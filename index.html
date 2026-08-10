@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gaslight Streets — remade · Beat I: The Masked Client</title>
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#eee4cc;
+    --cream-bright:#f6edd6;
+    --gold:#d6c49e;
+    --gold-dim:rgba(205,171,99,.55);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);
+    -webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  main{max-width:680px;margin:0 auto;padding:9vh 24px 6vh;}
+
+  .kicker{
+    font-size:13px;letter-spacing:.28em;color:var(--gold);
+    font-variant-caps:small-caps;text-transform:lowercase;
+    margin:0 0 18px;
+  }
+  h1{
+    font-size:clamp(28px,4.6vw,42px);font-weight:500;line-height:1.2;
+    color:var(--cream-bright);margin:0 0 6px;
+  }
+  h1 .beat{display:block;font-size:.62em;color:var(--cream);
+    font-style:italic;margin-top:6px;}
+  .desc{
+    font-style:italic;font-size:18px;color:var(--cream);
+    margin:18px 0 0;max-width:56ch;
+  }
+  .desc em{font-style:normal;font-variant-caps:small-caps;
+    text-transform:lowercase;letter-spacing:.08em;color:var(--cream-bright);}
+
+  hr{border:0;height:1px;background:var(--gold-dim);margin:40px 0;}
+
+  .cta{
+    display:inline-block;padding:16px 34px;margin:2px 0 0;
+    border:1px solid var(--gold);color:var(--cream-bright);
+    text-decoration:none;font-size:20px;letter-spacing:.06em;
+    background:rgba(214,196,158,.06);
+  }
+  .cta:hover{background:rgba(214,196,158,.14);color:#fff;}
+  .cta .arrow{color:var(--gold);margin-right:10px;}
+
+  .howto{
+    border-top:1px solid var(--gold-dim);border-bottom:1px solid var(--gold-dim);
+    padding:22px 0;margin:40px 0;
+  }
+  .label{
+    font-size:12px;letter-spacing:.3em;color:var(--gold);
+    font-variant-caps:small-caps;text-transform:lowercase;margin:0 0 10px;
+  }
+  .howto p{margin:0;font-size:17px;}
+  .howto .sep{color:var(--gold-dim);padding:0 .45em;}
+  .howto .sound{display:block;margin-top:10px;font-style:italic;
+    color:var(--gold);font-size:15px;}
+
+  figure{margin:0 0 34px;}
+  figure img{width:100%;display:block;border:1px solid var(--gold-dim);
+    box-sizing:border-box;}
+  figcaption{
+    margin-top:9px;font-size:13px;letter-spacing:.14em;color:var(--gold);
+    font-variant-caps:small-caps;text-transform:lowercase;
+  }
+
+  footer{
+    border-top:1px solid var(--gold-dim);padding-top:20px;margin-top:14px;
+    font-size:13.5px;color:rgba(238,228,204,.72);
+  }
+  footer a{color:var(--gold);text-decoration:none;
+    border-bottom:1px solid var(--gold-dim);}
+  footer a:hover{color:var(--cream-bright);}
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">An Interactive Book · A Scandal in Bohemia</p>
+  <h1>Gaslight Streets — remade
+    <span class="beat">Beat I: The Masked Client</span></h1>
+  <p class="desc">An interactive book — the diorama performs, Doyle's own words
+    sit in the margin, and the page turns when <em>you</em> act.</p>
+
+  <hr>
+
+  <p><a class="cta" href="./app/index.html"><span class="arrow">▶</span>Read Beat I</a></p>
+
+  <div class="howto">
+    <p class="label">How to Read</p>
+    <p>Click to read on<span class="sep">·</span>press-and-hold the
+       note<span class="sep">·</span>click the mask / the index / the door.
+       <span class="sound">Sound on recommended.</span></p>
+  </div>
+
+  <p class="label">Preview</p>
+
+  <figure>
+    <img src="./preview/00-i-00-head.png" alt="The opening leaf: the lit diorama of Baker Street's sitting-room inset in a dark page, Doyle's first line in the margin.">
+    <figcaption>The opening leaf — the sitting-room by lamplight, the first line in the margin</figcaption>
+  </figure>
+
+  <figure>
+    <img src="./preview/16-i-16-iamking.png" alt="The masked client stands unmasked in the sitting-room as the text admits: I am the King.">
+    <figcaption>“You are right — I am the King” — the mask falls when you take it</figcaption>
+  </figure>
+
+  <figure>
+    <img src="./preview/24-i-24-both.png" alt="Holmes, Watson and the King in the sitting-room as the photograph — the one they were both in — enters the story.">
+    <figcaption>“We were both in the photograph” — the evidence enters the room</figcaption>
+  </figure>
+
+  <footer>
+    <p>Rebuilt with Scenario image-to-3D and SFX, NB&nbsp;Pro (Gemini) images,
+       and three.js. Text is public domain — Arthur Conan Doyle,
+       <i>The Adventures of Sherlock Holmes</i> (Project Gutenberg #1661).</p>
+    <p><a href="./review/SIGNOFF.md">Review sign-off</a></p>
+  </footer>
+</main>
+</body>
+</html>
