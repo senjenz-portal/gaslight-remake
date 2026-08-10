@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The New King — casting demo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --gold-dim:rgba(205,171,99,.55);
+    --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1060px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  h2{font-weight:normal;font-size:22px;margin:64px 0 6px;}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.55;max-width:70ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  figure{margin:0;}
+  figure img{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;}
+  figcaption{font-size:13px;color:var(--note);margin-top:7px;line-height:1.45;}
+  figcaption b{color:var(--cream-bright);font-weight:normal;}
+
+  /* ---- the unmask ---- */
+  #unmask{position:relative;cursor:pointer;border:1px solid #2a2417;border-radius:3px;
+    overflow:hidden;background:#060810;user-select:none;-webkit-user-select:none;}
+  #unmask img{width:100%;display:block;border:0;border-radius:0;}
+  #portrait{position:relative;z-index:1;}
+  #ghost{position:absolute;inset:0;z-index:2;opacity:0;pointer-events:none;
+    transition:opacity .6s ease;}
+  #cue-ring{position:absolute;z-index:3;left:47.5%;top:28%;width:120px;height:120px;
+    margin:-60px 0 0 -60px;border:1px solid rgba(214,180,90,.85);border-radius:50%;
+    pointer-events:none;animation:breathe 2.6s ease-in-out infinite;
+    box-shadow:0 0 22px rgba(214,180,90,.25), inset 0 0 22px rgba(214,180,90,.12);}
+  #unmask.unmasked #cue-ring{animation:none;opacity:0;transition:opacity .6s ease;}
+  @keyframes breathe{
+    0%,100%{transform:scale(.92);opacity:.45;}
+    50%{transform:scale(1.06);opacity:.95;}
+  }
+  .capline{display:flex;justify-content:space-between;align-items:baseline;gap:18px;margin-top:10px;}
+  #mask-caption{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.16em;
+    font-size:14px;color:var(--cream-bright);}
+  #mask-cue{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);white-space:nowrap;}
+
+  /* ---- the mesh ---- */
+  .mesh-grid{display:grid;grid-template-columns:3fr 2fr;gap:22px;margin-top:18px;align-items:start;}
+  @media (max-width:760px){.mesh-grid{grid-template-columns:1fr;}}
+  #viewer-fig{position:relative;}
+  #viewer{width:100%;aspect-ratio:4/5;display:block;border:1px solid #2a2417;border-radius:3px;
+    background:#0d1428;cursor:grab;touch-action:none;}
+  #viewer:active{cursor:grabbing;}
+  .side-stack{display:grid;gap:22px;}
+  .viewer-cue{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);margin-top:7px;}
+
+  footer{margin-top:80px;}
+  footer p{color:var(--note);font-size:14px;}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../app/vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Casting Demo · Unlisted</div>
+  <h1>The New King — casting demo</h1>
+  <div class="rule"></div>
+  <p class="note">A new King of Bohemia, generated from a single supplied portrait via
+  NB&nbsp;Pro image-to-image <span class="tag">(gemini-3-pro-image)</span> + Scenario
+  image→3D <span class="tag">(model_yvo3d-image-to-3d)</span> — the product's own pipeline.</p>
+
+  <h2>1 · The unmask</h2>
+  <div class="rule"></div>
+  <div id="unmask" role="button" tabindex="0" aria-label="Toggle the King's mask">
+    <img id="portrait" src="king2-masked.png" alt="The masked client">
+    <img id="ghost" src="king2-masked.png" alt="" aria-hidden="true">
+    <div id="cue-ring"></div>
+  </div>
+  <div class="capline">
+    <div id="mask-caption">The Masked Client</div>
+    <div id="mask-cue">click the mask</div>
+  </div>
+
+  <h2>2 · The photograph</h2>
+  <div class="rule"></div>
+  <figure>
+    <img src="king2-both-photo.png" alt="The photograph of the two of them">
+    <figcaption><b>“We were both in the photograph.”</b></figcaption>
+  </figure>
+
+  <h2>3 · The mesh</h2>
+  <div class="rule"></div>
+  <p class="note">Scenario image→3D from the concept plate — 100k triangles, 1K texture,
+  same parameters as the shipping king asset.</p>
+  <div class="mesh-grid">
+    <figure id="viewer-fig">
+      <canvas id="viewer"></canvas>
+      <div class="viewer-cue">drag to turn him</div>
+    </figure>
+    <div class="side-stack">
+      <figure><img src="king2-look.png" alt="The concept plate"><figcaption><b>The concept</b> · NB Pro i2i from the supplied portrait</figcaption></figure>
+      <figure><img src="king2.meshthumb.jpg" alt="Scenario mesh preview"><figcaption><b>Scenario's own preview</b> · of the generated mesh</figcaption></figure>
+    </div>
+  </div>
+
+  <footer>
+    <div class="rule"></div>
+    <p>Demo only — not wired into the book. <a href="../">← back to the landing page</a></p>
+  </footer>
+</div>
+
+<script>
+/* ---- the unmask (vanilla) ---- */
+(function(){
+  const box     = document.getElementById('unmask');
+  const img     = document.getElementById('portrait');
+  const ghost   = document.getElementById('ghost');
+  const caption = document.getElementById('mask-caption');
+  const cue     = document.getElementById('mask-cue');
+  const sfx     = new Audio('mask-drop.mp3');
+  let unmasked = false;
+
+  function toggle(){
+    unmasked = !unmasked;
+    sfx.currentTime = 0;
+    sfx.play().catch(function(){ /* audio may be blocked; the reveal still plays */ });
+
+    /* crossfade: ghost holds the old frame and fades out over the new one (0.6s) */
+    ghost.src = img.src;
+    ghost.style.transition = 'none';
+    ghost.style.opacity = '1';
+    void ghost.offsetWidth;               /* commit, then arm the fade */
+    ghost.style.transition = 'opacity .6s ease';
+    img.src = unmasked ? 'king2-unmasked.png' : 'king2-masked.png';
+    ghost.style.opacity = '0';
+
+    box.classList.toggle('unmasked', unmasked);
+    caption.textContent = unmasked ? 'Wilhelm von Ormstein · King of Bohemia' : 'The Masked Client';
+    cue.textContent     = unmasked ? 'mask him again' : 'click the mask';
+  }
+
+  box.addEventListener('click', toggle);
+  box.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+  });
+})();
+</script>
+
+<script type="module">
+/* ---- the mesh (three.js viewer) ---- */
+import * as THREE from 'three';
+import { GLTFLoader } from '../app/vendor/loaders/GLTFLoader.js';
+import { OrbitControls } from '../app/vendor/controls/OrbitControls.js';
+
+const canvas = document.getElementById('viewer');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1428);          /* dark navy */
+scene.fog = new THREE.Fog(0x0d1428, 6, 14);
+
+const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 50);
+camera.position.set(1.9, 1.1, 3.1);
+
+/* dark navy ground — unlit so the warm rim can't tint it */
+const ground = new THREE.Mesh(
+  new THREE.CircleGeometry(5, 48),
+  new THREE.MeshBasicMaterial({ color:0x111b36 })
+);
+ground.rotation.x = -Math.PI/2;
+scene.add(ground);
+
+/* soft key + warm rim */
+scene.add(new THREE.HemisphereLight(0x40507a, 0x131a2e, 0.9));
+const key = new THREE.DirectionalLight(0xf2ead4, 2.1);   /* soft cream key */
+key.position.set(2.4, 3.2, 2.6);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0xffb45a, 1.7);   /* warm amber rim */
+rim.position.set(-2.2, 2.1, -2.8);
+scene.add(rim);
+const fill = new THREE.DirectionalLight(0x8fa3d0, 0.5);
+fill.position.set(-1.6, 0.8, 2.2);
+scene.add(fill);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.enablePan = false;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.9;          /* slow */
+controls.minDistance = 1.6;
+controls.maxDistance = 6;
+controls.target.set(0, 0.95, 0);
+controls.update();
+
+new GLTFLoader().load('king2.glb', (gltf) => {
+  const model = gltf.scene;
+  const box = new THREE.Box3().setFromObject(model);
+  const center = box.getCenter(new THREE.Vector3());
+  model.position.x -= center.x;
+  model.position.z -= center.z;
+  model.position.y -= box.min.y;        /* feet on the ground */
+  scene.add(model);
+  const h = box.max.y - box.min.y;
+  controls.target.set(0, h * 0.5, 0);
+  controls.update();
+  window.__meshLoaded = true;           /* verification hook */
+});
+
+function resize(){
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if(canvas.width !== Math.floor(w * renderer.getPixelRatio()) ||
+     canvas.height !== Math.floor(h * renderer.getPixelRatio())){
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+}
+window.addEventListener('resize', resize);
+
+renderer.setAnimationLoop(() => {
+  resize();
+  controls.update();
+  renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>
