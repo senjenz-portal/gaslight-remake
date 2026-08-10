@@ -62,8 +62,11 @@
     background:#0d1428;cursor:grab;touch-action:none;}
   #viewer:active{cursor:grabbing;}
   .side-stack{display:grid;gap:22px;}
-  .viewer-cue{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+  .viewer-cue{display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
     font-size:12px;color:var(--gold-soft);margin-top:7px;}
+  #mesh-toggle{cursor:pointer;color:#d8b45a;white-space:nowrap;}
+  #mesh-toggle:hover{text-decoration:underline;}
 
   footer{margin-top:80px;}
   footer p{color:var(--note);font-size:14px;}
@@ -105,18 +108,20 @@
     <figcaption><b>“We were both in the photograph.”</b></figcaption>
   </figure>
 
-  <h2>3 · The mesh</h2>
+  <h2>3 · The mesh — two generators</h2>
   <div class="rule"></div>
-  <p class="note">Scenario image→3D from the concept plate — 100k triangles, 1K texture,
-  same parameters as the shipping king asset.</p>
+  <p class="note">The same concept plate through two image→3D generators. In the viewer:
+  Tripo&nbsp;3.1 <span class="tag">(tripo-v3-1-image-to-3d)</span>, smart low poly —
+  12,848 triangles against the previous mesh's 100k.</p>
   <div class="mesh-grid">
     <figure id="viewer-fig">
       <canvas id="viewer"></canvas>
-      <div class="viewer-cue">drag to turn him</div>
+      <div class="viewer-cue"><span>drag to turn him</span><span id="mesh-toggle"
+        role="button" tabindex="0" aria-label="Swap the mesh in the viewer">view previous mesh</span></div>
     </figure>
     <div class="side-stack">
-      <figure><img src="king2-look.png" alt="The concept plate"><figcaption><b>The concept</b> · NB Pro i2i from the supplied portrait</figcaption></figure>
-      <figure><img src="king2.meshthumb.jpg" alt="Scenario mesh preview"><figcaption><b>Scenario's own preview</b> · of the generated mesh</figcaption></figure>
+      <figure><img src="king2-tripo.meshthumb.jpg" alt="Tripo 3.1 mesh preview"><figcaption><b>Tripo 3.1</b> · smart low poly, 12,848 tris</figcaption></figure>
+      <figure><img src="king2.meshthumb.jpg" alt="Scenario YVO3D mesh preview"><figcaption><b>Scenario YVO3D</b> · 100k tris — previous</figcaption></figure>
     </div>
   </div>
 
@@ -213,18 +218,52 @@ controls.maxDistance = 6;
 controls.target.set(0, 0.95, 0);
 controls.update();
 
-new GLTFLoader().load('king2.glb', (gltf) => {
-  const model = gltf.scene;
+/* two meshes, one viewer: Tripo 3.1 by default, the previous YVO3D on toggle */
+const HEIGHT = 1.9;                     /* normalise both meshes to the same stature */
+const MODELS = {
+  tripo: { url:'king2-tripo.glb', swapLabel:'view previous mesh' },
+  yvo:   { url:'king2.glb',       swapLabel:'view tripo mesh'    }
+};
+const loader = new GLTFLoader();
+const toggleEl = document.getElementById('mesh-toggle');
+let current = null, showing = 'tripo', loading = false;
+
+function prepare(model){
   const box = new THREE.Box3().setFromObject(model);
-  const center = box.getCenter(new THREE.Vector3());
+  model.scale.setScalar(HEIGHT / (box.max.y - box.min.y));
+  const b = new THREE.Box3().setFromObject(model);
+  const center = b.getCenter(new THREE.Vector3());
   model.position.x -= center.x;
   model.position.z -= center.z;
-  model.position.y -= box.min.y;        /* feet on the ground */
-  scene.add(model);
-  const h = box.max.y - box.min.y;
-  controls.target.set(0, h * 0.5, 0);
-  controls.update();
-  window.__meshLoaded = true;           /* verification hook */
+  model.position.y -= b.min.y;          /* feet on the ground */
+  return model;
+}
+
+function show(key){
+  const done = (model) => {
+    if (current) scene.remove(current);
+    current = model;
+    scene.add(model);
+    showing = key;
+    loading = false;
+    toggleEl.textContent = MODELS[key].swapLabel;
+    controls.target.set(0, HEIGHT * 0.5, 0);
+    controls.update();
+    if (key === 'tripo') window.__meshLoaded = true;   /* verification hook */
+  };
+  if (MODELS[key].model) return done(MODELS[key].model);
+  loading = true;
+  loader.load(MODELS[key].url, (gltf) => {
+    MODELS[key].model = prepare(gltf.scene);
+    done(MODELS[key].model);
+  });
+}
+show('tripo');
+
+function swap(){ if(!loading) show(showing === 'tripo' ? 'yvo' : 'tripo'); }
+toggleEl.addEventListener('click', swap);
+toggleEl.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); swap(); }
 });
 
 function resize(){
