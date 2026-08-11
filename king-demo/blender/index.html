@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The Blender Demo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --gold-dim:rgba(205,171,99,.55);
+    --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1060px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  h2{font-weight:normal;font-size:22px;margin:64px 0 6px;}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.55;max-width:70ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  figure{margin:0;}
+  figure img{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;}
+  figcaption{font-size:13px;color:var(--note);margin-top:7px;line-height:1.45;}
+  figcaption b{color:var(--cream-bright);font-weight:normal;}
+
+  /* ---- viewers ---- */
+  .viewer{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;
+    background:#0d1428;cursor:grab;touch-action:none;}
+  .viewer:active{cursor:grabbing;}
+  #viewer-clean{aspect-ratio:16/10;max-height:74vh;}
+  #viewer-scratch{aspect-ratio:16/10;max-height:66vh;}
+  .viewer-cue{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);margin-top:7px;}
+
+  /* ---- evidence rows ---- */
+  .evidence{display:grid;grid-template-columns:1fr;gap:26px;margin-top:18px;}
+
+  /* ---- lightbox ---- */
+  .evidence img{cursor:zoom-in;}
+  #lightbox{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+    background:rgba(6,8,16,.94);cursor:zoom-out;padding:4vmin;box-sizing:border-box;}
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:100%;max-height:100%;display:block;border:1px solid #2a2417;
+    border-radius:3px;box-shadow:0 0 60px rgba(0,0,0,.8);}
+  #lightbox figcaption{position:absolute;left:0;right:0;bottom:18px;text-align:center;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);pointer-events:none;}
+
+  footer{margin-top:80px;}
+  footer p{color:var(--note);font-size:14px;}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../app/vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Blender Demo · Unlisted</div>
+  <h1>The Blender Demo</h1>
+  <div class="rule"></div>
+  <p class="note">What a real DCC adds to the generated pipeline. Two exhibits: Blender as the
+  repair shop for an AI-generated, auto-rigged mesh — and Blender as the whole pipeline,
+  a head modeled from nothing but the portrait.</p>
+
+  <h2>1 · Blender cleans up Tripo</h2>
+  <div class="rule"></div>
+  <figure>
+    <canvas id="viewer-clean" class="viewer"></canvas>
+    <div class="viewer-cue">drag to turn him · he keeps running</div>
+    <figcaption><b>The cleaned-up rig, running.</b> Two Blender surgeries on the auto-rigged
+    Tripo mesh <span class="tag">(Make-It-Animatable + a stock Mixamo run)</span>: the cloak's
+    vertex weights — which the auto-rigger had bound to the arms, so it winged open like a
+    tent on every stride — were rebuilt onto the spine chain so it hangs and swings from the
+    body; and the good face from the static Tripo mesh was transplanted onto the animated
+    rig's head with sub-millimetre UV alignment, replacing the smeared face the rigging pass
+    had left him.</figcaption>
+  </figure>
+
+  <h2>2 · Blender from scratch</h2>
+  <div class="rule"></div>
+  <figure>
+    <canvas id="viewer-scratch" class="viewer"></canvas>
+    <div class="viewer-cue">drag to turn the head · slow turntable</div>
+    <figcaption><b>The from-scratch head.</b> No generator anywhere in this one: modeled
+    entirely in Blender from the single portrait — 1,202 triangles, likeness painted on by
+    camera projection of the portrait itself. Honest note: it reads front-only. A projection
+    carries no side data, so the likeness holds straight-on and thins out as the turntable
+    carries him past three-quarter.</figcaption>
+  </figure>
+
+  <h2>3 · The evidence</h2>
+  <div class="rule"></div>
+  <p class="note">Stills from the review passes. Click any image to enlarge.</p>
+  <div class="evidence">
+    <figure>
+      <img src="normalizer-widearm-sidebyside.png" alt="Wide-arm pose before and after the cloak weight rebuild">
+      <figcaption><b>The cloak weight rebuild</b> · the wide-arm test pose, before and after.
+      Left: the auto-rig's weights — arms out drags the whole cloak with them. Right: the
+      Blender normalizer's weights, rebuilt onto the spine — the cloak stays hung from the
+      shoulders while the arms move freely.</figcaption>
+    </figure>
+    <figure>
+      <img src="graft-face-sidebyside.jpg" alt="The animated rig's face before and after the head transplant">
+      <figcaption><b>The head transplant</b> · the animated rig's face, before and after.
+      Left: the face the auto-rig pass shipped with. Right: the static Tripo mesh's good face
+      transplanted onto the rig — same UV layout, sub-millimetre alignment, no seam at the
+      collar.</figcaption>
+    </figure>
+    <figure>
+      <img src="king2-head-blender-vs-tripo.png" alt="Turnaround sheet: the Blender from-scratch head next to the Tripo head">
+      <figcaption><b>From-scratch vs. Tripo</b> · the same four bearings, both heads.
+      1,202 hand-built triangles against the generator's output — the Blender head wins the
+      front view it was projected from and loses everywhere the portrait couldn't see.</figcaption>
+    </figure>
+  </div>
+
+  <footer>
+    <div class="rule"></div>
+    <p>Demo only — not wired into the book. <a href="../">← the King demo</a> ·
+    <a href="../../">the book</a></p>
+  </footer>
+</div>
+
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image">
+  <img alt="">
+  <figcaption></figcaption>
+</div>
+
+<script>
+/* ---- lightbox (vanilla): evidence images open full-screen ---- */
+(function(){
+  const box = document.getElementById('lightbox');
+  const big = box.querySelector('img');
+  const cap = box.querySelector('figcaption');
+
+  function open(src, alt, caption){
+    big.src = src;
+    big.alt = alt || '';
+    cap.textContent = caption || alt || '';
+    box.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    box.classList.remove('open');
+    big.src = '';
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.evidence img').forEach(function(img){
+    img.addEventListener('click', function(){
+      const fig = img.closest('figure');
+      const capEl = fig && fig.querySelector('figcaption');
+      open(img.src, img.alt, capEl ? capEl.textContent : '');
+    });
+  });
+
+  box.addEventListener('click', close);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && box.classList.contains('open')) close();
+  });
+})();
+</script>
+
+<script type="module">
+/* ---- two three.js viewers: the cleaned rig (running) and the from-scratch head ---- */
+import * as THREE from 'three';
+import { GLTFLoader } from '../../app/vendor/loaders/GLTFLoader.js';
+import { OrbitControls } from '../../app/vendor/controls/OrbitControls.js';
+
+const loader = new GLTFLoader();
+
+/* the page's night backdrop, so the canvas never reads as dead black */
+function nightBackdrop(){
+  const c = document.createElement('canvas');
+  c.width = c.height = 256;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(128, 116, 6, 128, 116, 200);
+  grad.addColorStop(0.00, '#16305c');
+  grad.addColorStop(0.40, '#0d2547');
+  grad.addColorStop(0.75, '#081a38');
+  grad.addColorStop(1.00, '#050e26');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 256, 256);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+function makeRenderer(canvas){
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  return renderer;
+}
+
+function fitRenderer(renderer, canvas, camera){
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== Math.floor(w * renderer.getPixelRatio()) ||
+      canvas.height !== Math.floor(h * renderer.getPixelRatio())){
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+}
+
+/* normalise a model: stand `height` tall, feet at y=0, centred on the y axis */
+function prepare(model, height){
+  const box = new THREE.Box3().setFromObject(model);
+  model.scale.setScalar(height / (box.max.y - box.min.y));
+  const b = new THREE.Box3().setFromObject(model);
+  const center = b.getCenter(new THREE.Vector3());
+  model.position.x -= center.x;
+  model.position.z -= center.z;
+  model.position.y -= b.min.y;
+  model.traverse((o) => { if (o.isSkinnedMesh) o.frustumCulled = false; });
+  return model;
+}
+
+window.__blender = { clean:{}, scratch:{} };   /* verification hooks */
+
+/* ================= viewer 1: the cleaned rig, running ================= */
+(function(){
+  const canvas = document.getElementById('viewer-clean');
+  const renderer = makeRenderer(canvas);
+  const scene = new THREE.Scene();
+  scene.background = nightBackdrop();
+
+  const HEIGHT = 1.9;
+  /* head + torso hold the frame — the face is the point of the exhibit */
+  const TARGET = new THREE.Vector3(0, 1.34, 0);
+  const camera = new THREE.PerspectiveCamera(30, 16/10, 0.05, 60);
+  camera.position.set(0.42, 1.52, 2.35);
+
+  scene.add(new THREE.HemisphereLight(0x39507a, 0x101827, 1.05));
+  const key = new THREE.DirectionalLight(0xf3ead6, 2.3);   /* cream key, on the face */
+  key.position.set(0.9, 2.2, 3.2);
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffb45a, 1.2);   /* amber rim off the shoulder */
+  rim.position.set(-2.4, 2.4, -2.2);
+  scene.add(rim);
+  const fill = new THREE.DirectionalLight(0x7d94c6, 0.55);
+  fill.position.set(-1.8, 1.1, 1.6);
+  scene.add(fill);
+
+  /* a faint ground disc so his run reads as on something, not in a void */
+  const disc = new THREE.Mesh(
+    new THREE.CircleGeometry(1.5, 48),
+    new THREE.MeshStandardMaterial({ color:0x10192e, roughness:1 })
+  );
+  disc.rotation.x = -Math.PI / 2;
+  scene.add(disc);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.enablePan = false;
+  controls.minDistance = 0.9;
+  controls.maxDistance = 6.0;
+  controls.minPolarAngle = 0.5;
+  controls.maxPolarAngle = 1.55;
+  controls.target.copy(TARGET);
+  controls.update();
+
+  let mixer = null;
+  loader.load('blender-cleaned.glb', (gltf) => {
+    const model = prepare(gltf.scene, HEIGHT);
+    scene.add(model);
+    if (gltf.animations.length){
+      mixer = new THREE.AnimationMixer(gltf.scene);
+      mixer.clipAction(gltf.animations[0]).play();   /* the run, LoopRepeat by default */
+      window.__blender.clean.mixer = mixer;
+    }
+    window.__blender.clean.loaded = true;
+  }, undefined, (err) => console.error('blender-cleaned.glb failed', err));
+
+  window.__blender.clean.renderer = renderer;
+  window.__blender.clean.camera = camera;
+  window.__blender.clean.controls = controls;
+  window.__blender.clean.frames = 0;
+
+  const clock = new THREE.Clock();
+  renderer.setAnimationLoop(() => {
+    fitRenderer(renderer, canvas, camera);
+    const dt = Math.min(clock.getDelta(), 0.1);
+    if (mixer) mixer.update(dt);
+    controls.update();
+    renderer.render(scene, camera);
+    window.__blender.clean.frames++;
+  });
+})();
+
+/* ================= viewer 2: the from-scratch head, turntable ================= */
+(function(){
+  const canvas = document.getElementById('viewer-scratch');
+  const renderer = makeRenderer(canvas);
+  const scene = new THREE.Scene();
+  scene.background = nightBackdrop();
+
+  const SIZE = 0.34;                       /* a head-sized head */
+  const TARGET = new THREE.Vector3(0, SIZE * 0.52, 0);
+  const camera = new THREE.PerspectiveCamera(28, 16/10, 0.02, 20);
+  camera.position.set(0.10, SIZE * 0.62, 0.72);
+
+  /* warm key — the portrait's own lamplight */
+  scene.add(new THREE.HemisphereLight(0x3a4a6e, 0x141220, 0.85));
+  const key = new THREE.DirectionalLight(0xffd9a8, 2.6);
+  key.position.set(0.8, 0.9, 1.2);
+  scene.add(key);
+  const fill = new THREE.DirectionalLight(0x8fa2c8, 0.5);
+  fill.position.set(-1.1, 0.3, 0.8);
+  scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xd8b45a, 0.9);
+  rim.position.set(-0.6, 0.8, -1.2);
+  scene.add(rim);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.06;
+  controls.enablePan = false;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.8;          /* slow turntable */
+  controls.minDistance = 0.3;
+  controls.maxDistance = 2.4;
+  controls.target.copy(TARGET);
+  controls.update();
+
+  loader.load('blender-scratch-head.glb', (gltf) => {
+    const model = prepare(gltf.scene, SIZE);
+    /* the sculpt faces -z; turn him to the camera — the projection only holds up front */
+    const pivot = new THREE.Group();
+    pivot.add(model);
+    pivot.rotation.y = Math.PI;
+    scene.add(pivot);
+    window.__blender.scratch.loaded = true;
+  }, undefined, (err) => console.error('blender-scratch-head.glb failed', err));
+
+  window.__blender.scratch.renderer = renderer;
+  window.__blender.scratch.camera = camera;
+  window.__blender.scratch.controls = controls;
+  window.__blender.scratch.frames = 0;
+
+  const clock = new THREE.Clock();
+  renderer.setAnimationLoop(() => {
+    fitRenderer(renderer, canvas, camera);
+    clock.getDelta();
+    controls.update();
+    renderer.render(scene, camera);
+    window.__blender.scratch.frames++;
+  });
+})();
+</script>
+</body>
+</html>
