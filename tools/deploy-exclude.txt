@@ -1,0 +1,51 @@
+# deploy-exclude.txt — ROUND 8b [8b-6], extended by 8c [8c-7], corrected by 8d [8d-4]
+#
+# Paths that stay ON DISK in this working tree but must NOT be copied into the
+# next site bundle. One repo-relative glob per line; blank lines and # comments
+# ignored. Consumed by whatever assembles site-deploy/.
+#
+# --- the retired cast (round 8 replaced it with procedural figures) ----------
+# holmes.glb / watson.glb / king.glb / king-unmasked.glb are the Scenario
+# image-to-3D casts: ~100k triangles each, baked painterly PBR, no rig, and
+# king.glb bakes the vizard into the mesh (which is why the unmask used to be a
+# whole-model swap). app/main.js's ASSETS list has not referenced any of them
+# since round 8 — the cast is 5.5k triangles of geometry this app builds — so
+# they are 33.4 MB of dead weight in the bundle. They stay here because they are
+# the raw record of rounds 3-7 and the manifest hashes them.
+# ROUND 8c [8c-7]: and they are now GONE from site-deploy/assets/3d/ as well —
+# 33.3 MB of the four of them, deleted, not merely un-listed. The four PROPS
+# (armchair, fireplace, hansom-cab, side-table) stay: main.js still loads them.
+assets/3d/holmes.glb
+assets/3d/watson.glb
+assets/3d/king.glb
+assets/3d/king-unmasked.glb
+
+# --- ROUND 8c [8c-7] the round-8 King EXPERIMENT, which no unit references ----
+# assets/plates/king-v2/ is the second-pass King: three re-authored cameo plates
+# and two Tripo image-to-3D meshes (14 MB) commissioned while round 8 was still
+# deciding whether to buy a better GLB King or to build him. It BUILT him, so
+# nothing in app/ names any of these files — checked by grep, not by memory —
+# and the plates the app does use are the ones directly in assets/plates/.
+# assets/raw/ is 121 MB of generator INPUT and provenance: the Scenario and Tripo
+# job payloads and their raw returns (83 + 21 MB), the notebook-pro prompt runs,
+# the raw audio stems, and the app scaffold the first round started from. It is
+# the record of how every asset in the bundle was made; none of it is loaded at
+# runtime, and it is 3.5x the whole rest of the bundle.
+assets/plates/king-v2/
+assets/raw/
+
+# --- ROUND 8d [8d-4] what stays behind, and what does NOT --------------------
+# The header this list carried said "review artefacts, never shipped" and then
+# listed review/** under it, which is false twice over: site-deploy/review/ IS
+# part of the bundle BY DESIGN — site-deploy/index.html links ./review/SIGNOFF.md
+# from the footer of the landing page, and rounds 1-6 are already published
+# beside it. What this line means is that review/ is not copied by the bulk sync:
+# the round files are the ORCHESTRATOR'S to publish, one at a time, after each
+# round is signed off. The round-7 and round-8 files are expected to be added to
+# site-deploy/review/ later by the orchestrator; a builder must not push them
+# there, and must not delete the six that are already live.
+#   shots/ and tools/ are the ones that genuinely never ship: 1.1 GB of review
+# frames and the harness that made them, none of it reachable from any page.
+shots/**
+review/**
+tools/**

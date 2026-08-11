@@ -1,0 +1,19 @@
+{
+  "name": "gaslight-remake",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "serve": "python3 app/serve.py",
+    "lap": "node tools/lap.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Ground-up rebuild of the interactive-book slice: Sherlock ch1 Beat I, 221B Baker Street.",
+  "dependencies": {
+    "playwright": "^1.62.1",
+    "three": "^0.185.1"
+  },
+  "type": "module",
+  "private": true
+}

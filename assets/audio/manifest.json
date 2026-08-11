@@ -1,0 +1,149 @@
+{
+  "lane": "audio",
+  "created_utc": "20260810T051700Z",
+  "note": "Curated picks (COPIES). Immutable raws + full per-run generation manifests live in assets/raw/audio/<timestamp>/manifest.json. All assets generated via Scenario API (model_elevenlabs-sound-effects-v2), output mp3 44100 Hz stereo 128 kbps CBR. Appended 2026-08-10: step, reveal, book, mask-drop (gap-fill lane, raws in assets/raw/audio/20260810T053955Z/).",
+  "generator": "scenario",
+  "model_id": "model_elevenlabs-sound-effects-v2",
+  "assets": {
+    "room-bed": {
+      "file": "room-bed.mp3",
+      "sha256": "0d4d5f456c3636b6d9eda185298f84c0ccd4ec0b4ab55b8283eae945648382b2",
+      "raw_source": "assets/raw/audio/20260810T051501Z/room-bed_v2_scenario.mp3",
+      "duration_s": 25.051,
+      "loop": true,
+      "loop_points_s": [
+        0.0,
+        25.051
+      ],
+      "rms_dbfs": -38.4,
+      "peak_dbfs": -0.3,
+      "suggested_volume": 0.8,
+      "role": "bed",
+      "description": "Quiet Victorian sitting room: fireplace crackle prominent, faint mantel clock tick. Generated in ElevenLabs seamless-loop mode; loop the whole file."
+    },
+    "street-bed": {
+      "file": "street-bed.mp3",
+      "sha256": "cbd3d14a1ff52a614a1cb16b9003802070fadb1d8af8657c69e322114a5a55aa",
+      "raw_source": "assets/raw/audio/20260810T051136Z/street-bed_v2_scenario.mp3",
+      "duration_s": 25.051,
+      "loop": true,
+      "loop_points_s": [
+        0.0,
+        25.051
+      ],
+      "rms_dbfs": -40.2,
+      "peak_dbfs": -28.2,
+      "suggested_volume": 1.0,
+      "role": "bed",
+      "description": "Distant London night street heard from indoors: low wind, faint far carriage passes. Seamless-loop mode; loop the whole file. ~28 dB peak headroom if it needs boosting."
+    },
+    "page-turn": {
+      "file": "page-turn.mp3",
+      "sha256": "0aab5a736fb27b807d0012da1904b512f58549aaf1979769c51d73aec0af453f",
+      "raw_source": "assets/raw/audio/20260810T051136Z/page-turn_v2_scenario.mp3",
+      "duration_s": 1.515,
+      "loop": false,
+      "rms_dbfs": -34.6,
+      "peak_dbfs": -8.1,
+      "suggested_volume": 1.0,
+      "role": "cue",
+      "description": "Single heavy paper page turn, clean decay to silence by ~1.2 s."
+    },
+    "paper-rustle": {
+      "file": "paper-rustle.mp3",
+      "sha256": "a4e6666548e3b22e586e5436b789e4c97f80f831399a9d0121b3f7ae59f4769b",
+      "raw_source": "assets/raw/audio/20260810T051136Z/paper-rustle_v1_scenario.mp3",
+      "duration_s": 1.515,
+      "loop": false,
+      "rms_dbfs": -47.4,
+      "peak_dbfs": -18.0,
+      "suggested_volume": 1.0,
+      "role": "cue",
+      "description": "Letter unfold / paper handling, clean tail."
+    },
+    "hoofbeats": {
+      "file": "hoofbeats.mp3",
+      "sha256": "33d49f4fc8f9022761f62edf88404ce9dfa7dc7af5225e73dd59cf621ddc4faf",
+      "raw_source": "assets/raw/audio/20260810T051136Z/hoofbeats_v1_scenario.mp3",
+      "duration_s": 8.046,
+      "loop": false,
+      "rms_dbfs": -21.1,
+      "peak_dbfs": 0.0,
+      "suggested_volume": 0.65,
+      "role": "cue",
+      "description": "Horse + carriage approaching on cobblestones, slows and stops (quiet by ~7.5 s). Peaks at full scale - keep volume <= 0.7 so it reads as outside the window."
+    },
+    "door-knock": {
+      "file": "door-knock.mp3",
+      "sha256": "e7f341a9ed159f2f9c80729ffb9380b073531506b91122c221a5872140200fef",
+      "raw_source": "assets/raw/audio/20260810T051136Z/door-knock_v1_scenario.mp3",
+      "duration_s": 2.038,
+      "loop": false,
+      "rms_dbfs": -28.5,
+      "peak_dbfs": -2.1,
+      "suggested_volume": 0.85,
+      "role": "cue",
+      "description": "Firm triple knock on heavy wooden door, starts immediately, silent tail."
+    },
+    "click-soft": {
+      "file": "click-soft.mp3",
+      "sha256": "0cf023e872927154f728de7769d870de0639740986084de5516a6f09ef9538bb",
+      "raw_source": "assets/raw/audio/20260810T051136Z/click-soft_v1_scenario.mp3",
+      "duration_s": 0.522,
+      "loop": false,
+      "rms_dbfs": -38.5,
+      "peak_dbfs": -17.5,
+      "suggested_volume": 0.5,
+      "role": "ui-tick",
+      "description": "Single soft paper tap for text advance. Already subtle; 0.4-0.6 volume keeps it diegetic."
+    },
+    "step": {
+      "file": "step.mp3",
+      "sha256": "7932768c3970ac5c286a45a025c0ad06727e1fde1adc7caed5e1f9166a906674",
+      "raw_source": "assets/raw/audio/20260810T053955Z/step_v1_scenario.mp3",
+      "duration_s": 2.0,
+      "loop": false,
+      "rms_dbfs": -21.4,
+      "peak_dbfs": -2.4,
+      "suggested_volume": 0.7,
+      "role": "cue",
+      "description": "Two slow heavy boot footsteps climbing wooden stairs, wood creak under each step (the colossus on the stair, i-13). Keep <=0.7 so it reads as beyond the room door; peak -2.4 dBFS is hot."
+    },
+    "reveal": {
+      "file": "reveal.mp3",
+      "sha256": "b7cb33a23cfdf4126ac5841ae4c00090b6722767281df915dfc2e15ce7336289",
+      "raw_source": "assets/raw/audio/20260810T053955Z/reveal_v1_scenario.mp3",
+      "duration_s": 1.0,
+      "loop": false,
+      "rms_dbfs": -23.3,
+      "peak_dbfs": -6.9,
+      "suggested_volume": 0.45,
+      "role": "cue",
+      "description": "Soft airy non-musical shimmer of light passing through paper - the press-and-hold watermark payoff. Keep subtle (0.4-0.5); fire as the hold resolves, not on press."
+    },
+    "book": {
+      "file": "book.mp3",
+      "sha256": "0a9649678f61632c40173298b4e309d44e1cc5555ec5efc09e67bb8d23266799",
+      "raw_source": "assets/raw/audio/20260810T053955Z/book_v1_scenario.mp3",
+      "duration_s": 1.48,
+      "loop": false,
+      "rms_dbfs": -23.8,
+      "peak_dbfs": -0.6,
+      "suggested_volume": 0.7,
+      "role": "cue",
+      "description": "Heavy book pulled from a wooden shelf then opened (gazetteer i-08/gaz1 + index lookup gate). Peak -0.6 dBFS is near full scale - do not boost, cap <=0.7."
+    },
+    "mask-drop": {
+      "file": "mask-drop.mp3",
+      "sha256": "ac6db482de3c47218b89c4e53afdb1fa0a8792351abd36330d719cb7dbc2d1e1",
+      "raw_source": "assets/raw/audio/20260810T053955Z/mask-drop_v1_scenario.mp3",
+      "duration_s": 0.48,
+      "loop": false,
+      "rms_dbfs": -29.8,
+      "peak_dbfs": -5.4,
+      "suggested_volume": 0.85,
+      "role": "cue",
+      "description": "Small hard lacquered object hitting a wooden floor, single short clatter - the mask hurled down at the unmask gate (iamking). Starts immediately, silent tail by ~0.48 s."
+    }
+  }
+}
