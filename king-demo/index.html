@@ -252,17 +252,26 @@
 import * as THREE from 'three';
 import { GLTFLoader } from '../app/vendor/loaders/GLTFLoader.js';
 import { OrbitControls } from '../app/vendor/controls/OrbitControls.js';
+import { RoomEnvironment } from '../app/vendor/environments/RoomEnvironment.js';
 import { createBakerStreetStage, createBakerStreetStageNightRig }
   from './createBakerStreetStage.js';
 
 const canvas = document.getElementById('viewer');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.9;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.shadowMap.enabled = true;                       /* the diorama's own contact shading */
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.autoClear = false;                              /* two passes share one depth buffer */
+
+/* Tone mapping is a renderer-global, and the two passes want different curves: the street
+ * was tuned under ACES at 0.9 and keeps it, the figure is drawn under Neutral at 1.0.
+ * (A/B'd against the reference render: ACES at 0.9 with no environment map was costing him
+ * ~25% luminance and ~35% saturation — the rig, not the mesh, was flattening his face.)
+ * They are set per pass in the loop; three caches one program per curve. */
+const STAGE_TONE = { mapping:THREE.ACESFilmicToneMapping, exposure:0.9 };
+const FIG_TONE   = { mapping:THREE.NeutralToneMapping,    exposure:1.0 };
+const useTone = (t) => { renderer.toneMapping = t.mapping; renderer.toneMappingExposure = t.exposure; };
 
 /* Two scenes, two light rigs, one depth buffer: the stage is drawn first under its own
  * night rig, then the figure is drawn into the same depth buffer under his hero rig.
@@ -318,17 +327,22 @@ nightRig.traverse((o) => {
 const bakeStageShadows = () => stageShadows.forEach((s) => { s.needsUpdate = true; });
 stageScene.add(nightRig);
 
-/* the figure's rig: cool key so he belongs to the night, amber rim thrown from the
- * gas lamp that is actually standing behind him on the stage */
-figScene.add(new THREE.HemisphereLight(0x33496f, 0x0d1730, 1.0));
-const key = new THREE.DirectionalLight(0xe6ecfa, 2.2);   /* cool cream key, frontal and low */
-key.position.set(1.3, 2.0, 4.4);
+/* The figure's rig. Three directional lights and a blue hemisphere used to stand in for
+ * ambient here; a MeshStandardMaterial with no environment gets no indirect diffuse and has
+ * nothing to reflect, so his skin went grey and his cloak went black. The fill is now an
+ * image-based one — a PMREM of the neutral room — and the two remaining lamps only shape
+ * him: a warm key raking across the cheek, and the amber rim thrown by the gas lamp that is
+ * actually standing behind him on the stage. */
+const pmrem = new THREE.PMREMGenerator(renderer);
+const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+pmrem.dispose();
+figScene.environment = envTex;
+figScene.environmentIntensity = 0.6;      /* 0.6, not the studio 0.7: he stands in the night */
+const key = new THREE.DirectionalLight(0xffe6c4, 0.85);   /* warm key, raking off the camera axis */
+key.position.set(2.0, 3.0, 4.0);
 figScene.add(key);
-const rim = new THREE.DirectionalLight(0xffb45a, 1.45);   /* amber; placeStage aims it */
+const rim = new THREE.DirectionalLight(0xffb45a, 1.2);    /* amber; placeStage aims it at the lamp */
 figScene.add(rim);
-const fill = new THREE.DirectionalLight(0x7d94c6, 0.7);
-fill.position.set(-1.9, 1.0, 2.0);
-figScene.add(fill);
 
 /* Where he stands, in stage units: mid-road at the near end, his cab and horse behind him,
  * the lit shopfront and a gas lamp off his shoulder.
@@ -427,7 +441,26 @@ function prepare(model){
   model.position.y -= b.min.y;          /* feet on the ground */
   /* skinned meshes animate outside their bind-pose bounds — never cull them */
   model.traverse((o) => { if (o.isSkinnedMesh) o.frustumCulled = false; });
+  dressMaterials(model);
   return model;
+}
+
+/* Material hygiene for generated meshes. The auto-rig re-export ships its body material at
+ * metalness 0.4 — wool and broadcloth are not 40% metal, and every generator-set point of
+ * metalness moves that much albedo into a specular lobe, which is why the cloak read as a
+ * black void. Roughness is clamped so skin can still catch a highlight. */
+function dressMaterials(model){
+  model.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of (Array.isArray(o.material) ? o.material : [o.material])){
+      if (!m || !m.isMeshStandardMaterial) continue;
+      const isSkin = /skin|face|head/i.test((m.name || '') + ' ' + (o.name || ''));
+      m.metalness = 0;
+      m.roughness = Math.min(m.roughness, isSkin ? 0.62 : 0.9);
+      m.envMapIntensity = 1.0;
+      m.needsUpdate = true;
+    }
+  });
 }
 
 function show(key){
@@ -494,6 +527,16 @@ window.__stage = {                                   /* verification hook */
   }
 };
 
+window.__rig = {                                     /* verification hook */
+  get environment(){ return !!figScene.environment; },
+  get environmentIntensity(){ return figScene.environmentIntensity; },
+  get figTone(){ return FIG_TONE.mapping; },
+  get stageTone(){ return STAGE_TONE.mapping; },
+  neutral: THREE.NeutralToneMapping, aces: THREE.ACESFilmicToneMapping,
+  lights: () => { const l = []; figScene.traverse((o) => { if (o.isLight)
+    l.push({ type:o.type, color:'#'+o.color.getHexString(), intensity:o.intensity }); }); return l; }
+};
+
 const clock = new THREE.Clock();
 renderer.setAnimationLoop(() => {
   resize();
@@ -509,7 +552,9 @@ renderer.setAnimationLoop(() => {
   }
   controls.update(dt);                    /* the sway turns per second, not per frame */
   renderer.clear();                       /* colour + depth, once per frame */
-  renderer.render(stageScene, camera);    /* the street, under its night rig */
+  useTone(STAGE_TONE);
+  renderer.render(stageScene, camera);    /* the street, under its night rig and its ACES curve */
+  useTone(FIG_TONE);
   renderer.render(figScene, camera);      /* the figure, under his — same depth buffer */
 });
 </script>

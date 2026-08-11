@@ -180,6 +180,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from '../../app/vendor/loaders/GLTFLoader.js';
 import { OrbitControls } from '../../app/vendor/controls/OrbitControls.js';
+import { RoomEnvironment } from '../../app/vendor/environments/RoomEnvironment.js';
 
 const loader = new GLTFLoader();
 
@@ -203,9 +204,38 @@ function nightBackdrop(){
 function makeRenderer(canvas){
   const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  /* Neutral, not ACES: ACES desaturates the moment it is fed enough light, and these two
+   * exhibits are both about a face. A/B'd against the reference render — see review/render-ab.png */
+  renderer.toneMapping = THREE.NeutralToneMapping;
   renderer.toneMappingExposure = 1.0;
   return renderer;
+}
+
+/* the fill is image-based: a PMREM of the neutral room. A MeshStandardMaterial with no
+ * environment gets no indirect diffuse and nothing to reflect, which is what was draining
+ * the skin. One PMREM per renderer — the texture lives in that renderer's GL context. */
+function roomEnv(renderer){
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const tex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  pmrem.dispose();
+  return tex;
+}
+
+/* generated meshes ship metalness on cloth (the auto-rig re-export sets 0.4), which moves
+ * albedo into a specular lobe and voids the cloak; skin keeps a highlight via the clamp */
+function dressMaterials(model){
+  model.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of (Array.isArray(o.material) ? o.material : [o.material])){
+      if (!m || !m.isMeshStandardMaterial) continue;
+      const isSkin = /skin|face|head/i.test((m.name || '') + ' ' + (o.name || ''));
+      m.metalness = 0;
+      m.roughness = Math.min(m.roughness, isSkin ? 0.62 : 0.9);
+      m.envMapIntensity = 1.0;
+      m.needsUpdate = true;
+    }
+  });
 }
 
 function fitRenderer(renderer, canvas, camera){
@@ -228,6 +258,7 @@ function prepare(model, height){
   model.position.z -= center.z;
   model.position.y -= b.min.y;
   model.traverse((o) => { if (o.isSkinnedMesh) o.frustumCulled = false; });
+  dressMaterials(model);
   return model;
 }
 
@@ -246,21 +277,19 @@ window.__blender = { clean:{}, scratch:{} };   /* verification hooks */
   const camera = new THREE.PerspectiveCamera(30, 16/10, 0.05, 60);
   camera.position.set(0.42, 1.52, 2.35);
 
-  scene.add(new THREE.HemisphereLight(0x39507a, 0x101827, 1.05));
-  const key = new THREE.DirectionalLight(0xf3ead6, 2.3);   /* cream key, on the face */
-  key.position.set(0.9, 2.2, 3.2);
+  scene.environment = roomEnv(renderer);
+  scene.environmentIntensity = 0.6;   /* the night backdrop is behind him, so 0.6, not the studio 0.7 */
+  const key = new THREE.DirectionalLight(0xffe6c4, 0.85);   /* warm key, raking across the cheek */
+  key.position.set(2.0, 3.0, 4.0);
   scene.add(key);
-  const rim = new THREE.DirectionalLight(0xffb45a, 1.2);   /* amber rim off the shoulder */
+  const rim = new THREE.DirectionalLight(0xffb45a, 0.9);    /* amber rim off the shoulder */
   rim.position.set(-2.4, 2.4, -2.2);
   scene.add(rim);
-  const fill = new THREE.DirectionalLight(0x7d94c6, 0.55);
-  fill.position.set(-1.8, 1.1, 1.6);
-  scene.add(fill);
 
   /* a faint ground disc so his run reads as on something, not in a void */
   const disc = new THREE.Mesh(
     new THREE.CircleGeometry(1.5, 48),
-    new THREE.MeshStandardMaterial({ color:0x10192e, roughness:1 })
+    new THREE.MeshStandardMaterial({ color:0x10192e, roughness:1, envMapIntensity:0.25 })
   );
   disc.rotation.x = -Math.PI / 2;
   scene.add(disc);
@@ -289,6 +318,7 @@ window.__blender = { clean:{}, scratch:{} };   /* verification hooks */
   }, undefined, (err) => console.error('blender-cleaned.glb failed', err));
 
   window.__blender.clean.renderer = renderer;
+  window.__blender.clean.scene = scene;
   window.__blender.clean.camera = camera;
   window.__blender.clean.controls = controls;
   window.__blender.clean.frames = 0;
@@ -316,15 +346,13 @@ window.__blender = { clean:{}, scratch:{} };   /* verification hooks */
   const camera = new THREE.PerspectiveCamera(28, 16/10, 0.02, 20);
   camera.position.set(0.10, SIZE * 0.62, 0.72);
 
-  /* warm key — the portrait's own lamplight */
-  scene.add(new THREE.HemisphereLight(0x3a4a6e, 0x141220, 0.85));
-  const key = new THREE.DirectionalLight(0xffd9a8, 2.6);
-  key.position.set(0.8, 0.9, 1.2);
+  /* warm key — the portrait's own lamplight — over the same image-based fill */
+  scene.environment = roomEnv(renderer);
+  scene.environmentIntensity = 0.6;   /* the night backdrop is behind him, so 0.6, not the studio 0.7 */
+  const key = new THREE.DirectionalLight(0xffe6c4, 0.85);
+  key.position.set(2.0, 3.0, 4.0);
   scene.add(key);
-  const fill = new THREE.DirectionalLight(0x8fa2c8, 0.5);
-  fill.position.set(-1.1, 0.3, 0.8);
-  scene.add(fill);
-  const rim = new THREE.DirectionalLight(0xd8b45a, 0.9);
+  const rim = new THREE.DirectionalLight(0xffb45a, 0.9);
   rim.position.set(-0.6, 0.8, -1.2);
   scene.add(rim);
 
@@ -350,6 +378,7 @@ window.__blender = { clean:{}, scratch:{} };   /* verification hooks */
   }, undefined, (err) => console.error('blender-scratch-head.glb failed', err));
 
   window.__blender.scratch.renderer = renderer;
+  window.__blender.scratch.scene = scene;
   window.__blender.scratch.camera = camera;
   window.__blender.scratch.controls = controls;
   window.__blender.scratch.frames = 0;
