@@ -60,13 +60,19 @@
   #viewer{width:100%;aspect-ratio:16/10;max-height:78vh;display:block;border:1px solid #2a2417;
     border-radius:3px;background:#0d1428;cursor:grab;touch-action:none;}
   #viewer:active{cursor:grabbing;}
-  .side-stack{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  .side-stack{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;}
   @media (max-width:560px){.side-stack{grid-template-columns:1fr;}}
   .viewer-cue{display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+    flex-wrap:wrap;
     font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
     font-size:12px;color:var(--gold-soft);margin-top:7px;}
-  #mesh-toggle{cursor:pointer;color:#d8b45a;white-space:nowrap;}
-  #mesh-toggle:hover{text-decoration:underline;}
+  #mesh-switch{text-align:right;}
+  .mesh-opt{cursor:pointer;color:var(--gold-soft);}
+  .mesh-opt:hover{text-decoration:underline;}
+  .mesh-opt.active{color:#d8b45a;cursor:default;border-bottom:1px solid var(--gold-dim);}
+  .mesh-opt.active:hover{text-decoration:none;}
+  #mesh-switch .sep{color:var(--gold-dim);padding:0 5px;}
+  #viewer-caption{min-height:1.45em;}
 
   /* ---- lightbox ---- */
   figure img, #zoom-photo{cursor:zoom-in;}
@@ -127,11 +133,16 @@
   <div class="mesh-grid">
     <figure id="viewer-fig">
       <canvas id="viewer"></canvas>
-      <div class="viewer-cue"><span>drag to turn him</span><span id="mesh-toggle"
-        role="button" tabindex="0" aria-label="Swap the mesh in the viewer">view previous mesh</span></div>
+      <div class="viewer-cue"><span>drag to turn him</span><span id="mesh-switch"
+        role="group" aria-label="Choose the mesh in the viewer"><span class="mesh-opt active"
+        data-key="tripo" role="button" tabindex="0">tripo 3.1</span><span class="sep">·</span><span
+        class="mesh-opt" data-key="hybrid" role="button" tabindex="0">hybrid — tripo head, game body</span><span
+        class="sep">·</span><span class="mesh-opt" data-key="yvo" role="button" tabindex="0">previous (yvo3d)</span></span></div>
+      <figcaption id="viewer-caption">Tripo 3.1 — smart low poly with the rebaked face texture, 19,622 tris</figcaption>
     </figure>
     <div class="side-stack">
       <figure><img src="king2-tripo.meshthumb.jpg" alt="Tripo 3.1 mesh preview"><figcaption><b>Tripo 3.1</b> · smart low poly, 19,622 tris</figcaption></figure>
+      <figure><img src="king2-hybrid.face.png" alt="Hybrid graft — face close-up render"><figcaption><b>the graft, close</b></figcaption></figure>
       <figure><img src="king2.meshthumb.jpg" alt="Scenario YVO3D mesh preview"><figcaption><b>Scenario YVO3D</b> · 100k tris — previous</figcaption></figure>
     </div>
   </div>
@@ -271,14 +282,19 @@ controls.maxDistance = 6;
 controls.target.set(0, 1.05, 0);         /* chest height — hero framing, head safe */
 controls.update();
 
-/* two meshes, one viewer: Tripo 3.1 by default, the previous YVO3D on toggle */
-const HEIGHT = 1.9;                     /* normalise both meshes to the same stature */
+/* three meshes, one viewer: Tripo 3.1 by default; each lazy-loads on first selection */
+const HEIGHT = 1.9;                     /* normalise all meshes to the same stature */
 const MODELS = {
-  tripo: { url:'king2-tripo.glb', swapLabel:'view previous mesh' },
-  yvo:   { url:'king2.glb',       swapLabel:'view tripo mesh'    }
+  tripo:  { url:'king2-tripo.glb',
+            caption:'Tripo 3.1 — smart low poly with the rebaked face texture, 19,622 tris' },
+  hybrid: { url:'king2-hybrid.glb',
+            caption:'Tripo head on the animated game body — the grafting experiment' },
+  yvo:    { url:'king2.glb',
+            caption:'Scenario YVO3D — the previous mesh, 100k tris' }
 };
 const loader = new GLTFLoader();
-const toggleEl = document.getElementById('mesh-toggle');
+const switchOpts = document.querySelectorAll('#mesh-switch .mesh-opt');
+const captionEl = document.getElementById('viewer-caption');
 let current = null, showing = 'tripo', loading = false;
 
 function prepare(model){
@@ -299,25 +315,31 @@ function show(key){
     scene.add(model);
     showing = key;
     loading = false;
-    toggleEl.textContent = MODELS[key].swapLabel;
+    captionEl.textContent = MODELS[key].caption;
+    switchOpts.forEach((o) => o.classList.toggle('active', o.dataset.key === key));
     controls.target.set(0, HEIGHT * 0.55, 0);
     controls.update();
-    if (key === 'tripo') window.__meshLoaded = true;   /* verification hook */
-    window.__viewer = { camera, controls, renderer };  /* verification hook */
+    if (key === 'tripo') window.__meshLoaded = true;             /* verification hook */
+    window.__viewer = { camera, controls, renderer, show, showing:key }; /* verification hook */
   };
   if (MODELS[key].model) return done(MODELS[key].model);
   loading = true;
   loader.load(MODELS[key].url, (gltf) => {
     MODELS[key].model = prepare(gltf.scene);
     done(MODELS[key].model);
+  }, undefined, (err) => {
+    loading = false;
+    console.error('mesh load failed: ' + MODELS[key].url, err);
   });
 }
 show('tripo');
 
-function swap(){ if(!loading) show(showing === 'tripo' ? 'yvo' : 'tripo'); }
-toggleEl.addEventListener('click', swap);
-toggleEl.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); swap(); }
+switchOpts.forEach((opt) => {
+  const pick = () => { if(!loading && showing !== opt.dataset.key) show(opt.dataset.key); };
+  opt.addEventListener('click', pick);
+  opt.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pick(); }
+  });
 });
 
 function resize(){
