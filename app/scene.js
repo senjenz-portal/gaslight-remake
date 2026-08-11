@@ -19,6 +19,10 @@
  */
 import * as THREE from 'three';
 import { mulberry32, damp, ease } from './clock.js';
+/* ROUND-8: the cast is built HERE now, not fetched. See app/figures.js — three
+ * rigged, flat-shaded, vertex-coloured figures at ~1.8k triangles each in place
+ * of four 100k-tri painterly GLBs that could not move. */
+import { createFigure } from './figures.js';
 
 /**
  * ROUND-1 [V1] palette lift. These hexes are ALBEDOS, and three converts
@@ -189,74 +193,59 @@ function makeRock(seed = 1337) {
 }
 
 /* ------------------------------------------------------------------ *
- * A faceted Victorian figure, single accent colour. Chunky low poly.
- * ------------------------------------------------------------------ */
-function makeFigure(accent, { tall = 1.78, coat = 0x1b2338 } = {}) {
-  const g = new THREE.Group();
-  const s = tall / 1.78;
-  const legL = box(0.19 * s, 0.82 * s, 0.30 * s, coat);
-  legL.position.set(-0.12 * s, 0.41 * s, 0);
-  const legR = box(0.19 * s, 0.82 * s, 0.30 * s, coat);
-  legR.position.set(0.12 * s, 0.41 * s, 0);
-  g.add(legL, legR);
-  const torso = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.30 * s, 0.24 * s, 0.66 * s, 6, 1), FLAT(accent));
-  torso.position.y = 1.14 * s; g.add(torso);
-  const shoulders = box(0.62 * s, 0.16 * s, 0.34 * s, accent);
-  shoulders.position.y = 1.46 * s; g.add(shoulders);
-  const head = new THREE.Mesh(new THREE.IcosahedronGeometry(0.155 * s, 0), FLAT(0xd8c3a8));
-  head.position.y = 1.66 * s; g.add(head);
-  const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.10 * s, 0.13 * s, 0.10 * s, 6),
-    FLAT(PALETTE.cream));
-  collar.position.y = 1.545 * s; g.add(collar);
-
-  // one arm is rigged: the note is handed over and held to the light with it
-  const armPivot = new THREE.Group();
-  armPivot.position.set(0.30 * s, 1.44 * s, 0);
-  const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.075 * s, 0.062 * s, 0.60 * s, 5),
-    FLAT(accent));
-  arm.position.y = -0.30 * s;
-  armPivot.add(arm);
-  const hand = new THREE.Mesh(new THREE.IcosahedronGeometry(0.085 * s, 0), FLAT(0xd8c3a8));
-  hand.position.y = -0.62 * s;
-  armPivot.add(hand);
-  g.add(armPivot);
-
-  const armLPivot = new THREE.Group();
-  armLPivot.position.set(-0.30 * s, 1.44 * s, 0);
-  const armL = new THREE.Mesh(new THREE.CylinderGeometry(0.075 * s, 0.062 * s, 0.60 * s, 5),
-    FLAT(accent));
-  armL.position.y = -0.30 * s;
-  armLPivot.add(armL);
-  g.add(armLPivot);
-
-  g.userData.parts = { torso, head, armPivot, armLPivot, hand, legL, legR };
-  g.userData.placeholder = true;
-  g.traverse(o => { o.userData.placeholder = true; });
-  return g;
-}
-
-/* ------------------------------------------------------------------ *
- * A mover: the two-phase gait + smooth turn every figure walks with.
- * Figures never teleport — a walk is a path, a duration and a heading.
+ * A mover: the path, the duration and the heading. ROUND-8 took the GAIT out
+ * of here — a mover no longer bobs or rolls its slot, because the figure it
+ * carries has hips and knees now and the bob falls out of the stance leg's
+ * own reach (figures.js). What is left is what a mover always was: where the
+ * man is going, how fast he is getting there, and which way he is facing —
+ * plus the idle breath/sway, which is a SLOT-level effect on purpose, so a
+ * still figure's screen box drifts whatever is inside it ([R4-2]).
+ *
+ * `speed` is a finite difference on a FIXED_DT clock, so it is deterministic,
+ * and it is the one number the figure's cadence is derived from.
  * ------------------------------------------------------------------ */
 function makeMover(slot, home, yaw0 = 0, life = {}) {
   return {
-    slot,
-    pos: home.clone(), from: home.clone(), to: home.clone(),
-    t: 0, dur: 0, yaw: yaw0, yawWant: yaw0, phase: 0, walking: false,
-    bob: 0.055, roll: 0.045,
-    // [R4-2] idle life, at SLOT level so it survives the GLB swap. Rates and
-    // phases differ per figure so three still figures never breathe in unison.
+    slot, fig: null,
+    pos: home.clone(), from: home.clone(), to: home.clone(), prev: home.clone(),
+    t: 0, dur: 0, ramp: 0, yaw: yaw0, yawWant: yaw0, walking: false, speed: 0,
     breathW: life.breathW ?? 1.15, breathPhase: life.breathPhase ?? 0,
     breath: life.breath ?? 0.0035,     // <= 0.5% of stature (a chest rise)
     sway: life.sway ?? 0.008,          // <= 0.01 rad (weight shifting)
-    gaitY: 0, gaitR: 0, lifeY: 0, lifeR: 0,
+    lifeY: 0, lifeR: 0,
   };
 }
 
-function walkTo(m, to, dur, { face = true } = {}) {
+/* ROUND-8b [8b-2] THE CRUISE PROFILE, AND WHY A WALK NEEDED ONE.
+ * Every mover in this beat has always been an `ease.inOut` — quadratic in,
+ * quadratic out — whose peak speed is 2 x the average. That is a fine curve for
+ * a camera and a bad one for a man: the King's 1.5 m step to the threshold ran
+ * 0.72 s, so it PEAKED at 4.17 m/s, and the gait (which derives cadence from
+ * speed, correctly) answered with 4.8 steps/s. A sprinting monarch, exactly as
+ * the review says, produced by a curve and not by a number.
+ *   `ramp` replaces it with a trapezoid: accelerate over the first `r` of the
+ * duration on a smoothstep, CRUISE, decelerate over the last `r` on the mirror
+ * of it. Peak is then 1/(1-r) x the average instead of 2x — at r = 0.26, 1.35x —
+ * so the same distance in the same time is walked at 68% of the old top speed,
+ * and the speed is CONSTANT through the middle, which is what lets the gait hold
+ * one cadence and one stride instead of chirping up and back down. The ramp is
+ * a smoothstep, so the velocity is still continuous at both ends and the gait's
+ * own ease-in/out envelope has something sane to ride.
+ *   It is opt-in per walk: with no `ramp` the curve is the ease.inOut it always
+ * was, byte for byte, and Holmes' three walks are untouched.
+ */
+function cruise(k, r) {
+  if (!(r > 0)) return ease.inOut(k);
+  const S = (u) => u * u * u - u * u * u * u / 2;    // integral of smoothstep, S(1)=0.5
+  const I = k <= r ? r * S(k / r)
+          : k >= 1 - r ? 0.5 * r + (1 - 2 * r) + r * (0.5 - S((1 - k) / r))
+          : 0.5 * r + (k - r);
+  return I / (1 - r);
+}
+
+function walkTo(m, to, dur, { face = true, ramp = 0 } = {}) {
   m.from.copy(m.pos); m.to.copy(to); m.t = 0; m.dur = Math.max(0.05, dur);
+  m.ramp = ramp;
   if (face) {
     const dx = to.x - m.pos.x, dz = to.z - m.pos.z;
     if (dx * dx + dz * dz > 1e-4) m.yawWant = Math.atan2(dx, dz);
@@ -272,26 +261,30 @@ function facePoint(m, x, z) {
 }
 
 /**
- * One mover step. Everything it writes goes on the SLOT transform, which is
- * what makes it survive `slot.replace()` — round-3 [R4-2] found the figures
- * dead after the GLB swap because the only idle animation left was on the
- * placeholder BLOCKS, and those get dropped when real art lands.
+ * One mover step: advance the path, damp the turn, measure the speed, write the
+ * slot, and hand the figure the four things its gait needs (speed, walking,
+ * where it stands and which way it faces — the last two because a foot-locked
+ * stance target is a WORLD point and has to be pulled back into figure space
+ * every frame; see figures.js).
  *
- *   walking -> a two-phase gait: vertical bob at 2x the stride, body roll at
- *              1x. This is what keeps the King's entrance a walk and not a
- *              glide across the floorboards.
- *   idle    -> a breath (<= 0.5% on Y, about the feet, so it reads as a chest
- *              rising) and a slow weight-shifting sway (<= 0.01 rad).
+ * The bob and the roll used to be written here, as `|sin(phase)| * 0.055` on
+ * the slot with a phase that ran at a constant 5.6 rad/s whatever the man's
+ * speed. That is what "he glides" looked like from the inside: a fixed-rate
+ * wobble on a translating box. Both now come out of the pose — the pelvis drops
+ * as far as the stance leg needs to reach a foot that is nailed to the floor —
+ * and `gait()` reports them off the posed skeleton instead of off the numbers
+ * that produced them.
  *
- * `t` is absolute sim seconds, so idle life is a pure function of the beat
- * clock: two laps are the same pixels.
+ * The idle breath and sway stay HERE, at slot level, because they are the
+ * effect [R4-2] gates: three still figures whose screen boxes must drift.
+ * `t` is absolute sim seconds, so all of it is a pure function of the clock.
  */
 function stepMover(m, dt, t) {
+  m.prev.copy(m.pos);
   if (m.t < m.dur) {
     m.t = Math.min(m.dur, m.t + dt);
-    m.pos.lerpVectors(m.from, m.to, ease.inOut(m.t / m.dur));
+    m.pos.lerpVectors(m.from, m.to, cruise(m.t / m.dur, m.ramp || 0));
     m.walking = m.t < m.dur;
-    m.phase += dt * 5.6;                       // stride rate
   } else if (m.walking) {
     m.walking = false;
   }
@@ -299,31 +292,23 @@ function stepMover(m, dt, t) {
   let d = m.yawWant - m.yaw;
   d = Math.atan2(Math.sin(d), Math.cos(d));
   m.yaw += d * (1 - Math.exp(-7.0 * dt));
+  m.speed = dt > 0 ? m.pos.distanceTo(m.prev) / dt : 0;
   const w = m.walking ? 1 : 0;
-  m.gaitY = w * Math.abs(Math.sin(m.phase)) * m.bob;
-  m.gaitR = w * Math.sin(m.phase) * m.roll;
   const ph = t * m.breathW + m.breathPhase;
   m.lifeY = (1 - w) * m.breath * (0.5 + 0.5 * Math.sin(ph));
   m.lifeR = (1 - w) * m.sway * Math.sin(ph * 0.62 + 1.1);
-  m.slot.position.set(m.pos.x, m.pos.y + m.gaitY, m.pos.z);
-  m.slot.rotation.set(0, m.yaw, m.gaitR + m.lifeR);
+  m.slot.position.set(m.pos.x, m.pos.y, m.pos.z);
+  m.slot.rotation.set(0, m.yaw, m.lifeR);
   m.slot.scale.y = 1 + m.lifeY;
+  if (m.fig) {
+    const dr = m.fig.drive;
+    dr.speed = m.speed;
+    dr.walking = m.walking;
+    dr.pos.set(m.pos.x, m.pos.y, m.pos.z);
+    dr.yaw = m.yaw;
+    m.fig.step(dt, t);
+  }
   return w;
-}
-
-/**
- * Legs swing with the stride — placeholder blocks ONLY. Once the slot holds a
- * GLB the placeholder group is detached, so this would be animating an orphan:
- * the caller checks `slot.userData.swapped` and skips it. Kept because a build
- * whose art has not landed still has to walk.
- */
-function stepLegs(fig, m) {
-  const p = fig && fig.userData && fig.userData.parts;
-  if (!p || !p.legL) return;
-  const sw = m.walking ? Math.sin(m.phase) * 0.30 : 0;
-  p.legL.rotation.x = sw;
-  p.legR.rotation.x = -sw;
-  if (p.armLPivot) p.armLPivot.rotation.x = -sw * 0.6;
 }
 
 /* ------------------------------------------------------------------ *
@@ -688,9 +673,42 @@ export function buildScene() {
   //     walk is gone and the objection got worse, not better: the man now HOLDS the
   //     sill through i-11, i-36 and the whole door gate, so the frames it would put
   //     a lamp level with his shoulders on are gated settled frames at 0 px.
-  const HALL_GAIN = 0.44;
+  /* ROUND-8c [8c-3 fallout] AND THE LAMP IS NOW ABOVE HIS CROWN, because 1.80 was
+   * INSIDE HIM. [8c-3]'s longer royal step changes his pelvis bob, so on the fast
+   * walk-in (`standScan` at 0.5 s a beat) his shoulder passed this lamp at a new
+   * phase and clipped: 9 px at luma 251.0 on `seg:chest`, two frames of 109, both
+   * ratios. Blame was isolated by hiding one contributor at a time ON THAT FRAME,
+   * the way [R6-2] did: with every additive card hidden the 9 px are still there
+   * at 251.0, and with the four point lights off the hottest pixel in the inset is
+   * 246.8 and none clip — then one lamp at a time, and it is this one, alone.
+   *   The reason is a SINGULARITY, not a value. His exit line runs to KING_SILL at
+   * z 1.15, this lamp sat at world (-2.79, 2.02, 1.15) — the same z, at the
+   * shoulder height of a 2.24 m man — and the measured distance from his chest
+   * facet to the lamp on the clipping frame was 0.04 m. Three's punctual falloff
+   * is `1 / max(d^decay, 0.01)`, so at 4 cm even this deliberately flat 0.7 decay
+   * is a 9.2x multiplier: no colour can survive standing inside a lamp (measured —
+   * taking the tunic down 5% in linear moved the pixel 251.0 -> 250.9, because R is
+   * already saturated).
+   *   0.62 m up puts it at world 2.64, clear of the 2.46 m crown of the tallest man
+   * who walks under it, which is also where a hall bracket belongs in a 3.3 m
+   * opening. The closest he now comes is 0.67 m and the multiplier is 1.33 instead
+   * of 9.2. `HALL_GAIN` goes 0.44 -> 0.54 to hold the landing FLOOR at the value
+   * the doorway read depends on: the lamp-to-floor distance goes 1.80 -> 2.42 m,
+   * which on a 0.7 decay is 0.813 of the irradiance, and 1/0.813 is 1.23.
+   *   Measured after: `standScan` is 0 clipped px on all 109 frames at BOTH walk-in
+   * cadences and both ratios (hottest pixel in the inset 246.8), and [V1] got
+   * BETTER at all three gated beats rather than worse — i-10-comes2 nearBlack
+   * 0.3436 -> 0.3136 landscape and 0.3728 -> 0.3481 portrait, i-11-hadnote 0.2005
+   * -> 0.1951 / 0.2495 -> 0.2330, i-37-door 0.2529 -> 0.2351 / 0.2958 -> 0.2805,
+   * against the 0.40 limit. A lamp that stops being swallowed by a man lights more
+   * of the room.
+   *   (The round-5 note above rejected a 0.25 m lift because it put the lamp level
+   * with a standing man's shoulders and hurt a walk-out that no longer exists.
+   * This lift goes PAST the shoulders rather than up to them, which is the half of
+   * that objection that mattered.) */
+  const HALL_GAIN = 0.54;
   const hallLight = new THREE.PointLight(0xffab5e, 4 * HALL_GAIN, 7.5, 0.7);
-  hallLight.position.set(0, 1.80, 0.68);
+  hallLight.position.set(0, 2.42, 0.68);
   hallLight.userData.anchor = 'hallLight';
   slots.door.add(hallLight);
   anchor(slots.door, 'door', [0.1, 1.25, 0.9]);
@@ -754,7 +772,15 @@ export function buildScene() {
   // downstage floor and up beside the hearth (1.0 m from the fireplace's
   // near face), turned into the room so the man in it is seen three-quarter
   // front rather than over his own shoulder.
-  const WATSON_YAW = -0.45;
+  /* ROUND-8: this was -0.45, a number tuned to WHICH WAY watson.glb's mesh was
+   * baked. A built figure faces its own +Z, and at -0.45 that put his facing 75
+   * degrees off the locked camera azimuth: the establishing framing looked down
+   * on the CROWN OF HIS HEAD (measured: 575 head pixels, 25% of them near-black
+   * hair, his eye band behind his own cap) and his cameo card had nothing on
+   * stage to bind to. At +0.24 his facing is 38 degrees off the lens — the
+   * three-quarter front this mark was always described as. The chair turns with
+   * him, because the man and the chair he is wedged in have to agree. */
+  const WATSON_YAW = 0.24;
   slots.armchair = makeSlot('armchair', root, [3.05, 0.22, -1.53], WATSON_YAW);
   const chairSeat = box(0.86, 0.34, 0.86, 0x4a2027);
   chairSeat.position.y = 0.40; slots.armchair.add(chairSeat);
@@ -801,10 +827,17 @@ export function buildScene() {
   // the sheet clear of his jaw and side-on to the window: it reads as a letter
   // held out to the light, which is what he is doing.
   const HOLMES_DESK_LOOK = [-1.56, -0.04];
+  /* ROUND-8. The three cast slots hold PROCEDURAL RIGGED FIGURES. The slot
+   * contract is unchanged — same slot names, same marks, same anchors, same
+   * yaws — so every camera, framing gate and click target in this file still
+   * addresses them the way it always did. What changed is what is inside: 16
+   * joints instead of one 100k-tri mesh, and the height each one carries is
+   * fact I.4's carrier (1.83 / 1.74 / 2.24 m).
+   *   Seeds are fixed, so the facet jitter is the same figure every load. */
   slots.holmes = makeSlot('holmes', root, HOLMES_HOME.toArray(), -0.55);
-  const holmes = makeFigure(PALETTE.holmes, { tall: 1.86 });
-  slots.holmes.add(holmes);
-  anchor(slots.holmes, 'holmes', [0, 1.62, 0]);
+  const holmes = createFigure({ seed: 0x48014, build: 'holmes' });
+  slots.holmes.add(holmes.root);
+  anchor(slots.holmes, 'holmes', [0, holmes.dims.headMidY, 0]);
 
   // ROUND-1 [c2] / ROUND-2 [R3-1]: round 1 found Watson sliced by the inset
   // edge; round 2 closed the slice by walking him off stage — which cost the
@@ -822,123 +855,119 @@ export function buildScene() {
   // what keeps the no-slice gate green at all 38 units with him on stage.
   const WATSON_HOME = new THREE.Vector3(3.05, 0.22, -1.53);
   slots.watson = makeSlot('watson', root, WATSON_HOME.toArray(), WATSON_YAW);
-  const watson = makeFigure(PALETTE.watson, { tall: 1.74 });
-  slots.watson.add(watson);
-  anchor(slots.watson, 'watson', [0, 1.55, 0]);
+  /* [R3-1] follow-on, ROUND-8: Watson SITS, and he sits on his own joints. The
+   * load-time two-joint vertex bend `seatFigure` existed only because
+   * watson.glb had no rig to pose; the seated pose is four joint angles now,
+   * it breathes, and his hip lands on the same cushion height the deformer
+   * reported (0.572 m above his feet). */
+  const watson = createFigure({ seed: 0x2b117, build: 'watson' });
+  slots.watson.add(watson.root);
+  anchor(slots.watson, 'watson', [0, watson.dims.headMidY, 0]);
 
   // the colossus comes through the door on the left wall and stops centre
   const KING_OUT   = new THREE.Vector3(-4.75, 0.22, 1.15);
+  /* ROUND-8b [8b-2] THE LANDING MARK. `KING_OUT` is the PARKING mark: it is
+   * 0.11 m behind the hall's own back wall, which is what makes it an off-stage
+   * position rather than a place a man can stand. Starting his entrance there
+   * meant walking 1.5 m in the 0.72 s between the leaf giving and the frame the
+   * review settles on — 4.17 m/s, the finding. He waits on the landing now,
+   * 0.80 m out, which is a step and a half at a king's pace; the closed leaf
+   * covers the whole opening (measured on round 8's own i-11 act frame), so
+   * nothing of him is on the plate until the door gives. */
+  const KING_LAND  = new THREE.Vector3(-4.05, 0.22, 1.15);
   const KING_SILL  = new THREE.Vector3(-3.25, 0.22, 1.15);
   const KING_STAGE = new THREE.Vector3(0.05, 0.22, 0.45);
   slots.client = makeSlot('client', root, KING_OUT.toArray(), Math.PI / 2);
-  const client = makeFigure(PALETTE.client, { tall: 2.20, coat: 0x241a3e });
-  slots.client.add(client);
+  /* the colossus: 2.24 m, deep blue floor cloak open at the front over a
+   * flame-orange lining, cream tunic, black boots, heavy bearded jaw — the
+   * cameo's man, in the diorama's own facets. The cloak is part of the figure
+   * now (it hangs off his chest and swings with his torso) rather than a
+   * separate cone hung on the slot. */
+  const client = createFigure({ seed: 0x3c0d5, build: 'king' });
+  slots.client.add(client.root);
   slots.client.visible = false;
-  anchor(slots.client, 'client', [0, 1.92, 0]);
-  // the cloak: the King's royal read at diorama distance
-  const cloak = new THREE.Mesh(new THREE.ConeGeometry(0.62, 1.55, 7, 1, true),
-    new THREE.MeshLambertMaterial({ color: PALETTE.client, flatShading: true,
-      side: THREE.DoubleSide }));
-  cloak.position.set(0, 1.02, -0.06);
-  cloak.userData.anchor = 'cloak';
-  slots.client.add(cloak);
+  anchor(slots.client, 'client', [0, client.dims.headMidY, 0]);
 
-  // the MASK: a click target, and the thing that gets hurled to the floor.
-  // Anchor-flagged so it survives a king.glb swap.
-  const maskRig = new THREE.Group();
-  maskRig.position.set(0, 2.065, 0.318);
-  maskRig.userData.anchor = 'mask';
-  // SCALE FIX (integration): the part sizes below were authored against the
-  // placeholder client. king.glb's actual skull measures ~0.25 m across at
-  // the 2.20 m swap, so the 0.33 m face plate + 0.48 m tie read as a visor
-  // with a rod through it. 0.62 puts the vizard at ~0.20 m — a domino that
-  // sits ON the face instead of in front of it. Uniform, so the tear-off
-  // animation, the raycast hits and the anchor contract are unchanged.
-  maskRig.scale.setScalar(0.62);
-  slots.client.add(maskRig);
-  // ROUND-1 [e2]: the old prop was a 0.33 plate + a brass brow band + a
-  // 0.48 straight tie, which at the gate camera read edge-on as a plank with
-  // a rod through it. A DOMINO is two lobes joined over the bridge of the
-  // nose, 16 mm thin, with the eye holes reading as voids and the strap
-  // raked back past the temples instead of crossing the face.
-  const maskFace = box(0.148, 0.104, 0.016, 0x15182c);
-  maskFace.name = 'maskFace';
-  maskFace.position.set(-0.083, 0, 0.010);
-  const maskFaceR = box(0.148, 0.104, 0.016, 0x15182c);
-  maskFaceR.position.set(0.083, 0, 0.010);
-  const maskBridge = box(0.070, 0.048, 0.016, 0x15182c);
-  maskBridge.position.set(0, 0.026, 0.010);
-  const maskBrow = box(0.320, 0.017, 0.015, 0x1e2136);
-  maskBrow.position.set(0, 0.052, 0.011);
-  const maskEyeL = box(0.072, 0.036, 0.012, 0x07080e);
-  maskEyeL.position.set(-0.083, 0.002, 0.016);
-  const maskEyeR = maskEyeL.clone(); maskEyeR.position.x = 0.083;
-  const strapL = box(0.018, 0.011, 0.150, 0x15182c);
-  strapL.position.set(-0.155, 0.030, -0.070); strapL.rotation.y = 0.36;
-  const strapR = strapL.clone();
-  strapR.position.x = 0.155; strapR.rotation.y = -0.36;
-  maskRig.add(maskFace, maskFaceR, maskBridge, maskBrow, maskEyeL, maskEyeR, strapL, strapR);
-  /**
-   * ROUND-3 [R4-5], second half. Face up and scaled for the read, the prop was
-   * STILL a black smear on the rug: worn over a lit face the vizard has to be
-   * the darkest thing in the frame, and that same near-black on a dark red rug
-   * two metres downstage has no value step left to read with. So the discarded
-   * mask is REPAINTED as it falls — the shell up to a satin navy that takes the
-   * key light, the brow trim brighter still, the eye voids left black so they
-   * read as holes. A stage convention, deliberately: one prop, two jobs, and it
-   * is only ever seen doing one of them at a time.
+  /* ---- the MASK ---------------------------------------------------- *
+   * ROUND-8. THE UNMASK IS A NODE, NOT A MODEL SWAP.
+   *
+   * Rounds 1-7 carried the vizard twice: a click-target PROP hung on the slot,
+   * and the vizard BAKED into king.glb's mesh — which is why fact I.6 needed a
+   * second 100k-tri model (king-unmasked.glb) and a parent-pointer swap under
+   * cover of the mask-drop to keep him from saying "I am the King" with his
+   * face still covered. The procedural King wears ONE mask: a thin black domino
+   * with a raked strap, parented to his HEAD joint, so it rides his face when he
+   * turns and comes off when the gate resolves.
+   *   `kingUnmask` reparents it from the head to the slot (world transform
+   * preserved) and tumbles it to the same MASK_FLOOR mark round 3 solved, with
+   * the same two-job repaint ([R4-5]). Nothing is swapped, nothing is baked, and
+   * "masked" is now a question anyone can answer off the scene graph: is the node
+   * attached to his head and visible?
    */
-  const maskShell = [maskFace, maskFaceR, maskBridge];
-  const maskTrim = [maskBrow, strapL, strapR];            // strapR shares strapL's material
-  const MASK_SHELL_WORN = new THREE.Color(0x15182c), MASK_SHELL_DROP = new THREE.Color(0x3c4270);
-  const MASK_TRIM_WORN = new THREE.Color(0x1e2136), MASK_TRIM_DROP = new THREE.Color(0x5a63a0);
-  const maskPaint = (k) => {
-    for (const m of maskShell) m.material.color.copy(MASK_SHELL_WORN).lerp(MASK_SHELL_DROP, k);
-    for (const m of maskTrim) m.material.color.copy(MASK_TRIM_WORN).lerp(MASK_TRIM_DROP, k);
-  };
-
-  // the face under the mask (hidden until the mask is torn off)
-  const faceRig = new THREE.Group();
-  faceRig.position.set(0, 2.06, 0.322);
-  faceRig.userData.anchor = 'face';
-  faceRig.visible = false;
-  slots.client.add(faceRig);
-  // (kept, unused: a stand-in face for a future mask-less king.glb)
-  const faceSkin = box(0.300, 0.104, 0.010, 0xb2794f);
-  faceRig.add(faceSkin);
-  targets.mask = { obj: maskRig, hits: [maskFace, maskFaceR, maskBridge, maskEyeL, maskEyeR],
-                   at: new THREE.Vector3(0, -0.02, 0.03) };
+  const maskNode = client.mask.node;
+  maskNode.userData.anchor = 'mask';
+  const maskPaint = (k) => client.mask.paint(k);
+  targets.mask = { obj: maskNode, hits: client.mask.hits,
+                   at: new THREE.Vector3(0, 0, 0.02) };
 
   // where the mask lands when it is torn off.
   // ROUND-3 [R4-5]: it used to land FACE DOWN (rotation.x +1.45 turns the lobes'
   // +Z normal to point at the floorboards), which at any wide framing is a
   // 0.20 m black smear on a dark red rug — a scribble, not a prop. It lies face
   // UP now, half a pace off his boot, and the discarded prop is scaled for the
-  // read it has to carry at diorama distance (0.62 -> 0.95, i.e. ~0.30 m): worn
+  // read it has to carry at diorama distance (1.0 -> 1.55, i.e. ~0.34 m): worn
   // on the face it must be a domino, dropped on the rug it must be legible.
-  const MASK_HOME = maskRig.position.clone();
+  // MASK_FLOOR is in CLIENT-SLOT space, which is where the node is reparented
+  // to when it comes off, so the mark is unchanged from round 3.
   const MASK_FLOOR = new THREE.Vector3(0.78, 0.045, 0.56);
   const MASK_LIE = { x: -1.42, y: 0.72, z: 0.18 };
-  const MASK_WORN_S = 0.62, MASK_DROP_S = 0.95;
+  const MASK_WORN_S = 1.0, MASK_DROP_S = 1.55;
+  const _mFrom = new THREE.Vector3();
+  /** Take the vizard off his face and hand it to the slot, world pose intact. */
+  function maskDetach() {
+    if (maskNode.parent === slots.client) return;
+    maskNode.updateWorldMatrix(true, false);
+    const mw = maskNode.matrixWorld.clone();
+    slots.client.updateWorldMatrix(true, false);
+    mw.premultiply(new THREE.Matrix4().copy(slots.client.matrixWorld).invert());
+    slots.client.add(maskNode);
+    mw.decompose(maskNode.position, maskNode.quaternion, maskNode.scale);
+    maskNode.scale.setScalar(MASK_WORN_S);
+    _mFrom.copy(maskNode.position);
+  }
+  /** Put it back on him (harness scrubbing only). */
+  function maskAttach() {
+    client.mask.node.visible = true;
+    if (maskNode.parent !== client.joints.head) client.joints.head.add(maskNode);
+    maskNode.position.copy(client.mask.rest.pos);
+    maskNode.quaternion.copy(client.mask.rest.quat);
+    maskNode.scale.setScalar(MASK_WORN_S);
+    maskPaint(0);
+  }
 
   // ---- the note (the hold verb's object) ----------------------------
   // ROUND-1 [E1b]: the note was an untextured rectangle floating unsupported
-  // mid-room while the cue read "hold the note to the light". It is now a
-  // CHILD OF THE HOLMES SLOT (ASSETS.md TODO #5 resolution b), sitting on the
-  // letter holmes.glb bakes into his raised hand — one letter, in a hand, that
-  // walks and turns with him. `noteLift` raises hand + note toward the window
-  // lamp in proportion to the reader's hold.
-  const NOTE_LOW  = new THREE.Vector3(0.320, 1.105, 0.030);   // at his side
-  const NOTE_HAND = new THREE.Vector3(0.200, 1.462, 0.212);   // over the baked letter
-  const NOTE_LAMP = new THREE.Vector3(0.150, 1.688, 0.268);   // held up to the light
+  // mid-room while the cue read "hold the note to the light". It is a real sheet
+  // in a real hand now — one letter, in a hand, that walks and turns with him,
+  // and `noteLift` raises the ARM toward the window lamp in proportion to the
+  // reader's hold.
   // The sheet's yaw is solved every step so it faces the locked diorama
   // azimuth: a letter shown to the reader, never edge-on. Must match
   // main.js ISO.azim (ASSETS.md §4: the camera azimuth is LOCKED).
   const READ_AZIM = 0.86;
-  slots.note = makeSlot('note', slots.holmes, NOTE_HAND.toArray(), 0);
-  // it is a child of the HOLMES slot now, so it has to be anchor-flagged or
-  // holmes.glb's swap would sweep the letter out of the scene graph with the
-  // placeholder blocks it replaces
+  /* ROUND-8. THE NOTE RIDES HIS HAND. Rounds 1-7 made the note a child of the
+   * HOLMES SLOT and drove it between three authored marks (NOTE_LOW ->
+   * NOTE_HAND -> NOTE_LAMP), because holmes.glb had no hand to hang it off — the
+   * paper and the arm were two animations that had to agree. It is parented to
+   * the figure's right-hand CARRY SOCKET now: the arm carries the letter, the
+   * toss is an arm, and the lift to the lamp is an arm. The three marks are
+   * gone with the hack.
+   *   Its ORIENTATION is still solved in world terms, because the one thing the
+   * paper must never do is go edge-on to a locked camera: every step the sheet
+   * is given a world quaternion (the locked azimuth plus the read's tilt) and
+   * the local rotation needed to hold it inside the hand's frame is computed
+   * from the socket's own matrix. Position from the hand, facing from the lens. */
+  slots.note = makeSlot('note', holmes.socket, [0, 0, 0], 0);
   slots.note.userData.anchor = 'noteRig';
   // ROUND-2 [R3-5]: the letter was an infinitely thin, DOUBLE-SIDED plane —
   // a decal, not an object. Seen from the reader's side its back face was
@@ -947,16 +976,15 @@ export function buildScene() {
   // with a lit edge, single-sided shading, depth-writing, held in a visible
   // pinch.
   const SHEET_W = 0.340, SHEET_H = 0.245, SHEET_TILT = -0.35;
-  // The whole letter rides a rig pushed 0.155 m along the note slot's own +Z,
-  // which the yaw solver keeps pointed at the locked camera azimuth (measured
-  // dot with the view direction: 0.97). That is what puts the paper IN FRONT
-  // of the letter holmes.glb bakes into his fist — raycast at the sheet's
-  // centre used to return the GLB at d 5.29 and the paper at d 5.38, i.e. his
-  // knuckles and the baked card were 90 mm PROUD of the sheet and read
-  // straight through it. Now the sheet occludes both, and the hand that holds
-  // it is drawn where the frame can see it.
+  /* The letter sits just clear of the mitten that holds it: the socket is at the
+   * grip, and the sheet's centre is half a sheet-width up and 30 mm proud of the
+   * knuckles, so the paper occludes the fist instead of intersecting it. Rounds
+   * 1-7 needed 0.155 m of push here to clear a LETTER BAKED INTO THE GLB's fist
+   * (measured then: knuckles and baked card 90 mm proud of the sheet, reading
+   * straight through it). There is no baked card any more — one letter, in a
+   * hand, and the hand is drawn where the frame can see it. */
   const noteRig = new THREE.Group();
-  noteRig.position.set(0.030, 0.004, 0.155);
+  noteRig.position.set(0.020, 0.118, 0.036);
   slots.note.add(noteRig);
   const sheetMat = new THREE.MeshLambertMaterial({
     color: PALETTE.paper, flatShading: true, transparent: false, opacity: 1,
@@ -965,35 +993,27 @@ export function buildScene() {
   const sheet = new THREE.Mesh(
     new THREE.BoxGeometry(SHEET_W, SHEET_H, 0.0016), sheetMat);
   sheet.rotation.x = SHEET_TILT;
+  // named, because this sheet hangs off HOLMES' carry socket and so turns up in
+  // lap.mjs's [R8-3] census of what is parented under a figure but is not the figure
+  sheet.name = 'noteSheet';
   noteRig.add(sheet);
-  // ...and the GRIP: a thumb laid ACROSS the front of the paper and three
-  // finger backs coming round its right edge, so the sheet is pinched between
-  // them with ~14 mm of overlap. The note slot's local +X is screen-right to
-  // within a rounding error (it resolves to the same (0.6525, 0, -0.7578) the
-  // framing solver uses), so "the reader's side of the sheet" is addressable.
-  // (his own hand and forearm stay visible past the sheet's right edge, so
-  // only the thumb has to be drawn: it comes over the FRONT of the paper and
-  // overlaps its edge by 18 mm. Emissive-lifted, because a 30 mm prop lit by
-  // ambient alone renders as a grey block instead of a thumb.)
-  const skin = new THREE.MeshLambertMaterial({ color: 0xd9b48c, flatShading: true,
-    emissive: 0x54381f, emissiveIntensity: 0.95 });
-  const grip = new THREE.Group();
-  grip.position.set(0.166, -0.046, 0);
-  grip.rotation.set(SHEET_TILT, 0, -0.34);
-  noteRig.add(grip);
-  const thumb = new THREE.Mesh(new THREE.BoxGeometry(0.030, 0.088, 0.022), skin);
-  thumb.position.set(0, 0.012, 0.014); grip.add(thumb);
-  const thumbTip = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.026, 0.020), skin);
-  thumbTip.position.set(-0.002, 0.062, 0.013); thumbTip.rotation.z = 0.24; grip.add(thumbTip);
+  /* ROUND-2 [R3-5] drew a THUMB here, laid across the front of the paper, so the
+   * sheet read as pinched rather than stuck to a fist — necessary while the hand
+   * behind it was an unrigged 100k-tri blob whose fingers pointed somewhere else.
+   * The mitten holding it is now posed by the same channel that lifts the paper,
+   * so the pinch is the hand, and a second free-floating thumb 30 mm in front of
+   * the real one is exactly the kind of prop this round exists to delete. */
   const wmarkMat = new THREE.MeshBasicMaterial({ color: 0xfff0c8, transparent: true,
     opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
   const wmark = new THREE.Mesh(new THREE.PlaneGeometry(0.28, 0.20), wmarkMat);
   wmark.position.set(-0.008, 0, 0.004);
   wmark.rotation.x = SHEET_TILT;
+  wmark.name = 'noteWatermark';
   noteRig.add(wmark);
   const noteGlowMat = glowMat(0xffd489, 0, 2.0);
   const noteGlow = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.5), noteGlowMat);
   noteGlow.position.set(0, 0, -0.03);
+  noteGlow.name = 'noteGlow';
   noteGlow.rotation.x = SHEET_TILT;
   noteRig.add(noteGlow);
   anchor(slots.note, 'note', [0, 0, 0]);
@@ -1102,13 +1122,42 @@ export function buildScene() {
   focus.room       = { obj: root,           at: new THREE.Vector3(0.2, 1.5, 0.0),  radius: 15.5, fov: 26 };
   focus.holmes     = { obj: slots.holmes,   at: new THREE.Vector3(0, 1.30, 0),     radius: 11.5, fov: 27 };
   focus.watson     = { obj: slots.watson,   at: new THREE.Vector3(0, 1.40, 0),     radius: 8.2,  fov: 24 };
-  focus.note       = { obj: slots.note,     at: new THREE.Vector3(0, -0.16, 0),    radius: 5.4,  fov: 24 };
+  /* ROUND-8b [8b-4a] REFIT. The note lives on Holmes' carry socket now (round 8
+   * gave him a real hand to hold it in), i.e. at his chest instead of on a table,
+   * and this framing was still fitted to the table: it targeted 0.16 m BELOW the
+   * paper and came in to 5.4, so through i-02..i-06 the top of the plate ran
+   * through Holmes' skull — 44 to 64 px of crown outside the inset, worst at i-05
+   * where the reader HOLDS on the frame for a second and a half. Opened to 6.0
+   * and the target lifted 0.18 m to just above the paper: the crown clears the
+   * top edge by 41 px at the worst unit, Holmes' box is wholly inside at all five
+   * (inset 0.866-0.932 -> 1.000), and the note itself sits on the plate's centre
+   * line instead of 57 px above it, which is a better place for the subject of a
+   * read anyway. It costs 10% of the note's plate size and none of its legibility
+   * (the watermark target still measures at i-06). */
+  focus.note       = { obj: slots.note,     at: new THREE.Vector3(0, 0.02, 0),     radius: 6.0,  fov: 24 };
+  /* ROUND-8c [8c-4] i-06 GETS ITS OWN LENS. It had been borrowing `focus.note`,
+   * which is fitted to the note in Holmes' hand — and at i-06 the note is not the
+   * subject: the WATERMARK PLATE is, and main.js draws that as a screen-space
+   * overlay, so it is the same rectangle whatever this camera does. What the
+   * camera still owns is the strip of diorama around the plate, and there Holmes
+   * measured inset 0.9112 — 9% of his box below the bottom edge, i.e. cropped at
+   * the ankles behind the one plate a reader looks at longest. The plate framing
+   * is untouched (it cannot move); the strip around it now holds a whole man. */
+  focus.wmark      = { obj: slots.note,     at: new THREE.Vector3(0, -0.15, 0),    radius: 7.0,  fov: 24 };
   focus.hearth     = { obj: slots.hearth,   at: new THREE.Vector3(0, 0.7, 0.2),    radius: 7.6,  fov: 24 };
   focus.window     = { obj: slots.window,   at: new THREE.Vector3(0.15, -0.62, 1.35), radius: 9.6, fov: 27 };
   focus.door       = { obj: root,           at: new THREE.Vector3(-1.58, 1.22, 0.84), radius: 10.4, fov: 30 };
   focus.street     = { obj: slots.street,   at: new THREE.Vector3(0.4, 1.15, 0.1), radius: 11.0, fov: 26 };
   focus.desk       = { obj: slots.desk,     at: new THREE.Vector3(0.15, 1.00, 0.35), radius: 7.6, fov: 25 };
-  focus.client     = { obj: slots.client,   at: new THREE.Vector3(0, 1.45, 0),     radius: 9.4,  fov: 25 };
+  /* ROUND-8b [8b-4b] THE GRAZE. At this framing the King's box hung 12 px past
+   * the BOTTOM edge — his boots — at i-17, i-27, i-29, i-31, i-32 and i-33: not a
+   * crop and not a clean frame, which is the one thing a composition may not be.
+   * (The head rework already took the same graze off the two-shot: `two` went
+   * 0.945-0.950 -> 1.000 with no camera change at all, because a 0.158-of-stature
+   * head is 0.08 m shorter and that was the whole of the overhang there.) The
+   * target drops 0.09 m and the radius opens 0.1: his heels come 10 px inside the
+   * plate and his crown stays 200 px clear of the top. */
+  focus.client     = { obj: slots.client,   at: new THREE.Vector3(0, 1.36, 0),     radius: 9.5,  fov: 25 };
   // ROUND-3 [R4-1 BLOCKING] the mask/unmask camera BISECTED Holmes. He stands
   // at the desk from unit 7, and this framing put the plate's left edge through
   // his coat (inset 0.49/0.44) — the round-1 [c2] finding at a new camera.
@@ -1121,9 +1170,22 @@ export function buildScene() {
   // azimuth stays locked): that carries the whole of Holmes off the plate
   // (inset 0.0000 at both ratios, 15 and 16) and leaves the King's masked face
   // and the mask target left-of-centre with the lit window as counterweight.
-  // Radius comes in to 4.2 so the domino still reads as a domino at the gate.
-  focus.clientFace = { obj: slots.client,   at: new THREE.Vector3(0, 1.95, 0.06),  radius: 4.2,  fov: 22,
-                       pan: [0.55, 0] };
+  // The radius comes in so the domino still reads as a domino at the gate.
+  /* ROUND-8b [8b-1] REFIT TO THE NEW SKULL. `at` was 1.95 — set when a head
+   * spanned 0.192 of stature and its joint sat at 1.81 m, i.e. 0.33 of the way
+   * up the head. The head is 0.158 of stature now with its joint at 1.886 m, so
+   * the same 1.95 aimed at his JAW and hung the crown in the top of the plate.
+   * ROUND-8c [8c-8] and this comment is now the numbers that are actually here,
+   * which the round-8b pass left three ways wrong (comment-truth law): it aims
+   * 2.06 in slot space — 19 mm under the eye band at headY + 0.545 of the span,
+   * 2.079 — and comes in to a radius of 2.95, not the 3.55 the text claimed, with
+   * a 0.46 m screen-right pan and not 0.55. Those are the values [8b-1] shipped
+   * and the frames it measured; only the prose was stale. The pan is [R4-1]'s fix
+   * and it is what keeps Holmes wholly off this plate (inset 0.0000, both
+   * ratios); the radius is what makes the face the biggest thing in the frame,
+   * which matters because this is the frame the round is judged by eye at. */
+  focus.clientFace = { obj: slots.client,   at: new THREE.Vector3(0, 2.06, 0.06),  radius: 2.95, fov: 22,
+                       pan: [0.46, 0] };
   focus.two        = { obj: root,           at: new THREE.Vector3(0.25, 1.55, 0.4), radius: 9.0, fov: 25 };
   focus.entrance   = { obj: root,           at: new THREE.Vector3(-1.45, 1.35, 0.85), radius: 10.2, fov: 28 };
   // [R3-1] the introduction three-shot: Holmes at the desk, the King centre,
@@ -1157,6 +1219,73 @@ export function buildScene() {
   // longer needs to fight the key light to stay separate from the floor.
   const under = new THREE.DirectionalLight(0x6a8ecb, 0.72);
   under.position.set(5, -4, 8); lights.add(under);
+  /* ROUND-8c [8c-1] THE FACE FILL — and it is here because the face plane was
+   * MEASURED and found unlit.
+   *   The client's head faces (0.65..0.81, 0.12..0.24, 0.58..0.73) at the three
+   * framings that hold his face (i-13, i-15, i-16). Against that normal the KEY
+   * measures N·L = 0.000 / 0.056 / 0.135 — it is behind his cheek at every one of
+   * them — and the only directional with any purchase on it was `under`, at
+   * N·L 0.79-0.85. So four fifths of the light on the King's face arrived from a
+   * COLD BLUE lamp aimed up from below: irradiance on his mid-face summed to
+   * linear RGB (0.224, 0.413, 0.996), i.e. four parts blue to one part red, and
+   * the rendered cheek came back (63, 64, 69) — a grey. That is the review's
+   * "cold grey-blue mid-face between warm bars", and it is arithmetic, not taste.
+   *   It also explains why he had no EYES: a light from BELOW fills an undercut.
+   * The socket band measured p50 83.6 against 63.6 on the cheek — the eye band was
+   * the BRIGHTEST strip on his face, because `under` shines straight into it.
+   *   This is the answer to both. It stands 47 degrees ABOVE his eye line on the
+   * axis his face actually points down, so N·L is 0.75-0.84 on the face plane and
+   * ~0 on a socket floor tilted 39 degrees the other way: the plane lights, the
+   * sockets stay in shadow, and the light that does it is warm.
+   *   THE RANGE IS THE SAFETY. `distance` 3.0 with decay 2 is not a look, it is
+   * how a new lamp gets added to a diorama whose settled-frame gate is EXACTLY
+   * ZERO clipped pixels (CLIP_MAX). Measured from this position, every surface
+   * that currently sits near the clip line is OUTSIDE the cutoff and takes
+   * literally none of it: the room floor's hot patch 3.66 m, the rug 3.09 m (and
+   * the cutoff is 0 by 3.0), the back wall 4.10 m, the left wall 5.45 m, the
+   * rock's plateau 6.45 m, the hearth ember 3.7 m, the window pane 3.9 m. What is
+   * inside 3.0 m is the client at his mark (his head at 1.69 m), Holmes at his
+   * own home mark (2.28 m, and his face takes 0.14 of it), and the side table. */
+  const faceFill = new THREE.PointLight(0xffcc96, 2.7, 3.0, 2);
+  faceFill.name = 'faceFill';
+  faceFill.position.set(0.83, 3.35, 1.30); lights.add(faceFill);
+  /* ROUND-8d [8d-2] THE SAME ARITHMETIC, FOR THE MAN IN THE CHAIR.
+   *   [8c-1] measured the face plane and lit it, and the lamp it added covers the
+   * two marks inside its 3.0 m cutoff: the King at centre stage and Holmes at his
+   * home mark. Watson is 4.08 m from it, in the wingback at the hearth, and he was
+   * left on the cold half of the room — irradiance (0.32, 0.52, 1.17) linear, R/B
+   * 0.273 against the 0.55 the King is gated at. Two of the three faces warm and
+   * the third grey-blue is worse than three cold ones, and i-00-head is the
+   * ESTABLISHING frame: his is the second face the reader ever sees.
+   *   Extending `faceFill` cannot do it. Its range is not a look, it is the safety
+   * argument for adding a lamp to a diorama whose settled-frame gate is EXACTLY
+   * zero clipped pixels, and opening it to 4.1 m would swallow the rug (3.09 m),
+   * the hearth ember (3.7 m) and the back wall (4.10 m) at once. So this is a
+   * SECOND lamp with its own arithmetic, and it is small: intensity 0.62 at 0.775 m
+   * from his face, 1.5 m of cutoff, decay 2. MEASURED from this position, as box
+   * distances to every visible mesh in the diorama —
+   *   inside the cutoff: Watson himself (head 0.51 m, chest 0.60, hands 0.84,
+   * knees 1.10, feet 1.48) and the wingback he is sitting in (0.47 m at its
+   * nearest corner, and it is the surface that takes the most of this lamp); then
+   * the fireplace mass at 1.33 m, where the falloff `(1-(d/1.5)^4)^2 / d^2` has
+   * already cut it to 0.081, and the hearth stone at 1.43 m, at 0.017.
+   *   outside it, taking literally none: the room floor at 1.60 m (the lamp stands
+   * 1.60 m over the boards), the back wall 1.74 m, the rock 1.76 m, the side table
+   * 1.61 m, Holmes 1.92 m at his chest and 2.24 m at his head, and everything
+   * else — the rug, the window, the lamp, the desk — further still.
+   *   And the receipt: with it in, all 38 settled units at BOTH ratios still
+   * measure exactly 0 clipped pixels in the inset, hottest pixel 248.1 against the
+   * 250 line, and V1 nearBlack is unmoved (median 0.229 / 0.273, worst gated beat
+   * 0.339 against its 0.40 gate).
+   *   It stands 35.7 degrees above his eye line on the axis his face points, the
+   * same geometry [8c-1] uses: N·L 0.774 on the face plane, ~0 on a socket floor
+   * tilted the other way, so it warms the face and leaves the eye band in shadow.
+   * His mid-face irradiance goes (0.32, 0.52, 1.17) -> (1.03, 0.95, 1.39), R/B
+   * 0.273 -> 0.740 at i-00 and 0.296 -> 0.751 at i-13, punctual share 0.73 ->
+   * 0.86 — in family with the King's 0.72-0.88, not past it. */
+  const faceFillW = new THREE.PointLight(0xffcc96, 0.62, 1.5, 2);
+  faceFillW.name = 'faceFillW';
+  faceFillW.position.set(3.23, 1.82, -0.85); lights.add(faceFillW);
   root.add(lights);
 
   /* ---- pantomime state ------------------------------------------- */
@@ -1184,8 +1313,11 @@ export function buildScene() {
     // — there is no "leaving" state because there is no walk to be half-way
     // through, at any cadence.
     kingVisible: false,
-    kingUnmasked: false,            // C1 — which GLB the client slot holds
     maskOff: 0, maskT: 0, masked: true,
+    // ROUND-8 gesture drives: the arm channels the acts write to. `reachWant`
+    // and `presentWant` are damped targets inside the figure; `unmaskT` is a
+    // scripted 0..1 the step advances, like `noteToss`.
+    reachWant: 0, presentWant: 0, unmaskT: 0, unmaskOn: false,
     indexLift: 0, indexWant: 0,
     plate: { note: 0, watermark: 0, both: 0 },
     plateWant: { note: 0, watermark: 0, both: 0 },
@@ -1200,35 +1332,22 @@ export function buildScene() {
   const clientM = makeMover(slots.client, KING_OUT, Math.PI / 2,
     { breathW: 0.86, breathPhase: 2.1, breath: 0.0032, sway: 0.0062 });
   // Watson is SEATED: less sway (he is wedged in a wingback), and the breath
-  // still reads because the bend deformer put his chest over his knees.
+  // still reads because his chest is over his knees.
   const watsonM = makeMover(slots.watson, WATSON_HOME.clone(), WATSON_YAW,
     { breathW: 1.02, breathPhase: 4.3, breath: 0.0048, sway: 0.0088 });
+  holmesM.fig = holmes; clientM.fig = client; watsonM.fig = watson;
+  // per-figure phase offsets, so three men never breathe in unison
+  holmes.drive.breathW = 1.15; holmes.drive.breathPhase = 0.0;
+  client.drive.breathW = 0.86; client.drive.breathPhase = 2.1;
+  watson.drive.breathW = 1.02; watson.drive.breathPhase = 4.3;
 
-  /* ---- C1: the two King models -----------------------------------
-   * Both GLBs are loaded at boot (main.js) and handed here, so the swap at
-   * the mask-drop moment is a parent-pointer change with no network and no
-   * frame of "wrong king". `dispose:false` on the replace keeps the model we
-   * are swapping OUT alive, because __gotoUnit scrubs backwards too.
-   * If the art lane has not delivered king-unmasked.glb, `unmasked` is null
-   * and the beat degrades to king.glb (logged in __assets().notes). */
-  const kingModel = { masked: null, unmasked: null };
-  function applyKingModel(unmasked) {
-    const want = unmasked && kingModel.unmasked ? kingModel.unmasked : kingModel.masked;
-    if (!want) { state.kingUnmasked = !!(unmasked && kingModel.unmasked); return false; }
-    if (slots.client.userData.model !== want) {
-      slots.client.replace(want, { dispose: false });
-      slots.client.userData.model = want;
-    }
-    state.kingUnmasked = want === kingModel.unmasked;
-    return state.kingUnmasked === !!unmasked;
-  }
-  /** main.js hands the preloaded scenes over once, before __ready. */
-  function setKingModels({ masked, unmasked }) {
-    if (masked !== undefined) kingModel.masked = masked;
-    if (unmasked !== undefined) kingModel.unmasked = unmasked;
-    applyKingModel(state.kingUnmasked);
-    return { masked: !!kingModel.masked, unmasked: !!kingModel.unmasked };
-  }
+  /* ROUND-8 retires C1 — the two-King GLB pair. Rounds 3-7 held king.glb and
+   * king-unmasked.glb resident simultaneously (200k tris) and flipped the slot's
+   * parent pointer at the mask gate, because the vizard was baked into the mesh
+   * and there was no other way to take it off. The procedural King wears a mask
+   * NODE; `kingUnmask` detaches it. Nothing loads, nothing swaps, and the beat
+   * cannot degrade to "a masked man saying I am the King" because the thing that
+   * would have to fail is a reparent, not a fetch. */
 
   // sim-time timeline: every act is a script, never a wall-clock timer
   let timers = [];
@@ -1261,17 +1380,22 @@ export function buildScene() {
       state.noteLiftWant = 1;
       state.plateWant.note = 0; state.plateWant.watermark = 1;
     },
-    /** gaz1 — Holmes walks to the desk and takes the gazetteer down. */
+    /** gaz1 — Holmes walks to the desk and takes the gazetteer down. The reach
+     *  waits for him to ARRIVE: an arm reaching for a book he is 3.8 m from is
+     *  the pantomime equivalent of a glide. */
     gazetteerFetch() {
       state.plateWant.note = 0; state.plateWant.watermark = 0;
       state.noteByHold = false; state.noteLiftWant = 0;
       state.noteMode = 'away';
+      state.reachWant = 0;
       walkTo(holmesM, HOLMES_DESK, 2.7);
-      after(2.7, () => { facePoint(holmesM, ...HOLMES_DESK_LOOK); state.indexWant = 0.35; });
+      after(2.7, () => { facePoint(holmesM, ...HOLMES_DESK_LOOK);
+                         state.indexWant = 0.35; state.reachWant = 0.55; });
     },
-    toIndex()  { facePoint(holmesM, ...HOLMES_DESK_LOOK); state.indexWant = 0.35; },
+    toIndex()  { facePoint(holmesM, ...HOLMES_DESK_LOOK); state.indexWant = 0.35;
+                 state.reachWant = 0.55; },
     /** the index gate resolves: the book comes up and is thumbed open. */
-    gazetteerLookup() { state.indexWant = 1; },
+    gazetteerLookup() { state.indexWant = 1; state.reachWant = 1; },
     carriageArrive()  { state.carriageTarget = 1; slots.carriage.visible = true; },
     /**
      * comes2 — ROUND-1 [E1a]. "And here he comes" used to play over a shut,
@@ -1295,8 +1419,9 @@ export function buildScene() {
       state.arriveOn = true;
       state.passOn = true;
       slots.client.visible = true;
-      clientM.pos.copy(KING_OUT); clientM.from.copy(KING_OUT); clientM.to.copy(KING_OUT);
-      clientM.t = 0; clientM.dur = 0; clientM.yaw = Math.PI / 2; clientM.yawWant = Math.PI / 2;
+      clientM.pos.copy(KING_LAND); clientM.from.copy(KING_LAND); clientM.to.copy(KING_LAND);
+      clientM.t = 0; clientM.dur = 0; clientM.ramp = 0;
+      clientM.yaw = Math.PI / 2; clientM.yawWant = Math.PI / 2;
       state.doorWant = 1;
       // CONTENT.md's order: a heavy step on the stair, then the knock, then
       // the door. ASSETS.md §3 durations: step ~0.5 s, knock 2.04 s (first
@@ -1307,14 +1432,31 @@ export function buildScene() {
       after(0.70, () => { state.knockT = 0; });                  // ...triple
       after(0.88, () => { state.knockT = 0; });
       after(0.96, () => { state.doorSwingWant = 1; });           // and the door gives
-      // he FILLS the doorway at t≈1.7 — the frame the review settles on
-      after(0.98, () => { walkTo(clientM, KING_SILL, 0.72); });
-      after(2.20, () => { walkTo(clientM, KING_STAGE, 2.1); });  // and comes to the centre
-      after(4.40, () => { facePoint(clientM, 1.05, -0.35); state.doorSwingWant = 0.28; });
+      /* [8b-2] THE ENTRANCE, RE-TIMED. Two legs, both on the cruise profile:
+       *   0.86 -> 1.56  the step through the opening, 0.80 m, peak 1.54 m/s
+       *   1.58 -> 4.83  the crossing, 3.373 m in 3.25 s, peak 1.40 m/s
+       * so he still FILLS THE DOORWAY at t = 1.7 (he is 3 cm past the sill on
+       * that frame, planted and just leaning into the crossing — the frame the
+       * review settles on is the frame it was) and the crossing now takes 3.25 s
+       * against the 2.1 s that produced 4.8 steps/s.
+       *   And he TURNS WHILE HE ARRIVES (4.10, i.e. through the last 22% of the
+       * walk) instead of after it. That is what a man does when he walks up to
+       * someone, and it is also what keeps the beat readable at reader cadence:
+       * the settled i-13 frame — the one framing in the act that holds all three
+       * heads — lands 5.10 s in, and he is now stopped AND square to the room
+       * before it, with the same margin the 2.1 s sprint used to buy. */
+      after(0.86, () => { walkTo(clientM, KING_SILL, 0.70, { ramp: 0.26 }); });
+      after(1.58, () => { walkTo(clientM, KING_STAGE, 3.25, { ramp: 0.26 }); });
+      /* the turn is solved from the mark he is WALKING TO, not from wherever he
+       * happens to be when it fires — `facePoint` reads his current position, so
+       * firing it mid-walk would aim him 7 degrees off the room. */
+      after(4.10, () => { faceYaw(clientM,
+        Math.atan2(1.05 - KING_STAGE.x, -0.35 - KING_STAGE.z)); });
+      after(4.95, () => { state.doorSwingWant = 0.28; });
     },
-    /** seat — the King turns to face the reader. */
-    kingPresent() { state.passOn = false; faceYaw(clientM, 0.62); },
-    pushToMask()  { faceYaw(clientM, 0.42); },
+    /** seat — the King turns to face the reader (fact: the reader IS Watson). */
+    kingPresent() { state.passOn = false; faceYaw(clientM, 0.62); state.presentWant = 1; },
+    pushToMask()  { faceYaw(clientM, 0.42); state.presentWant = 1; },
     /**
      * The mask gate resolves: torn off and hurled to the floor — and, C1,
      * king.glb (which BAKES the vizard) is exchanged for king-unmasked.glb
@@ -1324,10 +1466,15 @@ export function buildScene() {
     kingUnmask() {
       if (!state.masked) return;
       state.masked = false;
-      state.maskT = 0;
-      state.maskOff = 1;
-      applyKingModel(true);
-      // faceRig stays hidden: see the note by its construction
+      /* THE TEAR IS A HAND ON A PROP. `unmaskT` runs the arm: 0 -> 0.42 the hand
+       * goes to his face and takes hold of the vizard, and the node only comes
+       * OFF his head at 0.34 of that — under his own fingers, not a frame before
+       * them. 0.42 -> 1 the arm hurls it away and comes back down. The scheduler
+       * is the same sim-time `after` every other act uses, so a flush fires it
+       * and lands on the finished pose. */
+      state.unmaskT = 0;
+      state.unmaskOn = true;
+      after(0.34, () => { state.maskT = 0; state.maskOff = 1; maskDetach(); });
     },
     /**
      * briony — the King crosses to the threshold and STANDS there.
@@ -1389,7 +1536,23 @@ export function buildScene() {
      */
     kingExit() {
       state.doorSwingWant = 1;
-      walkTo(clientM, KING_SILL, 2.4);      // ...and then he simply stands
+      state.presentWant = 0;
+      /* [8b-2] the same check at the sill: 3.373 m in 2.4 s peaked at 2.81 m/s
+       * and 3.3 footfalls/s. On the cruise profile at 2.55 s it peaks at the
+       * measured 1.79 m/s with plants at a measured median 1.76 footfalls/s
+       * ([8d] figures — the man who came in slowly leaves only a little quicker.
+       *   It is 2.55 s and not the entrance's 3.25 for a measured reason. The
+       * door carries additive tells and the gate's own target ring; at 3.25 s a
+       * reader who clicks through at 0.5 s a beat catches him mid-stride 0.6 m
+       * INSIDE the room with the ring across his chest, and 5-11 of his pixels
+       * clip there. It is not his value doing it — scaling every colour on that
+       * mesh down 25% moves the hottest pixel 251.1 -> 249.2, i.e. the surface
+       * contributes 2 luma of it and an additive card contributes the rest — so
+       * the lever is the MARK, not the paint ([R4-4] with the terms swapped). At
+       * 2.55 s he is 0.03 m off the sill on that frame, clear of the ring, and
+       * the whole 109-frame stand scan reads 0 clipped px at both walk-in
+       * cadences. He is still on his mark 0.85 s before i-36's settled frame. */
+      walkTo(clientM, KING_SILL, 2.55, { ramp: 0.26 });   // ...and then he stands
     },
     /**
      * [R7-1] The King leaves the stage BEHIND THE PAGE. main.js calls this from
@@ -1442,10 +1605,26 @@ export function buildScene() {
       timers.shift().fn();
     }
     for (const m of [holmesM, clientM, watsonM]) {
-      m.pos.copy(m.to); m.t = m.dur; m.walking = false; m.yaw = m.yawWant;
+      m.pos.copy(m.to); m.prev.copy(m.to); m.t = m.dur; m.walking = false;
+      m.yaw = m.yawWant; m.speed = 0;
       m.slot.position.set(m.pos.x, m.pos.y, m.pos.z);
       m.slot.rotation.set(0, m.yaw, 0);
+      if (m.fig) {
+        // hand the figure the settled mover state, then snap its own damped
+        // channels: a flushed pose has to be the pose a reader who WALKED here
+        // is looking at, or __gotoUnit and the lap disagree by an arm
+        m.fig.drive.speed = 0; m.fig.drive.walking = false;
+        m.fig.drive.pos.set(m.pos.x, m.pos.y, m.pos.z); m.fig.drive.yaw = m.yaw;
+        m.fig.drive.tFlush = state.now;
+      }
     }
+    if (state.unmaskOn) state.unmaskT = 1;
+    holmes.drive.lift = state.noteLiftWant;
+    holmes.drive.toss = state.noteMode === 'toss' ? 1 : 0;
+    holmes.drive.reach = state.reachWant;
+    client.drive.present = state.presentWant;
+    client.drive.unmask = state.unmaskT;
+    for (const f of [holmes, watson, client]) f.flush();
     state.noteLift = state.noteLiftWant;
     state.carriage = state.carriageTarget;
     state.doorK = state.doorWant;
@@ -1455,9 +1634,11 @@ export function buildScene() {
     if (state.arriveOn) state.arrive = 1;
     for (const k of ['note', 'watermark', 'both']) state.plate[k] = state.plateWant[k];
     if (state.maskOff > 0) {
-      state.maskT = 1; maskRig.position.copy(MASK_FLOOR);
-      maskRig.rotation.set(MASK_LIE.x, MASK_LIE.y, MASK_LIE.z);
-      maskRig.scale.setScalar(MASK_DROP_S);
+      state.maskT = 1;
+      maskDetach();
+      maskNode.position.copy(MASK_FLOOR);
+      maskNode.rotation.set(MASK_LIE.x, MASK_LIE.y, MASK_LIE.z);
+      maskNode.scale.setScalar(MASK_DROP_S);
       maskPaint(1);
     }
     slots.client.visible = state.kingVisible;
@@ -1477,37 +1658,42 @@ export function buildScene() {
     state.kingVisible = false;
     slots.client.visible = false;
     state.masked = true; state.maskOff = 0; state.maskT = 0;
-    applyKingModel(false);                       // C1: scrubbing back re-masks him
-    maskRig.position.copy(MASK_HOME); maskRig.rotation.set(0, 0, 0);
-    maskRig.scale.setScalar(MASK_WORN_S);
-    maskPaint(0);
-    faceRig.visible = false;
+    state.unmaskT = 0; state.unmaskOn = false;
+    state.reachWant = 0; state.presentWant = 0;
+    maskAttach();                                // scrubbing back re-masks him
+    for (const f of [holmes, watson, client]) f.reset();
     state.indexWant = 0;
     state.plateWant.note = 0; state.plateWant.watermark = 0; state.plateWant.both = 0;
-    clientM.pos.copy(KING_OUT); clientM.t = 0; clientM.dur = 0;
+    // [8b-2] `ramp` is part of a mover's path state, so it resets with `t`/`dur`:
+    // a replay must never inherit the previous walk's speed profile.
+    clientM.pos.copy(KING_OUT); clientM.t = 0; clientM.dur = 0; clientM.ramp = 0;
     clientM.yaw = Math.PI / 2; clientM.yawWant = Math.PI / 2;
-    holmesM.pos.copy(HOLMES_HOME); holmesM.t = 0; holmesM.dur = 0;
+    holmesM.pos.copy(HOLMES_HOME); holmesM.t = 0; holmesM.dur = 0; holmesM.ramp = 0;
     holmesM.yaw = -0.55; holmesM.yawWant = -0.55;
-    watsonM.pos.copy(WATSON_HOME); watsonM.t = 0; watsonM.dur = 0;
+    watsonM.pos.copy(WATSON_HOME); watsonM.t = 0; watsonM.dur = 0; watsonM.ramp = 0;
     watsonM.yaw = WATSON_YAW; watsonM.yawWant = WATSON_YAW;
+    /* ROUND-8 [R8-7] ...AND A PARKED MOVER HAS NOWHERE TO GO.
+     * This reset moved `pos` and left `from`/`to` holding the last mark the mover
+     * had been sent to — and `flush()`, three lines up, does `pos.copy(to)`. So the
+     * FIRST flush of a replay teleported every mover to a stale destination, and
+     * the man who was supposed to walk there next was already standing on the spot:
+     * `__gotoUnit(7)` a second time gave a Holmes AT the desk who never crossed the
+     * room (measured by lap.mjs's [R8-2] joint scan — 0 of 204 frames walking, no
+     * stances, cadence null, on the very walk scene.js says he takes). The King hid
+     * it because `kingEnter` sets his from/to explicitly and Watson because he never
+     * walks anywhere. It is exactly the [R6-3] contract — a scrubbed unit is the
+     * diorama a reader who WALKED here is looking at — failing on the second jump
+     * through the same unit, which is what a probe suite does all day. */
+    for (const m of [holmesM, clientM, watsonM]) {
+      m.from.copy(m.pos); m.to.copy(m.pos); m.prev.copy(m.pos);
+    }
     slots.carriage.visible = false;
   }
 
   const _q = new THREE.Vector3();
-
-  /**
-   * Pose the PLACEHOLDER arm that carries the note. holmes.glb bakes the
-   * letter into his raised hand and is a single unrigged mesh, so once the art
-   * has landed there is no arm here to move: the writes below would be poking
-   * a detached group ([R4-2]'s dead code). The note quad rides `slots.note`
-   * either way, so the beat is unchanged.
-   */
-  function holmesArm(x, z) {
-    if (slots.holmes.userData.swapped) return;
-    const a = holmes.userData.parts.armPivot;
-    a.rotation.x = x;
-    if (z !== undefined) a.rotation.z = z;
-  }
+  const _noteEuler = new THREE.Euler(), _noteQ = new THREE.Quaternion();
+  const _sockP = new THREE.Vector3(), _sockQ = new THREE.Quaternion();
+  const _sockS = new THREE.Vector3();
 
   /** One fixed sim step. `t` is absolute sim seconds — the beat clock. */
   function step(t, dt) {
@@ -1530,11 +1716,22 @@ export function buildScene() {
      * WATCHES — and watched him lose his head to the door lintel on the way. His
      * last mark is the sill; `kingOffstage` (main.js enterEndLeaf) takes him off
      * behind the risen page cover, so nothing in step() has to end him. */
-    // the placeholder blocks only get stepped while they are still on stage
-    if (!slots.holmes.userData.swapped) stepLegs(holmes, holmesM);
-    if (!slots.client.userData.swapped) stepLegs(client, clientM);
-    cloak.visible = !slots.client.userData.swapped;
-    if (cloak.visible) cloak.rotation.z = Math.sin(t * 0.8) * 0.02 + clientM.gaitR * 0.5;
+    /* ROUND-8: there is no `stepLegs` here any more, and no placeholder/GLB
+     * fork. `stepMover` hands each figure its speed and mark and the figure
+     * poses its own 16 joints — walking legs with knee flexion, arm
+     * counter-swing, chest counter-rotation, breath — so the same code runs on
+     * stage as ran before the art landed, because it IS the art. */
+
+    // ---- the gesture channels the acts wrote to -------------------
+    // Damping lives inside the figure; what happens here is the SCRIPTED part:
+    // the two one-shot progressions (the toss, the unmask) advancing on sim
+    // time, exactly like the mask's own tumble below.
+    if (state.unmaskOn && state.unmaskT < 1) {
+      state.unmaskT = Math.min(1, state.unmaskT + dt / 1.05);
+    }
+    holmes.drive.reach = state.reachWant;
+    client.drive.present = state.presentWant;
+    client.drive.unmask = state.unmaskT;
 
     // hearth flicker (deterministic, sim-time driven)
     const flick = 0.72 + 0.28 * (0.5 + 0.5 * Math.sin(t * 7.3) * Math.sin(t * 3.1 + 1.7));
@@ -1547,37 +1744,38 @@ export function buildScene() {
     haloMat.uniforms.uK.value = 0.52 + 0.06 * Math.sin(t * 1.9);
 
     // ---- the note ------------------------------------------------
-    // [E1b] Every position here is in HOLMES-SLOT space: the note rides his
-    // hand. Only the yaw is solved in world terms, so the sheet always turns
-    // its face to the locked camera azimuth instead of going edge-on when he
-    // turns. noteMode 'hand'/'away' hides it and lets holmes.glb's own baked
-    // letter carry the frame — one letter on screen, never two.
+    /* THE PAPER NO LONGER MOVES ITSELF. Rounds 1-7 tweened the note between
+     * three marks in HOLMES-SLOT space and poked a placeholder arm alongside it
+     * with `holmesArm()` — two animations of one event that had to be kept in
+     * agreement by hand, and which went dead the moment holmes.glb landed and
+     * the arm it posed was detached ([R4-2]'s dead code).
+     *   The sheet is parented to the hand's carry socket, so its POSITION is
+     * whatever the arm does. What is still solved here is the one thing the hand
+     * must not be allowed to decide: the sheet's FACING. The locked camera
+     * azimuth means a letter turned edge-on is a letter the reader cannot read,
+     * so the note is given a WORLD orientation every step (the read azimuth, plus
+     * the tilt that opens the page toward the lens as the hold fills) and the
+     * local rotation that holds it there inside the socket's frame is solved from
+     * the socket's own matrix.
+     */
     if (state.noteByHold) state.noteLiftWant = state.holdK;
     slots.note.visible = (state.noteMode === 'toss' || state.noteMode === 'read');
     state.noteLift = damp(state.noteLift, state.noteLiftWant, 6.5, dt);
-    const noteYaw = READ_AZIM - holmesM.yaw;
     if (state.noteMode === 'toss') {
       state.noteToss = Math.min(1, state.noteToss + dt / 0.85);
-      const k = ease.out(state.noteToss);
-      _q.lerpVectors(NOTE_LOW, NOTE_HAND, k);
-      _q.z += Math.sin(Math.PI * state.noteToss) * 0.22;      // held out, then settled
-      _q.y += Math.sin(Math.PI * state.noteToss) * 0.10;
-      slots.note.position.copy(_q);
-      slots.note.rotation.set(-0.22 * k, noteYaw, 0.12 * (1 - k));
-      const armK = Math.sin(Math.PI * Math.min(1, state.noteToss * 1.6));
-      holmesArm(-armK * 1.35);
       if (state.noteToss >= 1) state.noteMode = 'read';
-    } else if (state.noteMode !== 'read') {
-      // the letter is still HIS (or long put away): holmes.glb holds its own
-      slots.note.position.copy(NOTE_HAND);
-      slots.note.rotation.set(0, noteYaw, 0);
-      holmesArm(-0.55);
-    } else {
+    }
+    holmes.drive.toss = state.noteMode === 'toss' ? state.noteToss : 0;
+    holmes.drive.lift = state.noteMode === 'read' ? state.noteLift : 0;
+    if (slots.note.visible) {
       const lift = ease.inOut(state.noteLift);
-      _q.lerpVectors(NOTE_HAND, NOTE_LAMP, lift);
-      slots.note.position.copy(_q);
-      slots.note.rotation.set(-0.22 - lift * 0.30, noteYaw, lift * 0.14);
-      holmesArm(-0.35 - lift * 0.95, -lift * 0.25);
+      const tossK = state.noteMode === 'toss'
+        ? Math.sin(Math.PI * Math.min(1, state.noteToss * 1.25)) : 0;
+      _noteEuler.set(-0.30 - lift * 0.26 + tossK * 0.20, READ_AZIM, lift * 0.12 - tossK * 0.16);
+      _noteQ.setFromEuler(_noteEuler);
+      holmes.socket.updateWorldMatrix(true, false);
+      holmes.socket.matrixWorld.decompose(_sockP, _sockQ, _sockS);
+      slots.note.quaternion.copy(_sockQ).invert().multiply(_noteQ);
     }
 
     // reveal tracks the reader's own hand
@@ -1651,8 +1849,9 @@ export function buildScene() {
      * 0.20 m of pre-roll and full 0.30 m PAST the plane, which concedes the occlusion
      * only after his mark has crossed — and a man's chest is a quarter-metre in front
      * of his mark, over the card and being composited over, well before that. The
-     * ramp now starts 0.55 m in front of the plane and is full 0.10 m past it, which
-     * is where his chest actually is when it starts blocking the landing. MEASURED
+     * ramp was moved to start 0.55 m in front of the plane and be full 0.10 m past
+     * it, which is where his chest is when it starts blocking the landing — see
+     * [R8-6] below for where the same argument lands once the man has a gait. MEASURED
      * result: the inbound crossing peaks at 10 px at both ratios (worst of four clock
      * phases; per-phase 1/4/0/10 landscape, 1/5/0/10 portrait) and his last beat at
      * 0 px on all 436 of its frames ([R7-1] standScan), with a hottest pixel of
@@ -1661,17 +1860,44 @@ export function buildScene() {
      *   Two other levers were measured against the same peak with the same
      * instrument and rejected; scene.js records them by the threshold lamp.
      *   `cross` is a pure function of the client's MARK, so two laps are the same
-     * pixels. Measured at the settled frames: exactly 0 at i-10-comes2 (he is not on
-     * stage) and at i-35-briony (his mark is 0.78 m in front of the plane, clear of
-     * the 0.55 m pre-roll), and 0.689 — the card at 41% of full — at i-11-hadnote,
+     * pixels. Measured at the settled frames, on round 6's pair: exactly 0 at
+     * i-10-comes2 (he is not on stage) and at i-35-briony (his mark is 0.78 m in
+     * front of the plane, clear of that 0.55 m pre-roll), and 0.689 — the card at
+     * 41% of full — at i-11-hadnote,
      * i-36-goodnight and, [R7-1], i-37-door, the three framings where he STANDS in
      * the opening. i-37 joined that list when the walk-out was deleted: he fills the
      * opening across the whole gate beat, so the landing behind him should be down,
      * and the hall glow and the threshold lamp are what keep it warm behind him —
      * however long the reader looks at it.
      */
+    /* ROUND-8 [R8-6] THE RAMP IS ABOUT ANATOMY, AND THE ANATOMY MOVES NOW.
+     * Round 6 widened the pre-roll from 0.20 m to 0.55 m because a man's CHEST is
+     * a quarter-metre in front of the mark this ramp is anchored on. The cast is
+     * jointed this round, so the thing furthest in front of his mark is no longer
+     * his chest: it is his SWINGING HAND. Measured on the walk to the sill, at the
+     * fast reader cadence lap.mjs's standScan walks in at, his mark reads x
+     * -2.882 while `seg:handR`'s leading edge is at x -3.640 — 0.76 m ahead of
+     * him and 0.15 m PAST this card's plane (-3.490) — with `cross` reading 0,
+     * i.e. the card at FULL strength, compositing over his knuckles: 9 of his own
+     * pixels over luma 250 (hide the card and it is 0, hottest 223.1).
+     *   So the pre-roll now covers the reach instead of the chest, and the SPAN
+     * widens with it to hold the two numbers earlier rounds measured. The pair is
+     * solved from both ends rather than picked: at the sill (x -3.250, the mark he
+     * holds through i-11, i-36 and the whole door gate) cross reads 0.6905 against
+     * round 6's 0.6889 — the card at 41% of full, the value [R5-1] and [R6-2]
+     * argued the landing's read from, unchanged to three decimals — and where his
+     * hand crosses the plane it reads 0.47, putting the card at 60%, which is the
+     * strength that measured 0 clipped px on him with 10 luma of headroom.
+     *   Full yield still only happens with his mark out in the hall (x <= -3.773)
+     * and the card is back to full strength once he is 0.8 m into the room, so the
+     * centre-stage framings (KING_STAGE is x 0.05) read exactly as they did. The one
+     * framing that MOVES is i-35-briony, where he is mid-walk 0.78 m in front of the
+     * plane: round 6's ramp read 0 there and this one reads 0.37, so the landing
+     * behind him is at 69% instead of 100%. It costs a little glow on an artefact
+     * beat and it can only ever reduce clipping on the man walking through it;
+     * i-35 is not a [V1] beat and its own numbers are in the lap. */
     const cross = slots.client.visible
-      ? ease.clamp01((DOORGLOW_X - clientM.pos.x + 0.55) / 0.45) : 0;
+      ? ease.clamp01((DOORGLOW_X - clientM.pos.x + 1.40) / 1.68) : 0;
     doorGlow.material.opacity = (0.30 * hallK * (0.84 + 0.16 * Math.sin(t * 4.1))
       + 0.34 * state.doorSwing) * (1 - 0.85 * cross);
     // [R4-4] the strip of hall light under the leaf is ADDITIVE, and it sits on
@@ -1695,15 +1921,17 @@ export function buildScene() {
     if (state.maskOff > 0 && state.maskT < 1) {
       state.maskT = Math.min(1, state.maskT + dt / 0.95);
       const k = state.maskT;
-      _q.lerpVectors(MASK_HOME, MASK_FLOOR, ease.out(k));
+      // it leaves from wherever his HAND took it off, not from a fixed mark:
+      // `maskDetach` records that point in slot space at the moment of the tear
+      _q.lerpVectors(_mFrom, MASK_FLOOR, ease.out(k));
       _q.y += Math.sin(Math.PI * k) * 0.34;
-      maskRig.position.copy(_q);
+      maskNode.position.copy(_q);
       // [R4-5] the tumble ARRIVES at the lying pose instead of snapping to it:
       // one full turn about each axis, landing face up on the rug.
-      maskRig.rotation.set(MASK_LIE.x - (1 - k) * 5.60,
-                           MASK_LIE.y - (1 - k) * 2.20,
-                           MASK_LIE.z - (1 - k) * 3.10);
-      maskRig.scale.setScalar(MASK_WORN_S + (MASK_DROP_S - MASK_WORN_S) * ease.out(k));
+      maskNode.rotation.set(MASK_LIE.x - (1 - k) * 5.60,
+                            MASK_LIE.y - (1 - k) * 2.20,
+                            MASK_LIE.z - (1 - k) * 3.10);
+      maskNode.scale.setScalar(MASK_WORN_S + (MASK_DROP_S - MASK_WORN_S) * ease.out(k));
       maskPaint(ease.out(k));
     }
 
@@ -1763,10 +1991,10 @@ export function buildScene() {
   const _hv = new THREE.Vector3();
   /** World position of a speaker's head — the leader line's far end. */
   function headWorld(who, out = _hv) {
-    if (who === 'HOLMES') { slots.holmes.updateWorldMatrix(true, false);
-      return out.set(0, 1.66, 0).applyMatrix4(slots.holmes.matrixWorld); }
-    if (who === 'KING' || who === 'CLIENT') { slots.client.updateWorldMatrix(true, false);
-      return out.set(0, 2.02, 0).applyMatrix4(slots.client.matrixWorld); }
+    // ROUND-8: the leader line lands on the HEAD JOINT, so it tracks a turned,
+    // walking, breathing head instead of a fixed height in slot space.
+    if (who === 'HOLMES') return holmes.headWorld(out);
+    if (who === 'KING' || who === 'CLIENT') return client.headWorld(out);
     return null;
   }
 
@@ -1873,31 +2101,93 @@ export function buildScene() {
   };
 
   /**
-   * [R4-2] What the slot-level life is doing this frame, per figure: the gait's
-   * vertical bob and body roll while walking, the breath and sway while idle.
-   * The harness samples this across the King's entrance and across a held idle
-   * beat, so "nothing glides, nothing is frozen" is measured, not asserted.
+   * [R4-2], ROUND-8. WHAT THE FIGURES ARE ACTUALLY DOING THIS FRAME.
+   *
+   * Round 3 left the post-swap figures dead and round 4 answered it with a bob
+   * and a roll written onto the SLOT, which this function then reported. Both
+   * numbers were inputs: `|sin(phase)| * 0.055` at a fixed 5.6 rad/s, read back
+   * out and called evidence of a walk.
+   *   Everything here is now read off the POSED SKELETON after the step — the
+   * pelvis's own height above its rest, the pelvis roll it is holding, the knee
+   * and elbow angles, the FOOTFALL RATE the speed produced and the STEP LENGTH
+   * that keeps the feet still ([8c-3]: footfalls/s, and the metres one covers).
+   * `y`/`bobY`/`roll` keep their old names and their old
+   * meaning (the gate that wants a walk to move vertically is the same gate);
+   * they are just no longer describing a value nothing draws.
    */
   const gait = () => {
     const out = {};
     for (const [name, m] of Object.entries({ holmes: holmesM, client: clientM, watson: watsonM })) {
-      out[name] = { walking: m.walking, y: +(m.pos.y + m.gaitY).toFixed(5),
-                    bobY: +m.gaitY.toFixed(5), roll: +m.gaitR.toFixed(5),
+      const k = m.fig.metric, d = m.fig.dims;
+      const bob = +(k.pelvisY - d.hipY).toFixed(5);
+      out[name] = { walking: m.walking, speed: +m.speed.toFixed(4),
+                    y: +(m.pos.y + bob).toFixed(5), bobY: bob, roll: k.roll,
                     breath: +m.lifeY.toFixed(5), sway: +m.lifeR.toFixed(5),
-                    scaleY: +m.slot.scale.y.toFixed(5) };
+                    scaleY: +m.slot.scale.y.toFixed(5),
+                    // the joint animation itself
+                    knee: [k.kneeL, k.kneeR], elbow: [k.elbowL, k.elbowR],
+                    /* [8c-3] FOOTFALLS per second, and the metres one covers.
+                     * [8d-1] MEASURED off the plants themselves — one over the
+                     * interval since the other foot landed — with the cadence
+                     * arithmetic's own answer reported beside it as `driveHz`. */
+                    footfallHz: k.footfallHz, stepLen: k.stepLen,
+                    driveHz: k.driveHz, driveStep: k.driveStep, gaitW: k.w };
     }
     return out;
   };
 
+  /**
+   * The joint scan: arm it, walk something, read it. Ranges are accumulated on
+   * EVERY fixed step (not sampled), and the foot slide is measured off world
+   * joint positions, so "his knee bends and his feet do not skate" is a
+   * measurement of the geometry the reader sees. Harness-only — it costs a
+   * matrix walk per figure per frame.
+   */
+  const gaitScan = (on) => {
+    for (const f of [holmes, watson, client]) f.scan(on);
+    return !!on;
+  };
+  const gaitScanRead = () => ({
+    holmes: holmes.scanRead(), watson: watson.scanRead(), client: client.scanRead(),
+  });
+
+  /**
+   * ROUND-8 style ledger, read off the built scene graph rather than asserted:
+   * the cast's whole triangle budget, its material count, and whether any of it
+   * carries a texture sampler or lost flat shading. The three GLBs this replaced
+   * were 100k triangles each with baked PBR maps.
+   */
+  const figureStyle = () => {
+    const per = { holmes: holmes.style(), watson: watson.style(), client: client.style() };
+    const sum = (k) => per.holmes[k] + per.watson[k] + per.client[k];
+    return { per, tris: sum('tris'), meshes: sum('meshes'), materials: sum('materials'),
+             textures: sum('textures'),
+             flatShaded: per.holmes.flatShaded && per.watson.flatShaded && per.client.flatShaded,
+             vertexColors: per.holmes.vertexColors && per.watson.vertexColors && per.client.vertexColors,
+             heights: { holmes: holmes.dims.H, watson: watson.dims.H, client: client.dims.H } };
+  };
+
+  /** [R7-1]+ROUND-8: is the vizard on his face, or on the rug? Off the graph. */
+  const maskState = () => ({
+    attached: maskNode.parent === client.joints.head,
+    visible: maskNode.visible,
+    onFloor: maskNode.parent === slots.client && state.maskT >= 1,
+    paintK: +state.maskT.toFixed(3),
+  });
+
   return { root, slots, focus, targets, actions, fire: fireAct, state, step, setHold, setReveal, gait,
            focusWorld, targetWorld, targetHits, targetLive, headWorld, resetPantomime, flush, probes,
            setCueSink: (fn) => { cueOut.fn = fn; },
-           setKingModels, setNoteTexture,
+           setNoteTexture, gaitScan, gaitScanRead, figureStyle, maskState,
            movers: { holmes: holmesM, client: clientM, watson: watsonM },
            // [R7-1] the King's two marks by name, so "he is standing at the sill
            // and bound for nowhere else" is a measurement and not a claim
            marks: { kingSill: KING_SILL, kingOut: KING_OUT },
            figures: { holmes, watson, client },
+           // the mask NODE and its two marks, so main.js/lap.mjs can ask the
+           // graph "is he masked?" instead of "which model is loaded?"
+           mask: { node: maskNode, floor: MASK_FLOOR, wornScale: MASK_WORN_S,
+                   dropScale: MASK_DROP_S },
            // props the review measures BY HIDING THEM (see main.js paintProbe)
            props: { ember: fire } };
 }

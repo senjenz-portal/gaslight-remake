@@ -64,19 +64,22 @@ const CAMEO_URLS = {
 };
 const PAGE_TEXTURE = '../assets/plates/page-texture.png';
 
-/** ASSETS.md §2 scale table. `height`/`depth` are metres; scale is derived. */
+/**
+ * ASSETS.md §2 scale table. `height`/`depth` are metres; scale is derived.
+ *
+ * ROUND-8: THE CAST IS NOT IN THIS LIST ANY MORE. holmes.glb, watson.glb,
+ * king.glb and king-unmasked.glb (100k tris apiece, baked painterly PBR, no
+ * rig) are retired — the three figures are BUILT, rigged and posed in
+ * app/figures.js and stand in their slots from the first frame. So the cast
+ * costs no network at all, cannot half-load, and `assets.missing` can no
+ * longer contain a man. The PROPS still load exactly as they did: fireplace,
+ * armchair, side table, hansom cab.
+ */
 const GLB_PLAN = [
-  { slot: 'holmes',    url: '../assets/3d/holmes.glb',     opts: { height: 1.78, lift: true, flat: true } },
-  // [R3-1] Watson SITS. watson.glb is a single unrigged mesh, so the pose is a
-  // load-time two-joint bend deformer (see gltf.js seatFigure) rather than an
-  // animation clip; `height` still names his STATURE, because the scale has to
-  // come from how tall he stands, not from how tall he is folded up.
-  { slot: 'watson',    url: '../assets/3d/watson.glb',     opts: { height: 1.74, lift: true, flat: true,
-                         pose: 'seated', seat: { hip: 0.515, knee: 0.28, thighAngle: -80,
-                                                 shinAngle: -6, lean: -8, band: 0.055 } } },
   { slot: 'hearth',    url: '../assets/3d/fireplace.glb',  opts: { height: 1.50, lift: true, flat: true } },
-  // scaled so the wingback's cushion meets his hip: seatFigure reports the
-  // seat height he needs and `assets.seat` carries it into lap.json
+  // scaled so the wingback's cushion meets Watson's hip: the seated figure
+  // reports the seat height it needs (`world.figures.watson.dims`, carried into
+  // lap.json as `assets.seat`) and this scale is set from it
   { slot: 'armchair',  url: '../assets/3d/armchair.glb',   opts: { height: 1.18, lift: true, flat: true } },
   // ASSETS.md TODO #6: the texture drifted washed-out grey — tint to mahogany
   { slot: 'sidetable', url: '../assets/3d/side-table.glb', opts: { height: 0.70, lift: true, flat: true, tint: 0x9a6038 } },
@@ -84,20 +87,19 @@ const GLB_PLAN = [
 ];
 
 /**
- * C1 — the King is TWO models in one slot. king.glb bakes the vizard into
- * the mesh, so after the unmask gate he was still visibly masked while
- * saying "I am the King" (fact I.6 failed). Both are fetched at boot and
- * handed to the scene, and `kingUnmask` flips the parent pointer under
- * cover of the mask-drop: instant, deterministic, no network after __ready.
- * If the art lane has not landed king-unmasked.glb the beat degrades to
- * king.glb and says so in `assets.notes` (also listed in lap.mjs PENDING).
+ * C1, ROUND-8 — THE KING IS ONE FIGURE AND THE MASK IS A NODE.
+ *
+ * Rounds 3-7 kept TWO 100k-tri Kings resident (king.glb bakes the vizard into
+ * the mesh, so "I am the King" played with his face still covered until a
+ * second model, king-unmasked.glb, was swapped in under cover of the mask-drop)
+ * and fact I.6 rested on which model was parented to the slot. The built King
+ * wears a mask NODE on his head joint; `kingUnmask` tears it off and throws it
+ * on the rug. Nothing loads, nothing swaps, and "is he masked?" is answered off
+ * the scene graph by `world.maskState()` — see __state().king below.
  */
-const KING_OPTS = { height: 2.20, lift: true, flat: true };
-const KING_MASKED = '../assets/3d/king.glb';
-const KING_UNMASKED = '../assets/3d/king-unmasked.glb';
 
 const assets = { glb: {}, tris: 0, missing: [], plates: [], cameos: {}, cameosDecoded: [],
-                 page: false, kingUnmasked: false, noteTexture: false, seat: null, notes: [] };
+                 page: false, noteTexture: false, seat: null, notes: [] };
 
 /* ---------------------------------------------------------------- *
  * Renderer / camera / the inset view rectangle
@@ -703,30 +705,12 @@ async function loadModels() {
       assets.missing.push(plan.url);       // placeholder geometry stays — no wedge
     }
   }
-  // ---- C1: the King's pair, both resident before __ready ------------
-  let masked = null, unmasked = null;
-  try {
-    const r = await m.prepareGLB(KING_MASKED, KING_OPTS);
-    masked = r.obj;
-    assets.glb.client = { url: KING_MASKED, tris: r.tris, scale: +r.scale.toFixed(4), size: r.size };
-    assets.tris += r.tris;
-  } catch (e) {
-    assets.missing.push(KING_MASKED);
-    assets.notes.push('king.glb did not load — the placeholder colossus stands in');
-  }
-  try {
-    const r = await m.prepareGLB(KING_UNMASKED, KING_OPTS);
-    unmasked = r.obj;
-    assets.glb.clientUnmasked = { url: KING_UNMASKED, tris: r.tris,
-                                  scale: +r.scale.toFixed(4), size: r.size };
-    assets.tris += r.tris;
-    assets.kingUnmasked = true;
-  } catch (e) {
-    assets.notes.push('king-unmasked.glb missing — the unmask gate keeps king.glb ' +
-                      '(the vizard stays baked on his face; fact I.6 rests on the ' +
-                      'thrown mask prop + the cameo flip alone)');
-  }
-  if (masked || unmasked) world.setKingModels({ masked, unmasked });
+  /* The cast needs no network. What the armchair's scale used to be set from —
+   * how high a cushion the seated doctor's hip wants — comes off the SEATED
+   * FIGURE now (his hip is a joint, so the number is the pose's own), which is
+   * what keeps `assets.seat` in lap.json honest with no GLB behind it. */
+  const wd = world.figures.watson.dims;
+  assets.seat = { hip: +wd.seatHipY.toFixed(4), stature: wd.H, jointDriven: true };
 }
 
 /**
@@ -762,8 +746,9 @@ async function boot() {
   render();
 
   // every network fetch the app will ever make happens HERE, before ready.
-  // The 8 MB GLBs go first and alone: seven of them racing the plate/audio
-  // fetches is what made the dev server drop connections.
+  // The 8 MB prop GLBs go first and alone: seven of them racing the plate/audio
+  // fetches is what made the dev server drop connections. ROUND-8 took four of
+  // the seven off this queue for good — the cast is built, not fetched.
   await loadModels();
   await Promise.allSettled([
     loadPageTexture(), probeCameos(), plates.ready, audio.preload(),
@@ -929,19 +914,28 @@ window.__state = () => ({
             both: +world.state.plate.both.toFixed(3),
             dim: +world.state.dim.toFixed(3) },
   cameo: cameo.snapshot(),
-  // C1 — which King is on stage, and whether the pair is even resident.
-  // [R7-1] ...and WHERE HE IS STANDING, because his exit is now a question about a
-  // mark rather than about a timer. `mark` is the mark his mover is bound to by
-  // name, `sillOff` the metres between him and the sill, `walking` whether anything
-  // is moving him at all: through i-35, i-36 and the door gate the answer is
-  // 'sill' / 0 / false at every dwell, and he is taken off stage — not walked off —
-  // by enterEndLeaf, behind a risen cover on a leaf with no diorama.
+  /* C1, ROUND-8 — IS THE VIZARD ON HIS FACE, OR ON THE RUG?
+   * The answer used to be "which of two models is parented to the slot"
+   * (`hasPair`, retired with the GLBs). It is read off the SCENE GRAPH now:
+   * `mask.attached` is the node still on his head joint, `mask.onFloor` is the
+   * node handed to the slot and landed on its mark, `mask.paintK` the fall's
+   * repaint. `unmasked` is fact I.6's own bit and it cannot disagree with the
+   * picture, because the picture is what it is measured from.
+   * [R7-1] ...and WHERE HE IS STANDING, because his exit is a question about a
+   * mark rather than about a timer. `mark` is the mark his mover is bound to by
+   * name, `sillOff` the metres between him and the sill, `walking` whether anything
+   * is moving him at all: through i-35, i-36 and the door gate the answer is
+   * 'sill' / 0 / false at every dwell, and he is taken off stage — not walked off —
+   * by enterEndLeaf, behind a risen cover on a leaf with no diorama. */
   king: (() => {
     const cm = world.movers.client, M = world.marks;
+    const ms = world.maskState();
     const nameOf = (v) => (v.distanceTo(M.kingSill) < 0.01 ? 'sill'
                         : v.distanceTo(M.kingOut) < 0.01 ? 'out' : 'other');
     return { visible: world.state.kingVisible, masked: world.state.masked,
-             unmasked: world.state.kingUnmasked, hasPair: assets.kingUnmasked,
+             unmasked: !world.state.masked && !ms.attached, mask: ms,
+             // the pair of 100k-tri models is gone; nothing to be half-resident
+             hasPair: false, procedural: true,
              mark: nameOf(cm.to), walking: !!cm.walking,
              sillOff: +cm.pos.distanceTo(M.kingSill).toFixed(3) };
   })(),
@@ -956,11 +950,16 @@ window.__state = () => ({
   acts: world.state.acts.map(a => a.name),
   assets: { tris: assets.tris, glb: Object.keys(assets.glb), missing: assets.missing.slice(),
             audioMissing: audio.snapshot().missing, notes: assets.notes.slice(),
-            kingUnmasked: assets.kingUnmasked, noteTexture: assets.noteTexture,
-            // [R3-1] what the seated bend actually produced: his stature, and
+            noteTexture: assets.noteTexture,
+            // [R3-1] what the seated pose actually produced: his stature, and
             // how high a chair his hip now needs — the number the armchair's
             // scale is set from
-            seat: assets.seat },
+            seat: assets.seat,
+            /* ROUND-8 — the cast's own ledger, read off the built graph rather
+             * than off a manifest: three rigged figures at ~2k triangles each,
+             * flat-shaded, vertex-coloured, ZERO texture samplers, in place of
+             * four 100k-tri baked-PBR meshes that could not move. */
+            cast: world.figureStyle() },
   audio: audio.snapshot(),
   marginText: margin.text(),
   unitErrors,
@@ -1221,6 +1220,24 @@ harnessOnly.__swapSlot = async (slotName, url, opts) => {
   return r;
 };
 window.__slots = () => Object.keys(world.slots);
+
+/* ---------------------------------------------------------------- *
+ * ROUND-8 cast hooks. The cast is geometry this app builds, so what it is and
+ * what it is DOING are both measurable without a screenshot:
+ *   __figureStyle()  triangles / materials / texture samplers / flat+vcol, off
+ *                    the built graph — the style claim, gateable.
+ *   __gaitScan(on)   arm the per-frame joint scan on all three figures, then
+ *   __gaitScanRead() read the accumulated ranges: knee flexion and elbow
+ *                    counter-swing spans, the pelvis bob, cadence and stride
+ *                    ranges, and the FOOT SLIDE measured off world joint
+ *                    positions. Costs a matrix walk per figure per frame, so it
+ *                    is armed by the harness and never by the reader loop.
+ *   __maskState()    the vizard, off the graph: on his head, or on the rug.
+ * ---------------------------------------------------------------- */
+window.__figureStyle = () => world.figureStyle();
+harnessOnly.__gaitScan = (on) => world.gaitScan(on !== false);
+window.__gaitScanRead = () => world.gaitScanRead();
+window.__maskState = () => world.maskState();
 
 /**
  * Frame-time probe. Renders `frames` frames at pixel ratio `dpr` and returns

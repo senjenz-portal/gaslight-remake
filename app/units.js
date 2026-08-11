@@ -100,9 +100,12 @@ export const UNITS = [
     clear: true, sfx: 'paper', act: 'noteLift' },
 
   /* 6 */
+  /* [8c-4] its OWN focus, not focus.note: the watermark plate is a screen-space
+     overlay, so this camera only frames the diorama around it — and on the note
+     lens Holmes was cropped at the ankles there (inset 0.9112). */
   { id: 'i-06-wmark', key: 'wmark',
     text: '…a large “E” with a small “g,” a “P,” and a large “G” with a small “t” woven into the texture of the paper.',
-    speaker: '', verb: 'click', focus: 'note', page: 1, clear: true,
+    speaker: '', verb: 'click', focus: 'wmark', page: 1, clear: true,
     act: 'watermarkPlateUp' },
 
   /* 7 — plate off; Holmes fetches the gazetteer */
