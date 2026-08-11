@@ -1,0 +1,48 @@
+{
+ "lane": "hd2d-cameo-cut",
+ "generator": "build_cameos.py",
+ "params": {
+  "colors": 24,
+  "downscale": "PIL BOX",
+  "card_px": [
+   96,
+   132
+  ]
+ },
+ "entries": [
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/sprites/cameo-masked.png",
+   "role": "masked",
+   "source": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/king2-masked.png",
+   "source_sha256": "f26801bbbb78b18ccaf07988fb0f74a5f2f8753d746d01840fc27d61e8d7e0e6",
+   "crop_box": [
+    409,
+    0,
+    1001,
+    768
+   ],
+   "size": [
+    96,
+    132
+   ],
+   "sha256": "d1dffa035ba0016ef99b5ca9c8657116fe71447452dfb0e05422e073b1d13719"
+  },
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/sprites/cameo-unmasked.png",
+   "role": "unmasked",
+   "source": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/king2-unmasked.png",
+   "source_sha256": "8616cd5336eb2c41d555b2930a37c90e18bfa379b6892721b9975cd2b63e524e",
+   "crop_box": [
+    492,
+    0,
+    1085,
+    768
+   ],
+   "size": [
+    96,
+    132
+   ],
+   "sha256": "46b0cebfe9347ac5a4ebc958767fa20793fe499165b808a2a7556602717b444b"
+  }
+ ]
+}

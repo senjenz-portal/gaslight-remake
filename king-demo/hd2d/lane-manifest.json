@@ -1,0 +1,197 @@
+{
+ "lane": "B \u2014 HD-2D (Octopath treatment)",
+ "built_at": "2026-08-11T16:18:37",
+ "style_reference": "/Users/samz/Downloads/image (54).png",
+ "raw_first": {
+  "dir": "/Users/samz/Documents/gaslight-remake/assets/raw/hd2d-sprite/20260811-153630",
+  "note": "Every NB Pro generation is kept verbatim here with its own manifest; nothing in site-deploy is a primary artefact. NOTE: gemini-3-pro-image delivered image/jpeg under a .png name \u2014 see delivered_mime.",
+  "generations": [
+   {
+    "manifest": "/Users/samz/Documents/gaslight-remake/assets/raw/hd2d-sprite/20260811-153630/manifest-idle-a.json",
+    "filename": "idle-a.png",
+    "model_id": "gemini-3-pro-image",
+    "delivered_mime": "image/jpeg",
+    "sha256": "832bca3540616ac857a1c82c94fcc87a96f8b5fee02895998742cc6e3934266f",
+    "input_image": "/Users/samz/Documents/gaslight-remake/assets/plates/king-v2/king2-look.png",
+    "generated_at": "2026-08-11T15:37:33"
+   },
+   {
+    "manifest": "/Users/samz/Documents/gaslight-remake/assets/raw/hd2d-sprite/20260811-153630/manifest-idle-b.json",
+    "filename": "idle-b.png",
+    "model_id": "gemini-3-pro-image",
+    "delivered_mime": "image/jpeg",
+    "sha256": "d8a8192b2d2ba8b9c5a43b28783482b71dccf27289d60fcdd8b458bc6a3384e3",
+    "input_image": "/Users/samz/Documents/gaslight-remake/assets/plates/king-v2/king2-look.png",
+    "generated_at": "2026-08-11T15:37:36"
+   },
+   {
+    "manifest": "/Users/samz/Documents/gaslight-remake/assets/raw/hd2d-sprite/20260811-153630/manifest-walk-a.json",
+    "filename": "walk-a.png",
+    "model_id": "gemini-3-pro-image",
+    "delivered_mime": "image/jpeg",
+    "sha256": "2129aa4f792db556f958d05e98f39c71f1f90ef6f0d273edaf4ef4c4a6e90c94",
+    "input_image": "/Users/samz/Documents/gaslight-remake/assets/raw/hd2d-sprite/20260811-153630/idle-a.png",
+    "generated_at": "2026-08-11T15:38:40"
+   },
+   {
+    "manifest": "/Users/samz/Documents/gaslight-remake/assets/raw/hd2d-sprite/20260811-153630/manifest-walk-b.json",
+    "filename": "walk-b.png",
+    "model_id": "gemini-3-pro-image",
+    "delivered_mime": "image/jpeg",
+    "sha256": "6908a48ee7b64c47b89da3bb44293c5d0e4e9951ad4bc1d32a73c0977f604049",
+    "input_image": "/Users/samz/Documents/gaslight-remake/assets/raw/hd2d-sprite/20260811-153630/idle-a.png",
+    "generated_at": "2026-08-11T15:38:41"
+   }
+  ],
+  "selected": {
+   "idle": "idle-a.png",
+   "walk": "walk-a.png",
+   "rejected": [
+    "idle-b.png (softer silhouette)",
+    "walk-b.png (wider frame pitch, less consistent head)"
+   ]
+  }
+ },
+ "derived": [
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/sprites/king-walk.png",
+   "role": "cut + alpha-matted 5-cell sprite sheet (idle + 4 walk)",
+   "bytes": 25474,
+   "sha256": "655e7de43aea022a1c6a15c2760c3409a34068d382da7656adbf9980325823ca"
+  },
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/sprites/cameo-masked.png",
+   "role": "pixel-quantised masked cameo card face",
+   "bytes": 8259,
+   "sha256": "d1dffa035ba0016ef99b5ca9c8657116fe71447452dfb0e05422e073b1d13719"
+  },
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/sprites/cameo-unmasked.png",
+   "role": "pixel-quantised unmasked cameo card face",
+   "bytes": 8528,
+   "sha256": "46b0cebfe9347ac5a4ebc958767fa20793fe499165b808a2a7556602717b444b"
+  }
+ ],
+ "builders": [
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/build_sprites.py",
+   "role": "magenta key -> frame cut -> BOX downscale -> quantise",
+   "bytes": 10317,
+   "sha256": "d7ffa1adfb9a99b1fa0c106769031b017038c91487501f047c33230567dcdc6e"
+  },
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/build_cameos.py",
+   "role": "cameo crop -> BOX downscale -> quantise",
+   "bytes": 2656,
+   "sha256": "455ec6ee8284a90e93047e76f967dd7a942ac4e2c88df9addf9186a619647871"
+  }
+ ],
+ "page": [
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/index.html",
+   "role": "standalone page",
+   "bytes": 2028,
+   "sha256": "ee427e2d89ef8338d97d208bcab5b827048ba59b1e39f343737d0dc66f7a1ee6"
+  },
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/hd2d.js",
+   "role": "scene, sprite billboard, patrol, post chain, interaction",
+   "bytes": 29980,
+   "sha256": "6bb38cc9418b48d12f2b06dd16253bb62bd41b3cd044b7a64e03e8bb6552a836"
+  },
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/createBakerStreetStage.js",
+   "role": "copied verbatim from ../createBakerStreetStage.js",
+   "bytes": 888616,
+   "sha256": "1fb1b57bd9888d6dbf148af2289025ac9d59ee9106cb840a4a439693defcccd5"
+  }
+ ],
+ "vendored": {
+  "three": "../../app/vendor/three.module.js (r0.185.1, already in the site)",
+  "postprocessing": "vendor/postprocessing + vendor/shaders, copied unmodified from node_modules/three/examples/jsm \u2014 exactly the import closure of EffectComposer, RenderPass, ShaderPass, BokehPass, UnrealBloomPass and OutputPass, nothing else",
+  "bokeh_note": "BokehPass.js itself is unmodified; hd2d.js SUBCLASSES it (SpriteAwareBokehPass) to replace the global scene.overrideMaterial depth prepass with a per-object material swap, so the sprite's alphaTest reaches the depth buffer"
+ },
+ "tools": [
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/tools/laneb/hd2d-shot.mjs",
+   "role": "headless screenshot + probe",
+   "bytes": 2201,
+   "sha256": "633ef6bfea7d4674cd193fd573c53aa0838372143f6d4ed86f04654771b69c8a"
+  },
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/tools/laneb/hd2d-verify.mjs",
+   "role": "behavioural verification",
+   "bytes": 4731,
+   "sha256": "137a32a82272037f6e7bca30ed11f3fb99660d91df886686b420a72bafc7a774"
+  },
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/tools/laneb/hd2d-compare.py",
+   "role": "style-reference stack + histogram",
+   "bytes": 1657,
+   "sha256": "d79bc70ca648d7df6677b0c9a2923bc557acd448d5d431685971300bf8aa34d5"
+  }
+ ],
+ "verification": {
+  "walk": {
+   "framesSeen": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "animated": true,
+   "dirsSeen": [
+    1,
+    -1
+   ],
+   "flipsSeen": [
+    -1,
+    1
+   ],
+   "zRange": [
+    0.68,
+    2.6
+   ],
+   "movedUnits": 1.92
+  },
+  "click": {
+   "before": {
+    "stopped": false,
+    "z": 1.0185980000591273
+   },
+   "mid": {
+    "stopped": true,
+    "card": 1,
+    "flip": 0,
+    "visible": true
+   },
+   "after": {
+    "stopped": true,
+    "card": 1,
+    "flip": 1,
+    "z": 1.0603239998817438
+   },
+   "resumed": {
+    "stopped": false,
+    "card": 0
+   },
+   "frozen": true
+  },
+  "shots": [
+   "/Users/samz/Documents/gaslight-remake/shots/laneb-hd2d/hd2d-frame-0.png",
+   "/Users/samz/Documents/gaslight-remake/shots/laneb-hd2d/hd2d-frame-1.png",
+   "/Users/samz/Documents/gaslight-remake/shots/laneb-hd2d/hd2d-frame-2.png",
+   "/Users/samz/Documents/gaslight-remake/shots/laneb-hd2d/hd2d-frame-3.png",
+   "/Users/samz/Documents/gaslight-remake/shots/laneb-hd2d/hd2d-frame-4.png",
+   "/Users/samz/Documents/gaslight-remake/shots/laneb-hd2d/hd2d-card-masked.png",
+   "/Users/samz/Documents/gaslight-remake/shots/laneb-hd2d/hd2d-card-unmasked.png"
+  ],
+  "errors": []
+ },
+ "performance": {
+  "1280x720@dpr1": "59.9 fps (vsync cap)",
+  "1280x720@dpr2 (2560x1440)": "49.3 fps",
+  "measured_with": "headless Chromium, ANGLE/Metal"
+ }
+}

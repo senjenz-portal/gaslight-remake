@@ -1,0 +1,46 @@
+{
+ "lane": "hd2d-sprite-cut",
+ "generator": "build_sprites.py",
+ "source_raw_dir": "/Users/samz/Documents/gaslight-remake/assets/raw/hd2d-sprite/20260811-153630",
+ "sources": [
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/assets/raw/hd2d-sprite/20260811-153630/idle-a.png",
+   "sha256": "832bca3540616ac857a1c82c94fcc87a96f8b5fee02895998742cc6e3934266f",
+   "role": "idle plate"
+  },
+  {
+   "file": "/Users/samz/Documents/gaslight-remake/assets/raw/hd2d-sprite/20260811-153630/walk-a.png",
+   "sha256": "2129aa4f792db556f958d05e98f39c71f1f90ef6f0d273edaf4ef4c4a6e90c94",
+   "role": "4-frame walk strip"
+  }
+ ],
+ "output": {
+  "file": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/hd2d/sprites/king-walk.png",
+  "sha256": "655e7de43aea022a1c6a15c2760c3409a34068d382da7656adbf9980325823ca",
+  "size": [
+   450,
+   140
+  ],
+  "cell": [
+   90,
+   140
+  ],
+  "frames": [
+   "idle",
+   "walk0",
+   "walk1",
+   "walk2",
+   "walk3"
+  ],
+  "anchor_x_in_cell": 58.04,
+  "baseline_y_in_cell": 137,
+  "figure_height_px": 132,
+  "colors": 28
+ },
+ "params": {
+  "scale_walk": 0.18592,
+  "scale_idle": 0.18132,
+  "alpha": "binary threshold 128, magenta chroma key",
+  "downscale": "PIL BOX after edge-bleed guard"
+ }
+}

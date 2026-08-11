@@ -1,0 +1,70 @@
+{
+ "plate": [
+  1408,
+  768
+ ],
+ "layers": [
+  {
+   "id": "room",
+   "file": "room.png",
+   "x": 306,
+   "y": 36,
+   "w": 798,
+   "h": 712,
+   "bytes": 481065,
+   "sha256": "3c3bc5fbadf2470da652f86ecc370d1befa7a8228f860e863bdd0de9b63084db"
+  },
+  {
+   "id": "rock",
+   "file": "rock.png",
+   "x": 361,
+   "y": 485,
+   "w": 703,
+   "h": 264,
+   "bytes": 132193,
+   "sha256": "4812b9aae3726ef06f1c0c398511b9e69d2c38dbdc650d1bc24452688b752e17"
+  },
+  {
+   "id": "lamp",
+   "file": "lamp.png",
+   "x": 967,
+   "y": 94,
+   "w": 138,
+   "h": 422,
+   "bytes": 41477,
+   "sha256": "1180f321ecb18982a450ab50fa1612a46fa6efbfe4fe15493cc9321d03305972"
+  }
+ ],
+ "halo": {
+  "center": [
+   1012.0,
+   181.8
+  ],
+  "maxRadius": 150,
+  "peakRgb": [
+   113.3,
+   72.8,
+   9.1
+  ],
+  "note": "additive bloom, subtracted from the plate and re-added as a screen layer",
+  "cropOrigin": [
+   858,
+   27
+  ],
+  "cropSize": [
+   308,
+   308
+  ]
+ },
+ "sourceManifest": "/Users/samz/Documents/gaslight-remake/assets/raw/lanea-layers/20260811-155555/manifest.json",
+ "static": {
+  "void.png": {
+   "bytes": 84724,
+   "sha256": "4283649bc6ee17fb1b24cdb142890823cd8228c2e7eaebf25df7f22c30368a30"
+  },
+  "halo.png": {
+   "bytes": 16631,
+   "sha256": "b1a73107e3fae51c8b4ac635f97cd1f3848678c4e39178353605241a3de7fd23"
+  }
+ }
+}

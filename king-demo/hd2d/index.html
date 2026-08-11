@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>The New King — HD-2D</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #05070e; overflow: hidden; }
+  body {
+    font: 400 13px/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+    color: #cbd5e6;
+    display: grid;
+    place-items: center;
+  }
+  #stagewrap { position: relative; width: 100vw; height: 100vh; }
+  canvas#view { display: block; width: 100%; height: 100%; cursor: pointer; }
+
+  .overlay { position: absolute; pointer-events: none; user-select: none; }
+  .title {
+    top: 26px; left: 30px;
+    letter-spacing: 0.26em; text-transform: uppercase;
+    font-size: 11px; color: #7f8ea8;
+    text-shadow: 0 1px 6px #000a;
+  }
+  .title b {
+    display: block; margin-top: 8px;
+    font: 600 20px/1.2 ui-serif, Georgia, serif;
+    letter-spacing: 0.06em; color: #e8dcc6; text-transform: none;
+  }
+  .hint {
+    bottom: 28px; left: 0; right: 0; text-align: center;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #8593ad; text-shadow: 0 1px 6px #000a;
+    transition: opacity .4s;
+  }
+  .credit {
+    bottom: 26px; right: 30px; text-align: right;
+    font-size: 10px; letter-spacing: 0.1em; color: #55617a;
+  }
+  /* the overlays are pointer-events:none so a click always reaches the King;
+     the one link on the page has to opt back in or it cannot be clicked */
+  .credit a { pointer-events: auto; color: #7d8aa4; text-decoration: none; }
+  .credit a:hover { color: #c3b083; text-decoration: underline; }
+  noscript { position: absolute; inset: 0; display: grid; place-items: center; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../app/vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div id="stagewrap">
+  <canvas id="view"></canvas>
+  <div class="overlay title">Gaslight · Lane B<b>The New King</b></div>
+  <div class="overlay hint" id="hint">click the King</div>
+  <div class="overlay credit">HD-2D · pixel sprite on a procedural diorama<br>
+    <a href="../">← the King demo</a> · <a href="../living-plate/">the living plate</a></div>
+</div>
+<noscript>This page needs JavaScript and WebGL.</noscript>
+<script type="module" src="./hd2d.js"></script>
+</body>
+</html>

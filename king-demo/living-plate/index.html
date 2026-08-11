@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The Living Plate — 221B</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --gold-dim:rgba(205,171,99,.55);
+    --note:#c9b98f;
+    --edge:#2a2417;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1060px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  h2{font-weight:normal;font-size:22px;margin:0 0 2px;}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+       font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.6;max-width:72ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  section{margin-top:72px;}
+
+  /* ---- section head ---- */
+  .head{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;}
+  .head .kicker{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.22em;
+    font-size:12px;color:var(--gold-soft);}
+  h2 .sc{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.1em;
+    color:var(--cream-bright);}
+
+  /* ---- the stage ---- */
+  .stage{position:relative;width:100%;aspect-ratio:1408/768;overflow:hidden;
+    border:1px solid var(--edge);border-radius:3px;background:#060810;
+    cursor:zoom-in;user-select:none;-webkit-user-select:none;
+    box-shadow:0 26px 60px -30px rgba(0,0,0,.95);}
+  .stage>*{position:absolute;inset:0;}
+  .stage video,.stage img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  /* still-plate reference overlay, shared by both techniques */
+  .ref{opacity:0;transition:opacity .45s ease;pointer-events:none;z-index:40;}
+  .stage.showref .ref{opacity:1;}
+  .stage.showref .living{opacity:.001;}
+  .living{transition:opacity .45s ease;}
+
+  /* ---- technique 1: video ----
+     both copies have to occupy the same box: two block-level <video> would
+     stack and the second would sit below the fold of the stage, which makes
+     the cross-fade composite against nothing. */
+  .living>video{position:absolute;left:0;top:0;width:100%;height:100%;}
+  .vid{opacity:1;}
+
+  /* ---- technique 2: layers ---- */
+  #plate-layers{background:#0b1226;}
+  #plate-layers .lyr{position:absolute;transform-origin:50% 50%;will-change:transform;}
+  #plate-layers img.lyr{image-rendering:auto;}
+  #void{inset:0;width:100%;height:100%;}
+  /* NB: mix-blend-mode has to live on the *transformed* wrapper. A transform or
+     a will-change:transform opens a stacking context, and a blend inside one
+     composites against its own empty parent — a screen layer would paint its
+     own black. So the wrappers blend; their children never do. */
+  #emis-room,#halowrap,#motes,.fog{mix-blend-mode:screen;}
+  .emis{position:absolute;pointer-events:none;border-radius:50%;
+    will-change:opacity,transform;}
+  #halo{position:absolute;pointer-events:none;will-change:opacity,transform;}
+  .fog{position:absolute;left:-30%;top:0;width:160%;height:100%;pointer-events:none;
+    will-change:transform;}
+  .mote{position:absolute;width:2px;height:2px;border-radius:50%;
+    background:rgba(255,226,168,.9);pointer-events:none;
+    filter:blur(.3px);will-change:transform,opacity;}
+
+  @keyframes drift-a{from{transform:translate3d(-8%,0,0);}to{transform:translate3d(8%,0,0);}}
+  @keyframes drift-b{from{transform:translate3d(7%,0,0);}to{transform:translate3d(-9%,0,0);}}
+  @keyframes lampbreathe{
+    0%,100%{opacity:.80;transform:scale(1);}
+    38%{opacity:1;transform:scale(1.035);}
+    62%{opacity:.86;transform:scale(1.01);}
+  }
+  @keyframes lampflick{
+    0%,100%{opacity:1;} 6%{opacity:.86;} 9%{opacity:1;} 41%{opacity:.93;}
+    44%{opacity:1;} 71%{opacity:.82;} 74%{opacity:.98;} 77%{opacity:.9;} 80%{opacity:1;}
+  }
+  @keyframes firelick{
+    0%,100%{opacity:.42;transform:scale(1);}
+    17%{opacity:.74;transform:scale(1.06);}
+    31%{opacity:.5;transform:scale(.98);}
+    52%{opacity:.86;transform:scale(1.09);}
+    68%{opacity:.48;transform:scale(1.01);}
+    83%{opacity:.68;transform:scale(1.04);}
+  }
+  @keyframes winbreathe{0%,100%{opacity:.24;}45%{opacity:.68;}}
+  @keyframes motefloat{
+    0%{transform:translate3d(0,0,0);opacity:0;}
+    12%{opacity:.85;}
+    88%{opacity:.6;}
+    100%{transform:translate3d(var(--mx),var(--my),0);opacity:0;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .fog,.emis,#halo,.mote{animation:none !important;}
+  }
+
+  /* ---- caption bar under a stage ---- */
+  .bar{display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+    margin-top:9px;flex-wrap:wrap;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);}
+  .bar .opts{text-align:right;}
+  .opt{cursor:pointer;color:var(--gold-soft);background:none;border:0;padding:0;
+    font:inherit;letter-spacing:inherit;}
+  .opt:hover{text-decoration:underline;}
+  .opt.active{color:#d8b45a;cursor:default;border-bottom:1px solid var(--gold-dim);}
+  .opt.active:hover{text-decoration:none;}
+  .sep{color:var(--gold-dim);padding:0 6px;}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:22px;}
+  @media (max-width:720px){.cols{grid-template-columns:1fr;}}
+  .cols p{margin:0;}
+  dl.spec{margin:16px 0 0;display:grid;grid-template-columns:auto 1fr;gap:5px 16px;
+    font-size:13.5px;color:var(--note);max-width:72ch;}
+  dl.spec dt{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.14em;
+    color:var(--gold-soft);white-space:nowrap;}
+  dl.spec dd{margin:0;}
+
+  /* small square stage for the street plate */
+  .sq{aspect-ratio:1/1;max-width:520px;}
+  .pair{display:grid;grid-template-columns:520px 1fr;gap:30px;align-items:start;}
+  @media (max-width:820px){.pair{grid-template-columns:1fr;} .sq{max-width:100%;}}
+
+  /* ---- lightbox ---- */
+  #lightbox{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;
+    background:rgba(6,8,16,.95);cursor:zoom-out;padding:4vmin;}
+  #lightbox.open{display:flex;}
+  #lightbox .holder{max-width:100%;max-height:100%;border:1px solid var(--edge);border-radius:3px;
+    box-shadow:0 0 70px rgba(0,0,0,.85);overflow:hidden;position:relative;background:#060810;}
+  #lightbox .holder>*{display:block;max-width:100%;max-height:88vh;}
+  #lightbox .cap{position:absolute;left:0;right:0;bottom:16px;text-align:center;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);pointer-events:none;}
+
+  /* ---- verdict table ---- */
+  table.verdict{border-collapse:collapse;margin:22px 0 6px;font-size:14px;width:100%;max-width:640px;}
+  table.verdict th,table.verdict td{text-align:left;padding:9px 18px 9px 0;
+    border-bottom:1px solid #1b2135;color:var(--note);font-weight:normal;}
+  table.verdict thead th{font-variant-caps:small-caps;text-transform:lowercase;
+    letter-spacing:.16em;font-size:11.5px;color:var(--gold-soft);border-bottom:1px solid var(--gold-dim);}
+  table.verdict tbody th{font-variant-caps:small-caps;text-transform:lowercase;
+    letter-spacing:.12em;color:var(--cream-bright);white-space:nowrap;}
+  table.verdict td b{color:var(--cream-bright);font-weight:normal;}
+
+  footer{margin-top:84px;border-top:1px solid #1b2135;padding-top:20px;}
+  footer p{color:var(--note);font-size:13.5px;max-width:72ch;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Lane A · unlisted</div>
+  <h1>The Living Plate</h1>
+  <div class="rule"></div>
+  <p class="note">One master plate — 221B, gas-lit, on its floating rock — and two ways to make it
+  move without ever ceasing to be itself. Nothing here is re-composed, re-lit or re-modelled.
+  The brief for both techniques was the same: <b>the plate stays the plate</b>; only the air,
+  the fire and the lamplight are allowed to change.</p>
+
+  <!-- ============================ 1 · BREATHED ============================ -->
+  <section id="s-breathed">
+    <div class="head">
+      <h2><span class="sc">the plate, breathed</span></h2>
+      <div class="kicker">technique one · generative video</div>
+    </div>
+    <div class="rule"></div>
+    <p class="note">The plate handed to an image-to-video model as <i>both</i> the first frame and
+    the last frame, so the clip is forced to return to its own opening image. No audio, no cut.
+    The prompt asked for light and nothing else: the lamp flame, the hearth, the window panes
+    breathing, and a two-percent camera push. The last twelve frames are then fused into the
+    first twelve offline, which closes the wrap exactly — one file, one <code>&lt;video loop&gt;</code>,
+    nothing for the browser to keep in sync.</p>
+
+    <div class="stage" id="stage-room" data-cap="the plate, breathed">
+      <div class="living">
+        <video class="vid" id="vidA" src="breathed-room.mp4" muted playsinline loop autoplay
+               preload="auto" poster="plate-room.jpg" aria-label="221B, breathing"></video>
+      </div>
+      <img class="ref" src="plate-room.jpg" alt="the original still plate">
+    </div>
+    <div class="bar">
+      <div id="cap-room">5.5 s loop · 1920 × 1080 · 1.1 MB</div>
+      <div class="opts">
+        <button class="opt active" data-stage="stage-room" data-mode="live">breathed</button><span class="sep">/</span><button class="opt" data-stage="stage-room" data-mode="ref">still plate</button>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>model</dt><dd>Seedance 2.0 <span class="tag">model_bytedance-seedance-2-0</span>, image → video</dd>
+      <dt>loop trick</dt><dd><code>image</code> and <code>lastFrameImage</code> both set to the plate</dd>
+      <dt>raw seam</dt><dd>1.19 mean RGB across the wrap, 3.0&nbsp;% of pixels moving &gt; 6 — small, but visible as a tick</dd>
+      <dt>fused seam</dt><dd><b>0.27 mean, 0.27&nbsp;% of pixels</b> — against 0.13 for an ordinary adjacent pair mid-clip. The wrap is now within noise of a normal frame step.</dd>
+      <dt>why not js</dt><dd>the two-copy cross-fade has to hold its copies half a cycle apart to cover the wrap, so the blend mixes a bright hearth with a dim one for the whole clip — a permanent double exposure. Fusing the ends offline blends frames that are already near-identical: worst ghost in the window, 1.4 RGB.</dd>
+      <dt>attempt 1</dt><dd>asked for drifting fog and got a glowing ribbon orbiting the island — a structural addition. Fog was cut from the prompt entirely and moved to technique two.</dd>
+    </dl>
+  </section>
+
+  <!-- ============================ 2 · LAYERED ============================ -->
+  <section id="s-layered">
+    <div class="head">
+      <h2><span class="sc">the plate, layered</span></h2>
+      <div class="kicker">technique two · animated illustration</div>
+    </div>
+    <div class="rule"></div>
+    <p class="note">The same plate cut into depth — void, room, rock, lamp — and put back together
+    with a twelve-second camera drift. The gas-lamp bloom was lifted out as its own additive layer
+    before cutting, so it can pulse on its own and can never tear at a seam. Fog is a displaced
+    turbulence band drifting between the rock and the room; the hearth, the window panes and the
+    flame are emissive overlays. No dependencies, no video, no canvas — five images and a transform.</p>
+
+    <div class="stage" id="stage-layers" data-cap="the plate, layered">
+      <div class="living" id="plate-layers">
+        <img id="void" class="lyr" src="void.png" alt="" aria-hidden="true">
+
+        <img id="rock" class="lyr" src="rock.png" alt="" aria-hidden="true">
+
+        <!-- fog: in front of the rock, behind the room -->
+        <div class="fog" id="fog1" style="animation:drift-a 46s linear infinite alternate;">
+          <svg viewBox="0 0 1408 768" preserveAspectRatio="none" width="100%" height="100%">
+            <defs>
+              <filter id="wisp1" x="-20%" y="-90%" width="140%" height="280%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.009 0.026" numOctaves="3" seed="17" result="n"/>
+                <feDisplacementMap in="SourceGraphic" in2="n" scale="52" xChannelSelector="R" yChannelSelector="G"/>
+                <feGaussianBlur stdDeviation="6"/>
+              </filter>
+              <linearGradient id="fade1" x1="0" x2="1">
+                <stop offset="0" stop-color="#a9c8e8" stop-opacity="0"/>
+                <stop offset=".3" stop-color="#bcd4ee" stop-opacity=".85"/>
+                <stop offset=".68" stop-color="#d2e2f4" stop-opacity="1"/>
+                <stop offset="1" stop-color="#a9c8e8" stop-opacity="0"/>
+              </linearGradient>
+              <radialGradient id="soft1" cx=".5" cy=".5" r=".5">
+                <stop offset="0" stop-color="#fff" stop-opacity="1"/>
+                <stop offset=".55" stop-color="#fff" stop-opacity=".7"/>
+                <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+              </radialGradient>
+              <mask id="fogmask1">
+                <ellipse cx="700" cy="556" rx="360" ry="66" fill="url(#soft1)"/>
+              </mask>
+            </defs>
+            <g filter="url(#wisp1)" opacity=".26" mask="url(#fogmask1)">
+              <ellipse cx="700" cy="548" rx="340" ry="21" fill="url(#fade1)"/>
+              <ellipse cx="586" cy="572" rx="240" ry="14" fill="url(#fade1)"/>
+              <ellipse cx="836" cy="560" rx="190" ry="12" fill="url(#fade1)"/>
+            </g>
+          </svg>
+        </div>
+
+        <img id="room" class="lyr" src="room.png" alt="221B, sliced into depth layers">
+
+        <!-- emissives sit with the room -->
+        <div id="emis-room" class="lyr" style="pointer-events:none;">
+          <div class="emis" id="fire"  style="animation:firelick 3.9s ease-in-out infinite;"></div>
+          <div class="emis" id="win-a" style="animation:winbreathe 7.3s ease-in-out infinite;"></div>
+          <div class="emis" id="win-b" style="animation:winbreathe 9.1s ease-in-out infinite .9s;"></div>
+          <div class="emis" id="win-c" style="animation:winbreathe 11.7s ease-in-out infinite 2.1s;"></div>
+          <div class="emis" id="candle" style="animation:firelick 2.6s ease-in-out infinite .4s;"></div>
+        </div>
+
+        <img id="lamp" class="lyr" src="lamp.png" alt="" aria-hidden="true">
+        <div class="lyr" id="halowrap" style="pointer-events:none;">
+          <img id="halo" src="halo.png" alt="" aria-hidden="true"
+               style="animation:lampbreathe 6.4s ease-in-out infinite, lampflick 2.3s steps(1,end) infinite;">
+        </div>
+        <div class="lyr" id="motes" style="pointer-events:none;"></div>
+
+        <!-- a second, fainter pass in front of everything -->
+        <div class="fog" id="fog2" style="animation:drift-b 61s linear infinite alternate;">
+          <svg viewBox="0 0 1408 768" preserveAspectRatio="none" width="100%" height="100%">
+            <defs>
+              <filter id="wisp2" x="-20%" y="-90%" width="140%" height="280%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.006 0.019" numOctaves="2" seed="41" result="n2"/>
+                <feDisplacementMap in="SourceGraphic" in2="n2" scale="74" xChannelSelector="R" yChannelSelector="G"/>
+                <feGaussianBlur stdDeviation="10"/>
+              </filter>
+              <mask id="fogmask2">
+                <ellipse cx="672" cy="600" rx="330" ry="60" fill="url(#soft1)"/>
+              </mask>
+            </defs>
+            <g filter="url(#wisp2)" opacity=".13" mask="url(#fogmask2)">
+              <ellipse cx="672" cy="596" rx="300" ry="17" fill="url(#fade1)"/>
+              <ellipse cx="780" cy="614" rx="200" ry="11" fill="url(#fade1)"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <img class="ref" src="plate-room.jpg" alt="the original still plate">
+    </div>
+    <div class="bar">
+      <div id="cap-layers">4 depth layers · 12 s drift · 736 KB of PNG · no dependencies</div>
+      <div class="opts">
+        <button class="opt active" data-stage="stage-layers" data-mode="live">layered</button><span class="sep">/</span><button class="opt" data-stage="stage-layers" data-mode="ref">still plate</button>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>the void</dt><dd>the backdrop is an isotropic radial gradient about (700, 390); a quadratic-in-<i>r</i> fit recovers it to 2.7 RGB RMS, which gives an exact silhouette by residual instead of a traced outline</dd>
+      <dt>the bloom</dt><dd>the lamp halo measured as an additive radial profile in the clean void sector, subtracted from the plate, shipped as its own screen-blended layer</dd>
+      <dt>the cuts</dt><dd>two hand-authored polygons — the lamp column, and the deck-to-rock rim — intersected with that silhouette</dd>
+      <dt>the fill</dt><dd>26 px of harmonically inpainted headroom behind every layer, so the drift never opens a hole</dd>
+      <dt>parallax</dt><dd>room 0.34 · rock 0.60 · lamp 1.00, ±11 px on an ellipse — a diorama turning, not cards sliding</dd>
+    </dl>
+  </section>
+
+  <!-- ============================ 3 · THE OTHER PLATE ============================ -->
+  <section id="s-street">
+    <div class="head">
+      <h2><span class="sc">the second plate, breathed</span></h2>
+      <div class="kicker">the same trick, the street</div>
+    </div>
+    <div class="rule"></div>
+    <div class="pair">
+      <div>
+        <div class="stage sq" id="stage-street" data-cap="the street, breathed">
+          <div class="living">
+            <video class="vid" id="stA" src="breathed-street.mp4" muted playsinline loop autoplay
+                   preload="auto" poster="plate-street.jpg" aria-label="Baker Street, breathing"></video>
+          </div>
+          <img class="ref" src="plate-street.jpg" alt="the original street plate">
+        </div>
+        <div class="bar">
+          <div>5.5 s loop · 900 × 900 · fused seam 0.02</div>
+          <div class="opts">
+            <button class="opt active" data-stage="stage-street" data-mode="live">breathed</button><span class="sep">/</span><button class="opt" data-stage="stage-street" data-mode="ref">still plate</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="note">The street corner ran through the identical pipeline. It holds the
+        composition even harder than the room does — carriage, horses and every figure stay
+        exactly put — but it has less to burn: two lamps and a wall of windows, no hearth.
+        The room plate is the better subject for this treatment, and it is the one the layered
+        build was cut from.</p>
+        <p class="note" style="margin-top:14px;">Its first attempt failed the same way the room's
+        did, and worse: a prompt that mentioned fog produced a white plume rolling off the
+        cobbles and blew out the carriage lantern halfway through.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ 4 · THE VERDICT ============================ -->
+  <section id="s-verdict">
+    <div class="head">
+      <h2><span class="sc">which one reads better</span></h2>
+      <div class="kicker">measured, not argued</div>
+    </div>
+    <div class="rule"></div>
+    <p class="note">Both stages were captured through the same box, ten frames apart, and each
+    compared against its own still-plate toggle — so the two numbers below are measured through
+    identical scaling and cropping. <b>Drift</b> is how far the technique sits from the plate at
+    its <i>closest</i> moment: what stays different no matter which frame you freeze on.
+    <b>Motion</b> is mean frame-to-frame change.</p>
+
+    <table class="verdict">
+      <thead><tr><th></th><th>drift from the plate</th><th>motion</th><th>weight</th></tr></thead>
+      <tbody>
+        <tr><th>the plate, breathed</th><td><b>12.25</b> RGB</td><td>2.66</td><td>1.1 MB + a decode</td></tr>
+        <tr><th>the plate, layered</th><td><b>3.53</b> RGB</td><td>1.39</td><td>736 KB, no decode</td></tr>
+      </tbody>
+    </table>
+
+    <div class="cols">
+      <p class="note"><span class="lbl">the video moves better</span><br>
+      Twice the motion energy, and it is the <i>right</i> motion: the hearth flickers with a
+      changing flame shape rather than a pulsing ellipse, the window panes brighten unevenly
+      pane by pane, and the push-in is a real dolly, so every edge in the frame gets correct
+      perspective — not three cards on three speeds. Nothing was authored to get it.</p>
+      <p class="note"><span class="lbl">the layers stay the plate</span><br>
+      12.25 is not a light change. The model re-framed the plate to 16:9 — its diorama sits about
+      7&nbsp;% larger in the box than the original does — and repainted it on the way: mantel
+      clutter, rock facets, wall tint. No frame of the loop is ever the plate again. The layered
+      build is the plate — its 3.53 is the fog and the emissives, added light and nothing else.
+      It is also deterministic, re-cuttable onto any plate by the same script, tunable
+      (parallax, fog, flicker are all parameters), reduced-motion aware, and it can take a
+      pointer.</p>
+    </div>
+
+    <p class="note" style="margin-top:22px;"><b>The layered build is the one to carry.</b> The
+    direction was that the art is the experience and the plate must stay the plate; a technique
+    that quietly repaints the art fails that on its own terms, however lovely the light. The
+    video earns a place as the hero moment — a single loop at the top of a page, where nobody
+    is holding it against the original. The layered build is what the product should be made of,
+    and the one thing it lacks is depth <i>inside</i> the room: one more cut, separating the two
+    wall planes from the furniture standing on the floor, would give the walls their own parallax
+    and close most of the gap to the video's dolly.</p>
+  </section>
+
+  <footer>
+    <p><span class="lbl">provenance</span><br>
+    Plates: <code>assets/plates/backdrop.png</code>, <code>assets/plates/street-arrival.png</code>.
+    Video: Scenario <code>model_bytedance-seedance-2-0</code>, 2 prompts per plate, raw mp4 and
+    job manifests under <code>assets/raw/lanea-video/</code>. Layers:
+    <code>tools/lanea/slice_plate.py</code> (numpy + PIL, deterministic, no network), raw layers and
+    analysis manifest under <code>assets/raw/lanea-layers/</code>.</p>
+    <p class="lbl"><a href="../">← the King demo</a> · <a href="../hd2d/">the HD-2D exploration →</a></p>
+  </footer>
+</div>
+
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="enlarged plate">
+  <div class="holder"><img id="lb-img" src="" alt=""><div class="cap" id="lb-cap"></div></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var PLATE_W = 1408, PLATE_H = 768;
+
+  /* ------------------------------------------------------------------ *
+   * 1 · layer placement — everything is authored in plate pixel space   *
+   * ------------------------------------------------------------------ */
+  var LAYERS = [
+    {id:"room", x:306, y: 36, w:798, h:712, depth:0.34},
+    {id:"rock", x:361, y:485, w:703, h:264, depth:0.60},
+    {id:"lamp", x:967, y: 94, w:138, h:422, depth:1.00}
+  ];
+  var HALO = {x:858, y:27, w:308, h:308, depth:1.00};
+
+  /* emissive overlays, in plate pixels: [cx, cy, radius, colour, alpha] */
+  var EMIS = {
+    "fire":   [516, 432,  92, "255,168,58",  .58],
+    "win-a":  [876, 172,  70, "255,214,132", .26],
+    "win-b":  [876, 268,  62, "255,206,120", .22],
+    "win-c":  [872, 348,  56, "255,198,110", .18],
+    "candle": [577, 300,  22, "255,206,126", .55]
+  };
+
+  function pct(v, total){ return (v / total * 100) + "%"; }
+
+  function place(el, box){
+    el.style.left   = pct(box.x, PLATE_W);
+    el.style.top    = pct(box.y, PLATE_H);
+    el.style.width  = pct(box.w, PLATE_W);
+    el.style.height = pct(box.h, PLATE_H);
+  }
+
+  LAYERS.forEach(function(L){
+    var el = document.getElementById(L.id);
+    if (el) { place(el, L); L.el = el; }
+  });
+
+  (function(){
+    var w = document.getElementById("halowrap");
+    place(w, HALO);
+    w.style.left = pct(HALO.x, PLATE_W); w.style.top = pct(HALO.y, PLATE_H);
+    var img = document.getElementById("halo");
+    img.style.width = "100%"; img.style.height = "100%";
+  })();
+
+  Object.keys(EMIS).forEach(function(k){
+    var e = EMIS[k], el = document.getElementById(k);
+    if (!el) return;
+    el.style.left   = pct(e[0] - e[2], PLATE_W);
+    el.style.top    = pct(e[1] - e[2], PLATE_H);
+    el.style.width  = pct(e[2] * 2, PLATE_W);
+    el.style.height = pct(e[2] * 2, PLATE_H);
+    el.style.background = "radial-gradient(circle at 50% 50%, rgba(" + e[3] + "," + e[4] +
+      ") 0%, rgba(" + e[3] + "," + (e[4] * 0.45) + ") 38%, rgba(" + e[3] + ",0) 72%)";
+  });
+
+  /* the emissive group and the halo wrapper ride their parent layer's depth */
+  var emisRoom = document.getElementById("emis-room");
+  emisRoom.style.left = "0"; emisRoom.style.top = "0";
+  emisRoom.style.width = "100%"; emisRoom.style.height = "100%";
+  var motes = document.getElementById("motes");
+  motes.style.left = "0"; motes.style.top = "0";
+  motes.style.width = "100%"; motes.style.height = "100%";
+
+  /* dust motes in the lamplight */
+  var MOTES = [[1002,236],[1042,204],[978,268],[1030,150],[996,190],[1052,258],[966,214]];
+  MOTES.forEach(function(m, i){
+    var d = document.createElement("div");
+    d.className = "mote";
+    d.style.left = pct(m[0], PLATE_W);
+    d.style.top  = pct(m[1], PLATE_H);
+    d.style.setProperty("--mx", (((i * 37) % 23) - 11) + "px");
+    d.style.setProperty("--my", (-34 - (i * 9) % 26) + "px");
+    d.style.animation = "motefloat " + (11 + i * 1.7) + "s linear infinite " + (i * 1.9) + "s";
+    motes.appendChild(d);
+  });
+
+  /* ------------------------------------------------------------------ *
+   * 2 · the camera drift — one slow ellipse, 12 s                       *
+   * ------------------------------------------------------------------ */
+  var AMP_X = 11, AMP_Y = 4.2, PERIOD = 12000, SCALE_GAIN = 0.012;
+  var stageLayers = document.getElementById("stage-layers");
+  var running = true, reduced = false;
+  try {
+    reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (e) {}
+
+  function frame(now){
+    if (running) {
+      var t = (now % PERIOD) / PERIOD * Math.PI * 2;
+      var cx = Math.sin(t), cy = Math.sin(t * 2 + 0.7);
+      for (var i = 0; i < LAYERS.length; i++) {
+        var L = LAYERS[i];
+        if (!L.el) continue;
+        var dx = cx * AMP_X * L.depth, dy = cy * AMP_Y * L.depth;
+        var s  = 1 + SCALE_GAIN * L.depth * (0.5 + 0.5 * Math.cos(t));
+        var tr = "translate3d(" + (dx / PLATE_W * 100 * (PLATE_W / L.w)) + "%," +
+                 (dy / PLATE_H * 100 * (PLATE_H / L.h)) + "%,0) scale(" + s + ")";
+        L.el.style.transform = tr;
+        if (L.id === "room") emisRoom.style.transform =
+          "translate3d(" + (dx / PLATE_W * 100) + "%," + (dy / PLATE_H * 100) + "%,0)";
+        if (L.id === "lamp") {
+          document.getElementById("halowrap").style.transform =
+            "translate3d(" + (dx / HALO.w * 100) + "%," + (dy / HALO.h * 100) + "%,0)";
+          motes.style.transform =
+            "translate3d(" + (dx / PLATE_W * 100) + "%," + (dy / PLATE_H * 100) + "%,0)";
+        }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  if (!reduced) requestAnimationFrame(frame);
+
+  /* pause the drift when the stage is off screen */
+  if (window.IntersectionObserver) {
+    new IntersectionObserver(function(es){
+      es.forEach(function(e){ running = e.isIntersecting && !reduced; });
+    }, {threshold:0.02}).observe(stageLayers);
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 3 · video — the seam is baked into the file, so this is only the    *
+   *     nagging needed to keep autoplay alive on mobile Safari          *
+   * ------------------------------------------------------------------ */
+  var vids = ["vidA", "stA"].map(function(id){ return document.getElementById(id); })
+                            .filter(Boolean);
+  function nudge(){
+    vids.forEach(function(v){
+      if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+    });
+  }
+  nudge();
+  document.addEventListener("visibilitychange", function(){ if (!document.hidden) nudge(); });
+  ["touchstart", "click", "keydown"].forEach(function(e){
+    document.addEventListener(e, nudge, { once: true, passive: true });
+  });
+
+  /* ------------------------------------------------------------------ *
+   * 4 · still-plate reference toggle + lightbox                         *
+   * ------------------------------------------------------------------ */
+  document.querySelectorAll(".opt").forEach(function(btn){
+    btn.addEventListener("click", function(ev){
+      ev.stopPropagation();
+      var stage = document.getElementById(btn.dataset.stage);
+      stage.classList.toggle("showref", btn.dataset.mode === "ref");
+      btn.parentNode.querySelectorAll(".opt").forEach(function(o){
+        o.classList.toggle("active", o === btn);
+      });
+    });
+  });
+
+  var lb = document.getElementById("lightbox"),
+      lbImg = document.getElementById("lb-img"),
+      lbCap = document.getElementById("lb-cap");
+  var SHOT = {"stage-room":"plate-room.jpg","stage-layers":"plate-room.jpg","stage-street":"plate-street.jpg"};
+  document.querySelectorAll(".stage").forEach(function(s){
+    s.addEventListener("click", function(){
+      lbImg.src = SHOT[s.id];
+      lbCap.textContent = s.dataset.cap + " — source plate";
+      lb.classList.add("open");
+    });
+  });
+  lb.addEventListener("click", function(){ lb.classList.remove("open"); lbImg.src = ""; });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape") { lb.classList.remove("open"); lbImg.src = ""; }
+  });
+})();
+</script>
+</body>
+</html>
