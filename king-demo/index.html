@@ -125,11 +125,14 @@
     <figcaption><b>“We were both in the photograph.”</b></figcaption>
   </figure>
 
-  <h2>3 · The mesh — two generators</h2>
+  <h2>3 · The mesh — four takes</h2>
   <div class="rule"></div>
-  <p class="note">The same concept plate through two image→3D generators. In the viewer:
-  Tripo&nbsp;3.1 <span class="tag">(tripo-v3-1-image-to-3d)</span>, smart low poly with a
-  rebaked face texture — 19,622 triangles against the previous mesh's 100k.</p>
+  <p class="note">The same concept plate, four ways: two image→3D generators, a graft, and an
+  auto-rig. In the viewer by default: Tripo&nbsp;3.1 <span class="tag">(tripo-v3-1-image-to-3d)</span>,
+  smart low poly with a rebaked face texture — 19,622 triangles against the previous mesh's
+  100k. On the switch: the hybrid graft (Tripo head on the procedural game body), the
+  auto-rigged and animated take <span class="tag">(Make-It-Animatable + a stock Mixamo run)</span>,
+  and the previous Scenario YVO3D generation.</p>
   <div class="mesh-grid">
     <figure id="viewer-fig">
       <canvas id="viewer"></canvas>
@@ -137,6 +140,7 @@
         role="group" aria-label="Choose the mesh in the viewer"><span class="mesh-opt active"
         data-key="tripo" role="button" tabindex="0">tripo 3.1</span><span class="sep">·</span><span
         class="mesh-opt" data-key="hybrid" role="button" tabindex="0">hybrid — tripo head, game body</span><span
+        class="sep">·</span><span class="mesh-opt" data-key="rigged" role="button" tabindex="0">RIGGED — auto-rig + mixamo run</span><span
         class="sep">·</span><span class="mesh-opt" data-key="yvo" role="button" tabindex="0">previous (yvo3d)</span></span></div>
       <figcaption id="viewer-caption">Tripo 3.1 — smart low poly with the rebaked face texture, 19,622 tris</figcaption>
     </figure>
@@ -282,13 +286,17 @@ controls.maxDistance = 6;
 controls.target.set(0, 1.05, 0);         /* chest height — hero framing, head safe */
 controls.update();
 
-/* three meshes, one viewer: Tripo 3.1 by default; each lazy-loads on first selection */
+/* four meshes, one viewer: Tripo 3.1 by default; each lazy-loads on first selection.
+ * 'rigged' carries a baked Mixamo run clip — it gets an AnimationMixer on load,
+ * driven from the render loop only while it is the one on screen. */
 const HEIGHT = 1.9;                     /* normalise all meshes to the same stature */
 const MODELS = {
   tripo:  { url:'king2-tripo.glb',
             caption:'Tripo 3.1 — smart low poly with the rebaked face texture, 19,622 tris' },
   hybrid: { url:'king2-hybrid.glb',
             caption:'Tripo head on the animated game body — the grafting experiment' },
+  rigged: { url:'king2-rigged.glb',
+            caption:'Auto-rigged (Make-It-Animatable, free) — a stock Mixamo run retargeted onto the generated mesh. The full pipeline: portrait → image→3D → auto-rig → animate.' },
   yvo:    { url:'king2.glb',
             caption:'Scenario YVO3D — the previous mesh, 100k tris' }
 };
@@ -305,6 +313,8 @@ function prepare(model){
   model.position.x -= center.x;
   model.position.z -= center.z;
   model.position.y -= b.min.y;          /* feet on the ground */
+  /* skinned meshes animate outside their bind-pose bounds — never cull them */
+  model.traverse((o) => { if (o.isSkinnedMesh) o.frustumCulled = false; });
   return model;
 }
 
@@ -320,12 +330,18 @@ function show(key){
     controls.target.set(0, HEIGHT * 0.55, 0);
     controls.update();
     if (key === 'tripo') window.__meshLoaded = true;             /* verification hook */
-    window.__viewer = { camera, controls, renderer, show, showing:key }; /* verification hook */
+    window.__viewer = { camera, controls, renderer, show, showing:key,
+                        mixer: MODELS[key].mixer || null };      /* verification hook */
   };
   if (MODELS[key].model) return done(MODELS[key].model);
   loading = true;
   loader.load(MODELS[key].url, (gltf) => {
     MODELS[key].model = prepare(gltf.scene);
+    if (gltf.animations.length){       /* the rigged take: play its run clip on loop */
+      const mixer = new THREE.AnimationMixer(gltf.scene);
+      mixer.clipAction(gltf.animations[0]).play();   /* LoopRepeat is the default */
+      MODELS[key].mixer = mixer;
+    }
     done(MODELS[key].model);
   }, undefined, (err) => {
     loading = false;
@@ -353,8 +369,12 @@ function resize(){
 }
 window.addEventListener('resize', resize);
 
+const clock = new THREE.Clock();
 renderer.setAnimationLoop(() => {
   resize();
+  const dt = clock.getDelta();
+  const mixer = MODELS[showing] && MODELS[showing].mixer;
+  if (mixer) mixer.update(dt);   /* only the on-screen model runs; the rest stay paused */
   controls.update();
   renderer.render(scene, camera);
 });
