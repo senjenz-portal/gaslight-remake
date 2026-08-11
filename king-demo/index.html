@@ -54,19 +54,30 @@
   #mask-cue{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
     font-size:12px;color:var(--gold-soft);white-space:nowrap;}
 
-  /* ---- the mesh ---- */
-  .mesh-grid{display:grid;grid-template-columns:3fr 2fr;gap:22px;margin-top:18px;align-items:start;}
-  @media (max-width:760px){.mesh-grid{grid-template-columns:1fr;}}
+  /* ---- the mesh: stacked hero viewer, thumbs in a row below ---- */
+  .mesh-grid{display:grid;grid-template-columns:1fr;gap:22px;margin-top:18px;align-items:start;}
   #viewer-fig{position:relative;}
-  #viewer{width:100%;aspect-ratio:4/5;display:block;border:1px solid #2a2417;border-radius:3px;
-    background:#0d1428;cursor:grab;touch-action:none;}
+  #viewer{width:100%;aspect-ratio:16/10;max-height:78vh;display:block;border:1px solid #2a2417;
+    border-radius:3px;background:#0d1428;cursor:grab;touch-action:none;}
   #viewer:active{cursor:grabbing;}
-  .side-stack{display:grid;gap:22px;}
+  .side-stack{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  @media (max-width:560px){.side-stack{grid-template-columns:1fr;}}
   .viewer-cue{display:flex;justify-content:space-between;align-items:baseline;gap:18px;
     font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
     font-size:12px;color:var(--gold-soft);margin-top:7px;}
   #mesh-toggle{cursor:pointer;color:#d8b45a;white-space:nowrap;}
   #mesh-toggle:hover{text-decoration:underline;}
+
+  /* ---- lightbox ---- */
+  figure img, #zoom-photo{cursor:zoom-in;}
+  #lightbox{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+    background:rgba(6,8,16,.94);cursor:zoom-out;padding:4vmin;box-sizing:border-box;}
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:100%;max-height:100%;display:block;border:1px solid #2a2417;
+    border-radius:3px;box-shadow:0 0 60px rgba(0,0,0,.8);}
+  #lightbox figcaption{position:absolute;left:0;right:0;bottom:18px;text-align:center;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);pointer-events:none;}
 
   footer{margin-top:80px;}
   footer p{color:var(--note);font-size:14px;}
@@ -111,8 +122,8 @@
   <h2>3 · The mesh — two generators</h2>
   <div class="rule"></div>
   <p class="note">The same concept plate through two image→3D generators. In the viewer:
-  Tripo&nbsp;3.1 <span class="tag">(tripo-v3-1-image-to-3d)</span>, smart low poly —
-  12,848 triangles against the previous mesh's 100k.</p>
+  Tripo&nbsp;3.1 <span class="tag">(tripo-v3-1-image-to-3d)</span>, smart low poly with a
+  rebaked face texture — 19,622 triangles against the previous mesh's 100k.</p>
   <div class="mesh-grid">
     <figure id="viewer-fig">
       <canvas id="viewer"></canvas>
@@ -120,7 +131,7 @@
         role="button" tabindex="0" aria-label="Swap the mesh in the viewer">view previous mesh</span></div>
     </figure>
     <div class="side-stack">
-      <figure><img src="king2-tripo.meshthumb.jpg" alt="Tripo 3.1 mesh preview"><figcaption><b>Tripo 3.1</b> · smart low poly, 12,848 tris</figcaption></figure>
+      <figure><img src="king2-tripo.meshthumb.jpg" alt="Tripo 3.1 mesh preview"><figcaption><b>Tripo 3.1</b> · smart low poly, 19,622 tris</figcaption></figure>
       <figure><img src="king2.meshthumb.jpg" alt="Scenario YVO3D mesh preview"><figcaption><b>Scenario YVO3D</b> · 100k tris — previous</figcaption></figure>
     </div>
   </div>
@@ -130,6 +141,48 @@
     <p>Demo only — not wired into the book. <a href="../">← back to the landing page</a></p>
   </footer>
 </div>
+
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image">
+  <img alt="">
+  <figcaption></figcaption>
+</div>
+
+<script>
+/* ---- lightbox (vanilla): any plain image opens full-screen ---- */
+(function(){
+  const box = document.getElementById('lightbox');
+  const big = box.querySelector('img');
+  const cap = box.querySelector('figcaption');
+
+  function open(src, alt, caption){
+    big.src = src;
+    big.alt = alt || '';
+    cap.textContent = caption || alt || '';
+    box.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    box.classList.remove('open');
+    big.src = '';
+    document.body.style.overflow = '';
+  }
+
+  /* every image outside the unmask toggle (that one keeps its own click) */
+  document.querySelectorAll('.wrap img').forEach(function(img){
+    if (img.closest('#unmask')) return;
+    img.addEventListener('click', function(){
+      const fig = img.closest('figure');
+      const capEl = fig && fig.querySelector('figcaption');
+      open(img.src, img.alt, capEl ? capEl.textContent : '');
+    });
+  });
+
+  box.addEventListener('click', close);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && box.classList.contains('open')) close();
+  });
+})();
+</script>
 
 <script>
 /* ---- the unmask (vanilla) ---- */
@@ -185,7 +238,7 @@ scene.background = new THREE.Color(0x0d1428);          /* dark navy */
 scene.fog = new THREE.Fog(0x0d1428, 6, 14);
 
 const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 50);
-camera.position.set(1.9, 1.1, 3.1);
+camera.position.set(1.52, 1.17, 2.47);   /* ~25% closer than the first cut */
 
 /* dark navy ground — unlit so the warm rim can't tint it */
 const ground = new THREE.Mesh(
@@ -195,10 +248,10 @@ const ground = new THREE.Mesh(
 ground.rotation.x = -Math.PI/2;
 scene.add(ground);
 
-/* soft key + warm rim */
-scene.add(new THREE.HemisphereLight(0x40507a, 0x131a2e, 0.9));
+/* soft key + warm rim — key kept frontal and low so the nose doesn't cast a hard patch */
+scene.add(new THREE.HemisphereLight(0x40507a, 0x131a2e, 1.15));
 const key = new THREE.DirectionalLight(0xf2ead4, 2.1);   /* soft cream key */
-key.position.set(2.4, 3.2, 2.6);
+key.position.set(1.2, 1.8, 4.5);
 scene.add(key);
 const rim = new THREE.DirectionalLight(0xffb45a, 1.7);   /* warm amber rim */
 rim.position.set(-2.2, 2.1, -2.8);
@@ -215,7 +268,7 @@ controls.autoRotate = true;
 controls.autoRotateSpeed = 0.9;          /* slow */
 controls.minDistance = 1.6;
 controls.maxDistance = 6;
-controls.target.set(0, 0.95, 0);
+controls.target.set(0, 1.05, 0);         /* chest height — hero framing, head safe */
 controls.update();
 
 /* two meshes, one viewer: Tripo 3.1 by default, the previous YVO3D on toggle */
@@ -247,9 +300,10 @@ function show(key){
     showing = key;
     loading = false;
     toggleEl.textContent = MODELS[key].swapLabel;
-    controls.target.set(0, HEIGHT * 0.5, 0);
+    controls.target.set(0, HEIGHT * 0.55, 0);
     controls.update();
     if (key === 'tripo') window.__meshLoaded = true;   /* verification hook */
+    window.__viewer = { camera, controls, renderer };  /* verification hook */
   };
   if (MODELS[key].model) return done(MODELS[key].model);
   loading = true;
