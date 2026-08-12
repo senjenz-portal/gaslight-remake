@@ -247,6 +247,50 @@
                        to{transform:scale(1.012) translate3d(.35%,-.2%,0);}}
   @media (prefers-reduced-motion:reduce){.grammar .mini>img.base{animation:none;}}
 
+  /* ================= the actor stage ==================================== *
+   * Same plate, same layer discipline, one thing added: a figure cut OUT of
+   * the room and put back on top of it as five hinged pieces. The z-order is
+   * the whole argument, so it is DOM order and nothing else -- room-clean,
+   * then the actor, then the chair, then the lamp. Nothing here carries a
+   * z-index, because a z-index would let the argument be a lie.            */
+  #plate-actors{background:#0b1226;}
+  #plate-actors .lyr{position:absolute;}
+  #plate-actors #act-void{inset:0;width:100%;height:100%;}
+  #act-emis{mix-blend-mode:screen;position:absolute;inset:0;pointer-events:none;}
+  #act-halowrap{mix-blend-mode:screen;position:absolute;pointer-events:none;}
+  #act-halo{position:absolute;width:100%;height:100%;
+    animation:lampbreathe 6.4s ease-in-out infinite,
+              lampflick 2.3s steps(1,end) infinite;}
+  #act-fire{animation:firelick 3.9s ease-in-out infinite;}
+  #act-candle{animation:firelick 2.6s ease-in-out infinite .4s;}
+  #act-win{animation:winbreathe 7.3s ease-in-out infinite;}
+
+  /* the puppet. Every hinge is a full-stage box whose transform-origin is the
+     joint in plate co-ordinates, so the nesting composes the way a skeleton
+     does: turn the chest and the head and the arm come with it. */
+  #act-figure{position:absolute;inset:0;pointer-events:none;
+    will-change:transform;}
+  .hinge{position:absolute;inset:0;will-change:transform;}
+  .hinge>img{position:absolute;}
+  #act-puppet,#act-sprite{transition:opacity .18s linear;}
+  #act-sprite{position:absolute;pointer-events:none;opacity:0;
+    background-repeat:no-repeat;background-size:400% 100%;
+    background-position:0 0;image-rendering:auto;will-change:background-position;}
+  #act-figure.walking #act-puppet{opacity:0;}
+  #act-figure.walking #act-sprite{opacity:1;}
+
+  /* the actor's two verbs get the same breathing dot as the plate's three */
+  #act-targets{position:absolute;inset:0;pointer-events:none;z-index:12;}
+  .stage.showref #act-targets{pointer-events:none;}
+  @media (prefers-reduced-motion:reduce){
+    #act-halo,#act-fire,#act-candle,#act-win{animation:none !important;}
+  }
+  /* the ambient can be held still so a measurement of the ACTOR is a
+     measurement of the actor: the fire and the candle both overlap him */
+  #plate-actors.still #act-halo,#plate-actors.still #act-fire,
+  #plate-actors.still #act-candle,#plate-actors.still #act-win{
+    animation-play-state:paused;}
+
   /* the margin column: cream serif ink on the page ground, no boxes */
   #margin{display:flex;flex-direction:column;justify-content:flex-end;
     padding:6px 0 2px;min-height:200px;}
@@ -537,6 +581,103 @@
       <dt>the pacing</dt><dd>click-paced, never timed. Three blocks maximum in the column, older ones at 62&nbsp;% so the column never scrolls and the live line always leads.</dd>
       <dt>the audio</dt><dd>diegetic only — <code>room-bed</code> under everything from the first gesture, <code>paper-rustle</code> on the note-throw, <code>click-soft</code> on every advance. No music.</dd>
     </dl>
+  </section>
+
+  <!-- ======================= 3b · THE ACTORS STEP OUT ======================= -->
+  <section id="s-actors">
+    <div class="head">
+      <h2><span class="sc">the actors step out of the painting</span></h2>
+      <div class="kicker">the plate is a stage · now the cast moves</div>
+    </div>
+    <div class="rule"></div>
+    <p class="note">The layered plate proved the room is a <i>stage</i>. This proves the figures on it
+    are <i>actors</i>. Holmes has been cut out of the plate into his own alpha, the wall and hearth
+    behind him painted back in, and the cut-out re-hung on the stage as five hinged pieces —
+    head, near arm, torso, gown, legs — over the room he used to be part of. He breathes and
+    turns towards the window on his own; <b>click him</b> and he draws on the pipe; <b>click the
+    desk</b> and he walks to it as a four-frame sprite, <b>passing behind Watson's armchair</b>,
+    which is a second cut-out laid in front of him. Watson is left baked into the plate on
+    purpose: one actor is enough to prove the technique, and the difference between the two of
+    them is the whole point.</p>
+
+    <div class="stage" id="stage-actors" data-cap="the plate, acted">
+      <div class="living" id="plate-actors">
+        <img id="act-void" class="lyr" src="void.png" alt="" aria-hidden="true">
+        <img id="act-rock" class="lyr" src="rock.png" alt="" aria-hidden="true">
+
+        <!-- the room with the standing figure removed and the hearth,
+             the mantel and the floorboards painted back in behind him -->
+        <img id="act-room" class="lyr" src="room-clean.png"
+             alt="221B with the standing figure lifted out of the plate">
+
+        <div id="act-emis">
+          <div class="emis" id="act-fire"></div>
+          <div class="emis" id="act-win"></div>
+          <div class="emis" id="act-candle"></div>
+        </div>
+
+        <!-- THE ACTOR. Between the room and the chair: that is the claim. -->
+        <div id="act-figure">
+          <div class="hinge" id="act-root">
+            <img class="apart" id="ap-legs" src="actor/part-legs.png" alt="" aria-hidden="true">
+            <div class="hinge" id="act-hip">
+              <img class="apart" id="ap-skirt" src="actor/part-skirt.png" alt="" aria-hidden="true">
+            </div>
+            <div class="hinge" id="act-chest">
+              <img class="apart" id="ap-torso" src="actor/part-torso.png" alt="" aria-hidden="true">
+              <div class="hinge" id="act-neck">
+                <img class="apart" id="ap-head" src="actor/part-head.png" alt="" aria-hidden="true">
+              </div>
+              <div class="hinge" id="act-arm">
+                <img class="apart" id="ap-pipe" src="actor/part-pipe.png" alt="" aria-hidden="true">
+              </div>
+            </div>
+          </div>
+          <div id="act-sprite"></div>
+        </div>
+
+        <!-- Watson and his armchair, cut from the plate's own pixels and laid
+             back ON TOP. Opaque where the plate is opaque, so with nobody
+             walking it changes not one pixel of the picture. -->
+        <img id="act-chair" class="lyr" src="chair.png" alt="" aria-hidden="true">
+
+        <img id="act-lamp" class="lyr" src="lamp.png" alt="" aria-hidden="true">
+        <div id="act-halowrap"><img id="act-halo" src="halo.png" alt="" aria-hidden="true"></div>
+        <div id="act-targets"></div>
+      </div>
+      <img class="ref" src="plate-room.jpg" alt="the original still plate, everyone baked in">
+    </div>
+    <div class="bar">
+      <div id="cap-actors">1 actor · 5 hinged parts · 4-frame walk · 2 verbs · the chair in front of him is a cut-out too</div>
+      <div class="opts">
+        <button class="opt active" data-stage="stage-actors" data-mode="live">actor plate</button><span class="sep">/</span><button class="opt" data-stage="stage-actors" data-mode="ref">baked plate</button>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>the cut</dt><dd>a hand polygon brackets him; the alpha inside it is not traced, it is <i>measured</i> — the plate diffed against a generative fill of the same crop with the figure removed. Two tests have to agree: the pixel changed, <i>and</i> no small offset of the fill explains it (a fill re-draws unchanged geometry a pixel or two over, and a naive diff calls that a man). One colour veto handles the fire-lit post of the fireplace beside him, which no diff can tell from him.</dd>
+      <dt>the inpaint</dt><dd>the fill is trusted only <i>inside</i> the polygon: the paste is masked and feathered to it, so the diff against the original plate is <b>0 changed pixels</b> outside the figure's own region. Outside the polygon the model's own agreement with the plate is 9.0 RGB RMS — which is why it is not the thing that ships there.</dd>
+      <dt>the parts</dt><dd>five claims resolved into a strict partition, each grown one pixel into its neighbour. Parts that <i>sum</i> to the figure do not <i>composite</i> to it — two 50 % edges stack to 75 % and the seam reads as a crack of daylight — so they overlap instead: invisible at rest, and it is the pixel that holds the join closed when they swing apart.</dd>
+      <dt>the idle</dt><dd>sim-time sinusoids on nested transforms, no keyframes and no library: breath on the chest at 4.1 s, the gown at 7.7 s, the arm at 5.9 s, and a 13 s turn of the head towards the window. Rotations stay under 3° because a painted cut-out forgives 3° and not 8°.</dd>
+      <dt>the walk</dt><dd>the same painted Holmes, redrawn as a four-frame strip by image-to-image from his own cut-out, keyed off flat green, then normalised: one height (the four came back 1.5 % apart), one foot baseline, torso centred, and the palette pulled 65 % back to the cut-out's own mean and deviation, because i2i drifts warm and he has to match the room he is walking across.</dd>
+      <dt>the occlusion</dt><dd>Watson's armchair is genuinely in the foreground, so it was cut the same way and re-laid <i>above</i> the actor in DOM order — no z-index anywhere in the stack. Because its opaque pixels are the plate's own, compositing it over the plate changes <b>0.0000 RGB on average and 0 pixels by more than 6</b>: the layer costs nothing at all until somebody walks behind it.</dd>
+      <dt>the headroom</dt><dd>a cut-out puppet has nothing behind its own arm — swing it and the fireplace shows through the hole it left. So every part is extended 14&nbsp;px <i>under</i> the parts that cover it and those pixels are harmonically filled from the part's own paint, seeded so the Laplacian cannot reach round the silhouette and drag the room in with it. The gown continues behind the sleeve, so the sleeve has somewhere to go.</dd>
+      <dt>the floor</dt><dd>the two marks are read off the plate — his own shoe base at the hearth, and a spot at the desk by the window. The room's floor is planar, so the line between them is the floor line; the sprite's foot baseline rides it, and depth eases the scale from 1.00 to 0.885 across the room. The verifier measures that against the <i>rendered</i> box, not against the numbers that drew it: worst deviation across a walk, 0.5&nbsp;px.</dd>
+    </dl>
+
+    <p class="note" style="margin-top:22px;"><b>Which of the two actually holds up.</b> The
+    <i>puppet</i> is the one to keep. It is the plate's own paint, so it cannot drift: at rest it is
+    the plate, and the idle only ever asks for a degree or two, which is exactly what a painted
+    cut-out will give you. It is also the cheap one — 42&nbsp;KB of parts and no new pixels
+    invented anywhere a viewer can look. What it cannot do is change pose: he can breathe and
+    turn and raise the pipe, and that is the whole vocabulary. The <i>sprite</i> buys real
+    locomotion and pays for it in identity — the four frames came back from i2i a percent and a
+    half apart in height and noticeably warmer than the plate, and even after normalising and
+    pulling the palette back he is a redrawing of Holmes rather than Holmes. At this scale, mid-
+    stride, that is a fair trade; hold a walk frame still next to the cut-out and it is not. The
+    honest shape of the technique is what is built here: puppet for everything that happens
+    <i>on the mark</i>, sprite only for the crossing between marks, and the hand-off hidden in
+    the one moment the eye is following movement rather than reading a face.</p>
   </section>
 
   <!-- ============================ 4 · THE OTHER PLATE ============================ -->
@@ -851,6 +992,7 @@
       }
     }
     stepHold(dt);
+    actorFrame(now);            /* the cast, on the same clock as the camera */
     requestAnimationFrame(frame);
   }
 
@@ -1127,7 +1269,8 @@
   var lb = document.getElementById("lightbox"),
       lbImg = document.getElementById("lb-img"),
       lbCap = document.getElementById("lb-cap");
-  var SHOT = {"stage-room":"plate-room.jpg","stage-layers":"plate-room.jpg","stage-street":"plate-street.jpg"};
+  var SHOT = {"stage-room":"plate-room.jpg","stage-layers":"plate-room.jpg",
+              "stage-actors":"plate-room.jpg","stage-street":"plate-street.jpg"};
   document.querySelectorAll(".stage").forEach(function(s){
     s.addEventListener("click", function(){
       lbImg.src = SHOT[s.id];
@@ -1243,6 +1386,291 @@
   });
 
   /* ------------------------------------------------------------------ *
+   * 7b · the actors — the plate's cast, moving                          *
+   * ------------------------------------------------------------------ *
+   * Everything below is authored in the same plate-pixel space as the
+   * layers, and every number came out of the cut manifests rather than
+   * out of the air:
+   *   assets/raw/lanea-actors/<stamp>/matte/manifest-matte.json  (parts)
+   *   .../manifest-occluder.json                                 (chair)
+   *   .../manifest-sprite.json                                   (walk)
+   * The z-order is DOM order — room-clean, actor, chair, lamp — because
+   * the claim being made is about z-order and a z-index could fake it.
+   */
+  var ACT = {
+    /* each part carries 14 px of harmonically filled headroom UNDER the parts
+       that cover it, which is why these boxes overlap: swing the arm and what
+       shows through is the gown continuing, not the fireplace */
+    parts: {
+      "ap-legs":  {x:572, y:469, w:63, h:54},
+      "ap-skirt": {x:578, y:395, w:56, h:86},
+      "ap-torso": {x:558, y:297, w:89, h:110},
+      "ap-head":  {x:577, y:293, w:43, h:61},
+      "ap-pipe":  {x:558, y:325, w:43, h:81}
+    },
+    /* every hinge is the joint it turns about, in plate pixels */
+    hinge: {
+      "act-root":  [602, 523],   /* the whole body, over the feet   */
+      "act-hip":   [601, 400],   /* the gown, at the belt           */
+      "act-chest": [601, 402],   /* the ribs, at the belt           */
+      "act-neck":  [601, 338],   /* the head, at the base of the neck */
+      "act-arm":   [590, 345]    /* the near arm, at the shoulder   */
+    },
+    layers: {
+      "act-room":  {x:306, y: 36, w:798, h:712},
+      "act-rock":  {x:361, y:485, w:703, h:264},
+      "act-lamp":  {x:967, y: 94, w:138, h:422},
+      "act-chair": {x:718, y:335, w:176, h:209}
+    },
+    emis: {
+      "act-fire":   [516, 432,  92, "255,168,58",  .58],
+      "act-win":    [876, 258, 104, "255,210,126", .24],
+      "act-candle": [601, 288,  20, "255,206,126", .55]
+    },
+    /* the walk sprite: four cells of 110 x 234, foot baseline 232 down */
+    sprite: {cell:[110, 234], foot:232, frames:4, pxPerFrame:19},
+    /* the two marks, read off the plate. His own shoe base at the hearth is
+       the origin of the floor line; the room's floor is planar, so the line
+       between the marks IS the floor line. */
+    mark: {hearth:[602, 523], desk:[766, 472]},
+    deskScale: 0.885,
+    walkMs: 2200
+  };
+
+  var figEl = document.getElementById("act-figure");
+  var puppetEl = document.getElementById("act-root");
+  var spriteEl = document.getElementById("act-sprite");
+  var actStage = document.getElementById("stage-actors");
+
+  if (figEl) {
+    Object.keys(ACT.layers).forEach(function(id){
+      var el = document.getElementById(id); if (el) place(el, ACT.layers[id]);
+    });
+    (function(){
+      var w = document.getElementById("act-halowrap");
+      place(w, HALO);
+    })();
+    Object.keys(ACT.emis).forEach(function(id){
+      var e = ACT.emis[id], el = document.getElementById(id); if (!el) return;
+      el.style.left = pct(e[0] - e[2], PLATE_W); el.style.top = pct(e[1] - e[2], PLATE_H);
+      el.style.width = pct(e[2] * 2, PLATE_W);   el.style.height = pct(e[2] * 2, PLATE_H);
+      el.style.background = "radial-gradient(circle at 50% 50%, rgba(" + e[3] + "," + e[4] +
+        ") 0%, rgba(" + e[3] + "," + (e[4] * 0.45) + ") 38%, rgba(" + e[3] + ",0) 72%)";
+    });
+    Object.keys(ACT.parts).forEach(function(id){
+      place(document.getElementById(id), ACT.parts[id]);
+    });
+    Object.keys(ACT.hinge).forEach(function(id){
+      var h = ACT.hinge[id];
+      document.getElementById(id).style.transformOrigin =
+        pct(h[0], PLATE_W) + " " + pct(h[1], PLATE_H);
+    });
+    /* the sprite is anchored in the SAME body space as the puppet — centred on
+       the hearth mark with its foot baseline on the floor line — so the one
+       transform on #act-figure carries either of them along the walk */
+    place(spriteEl, {x: ACT.mark.hearth[0] - ACT.sprite.cell[0] / 2,
+                     y: ACT.mark.hearth[1] - ACT.sprite.foot,
+                     w: ACT.sprite.cell[0], h: ACT.sprite.cell[1]});
+    spriteEl.style.backgroundImage = "url(walk.png)";
+    figEl.style.transformOrigin =
+      pct(ACT.mark.hearth[0], PLATE_W) + " " + pct(ACT.mark.hearth[1], PLATE_H);
+  }
+
+  function floorY(x){
+    var a = ACT.mark.hearth, b = ACT.mark.desk;
+    return a[1] + (x - a[0]) * (b[1] - a[1]) / (b[0] - a[0]);
+  }
+
+  /* ---- state -------------------------------------------------------- */
+  var act = {
+    at: "hearth",            /* which mark he is standing on           */
+    walking: false,
+    wt: 0,                   /* 0..1 along the current walk            */
+    from: "hearth", to: "desk",
+    x: ACT.mark.hearth[0], y: ACT.mark.hearth[1], s: 1, frame: 0,
+    gest: 0, gestT: -1e9,    /* gesture ramp and its start time        */
+    pose: {}
+  };
+
+  var TAU = Math.PI * 2;
+  function easeOutCubic(k){ return 1 - Math.pow(1 - k, 3); }
+  function easeInOut(k){ return 0.5 - 0.5 * Math.cos(Math.PI * k); }
+
+  /* the gesture envelope: rise, hold, fall — one number, 0..1 */
+  function gestureAt(dt){
+    if (dt < 0) return 0;
+    if (dt < 320) return easeOutCubic(dt / 320);
+    if (dt < 840) return 1;
+    if (dt < 1600) return 1 - easeInOut((dt - 840) / 760);
+    return 0;
+  }
+
+  var actEls = {};
+  function setT(id, t){
+    var el = actEls[id] || (actEls[id] = document.getElementById(id));
+    writeTransform(el, "a:" + id, t);
+  }
+
+  /* The cast only acts when the house is looking. Off-screen this is dead
+     weight — and worse, six style writes and four CSS animations a frame from
+     a section nobody can see cost the LAYERED stage's measurements real
+     precision. An IntersectionObserver is the whole fix. */
+  var actSeen = !("IntersectionObserver" in window);
+  var actLiving = document.getElementById("plate-actors");
+  if (figEl && !actSeen) {
+    actLiving.classList.add("still");
+    new IntersectionObserver(function(es){
+      actSeen = es[0].isIntersecting;
+      if (!actLiving.classList.contains("held"))
+        actLiving.classList.toggle("still", !actSeen);
+    }, {rootMargin:"220px"}).observe(actStage);
+  }
+
+  function actorFrame(now){
+    if (!figEl || (!actSeen && !act.walking)) { act.last = now; return; }
+    var t = now / 1000;
+    var g = reduced ? (now - act.gestT < 900 ? 1 : 0) : gestureAt(now - act.gestT);
+    act.gest = g;
+
+    /* ---- the idle: sim-time sinusoids on nested transforms.
+       Small on purpose. A painted cut-out forgives three degrees of rotation
+       and starts to shear at eight, so nothing here asks for more than that —
+       the life is in the phase offsets, not in the amplitude. */
+    var breath = reduced ? 0 : Math.sin(TAU * t / 4.1);
+    var bob    = reduced ? 0 : 0.55 * breath;
+    var chest  = reduced ? 0 : 0.70 * Math.sin(TAU * t / 9.3);
+    var hip    = reduced ? 0 : 1.15 * Math.sin(TAU * t / 7.7 + 1.1);
+    var armIdl = reduced ? 0 : 1.40 * Math.sin(TAU * t / 5.9 + 0.6);
+    /* the head does not swing, it TURNS — a 13 s look towards the window and
+       back, expressed as a small rotation plus the sideways shift that sells
+       a yaw on a flat cut-out */
+    var look   = reduced ? 0 : 0.5 + 0.5 * Math.sin(TAU * t / 13.0);
+
+    var pose = {
+      bob: bob, chest: chest, hip: hip, look: look,
+      arm: armIdl + 8.0 * g, neck: 2.2 * look + 1.6 * g,
+      gesture: g
+    };
+    act.pose = pose;
+
+    setT("act-root", "translate(0," + pct(bob, PLATE_H) + ")");
+    setT("act-hip", "rotate(" + hip.toFixed(3) + "deg)");
+    setT("act-chest", "rotate(" + chest.toFixed(3) + "deg) scaleY(" +
+         (1 + (reduced ? 0 : 0.006) * breath).toFixed(5) + ")");
+    setT("act-neck", "rotate(" + pose.neck.toFixed(3) + "deg) translate(" +
+         pct(0.9 * look + 0.5 * g, PLATE_W) + ",0)");
+    setT("act-arm", "rotate(" + pose.arm.toFixed(3) + "deg) translate(0," +
+         pct(-1.9 * g, PLATE_H) + ")");
+
+    /* ---- the walk */
+    if (act.walking) {
+      act.wt = Math.min(1, act.wt + (now - act.last) / ACT.walkMs);
+      var a = ACT.mark[act.from], b = ACT.mark[act.to];
+      var k = easeInOut(act.wt);              /* he leans off and settles in */
+      act.x = a[0] + (b[0] - a[0]) * k;
+      act.y = floorY(act.x);
+      var travelled = Math.abs(act.x - a[0]) * (PLATE_W / PLATE_W);
+      act.frame = Math.floor(travelled / ACT.sprite.pxPerFrame) % ACT.sprite.frames;
+      if (act.wt >= 1) {
+        act.walking = false; act.at = act.to;
+        figEl.classList.remove("walking");
+        retarget();
+      }
+    }
+    act.last = now;
+    var m = ACT.mark[act.at];
+    if (!act.walking) { act.x = m[0]; act.y = m[1]; }
+    act.s = 1 + (act.x - ACT.mark.hearth[0]) /
+            (ACT.mark.desk[0] - ACT.mark.hearth[0]) * (ACT.deskScale - 1);
+    writeTransform(figEl, "a:figure",
+      "translate(" + pct(act.x - ACT.mark.hearth[0], PLATE_W) + "," +
+                     pct(act.y - ACT.mark.hearth[1], PLATE_H) + ") scale(" +
+      act.s.toFixed(4) + ")");
+    if (act.frame !== act.drawnFrame) {
+      act.drawnFrame = act.frame;
+      spriteEl.style.backgroundPosition =
+        (act.frame / (ACT.sprite.frames - 1) * 100).toFixed(3) + "% 0";
+    }
+    writeTransform(spriteEl, "a:sprite",
+      (act.to === "hearth" && act.walking) ? "scaleX(-1)" : "none");
+  }
+
+  /* ---- the two verbs ------------------------------------------------ */
+  var actTargets = document.getElementById("act-targets");
+  var ACT_TGT = [
+    {id:"holmes", w:96, h:236, tip:"click Holmes"},
+    {id:"send",   w:100, h:96, tip:"send him to the desk"}
+  ];
+  ACT_TGT.forEach(function(T){
+    if (!actTargets) return;
+    var el = document.createElement("div");
+    el.className = "tgt"; el.id = "tgt-act-" + T.id;
+    el.setAttribute("role", "button"); el.setAttribute("tabindex", "0");
+    el.setAttribute("aria-label", T.tip);
+    el.innerHTML = PIP + '<span class="tip">' + T.tip + '</span>';
+    actTargets.appendChild(el);
+    T.el = el;
+  });
+
+  /* the dot for "go" always stands on the mark he is NOT on: the affordance
+     names the destination, so it has to move when he does */
+  function retarget(){
+    if (!actTargets) return;
+    var m = ACT.mark[act.at];
+    place(ACT_TGT[0].el, {x: m[0] - 48, y: m[1] - 232, w: 96, h: 236});
+    var goingToDesk = act.at === "hearth";
+    var d = goingToDesk ? [706, 404] : [560, 438];
+    place(ACT_TGT[1].el, {x: d[0] - 50, y: d[1] - 48, w: 100, h: 96});
+    var tip = goingToDesk ? "send him to the desk" : "send him back to the hearth";
+    ACT_TGT[1].el.querySelector(".tip").textContent = tip;
+    ACT_TGT[1].el.setAttribute("aria-label", tip);
+  }
+  if (figEl) retarget();
+
+  function doGesture(){
+    startBed(); sfx("click");
+    act.gestT = performance.now();
+  }
+  function doWalk(){
+    if (act.walking) return;
+    startBed(); sfx("paper");
+    act.from = act.at; act.to = act.at === "hearth" ? "desk" : "hearth";
+    if (reduced) {                       /* the verb still answers; it just
+                                            arrives as a state change */
+      act.at = act.to; act.wt = 0; retarget(); return;
+    }
+    act.walking = true; act.wt = 0; act.frame = 0;
+    act.last = performance.now();
+    figEl.classList.add("walking");
+  }
+
+  ACT_TGT.forEach(function(T, i){
+    if (!T.el) return;
+    var fn = i === 0 ? doGesture : doWalk;
+    T.el.addEventListener("click", function(ev){
+      ev.stopPropagation();              /* touching the actor is not "zoom" */
+      fn();
+    });
+    T.el.addEventListener("keydown", function(ev){
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); ev.stopPropagation(); fn(); }
+    });
+  });
+
+  /* ---- feet on the floor: measured off the RENDERED boxes, not off the
+     numbers that drew them, so a wrong transform cannot pass ------------ */
+  function footCheck(){
+    if (!figEl) return null;
+    var st = actStage.getBoundingClientRect();
+    var walking = figEl.classList.contains("walking");
+    var el = walking ? spriteEl : document.getElementById("ap-legs");
+    var r = el.getBoundingClientRect();
+    var frac = walking ? (ACT.sprite.foot / ACT.sprite.cell[1]) : 1;
+    var footY = (r.top + r.height * frac - st.top) / st.height * PLATE_H;
+    var cx = (r.left + r.width / 2 - st.left) / st.width * PLATE_W;
+    return {x:cx, footY:footY, floorY:floorY(cx), dy:footY - floorY(cx), walking:walking};
+  }
+
+  /* ------------------------------------------------------------------ *
    * 8 · harness surface — read-only state for the verification pass.    *
    *     A screenshot cannot tell a running page from a frozen one, so   *
    *     every claim the review makes is a claim about these numbers.    *
@@ -1261,6 +1689,43 @@
     audio: function(){ return audioLog.slice(); },
     freezeDrift: function(on){ AMP_X = on ? 0 : 11; AMP_Y = on ? 0 : 4.2;
                                SCALE_GAIN = on ? 0 : 0.012; return {AMP_X:AMP_X}; }
+  };
+
+  /* the actors get their own surface: the 46 checks already standing on
+     __lp should not have to change shape to let a second lane land */
+  window.__actors = {
+    pose: function(){ return {bob:act.pose.bob, chest:act.pose.chest, hip:act.pose.hip,
+                              neck:act.pose.neck, arm:act.pose.arm,
+                              look:act.pose.look, gesture:act.gest}; },
+    walk: function(){ return {at:act.at, walking:act.walking, t:act.wt,
+                              from:act.from, to:act.to, x:act.x, y:act.y,
+                              scale:act.s, frame:act.frame}; },
+    marks: function(){ return {hearth:ACT.mark.hearth.slice(),
+                               desk:ACT.mark.desk.slice()}; },
+    /* the geometry the page was drawn with, so a verifier can hold it
+       against the cut manifest instead of taking the page's word */
+    geom: function(){ return {parts:ACT.parts, hinge:ACT.hinge,
+                              sprite:ACT.sprite, layers:ACT.layers,
+                              deskScale:ACT.deskScale}; },
+    floorY: floorY,
+    foot: footCheck,
+    /* the z-claim, read back off the live DOM rather than asserted */
+    order: function(){
+      var kids = [].slice.call(document.getElementById("plate-actors").children);
+      return kids.map(function(k){
+        return {id:k.id, z:getComputedStyle(k).zIndex};
+      });
+    },
+    gesture: doGesture,
+    send: doWalk,
+    /* hold the fire, the candle and the halo still. They overlap him, so a
+       pixel delta over his region would otherwise be measuring the light. */
+    stillAmbient: function(on){
+      actLiving.classList.toggle("held", !!on);   /* held beats the observer */
+      actLiving.classList.toggle("still", !!on || !actSeen);
+      return on;
+    },
+    reduced: function(){ return reduced; }
   };
 })();
 </script>
