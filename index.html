@@ -68,6 +68,19 @@
     font-variant-caps:small-caps;text-transform:lowercase;
   }
 
+  /* the second reading of the same beat: one line, given the weight of a line
+     that is worth leaving the page for */
+  .living{
+    border-top:1px solid var(--gold-dim);border-bottom:1px solid var(--gold-dim);
+    padding:20px 0;margin:38px 0 30px;font-size:19px;
+  }
+  .living a{color:var(--cream-bright);text-decoration:none;
+    border-bottom:1px solid var(--gold);}
+  .living a:hover{color:#fff;background:rgba(214,196,158,.10);}
+  .living .arrow{color:var(--gold);margin-right:10px;}
+  .living .aside{display:block;margin-top:8px;font-size:15px;font-style:italic;
+    color:var(--gold);}
+
   footer{
     border-top:1px solid var(--gold-dim);padding-top:20px;margin-top:14px;
     font-size:13.5px;color:rgba(238,228,204,.72);
@@ -112,6 +125,11 @@
     <img src="./preview/24-i-24-both.png" alt="Holmes, Watson and the King in the sitting-room as the photograph — the one they were both in — enters the story.">
     <figcaption>“We were both in the photograph” — the evidence enters the room</figcaption>
   </figure>
+
+  <p class="living"><span class="arrow">▶</span><a href="./living/">The Living Book —
+    Beat&nbsp;I</a>
+    <span class="aside">the same thirty-eight units, rebuilt 2D-first: the painted
+      plate IS the set, and every moving thing on it is a painted cut-out.</span></p>
 
   <footer>
     <p>Rebuilt with Scenario image-to-3D and SFX, NB&nbsp;Pro (Gemini) images,

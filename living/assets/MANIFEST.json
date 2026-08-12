@@ -1,0 +1,354 @@
+{
+ "generated": "2026-08-12T02:56:32Z",
+ "generator": "tools/living/prep.py",
+ "files": {
+  "plate/room.jpg": {
+   "bytes": 180911,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "11eb6dd92e77a1b1",
+   "note": "base set: backdrop + the closed entrance door"
+  },
+  "plate/room-open.jpg": {
+   "bytes": 192069,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "31d5d0df75dab25f",
+   "note": "units 11 + 37: the door standing open"
+  },
+  "plate/room-dim.jpg": {
+   "bytes": 158433,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "b36da38ab1665130",
+   "note": "the painted relight the inset plates dim the world to"
+  },
+  "plate/holmes-patch.png": {
+   "bytes": 62812,
+   "size": [
+    136,
+    278
+   ],
+   "mode": "RGBA",
+   "sha256": "078f7f6baac1a275",
+   "note": "the inpainted hole where Holmes was painted in"
+  },
+  "plate/holmes-patch-dim.png": {
+   "bytes": 51018,
+   "size": [
+    136,
+    278
+   ],
+   "mode": "RGBA",
+   "sha256": "8c21f0ec3dc9a81c",
+   "note": "the same hole under the painted relight"
+  },
+  "actor/king-masked.png": {
+   "bytes": 703228,
+   "size": [
+    571,
+    1159
+   ],
+   "mode": "RGBA",
+   "sha256": "55c69f918b7fceea",
+   "note": "units 11-15, the masked colossus"
+  },
+  "actor/king-unmasked.png": {
+   "bytes": 790045,
+   "size": [
+    570,
+    1159
+   ],
+   "mode": "RGBA",
+   "sha256": "5065c4d23cd66f2d",
+   "note": "units 16-35, pixel-aligned with the masked plate"
+  },
+  "actor/king-walk-enter.png": {
+   "bytes": 736216,
+   "size": [
+    1792,
+    473
+   ],
+   "mode": "RGBA",
+   "sha256": "5700dba7edc74268",
+   "note": "4 frames, cell 448x473, facing viewer RIGHT"
+  },
+  "actor/king-walk-exit.png": {
+   "bytes": 758534,
+   "size": [
+    1512,
+    481
+   ],
+   "mode": "RGBA",
+   "sha256": "51a3fab8a1787fb4",
+   "note": "4 frames, cell 378x481, facing viewer LEFT"
+  },
+  "actor/contact-shadow.png": {
+   "bytes": 15917,
+   "size": [
+    512,
+    160
+   ],
+   "mode": "RGBA",
+   "sha256": "01825b21bfcff302",
+   "note": "ground contact under any actor"
+  },
+  "actor/holmes-holmes.png": {
+   "bytes": 37884,
+   "size": [
+    89,
+    230
+   ],
+   "mode": "RGBA",
+   "sha256": "fd7ab97e1e2dcacc",
+   "note": "sibling lane: the Holmes puppet, cut from the plate itself"
+  },
+  "actor/holmes-head.png": {
+   "bytes": 6363,
+   "size": [
+    43,
+    61
+   ],
+   "mode": "RGBA",
+   "sha256": "088c7678d45c053a",
+   "note": "sibling lane: the Holmes puppet, cut from the plate itself"
+  },
+  "actor/holmes-pipe.png": {
+   "bytes": 7785,
+   "size": [
+    43,
+    81
+   ],
+   "mode": "RGBA",
+   "sha256": "3fa9f9c622c18a96",
+   "note": "sibling lane: the Holmes puppet, cut from the plate itself"
+  },
+  "actor/holmes-torso.png": {
+   "bytes": 19531,
+   "size": [
+    89,
+    110
+   ],
+   "mode": "RGBA",
+   "sha256": "ed9472bf056b2414",
+   "note": "sibling lane: the Holmes puppet, cut from the plate itself"
+  },
+  "actor/holmes-skirt.png": {
+   "bytes": 7958,
+   "size": [
+    56,
+    86
+   ],
+   "mode": "RGBA",
+   "sha256": "685873c079162a67",
+   "note": "sibling lane: the Holmes puppet, cut from the plate itself"
+  },
+  "actor/holmes-legs.png": {
+   "bytes": 7204,
+   "size": [
+    63,
+    54
+   ],
+   "mode": "RGBA",
+   "sha256": "8a5519217b026930",
+   "note": "sibling lane: the Holmes puppet, cut from the plate itself"
+  },
+  "actor/holmes-walk.png": {
+   "bytes": 100848,
+   "size": [
+    440,
+    234
+   ],
+   "mode": "RGBA",
+   "sha256": "d13e33d4e4db1de7",
+   "note": "sibling lane: 4 frames, cell 110x234, foot baseline 232, facing RIGHT"
+  },
+  "plate/chair.png": {
+   "bytes": 66587,
+   "size": [
+    176,
+    209
+   ],
+   "mode": "RGBA",
+   "sha256": "e8296a02e39e6d82",
+   "note": "Watson's armchair as a free layer, so an actor can pass BEHIND it"
+  },
+  "plate/chair-dim.png": {
+   "bytes": 59939,
+   "size": [
+    176,
+    209
+   ],
+   "mode": "RGBA",
+   "sha256": "a8859cf7d95a0031",
+   "note": "the same armchair under the painted relight"
+  },
+  "actor/note-prop.png": {
+   "bytes": 23548,
+   "size": [
+    160,
+    123
+   ],
+   "mode": "RGBA",
+   "sha256": "20d82cedf0ffa477",
+   "note": "the note, cut out of note-plate.png by luminance"
+  },
+  "actor/mask-prop.png": {
+   "bytes": 5595,
+   "size": [
+    63,
+    42
+   ],
+   "mode": "RGBA",
+   "sha256": "133fe4246cd5ec1d",
+   "note": "the domino, cut off the King's own face"
+  },
+  "inset/note-plate.jpg": {
+   "bytes": 123366,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "48c76b05d517b6aa",
+   "note": "unit 2-4: the note, as a document"
+  },
+  "inset/watermark-plate.jpg": {
+   "bytes": 151776,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "ab64fee1142644d4",
+   "note": "unit 5-6: the hold reveal"
+  },
+  "inset/both-photo.jpg": {
+   "bytes": 146631,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "f5442cf0601b1d71",
+   "note": "unit 24-26: the photograph of them BOTH"
+  },
+  "cameo/holmes.jpg": {
+   "bytes": 70362,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "970435e8613bbf6b",
+   "note": "identity card art"
+  },
+  "cameo/king-masked.jpg": {
+   "bytes": 91896,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "105b4254d73164d2",
+   "note": "identity card art"
+  },
+  "cameo/king-unmasked.jpg": {
+   "bytes": 111587,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "dd17ea36df1863bb",
+   "note": "identity card art"
+  },
+  "cameo/irene.jpg": {
+   "bytes": 72743,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "3742f2f6e0ad78b6",
+   "note": "identity card art"
+  },
+  "cameo/watson.jpg": {
+   "bytes": 98179,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "2ebe305ff77efa32",
+   "note": "identity card art"
+  },
+  "page-texture.jpg": {
+   "bytes": 138547,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "1d4346742afd4d74",
+   "note": "the leaf"
+  },
+  "audio/": {
+   "clips": 11,
+   "bytes": 1106816
+  }
+ },
+ "derivations": {
+  "holmes_patch": {
+   "rect": [
+    536,
+    271,
+    672,
+    549
+   ],
+   "source": "assets/raw/lanea-actors/20260811-184321/matte/plate-clean.png",
+   "baseVsBackdropMeanAbs": 3.469,
+   "baseVsBackdropMaxAbs": 52,
+   "note": "plate-clean is an inpaint of backdrop.png; the patch only holds if plate-door.png left this rect alone. Both numbers are that proof.",
+   "method": "plate-clean * blur41(target)/blur41(backdrop), clipped 0.25..1.35, 10px feathered alpha",
+   "meanRatioLit": 0.9689,
+   "meanRatioDim": 0.5626
+  },
+  "note_prop": {
+   "source": "assets/plates/note-plate.png",
+   "crop": [
+    470,
+    196,
+    1010,
+    600
+   ],
+   "key": "lum 96..136 -> alpha",
+   "bboxAfterKey": [
+    0,
+    10,
+    509,
+    404
+   ]
+  },
+  "mask_prop": {
+   "source": "assets/plates/beat1/king-masked.png",
+   "crop": [
+    190,
+    48,
+    264,
+    94
+   ],
+   "key": "lum<78 inside a soft ellipse",
+   "alphaPx": 793
+  }
+ }
+}
