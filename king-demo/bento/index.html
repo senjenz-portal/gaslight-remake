@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The Bento Engine Experiment</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --gold-dim:rgba(205,171,99,.55);
+    --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1060px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  h2{font-weight:normal;font-size:22px;margin:64px 0 6px;}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.55;max-width:70ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  figure{margin:0;}
+  figure img{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;}
+  figcaption{font-size:13px;color:var(--note);margin-top:7px;line-height:1.45;}
+  figcaption b{color:var(--cream-bright);font-weight:normal;}
+  code,.num{font-family:var(--mono);font-size:.92em;color:var(--cream-bright);}
+
+  /* ---- gallery ---- */
+  .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:26px;margin-top:18px;}
+  .gallery figure.wide{grid-column:1 / -1;}
+  @media (max-width:760px){ .gallery{grid-template-columns:1fr;} }
+
+  /* ---- lightbox ---- */
+  .zoom img{cursor:zoom-in;}
+  #lightbox{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+    background:rgba(6,8,16,.94);cursor:zoom-out;padding:4vmin;box-sizing:border-box;}
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:100%;max-height:100%;display:block;border:1px solid #2a2417;
+    border-radius:3px;box-shadow:0 0 60px rgba(0,0,0,.8);object-fit:contain;}
+  #lightbox figcaption{position:absolute;left:0;right:0;bottom:18px;text-align:center;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);pointer-events:none;}
+
+  /* ---- the measured table ---- */
+  table.measured{width:100%;border-collapse:collapse;margin-top:18px;font-size:14px;}
+  table.measured th{text-align:left;font-weight:normal;font-variant-caps:small-caps;
+    text-transform:lowercase;letter-spacing:.16em;font-size:11px;color:var(--gold-soft);
+    border-bottom:1px solid #2a2417;padding:0 14px 7px 0;vertical-align:bottom;}
+  table.measured td{padding:11px 14px 11px 0;border-bottom:1px solid #171a26;
+    color:var(--note);vertical-align:top;line-height:1.42;}
+  table.measured td:first-child{color:var(--cream);white-space:nowrap;}
+  table.measured td.b{color:#e0a86a;font-family:var(--mono);font-size:13px;}
+  table.measured td.t{color:#8fc7a8;font-family:var(--mono);font-size:13px;}
+  @media (max-width:760px){ table.measured{font-size:13px;} table.measured td:first-child{white-space:normal;} }
+
+  /* ---- verdict cards ---- */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px;}
+  .card{border:1px solid #241f14;border-left:2px solid var(--gold);border-radius:3px;
+    padding:16px 18px 18px;background:rgba(255,255,255,.014);}
+  .card h3{font-weight:normal;font-size:16px;margin:0 0 8px;color:var(--cream-bright);}
+  .card p{font-size:13.5px;color:var(--note);margin:0 0 10px;line-height:1.5;}
+  .card p:last-child{margin-bottom:0;}
+  .card b{color:var(--cream-bright);font-weight:normal;}
+  @media (max-width:760px){ .cards{grid-template-columns:1fr;} }
+
+  /* ---- the play / no-play block ---- */
+  .playbox{border:1px solid #241f14;border-radius:3px;padding:20px 22px;margin-top:18px;
+    background:rgba(255,255,255,.014);}
+  .playbox p{font-size:14px;color:var(--note);margin:0 0 10px;max-width:78ch;}
+  .playbox p:last-child{margin-bottom:0;}
+
+  footer{margin-top:80px;}
+  footer p{color:var(--note);font-size:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Engine Experiment · Unlisted</div>
+  <h1>The Bento Engine Experiment</h1>
+  <div class="rule"></div>
+  <p class="note">The same King, the same night, built a second time on a different engine —
+  <b>bento</b>, a data-oriented ECS engine that runs the game as typed data on a prebuilt
+  WebGPU/wasm host. Not a rewrite of the book: a port of one scene, taken far enough to measure
+  what the trade actually costs. Below are the frames it produced, the side-by-side sheet against
+  the three.js page this site already ships, and the verdict — with numbers, not impressions.</p>
+
+  <h2>1 · The scene, on bento</h2>
+  <div class="rule"></div>
+  <p class="note">Five frames from one live session, driven over the engine's control plane — paused,
+  stepped, framed by mutating config fields — and captured through its own screenshot verb.
+  Engine primitives only — no imported set geometry: one shadow-casting point light in the lamp,
+  five emissive plates for the windows, procedural sky and height fog. The character is the
+  <i>same</i> auto-rigged GLB the three.js page loads (Tripo mesh + a stock Mixamo run), imported
+  once and staged as nine assets with its skinning intact.</p>
+  <div class="gallery zoom">
+    <figure class="wide">
+      <img src="shot-1-street-wide.png" alt="Wide shot of the gas-lit street, the client walking under the lamp">
+      <figcaption><b>The street.</b> The whole stage in one frame — kerb, cobbles, the lamp's cone,
+      and lit windows carried entirely by emissive plates. The light falls off exactly as far as it
+      was authored to; everything past the lamp's pool is genuinely black, not fogged.</figcaption>
+    </figure>
+    <figure>
+      <img src="shot-2-walking-mid.png" alt="The client mid-stride, lit from the window plates">
+      <figcaption><b>The walk.</b> Mid-stride, the run clip playing off the baked skeleton — the
+      engine advances the skinned playhead itself, so the travel reads as a walk rather than a
+      slide. He paces a 4.2-metre span of street.</figcaption>
+    </figure>
+    <figure>
+      <img src="shot-3-face-closeup.png" alt="Close-up of the client's face, lantern-lit from one side">
+      <figcaption><b>The face.</b> The lantern key with a cold rim behind it. It reads — but only
+      inside the lamp's pool: one point light and no image-based fill means the face has nothing to
+      pick up when he walks out of it.</figcaption>
+    </figure>
+    <figure>
+      <img src="shot-4-reveal-facing.png" alt="The client stopped and turned to face the viewer after the reveal click">
+      <figcaption><b>The reveal.</b> A real pointer click — routed through the same input interface a
+      window feeds — latches the reveal: he halts, eases round to face the viewer, and the run clip
+      holds on one chosen frame of its cycle rather than freezing wherever the playhead landed.</figcaption>
+    </figure>
+    <figure>
+      <img src="shot-0-cold-boot-default.png" alt="The same street on cold boot with the default camera framing">
+      <figcaption><b>Cold boot, default framing.</b> What the game looks like the moment it starts,
+      before any camera work — kept here honestly, because the four frames above are all composed
+      shots and this is the one nobody art-directed.</figcaption>
+    </figure>
+  </div>
+
+  <h2>2 · Side by side against three.js</h2>
+  <div class="rule"></div>
+  <p class="note">Both engines captured live, in the same browser, at the same viewport, in the same
+  session — the left column bento on its WebGPU/wasm host, the right column this site's own three.js
+  King demo on GitHub Pages. The face row is the strictest comparison available: identical source
+  asset, so what differs is purely the renderer and its lighting rig. Click to enlarge —
+  the full sheet is legible at 3416 × 3844.</p>
+  <div class="zoom">
+    <figure>
+      <img src="bento-vs-threejs-preview.jpg" data-full="bento-vs-threejs.jpg"
+           alt="Comparison sheet: bento versus three.js — the scene, the face, and the engineering table">
+      <figcaption><b>The comparison sheet</b> · the scene, the face, and a twelve-row engineering
+      table — payload, renderer floor, execution tier, dev loop, capture, determinism, deploy, and
+      typography — each row naming how it was measured.</figcaption>
+    </figure>
+  </div>
+
+  <h2>3 · The measured verdict</h2>
+  <div class="rule"></div>
+  <p class="note">Everything below was measured on one machine in one session — nothing quoted from
+  a README. The payload figures are PerformanceResourceTiming over both pages in the same browser.</p>
+
+  <table class="measured">
+    <thead>
+      <tr><th style="width:19%">Dimension</th><th style="width:31%">bento</th><th style="width:31%">three.js</th><th style="width:19%">How it was measured</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Web payload, first load</td>
+        <td class="b">49.0 MB transfer / 190.2 MB decoded<br><span style="color:var(--note);font-family:var(--serif)">15 assets, all eager at boot</span></td>
+        <td class="t">4.2 MB transfer / 7.4 MB decoded<br><span style="color:var(--note);font-family:var(--serif)">lazy — 1 of 4 GLB takes loads</span></td>
+        <td>PerformanceResourceTiming, same browser, both pages</td>
+      </tr>
+      <tr>
+        <td>…fully exercised</td>
+        <td class="b">49.0 MB (nothing left to stream)</td>
+        <td class="t">~19 MB after clicking all four takes</td>
+        <td>sum of the four GLBs + three + plates</td>
+      </tr>
+      <tr>
+        <td>Worst single asset</td>
+        <td class="b">2 × 89.5 MB raw RGBA8 + mips<br><span style="color:var(--note);font-family:var(--serif)">(21.9 / 22.2 MB gzipped) — 4096² decoded out of the GLB, and <b>uncompressed is the only bake the glTF path offers</b></span></td>
+        <td class="t">7.8 MB king2.glb, JPEG-in-GLB, untouched</td>
+        <td>staged package on disk vs. transferSize; the block-compression knob was then chased through the toolchain — see §4</td>
+      </tr>
+      <tr>
+        <td>Renderer floor</td>
+        <td class="b">WebGPU only — 87 distinct WebGPU symbols across the host, and <b>zero</b> occurrences of "webgl"</td>
+        <td class="t">WebGL2 — every browser back to 2017, incl. iOS Safari</td>
+        <td>case-insensitive symbol grep over the emitted host JS vs. the demo page</td>
+      </tr>
+      <tr>
+        <td>Execution tier on web</td>
+        <td class="b">5 / 5 interpreted</td>
+        <td class="t">n/a — JS is the tier</td>
+        <td><code>control system-tiers</code> against the live tab</td>
+      </tr>
+      <tr>
+        <td>Determinism</td>
+        <td class="b">Engine contract — parity gate green: <b>240 ticks, 5 samples, identical world-hash trajectories</b>, own native binary (5/5 baked) vs. stock host (interpreted)</td>
+        <td class="t">App-level. A hand-rolled harness latch — real, but only as good as its discipline</td>
+        <td><code>pnpm test --own-binary</code>, re-run for this page; tools/lap.mjs on the three.js side</td>
+      </tr>
+      <tr>
+        <td>Dev loop</td>
+        <td class="b">Re-framed a <i>running</i> WebGPU tab by mutating 6 config fields — no rebuild, no reload, each ack'd <code>appliesAtTickFence</code></td>
+        <td class="t">Edit &amp; reload. Hand-rolled dev hooks give the same reach — but the project had to build them</td>
+        <td>timed <code>control mutate</code> round trips; gate 6.5 s, no-op build 3.0 s</td>
+      </tr>
+      <tr>
+        <td>Headless capture</td>
+        <td class="b">Native <code>screenshot</code> ✓. On web REFUSED — <code>notObservable</code> / <code>unboundSource</code></td>
+        <td class="t">One path — Playwright, everywhere, already this project's harness</td>
+        <td>POST /control/screenshot against the live web session</td>
+      </tr>
+      <tr>
+        <td>Text &amp; typography</td>
+        <td class="b">Engine-rendered from a baked font asset into mounted views. Explicit rule: <i>never inject text into the web page</i></td>
+        <td class="t">The DOM is the medium — real serif typography, margins, ligatures, selection, a11y, reflow, print</td>
+        <td>the engine's own authoring contract vs. king-demo/index.html</td>
+      </tr>
+      <tr>
+        <td>Deploy</td>
+        <td class="b"><code>publish</code> → one replayable build record into a store or portal, packaged onto the shipped control-free wasm host</td>
+        <td class="t"><code>git push</code> → GitHub Pages. Static files, free, already live, shareable in one link</td>
+        <td>the publish report emitted for this page (below)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="cards">
+    <div class="card">
+      <h3>What bento won, honestly</h3>
+      <p><b>The live session is the best dev surface I have used.</b> Re-framing a running WebGPU tab
+      by mutating six config fields — tick-fenced, ack'd, no rebuild — is not a thing the three.js
+      project can do without building it first, and it did have to build it.</p>
+      <p><b>Determinism is the engine's problem, not yours.</b> Hashes, snapshots, replay, and a lint
+      that refuses <code>Math.random</code>, with a native↔web parity gate on top. On three.js that is
+      a harness you write and maintain.</p>
+      <p><b>Import was free.</b> GLB in, nine staged assets out, skinning intact, first attempt, no
+      Blender stage.</p>
+    </div>
+    <div class="card">
+      <h3>What it cost</h3>
+      <p><b>The page is 12× heavier for a worse-looking frame.</b> 49 MB against 4.2 MB, because a
+      glTF-embedded image bakes to uncompressed RGBA8 + mips — and, as §4 shows, that is not a
+      default you can turn off but the only bake that path offers.</p>
+      <p><b>WebGPU only.</b> No fallback — that excludes a real slice of visitors today, and a
+      casting page is exactly the artifact you send to people whose browser you do not control.</p>
+      <p><b>The book is the hard part.</b> Its 38 click-paced units are margin typography, which is
+      DOM work. bento's answer is engine-rendered text in flex views with an explicit prohibition on
+      page text — that is a rewrite of the medium, not a port.</p>
+    </div>
+    <div class="card">
+      <h3>Verdict — hybrid, three.js-led</h3>
+      <p><b>Ship the book on three.js + DOM.</b> The 38-unit reader is typography and pacing; that is
+      the DOM's home turf, and bento forbids it on purpose.</p>
+      <p><b>Reach for bento when a unit becomes a simulation</b> — something with rules, state,
+      replay, or a bug you must prove is gone. That is where its contract pays and three.js has
+      nothing.</p>
+      <p><b>Cost to get there:</b> the scene port is ~1 day — it already happened. The blocker is not
+      the engine, it is the frame around it: text, payload, and WebGPU-only reach.</p>
+    </div>
+  </div>
+
+  <h2>4 · Why there is no playable here</h2>
+  <div class="rule"></div>
+  <div class="playbox">
+    <p>The engine's <code>publish</code> verb was run for this page, and it worked: it rebuilt the
+    game's own shipping web tree and emitted one replayable build record —
+    <span class="num">191,990,085 bytes</span> across 30 content-addressed blobs
+    (<span class="num">5.55 MB</span> of wasm host, <span class="num">637 KB</span> of code bundle,
+    <span class="num">184.5 MB</span> of assets). The emitted tree is a genuinely static,
+    control-free web host, and it is <i>subpath-safe</i> — every runtime fetch in the host page is
+    relative (<code>package-identity.json</code>, <code>index.js</code>, the wasm subject); the only
+    leading-slash paths in it are writes into the in-memory filesystem, not URLs. Dropped under
+    <code>/gaslight-remake/king-demo/bento/play/</code> it would have resolved correctly.</p>
+    <p><b>It was not shipped, and the reason is a number.</b> The servable tree is
+    <span class="num">195.0 MB</span> on disk (194,950,099 bytes), of which
+    <span class="num">179.0 MB</span> is two texture blobs of <span class="num">89.5 MB</span> each —
+    the same uncompressed RGBA8 + mips the table above names. That is far past what belongs in a
+    Pages repo (each blob also sits just under GitHub's 100 MB per-file hard limit), for a page that
+    would then be WebGPU-only anyway. The honest move was to measure it and say so rather than push
+    195 MB of raw texture into a portfolio repo.</p>
+    <p><b>The obvious fix was tried, and it does not exist.</b> The engine has a block-compression
+    tier — <code>params.compression: "quality"</code> or <code>"compact"</code>, which the texture
+    policy resolves to BC7 and BC1 — so the first assumption was that this page had simply left the
+    default on. It had not. Declared on the model, discovery refuses it outright:
+    <code>params.compression … only applies to a texture; this asset is a gltfGeometry</code> — and
+    there is no sub-asset sidecar to hang it on instead. The gap is in the bakers, not the spelling:
+    <code>bento_bake_texture</code> takes <code>--block-format bc7|bc1 --tier quality|compact</code>,
+    while <code>bento_bake_gltf_texture</code> rejects <code>--block-format</code> as an unknown
+    argument, and the argv builder for a glTF texture passes only its selection — it has no channel
+    through which a tier could ever be sent.</p>
+    <p>So the 179 MB is not a default someone forgot to change. <b>For images that arrive embedded in
+    a GLB, uncompressed RGBA8 + mips is the only thing this toolchain can produce.</b> Compressing
+    them means not importing them as glTF textures — extracting the images and re-authoring them as
+    standalone texture assets, which is a different import pipeline than the one whose one-attempt
+    ease is the headline of §3. That is the real cost, and it is bigger than a knob. It is filed
+    against the engine as a harness-arm friction record.</p>
+  </div>
+
+  <footer>
+    <div class="rule"></div>
+    <p class="lbl">Explorations · <a href="../living-plate/">the living plate — 2D, breathed &amp; layered</a> · <a href="../hd2d/">HD-2D — pixel sprite on the diorama</a> · <a href="../blender/">the blender demo</a></p>
+    <p>Experiment only — not wired into the book. <a href="../">← the King demo</a> ·
+    <a href="../../">the book</a></p>
+  </footer>
+</div>
+
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image">
+  <img alt="">
+  <figcaption></figcaption>
+</div>
+
+<script>
+/* ---- lightbox (vanilla): any .zoom image opens full-screen, at its full-res source ---- */
+(function(){
+  const box = document.getElementById('lightbox');
+  const big = box.querySelector('img');
+  const cap = box.querySelector('figcaption');
+
+  function open(src, alt, caption){
+    big.src = src;
+    big.alt = alt || '';
+    cap.textContent = caption || alt || '';
+    box.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close(){
+    box.classList.remove('open');
+    big.src = '';
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.zoom img').forEach(function(img){
+    img.addEventListener('click', function(){
+      const fig = img.closest('figure');
+      const capEl = fig && fig.querySelector('figcaption');
+      open(img.dataset.full || img.src, img.alt, capEl ? capEl.textContent : '');
+    });
+  });
+
+  box.addEventListener('click', close);
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && box.classList.contains('open')) close();
+  });
+})();
+</script>
+</body>
+</html>
