@@ -61,7 +61,7 @@
   .vid{opacity:1;}
 
   /* ---- technique 2: layers ---- */
-  #plate-layers{background:#0b1226;}
+  #plate-layers{background:#0b1226;--lamplit:0;}
   #plate-layers .lyr{position:absolute;transform-origin:50% 50%;will-change:transform;}
   #plate-layers img.lyr{image-rendering:auto;}
   #void{inset:0;width:100%;height:100%;}
@@ -78,6 +78,115 @@
   .mote{position:absolute;width:2px;height:2px;border-radius:50%;
     background:rgba(255,226,168,.9);pointer-events:none;
     filter:blur(.3px);will-change:transform,opacity;}
+
+  /* The emissive and halo animations live HERE rather than on the elements,
+     because the interactions have to override them: an inline `animation`
+     always wins over a class, so a flare or a stoke could only have been
+     expressed with !important. As stylesheet rules, `#halo.flare` simply
+     outranks `#halo`. */
+  #halo{animation:lampbreathe 6.4s ease-in-out infinite,
+                  lampflick 2.3s steps(1,end) infinite;}
+  #fire{animation:firelick 3.9s ease-in-out infinite;}
+  #candle{animation:firelick 2.6s ease-in-out infinite .4s;}
+  #win-a{animation:winbreathe 7.3s ease-in-out infinite;}
+  #win-b{animation:winbreathe 9.1s ease-in-out infinite .9s;}
+  #win-c{animation:winbreathe 11.7s ease-in-out infinite 2.1s;}
+
+  /* The lamp flare: the same two animations, quicker and hotter. NB the
+     second animation in the list owns `opacity` outright — lampflick is what
+     you see flickering, and lampbreathe only survives in `transform`. So the
+     flare swaps the BREATHE for a wider one (the bloom opens) and keeps the
+     flick (it just runs four times as fast); the brightness is a filter,
+     which is the only channel neither animation is already driving. */
+  #halo.flare{animation:lampflare 2.5s ease-in-out infinite,
+                        lampflick .62s steps(1,end) infinite;
+    filter:brightness(1.6) saturate(1.05);}
+  @keyframes lampflare{
+    0%,100%{opacity:.92;transform:scale(1.05);}
+    32%{opacity:1;transform:scale(1.13);}
+    64%{opacity:.95;transform:scale(1.08);}
+  }
+  #halo{transition:filter .5s ease;}
+  /* the warm pool the flare pushes out across the room */
+  #pool{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
+    opacity:0;will-change:opacity,transform;}
+  #pool.on{animation:poolspread 3s cubic-bezier(.18,.75,.3,1) 1;}
+  /* the hearth, stoked */
+  #fire.stoked{animation:firestoke 1.15s ease-in-out infinite;
+    filter:brightness(1.42) saturate(1.08);}
+  #fire{transition:filter .6s ease;}
+
+  /* the lamplit reveal: window glow up, everything else pulled down.
+     Both are driven straight off --lamplit, which the hold ramps 0..1. */
+  #winglow{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
+    opacity:calc(var(--lamplit) * .92);will-change:opacity;}
+  #vign{position:absolute;inset:0;pointer-events:none;opacity:var(--lamplit);
+    will-change:opacity;background:
+      radial-gradient(58% 78% at 62.2% 33.6%,rgba(4,6,14,0) 0%,rgba(4,6,14,0) 38%,
+        rgba(4,6,14,.52) 72%,rgba(3,5,12,.86) 100%);}
+
+  @keyframes poolspread{
+    0%{opacity:0;transform:scale(.55);}
+    18%{opacity:.85;}
+    100%{opacity:0;transform:scale(1.35);}
+  }
+  @keyframes firestoke{
+    0%,100%{opacity:.62;transform:scale(1.04);}
+    14%{opacity:1;transform:scale(1.19);}
+    29%{opacity:.7;transform:scale(1.06);}
+    48%{opacity:1;transform:scale(1.24);}
+    66%{opacity:.66;transform:scale(1.08);}
+    82%{opacity:.94;transform:scale(1.16);}
+  }
+
+  /* ---- the diegetic targets: the things on the plate you may touch ---- */
+  #targets{position:absolute;inset:0;pointer-events:none;z-index:12;}
+  .tgt{position:absolute;pointer-events:auto;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    display:flex;align-items:center;justify-content:center;}
+  .tgt.hold{cursor:grab;touch-action:none;}   /* a held finger is not a scroll */
+  .tgt.hold:active{cursor:grabbing;}
+  /* the still-plate toggle takes the verbs with it: there is nothing on a
+     still plate to click */
+  .stage.showref .tgt{pointer-events:none;}
+  /* The affordance: the book's breathing teal dot, standing ON the thing.
+     Two of these three targets sit in the brightest light in the picture —
+     the flame and the fire — where a hairline teal ring at half alpha simply
+     is not there. The scrim disc under the ring is what makes the dot read on
+     a blown highlight without putting a chip of UI on the plate. */
+  .tgt .pip{width:38px;height:38px;opacity:.55;
+    filter:drop-shadow(0 1px 3px rgba(0,0,0,.8));
+    /* the scrim is a CSS background ON the svg, so its edge is a gradient
+       rather than a disc: a hard dark circle over the fire reads as a sticker */
+    background:radial-gradient(circle at 50% 50%,rgba(3,6,14,.52) 0%,
+      rgba(3,6,14,.34) 50%,rgba(3,6,14,0) 76%);
+    transition:opacity .3s ease,transform .3s ease;}
+  .tgt:hover .pip,.tgt.warm .pip{opacity:1;transform:scale(1.14);}
+  .tgt .ring{fill:none;stroke:#7fe3d8;stroke-width:2.6;
+    filter:drop-shadow(0 0 7px rgba(127,227,216,.65));
+    animation:pipbreathe 2.6s ease-in-out infinite;}
+  .tgt .ring2{fill:none;stroke:rgba(127,227,216,.55);stroke-width:1.4;}
+  .tgt .dotc{fill:rgba(240,215,154,.95);}
+  /* the label hangs off the DOT, not off the hit box: the window's box is 326
+     plate px tall and `top:100%` parked its name down by the armchair */
+  .tgt .tip{position:absolute;top:50%;margin-top:24px;left:50%;transform:translate(-50%,4px);
+    white-space:nowrap;font-variant-caps:small-caps;text-transform:lowercase;
+    letter-spacing:.19em;font-size:11.5px;color:#bfeee7;
+    text-shadow:0 1px 6px rgba(0,0,0,.98);opacity:0;pointer-events:none;
+    transition:opacity .28s ease,transform .28s ease;}
+  .tgt:hover .tip{opacity:.96;transform:translate(-50%,0);}
+  @keyframes pipbreathe{0%,100%{opacity:.55;}50%{opacity:1;}}
+
+  /* ---- the hold ring, pinned to the pointer (the book's, verbatim) ---- */
+  #lp-hold{position:fixed;left:0;top:0;width:78px;height:78px;margin:-39px 0 0 -39px;
+    z-index:55;pointer-events:none;opacity:0;transition:opacity .3s ease;}
+  #lp-hold.on{opacity:1;}
+  #lp-hold svg{width:100%;height:100%;transform:rotate(-90deg);}
+  #lp-hold .trk{fill:none;stroke:rgba(214,196,158,.20);stroke-width:2;}
+  #lp-hold .arc{fill:none;stroke:#f0d79a;stroke-width:2.6;stroke-linecap:round;
+    filter:drop-shadow(0 0 6px rgba(240,215,154,.55));}
+  #lp-hold .dotc{fill:rgba(240,215,154,.9);}
+  #lp-hold.done .arc{stroke:#7fe3d8;filter:drop-shadow(0 0 8px rgba(127,227,216,.7));}
 
   @keyframes drift-a{from{transform:translate3d(-8%,0,0);}to{transform:translate3d(8%,0,0);}}
   @keyframes drift-b{from{transform:translate3d(7%,0,0);}to{transform:translate3d(-9%,0,0);}}
@@ -106,8 +215,67 @@
     100%{transform:translate3d(var(--mx),var(--my),0);opacity:0;}
   }
   @media (prefers-reduced-motion:reduce){
-    .fog,.emis,#halo,.mote{animation:none !important;}
+    .fog,.emis,#halo,.mote,#pool,.tgt .ring,#cue-dot{animation:none !important;}
+    /* the verbs still work under reduced motion — they just arrive as a state
+       change instead of as a performance. Only the pointer parallax is fully
+       withheld (see `reduced` in the script). */
+    #halo,#fire{transition:filter .2s linear;}
   }
+
+  /* ---- the book's margin, set beside the plate ---- */
+  .grammar{display:grid;grid-template-columns:1fr 340px;gap:30px;align-items:stretch;
+    cursor:pointer;user-select:none;-webkit-user-select:none;
+    -webkit-tap-highlight-color:transparent;}
+  /* stacked, the margin is under the plate rather than beside it, so the
+     bottom-alignment that keeps the column hanging off the plate's foot on a
+     desktop would open 200 px of nothing between the two */
+  @media (max-width:900px){
+    .grammar{grid-template-columns:1fr;gap:18px;}
+    #margin{min-height:0;justify-content:flex-start;}
+    .blk.head p{font-size:26px;}
+  }
+  .grammar .mini{position:relative;aspect-ratio:1408/768;overflow:hidden;
+    border:1px solid var(--edge);border-radius:3px;background:#060810;
+    box-shadow:0 26px 60px -30px rgba(0,0,0,.95);}
+  .grammar .mini>img.base{position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;display:block;animation:minidrift 27s ease-in-out infinite alternate;}
+  .grammar .mini .glow{position:absolute;inset:0;pointer-events:none;
+    mix-blend-mode:screen;animation:miniglow 6.4s ease-in-out infinite;}
+  @keyframes miniglow{0%,100%{opacity:.72;}38%{opacity:1;}62%{opacity:.82;}}
+  @media (prefers-reduced-motion:reduce){.grammar .mini .glow{animation:none;}}
+  @keyframes minidrift{from{transform:scale(1.012) translate3d(-.35%,0,0);}
+                       to{transform:scale(1.012) translate3d(.35%,-.2%,0);}}
+  @media (prefers-reduced-motion:reduce){.grammar .mini>img.base{animation:none;}}
+
+  /* the margin column: cream serif ink on the page ground, no boxes */
+  #margin{display:flex;flex-direction:column;justify-content:flex-end;
+    padding:6px 0 2px;min-height:200px;}
+  #blocks{display:flex;flex-direction:column;gap:15px;}
+  .blk{opacity:0;transform:translateY(6px);
+    transition:opacity .5s ease,transform .5s ease;}
+  .blk.in{opacity:1;transform:none;}
+  .blk.past{opacity:.62;}
+  .blk .who{display:block;font-variant-caps:small-caps;text-transform:lowercase;
+    letter-spacing:.19em;font-size:12.5px;color:#eee0c0;margin-bottom:5px;}
+  .blk p{margin:0;color:var(--cream);font-size:17px;line-height:1.5;
+    text-shadow:0 1px 5px rgba(0,0,0,.98);}
+  .blk.doc p{border-left:1px solid var(--gold-dim);padding-left:13px;
+    font-style:italic;color:var(--cream-bright);}
+  .blk.head .rule{width:52px;height:1px;background:var(--gold-dim);margin-bottom:14px;}
+  .blk.head .num{font-variant-caps:small-caps;text-transform:lowercase;
+    letter-spacing:.26em;font-size:12.5px;color:rgba(214,182,110,.96);margin-bottom:8px;}
+  .blk.head p{font-size:30px;line-height:1.1;color:#f4ecd7;letter-spacing:.02em;}
+  .blk p .drop{float:left;font-size:2.7em;line-height:.82;padding:.05em .1em 0 0;
+    color:#f4ecd7;}
+  /* the affordance is type in the same margin, never a button */
+  #cue{margin-top:20px;padding-top:11px;border-top:1px solid rgba(205,171,99,.28);
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.2em;
+    font-size:12.5px;color:#f5dfa6;opacity:0;transition:opacity .4s ease;}
+  #cue.on{opacity:.98;}
+  #cue-dot{display:inline-block;width:7px;height:7px;border-radius:50%;
+    background:#7fe3d8;box-shadow:0 0 8px rgba(127,227,216,.75);
+    margin-right:9px;vertical-align:middle;
+    animation:pipbreathe 2.6s ease-in-out infinite;}
 
   /* ---- caption bar under a stage ---- */
   .bar{display:flex;justify-content:space-between;align-items:baseline;gap:18px;
@@ -222,6 +390,11 @@
     before cutting, so it can pulse on its own and can never tear at a seam. Fog is a displaced
     turbulence band drifting between the rock and the room; the hearth, the window panes and the
     flame are emissive overlays. No dependencies, no video, no canvas — five images and a transform.</p>
+    <p class="note" style="margin-top:14px;">And because it is only images and a transform, it can
+    take a hand. The pointer leans on the drift instead of replacing it; the lamp, the hearth and
+    the window are diegetic targets, each wearing the book's breathing teal dot; and the window
+    takes the book's press-and-hold — the reveal verb, resolving in proportion to the hold and
+    springing back if you let it go.</p>
 
     <div class="stage" id="stage-layers" data-cap="the plate, layered">
       <div class="living" id="plate-layers">
@@ -265,17 +438,16 @@
 
         <!-- emissives sit with the room -->
         <div id="emis-room" class="lyr" style="pointer-events:none;">
-          <div class="emis" id="fire"  style="animation:firelick 3.9s ease-in-out infinite;"></div>
-          <div class="emis" id="win-a" style="animation:winbreathe 7.3s ease-in-out infinite;"></div>
-          <div class="emis" id="win-b" style="animation:winbreathe 9.1s ease-in-out infinite .9s;"></div>
-          <div class="emis" id="win-c" style="animation:winbreathe 11.7s ease-in-out infinite 2.1s;"></div>
-          <div class="emis" id="candle" style="animation:firelick 2.6s ease-in-out infinite .4s;"></div>
+          <div class="emis" id="fire"></div>
+          <div class="emis" id="win-a"></div>
+          <div class="emis" id="win-b"></div>
+          <div class="emis" id="win-c"></div>
+          <div class="emis" id="candle"></div>
         </div>
 
         <img id="lamp" class="lyr" src="lamp.png" alt="" aria-hidden="true">
         <div class="lyr" id="halowrap" style="pointer-events:none;">
-          <img id="halo" src="halo.png" alt="" aria-hidden="true"
-               style="animation:lampbreathe 6.4s ease-in-out infinite, lampflick 2.3s steps(1,end) infinite;">
+          <img id="halo" src="halo.png" alt="" aria-hidden="true">
         </div>
         <div class="lyr" id="motes" style="pointer-events:none;"></div>
 
@@ -298,11 +470,20 @@
             </g>
           </svg>
         </div>
+
+        <!-- what the verbs paint: the lamp's warm pool, the lamplit window
+             glow, and the vignette that pulls focus while the reveal is held.
+             All three live INSIDE .living so the still-plate toggle takes
+             them with it. -->
+        <div id="pool"></div>
+        <div id="winglow"></div>
+        <div id="vign"></div>
+        <div id="targets"></div>
       </div>
       <img class="ref" src="plate-room.jpg" alt="the original still plate">
     </div>
     <div class="bar">
-      <div id="cap-layers">4 depth layers · 12 s drift · 736 KB of PNG · no dependencies</div>
+      <div id="cap-layers">4 depth layers · 12 s drift · pointer parallax · click the lamp, click the hearth, hold the window · 736 KB of PNG, no dependencies</div>
       <div class="opts">
         <button class="opt active" data-stage="stage-layers" data-mode="live">layered</button><span class="sep">/</span><button class="opt" data-stage="stage-layers" data-mode="ref">still plate</button>
       </div>
@@ -314,10 +495,51 @@
       <dt>the cuts</dt><dd>two hand-authored polygons — the lamp column, and the deck-to-rock rim — intersected with that silhouette</dd>
       <dt>the fill</dt><dd>26 px of harmonically inpainted headroom behind every layer, so the drift never opens a hole</dd>
       <dt>parallax</dt><dd>room 0.34 · rock 0.60 · lamp 1.00, ±11 px on an ellipse — a diorama turning, not cards sliding</dd>
+      <dt>the pointer</dt><dd>the pointer does not drive the camera, it <i>biases</i> it: a ±26 px offset added to the same ellipse at each layer's own depth, eased in over about two seconds so a flicked mouse never snaps the diorama. Take the pointer away and the bias decays to zero and the idle drift is all that is left. Withheld entirely under <code>prefers-reduced-motion</code>.</dd>
+      <dt>the verbs</dt><dd>three things on the plate answer to the hand, each with the book's breathing teal dot standing on it: the <b>lamp</b> flares (halo brightens, flicker quickens, a warm pool spreads for 3 s), the <b>hearth</b> stokes (the emissive's pulse amplitude and rate up for 4 s), and the <b>window</b> takes a press-and-hold — the reveal verb, resolving in proportion to the hold, with the book's progress ring at the pointer and an elastic fall-back if you let go early.</dd>
     </dl>
   </section>
 
-  <!-- ============================ 3 · THE OTHER PLATE ============================ -->
+  <!-- ======================= 3 · THE PLATE AS THE PAGE ======================= -->
+  <section id="s-grammar">
+    <div class="head">
+      <h2><span class="sc">the plate as the page</span></h2>
+      <div class="kicker">the book's verbs on a living plate</div>
+    </div>
+    <div class="rule"></div>
+    <p class="note">The stage above proves the plate can hold a hand. This proves it can hold the
+    <i>book</i>: three units of Beat I, Doyle verbatim, set as cream serif ink in the dark page
+    margin beside a living diorama — one speech per unit, prefixed in small caps, the reader
+    click-paced by a breathing teal dot, earlier lines receding so the eye always lands on the
+    newest. Nothing here is a widget: the affordance is type in the same margin, and the room
+    bed lights up on your first gesture.</p>
+
+    <div class="grammar" id="grammar" role="button" tabindex="0"
+         aria-label="advance the reading — click anywhere in this panel">
+      <div class="mini" id="mini-stage">
+        <img class="base" src="plate-room.jpg" alt="221B, the master plate">
+        <div class="glow" id="mini-glow"></div>
+      </div>
+      <div id="margin">
+        <div id="blocks"></div>
+        <div id="cue"><span id="cue-dot"></span><span class="beat"></span></div>
+      </div>
+    </div>
+    <div class="bar">
+      <div id="cap-grammar">3 units · click anywhere to advance</div>
+      <div class="opts">
+        <button class="opt active" id="snd-on" data-snd="1">sound</button><span class="sep">/</span><button class="opt" id="snd-off" data-snd="0">silent</button>
+      </div>
+    </div>
+
+    <dl class="spec">
+      <dt>the text</dt><dd>units 1–3 of <code>CONTENT.md</code> — <i>post</i>, <i>undated</i>, <i>note1</i> — transcribed, not paraphrased. A thing <i>read</i> is not a thing <i>said</i>: the note is ruled off and set in italic, and it carries no speaker's voice.</dd>
+      <dt>the pacing</dt><dd>click-paced, never timed. Three blocks maximum in the column, older ones at 62&nbsp;% so the column never scrolls and the live line always leads.</dd>
+      <dt>the audio</dt><dd>diegetic only — <code>room-bed</code> under everything from the first gesture, <code>paper-rustle</code> on the note-throw, <code>click-soft</code> on every advance. No music.</dd>
+    </dl>
+  </section>
+
+  <!-- ============================ 4 · THE OTHER PLATE ============================ -->
   <section id="s-street">
     <div class="head">
       <h2><span class="sc">the second plate, breathed</span></h2>
@@ -353,7 +575,7 @@
     </div>
   </section>
 
-  <!-- ============================ 4 · THE VERDICT ============================ -->
+  <!-- ============================ 5 · THE VERDICT ============================ -->
   <section id="s-verdict">
     <div class="head">
       <h2><span class="sc">which one reads better</span></h2>
@@ -409,6 +631,16 @@
     analysis manifest under <code>assets/raw/lanea-layers/</code>.</p>
     <p class="lbl"><a href="../">← the King demo</a> · <a href="../hd2d/">the HD-2D exploration →</a></p>
   </footer>
+</div>
+
+<!-- the hold ring stands ON the thing being held, so it is pinned to the
+     pointer in viewport space rather than parented into the stage -->
+<div id="lp-hold" aria-hidden="true">
+  <svg viewBox="0 0 78 78">
+    <circle class="trk" cx="39" cy="39" r="33"></circle>
+    <circle class="arc" cx="39" cy="39" r="33" stroke-dasharray="207.35" stroke-dashoffset="207.35"></circle>
+    <circle class="dotc" cx="39" cy="39" r="2.2"></circle>
+  </svg>
 </div>
 
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="enlarged plate">
@@ -472,6 +704,39 @@
       ") 0%, rgba(" + e[3] + "," + (e[4] * 0.45) + ") 38%, rgba(" + e[3] + ",0) 72%)";
   });
 
+  /* One ellipse of light, authored in plate pixels and expressed as a
+     PERCENTAGE-radius radial-gradient so it scales with the box. A px radius
+     would be right at 1408 wide and wrong at every other width. */
+  function lightStop(cx, cy, r, rgb, a){
+    return "radial-gradient(" + (r / PLATE_W * 100).toFixed(3) + "% " +
+      (r / PLATE_H * 100).toFixed(3) + "% at " + (cx / PLATE_W * 100).toFixed(3) + "% " +
+      (cy / PLATE_H * 100).toFixed(3) + "%, rgba(" + rgb + "," + a + ") 0%, rgba(" +
+      rgb + "," + (a * 0.42).toFixed(3) + ") 40%, rgba(" + rgb + ",0) 74%)";
+  }
+
+  /* the lamplit state: the window emissives, opened up. This is the layer the
+     press-and-hold cross-fades in — it is the SAME three lights, wider and
+     hotter, so the reveal reads as the room answering the lamp rather than as
+     a new picture arriving. */
+  document.getElementById("winglow").style.backgroundImage = [
+    lightStop(876, 172, 132, "255,222,150", .60),
+    lightStop(876, 268, 120, "255,214,138", .52),
+    lightStop(872, 348, 108, "255,206,126", .44),
+    lightStop(880, 258, 260, "255,208,132", .16)
+  ].join(",");
+
+  /* the warm pool the lamp flare pushes out, anchored on the flame so the
+     spread grows FROM the source */
+  (function(){
+    var pool = document.getElementById("pool");
+    pool.style.backgroundImage = [
+      lightStop(1012, 182, 560, "255,178,84", .30),
+      lightStop(1012, 182, 220, "255,206,132", .34)
+    ].join(",");
+    pool.style.transformOrigin = (1012 / PLATE_W * 100).toFixed(2) + "% " +
+                                 (182 / PLATE_H * 100).toFixed(2) + "%";
+  })();
+
   /* the emissive group and the halo wrapper ride their parent layer's depth */
   var emisRoom = document.getElementById("emis-room");
   emisRoom.style.left = "0"; emisRoom.style.top = "0";
@@ -494,50 +759,342 @@
   });
 
   /* ------------------------------------------------------------------ *
-   * 2 · the camera drift — one slow ellipse, 12 s                       *
-   * ------------------------------------------------------------------ */
+   * 2 · the camera — one slow ellipse (12 s), biased by the pointer     *
+   * ------------------------------------------------------------------ *
+   * The pointer does not TAKE the camera; it leans on it. The idle drift
+   * keeps running underneath and the pointer adds an offset on the same
+   * per-layer depths, eased with a time constant rather than a per-frame
+   * fraction so the feel is identical at 60 and at 120 Hz. Take the pointer
+   * off the stage and the bias eases back to zero: the drift is what is
+   * left, which is what "idle" means here.
+   */
   var AMP_X = 11, AMP_Y = 4.2, PERIOD = 12000, SCALE_GAIN = 0.012;
+  var PTR_AMP_X = 26, PTR_AMP_Y = 11, PTR_TAU = 0.66;   /* ~2 s to settle (3τ) */
   var stageLayers = document.getElementById("stage-layers");
+  var plateLayers = document.getElementById("plate-layers");
+  var halowrap = document.getElementById("halowrap");
   var running = true, reduced = false;
   try {
     reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   } catch (e) {}
 
+  /* pointer bias: tx/ty are where the pointer asks the camera to be (-1..1),
+     x/y are where it has actually eased to */
+  var ptr = {tx:0, ty:0, x:0, y:0, over:false};
+
+  function aimPointer(ev){
+    var r = stageLayers.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    var nx = (ev.clientX - r.left) / r.width  * 2 - 1;
+    var ny = (ev.clientY - r.top)  / r.height * 2 - 1;
+    /* a camera that steps right pushes the near layers left: the bias is the
+       negative of the pointer, which is what makes it read as looking AROUND
+       the diorama rather than dragging it */
+    ptr.tx = -Math.max(-1, Math.min(1, nx));
+    ptr.ty = -Math.max(-1, Math.min(1, ny));
+    ptr.over = true;
+  }
+  function dropPointer(){ ptr.over = false; ptr.tx = 0; ptr.ty = 0; }
+
+  stageLayers.addEventListener("pointermove", aimPointer, {passive:true});
+  stageLayers.addEventListener("pointerdown", aimPointer, {passive:true});
+  stageLayers.addEventListener("pointerleave", dropPointer, {passive:true});
+  stageLayers.addEventListener("pointercancel", dropPointer, {passive:true});
+
+  var lastWrote = {};                         /* skip identical style writes */
+  function writeTransform(el, key, tr){
+    if (lastWrote[key] === tr) return;
+    lastWrote[key] = tr;
+    el.style.transform = tr;
+  }
+
+  var prevNow = 0;
   function frame(now){
+    var dt = prevNow ? Math.min(0.05, (now - prevNow) / 1000) : 0.016;
+    prevNow = now;
+
+    /* ease the bias toward its target — exponential, so frame-rate free */
+    var kEase = 1 - Math.exp(-dt / PTR_TAU);
+    ptr.x += ((reduced ? 0 : ptr.tx) - ptr.x) * kEase;
+    ptr.y += ((reduced ? 0 : ptr.ty) - ptr.y) * kEase;
+
     if (running) {
       var t = (now % PERIOD) / PERIOD * Math.PI * 2;
-      var cx = Math.sin(t), cy = Math.sin(t * 2 + 0.7);
+      var cx = reduced ? 0 : Math.sin(t), cy = reduced ? 0 : Math.sin(t * 2 + 0.7);
+      var bx = ptr.x * PTR_AMP_X, by = ptr.y * PTR_AMP_Y;
+      var sc = stageLayers.clientWidth / PLATE_W;    /* plate px -> screen px */
       for (var i = 0; i < LAYERS.length; i++) {
         var L = LAYERS[i];
         if (!L.el) continue;
-        var dx = cx * AMP_X * L.depth, dy = cy * AMP_Y * L.depth;
-        var s  = 1 + SCALE_GAIN * L.depth * (0.5 + 0.5 * Math.cos(t));
+        var dx = (cx * AMP_X + bx) * L.depth, dy = (cy * AMP_Y + by) * L.depth;
+        var s  = 1 + SCALE_GAIN * L.depth * (reduced ? 0 : (0.5 + 0.5 * Math.cos(t)));
         var tr = "translate3d(" + (dx / PLATE_W * 100 * (PLATE_W / L.w)) + "%," +
                  (dy / PLATE_H * 100 * (PLATE_H / L.h)) + "%,0) scale(" + s + ")";
-        L.el.style.transform = tr;
-        if (L.id === "room") emisRoom.style.transform =
-          "translate3d(" + (dx / PLATE_W * 100) + "%," + (dy / PLATE_H * 100) + "%,0)";
+        writeTransform(L.el, L.id, tr);
+        L.dx = dx; L.dy = dy;
+        if (L.id === "room") writeTransform(emisRoom, "emis",
+          "translate3d(" + (dx / PLATE_W * 100) + "%," + (dy / PLATE_H * 100) + "%,0)");
         if (L.id === "lamp") {
-          document.getElementById("halowrap").style.transform =
-            "translate3d(" + (dx / HALO.w * 100) + "%," + (dy / HALO.h * 100) + "%,0)";
-          motes.style.transform =
-            "translate3d(" + (dx / PLATE_W * 100) + "%," + (dy / PLATE_H * 100) + "%,0)";
+          writeTransform(halowrap, "halo",
+            "translate3d(" + (dx / HALO.w * 100) + "%," + (dy / HALO.h * 100) + "%,0)");
+          writeTransform(motes, "motes",
+            "translate3d(" + (dx / PLATE_W * 100) + "%," + (dy / PLATE_H * 100) + "%,0)");
         }
       }
+      /* the hit areas ride the art: a target that stayed put while its lamp
+         drifted would be a lie about where the thing is */
+      for (var j = 0; j < TARGETS.length; j++) {
+        var T = TARGETS[j];
+        if (!T.el || !T.layer) continue;
+        writeTransform(T.el, "t:" + T.id, "translate3d(" +
+          (T.layer.dx * sc).toFixed(2) + "px," + (T.layer.dy * sc).toFixed(2) + "px,0)");
+      }
     }
+    stepHold(dt);
     requestAnimationFrame(frame);
   }
-  if (!reduced) requestAnimationFrame(frame);
 
   /* pause the drift when the stage is off screen */
   if (window.IntersectionObserver) {
     new IntersectionObserver(function(es){
-      es.forEach(function(e){ running = e.isIntersecting && !reduced; });
+      es.forEach(function(e){ running = e.isIntersecting; });
     }, {threshold:0.02}).observe(stageLayers);
   }
 
   /* ------------------------------------------------------------------ *
-   * 3 · video — the seam is baked into the file, so this is only the    *
+   * 3 · audio — diegetic only, and never before a gesture               *
+   * ------------------------------------------------------------------ *
+   * Five files, no graph: an <audio> element per cue, cloned on fire so
+   * two of the same cue can overlap. The bed waits for a real gesture (no
+   * browser will start it before one anyway) and the toggle is honoured
+   * retroactively, so "silent" means silent even mid-loop.
+   */
+  var CUES = {
+    click:  {src:"click-soft.mp3",   vol:0.40},
+    paper:  {src:"paper-rustle.mp3", vol:0.75},
+    reveal: {src:"reveal.mp3",       vol:0.45},
+    book:   {src:"book.mp3",         vol:0.55}
+  };
+  var soundOn = true, bedEl = null, bedWanted = false;
+  var audioLog = [];
+
+  Object.keys(CUES).forEach(function(k){
+    var a = new Audio(CUES[k].src);
+    a.preload = "auto";
+    CUES[k].el = a;
+  });
+
+  function sfx(id){
+    audioLog.push(id);
+    var c = CUES[id];
+    if (!c || !soundOn) return;
+    try {
+      var n = c.el.cloneNode();
+      n.volume = c.vol;
+      var p = n.play();
+      if (p && p.catch) p.catch(function(){});
+    } catch (e) {}
+  }
+
+  /* the room bed comes up on the reader's first gesture and stays under
+     everything after it — CONTENT.md's "beds + moment cues, no music" */
+  function startBed(){
+    bedWanted = true;
+    if (!bedEl) {
+      bedEl = new Audio("room-bed.mp3");
+      bedEl.loop = true;
+      bedEl.volume = 0;
+      audioLog.push("bed:room");
+    }
+    if (!soundOn) return;
+    var p = bedEl.play();
+    if (p && p.catch) p.catch(function(){});
+    fadeBed(0.30);
+  }
+  var bedFade = null;
+  function fadeBed(to){
+    if (!bedEl) return;
+    clearInterval(bedFade);
+    bedFade = setInterval(function(){
+      if (!bedEl) return clearInterval(bedFade);
+      var d = to - bedEl.volume;
+      if (Math.abs(d) < 0.012) { bedEl.volume = to; clearInterval(bedFade);
+        if (to === 0) bedEl.pause(); return; }
+      bedEl.volume = Math.max(0, Math.min(1, bedEl.volume + d * 0.14));
+    }, 40);
+  }
+  function setSound(on){
+    soundOn = on;
+    if (!on) { fadeBed(0); }
+    else if (bedWanted) { startBed(); }
+  }
+  document.querySelectorAll(".opt[data-snd]").forEach(function(btn){
+    btn.addEventListener("click", function(ev){
+      ev.stopPropagation();
+      setSound(btn.dataset.snd === "1");
+      btn.parentNode.querySelectorAll(".opt").forEach(function(o){
+        o.classList.toggle("active", o === btn);
+      });
+    });
+  });
+
+  /* ------------------------------------------------------------------ *
+   * 4 · the verbs — three things on the plate that answer to the hand   *
+   * ------------------------------------------------------------------ *
+   * Each target is a hit box in plate pixels carrying the book's teal
+   * breathing dot, and each rides the depth layer its subject belongs to.
+   * The stage's own click opens the lightbox, so every target stops its
+   * event: touching the lamp is not "look closer at the picture".
+   */
+  var TARGETS = [
+    /* the lamp's dot hangs a little below the flame: sitting it on the
+       brightest pixel in the plate hides it in its own light */
+    {id:"lamp",   layerId:"lamp", cx:1012, cy:214, w:126, h:252,
+     verb:"click", tip:"click the lamp"},
+    {id:"hearth", layerId:"room", cx: 516, cy:432, w:212, h:190,
+     verb:"click", tip:"click the hearth"},
+    {id:"window", layerId:"room", cx: 874, cy:258, w:158, h:326,
+     verb:"hold",  tip:"press and hold the window"}
+  ];
+  var PIP =
+    '<svg class="pip" viewBox="0 0 78 78" aria-hidden="true">' +
+      '<circle class="ring2" cx="39" cy="39" r="33"></circle>' +
+      '<circle class="ring"  cx="39" cy="39" r="22"></circle>' +
+      '<circle class="dotc"  cx="39" cy="39" r="2.4"></circle></svg>';
+
+  var targetsEl = document.getElementById("targets");
+  var halo = document.getElementById("halo");
+  var fire = document.getElementById("fire");
+  var pool = document.getElementById("pool");
+  var holdEl = document.getElementById("lp-hold");
+  var holdArc = holdEl.querySelector(".arc");
+  var ARC_LEN = 207.35;
+
+  TARGETS.forEach(function(T){
+    var el = document.createElement("div");
+    el.className = "tgt" + (T.verb === "hold" ? " hold" : "");
+    el.id = "tgt-" + T.id;
+    el.dataset.verb = T.verb;
+    el.setAttribute("role", "button");
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("aria-label", T.tip);
+    place(el, {x: T.cx - T.w / 2, y: T.cy - T.h / 2, w: T.w, h: T.h});
+    el.innerHTML = PIP + '<span class="tip">' + T.tip + '</span>';
+    targetsEl.appendChild(el);
+    T.el = el;
+    for (var i = 0; i < LAYERS.length; i++)
+      if (LAYERS[i].id === T.layerId) T.layer = LAYERS[i];
+  });
+
+  /* (a) the lamp flares: the halo's own two animations, quicker and hotter,
+     and a warm pool pushed out from the flame for three seconds */
+  var flareT = null;
+  function flare(){
+    startBed();
+    sfx("click");
+    halo.classList.add("flare");
+    pool.classList.remove("on");
+    void pool.offsetWidth;                       /* restart the one-shot */
+    pool.classList.add("on");
+    clearTimeout(flareT);
+    flareT = setTimeout(function(){ halo.classList.remove("flare"); }, 3000);
+  }
+
+  /* (b) the hearth stokes: same emissive, bigger amplitude, faster, for 4 s */
+  var stokeT = null;
+  function stoke(){
+    startBed();
+    sfx("click");
+    fire.classList.add("stoked");
+    clearTimeout(stokeT);
+    stokeT = setTimeout(function(){ fire.classList.remove("stoked"); }, 4000);
+  }
+
+  /* (c) the window takes the reveal verb: press and hold. The lamplit state
+     resolves IN PROPORTION to the hold (CONTENT.md §5), and letting go early
+     springs it back rather than cutting it — the elastic fall-back is a real
+     spring, under-damped, so the light rocks back instead of snapping. */
+  var HOLD_SEC = 1.6, SPRING_K = 48, SPRING_D = 7.4;
+  var hold = {pressing:false, k:0, shown:0, vel:0, resolved:false,
+              x:-99, y:-99, id:null};
+
+  function holdDown(ev){
+    hold.pressing = true;
+    hold.x = ev.clientX; hold.y = ev.clientY;
+    startBed();
+    if (ev.pointerId != null && ev.target.setPointerCapture) {
+      hold.id = ev.pointerId;
+      try { ev.target.setPointerCapture(ev.pointerId); } catch (e) {}
+    }
+  }
+  function holdMove(ev){
+    if (!hold.pressing) return;
+    hold.x = ev.clientX; hold.y = ev.clientY;
+  }
+  function holdUp(){ hold.pressing = false; hold.id = null; }
+
+  function stepHold(dt){
+    if (hold.pressing && !hold.resolved) {
+      hold.k = Math.min(1, hold.k + dt / HOLD_SEC);
+      var prev = hold.shown;
+      hold.shown = hold.k;
+      hold.vel = dt > 0 ? (hold.shown - prev) / dt : 0;
+      if (hold.k >= 1) { hold.resolved = true; sfx("reveal"); }
+    } else if (hold.pressing && hold.resolved) {
+      hold.shown = 1; hold.vel = 0;
+    } else if (hold.shown !== 0 || hold.vel !== 0) {
+      /* released: an under-damped spring to zero — it undershoots by a few
+         percent and comes back, which is the elastic tick you feel */
+      var a = -SPRING_K * hold.shown - SPRING_D * hold.vel;
+      hold.vel += a * dt;
+      hold.shown += hold.vel * dt;
+      if (Math.abs(hold.shown) < 0.002 && Math.abs(hold.vel) < 0.03) {
+        hold.shown = 0; hold.vel = 0; hold.k = 0; hold.resolved = false;
+      }
+    }
+    var lit = Math.max(0, Math.min(1, hold.shown));
+    plateLayers.style.setProperty("--lamplit", lit.toFixed(4));
+    holdArc.setAttribute("stroke-dashoffset", (ARC_LEN * (1 - lit)).toFixed(2));
+    holdEl.classList.toggle("done", hold.resolved);
+    holdEl.classList.toggle("on", hold.pressing || lit > 0.01);
+    holdEl.style.transform = "translate(" + hold.x.toFixed(1) + "px," +
+                                            hold.y.toFixed(1) + "px)";
+  }
+
+  TARGETS.forEach(function(T){
+    var el = T.el;
+    el.addEventListener("click", function(ev){
+      ev.stopPropagation();                      /* not a lightbox click */
+      if (T.verb !== "click") return;
+      if (T.id === "lamp") flare(); else stoke();
+    });
+    el.addEventListener("keydown", function(ev){
+      if (ev.key !== "Enter" && ev.key !== " ") return;
+      ev.preventDefault(); ev.stopPropagation();
+      if (T.id === "lamp") flare();
+      else if (T.id === "hearth") stoke();
+      else { /* the keyboard route to the reveal: a tap, held for the reader */
+        var r = el.getBoundingClientRect();
+        holdDown({clientX:r.left + r.width / 2, clientY:r.top + r.height / 2});
+        setTimeout(holdUp, (HOLD_SEC + 0.25) * 1000);
+      }
+    });
+    if (T.verb !== "hold") return;
+    el.addEventListener("pointerdown", function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      holdDown(ev);
+    });
+    el.addEventListener("pointermove", holdMove, {passive:true});
+  });
+  window.addEventListener("pointermove", holdMove, {passive:true});
+  window.addEventListener("pointerup", holdUp, {passive:true});
+  window.addEventListener("pointercancel", holdUp, {passive:true});
+  window.addEventListener("blur", holdUp);
+
+  requestAnimationFrame(frame);
+
+  /* ------------------------------------------------------------------ *
+   * 5 · video — the seam is baked into the file, so this is only the    *
    *     nagging needed to keep autoplay alive on mobile Safari          *
    * ------------------------------------------------------------------ */
   var vids = ["vidA", "stA"].map(function(id){ return document.getElementById(id); })
@@ -554,9 +1111,9 @@
   });
 
   /* ------------------------------------------------------------------ *
-   * 4 · still-plate reference toggle + lightbox                         *
+   * 6 · still-plate reference toggle + lightbox                         *
    * ------------------------------------------------------------------ */
-  document.querySelectorAll(".opt").forEach(function(btn){
+  document.querySelectorAll(".opt[data-stage]").forEach(function(btn){
     btn.addEventListener("click", function(ev){
       ev.stopPropagation();
       var stage = document.getElementById(btn.dataset.stage);
@@ -582,6 +1139,129 @@
   document.addEventListener("keydown", function(e){
     if (e.key === "Escape") { lb.classList.remove("open"); lbImg.src = ""; }
   });
+
+  /* ------------------------------------------------------------------ *
+   * 7 · the book's grammar, on a living plate                           *
+   * ------------------------------------------------------------------ *
+   * Units 1–3 of CONTENT.md, verbatim. The rules being demonstrated are
+   * the book's own: one unit is one speech; the prefix is small caps and
+   * a thing READ is ruled off and italic, not spoken; at most three
+   * blocks stand in the column and the older ones recede; the affordance
+   * is type in the margin with a breathing teal dot, never a button.
+   */
+  var UNITS = [
+    {id:"head", head:true, num:"I", text:"The Masked Client",
+     cue:"click anywhere to begin"},
+    {id:"post", who:"Holmes", sfx:"paper",
+     text:"“It came by the last post… Read it aloud.”"},
+    {id:"undated", drop:true,
+     text:"The note was undated, and without either signature or address."},
+    {id:"note1", who:"the note", doc:true,
+     text:"“There will call upon you to-night, at a quarter to eight o’clock… " +
+          "a gentleman who desires to consult you upon a matter of the very deepest moment.”",
+     cue:"the slice ends here · click to read it again"}
+  ];
+  var MAX_BLOCKS = 3;
+  var grammar = document.getElementById("grammar");
+  var blocksEl = document.getElementById("blocks");
+  var cueEl = document.getElementById("cue");
+  var cueBeat = cueEl.querySelector(".beat");
+  var blocks = [], at = -1;
+
+  /* the mini plate is the same light, painted as gradients over the still —
+     the lamp breathing is what makes it a LIVING plate and not a picture */
+  document.getElementById("mini-glow").style.backgroundImage = [
+    lightStop(1012, 182, 190, "255,196,102", .42),
+    lightStop(1012, 182, 420, "255,170,74",  .14),
+    lightStop( 516, 432, 110, "255,168,58",  .34),
+    lightStop( 876, 172,  74, "255,214,132", .20),
+    lightStop( 876, 268,  66, "255,206,120", .16)
+  ].join(",");
+
+  function markBlocks(){
+    for (var i = 0; i < blocks.length; i++) {
+      var live = i === blocks.length - 1;
+      blocks[i].classList.toggle("live", live);
+      blocks[i].classList.toggle("past", !live);
+    }
+  }
+
+  function showUnit(u){
+    var blk = document.createElement("div");
+    blk.className = "blk" + (u.doc ? " doc" : "") + (u.head ? " head" : "");
+    blk.dataset.unit = u.id;
+    if (u.head) {
+      var rule = document.createElement("div"); rule.className = "rule";
+      var num = document.createElement("div"); num.className = "num";
+      num.textContent = u.num + " · the masked client";
+      blk.appendChild(rule); blk.appendChild(num);
+    } else if (u.who) {
+      var w = document.createElement("span"); w.className = "who";
+      w.textContent = u.who;
+      blk.appendChild(w);
+    }
+    var p = document.createElement("p");
+    if (u.drop) {
+      var cap = document.createElement("span");
+      cap.className = "drop";
+      cap.textContent = u.text.charAt(0);
+      p.appendChild(cap);
+      p.appendChild(document.createTextNode(u.text.slice(1)));
+    } else {
+      p.textContent = u.text;
+    }
+    blk.appendChild(p);
+    blocksEl.appendChild(blk);
+    blocks.push(blk);
+    void blk.offsetWidth;                    /* force layout so the fade runs */
+    blk.classList.add("in");
+    while (blocks.length > MAX_BLOCKS) blocks.shift().remove();
+    markBlocks();
+    cueBeat.textContent = u.cue || "click anywhere to go on";
+    cueEl.classList.add("on");
+  }
+
+  function advance(){
+    startBed();
+    if (at >= UNITS.length - 1) {            /* the sequence turns back over */
+      at = -1;
+      blocks.forEach(function(b){ b.remove(); });
+      blocks = [];
+      sfx("book");
+    }
+    at++;
+    var u = UNITS[at];
+    if (at > 0) sfx("click");                /* click-soft on every advance */
+    if (u.sfx) sfx(u.sfx);
+    showUnit(u);
+  }
+
+  showUnit(UNITS[0]); at = 0;                /* the heading is already set */
+  grammar.addEventListener("click", advance);
+  grammar.addEventListener("keydown", function(ev){
+    if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); advance(); }
+  });
+
+  /* ------------------------------------------------------------------ *
+   * 8 · harness surface — read-only state for the verification pass.    *
+   *     A screenshot cannot tell a running page from a frozen one, so   *
+   *     every claim the review makes is a claim about these numbers.    *
+   * ------------------------------------------------------------------ */
+  window.__lp = {
+    reduced: function(){ return reduced; },
+    ptr: function(){ return {tx:ptr.tx, ty:ptr.ty, x:ptr.x, y:ptr.y, over:ptr.over}; },
+    bias: function(){ return {x:ptr.x * PTR_AMP_X, y:ptr.y * PTR_AMP_Y}; },
+    hold: function(){ return {pressing:hold.pressing, k:hold.k, shown:hold.shown,
+                              resolved:hold.resolved,
+                              lit:+(plateLayers.style.getPropertyValue("--lamplit") || 0)}; },
+    flare: function(){ return halo.classList.contains("flare"); },
+    stoked: function(){ return fire.classList.contains("stoked"); },
+    unit: function(){ return {at:at, id:UNITS[at] && UNITS[at].id,
+                              blocks:blocks.length, text:blocksEl.textContent.trim()}; },
+    audio: function(){ return audioLog.slice(); },
+    freezeDrift: function(on){ AMP_X = on ? 0 : 11; AMP_Y = on ? 0 : 4.2;
+                               SCALE_GAIN = on ? 0 : 0.012; return {AMP_X:AMP_X}; }
+  };
 })();
 </script>
 </body>
