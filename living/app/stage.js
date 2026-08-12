@@ -200,6 +200,8 @@ export class Stage {
     this.kingMasked = this.img('actor/king-masked.png', 'lyr', this.kingWrap);
     this.kingUnmasked = this.img('actor/king-unmasked.png', 'lyr', this.kingWrap);
     this.kingWalk = el('div', 'lyr walk', this.kingWrap);
+    this.kingWalkBg = { enter: this.bitmap('actor/' + KING.walk.enter.file),
+                        exit: this.bitmap('actor/' + KING.walk.exit.file) };
     this.kingUnmasked.style.opacity = '0';
     this.kingWalk.style.opacity = '0';
     this.kingS = KING.h / KING.srcH;
@@ -238,7 +240,7 @@ export class Stage {
        (they are never both visible) and sits in the puppet's own z-slot, so a
        crossing passes behind the armchair exactly as the standing figure would */
     this.holmesWalk = el('div', 'lyr walk', this.actors);
-    this.holmesWalk.style.backgroundImage = `url(${base}actor/${HOLMES.walk.file})`;
+    this.holmesWalk.style.backgroundImage = this.bitmap('actor/' + HOLMES.walk.file);
     this.holmesWalk.style.opacity = '0';   // size + cell are written per frame
 
     // the props the lanes flagged as gaps, cut out of the painted art
@@ -310,6 +312,23 @@ export class Stage {
     e.src = this.base + file;
     this.pending.push(e);
     return e;
+  }
+
+  /**
+   * A bitmap painted as a CSS background instead of as an <img>. It goes in the
+   * SAME preload set, and it has to: a background is only fetched when a rule
+   * first needs it, and the rule that needs a walk strip is written on the frame
+   * the walk begins. On localhost that read as instant. On the deployed site the
+   * King's entrance played with no King in it — his 736 KB strip was still on
+   * the wire while the sim walked an invisible man across the floor. Anything
+   * the story can reveal has to be decoded before __ready, whatever paints it.
+   */
+  bitmap(file) {
+    const e = new Image();
+    e.decoding = 'sync';
+    e.src = this.base + file;
+    this.pending.push(e);
+    return `url(${this.base}${file})`;
   }
 
   /** Every bitmap decoded before the first frame — a lap must not race a decode. */
@@ -708,7 +727,7 @@ export class Stage {
       const e = this.kingWalk;
       e.style.opacity = '1';
       e.style.width = cw + 'px'; e.style.height = ch + 'px';
-      e.style.backgroundImage = `url(${this.base}actor/${W.file})`;
+      e.style.backgroundImage = this.kingWalkBg[K.walking];   // decoded at boot
       e.style.backgroundSize = `${(W.cell[0] * W.n * ws)}px ${ch}px`;
       e.style.backgroundPosition = `${(-K.frame * cw).toFixed(2)}px 0px`;
       e.style.left = (K.x - W.anchors[K.frame] * ws).toFixed(2) + 'px';
