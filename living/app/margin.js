@@ -18,10 +18,44 @@ const WHO = {
   CLIENT:   { prefix: 'the masked client' },
   KING:     { prefix: 'the King' },
   NOTE:     { prefix: 'the note', doc: true },
+  /* LETTER renders like NOTE — a document, ruled off at its edge, italic.
+     Beat VII's first four units are a letter, not a conversation (sec 2.2). */
   LETTER:   { prefix: 'the letter', doc: true },
+  /* The three registers the told story adds (sec 2.1). Doyle sets this speech
+     in single quotes INSIDE Holmes' account and attributes it himself; the
+     book drops each attribution into the prefix, which is presentation and not
+     text — the words between the quotes stay byte-exact. */
+  'THE GENTLEMAN':  { prefix: 'the gentleman' },
+  'IRENE ADLER':    { prefix: 'Irene Adler' },
+  'GODFREY NORTON': { prefix: 'Godfrey Norton' },
 };
 
 const MAX_BLOCKS = 3;
+
+/**
+ * GUTENBERG'S OWN ITALIC, and only that.
+ *
+ * Two units in the chapter carry emphasis Doyle's text carries — `lodge`'s
+ * *bijou* and `thewoman`'s *the* — and CONTENT-full.md sec 3 is explicit that
+ * they "must ship as italic, not as literal underscores". The law writes them
+ * as `*word*`, so that is what this reads, and nothing else: no markdown, no
+ * bold, no links. Beat I's 38 units contain no asterisk at all, so this cannot
+ * change a single glyph of what is already live.
+ */
+function emphasise(text) {
+  const out = [];
+  const re = /\*([^*]+)\*/g;
+  let last = 0, m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) out.push(document.createTextNode(text.slice(last, m.index)));
+    const em = document.createElement('em');
+    em.textContent = m[1];
+    out.push(em);
+    last = re.lastIndex;
+  }
+  if (last < text.length) out.push(document.createTextNode(text.slice(last)));
+  return out.length ? out : [document.createTextNode(text)];
+}
 
 export class Margin {
   constructor(root = document) {
@@ -67,9 +101,9 @@ export class Margin {
       const cap = document.createElement('span');
       cap.className = 'drop';
       cap.textContent = text[0];
-      p.append(cap, document.createTextNode(text.slice(1)));
+      p.append(cap, ...emphasise(text.slice(1)));
     } else {
-      p.textContent = text;
+      p.append(...emphasise(text));
     }
     blk.append(p);
     this.el.append(blk);
@@ -119,9 +153,12 @@ export class Margin {
     this.cueEl.classList.add('nudge');
   }
 
-  /** Progress is always visible: no wedge states, no lost readers. */
+  /** Progress is always visible: no wedge states, no lost readers.
+   *  It counts INSIDE the beat, because that is the unit the reader is in —
+   *  and Beat V shows no numeral at all, exactly as the reader's page does. */
   progress(beat, i, total) {
-    this.progEl.textContent = `${beat.num} · ${beat.title.toUpperCase()} — unit ${i + 1}/${total}`;
+    const head = beat.num ? `${beat.num} · ` : '';
+    this.progEl.textContent = `${head}${beat.title.toUpperCase()} — unit ${i + 1}/${total}`;
   }
 
   /**
@@ -129,8 +166,8 @@ export class Margin {
    * turn takes the last unit off the page; a cue still counting units the reader
    * can no longer see is a cue out of alignment with the book.
    */
-  progressEnd(beat) {
-    this.progEl.textContent = `${beat.num} · ${beat.title.toUpperCase()} — end of beat`;
+  progressEnd() {
+    this.progEl.textContent = 'A SCANDAL IN BOHEMIA — end of chapter';
   }
 
   /** First-visit affordance hint; fades for good after the first advance. */

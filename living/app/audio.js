@@ -14,17 +14,28 @@
  *   hold(k)           continuous 0..1 from the press-and-hold verb
  */
 const FILES = {
+  // beds
   hearth: 'room-bed.mp3', street: 'street-bed.mp3',
+  chase: 'chase-bed.mp3', church: 'church-bed.mp3',
+  // Beat I's cues
   paper: 'paper-rustle.mp3', page: 'page-turn.mp3', book: 'book.mp3',
   hoofbeats: 'hoofbeats.mp3', knock: 'door-knock.mp3', click: 'click-soft.mp3',
   step: 'step.mp3', reveal: 'reveal.mp3', 'mask-drop': 'mask-drop.mp3',
+  /* the named slots beats II-VII require (CONTENT-full.md 6.5 + 7.2 #14).
+     `letter` is deliberately absent: the ledger says reuse paper-rustle. */
+  bell: 'bell.mp3', watch: 'watch.mp3', whip: 'whip.mp3', wheels: 'wheels.mp3',
+  cab: 'hoofbeats.mp3', rocket: 'rocket.mp3', 'cry-fire': 'cry-fire.mp3',
+  disperse: 'disperse.mp3', 'window-open': 'window-open.mp3', glass: 'glass.mp3',
 };
 // suggested_volume out of assets/audio/manifest.json, trimmed for the mix
 const GAIN = {
-  hearth: 0.55, street: 0.75, paper: 0.9, page: 1.0, book: 0.8, hoofbeats: 0.7,
+  hearth: 0.55, street: 0.75, chase: 0.62, church: 0.5,
+  paper: 0.9, page: 1.0, book: 0.8, hoofbeats: 0.7,
   knock: 0.85, click: 0.32, step: 0.6, reveal: 0.8, 'mask-drop': 0.9,
+  bell: 0.8, watch: 0.9, whip: 0.75, wheels: 0.55, cab: 0.8, rocket: 0.85,
+  'cry-fire': 0.7, disperse: 0.65, 'window-open': 0.8, glass: 0.7,
 };
-const BEDS = new Set(['hearth', 'street']);
+const BEDS = new Set(['hearth', 'street', 'chase', 'church']);
 
 export class AudioManager {
   constructor(base = './assets/audio/') {
@@ -126,6 +137,22 @@ export class AudioManager {
       src.start(this.ctx.currentTime + delay);
       return true;
     } catch (_) { return false; }
+  }
+
+  /**
+   * A bed's own continuous level, driven by the world rather than by a unit.
+   * The pursuit is the case that needs it: the reference drives hoof rate off
+   * the gap in metres, so the cab that is 14 m back has to SOUND nearer than
+   * the one 19.5 m back, on the same clip.
+   */
+  setBedGain(id, k) {
+    this.bedGain = this.bedGain || {};
+    this.bedGain[id] = k;
+    const n = this.bedNodes[id];
+    if (!this.ok || !n) return;
+    const base = GAIN[id] || 0.6;
+    try { n.gain.gain.setTargetAtTime(base * k, this.ctx.currentTime, 0.12); }
+    catch (_) { /* noop */ }
   }
 
   /** the hold verb's continuous signal: the hearth leans in as the note rises */

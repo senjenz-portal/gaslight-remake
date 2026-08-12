@@ -1,23 +1,43 @@
 /**
- * main.js — the reader's machine: 38 units, four gates, one page turn.
+ * main.js — the reader's machine: 95 units, seven beats, eight gates, six page
+ * turns and one closing card.
  *
- * This is the original app's grammar (site-deploy/app/main.js) ported onto a
- * 2D living plate. The pacing, the verbs, the page turn, the cameo rules and
- * the harness contract are the SAME MACHINE — a unit holds its freeze frame
- * until the reader clicks, a gate demands its verb instead, and the door click
- * turns the page out of the beat. What changed underneath is only where the
- * picture comes from: a painted plate with cut-outs laid over it in plate
- * pixels, instead of a WebGL diorama.
+ * This is Beat I's machine, unchanged in its grammar and extended to the whole
+ * chapter. A unit holds its freeze frame until the reader clicks; a gate
+ * demands its verb instead; the completing action turns the page. What the
+ * chapter adds to the beat:
+ *
+ *   SETS          one painted stage is mounted at a time, and the PAGE TURN is
+ *                 what swaps them. The cover rises, the incoming set is decoded
+ *                 UNDER it, the leaf swaps, the cover falls onto a new picture.
+ *                 The turn will wait as long as the bytes take — a reader can
+ *                 never outrun a leaf he has not turned to yet.
+ *   wait:         three units may not be paged past until the thing they name
+ *                 has happened on stage. A click inside that window is LATCHED,
+ *                 not lost, and spends the moment the unit may turn (sec 2.3).
+ *   seg           five units run a timed segment of pantomime; four of them are
+ *                 paced by it, the same latching way.
+ *   clock         Beat VI is the one stretch of the book that is not click-
+ *                 paced: after the reader's throw the camera owns the frame and
+ *                 five units arrive on the beat's own timeline (sec 6.6).
+ *   soft-fail     every gate self-satisfies after 30 s, and every click-paced
+ *                 unit in beats II-VII advances itself (sec 2.6). No gate is a
+ *                 wall. BEAT I IS EXCLUDED: it shipped without soft-fail and
+ *                 stays byte-identical.
  *
  * LAW: nothing here reads a wall clock except `frame()`. Everything animated
- * is a pure function of clock.t, so two laps that step the same numbers paint
- * the same pixels.
+ * is a pure function of STORY TIME — the sim clock minus the seconds the book
+ * spent under a raised cover waiting for a leaf's bytes — so two laps that
+ * step the same numbers paint the same pixels, on a fast line or a slow one.
+ * (Beat I never needed the distinction: it has one SET and nothing to wait
+ * for. The chapter has four, and the first turn that waited put 4% of THE
+ * REVEAL's pixels somewhere else between two otherwise identical laps.)
  *
  * Dev hooks (foot of this file) are the harness's whole contract, and they are
  * only attached under ?harness=1.
  */
-import { UNITS, BEAT, END_CARD, END_PAGE, PAGES, CUE_DEFAULT, FIRST_HINT,
-         validateUnits, unitByKey } from './units.js';
+import { UNITS, BEATS, beatOf, END_CARD, END_PAGE, PAGES, SET_OF_PAGE,
+         CUE_DEFAULT, FIRST_HINT, validateUnits, unitByKey } from './units.js';
 import { Margin, Cameo, Leader } from './margin.js';
 import { SimClock, FIXED_DT } from './clock.js';
 import { AudioManager } from './audio.js';
@@ -29,6 +49,7 @@ const TURN_OUT = 0.72;     // cover fades away on the new page
 const END_CARD_IN = 0.55;
 const HOLD_DECAY = 0.75;   // a released hold bleeds back at this fraction
 const TARGET_RADIUS_PX = 48;   // screen-space slack on top of the plate radius
+const SOFT_FAIL = 30;      // sec 2.6 — no gate is a wall
 
 const errors = [];
 window.addEventListener('error', (e) => errors.push({ kind: 'error', msg: String(e.message) }));
@@ -39,6 +60,7 @@ const CAMEO_URLS = {
   holmes: './assets/cameo/holmes.jpg',
   watson: './assets/cameo/watson.jpg',
   irene: './assets/cameo/irene.jpg',
+  norton: './assets/cameo/norton.jpg',
   'king-masked': './assets/cameo/king-masked.jpg',
   'king-unmasked': './assets/cameo/king-unmasked.jpg',
 };
@@ -56,6 +78,7 @@ if (HARNESS_BOOT) { clock.harness = true; document.documentElement.classList.add
 const stageEl = document.getElementById('stage');
 const stage = new Stage(stageEl, './assets/');
 const audio = new AudioManager('./assets/audio/');
+stage.audio = audio;
 const margin = new Margin(document);
 const cameo = new Cameo(document, CAMEO_URLS);
 const leader = new Leader(document);
@@ -111,10 +134,11 @@ const S = {
   i: -1, unit: null, unitT: 0, page: PAGES[0] || 1,
   hold: { pressing: false, k: 0, resolved: false, wasPress: false },
   gate: { resolved: false, misses: 0, lastHit: null, missT: 99 },
-  turn: { active: false, t: 0, to: -1, swapped: false, k: 0 },
+  turn: { active: false, t: 0, to: -1, swapped: false, k: 0, ready: true, waited: 0 },
   end: { active: false, t: 0, k: 0, card: 0 },
   finished: false, advances: 0, nudges: 0, visited: new Set(),
   ready: false, renders: 0, hinted: true,
+  latch: false, latched: 0, softFails: 0, clockHeld: false, stall: 0,
 };
 
 const unitErrors = validateUnits(UNITS);
@@ -125,6 +149,8 @@ const ease = {
   inOut: (k) => 0.5 - 0.5 * Math.cos(Math.PI * (k < 0 ? 0 : k > 1 ? 1 : k)),
 };
 
+const setOf = (u) => (u && u.set) || 'room';
+
 /* ---- entering a unit ---------------------------------------------------- */
 function enterUnit(n, { silent = false } = {}) {
   const idx = Math.max(0, Math.min(UNITS.length - 1, n | 0));
@@ -132,6 +158,8 @@ function enterUnit(n, { silent = false } = {}) {
   S.i = idx; S.unit = u; S.unitT = 0; S.page = u.page;
   S.visited.add(u.id);
   S.finished = false;
+  S.latch = false;
+  S.clockHeld = false;
 
   S.hold.pressing = false; S.hold.k = 0; S.hold.resolved = false; S.hold.wasPress = false;
   S.gate.resolved = false; S.gate.lastHit = null; S.gate.missT = 99;
@@ -139,15 +167,21 @@ function enterUnit(n, { silent = false } = {}) {
   stage.setReveal(u.reveal || null, 0);
   audio.hold(0);
 
+  /* the SET this unit is played on must be the one that is mounted. In the
+     read it always is — the page turn is what swaps them — but a harness jump
+     lands anywhere, so this is the assertion that a wrong set cannot survive. */
+  if (stage.activeName !== setOf(u) && stage.sets[setOf(u)]) stage.mount(setOf(u));
+
   margin.show(u);
   margin.cue(cueFor(u));
-  margin.progress(BEAT, idx, UNITS.length);
+  progress(idx);
   applyCameo(idx);
   wrapEl.style.opacity = '1';
 
   refreshFocus(true);
 
   if (u.act) stage.fire(u.act);
+  if (u.seg) stage.startSeg(u.seg, u.segDur || 6.0, silent);
   if (!silent) {
     if (u.bed) audio.bed(u.bed);
     if (u.sfx) audio.cue(u.sfx);
@@ -156,6 +190,16 @@ function enterUnit(n, { silent = false } = {}) {
   document.body.dataset.unit = u.id;
   document.body.dataset.verb = u.verb;
   document.body.dataset.gate = u.target || '';
+  document.body.dataset.set = setOf(u);
+  document.body.dataset.beat = String(u.beat || 1);
+}
+
+/** The progress line names the BEAT the reader is in and counts inside it. */
+function progress(idx) {
+  const u = UNITS[idx];
+  const b = beatOf(u);
+  const first = UNITS.findIndex((v) => (v.beat || 1) === b.n);
+  margin.progress(b, idx - first, b.units);
 }
 
 function refreshFocus(snap = false) {
@@ -163,10 +207,28 @@ function refreshFocus(snap = false) {
   stage.setFocus((u && u.focus) || 'room', snap);
 }
 
-/** Cameos persist: on a jump, show the most recent one at or before `idx`. */
+/**
+ * Cameos persist — WITHIN THE LEAF THEY WERE RAISED ON.
+ *
+ * Beat I raised the King's card and never took it down, because Beat I is one
+ * leaf and he never leaves it. Carried naively into the chapter that same rule
+ * left "Wilhelm von Ormstein · King of Bohemia" pinned to the corner of
+ * Serpentine Avenue, a street he is not in, for the whole of Beats II and III.
+ * The card names who is on this page, so the page turn puts it away and the
+ * next leaf raises its own. Beat I is 38 units on ONE leaf, so nothing about
+ * its behaviour changes.
+ *
+ * An explicit `cameo: null` is the card being PUT AWAY mid-leaf (IV.13, where
+ * the told story ends), not a unit with no opinion — so the scan stops there
+ * rather than reaching past it.
+ */
 function applyCameo(idx) {
-  for (let j = idx; j >= 0; j--) {
-    if (UNITS[j].cameo) { cameo.set(UNITS[j].cameo, UNITS[j].cap); return; }
+  const page = UNITS[idx].page;
+  for (let j = idx; j >= 0 && UNITS[j].page === page; j--) {
+    if (!Object.prototype.hasOwnProperty.call(UNITS[j], 'cameo')) continue;
+    const c = UNITS[j].cameo;
+    if (c) cameo.set(c, UNITS[j].cap); else cameo.hide();
+    return;
   }
   cameo.hide();
 }
@@ -179,18 +241,51 @@ function cueFor(u) {
 }
 
 /* ---- advancing ---------------------------------------------------------- */
+/**
+ * What is holding this unit on the page, if anything. A blocked unit is NOT a
+ * refused unit: the click that arrives inside the window is latched and spends
+ * itself the moment the block lifts, so a fast reader loses nothing and the
+ * fact still performs.
+ */
+function blockedBy(u) {
+  if (!u) return null;
+  if (u.wait && !stage.waitDone(u.wait)) return 'wait:' + u.wait;
+  if (u.seg && u.segHold && S.unitT < (u.segDur || 6.0)) return 'seg:' + u.seg;
+  return null;
+}
+
+/** A clock unit arrives on the beat's clock and a click cannot hurry it. */
+function clockDue(u) {
+  if (!u || u.verb !== 'clock') return true;
+  const t = stage.clockT();
+  return t !== null && t >= u.at;
+}
+
 function canAdvance() {
   if (!S.unit || S.turn.active || S.end.active) return false;
   if (S.unit.verb === 'hold' && !S.hold.resolved) return false;
   if (S.unit.verb === 'target' && !S.gate.resolved) return false;
+  if (blockedBy(S.unit)) return false;
+  const next = UNITS[S.i + 1];
+  if (next && next.verb === 'clock' && !clockDue(next)) return false;
+  if (S.unit.verb === 'clock' && S.unit.turnAt !== undefined) {
+    const t = stage.clockT();
+    if (t === null || t < S.unit.turnAt) return false;
+  }
   return true;
 }
 
 function advance() {
-  if (!canAdvance()) return false;
+  if (!canAdvance()) {
+    // the click is not lost: it is spent the moment the unit may turn
+    if (S.unit && (blockedBy(S.unit) || (UNITS[S.i + 1] && UNITS[S.i + 1].verb === 'clock'))) {
+      if (!S.latch) { S.latch = true; S.latched++; }
+    }
+    return false;
+  }
   const next = S.i + 1;
   audio.cue('click');
-  if (next >= UNITS.length) { S.finished = true; return false; }
+  if (next >= UNITS.length || S.unit.endsBook) { startEnding(); return false; }
   S.advances++;
   if (S.hinted) { S.hinted = false; margin.hint(false); }
   if (UNITS[next].page !== S.unit.page) { startTurn(next); return true; }
@@ -199,20 +294,57 @@ function advance() {
 }
 
 const END_LEAF = 'end';
+
+/**
+ * THE PAGE TURN, AT PLATE SCALE — and now it is also the SET SWAP.
+ *
+ * The cover takes the whole leaf, the picture is swapped underneath it, and
+ * the cover lifts on what is now a different page. The set does not dissolve
+ * into the next one: the leaf turns, and a different painting is what is
+ * printed on the other side of it.
+ *
+ * The one thing the chapter adds is patience. The incoming SET is `ensure`d
+ * the instant the turn begins and the cover HOLDS UP until its bytes are
+ * decoded, however long that takes. A turn that lifted on a half-decoded plate
+ * would be exactly Beat I's King-with-no-King bug, one leaf wider.
+ */
 function startTurn(to, { sfx = true } = {}) {
-  S.turn.active = true; S.turn.t = 0; S.turn.to = to; S.turn.swapped = false; S.turn.k = 0;
+  S.turn.active = true; S.turn.t = 0; S.turn.to = to;
+  S.turn.swapped = false; S.turn.k = 0; S.turn.waited = 0;
+  const page = to === END_LEAF ? END_PAGE : UNITS[to].page;
+  const want = SET_OF_PAGE[page];
+  if (want && stage.activeName !== want && !stage.decoded(want)) {
+    S.turn.ready = false;
+    stage.ensure(want).then(() => { S.turn.ready = true; })
+      .catch((e) => { errors.push({ kind: 'set', msg: String(e.message) }); S.turn.ready = true; });
+  } else {
+    // already decoded (or the same set): the cover has nothing to wait for, and
+    // it must not wait on a microtask to be told so — see stage.decoded()
+    S.turn.ready = true;
+  }
   if (sfx) audio.cue('page');
   margin.cue('');
 }
 
-/**
- * The page turn, at PLATE SCALE: the cover takes the whole leaf, the picture
- * is swapped underneath it, and the cover lifts on what is now a different
- * page. The set does not dissolve into the card — the leaf turns and the card
- * is what is printed on the next one.
- */
 function stepTurn(dt) {
   const T = S.turn;
+  /* A DECODE WAIT IS NOT STORY TIME.
+   *
+   * While the cover is up and the incoming SET is still decoding, the turn's
+   * own clock stops and so does the world's (see `step`). Without that, how
+   * long a leaf took to arrive off the wire leaked into the story: two laps of
+   * the identical script diverged from the first turn that had to wait,
+   * because the second one waited a different number of sim steps and every
+   * ambient in the book is a function of the clock. Measured, that put 4.05%
+   * of the pixels of THE REVEAL somewhere else. Nothing the reader can see
+   * happens under a raised cover, so nothing under it ages. */
+  if (!T.ready) {
+    T.waited += dt;
+    T.k = 1;
+    coverEl.style.opacity = '1';
+    wrapEl.style.transform = `translateX(${(-view.w * 0.06).toFixed(2)}px)`;
+    return;
+  }
   T.t += dt;
   const total = TURN_IN + TURN_HOLD + TURN_OUT;
   if (T.t < TURN_IN) T.k = ease.inOut(T.t / TURN_IN);
@@ -222,11 +354,17 @@ function stepTurn(dt) {
   coverEl.style.opacity = String(T.k);
   // the leaf itself slides a little as it turns — a plate-scale page turn
   wrapEl.style.transform = `translateX(${(-T.k * view.w * 0.06).toFixed(2)}px)`;
-  if (!T.swapped && T.t >= TURN_IN) {
+  if (!T.swapped && T.t >= TURN_IN && T.ready) {
     T.swapped = true;
-    if (T.to === END_LEAF) enterEndLeaf(); else enterUnit(T.to);
+    if (T.to === END_LEAF) {
+      enterEndLeaf();
+    } else {
+      const want = SET_OF_PAGE[UNITS[T.to].page];
+      if (want && stage.activeName !== want) stage.mount(want);
+      enterUnit(T.to);
+    }
   }
-  if (T.t >= total) {
+  if (T.swapped && T.t >= total) {
     T.active = false; T.k = 0;
     coverEl.style.opacity = '0';
     wrapEl.style.transform = 'none';
@@ -241,19 +379,19 @@ function startEnding() {
   endEl.querySelector('.kick').textContent = END_CARD.kicker;
   endEl.querySelector('.ttl').textContent = END_CARD.title;
   endEl.querySelector('.sub').textContent = END_CARD.sub;
-  startTurn(END_LEAF, { sfx: false });     // the gate already cued the page
+  startTurn(END_LEAF, { sfx: false });     // the last unit already cued the page
 }
 
-/** The swap under a risen cover: page 2 is a leaf with no picture on it, and
- *  it is where the King goes — he stood at his mark through the door gate, the
- *  reader turned the page, he is not on the new one. */
+/** The swap under a risen cover: the closing leaf is a leaf with no picture on
+ *  it, and it is where the cast goes — they stood at their marks through the
+ *  last unit, the reader turned the page, they are not on the new one. */
 function enterEndLeaf() {
   S.page = END_PAGE;
   S.finished = true;
   stage.fire('kingOffstage');
   margin.clear();
   margin.cue('');
-  margin.progressEnd(BEAT);
+  margin.progressEnd();
   leader.clear();
   cameo.hide();
   wrapEl.style.opacity = '0';
@@ -304,7 +442,7 @@ function stepHold(dt) {
   holdArc.setAttribute('stroke-dashoffset', String(ARC_LEN * (1 - shown)));
 }
 
-/* ---- the target gates: the MASK / the INDEX / the DOOR ------------------- */
+/* ---- the target gates: eight of them, four per half of the book --------- */
 function stepTarget(t, dt) {
   const u = S.unit;
   if (!u || u.verb !== 'target' || S.gate.resolved || S.turn.active || S.end.active) {
@@ -330,11 +468,22 @@ function hitsTarget(name, px, py) {
   return Math.hypot(p.x - px, p.y - py) <= TARGET_RADIUS_PX;
 }
 
-function resolveGate(u) {
+function resolveGate(u, { soft = false } = {}) {
   S.gate.resolved = true;
   if (u.gateAct) stage.fire(u.gateAct);
   if (u.gateSfx) audio.cue(u.gateSfx);
-  if (u.endsBeat) { S.gate.lastHit = 'end'; audio.cue('click'); startEnding(); return true; }
+  if (soft) S.softFails++;
+  if (u.endsBook) { S.gate.lastHit = 'end'; audio.cue('click'); startEnding(); return true; }
+  /* THE THROW HAS NO TEXT (sec 2.4). The window gate hands the frame to the
+     beat's own clock: the margin is cleared and left empty, and the next unit
+     arrives when the clock says so, not when the gate resolves. */
+  const next = UNITS[S.i + 1];
+  if (next && next.verb === 'clock') {
+    margin.clear();
+    margin.cue('');
+    S.clockHeld = true;
+    return true;
+  }
   advance();
   return true;
 }
@@ -350,7 +499,12 @@ function tryGate(px, py) {
 
 /* ---- one fixed sim step -------------------------------------------------- */
 function step(dt) {
-  const t = clock.t;
+  /* STORY TIME, not wall time and not even sim time: the seconds the book has
+     spent waiting for a leaf's bytes are subtracted out, so every ambient in
+     every SET is a pure function of a clock that only runs while there is
+     something to see. See stepTurn(). */
+  if (S.turn.active && !S.turn.ready) { S.stall += dt; stepTurn(dt); return; }
+  const t = clock.t - S.stall;
   S.unitT += dt;
   audio.setTime(t);
   if (S.turn.active) stepTurn(dt);
@@ -359,8 +513,39 @@ function step(dt) {
   stepTarget(t, dt);
 
   const u = S.unit;
-  if (u && u.verb === 'auto' && !S.turn.active && !S.end.active && S.unitT >= (u.dwell || 2)) {
+  const quiet = !S.turn.active && !S.end.active;
+
+  if (u && u.verb === 'auto' && quiet && S.unitT >= (u.dwell || 2)) {
     advance();
+  }
+
+  /* THE BEAT VI CLOCK. Five units arrive on the beat's own timeline, and the
+     page turns on it too — 19.8 s after the reader's throw. */
+  if (quiet && u) {
+    const next = UNITS[S.i + 1];
+    if (next && next.verb === 'clock' && clockDue(next) &&
+        (S.clockHeld || u.verb === 'clock')) {
+      if (UNITS[S.i + 1].page !== u.page) startTurn(S.i + 1); else enterUnit(S.i + 1);
+      S.clockHeld = u.verb !== 'clock' ? false : S.clockHeld;
+    } else if (u.verb === 'clock' && u.turnAt !== undefined) {
+      const ct = stage.clockT();
+      if (ct !== null && ct >= u.turnAt && S.i + 1 < UNITS.length) {
+        if (UNITS[S.i + 1].page !== u.page) startTurn(S.i + 1); else enterUnit(S.i + 1);
+      }
+    }
+  }
+
+  // a latched click spends itself the moment its block lifts
+  if (S.latch && quiet && canAdvance()) { S.latch = false; advance(); }
+
+  /* SOFT-FAIL (sec 2.6): no gate is a wall, and no line is either. Beat I is
+     excluded — it shipped without this and stays byte-identical. */
+  if (quiet && u && (u.beat || 1) >= 2) {
+    const limit = u.verb === 'target' ? SOFT_FAIL : Math.min(SOFT_FAIL, u.dwell || SOFT_FAIL);
+    if (S.unitT >= limit) {
+      if (u.verb === 'target' && !S.gate.resolved) resolveGate(u, { soft: true });
+      else if (u.verb !== 'clock' && u.verb !== 'auto') { S.softFails++; advance(); }
+    }
   }
 
   refreshFocus();
@@ -370,11 +555,11 @@ function step(dt) {
 }
 
 /** The hairline from the live speech to the speaker's head. */
+const EMBODIED = new Set(['HOLMES', 'KING', 'CLIENT', 'GODFREY NORTON']);
 function stepLeader() {
   const u = S.unit;
   const who = u && u.speaker;
-  if (!u || S.end.active || S.turn.active ||
-      (who !== 'HOLMES' && who !== 'KING' && who !== 'CLIENT')) {
+  if (!u || S.end.active || S.turn.active || !EMBODIED.has(who)) {
     leader.clear(); return;
   }
   if (stage.state.dim > 0.12) { leader.clear(); return; }   // a plate owns the frame
@@ -447,12 +632,18 @@ window.addEventListener('keyup', (e) => {
   }
 });
 
-/* ---- boot: every byte decoded before __ready ---------------------------- */
+/* ---- boot: leaf one's every byte decoded before __ready ----------------- *
+ * The book does NOT decode four sets to open on one. What __ready promises is
+ * what it always promised — that nothing the CURRENT leaf can reveal is still
+ * on the wire — and the page turn keeps that promise for every later leaf by
+ * holding its cover up until the incoming set is decoded.                    */
 async function boot() {
-  const [missing, snd, cameos] = await Promise.all([
-    stage.preload(), audio.preload(), cameo.preload(),
+  const first = SET_OF_PAGE[PAGES[0]] || 'room';
+  const [rec, snd, cameos] = await Promise.all([
+    stage.ensure(first), audio.preload(), cameo.preload(),
   ]);
-  if (missing.length) errors.push({ kind: 'assets', msg: 'undecodable: ' + missing.join(', ') });
+  stage.mount(first);
+  if (rec.missing.length) errors.push({ kind: 'assets', msg: 'undecodable: ' + rec.missing.join(', ') });
   if (snd.missing.length) errors.push({ kind: 'audio', msg: 'undecodable: ' + snd.missing.join(', ') });
   layout();
   enterUnit(0, { silent: true });
@@ -476,7 +667,10 @@ const harnessOnly = {};
 const unitView = (u, i) => (!u ? null : {
   i, id: u.id, key: u.key, verb: u.verb, target: u.target || null,
   speaker: u.speaker || '', text: u.text || '', cue: cueFor(u),
-  focus: u.focus, page: u.page, fact: u.fact || null,
+  focus: u.focus, page: u.page, beat: u.beat || 1, set: setOf(u),
+  fact: u.fact || null, wait: u.wait || null, seg: u.seg || null,
+  at: u.at === undefined ? null : u.at,
+  endsBeat: !!u.endsBeat, endsBook: !!u.endsBook,
   cameo: u.cameo || null, cap: u.cap || null, act: u.act || null,
   shown: margin.lastText, blocks: margin.text(),
 });
@@ -484,19 +678,34 @@ const unitView = (u, i) => (!u ? null : {
 window.__unit = () => unitView(S.unit, S.i);
 window.__units = () => UNITS.map((u, i) => unitView(u, i));
 window.__unitByKey = (k) => unitByKey(k);
+window.__beats = () => BEATS.map((b) => ({ ...b }));
 
-harnessOnly.__gotoUnit = (n) => {
+/**
+ * Jump. It is ASYNC now, because a jump can land on a leaf whose SET has never
+ * been built — and a set that is not decoded cannot be painted, so the jump
+ * has to wait for it exactly the way a page turn does.
+ */
+harnessOnly.__gotoUnit = async (n) => {
   const idx = typeof n === 'string' ? UNITS.findIndex((u) => u.key === n || u.id === n) : n;
   if (!(idx >= 0)) return null;
+  const want = setOf(UNITS[idx]);
+  await stage.ensure(want);
   // replay every unit's act so the world arrives in the state the story built.
   // The reset is what makes that true in BOTH directions: replaying forward
   // from unit 0 cannot undo what a later unit switched on, so the world has to
   // be put back to how unit 0 found it before the replay starts.
   stage.reset();
+  stage.mount(want);
   margin.clear();
   S.turn.active = false; S.end.active = false; S.finished = false;
+  S.latch = false; S.clockHeld = false;
   endEl.style.opacity = '0'; coverEl.style.opacity = '0';
-  for (let j = 0; j <= idx; j++) enterUnit(j, { silent: j !== idx });
+  wrapEl.style.transform = 'none';
+  /* Only this leaf's own units are replayed: an act belonging to another SET
+     would be fired at a set that has never heard of it. The page turn is the
+     boundary the story itself draws, so it is the right one to replay from. */
+  const from = UNITS.findIndex((u) => u.page === UNITS[idx].page);
+  for (let j = from; j <= idx; j++) enterUnit(j, { silent: j !== idx });
   return window.__unit();
 };
 
@@ -510,10 +719,19 @@ harnessOnly.__gateClick = () => {
   ptr.x = p.x; ptr.y = p.y;
   const before = S.i;
   pressDown(); pressUp();
-  // a resolved gate ADVANCES, and entering the next unit clears gate.resolved —
-  // so the proof that the gate fired is that the reader moved, not the flag
-  return { ok: S.i !== before || S.end.active, from: before, to: S.i, target: u.target,
-           endsBeat: !!u.endsBeat, at: { x: +p.x.toFixed(1), y: +p.y.toFixed(1) } };
+  /* A resolved gate ADVANCES, and entering the next unit clears gate.resolved —
+     so the proof that the gate fired is that the reader MOVED, not the flag.
+     "Moved" has three shapes in this book and all three count:
+       the index changed              — an ordinary gate inside a leaf
+       a page turn began              — the door gate, which turns the leaf, and
+                                        the index does not change until the swap
+                                        happens under the risen cover
+       the frame was handed to a clock — the window gate (sec 6.6), whose next
+                                        unit arrives on the beat's own timeline */
+  return { ok: S.i !== before || S.end.active || S.clockHeld || S.turn.active,
+           from: before, to: S.i, target: u.target, endsBeat: !!u.endsBeat,
+           held: S.clockHeld, turning: S.turn.active,
+           at: { x: +p.x.toFixed(1), y: +p.y.toFixed(1) } };
 };
 
 /** A deliberate miss: the gate must NOT resolve and must NOT advance. */
@@ -541,18 +759,26 @@ harnessOnly.__advance = (dt) => harnessOnly.__setTime(clock.t + Math.max(0, dt |
 harnessOnly.__renderNow = () => { step(0); return S.renders; };
 harnessOnly.__mute = (m) => { audio.setMuted(m !== false); return audio.snapshot(); };
 harnessOnly.__audio = () => audio.snapshot();
+harnessOnly.__ensureAll = () => stage.preloadAll();
 harnessOnly.__refs = { stage, audio, margin, clock, S, UNITS };
 
 window.__state = () => ({
-  ready: S.ready, t: +clock.t.toFixed(4), frame: clock.frame, harness: clock.harness,
+  ready: S.ready, t: +(clock.t - S.stall).toFixed(4), wall: +clock.t.toFixed(4),
+  stall: +S.stall.toFixed(4), frame: clock.frame, harness: clock.harness,
   i: S.i, total: UNITS.length, unit: window.__unit(), unitT: +S.unitT.toFixed(3),
   page: S.page, pages: PAGES.length, finished: S.finished, blankLeaf: blankLeaf(),
+  beat: (S.unit && S.unit.beat) || 1, set: stage.activeName,
   advances: S.advances, nudges: S.nudges, visited: S.visited.size, renders: S.renders,
+  blocked: blockedBy(S.unit), latch: S.latch, latched: S.latched, softFails: S.softFails,
+  clock: { t: stage.clockT(), held: S.clockHeld },
   hold: { pressing: S.hold.pressing, k: +S.hold.k.toFixed(3), resolved: S.hold.resolved,
           required: (S.unit && S.unit.hold) || null },
   gate: { target: (S.unit && S.unit.target) || null, resolved: S.gate.resolved,
-          misses: S.gate.misses },
-  turn: { active: S.turn.active, k: +S.turn.k.toFixed(3), to: S.turn.to },
+          misses: S.gate.misses, live: S.unit && S.unit.target
+            ? stage.targetLive(S.unit.target) : null },
+  turn: { active: S.turn.active, k: +S.turn.k.toFixed(3), to: S.turn.to,
+          ready: S.turn.ready, waited: +S.turn.waited.toFixed(3),
+          swapped: S.turn.swapped },
   end: { active: S.end.active, k: +S.end.k.toFixed(3), card: +S.end.card.toFixed(3) },
   view: { w: +view.w.toFixed(1), h: +view.h.toFixed(1), portrait: view.portrait,
           fit: +stage.F.toFixed(4) },

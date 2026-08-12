@@ -1,0 +1,895 @@
+{
+ "generated": "2026-08-12T18:02:39Z",
+ "generator": "tools/living/prep_book.py",
+ "covers": "beats II-VII (CONTENT-full.md). Beat I is prep.py and is untouched.",
+ "files": {
+  "set/street/street.jpg": {
+   "bytes": 131393,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "eba1411f02f8ae9c",
+   "note": "base: quiet night, NO smoke (II.0-2, V.0-5)"
+  },
+  "set/street/street-dim.jpg": {
+   "bytes": 135286,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "854e9425c65a9b92",
+   "note": "painted relight under the plate-rocket inset (V.3-4)"
+  },
+  "set/street/street-window.jpg": {
+   "bytes": 145752,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "3fee52fe15a86599",
+   "note": "the sitting-room window OPEN and lit (V.5 -> VI)"
+  },
+  "set/street/street-smoke.jpg": {
+   "bytes": 168683,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "18cc109e6f35fd19",
+   "note": "the ruse burning (VI, from t+1.35)"
+  },
+  "set/street/street-empty.jpg": {
+   "bytes": 177416,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "1d616943c21e310d",
+   "note": "dispersed: the plume dying (VI, from t+8.6)"
+  },
+  "set/street/chalk-armed.png": {
+   "bytes": 14925,
+   "size": [
+    154,
+    180
+   ],
+   "mode": "RGBA",
+   "sha256": "1607c2f24af52196",
+   "note": "the chalk ring, ARMED (the station cue)"
+  },
+  "set/street/chalk-locked.png": {
+   "bytes": 12937,
+   "size": [
+    120,
+    140
+   ],
+   "mode": "RGBA",
+   "sha256": "baaade3488e55be8",
+   "note": "the chalk ring, LOCKED (the station taken)"
+  },
+  "set/street/reveal-back.png": {
+   "bytes": 2829,
+   "size": [
+    108,
+    112
+   ],
+   "mode": "RGBA",
+   "sha256": "9f6d4bb5d740605a",
+   "note": "the backlight she is a silhouette against"
+  },
+  "set/street/bayglass.png": {
+   "bytes": 26531,
+   "size": [
+    123,
+    133
+   ],
+   "mode": "RGBA",
+   "sha256": "4c1f323d1f8bebd9",
+   "note": "the bay glass, drawn AFTER the actors"
+  },
+  "set/street/mist.png": {
+   "bytes": 14436,
+   "size": [
+    1408,
+    190
+   ],
+   "mode": "RGB",
+   "sha256": "a56e5aa499227d19",
+   "note": "the damp, screen-blended, drifting"
+  },
+  "set/street/halo.png": {
+   "bytes": 11283,
+   "size": [
+    304,
+    304
+   ],
+   "mode": "RGB",
+   "sha256": "5b17c2cbfbedccaa",
+   "note": "the gas-lamp bloom"
+  },
+  "set/chase/chase.jpg": {
+   "bytes": 156220,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "de5f3c05136d2d9f",
+   "note": "base"
+  },
+  "set/chase/chase-dim.jpg": {
+   "bytes": 112693,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "3b03f5c31aa59da4",
+   "note": "the painted relight (the SET contract variant)"
+  },
+  "set/chase/fog.png": {
+   "bytes": 34744,
+   "size": [
+    410,
+    473
+   ],
+   "mode": "RGBA",
+   "sha256": "c3f32f182cb9130c",
+   "note": "the fog bank at the far end, drifting"
+  },
+  "set/chase/lamp2-front.png": {
+   "bytes": 18570,
+   "size": [
+    49,
+    222
+   ],
+   "mode": "RGBA",
+   "sha256": "e7b5c867ffd49983",
+   "note": "THE foreground occluder: the pursuit passes behind it"
+  },
+  "set/chase/door-out.png": {
+   "bytes": 50841,
+   "size": [
+    168,
+    194
+   ],
+   "mode": "RGBA",
+   "sha256": "2ab711975e5d5e4c",
+   "note": "Briony Lodge with its light OUT (after she boards)"
+  },
+  "set/church/church.jpg": {
+   "bytes": 222013,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "1b30b111070bb2e8",
+   "note": "base: the three in a knot before the altar"
+  },
+  "set/church/church-dim.jpg": {
+   "bytes": 199132,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "8a57ed3e5c65f51f",
+   "note": "the painted relight (the SET contract variant)"
+  },
+  "set/church/church-ring.jpg": {
+   "bytes": 223349,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "da32a0c8862d8fc6",
+   "note": "the ring moment: gold catch on the joined hands"
+  },
+  "set/church/altar.png": {
+   "bytes": 101755,
+   "size": [
+    286,
+    206
+   ],
+   "mode": "RGBA",
+   "sha256": "b448951590581f7c",
+   "note": "the altar, a free layer"
+  },
+  "set/church/hourglass.png": {
+   "bytes": 6984,
+   "size": [
+    52,
+    64
+   ],
+   "mode": "RGBA",
+   "sha256": "d25d5f44c45c34af",
+   "note": "the altar hourglass; its glass runs out under the drag"
+  },
+  "set/church/knot-patch.png": {
+   "bytes": 38962,
+   "size": [
+    276,
+    230
+   ],
+   "mode": "RGB",
+   "sha256": "bc89876d692f20bb",
+   "note": "the chancel with the three figures inpainted away"
+  },
+  "actor/irene-street.png": {
+   "bytes": 29173,
+   "size": [
+    98,
+    249
+   ],
+   "mode": "RGBA",
+   "sha256": "01343309c29d002e",
+   "note": "Irene standing (III.5 out of the hall door; her rest pose) [draws 83 px on street]"
+  },
+  "actor/irene-board.png": {
+   "bytes": 30158,
+   "size": [
+    125,
+    249
+   ],
+   "mode": "RGBA",
+   "sha256": "452df933e2319c3d",
+   "note": "Irene mid-step, hand up for the carriage handle (III.5) [draws 83 px on street]"
+  },
+  "actor/irene-bride.png": {
+   "bytes": 108291,
+   "size": [
+    255,
+    527
+   ],
+   "mode": "RGBA",
+   "sha256": "a491f8474172056e",
+   "note": "Irene as the bride (IV) [draws 176 px on church]"
+  },
+  "actor/norton-street.png": {
+   "bytes": 31158,
+   "size": [
+    109,
+    267
+   ],
+   "mode": "RGBA",
+   "sha256": "96f7491b79251bb0",
+   "note": "Norton, top hat + open gold watch (III.1-4) [draws 89 px on street]"
+  },
+  "actor/norton-beckon.png": {
+   "bytes": 124277,
+   "size": [
+    294,
+    564
+   ],
+   "mode": "RGBA",
+   "sha256": "08e5530c0322ccc2",
+   "note": "Norton beckoning with both hands (IV.7, the gate pose) [draws 188 px on church]"
+  },
+  "actor/norton-groom.png": {
+   "bytes": 102941,
+   "size": [
+    195,
+    564
+   ],
+   "mode": "RGBA",
+   "sha256": "0f29893472eed086",
+   "note": "Norton at the altar (IV) [draws 188 px on church]"
+  },
+  "actor/irene-walk.png": {
+   "bytes": 124446,
+   "size": [
+    528,
+    249
+   ],
+   "mode": "RGBA",
+   "sha256": "bea251254cde6d50",
+   "note": "Irene, 4-frame walk, profile facing LEFT [draws 83 px on street]"
+  },
+  "actor/norton-run.png": {
+   "bytes": 622222,
+   "size": [
+    1412,
+    508
+   ],
+   "mode": "RGBA",
+   "sha256": "8b75542df09ca636",
+   "note": "Norton, 4-frame run, profile facing RIGHT (IV.4 seg run) [draws 188 px on church]"
+  },
+  "actor/holmes-street.png": {
+   "bytes": 29631,
+   "size": [
+    110,
+    277
+   ],
+   "mode": "RGBA",
+   "sha256": "39ce6ec977b45057",
+   "note": "Holmes in the Nonconformist-clergyman disguise (II, V, VI) [draws 92 px on street]"
+  },
+  "actor/holmes-street-signal.png": {
+   "bytes": 32478,
+   "size": [
+    110,
+    277
+   ],
+   "mode": "RGBA",
+   "sha256": "e594083561a071bd",
+   "note": "V.3 \"when I raise my hand-so\" -- pixel-aligned with the idle [draws 92 px on street]"
+  },
+  "actor/holmes-church.png": {
+   "bytes": 143144,
+   "size": [
+    218,
+    586
+   ],
+   "mode": "RGBA",
+   "sha256": "9f62ba9ff9fc4cc5",
+   "note": "Holmes as the groom-out-of-work: the idler at the back (IV) [draws 195 px on church]"
+  },
+  "actor/holmes-church-altar.png": {
+   "bytes": 139303,
+   "size": [
+    218,
+    586
+   ],
+   "mode": "RGBA",
+   "sha256": "ebb959ddbae04bd2",
+   "note": "IV.9-13: cap off, head bowed, at the altar [draws 195 px on church]"
+  },
+  "actor/holmes-church-walk.png": {
+   "bytes": 556418,
+   "size": [
+    1192,
+    467
+   ],
+   "mode": "RGBA",
+   "sha256": "5a6d895380c95d99",
+   "note": "IV.3 seg lounge / IV.8 seg drag: 4-frame cycle facing RIGHT [draws 195 px on church]"
+  },
+  "actor/holmes-chase.png": {
+   "bytes": 44173,
+   "size": [
+    107,
+    287
+   ],
+   "mode": "RGBA",
+   "sha256": "ea7789985dd985b3",
+   "note": "Holmes as the groom at chase scale (III.9, the shabby fare)"
+  },
+  "actor/irene-chase.png": {
+   "bytes": 30920,
+   "size": [
+    102,
+    258
+   ],
+   "mode": "RGBA",
+   "sha256": "7ca8ed4d79459131",
+   "note": "Irene at chase scale (III.5-6, boarding the landau)"
+  },
+  "actor/norton-chase.png": {
+   "bytes": 32457,
+   "size": [
+    112,
+    276
+   ],
+   "mode": "RGBA",
+   "sha256": "53823837ce049b67",
+   "note": "Norton at chase scale (III.1-4, at the lit door)"
+  },
+  "cameo/norton.jpg": {
+   "bytes": 88880,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "5789a5caedfa52d6",
+   "note": "GODFREY NORTON, first raised at IV.5 (CONTENT-full 6.5)"
+  },
+  "inset/photo-irene.jpg": {
+   "bytes": 156087,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "c8ea3b6d3387eaa1",
+   "note": "INSET plate-irene: the portrait of her ALONE, the fee (VII.6-10)"
+  },
+  "set/chase/rig-lamp.png": {
+   "bytes": 7765,
+   "size": [
+    208,
+    208
+   ],
+   "mode": "RGB",
+   "sha256": "50ed491766a2641d",
+   "note": "a rig's carriage lamp: the chase lane's own painted bloom, screen-blended, travelling the rail"
+  },
+  "inset/rocket-plate.jpg": {
+   "bytes": 124687,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "f9ef5964fe0cf120",
+   "note": "INSET plate-rocket (7.2 GAP #9, closed by the engine lane): \"an ordinary plumber's smoke-rocket, fitted with a cap at either end\". Raised at V.3 signal, held through V.4 rocket, taken down at V.5 neutral."
+  }
+ },
+ "derivations": {
+  "street_layers": {
+   "overlays": [
+    {
+     "id": "bayglass",
+     "file": "bayglass.png",
+     "x": 691,
+     "y": 308,
+     "w": 123,
+     "h": 133,
+     "bytes": 26531,
+     "sha256": "4c1f323d1f8bebd958bdfaca0d94ca613f9b9adfea2993eb858b1d8efa21714c"
+    }
+   ],
+   "lampBox": {
+    "id": "lamp",
+    "file": "lamp.png",
+    "x": 451,
+    "y": 273,
+    "w": 67,
+    "h": 239,
+    "bytes": 20293,
+    "sha256": "ddb3d97f9a44c85b97719ec3ffebb2d96216d494d33d941b057745060aa27496"
+   }
+  },
+  "church_marks": {
+   "closeLenses": {
+    "_law": "CONTENT-full.md 6.2: \"Two close lenses on this SET are contract facts and must be composed for, not cropped to.\"",
+    "ring": {
+     "at": [
+      782,
+      446
+     ],
+     "plateReadAtZeroPush": {
+      "bride_pct_of_frame_h": 24.0,
+      "clergyman": 23.7,
+      "groom": 17.3
+     },
+     "contract": "27.2 / 20.5 / 16.7",
+     "verdict": "PASSES AT k=1.0 -- the contract read is already in the base plate; k=1.13 lands the bride exactly on 27.2"
+    },
+    "coin": {
+     "at": [
+      934,
+      402
+     ],
+     "note": "altar top, left of the hourglass -- unit 12 sovereignScrub"
+    },
+    "nave": {
+     "at": [
+      704,
+      384
+     ],
+     "note": "unit 0 establishing"
+    },
+    "aisle": {
+     "at": [
+      520,
+      470
+     ],
+     "note": "unit 3, the witness up the side aisle"
+    }
+   },
+   "figureBoxes": {
+    "bride": [
+     688,
+     344,
+     792,
+     528
+    ],
+    "groom": [
+     790,
+     372,
+     875,
+     505
+    ],
+    "clergyman": [
+     848,
+     328,
+     925,
+     510
+    ]
+   },
+   "props": [
+    {
+     "id": "altar",
+     "file": "altar.png",
+     "x": 813,
+     "y": 339,
+     "w": 286,
+     "h": 206,
+     "bytes": 101755,
+     "sha256": "b448951590581f7c77055db04ceb07e4fbdf4abbb77cafe948ea36fc4f077480"
+    },
+    {
+     "id": "hourglass",
+     "file": "hourglass.png",
+     "x": 981,
+     "y": 345,
+     "w": 52,
+     "h": 64,
+     "bytes": 6984,
+     "sha256": "d25d5f44c45c34af98fcc4c955b6c113b5bf1892898cbba82a2351b89ef16bfb"
+    }
+   ],
+   "knotPatch": {
+    "bytes": 38962,
+    "sha256": "bc89876d692f20bba8bae67a57523572340936d60e06a63064524b3e8cec8fb5",
+    "x": 662,
+    "y": 316,
+    "note": "the chancel with the three figures inpainted away -- Beat I holmes-patch law, so the actor lane can lift them off the plate"
+   },
+   "emissives": [
+    {
+     "at": [
+      867,
+      255
+     ],
+     "r": 66,
+     "rgb": "249,227,149",
+     "a": 0.235,
+     "per": 2.6,
+     "amp": 0.42,
+     "class": "glow",
+     "blob_px": 3227,
+     "peak_lum": 226.9,
+     "surround_lum": 84.0,
+     "id": "glo1"
+    },
+    {
+     "at": [
+      580,
+      270
+     ],
+     "r": 58,
+     "rgb": "233,252,254",
+     "a": 0.22,
+     "per": 7.3,
+     "amp": 0.45,
+     "class": "window",
+     "blob_px": 3836,
+     "peak_lum": 214.2,
+     "surround_lum": 80.4,
+     "id": "win2"
+    },
+    {
+     "at": [
+      900,
+      298
+     ],
+     "r": 38,
+     "rgb": "253,250,200",
+     "a": 0.188,
+     "per": 3.7,
+     "amp": 0.5,
+     "class": "candle",
+     "blob_px": 110,
+     "peak_lum": 210.3,
+     "surround_lum": 96.1,
+     "id": "can3"
+    },
+    {
+     "at": [
+      1081,
+      314
+     ],
+     "r": 54,
+     "rgb": "249,226,152",
+     "a": 0.267,
+     "per": 2.6,
+     "amp": 0.42,
+     "class": "glow",
+     "blob_px": 3726,
+     "peak_lum": 227.1,
+     "surround_lum": 64.7,
+     "id": "glo4"
+    },
+    {
+     "at": [
+      939,
+      372
+     ],
+     "r": 42,
+     "rgb": "248,208,138",
+     "a": 0.159,
+     "per": 3.7,
+     "amp": 0.5,
+     "class": "candle",
+     "blob_px": 726,
+     "peak_lum": 205.3,
+     "surround_lum": 108.6,
+     "id": "can5"
+    },
+    {
+     "at": [
+      415,
+      378
+     ],
+     "r": 90,
+     "rgb": "226,251,254",
+     "a": 0.318,
+     "per": 7.3,
+     "amp": 0.45,
+     "class": "window",
+     "blob_px": 5818,
+     "peak_lum": 241.2,
+     "surround_lum": 48.4,
+     "id": "win6"
+    }
+   ],
+   "dimMatrix": [
+    0.435,
+    0.746,
+    1.0
+   ]
+  },
+  "actor/irene-street.png": {
+   "scale": 0.20376,
+   "srcSize": [
+    481,
+    1222
+   ],
+   "size": [
+    98,
+    249
+   ],
+   "baseline": 247.8,
+   "srcBaseline": 1216
+  },
+  "actor/irene-board.png": {
+   "scale": 0.22133,
+   "srcSize": [
+    566,
+    1125
+   ],
+   "size": [
+    125,
+    249
+   ],
+   "baseline": 247.7,
+   "srcBaseline": 1119
+  },
+  "actor/irene-bride.png": {
+   "scale": 0.4512,
+   "srcSize": [
+    565,
+    1168
+   ],
+   "size": [
+    255,
+    527
+   ],
+   "baseline": 524.3,
+   "srcBaseline": 1162
+  },
+  "actor/norton-street.png": {
+   "scale": 0.22551,
+   "srcSize": [
+    482,
+    1184
+   ],
+   "size": [
+    109,
+    267
+   ],
+   "baseline": 265.6,
+   "srcBaseline": 1178
+  },
+  "actor/norton-beckon.png": {
+   "scale": 0.48958,
+   "srcSize": [
+    600,
+    1152
+   ],
+   "size": [
+    294,
+    564
+   ],
+   "baseline": 561.1,
+   "srcBaseline": 1146
+  },
+  "actor/norton-groom.png": {
+   "scale": 0.48579,
+   "srcSize": [
+    401,
+    1161
+   ],
+   "size": [
+    195,
+    564
+   ],
+   "baseline": 561.1,
+   "srcBaseline": 1155
+  },
+  "actor/irene-walk.png": {
+   "scale": 0.52643,
+   "srcSize": [
+    1004,
+    473
+   ],
+   "size": [
+    528,
+    249
+   ],
+   "baseline": 245.8,
+   "srcBaseline": 467,
+   "cell": [
+    132,
+    249
+   ]
+  },
+  "actor/norton-run.png": {
+   "scale": 1.0,
+   "srcSize": [
+    1412,
+    508
+   ],
+   "size": [
+    1412,
+    508
+   ],
+   "baseline": 502.0,
+   "srcBaseline": 502,
+   "cell": [
+    353,
+    508
+   ]
+  },
+  "actor/holmes-street.png": {
+   "scale": 0.24427,
+   "srcSize": [
+    450,
+    1134
+   ],
+   "size": [
+    110,
+    277
+   ],
+   "baseline": 275.5,
+   "srcBaseline": 1128
+  },
+  "actor/holmes-street-signal.png": {
+   "scale": 0.24427,
+   "srcSize": [
+    450,
+    1134
+   ],
+   "size": [
+    110,
+    277
+   ],
+   "baseline": 275.5,
+   "srcBaseline": 1128
+  },
+  "actor/holmes-church.png": {
+   "scale": 0.4847,
+   "srcSize": [
+    450,
+    1209
+   ],
+   "size": [
+    218,
+    586
+   ],
+   "baseline": 583.1,
+   "srcBaseline": 1203
+  },
+  "actor/holmes-church-altar.png": {
+   "scale": 0.4847,
+   "srcSize": [
+    450,
+    1209
+   ],
+   "size": [
+    218,
+    586
+   ],
+   "baseline": 583.1,
+   "srcBaseline": 1203
+  },
+  "actor/holmes-church-walk.png": {
+   "scale": 1.0,
+   "srcSize": [
+    1192,
+    467
+   ],
+   "size": [
+    1192,
+    467
+   ],
+   "baseline": 461.0,
+   "srcBaseline": 461,
+   "cell": [
+    298,
+    467
+   ]
+  },
+  "actor/holmes-chase.png": {
+   "scale": 0.23739,
+   "srcSize": [
+    450,
+    1209
+   ],
+   "size": [
+    107,
+    287
+   ],
+   "baseline": 285.6,
+   "srcBaseline": 1203
+  },
+  "actor/irene-chase.png": {
+   "scale": 0.21113,
+   "srcSize": [
+    481,
+    1222
+   ],
+   "size": [
+    102,
+    258
+   ],
+   "baseline": 256.7,
+   "srcBaseline": 1216
+  },
+  "actor/norton-chase.png": {
+   "scale": 0.23311,
+   "srcSize": [
+    482,
+    1184
+   ],
+   "size": [
+    112,
+    276
+   ],
+   "baseline": 274.6,
+   "srcBaseline": 1178
+  },
+  "inset/rocket-plate.jpg": {
+   "raw_dir": "assets/raw/book-living/20260812T180829Z",
+   "picked": "plate-rocket-b.png",
+   "rejected": "plate-rocket-a.png -- the model lettered the tube \"VICTORIAN PLUMBER TOOL\"; the locked template says no text, no letters, so it is a hard fail, not a preference",
+   "prompt_shape": "the note-plate / watermark-plate object-plate template verbatim ('stylized low poly 3d render, flat shaded chunky faceted style, muted Victorian palette, ... dark navy faceted background, no text, no letters, no writing') + the canon subject clause from l.900-901",
+   "generator": "tools/nbpro.py (gemini-3-pro-image), 2 candidates, raw-first"
+  }
+ },
+ "gaps": {
+  "rigs": "CONTENT-full 7.2 #7: three rigs (hansom, landau, four-wheeler) are NOT shipped by any lane. Everything the STORY needs about them is computed from the chase lane's rail and is correct -- position, ground, scale, the 19.5->14.0 m gap, and which one the `cab` gate stands on. What is missing is only the picture, so each rig runs as its carriage lamp and its contact shadow. The chase lane's painted bloom (glow-lamp3) was tried and measured invisible at rig scale over warm cobbles, so the lamp is drawn as an emissive like every other light in this stack. Dropping set/chase/rig-<id>.png in gives them bodies with no engine change.",
+  "crowd": "7.2 #12: the crowd is not shipped. Beat VI stages the turn and the disperse on the street plate's own painted states (street-smoke / street-empty), which is where the crowd lives in the painting.",
+  "props": "7.2 #13: the gold watch is painted INTO norton-street.png; the ring is the church lane's painted church-ring.jpg; the hourglass is a shipped layer. The sovereign and the rocket are performed as light (engine-side emissives), not as sprites.",
+  "maid": "7.2 #12: folded into street-window.jpg, which is the ledger's own stated fallback.",
+  "clergyman": "7.2 #6: no cut shipped, and none is needed -- St Monica's paints its own clergyman and nothing in the beat moves him.",
+  "knot-patch": "shipped but NOT USED: set/church/knot-patch.png is a harmonic blur, not a clean inpaint, and clipped over the groom it puts a grey smear in the chancel. sets/church.js keeps the painted groom instead and only shows the Norton sprite while he is off his own mark."
+ },
+ "scale": {
+  "street": {
+   "px_per_m": 49.4,
+   "source": "MANIFEST-reprise.json plate_space_scale.street -- the front door reads 100 px (plate y 368..468) for a 2.03 m door and the area railings 55 px for 1.11 m",
+   "conflict": "assets/plates/book/actors/MANIFEST.json says 53.2 px/m off the same door leaf measured 108 px. 7.7% apart; the engine takes the reprise number because it is cross-checked against a second element (the railings)."
+  },
+  "church": {
+   "px_per_m": 104.5,
+   "source": "the church lane's own painted figures: closeLenses.ring records bride 24.0% of 768 = 184 px, and handoffToActorLane figureBoxes measure clergyman 182 px, for ~1.75 m adults",
+   "conflict": "laneactors MANIFEST says 88.6 px/m off a 155 px clergyman; that measurement is 27 px short of the church lane's own box for the same figure, so the plate's number wins."
+  },
+  "chase": {
+   "px_per_m": 51.2,
+   "source": "chase MANIFEST: near gas standard finial y309 -> base y514 (205 px) for a 4.0 m lamp, at rail u=0; scaled by rail.s"
+  }
+ }
+}

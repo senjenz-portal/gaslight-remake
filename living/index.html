@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Gaslight — Ch. 1, Beat I · The Masked Client</title>
+<title>Gaslight — The Living Book · A Scandal in Bohemia</title>
 <style>
   /* ------------------------------------------------------------------ *
    * The page is a DARK LEAF: assets/page-texture.jpg crushed to near
@@ -49,6 +49,15 @@
   #stage .lyr{position:absolute;display:block;}
   #stage .plate{image-rendering:auto;}
   #stage .emis{position:absolute;mix-blend-mode:screen;pointer-events:none;}
+  /* ONE SET IS MOUNTED AT A TIME. Each is a full plate-space box inside the
+     camera; the page turn swaps which one is displayed, under a risen cover. */
+  #stage .set{position:absolute;left:0;top:0;width:1408px;height:768px;}
+  /* a rig on the chase rail: its lamp and its shadow travel together */
+  #stage .rig{position:absolute;left:0;top:0;width:1408px;height:768px;}
+  #stage .riglamp{mix-blend-mode:screen;}
+  /* a shipped patch clipped to ONE painted figure's box, so the plate keeps
+     the other two exactly as painted (sets/church.js) */
+  #stage .clipbox{position:absolute;overflow:hidden;}
   /* the actors are ISOLATED so the relight matrix is theirs alone */
   #stage .actors{position:absolute;left:0;top:0;width:1408px;height:768px;
     isolation:isolate;filter:url(#dimf);}
@@ -92,6 +101,11 @@
     text-shadow:0 1px 5px rgba(0,0,0,.98);}
   .blk.doc p{border-left:1px solid var(--gold-dim);padding-left:13px;font-style:italic;
     color:var(--cream-bright);}
+  /* Gutenberg's own italic (*bijou*, *the*), and only that — see margin.js.
+     Inside a document block the run is already italic, so the emphasis has to
+     go the other way or it says nothing. */
+  .blk p em{font-style:italic;}
+  .blk.doc p em{font-style:normal;}
   .blk.head{text-align:left;}
   .blk.head .rule{width:52px;height:1px;background:var(--gold-dim);margin-bottom:16px;}
   .blk.head .num{font-variant:small-caps;letter-spacing:.26em;font-size:13px;
