@@ -154,12 +154,15 @@ export const UNITS = [
     speaker: 'HOLMES', verb: 'click', focus: 'window', page: 1, clear: true,
     act: 'carriageArrive' },
 
-  /* 10 — cam -> door; hoofbeats in the street; fact I.3.
-     `arrival` stages the beat (round-1 [E1a]): carriage lamps sweep the pane
-     and rake the wall, the light under the door swells, the landing comes up. */
+  /* 10 — cam -> the WINDOW; hoofbeats in the street; fact I.3.
+     `arrival` stages the beat (round-1 [E1a], and [F8] in the fable-pass round):
+     the carriage lamps rake the panes, THE RIG ITSELF CROSSES THE GLASS as a
+     silhouette, and the light under the door swells behind it. Its own lens, not
+     the door gate's: no single lens holds both apertures in portrait, and the
+     aperture this unit happens in is the window (sets/room.js FOCUS.arrival). */
   { id: 'i-10-comes2', key: 'comes2',
     text: '“And here he comes, if I am not mistaken, to resolve all our doubts.”',
-    speaker: 'HOLMES', verb: 'click', focus: 'door', page: 1, clear: true,
+    speaker: 'HOLMES', verb: 'click', focus: 'arrival', page: 1, clear: true,
     sfx: 'hoofbeats', bed: 'street', act: 'arrival', fact: 'I.3' },
 
   /* 11 — the King ENTERS the diorama; fact I.4 */
@@ -506,17 +509,38 @@ export const UNITS = [
   { id: 'iv-08-halfdragged', key: 'halfdragged',
     text: '“I was half-dragged up to the altar, and before I knew where I was I found myself mumbling responses which were whispered in my ear…”',
     speaker: 'HOLMES', verb: 'click', seg: 'drag', segDur: 6.0, segHold: true,
-    /* the AISLE lens, not the knot: the drag is now performed (Norton hauls the
-       witness up and then hands back to his own painted self), and the aisle
-       lens is the one composed so his painted self is outside the frame while
-       his cut-out is inside it. On `knot` the reader would see two of him. */
-    focus: 'aisle', page: 4, beat: 4, set: 'church', clear: true, sfx: 'glass',
+    /* THE KNOT LENS, and the aisle lens it replaces was the last thing in the
+       book still paying rent on the two-Norton problem [F4]. Its case was: "the
+       aisle lens is composed so Norton's PAINTED self is outside the frame while
+       his cut-out is inside it — on `knot` the reader would see two of him." The
+       plate paints nobody now (tools/lanecf/chancel_patch.py), so there is one
+       Norton in the world and the constraint is void; the note outlived the
+       thing it was avoiding.
+
+       What it cost is measurable, because this unit's SETTLED frame is the
+       witness standing AT THE ALTAR (`drag` ends on MARK.altar) while the lens
+       is still composed on the aisle floor 100 px below him. The aisle frame is
+       plate x 218..782 / y 346..654, and at that frame the altar's four are:
+       clergyman 166 px outside it, groom 48 px outside, and the WITNESS's own
+       head 40 px above the top edge — the reader dwells on "I was half-dragged
+       up to the altar" looking at a beheaded man, half a groom, no clergyman
+       and a foreground of empty pews (tools/lanecf/frame_feet.py).
+
+       `knot` holds all four whole, and it holds the whole drag: Norton hauling
+       him up from 520 and handing back to his own mark is now something the
+       reader WATCHES instead of something that happens off-frame. The law that
+       keeps it honest is in the lap — once the witness stands on the altar mark,
+       every participant must be inside the lens, whatever the lens is called. */
+    focus: 'knot', page: 4, beat: 4, set: 'church', clear: true, sfx: 'glass',
     act: 'glassStart' },
 
   /* 4.9 — THE CAMEO CAPTION FLIPS - the King's own reveal device, used for the chapter's
-     one other change of identity. The ring lens is MEASURED, not chosen: the
-     church lane reads bride 24.0 / clergyman 23.7 / groom 17.3 % of frame height
-     at k=1.0, and k=1.13 lands the bride on the reference's own 27.2. fact M.4.
+     one other change of identity. The ring lens is MEASURED, not chosen — and
+     what it is measured ON is the RING, not the bride: k=1.13 satisfied "the
+     bride reads 27.2% of frame height" and still left the fact of the unit a
+     ~10 px speck the review could not see [F7]. It is k=3.20 now, set by the
+     frame's own content (sets/church.js FOCUS.ring), which puts the band 64
+     device px across and still holds all four participants whole. fact M.4.
    */
   { id: 'iv-09-tyingup', key: 'tyingup',
     text: '“…generally assisting in the secure tying up of Irene Adler, spinster, to Godfrey Norton, bachelor. It was all done in an instant…”',

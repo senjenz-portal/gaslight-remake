@@ -514,7 +514,19 @@ function step(dt) {
      something to see. See stepTurn(). */
   if (S.turn.active && !S.turn.ready) { S.stall += dt; stepTurn(dt); return; }
   const t = clock.t - S.stall;
-  S.unitT += dt;
+  /* A UNIT DOES NOT SPEND ITS DWELL UNDER THE COVER — [F10].
+   *
+   * The leaf swaps at TURN_IN and the cover then takes TURN_OUT (0.72 s) to
+   * fade off the new page, so a unit entered under a raised cover was already
+   * 0.9 s into its dwell by the time the reader could see it. On a 3.4 s chapter
+   * heading that is a quarter of the frame, and on the Beat VII heading — which
+   * the Beat VI clock hands over at t+19.8 and which the review therefore caught
+   * at 2% luminance — it is why "The Woman" read as 3.4 s of nothing. Nothing
+   * the reader can see happens under a raised cover, so nothing ages under one:
+   * the same rule stall already applies to story time, applied to the unit's own
+   * clock. (Beat I is unaffected: its single page turn is the last thing that
+   * happens in the beat.) */
+  if (!S.turn.active) S.unitT += dt;
   audio.setTime(t);
   if (S.turn.active) stepTurn(dt);
   if (S.end.active) stepEnding(dt);

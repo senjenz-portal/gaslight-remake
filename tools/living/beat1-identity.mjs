@@ -13,7 +13,18 @@
  * unpinned comparison measures the harness, not the app — and diffs the
  * frames.
  *
- * Usage: node tools/living/beat1-identity.mjs [--tol 8]
+ * WHICH BASELINE. `living-book-bundle.zip` is whatever was last packed, and it
+ * is NOT necessarily what is deployed: on the fable-pass fix round it was two
+ * commits old, so "BEAT I MOVED 16/16" was reporting the previous round's
+ * accepted changes as well as this round's. A regression check has to run
+ * against the state it claims not to regress from, so `--base DIR` takes any
+ * unpacked build — e.g. HEAD, which is what the live URL serves:
+ *
+ *   rm -rf /tmp/gl-b1-head && mkdir -p /tmp/gl-b1-head
+ *   git -C site-deploy archive HEAD living | tar -x -C /tmp/gl-b1-head
+ *   node tools/living/beat1-identity.mjs --base /tmp/gl-b1-head/living
+ *
+ * Usage: node tools/living/beat1-identity.mjs [--tol 8] [--base DIR]
  * Exit 0 only if every frame is identical.
  */
 import { chromium } from 'playwright';
@@ -30,7 +41,15 @@ const ROOT = path.resolve(HERE, '..', '..');
 const args = process.argv.slice(2);
 const TOL = +((args.indexOf('--tol') >= 0 && args[args.indexOf('--tol') + 1]) || 8);
 const BUNDLE = path.join(ROOT, 'living-book-bundle.zip');
-const BASE = '/tmp/gl-beat1-base';
+const UNZIP_TO = '/tmp/gl-beat1-base';
+/* --base takes an ALREADY-UNPACKED build and uses it verbatim. This flag was
+   documented in the header from the start and was never wired up: every run
+   silently unzipped living-book-bundle.zip instead, which is whatever was last
+   packed and NOT necessarily what is deployed. That is the bug the header itself
+   warns about ("BEAT I MOVED 16/16 was reporting the previous round's accepted
+   changes as well as this round's") — the flag that was supposed to be the cure
+   was the thing that was broken. */
+const BASE_ARG = args.indexOf('--base') >= 0 ? args[args.indexOf('--base') + 1] : null;
 
 /* the frames: one per device the beat owns — the toss, the note plate, the
    hold's reveal, the crossing, the arrival, the entrance, the three-shot, the
@@ -74,28 +93,57 @@ async function frames(dir, port) {
   return out;
 }
 
-if (!fs.existsSync(BUNDLE)) { console.log('no bundle to compare against:', BUNDLE); process.exit(2); }
-fs.rmSync(BASE, { recursive: true, force: true });
-fs.mkdirSync(BASE, { recursive: true });
-execFileSync('unzip', ['-q', '-o', BUNDLE, '-d', BASE]);
+let baseDir;
+if (BASE_ARG) {
+  baseDir = path.resolve(BASE_ARG);
+  if (!fs.existsSync(path.join(baseDir, 'index.html'))) {
+    console.log('--base is not an unpacked living build (no index.html):', baseDir);
+    process.exit(2);
+  }
+  console.log('baseline: ' + baseDir + '  (unpacked build, used verbatim)');
+} else {
+  if (!fs.existsSync(BUNDLE)) { console.log('no bundle to compare against:', BUNDLE); process.exit(2); }
+  fs.rmSync(UNZIP_TO, { recursive: true, force: true });
+  fs.mkdirSync(UNZIP_TO, { recursive: true });
+  execFileSync('unzip', ['-q', '-o', BUNDLE, '-d', UNZIP_TO]);
+  baseDir = path.join(UNZIP_TO, 'living');
+  console.log('baseline: ' + BUNDLE + '  (last packed bundle — NOT necessarily what is ' +
+              'deployed; pass --base for a build you can name)');
+}
 
-const A = await frames(path.join(BASE, 'living'), 8831);
+const A = await frames(baseDir, 8831);
 const B = await frames(path.join(ROOT, 'site-deploy', 'living'), 8832);
 
+/* WHERE it moved, not just how much. "Beat I is pixel-identical where it was not
+   touched" is a claim about a REGION, so the diff reports the bounding box of the
+   changed pixels in device px. A fix's own box (Watson's armchair, the window
+   band, the heading's type) is a small named rectangle; a regression is a box
+   somewhere nobody worked. Without this the tool can only say 16/16 MOVED, which
+   is what let the last round argue about it instead of reading it. */
 let bad = 0;
+const moved = [];
 for (const [key] of PINS) {
   const a = A[key], b = B[key];
-  let n = 0, mx = 0;
+  let n = 0, mx = 0, x1 = Infinity, y1 = Infinity, x2 = -1, y2 = -1;
   if (a.width !== b.width || a.height !== b.height) { n = -1; } else {
     for (let i = 0; i < a.data.length; i += 4) {
       const d = Math.max(Math.abs(a.data[i] - b.data[i]), Math.abs(a.data[i + 1] - b.data[i + 1]),
                          Math.abs(a.data[i + 2] - b.data[i + 2]));
       if (d > mx) mx = d;
-      if (d > TOL) n++;
+      if (d > TOL) {
+        n++;
+        const p = i / 4, x = p % a.width, y = (p - x) / a.width;
+        if (x < x1) x1 = x; if (x > x2) x2 = x;
+        if (y < y1) y1 = y; if (y > y2) y2 = y;
+      }
     }
   }
   if (n) bad++;
-  console.log(`  ${key.padEnd(12)} ${n === 0 ? 'identical' : n + ' px differ'}   maxdelta ${mx}`);
+  const box = n > 0 ? `  box [${x1},${y1} ${x2 - x1 + 1}x${y2 - y1 + 1}]` : '';
+  const pct = n > 0 ? ` (${(100 * n / (a.width * a.height)).toFixed(2)}% of frame)` : '';
+  if (n > 0) moved.push({ key, n, mx, box: [x1, y1, x2 - x1 + 1, y2 - y1 + 1] });
+  console.log(`  ${key.padEnd(12)} ${n === 0 ? 'identical' : n + ' px differ'}${pct}` +
+              `   maxdelta ${mx}${box}`);
 }
 console.log(bad ? `BEAT I MOVED (${bad}/${PINS.length} frames)` : `BEAT I HELD — ${PINS.length}/${PINS.length} frames pixel-identical to the shipped build`);
 process.exit(bad ? 1 : 0);
