@@ -54,7 +54,10 @@ proven (nothing fetched while a leaf is being read), zero console errors,
 per-beat screenshots. Plus the on-screen carrier assertions of §3.4.
 
 **7. DEPLOY** ($0). Self-contained static folder, any host, no build step.
-Push the branch; GitHub Pages serves it. Median observed propagation: ~50 s.
+Push the branch; GitHub Pages serves it. Propagation on the last fix push,
+measured by polling a new asset until it returned 200: 50 s. Poll for the
+new bytes before running stage 6 against the URL, or the lap verifies the
+previous deploy and passes.
 
 ---
 
