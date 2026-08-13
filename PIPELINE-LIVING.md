@@ -51,7 +51,7 @@ model, the beat clock.
 URL — every unit entered by its real verb with no `__gotoUnit` in the walk,
 verbatim vs the contract, each gate proven by MISSING it first, lazy-load
 proven (nothing fetched while a leaf is being read), zero console errors,
-per-beat screenshots. Plus the on-screen carrier assertions of §3.3.
+per-beat screenshots. Plus the on-screen carrier assertions of §3.4.
 
 **7. DEPLOY** ($0). Self-contained static folder, any host, no build step.
 Push the branch; GitHub Pages serves it. Median observed propagation: ~50 s.
@@ -164,7 +164,7 @@ Three separate failures, and all three are structural:
    a missing rig an unfinished set rather than a pending sprite.
 2. **The engine never asked for them.** A degrade-gracefully placeholder that
    requests nothing degrades silently and permanently.
-3. **The verifier could not see it** (§3.3).
+3. **The verifier could not see it** (§3.4).
 
 The law, in the order it gets applied:
 * At **contract time**, grep the chapter for every physical noun the staging
