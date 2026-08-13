@@ -138,6 +138,105 @@ SOUNDS = {
         "promptInfluence": 0.65,
         "loop": False,
     },
+
+    # ------------------------------------------------------------------
+    # BEATS II-VII (CONTENT-full.md sec 6.5 "Sfx and beds" + 7.2 GAP #14).
+    # Every clip below is named by the ledger; nothing here is invented, and
+    # `letter` is deliberately absent because the ledger says reuse
+    # paper-rustle. Two beds (chase, church) and nine cues.
+    # ------------------------------------------------------------------
+    "chase-bed": {
+        "text": ("empty London night road ambience, low wind along a stone "
+                 "street canyon, very distant carriage wheels and hooves far "
+                 "off in the fog, sparse and quiet, no voices, no music, "
+                 "seamless ambient loop"),
+        "durationSeconds": 25,
+        "promptInfluence": 0.4,
+        "loop": True,
+    },
+    "church-bed": {
+        "text": ("interior of a large empty stone church at midday, still "
+                 "cold air, faint reverberant room tone, a very distant "
+                 "muffled street outside, no voices, no music, no organ, "
+                 "seamless ambient loop"),
+        "durationSeconds": 25,
+        "promptInfluence": 0.4,
+        "loop": True,
+    },
+    "bell": {
+        "text": ("a single church bell struck once in a stone tower, heard "
+                 "from the street below, long natural decay, no other "
+                 "sounds"),
+        "durationSeconds": 4,
+        "promptInfluence": 0.6,
+        "loop": False,
+    },
+    "watch": {
+        "text": ("a gold pocket watch pulled from a waistcoat pocket, fine "
+                 "chain rattling, then the case lid springing open with a "
+                 "small metallic click, close perspective, no other sounds"),
+        "durationSeconds": 2,
+        "promptInfluence": 0.65,
+        "loop": False,
+    },
+    "whip": {
+        "text": ("a single sharp coachman's whip crack outdoors at night, "
+                 "one crack only, short echo, no other sounds"),
+        "durationSeconds": 1.5,
+        "promptInfluence": 0.65,
+        "loop": False,
+    },
+    "wheels": {
+        "text": ("a horse-drawn four-wheeler cab travelling at a steady fast "
+                 "trot on cobblestones, continuous hooves and iron-rimmed "
+                 "wooden wheels rumbling, heard from inside the cab, no "
+                 "voices, no music, seamless loop"),
+        "durationSeconds": 12,
+        "promptInfluence": 0.5,
+        "loop": True,
+    },
+    "rocket": {
+        "text": ("a plumber's smoke rocket igniting and hissing, a short "
+                 "fizzing whoosh through the air then a soft muffled pop and "
+                 "billowing smoke, close perspective, no voices, no "
+                 "explosion"),
+        "durationSeconds": 3,
+        "promptInfluence": 0.6,
+        "loop": False,
+    },
+    "cry-fire": {
+        "text": ("a small Victorian street crowd raising a sudden alarm at "
+                 "night, several men and women shouting in panic outdoors, "
+                 "urgent overlapping shouts, heard from across the street, "
+                 "no music"),
+        "durationSeconds": 4,
+        "promptInfluence": 0.5,
+        "loop": False,
+    },
+    "disperse": {
+        "text": ("a small crowd of people losing interest and walking away "
+                 "on a wet cobbled street at night, murmuring voices fading, "
+                 "scattered footsteps receding into the distance, no music"),
+        "durationSeconds": 5,
+        "promptInfluence": 0.5,
+        "loop": False,
+    },
+    "window-open": {
+        "text": ("a heavy wooden sash window thrown open in a hurry, wood "
+                 "sliding hard in its frame and glass rattling once, close "
+                 "perspective, no other sounds"),
+        "durationSeconds": 2,
+        "promptInfluence": 0.65,
+        "loop": False,
+    },
+    "glass": {
+        "text": ("fine dry sand running steadily through a small glass "
+                 "hourglass, very close perspective, quiet continuous "
+                 "trickle, no other sounds"),
+        "durationSeconds": 4,
+        "promptInfluence": 0.6,
+        "loop": False,
+    },
 }
 
 

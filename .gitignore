@@ -1,0 +1,15 @@
+# Secrets never land on this branch. The generation tools read their keys from
+# an env file OUTSIDE the repo (GEMINI_ENV_FILE / ELEVEN_ENV_FILE, default
+# ~/Documents/story-orbit/.env) — nothing here should ever hold a key.
+*.env
+!deploy-exclude.txt
+keys.env
+.venv*/
+
+# Lane scratch and generated output: raw artifacts live under assets/raw/ with
+# their sha256 manifests, not on the source branch.
+tools/lanea/work/
+tools/img2threejs-out/
+__pycache__/
+node_modules/
+.DS_Store

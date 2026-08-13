@@ -32,15 +32,37 @@ MODEL_CHAIN = [
 
 GENERATION_CONFIG = {'responseModalities': ['TEXT', 'IMAGE']}
 
+ENV_FILE_DEFAULT = '/Users/samz/Documents/story-orbit/.env'
 
-def call_model(model_id, prompt, key, timeout=300):
+
+def _key():
+    """GEMINI_API_KEY from the environment, else parsed line-by-line from the
+    story-orbit .env IN PYTHON (that file has a zsh parse error mid-file — never
+    shell-source it). Same rule nbpro_edit.py uses. Never printed."""
+    key = os.environ.get('GEMINI_API_KEY')
+    if not key:
+        envfile = os.environ.get('GEMINI_ENV_FILE', ENV_FILE_DEFAULT)
+        try:
+            for line in open(envfile):
+                line = line.strip()
+                if line.startswith('GEMINI_API_KEY='):
+                    key = line.split('=', 1)[1].strip().strip('"').strip("'")
+                    break
+        except OSError:
+            pass
+    if not key:
+        sys.exit('GEMINI_API_KEY not found (env or env-file)')
+    return key
+
+
+def call_model(model_id, prompt, key, timeout=300, gen_config=None):
     """One generateContent call; returns (mime, bytes) of first image or raises.
     NOTE: gemini-3-pro-image has been observed returning image/jpeg — the
     bytes are written verbatim (raw-first), so check the manifest's
     delivered_mime before assuming the .png extension is truthful."""
     body = json.dumps({
         'contents': [{'parts': [{'text': prompt}]}],
-        'generationConfig': GENERATION_CONFIG,
+        'generationConfig': gen_config or GENERATION_CONFIG,
     }).encode()
     req = urllib.request.Request(
         'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent'
@@ -66,11 +88,16 @@ def main():
                     help='manifest.json to append the result entry to')
     ap.add_argument('--models', default=','.join(MODEL_CHAIN),
                     help='comma-separated model-id fallback chain')
+    ap.add_argument('--aspect', default='',
+                    help='imageConfig.aspectRatio, e.g. 16:9 (plate space is '
+                         '1408x768, which is this API\'s 1K 16:9 output). Empty '
+                         '= model default (1:1), which is NOT plate space.')
     a = ap.parse_args()
 
-    key = os.environ.get('GEMINI_API_KEY')
-    if not key:
-        sys.exit('GEMINI_API_KEY not in environment')
+    key = _key()
+    gen_config = dict(GENERATION_CONFIG)
+    if a.aspect:
+        gen_config['imageConfig'] = {'aspectRatio': a.aspect}
 
     errors = []
     data = None
@@ -78,7 +105,8 @@ def main():
     mime = None
     for model_id in [m.strip() for m in a.models.split(',') if m.strip()]:
         try:
-            mime, data = call_model(model_id, a.prompt, key)
+            mime, data = call_model(model_id, a.prompt, key,
+                                    gen_config=gen_config)
             used = model_id
             break
         except urllib.error.HTTPError as e:
@@ -108,7 +136,7 @@ def main():
         'model_id': used,
         'delivered_mime': mime,
         'prompt': a.prompt,
-        'params': {'generationConfig': GENERATION_CONFIG,
+        'params': {'generationConfig': gen_config,
                    'endpoint': 'v1beta generateContent',
                    'model_chain': a.models},
         'fallback_errors': errors,

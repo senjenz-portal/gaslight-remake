@@ -1,0 +1,8 @@
+[
+{
+ "id": "plate-door-open",
+ "image": "/Users/samz/Documents/gaslight-remake/assets/plates/beat1/plate-door.png",
+ "out":   "/Users/samz/Documents/gaslight-remake/assets/raw/beat1/plate-door-open.png",
+ "prompt": "EDIT THIS IMAGE. Make EXACTLY ONE change and leave every other pixel identical.\n\nTHE ONE CHANGE: OPEN the tall panelled door on the left. Swing the door leaf inward, into the room, on its hinges, so it stands at roughly forty-five degrees and we see it edge-on-and-open; behind it, in the doorway it has vacated, is a dark empty landing beyond - deep shadow, no furniture, no figure, nobody standing there. The brass knob rides round with the leaf. The door frame and architrave stay exactly where they are.\n\nEVERYTHING ELSE IS LOCKED, pixel for pixel: identical camera, framing and crop; identical fireplace, fire, mantel and every prop on the mantel; identical hanging picture; identical shelves; identical violin case; identical desk; identical armchair; identical window and its warm light; identical street gas lamp and its glow; identical scattered papers; identical standing man in the purple gown; identical seated man reading; identical deep navy background, vignette and floating rock; identical low-poly faceted style, palette and overall brightness. Do not add anyone in the doorway. Do not re-render the scene - return the SAME picture with only the door leaf swung open."
+}
+]
