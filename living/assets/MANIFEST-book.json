@@ -374,14 +374,20 @@
    "note": "Irene at chase scale (III.5-6, boarding the landau)"
   },
   "actor/norton-chase.png": {
-   "bytes": 32457,
+   "bytes": 36894,
    "size": [
     112,
     276
    ],
    "mode": "RGBA",
-   "sha256": "53823837ce049b67",
-   "note": "Norton at chase scale (III.1-4, at the lit door)"
+   "sha256": "32ecbf114ca926c5aa34442463091e5c998d8a2d7f0eafac64432405f193ecae",
+   "note": "Norton at chase scale (III.1-4, at the lit door)",
+   "fixRound": {
+    "defect": "F3",
+    "tool": "tools/living/nortonmatte.py",
+    "raw": "assets/raw/nortonmatte",
+    "change": "matte pass (the body colour bled into every partial pixel: local halo +3.09 -> +0.71 luma) and palette pull (core p95 130.4 -> 103.9, 52 -> 0 blown px). Alpha untouched."
+   }
   },
   "cameo/norton.jpg": {
    "bytes": 88880,
@@ -545,6 +551,102 @@
    "mode": "RGBA",
    "sha256": "e2d84cbac2537ee9",
    "note": "fact M.6's third holder: the chain on the witness's waistcoat, which the actor cut does not paint"
+  },
+  "plate/room.jpg": {
+   "bytes": 211804,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "a9f4de09a5773cea97540152d9a1fa0439963aa0429ef08ca159b4595eb935da",
+   "note": "the painted Watson removed from the armchair (confined i2i, hole-fill pass, diff-gated: 0 leak outside the box, 0 px of his coat left in the seat volume)",
+   "fixRound": {
+    "defect": "F9",
+    "tool": "tools/living/watsonectomy.py",
+    "raw": "assets/raw/watsonectomy",
+    "change": "the painted Watson removed from the armchair (confined i2i, hole-fill pass, diff-gated: 0 leak outside the box, 0 px of his coat left in the seat volume)"
+   }
+  },
+  "plate/room-open.jpg": {
+   "bytes": 225645,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "0f64359ef37a9f0ed355207cb85847ef268857aded79df8fe2232e05c70d3607",
+   "note": "the same removal, door-open state",
+   "fixRound": {
+    "defect": "F9",
+    "tool": "tools/living/watsonectomy.py",
+    "raw": "assets/raw/watsonectomy",
+    "change": "the same removal, door-open state"
+   }
+  },
+  "plate/room-dim.jpg": {
+   "bytes": 186471,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "3a6504df6492ef1f3c283ba5e0f693287fd685405ccf548c33e6d45f3f3a46fd",
+   "note": "the same removal, relit state",
+   "fixRound": {
+    "defect": "F9",
+    "tool": "tools/living/watsonectomy.py",
+    "raw": "assets/raw/watsonectomy",
+    "change": "the same removal, relit state"
+   }
+  },
+  "plate/chair.png": {
+   "bytes": 61937,
+   "size": [
+    176,
+    209
+   ],
+   "mode": "RGBA",
+   "sha256": "1f2ff6433df2b9ff6028602fec58ae0dd1c5fff0c1b2a2ab1016409fdab31a2d",
+   "note": "the FOREGROUND cut re-cut off the repaired plate: he was inside this one too, and above y 400 the outline was his cap, not the chair",
+   "fixRound": {
+    "defect": "F9",
+    "tool": "tools/living/watsonectomy.py",
+    "raw": "assets/raw/watsonectomy",
+    "change": "the FOREGROUND cut re-cut off the repaired plate: he was inside this one too, and above y 400 the outline was his cap, not the chair"
+   }
+  },
+  "plate/chair-dim.png": {
+   "bytes": 53646,
+   "size": [
+    176,
+    209
+   ],
+   "mode": "RGBA",
+   "sha256": "e4a86a098a173aaba14107a81c8d18e02dea42c2e5a3395a6ca723c1dd23f588",
+   "note": "the same cut, relit state",
+   "fixRound": {
+    "defect": "F9",
+    "tool": "tools/living/watsonectomy.py",
+    "raw": "assets/raw/watsonectomy",
+    "change": "the same cut, relit state"
+   }
+  },
+  "cameo/holmes.jpg": {
+   "bytes": 104030,
+   "size": [
+    1408,
+    768
+   ],
+   "mode": "RGB",
+   "sha256": "78d6b022b5843428739ab0b79aac9cf0b45bf7c1b65757c28f7e9b0ec02e3e21",
+   "note": "regenerated FROM the canonical room Holmes via a two-panel sheet (his own five actor cuts + the shipped card format). In the circle the reader sees: gown 0 -> 4.67%, hue none -> 299.3 (stage 298), skin 0 -> 2.82%, green 15.23 -> 0.00%",
+   "fixRound": {
+    "defect": "F11",
+    "tool": "tools/living/holmescameo.py",
+    "raw": "assets/raw/holmescameo",
+    "change": "regenerated FROM the canonical room Holmes via a two-panel sheet (his own five actor cuts + the shipped card format). In the circle the reader sees: gown 0 -> 4.67%, hue none -> 299.3 (stage 298), skin 0 -> 2.82%, green 15.23 -> 0.00%"
+   }
   }
  },
  "derivations": {
@@ -1015,5 +1117,22 @@
    "source": "chase MANIFEST: near gas standard finial y309 -> base y514 (205 px) for a 4.0 m lamp, at rail u=0; scaled by rail.s"
   }
  },
- "rigs_shipped": "2026-08-13T05:22:38Z"
+ "rigs_shipped": "2026-08-13T05:22:38Z",
+ "fixRounds": [
+  {
+   "round": "fable-pass fix round 1",
+   "lane": "ROOM + STREET + HEADS",
+   "defects": [
+    "F1",
+    "F2",
+    "F3",
+    "F8",
+    "F9",
+    "F10",
+    "F11"
+   ],
+   "at": "2026-08-13T19:05:42+00:00",
+   "assertions": "tools/living/lap.mjs sections [F1] [F2] [F3] [F8] [F9] [F10] [F11]; proved to bite by tools/living/teeth.sh"
+  }
+ ]
 }

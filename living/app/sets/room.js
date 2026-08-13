@@ -83,6 +83,35 @@ const HOLMES = {
 const CHAIR = [718, 335, 176, 209];
 const CANDLE = [601, 288];    // the light he holds the note up to
 
+/* ---- BEAT I, UNIT 10: THE ARRIVAL, AT THE ONE APERTURE THIS ROOM HAS ----
+ * "And here he comes, if I am not mistaken" shipped as hoofbeats over a still
+ * picture with a warm smudge under the door (the audit's #16, the review's F8).
+ * This room has exactly ONE exterior aperture: the tall window, whose lit glass
+ * measures x 827..914, y 137..395 on the plate, and which the `door` lens does
+ * show (that lens ends at plate x 908). So the arrival happens THERE — the
+ * carriage lamps rake across the panes and the rig crosses them as a
+ * SILHOUETTE, both on the clock `arrival` starts, which is the same instant the
+ * hoofbeats cue is fired on. A shadow across the glass and a lamp sweep is what
+ * a Baker Street window actually gives you at a quarter to eight, and it costs
+ * one cut-out the chase SET already ships.
+ */
+const WIN = { x: 827, y: 137, w: 87, h: 258 };
+const ARRIVE = {
+  lamp: [0.10, 2.10],         // the lamps rake the glass, left to right
+  rig: [0.30, 1.95],          // and the rig itself passes, right to left
+  /* the WHOLE rig has to fit between the pane's head and sill or its flat side
+     reads as a grey slab: 168 px of a 258 px pane, so horse, shafts, driver and
+     wheels are all inside the glass. It is 186 px wide against an 87 px pane, so
+     the reader never sees all of it at once — which is what a vehicle passing a
+     window looks like. */
+  rigH: 168,
+  rigTop: 84,                 // where its roofline sits inside the pane
+  /* LEFT TO RIGHT, because the chase lane's rigs are drawn facing right: run it
+     the other way and the cab leads its own horse across the glass. */
+  from: -0.80, to: 1.75,      // rig centre, in window widths
+};
+const bandK = (d, [a, b]) => clamp01((d - a) / (b - a));
+
 /* the emissives the plate already paints — these only ever BREATHE */
 const EMIS = [
   { id: 'fire',   at: [516, 432], r: 92,  rgb: '255,168,58',  a: 0.30, per: 2.6, amp: 0.42 },
@@ -105,7 +134,25 @@ const FOCUS = {
   wmark:      [620, 392, 1.18],
   desk:       [744, 416, 1.62],
   window:     [860, 300, 1.50],
-  door:       [386, 372, 1.55],
+  /* [F2/F8] was [386,372,1.55]. Asking for a centre at x 386 with k 1.55 pushes
+     the window off the LEFT edge of the painting, so stage.applyCam clamped it
+     to x 0..908 — and 29% of the panel was the plate's unpainted left margin
+     (the review measured 28% of the frame's columns near-black). Recomposed on
+     the room's content bbox (x 266..1123): at k 1.90 the window is 741 px and
+     sits at x 197..937, 9% off the painting on the left. It has to hold BOTH
+     apertures, because this is the lens the arrival plays on: the door leaf
+     (288..436) and the lit window (827..914), where the rig now passes. The
+     centre is 567 rather than the content's own centre because PORTRAIT crops
+     the plate to 1060 px of width: at 612 the door leaf was sliced in half on a
+     phone, and the gate on this unit is the door. */
+  door:       [567, 356, 1.90],
+  /* [F8] UNIT 10 GETS ITS OWN LENS. It used to share `door`, and it must not:
+     the arrival now plays at the window (827..914) while the door gate 27 units
+     later needs the leaf (288..436), and no single lens holds both in PORTRAIT,
+     which crops the plate to 1060 px of width. So the arrival's lens is composed
+     on the aperture the arrival happens in — landscape x 304..1095, portrait
+     x 402..998, both of which hold the whole pane — and the door keeps its own. */
+  arrival:    [700, 340, 1.78],
   entrance:   [572, 452, 1.20],
   present:    [664, 402, 1.16],
   client:     [686, 366, 1.38],
@@ -168,6 +215,25 @@ export class RoomSet {
     this.doorGlow.style.background =
       'radial-gradient(ellipse at 50% 40%,rgba(255,196,110,.5) 0%,rgba(255,196,110,0) 70%)';
     this.doorGlow.style.opacity = '0';
+
+    /* ---- and what passes the window while it does (unit 10) --------- *
+     * Clipped to the lit glass, so nothing of either layer can escape onto the
+     * wall. The rig is MULTIPLIED rather than drawn: a silhouette behind glass
+     * darkens the pane it crosses, and multiplying leaves the plate's own
+     * glazing bars exactly as dark as they were painted instead of pasting a
+     * black card over them. The lamp rake is screened, because that is light. */
+    this.winClip = el('div', 'clipbox', root);
+    box(this.winClip, WIN.x, WIN.y, WIN.w, WIN.h);
+    this.winRig = img('set/chase/rig-follow.png', 'lyr', this.winClip);
+    this.winRig.style.opacity = '0';
+    this.winRig.style.mixBlendMode = 'multiply';
+    this.winRig.style.filter = 'brightness(0.06) contrast(1.35) blur(0.7px)';
+    this.winLamp = el('div', 'emis', this.winClip);
+    box(this.winLamp, 0, 0, WIN.w, WIN.h);
+    this.winLamp.style.background =
+      'linear-gradient(96deg,rgba(255,206,140,0) 0%,rgba(255,214,152,.42) 38%,' +
+      'rgba(255,232,182,.86) 54%,rgba(255,206,140,.30) 72%,rgba(255,206,140,0) 100%)';
+    this.winLamp.style.opacity = '0';
 
     /* ---- THE ACTORS (isolated, so the dim matrix is theirs alone) --- */
     this.actors = el('div', 'actors', root);
@@ -419,6 +485,9 @@ export class RoomSet {
       const d = this.emis[e.id];
       let a = 1 + amb * e.amp * Math.sin(2 * Math.PI * t / e.per);
       if (e.id === 'lamp' && S.arrival > -1e8) a *= 1 + 0.55 * Math.sin(Math.PI * arr);
+      // the pane itself takes the carriage lamps as they pass ([F8]): the street
+      // lamp's own flare is at plate x 1012, which the door lens never showed
+      if (e.id === 'win' && S.arrival > -1e8) a *= 1 + 0.45 * Math.sin(Math.PI * arr);
       if (e.id === 'candle') a *= 1 + 0.5 * S.hold;   // he holds the note to it
       d.style.opacity = a.toFixed(3);
     }
@@ -427,9 +496,46 @@ export class RoomSet {
     this.ledger.style.opacity =
       (S.ledger * (0.42 + 0.32 * (0.5 + 0.5 * Math.sin(2 * Math.PI * t / 1.9)))).toFixed(3);
 
+    this.stepArrival(t);
     this.stepHolmes(t, dt);
     this.stepKing(t, dt);
     this.stepProps(t, dt);
+  }
+
+  /* ---- unit 10: the rig passes the window ----------------------------- *
+   * Pure function of (t - arrival), like everything else in this stack, so two
+   * laps that step the same numbers paint the same pixels. `arrive` is reported
+   * in the snapshot AND the motion is measurable in the pane — the number and
+   * the picture have to agree.
+   */
+  stepArrival(t) {
+    const S = this.state;
+    const d = S.arrival > -1e8 ? t - S.arrival : -1;
+    if (!(d >= 0) || d > ARRIVE.lamp[1] + 0.6) {
+      this.winRig.style.opacity = '0';
+      this.winLamp.style.opacity = '0';
+      this.arrive = { k: 0, rigX: null, lamp: 0, band: [WIN.x, WIN.y, WIN.w, WIN.h] };
+      return;
+    }
+    // the lamps rake the glass: a warm bar travelling across the panes
+    const lk = bandK(d, ARRIVE.lamp);
+    const lampOp = Math.sin(Math.PI * lk);
+    this.winLamp.style.opacity = (0.92 * lampOp).toFixed(3);
+    this.winLamp.style.transform =
+      `translateX(${((lk - 0.5) * WIN.w * 2.1).toFixed(2)}px)`;
+
+    // and the rig crosses them, right to left, at the pace of the hoofbeats
+    const rk = bandK(d, ARRIVE.rig);
+    const w = ARRIVE.rigH * (554 / 500);
+    const cx = lerp(ARRIVE.from, ARRIVE.to, easeInOut(rk)) * WIN.w;
+    box(this.winRig, cx - w / 2, ARRIVE.rigTop, w, ARRIVE.rigH);
+    const on = rk > 0 && rk < 1;
+    // it does not pop: the near and far ends of the crossing fade it
+    this.winRig.style.opacity = on
+      ? (0.94 * clamp01(Math.min(rk, 1 - rk) / 0.10)).toFixed(3) : '0';
+    this.arrive = { k: +bandK(d, [0, ARRIVE.lamp[1]]).toFixed(3),
+                    rigX: on ? +(WIN.x + cx).toFixed(1) : null,
+                    lamp: +(0.92 * lampOp).toFixed(3) };
   }
 
   /* ---- Holmes: the sibling lane's idle, and one new verb ------------- */
@@ -662,6 +768,13 @@ export class RoomSet {
                 })() },
       door: { open: +(S.doorK || 0).toFixed(3) },
       ledger: S.ledger,
+      /* unit 10's arrival, and the pane it happens in — the lap measures the
+         MOTION inside this rect, so the rect it measures is the set's own */
+      arrive: this.arrive || { k: 0, rigX: null, lamp: 0 },
+      winBand: [WIN.x, WIN.y, WIN.w, WIN.h],
+      /* the armchair's own box, so the lap measures the volume the SET declares
+         rather than a rect copied into the harness ([F9]) */
+      chairBox: CHAIR.slice(),
       /* feet on the floor, measured off the RENDERED box rather than off the
          numbers that drew it, so a wrong transform cannot pass */
       foot: (() => {
@@ -679,4 +792,4 @@ export class RoomSet {
   }
 }
 
-export { KING, HOLMES, TARGETS, FOCUS, DIM_MATRIX };
+export { KING, HOLMES, TARGETS, FOCUS, DIM_MATRIX, WIN, ARRIVE, CHAIR };
