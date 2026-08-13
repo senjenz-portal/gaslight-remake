@@ -35,13 +35,15 @@ change** — reject it (§3.1 learned this the expensive way).
 In-plate figures -> hinged puppet parts cut from the plate's own paint
 (idle/gesture <=3 deg; hole inpainted, diff-confined). New characters ->
 refsheet-locked i2i standing actor + pixel-aligned pose variants + 4-frame
-walk strips (`matte_actors.py` spill ceiling, `palettepull.py`,
-`stageproof.py` composites onto the real plate before acceptance). Puppet on
-the mark; sprite only for crossings. **Vehicles and set-pieces are actors
-too** — see §3.2.
+walk strips (`laneactors/matte_actors.py` spill ceiling,
+`laneassets/palettepull.py`, and a `stageproof_*.py` that composites onto the
+real plate at the set's own px/m before acceptance — one per lane:
+`laneactors/stageproof_actors.py`, `lanechase/stageproof_rigs.py`,
+`laneconsist/stageproof.py`). Puppet on the mark; sprite only for crossings.
+**Vehicles and set-pieces are actors too** — see §3.2.
 
 **5. GRAMMAR** (reuse, $0). `units.js` is byte-identical across all product
-versions; `living/app/{main,stage}.js` re-host the same state machine —
+versions; `living-app/app/{main,stage}.js` re-host the same state machine —
 margin typography, cameos, the four gate verbs, Scenario SFX, the leaf/turn
 model, the beat clock.
 

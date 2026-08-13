@@ -1,0 +1,64 @@
+{
+ "lane": "character-consistency",
+ "when": "2026-08-12T22:23:23",
+ "law": "THE CANONICAL SHEET LAW. One canonical image per character -- the best existing, left untouched. Every other pose keeps its ACCEPTED BODY (keyed silhouette, plate-pulled palette, measured baseline, twin alignment) and receives the canonical HEAD by i2i graft. Alpha is never taken from a generation, so no regeneration can move a figure, change a baseline, break a strip cell or unalign a twin pair.",
+ "canonical": {
+  "holmes": {
+   "file": "actors/holmes-clergyman.png",
+   "why": "the only Holmes face in the book that is a lean hawk-faced man of ~35 and not an old peasant; matches cameo/holmes.jpg in bone structure",
+   "face": "gaunt, long straight aquiline nose, deep-set eyes under heavy dark straight brows, hollow cheeks, thin firm mouth, DARK BROWN-BLACK hair, CLEAN SHAVEN"
+  },
+  "irene": {
+   "file": "actors/irene-street.png",
+   "why": "shipped, drawn in Beat VI (the reveal), accepted; the only Irene whose eyes are painted",
+   "hair": "near-black and COOL -- clusters #1B1928 / #1F2736 / #30323C, every hair facet has B >= R"
+  },
+  "norton": {
+   "file": "actors/norton-street.png",
+   "why": "already consistent across all five poses; no drift found"
+  },
+  "king": {
+   "file": "beat1/king-unmasked.png",
+   "why": "the published unmasked face; the exit walk now matches it"
+  }
+ },
+ "regenerated": {
+  "irene-bride.png": {
+   "sha256": "c91154ea51fac459281bffb2b29383a1af506fa70c57052b3a5a5fb8c6c5f15b",
+   "change": "hair auburn -> canonical near-black cool; eyes opened; veil, gown, silhouette untouched",
+   "method": "tools/laneconsist/{twinsheet,graft}.py; raws assets/raw/book-consist/"
+  },
+  "holmes-groom.png": {
+   "sha256": "90dc8b0155258532fec89a4b84e2302ad8303d1440e52b220ef560e8ab275623",
+   "change": "a grey-stubbled old man -> the canonical Holmes face; cap, neckerchief, jacket, silhouette untouched",
+   "method": "tools/laneconsist/{twinsheet,graft}.py; raws assets/raw/book-consist/"
+  },
+  "holmes-groom-altar.png": {
+   "sha256": "bccb2afdecdbe20ece46487c456ee3a2b03f4f1d6151c32a2d3301625dadb152",
+   "change": "a shaggy blond-white THIRD man -> the same canonical face as the stand it swaps with",
+   "method": "tools/laneconsist/{twinsheet,graft}.py; raws assets/raw/book-consist/"
+  },
+  "holmes-groom-walk.png": {
+   "sha256": "21f0d73ce07aef26a0c1e1d97d579ec7c374e84176854ae05e754e05248aa7ef",
+   "change": "a soft 3D render of an old man in cold grey breeches -> painted low-poly, canonical face, tan breeches, cap kept",
+   "method": "tools/laneconsist/{twinsheet,graft}.py; raws assets/raw/book-consist/"
+  },
+  "../beat1/king-walk-exit.png": {
+   "sha256": "d06255be41ebac64e2490c77cabf35b95dee5ff2822979b55ac64b19319cf349",
+   "change": "all 4 frames unmasked. room.js hides both cut-outs while walking, so masked walk art put the domino mask back on his face at unit 36, after his own unmasking.",
+   "method": "per-cell head graft on the strip's union head box; cell grid and alpha untouched"
+  }
+ },
+ "rejected": {
+  "irene-board.png": "graft rejected: the model returned the panel a stop down and off-register, so the face landed ashen and offset. The file is NOT referenced by app/ (no set draws it), so the drift is recorded rather than shipped. before art kept."
+ },
+ "unreferenced_by_app": [
+  "actor/irene-board.png",
+  "actor/irene-walk.png",
+  "actor/irene-bride.png",
+  "actor/holmes-chase.png"
+ ],
+ "code_hook_needed": {
+  "church.js": "ART has no irene entry, so the corrected bride is still never drawn. Add irene: { file: 'actor/irene-bride.png', size: [255, 527], baseline: 524 } and stand her on the church mark [740, 521] (actor_geom CHURCH.marks.bride). The shipped PNG is already 255x527 at the engine px/m, so nothing else changes."
+ }
+}
