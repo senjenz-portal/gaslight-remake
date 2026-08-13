@@ -180,7 +180,16 @@ function enterUnit(n, { silent = false } = {}) {
 
   refreshFocus(true);
 
-  if (u.act) stage.fire(u.act);
+  if (u.act) stage.fire(u.act, silent);
+  /* A REPLAYED GATE HAS ALREADY BEEN ANSWERED. `silent` means this unit is
+     being replayed to rebuild the world on the way to a later one, and the
+     reader's own verb is not coming: so its gateAct has to be fired here or the
+     world arrives in a state the story never passes through. This is not
+     theoretical — the shipped portrait proof `09-01-portrait-ring.png` was
+     captured through this path and holds TWO Nortons, because `dragToAltar`
+     never ran and the cut-out was left standing at the mark he beckons from
+     while the plate went on painting him at the altar. */
+  if (silent && u.gateAct) stage.fire(u.gateAct, true);
   if (u.seg) stage.startSeg(u.seg, u.segDur || 6.0, silent);
   if (!silent) {
     if (u.bed) audio.bed(u.bed);

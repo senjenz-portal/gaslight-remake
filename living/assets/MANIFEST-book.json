@@ -422,6 +422,129 @@
    "mode": "RGB",
    "sha256": "f9ef5964fe0cf120",
    "note": "INSET plate-rocket (7.2 GAP #9, closed by the engine lane): \"an ordinary plumber's smoke-rocket, fitted with a cap at either end\". Raised at V.3 signal, held through V.4 rocket, taken down at V.5 neutral."
+  },
+  "set/chase/rig-norton.png": {
+   "bytes": 264603,
+   "size": [
+    607,
+    500
+   ],
+   "mode": "RGBA",
+   "sha256": "95621f25ce17979d",
+   "note": "Norton's cab at Briony Lodge (III.1-5) - closed night carriage, horse in harness, driver on the box, near-side lamp lit",
+   "rig": {
+    "file": "set/chase/rig-norton.png",
+    "size": [
+     607,
+     500
+    ],
+    "baseline": 500,
+    "height_m": 2.9,
+    "lamp": [
+     382.1,
+     159.9
+    ],
+    "lamp_uv": [
+     0.6295,
+     0.3199
+    ],
+    "foot_x": [
+     138,
+     286
+    ]
+   }
+  },
+  "set/chase/rig-lead.png": {
+   "bytes": 281554,
+   "size": [
+    656,
+    500
+   ],
+   "mode": "RGBA",
+   "sha256": "a3e3bd0055f78fca",
+   "note": "Irene's landau (III.5-11) - open four-wheeler, half-hood folded down, coachman with his coat half-buttoned, near-side lamp lit",
+   "rig": {
+    "file": "set/chase/rig-lead.png",
+    "size": [
+     656,
+     500
+    ],
+    "baseline": 500,
+    "height_m": 2.75,
+    "lamp": [
+     494.1,
+     151.0
+    ],
+    "lamp_uv": [
+     0.7532,
+     0.3019
+    ],
+    "foot_x": [
+     62,
+     334
+    ]
+   }
+  },
+  "set/chase/rig-follow.png": {
+   "bytes": 256184,
+   "size": [
+    554,
+    500
+   ],
+   "mode": "RGBA",
+   "sha256": "00decc367bfb6e6d",
+   "note": "the following four-wheeler, the `cab` gate's target (III.5-11) - box-bodied growler with its roof rail, shabby horse, lamp lit",
+   "rig": {
+    "file": "set/chase/rig-follow.png",
+    "size": [
+     554,
+     500
+    ],
+    "baseline": 500,
+    "height_m": 3.0,
+    "lamp": [
+     383.1,
+     148.9
+    ],
+    "lamp_uv": [
+     0.6915,
+     0.2979
+    ],
+    "foot_x": [
+     187,
+     298
+    ]
+   }
+  },
+  "set/church/ring.png": {
+   "bytes": 18389,
+   "size": [
+    128,
+    115
+   ],
+   "mode": "RGBA",
+   "sha256": "3e901c8165b15b95",
+   "note": "fact M.4: the gold band, scrubbed onto the joined hands 0->1"
+  },
+  "set/church/sovereign.png": {
+   "bytes": 20094,
+   "size": [
+    128,
+    114
+   ],
+   "mode": "RGBA",
+   "sha256": "fda160b3aeddd85f",
+   "note": "fact M.6: the sovereign, bride -> witness -> watch chain"
+  },
+  "set/church/watch-chain.png": {
+   "bytes": 23134,
+   "size": [
+    192,
+    146
+   ],
+   "mode": "RGBA",
+   "sha256": "e2d84cbac2537ee9",
+   "note": "fact M.6's third holder: the chain on the witness's waistcoat, which the actor cut does not paint"
   }
  },
  "derivations": {
@@ -891,5 +1014,6 @@
    "px_per_m": 51.2,
    "source": "chase MANIFEST: near gas standard finial y309 -> base y514 (205 px) for a 4.0 m lamp, at rail u=0; scaled by rail.s"
   }
- }
+ },
+ "rigs_shipped": "2026-08-13T05:22:38Z"
 }

@@ -321,9 +321,18 @@ export class Stage {
   }
 
   /* ---- the verbs ------------------------------------------------------ */
-  fire(act) {
+  /**
+   * A verb the story fires at the SET.
+   *
+   * `settled` is the same promise `startSeg` already makes and for the same
+   * reason: a REPLAYED act (a harness jump, or any non-linear entry) must leave
+   * the world where the story would have left it, not at the first frame of a
+   * 2.6 s walk. Without it the book's own portrait proof was captured with
+   * Norton caught mid-drag beside the groom the plate was still painting.
+   */
+  fire(act, settled = false) {
     this.acts.push(act);
-    if (this.active) this.active.fire(act);
+    if (this.active) this.active.fire(act, settled);
   }
 
   /**

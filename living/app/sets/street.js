@@ -174,6 +174,22 @@ export class StreetSet {
       .map(([x, y]) => `${(x - rb[0]).toFixed(1)}px ${(y - rb[1]).toFixed(1)}px`)
       .join(',') + ')';
     this.actors = el('div', 'actors', root);
+    /* THE CRIMSON EDGE. The law asks for a silhouette that is "crimson-edged,
+       backlit" and the crush to brightness .10 rendered her flat black — the
+       chapter's most important image with no accent in it. So her own alpha is
+       used as a MASK over a crimson fill, drawn 3.5% larger about her feet and
+       softened, and the black silhouette lands on top of it: what shows is the
+       hot edge of a woman standing between the reader and a lit room. Her cut
+       is the source of both, so the edge cannot drift off the shape. */
+    this.ireneRim = el('div', 'lyr', this.actors);
+    const rim = st.bitmap(ART.irene.file);
+    this.ireneRim.style.webkitMaskImage = rim;
+    this.ireneRim.style.maskImage = rim;
+    this.ireneRim.style.webkitMaskSize = '100% 100%';
+    this.ireneRim.style.maskSize = '100% 100%';
+    this.ireneRim.style.background = 'rgb(206,44,58)';
+    this.ireneRim.style.filter = 'blur(1.6px)';
+    this.ireneRim.style.opacity = '0';
     this.irene = img(ART.irene.file, 'lyr', this.actors);
     this.irene.style.opacity = '0';
     this.holmes = img(ART.holmes.file, 'lyr', this.actors);
@@ -369,6 +385,7 @@ export class StreetSet {
       this.rocket.style.opacity = '0';
       this.flash.style.opacity = '0';
       this.irene.style.opacity = '0';
+      this.ireneRim.style.opacity = '0';
       this.revealBack.style.opacity = '0';
       return;
     }
@@ -399,7 +416,10 @@ export class StreetSet {
        screen-blended card whose alpha is the pane mask, she is the shipped cut
        crushed to a backlit shape, and the bay glass is drawn over both. */
     const d = r - RUSE.reveal;
-    if (d < 0) { this.irene.style.opacity = '0'; this.revealBack.style.opacity = '0'; return; }
+    if (d < 0) {
+      this.irene.style.opacity = '0'; this.ireneRim.style.opacity = '0';
+      this.revealBack.style.opacity = '0'; return;
+    }
     const bright = clamp01((d - RUSE.bright[0]) / (RUSE.bright[1] - RUSE.bright[0]));
     const down = clamp01((d - RUSE.lightDown[0]) / (RUSE.lightDown[1] - RUSE.lightDown[0]));
     this.revealBack.style.opacity = (bright * (1 - down)).toFixed(3);
@@ -415,7 +435,15 @@ export class StreetSet {
     // BEFORE the glass so the pane's own paint sits over her
     this.irene.style.filter =
       `brightness(${(0.10 + 0.06 * hand).toFixed(3)}) contrast(1.35) saturate(.5)`;
-    this.irene.style.opacity = (clamp01(d / 0.4) * (1 - down)).toFixed(3);
+    const op = clamp01(d / 0.4) * (1 - down);
+    this.irene.style.opacity = op.toFixed(3);
+    /* the edge, off her own box so it cannot drift: 3.5% bigger, standing on
+       the same feet, and it brightens as she reaches the panel */
+    const bx = parseFloat(this.irene.style.left), by = parseFloat(this.irene.style.top);
+    const bw = parseFloat(this.irene.style.width), bh = parseFloat(this.irene.style.height);
+    const g = 0.035;
+    box(this.ireneRim, bx - bw * g * 0.5, by - bh * g, bw * (1 + g), bh * (1 + g));
+    this.ireneRim.style.opacity = (op * (0.72 + 0.28 * hand)).toFixed(3);
   }
 
   snapshot() {

@@ -506,7 +506,11 @@ export const UNITS = [
   { id: 'iv-08-halfdragged', key: 'halfdragged',
     text: '“I was half-dragged up to the altar, and before I knew where I was I found myself mumbling responses which were whispered in my ear…”',
     speaker: 'HOLMES', verb: 'click', seg: 'drag', segDur: 6.0, segHold: true,
-    focus: 'knot', page: 4, beat: 4, set: 'church', clear: true, sfx: 'glass',
+    /* the AISLE lens, not the knot: the drag is now performed (Norton hauls the
+       witness up and then hands back to his own painted self), and the aisle
+       lens is the one composed so his painted self is outside the frame while
+       his cut-out is inside it. On `knot` the reader would see two of him. */
+    focus: 'aisle', page: 4, beat: 4, set: 'church', clear: true, sfx: 'glass',
     act: 'glassStart' },
 
   /* 4.9 — THE CAMEO CAPTION FLIPS - the King's own reveal device, used for the chapter's
