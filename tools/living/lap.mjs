@@ -1896,13 +1896,18 @@ async function main() {
    * lamp, plinth and all. Lamps 1, 3 and 4 have no front cut, so at every
    * settle a rig's body span must CLEAR their columns. Asserted at the
    * roll's own end (where the follow now lives for two units) and at every
-   * chase settle the reader dwells on. */
+   * chase settle the reader dwells on. Round 4 (the user's eye) removed
+   * lamp2's exemption: its front cut draws a rig under it "correctly", and
+   * it still reads as a carriage stuck behind the light on a dwell — so at
+   * SETTLES no rig may touch ANY post column, cut or no cut. The columns
+   * are true post pixels (lamp2's is its shipped cut box), not bloom. */
   {
-    const UNCUT = [[293, 320, 'lamp1'], [938, 997, 'lamp3'], [1110, 1169, 'lamp4']];
+    const UNCUT = [[300, 332, 'lamp1'], [727, 776, 'lamp2'],
+                   [950, 990, 'lamp3'], [1125, 1155, 'lamp4']];
     const CLEAR = 10;                      // plate px of daylight required
     await T(8.5);                          // let the roll finish: the END is the dwell
     const parks = [];
-    for (const unit of ['landau', 'shotout', 'shabby', 'twentyfive']) {
+    for (const unit of ['hansom', 'watch', 'devil', 'landau', 'shotout', 'shabby', 'twentyfive']) {
       await page.evaluate(async (u) => await window.__gotoUnit(u), unit);
       await T(9.0);                        // every travel/segment done; this IS the dwell
       const s = await st();
@@ -1922,7 +1927,7 @@ async function main() {
       }
     }
     note(`[F15] the parking law: every settled rig clears the uncut lamp columns ` +
-         `by >= ${CLEAR} plate px (${parks.length} settles measured: ${parks.join(' ')})`);
+         `by >= ${CLEAR} plate px, lamp2's cut column included (${parks.length} settles measured: ${parks.join(' ')})`);
   }
 
   /* ---- [F16] THE RING RINGS THE THING THE CUE NAMES ------------------- *
@@ -1949,6 +1954,43 @@ async function main() {
     else
       note(`[F16] the door ring: circle ends at plate x ${ringR.toFixed(0)}, ` +
            `${(edge - ringR).toFixed(0)} px clear of the waiting King (edge ${edge.toFixed(0)})`);
+  }
+
+  /* ---- [F17] THE MASK COMES OFF WHEN THE READER TAKES IT OFF ---------- *
+   * The state machine was always right (S.masked flips only at the gate);
+   * the PAINT ignored it: `un` was computed off S.unmask alone, whose
+   * sentinel (-1e9) clamps to 1, so the standing King rendered bare-faced
+   * from the moment he stopped walking — four units before the reader
+   * clicks the mask (round 4, the user's eye; three review rounds missed
+   * it because no gate ever measured the PAINT). Asserted at the layer
+   * that failed: the two standing sprites' own opacities, on all three
+   * paths — masked dwell, gate reveal, and the Beat-VII return whose
+   * sentinel must land bare-faced INSTANTLY. */
+  {
+    const faces = async () => page.evaluate(() => {
+      const o = (sel) => { const e = document.querySelector(`img[src*="${sel}"]`);
+        return e ? +getComputedStyle(e).opacity : null; };
+      return { masked: o('king-masked'), un: o('king-unmasked') };
+    });
+    const want = [
+      ['ormstein', 1, 0, 'the dwell BEFORE the gate'],
+      ['iamking',  0, 1, 'after the reader takes it off'],
+      ['letter1',  0, 1, 'the Beat-VII return (sentinel path)'],
+    ];
+    const got = [];
+    for (const [unit, m, u, why] of want) {
+      await page.evaluate(async (k) => await window.__gotoUnit(k), unit);
+      /* a goto replays the leaf's acts at NOW, so the King is mid-entry-walk
+         (both standing sprites at 0) for walkDur after any jump into Beat I.
+         The dwell must outlast the walk before the standing paint exists. */
+      await T(3.5);
+      const f = await faces();
+      if (f.masked === null || Math.abs(f.masked - m) > 0.02 || Math.abs(f.un - u) > 0.02)
+        bad(`[F17] the King's face at ${unit} (${why}): masked=${f.masked} ` +
+            `unmasked=${f.un}, law says ${m}/${u}`);
+      got.push(`${unit} ${f.masked}/${f.un}`);
+    }
+    note(`[F17] the mask obeys the reader on all three paths (masked/unmasked): ${got.join(' | ')}`);
   }
 
   /* ==================================================================== *

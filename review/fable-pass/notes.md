@@ -66,3 +66,31 @@ wrong: settle shots hid this bug because the collision lives in the dwell after 
   pavement ellipse is a STORY OBJECT, not UI), throw gate, one-storey plume, reveal, letter
   read, portrait fade, closing card, portrait-orientation lenses.
 # ROUND 3 VERDICT: two defects found, two fixed, each with its own lap law. LAP CLEAN, F1-F16.
+
+# ============ ROUND 4 — user's eye again (2026-08-14): mask timing + the dwell class ============
+User: "carriage still is behind the light; the king has the mask off before we took off its mask."
+- [F17 CONFIRMED — the mask] room.js painted `un` off S.unmask alone; the sentinel (-1e9)
+  clamps to 1, so the STANDING King rendered bare-faced from the moment his entry walk ended —
+  four units before the mask gate. The STATE was always right; the PAINT ignored it. Three
+  review rounds missed it: walk frames carry masked art, 01-16 is legitimately unmasked, and
+  the 01-14 dwell was only ever seen at contact-sheet scale. FIX: paint obeys S.masked; unmask
+  timestamp only times the reveal; the Beat-VII sentinel return lands bare-faced instantly.
+  LAW: sprite opacities asserted on all three paths (ormstein 1/0, iamking 0/1, letter1 0/1).
+- [F15 EXTENDED — the carriage class] Round 3 exempted lamp2's column because its front cut
+  draws a parked rig "correctly" behind the post. The user's eye rejected the exemption: a
+  carriage merged with a standard at a DWELL reads broken whichever wins the paint order.
+  Norton's cab dwelt at u 0.36 = body 664..829 square across lamp2 for three units — THE
+  "still behind the light." FIX: CAB_AT_DOOR 0.20 (12 px clear, door over the cab's right
+  half, Norton springs out in front of his own cab); lead park 0.492, follow end 0.509; law
+  now: at every settle, every rig clears EVERY true post column >= 10 px, 11 settles measured.
+  The gates caught two of my own park estimates (sprite widths) before any human did.
+- "Am I looking at the right one": console.story-orbit.org serves no-cache (always fresh);
+  Pages caches 10 min — a view within minutes of a deploy can be stale.
+# LEARNINGS (written to memory):
+# 1. When my review says "physically correct" and the user's eye says broken, the eye wins —
+#    a rationalization in a review note is a defect wearing an explanation.
+# 2. State bugs hide from settle-shot review: paint layers must be asserted, not inferred
+#    from state; goto-replay timing differs from the reader's path (walks replay at NOW).
+# 3. Fix classes, not instances: round 3 fixed two parks and kept the exemption; round 4
+#    removes the class (ANY rig on ANY column at ANY dwell).
+# ROUND 4 VERDICT: both user reports confirmed and fixed; LAP CLEAN F1-F17.
