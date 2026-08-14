@@ -1886,6 +1886,71 @@ async function main() {
          roll.map((r) => r.gapM + 'm').join(' -> '));
   }
 
+  /* ---- [F15] THE PARKING LAW ----------------------------------------- *
+   * A rig CROSSING a lamp column reads as passing in front of it, which it
+   * is. A rig PARKED on one reads as a gas standard growing out of the
+   * carriage — the round-3 user bug: "the cart passed through the light"
+   * (her landau settled at u 0.620, hood on lamp3; the follow's roll end
+   * reached the same column). Lamp2 (719..778) is exempt: lamp2-front.png
+   * restores its post IN FRONT, so a rig under it reads as parked behind a
+   * lamp, plinth and all. Lamps 1, 3 and 4 have no front cut, so at every
+   * settle a rig's body span must CLEAR their columns. Asserted at the
+   * roll's own end (where the follow now lives for two units) and at every
+   * chase settle the reader dwells on. */
+  {
+    const UNCUT = [[293, 320, 'lamp1'], [938, 997, 'lamp3'], [1110, 1169, 'lamp4']];
+    const CLEAR = 10;                      // plate px of daylight required
+    await T(8.5);                          // let the roll finish: the END is the dwell
+    const parks = [];
+    for (const unit of ['landau', 'shotout', 'shabby', 'twentyfive']) {
+      await page.evaluate(async (u) => await window.__gotoUnit(u), unit);
+      await T(9.0);                        // every travel/segment done; this IS the dwell
+      const s = await st();
+      for (const [id, r] of Object.entries(s.stage.rigs || {})) {
+        if (!r.on || !r.plate) continue;
+        const [bx, , bw] = r.plate;
+        for (const [c0, c1, lname] of UNCUT) {
+          const gap = bx > c1 ? bx - c1 : c0 - (bx + bw);
+          if (bx + bw > c0 && bx < c1)
+            bad(`[F15] ${id} settles ON ${lname}'s column at ${unit}: body x ` +
+                `${bx.toFixed(0)}..${(bx + bw).toFixed(0)} vs post ${c0}..${c1}`);
+          else if (gap < CLEAR && gap > -1e9)
+            bad(`[F15] ${id} settles ${gap.toFixed(0)}px from ${lname}'s column at ` +
+                `${unit} (law: >= ${CLEAR})`);
+        }
+        parks.push(`${unit}/${id}@u${r.u}`);
+      }
+    }
+    note(`[F15] the parking law: every settled rig clears the uncut lamp columns ` +
+         `by >= ${CLEAR} plate px (${parks.length} settles measured: ${parks.join(' ')})`);
+  }
+
+  /* ---- [F16] THE RING RINGS THE THING THE CUE NAMES ------------------- *
+   * The door gate's cue says "click the door" while the King waits out the
+   * gate standing at the sill (R7-1 keeps him there — walking him out
+   * beheads him at the lintel). His body covers the leaf's right half, and
+   * the old anchor (378,372) put the pulsing ring ON HIS CHEST. The law:
+   * the ring's full circle must clear his body's near edge. His standing
+   * half-width measured off the shipped king-masked sprite is 55 plate px
+   * at the sill's depth; 10 more of daylight required. */
+  {
+    await page.evaluate(async () => await window.__gotoUnit('door'));
+    await T(2.5);
+    const d = await page.evaluate(() => {
+      const a = window.__refs.stage.targetPlate('door');
+      return { at: a, r: 62 };
+    });
+    const kx = (await st()).stage.king.x;
+    const edge = kx - 55;
+    const ringR = d.at[0] + d.r;
+    if (ringR + 10 > edge)
+      bad(`[F16] the door ring reaches ${ringR.toFixed(0)} but the King's body ` +
+          `edge is at ${edge.toFixed(0)} (need 10 clear) — the ring is on HIM again`);
+    else
+      note(`[F16] the door ring: circle ends at plate x ${ringR.toFixed(0)}, ` +
+           `${(edge - ringR).toFixed(0)} px clear of the waiting King (edge ${edge.toFixed(0)})`);
+  }
+
   /* ==================================================================== *
    * 8. THE ROOM + STREET + HEADS LANE: the gates that need the whole read *
    * ==================================================================== */

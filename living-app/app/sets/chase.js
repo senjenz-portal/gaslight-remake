@@ -60,7 +60,18 @@ const RAIL = [[0.000, 420.0, 545.1, 1.0000], [0.050, 461.9, 536.2, 1.0072],
 
 const M_PER_U = 32.23;         // least squares of the plate's own lamp columns
 const GAP = { start: 0.605, end: 0.434 };   // 19.5 -> 14.0 m, the reference's
-const ROLL = { dur: 8.0, follow: [0.015, 0.550], lead: [0.620, 0.984] };
+/* WHERE A RIG MAY STOP. A rig CROSSING a lamp column reads as passing in
+ * front of it, which it is; a rig PARKED on one reads as a gas standard
+ * growing out of the carriage (the fable-round-3 bug: "the cart passed
+ * through the light"). Lamp2's column is exempt — its post is restored in
+ * front by lamp2-front.png, so a rig under it reads as parked BEHIND a
+ * lamp, base and all. Lamps 3 (938..997) and 4 (1110..1169) have no front
+ * cut, so no rig may SETTLE with its body on them. The lead's old park
+ * (0.620, pin x 940) sat its hood exactly on lamp3; the follow's old end
+ * (0.550, body 839..976) reached into the same column. Both now park in
+ * the clear cobbles between lamp2 and lamp3 — the lap asserts the
+ * clearance at every chase settle. */
+const ROLL = { dur: 8.0, follow: [0.015, 0.490], lead: [0.478, 0.984] };
 
 const DOOR = [663, 356];       // Briony Lodge's lit door, up the road
 const LAMPS = [[307, 327], [749, 288], [968, 271], [1140, 241]];
@@ -83,9 +94,14 @@ const FOCUS = {
      (k 1.46 on 676,402) spent its left quarter on the backdrop. */
   door:  [700, 430, 2.00],
   lane:  [800, 430, 1.12],
-  /* HER LANDAU, at the rail position the intro leaves it on (u 0.620). The old
-     lens sat at 700,452 — the pavement she had already driven away from. */
-  her:   [951, 402, 1.72],
+  /* HER LANDAU, at the rail position the intro leaves it on (ROLL.lead[0],
+     now 0.478 — see the parking law at ROLL). The old lens sat at 700,452 —
+     the pavement she had already driven away from; the 951-centred one was
+     composed on the old park, on lamp3's column. This one is composed on the
+     new park (u 0.478: body right edge 12 px clear of lamp3's column, rear
+     tip under exempt lamp2's front cut, centre 848, ground 447) and its
+     frame 438..1257 still holds the hall door (663) and both gas standards. */
+  her:   [848, 410, 1.72],
   /* THE GATE LENS. A gate's target must be reachable the MOMENT its cue asks
      for it, and the reference measured its own 2.8 s push leaving the cab
      off-frame for 16 of the first 20 samples. The follower sits at rail u
@@ -500,7 +516,11 @@ export class ChaseSet {
          the hole the old `gaps: []` could not see. */
       rigs: Object.fromEntries(Object.entries(this.rigs).map(([k, r]) =>
         [k, { on: r.on, u: +(+r.u).toFixed(3),
-              body: !!(r.on && r.body.naturalWidth > 0 && r.body.clientWidth > 0) }])),
+              body: !!(r.on && r.body.naturalWidth > 0 && r.body.clientWidth > 0),
+              /* the body's PLATE-SPACE box, for the parking law: a settled rig
+                 may not stand on an uncut lamp column (see ROLL). */
+              plate: r.on ? (() => { const B = this.rigBox(k, r.u);
+                return [B.left, B.top, B.w, B.h].map((v) => +v.toFixed(1)); })() : null }])),
       norton: S.norton, doorLit: S.doorLit, irene: S.irene, holmesIn: S.holmesIn,
       seg: S.seg, rolling: S.roll > -1e8 && !S.rolled, rolled: S.rolled,
       gapM,

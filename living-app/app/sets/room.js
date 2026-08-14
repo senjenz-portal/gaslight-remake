@@ -124,7 +124,13 @@ const EMIS = [
 const TARGETS = {
   mask:  { r: 34 },                       // follows the King's face
   index: { at: [736, 404], r: 44 },       // the index volume on the desk
-  door:  { at: [378, 372], r: 62 },       // the leaf; knob measured at (405,393)
+  /* the leaf's LEFT panel, not its centre: the King waits out the door gate
+     standing at the sill (R7-1), and his body covers the leaf's right half —
+     a ring at the old (378,372) pulsed ON HIS CHEST while the cue said
+     "click the door" (fable round 3). The knob (405,393) is behind him too.
+     Anchored where the leaf is actually VISIBLE past his shoulder; the lap
+     asserts the ring clears his body ([F16]). */
+  door:  { at: [312, 400], r: 62 },
 };
 
 const FOCUS = {

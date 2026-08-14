@@ -41,3 +41,28 @@ Minors logged, NOT blockers (round-3 candidates only if user asks):
 
 # ROUND 2 VERDICT: ACCEPTED. All 8 majors dead, all 14 assertions green, every fix carries its own lap gate.
 # SHIP: commit + Pages push + LIVE lap re-shots to shots/fable-round2/ + story-orbit refresh PR.
+
+# ============ ROUND 3 — user report + full-scene Fable review (2026-08-14) ============
+User: "still a lot of bugs... when the cart pass through one of the light it will pass through."
+Method (the marriage-scene lesson, applied): REPRODUCE first — tools/living/_crossingprobe.mjs
+steps every rig travel at 4fps through the reader's own harness; review EVERY scene (9 contact
+sheets, all 74 frames), not just the evidence frames. Assert the thing AT THE MOMENT it is
+wrong: settle shots hid this bug because the collision lives in the dwell after motion.
+- [F15 CONFIRMED — the user's cart/light bug] Her landau PARKED at u 0.620 with its hood on
+  lamp3's column (938..997): post grows out of the carriage for a two-unit dwell. The follow
+  cab's roll end (0.550, body 839..976) reached the same column. Geometry was never wrong in
+  MOTION (rigs pass in front of far-side lamps; lamp2 has its front cut) — the defect is
+  PARKING on an uncut column. FIX: parking law — ROLL = follow [0.015,0.490], lead [0.478,
+  0.984]; FOCUS.her recomposed 951->848. LAW IN THE LAP: every settled rig clears uncut lamp
+  columns by >= 10 plate px, measured off the set's own rigBox at all four chase dwells.
+- [F16 — full-review find] The door gate's ring pulsed ON THE KING'S CHEST while the cue said
+  "click the door" (he waits at the sill per R7-1; his body covers the leaf's right half and
+  the old anchor 378,372 + knob 405,393 both sit behind him). FIX: anchor moved to the leaf's
+  visible LEFT panel (312,400). LAW: ring circle must clear his body edge by >= 10 px
+  (measured: 23 px clear).
+- Everything else PASSES the full-scene review: Beat I room read (hold/watermark/mask/index
+  gates, cameo sync), pursuit motion (crossings read correctly as pass-in-front), church
+  (knot lens, Norton run, drag, wedding register), rocket close-up, chalk-ring gate (the
+  pavement ellipse is a STORY OBJECT, not UI), throw gate, one-storey plume, reveal, letter
+  read, portrait fade, closing card, portrait-orientation lenses.
+# ROUND 3 VERDICT: two defects found, two fixed, each with its own lap law. LAP CLEAN, F1-F16.
