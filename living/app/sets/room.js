@@ -677,7 +677,15 @@ export class RoomSet {
     } else {
       this.kingWalk.style.opacity = '0';
       const x = K.x - KING.foot[0] * s, y = K.y - KING.foot[1] * s;
-      const un = clamp01((t - S.unmask) / 0.5);
+      /* the paint OBEYS THE STATE. `un` used to be computed off S.unmask
+         alone, and the sentinel (-1e9) clamps to 1 — so the standing King
+         painted UNMASKED from the moment he stopped walking, four units
+         before the reader clicks the mask (fable round 4, user's eye).
+         S.masked is the truth; S.unmask only times the 0.5 s reveal. The
+         Beat-VII return (masked=false, unmask=sentinel) must land at 1
+         instantly — he comes back bare-faced, no transition to replay. */
+      const un = S.masked ? 0
+               : (S.unmask > -1e8 ? clamp01((t - S.unmask) / 0.5) : 1);
       for (const [im, o] of [[this.kingMasked, 1 - un], [this.kingUnmasked, un]]) {
         im.style.opacity = o.toFixed(3);
         im.style.left = x.toFixed(2) + 'px';

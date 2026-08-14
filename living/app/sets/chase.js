@@ -61,17 +61,19 @@ const RAIL = [[0.000, 420.0, 545.1, 1.0000], [0.050, 461.9, 536.2, 1.0072],
 const M_PER_U = 32.23;         // least squares of the plate's own lamp columns
 const GAP = { start: 0.605, end: 0.434 };   // 19.5 -> 14.0 m, the reference's
 /* WHERE A RIG MAY STOP. A rig CROSSING a lamp column reads as passing in
- * front of it, which it is; a rig PARKED on one reads as a gas standard
- * growing out of the carriage (the fable-round-3 bug: "the cart passed
- * through the light"). Lamp2's column is exempt — its post is restored in
- * front by lamp2-front.png, so a rig under it reads as parked BEHIND a
- * lamp, base and all. Lamps 3 (938..997) and 4 (1110..1169) have no front
- * cut, so no rig may SETTLE with its body on them. The lead's old park
- * (0.620, pin x 940) sat its hood exactly on lamp3; the follow's old end
- * (0.550, body 839..976) reached into the same column. Both now park in
- * the clear cobbles between lamp2 and lamp3 — the lap asserts the
- * clearance at every chase settle. */
-const ROLL = { dur: 8.0, follow: [0.015, 0.490], lead: [0.478, 0.984] };
+ * front of it, which it is; a rig PARKED on one reads as broken — round 3
+ * exempted lamp2 because its front cut draws the post "correctly" in front
+ * of a rig under it, and round 4's review (the user's eye) rejected that
+ * too: a carriage merged with a standard at a DWELL reads wrong whichever
+ * of them wins the paint order. The law, final form: at every settle, every
+ * rig's body clears EVERY post column (true post pixels, not bloom) by
+ * >= 10 plate px. Posts: lamp1 300..332, lamp2 727..776 (the cut box),
+ * lamp3 950..990, lamp4 1125..1155. The front cut still earns its keep on
+ * CROSSINGS, where passing behind the post is the read. History: the lead
+ * parked at 0.620 (hood on lamp3), then 0.478 (rear tip on lamp2's edge);
+ * the follow ended at 0.550 (on lamp3); Norton's cab dwelt at 0.36 (square
+ * across lamp2, three units). */
+const ROLL = { dur: 8.0, follow: [0.015, 0.509], lead: [0.492, 0.984] };
 
 const DOOR = [663, 356];       // Briony Lodge's lit door, up the road
 const LAMPS = [[307, 327], [749, 288], [968, 271], [1140, 241]];
@@ -87,20 +89,22 @@ const EMIS = [
 const FOCUS = {
   strip: [704, 384, 1.00],
   /* THE COMPOSED DOOR SHOT: his cab at the lit door, and the man who sprang
-     out of it. Composed on the two of them (cab body 664..829, Norton 612..648)
-     and on the plate's painted content, which runs out at x 150 — at k 2.00 the
-     frame is x 348..1052, y 238..622, every pixel of it painting, and the rig
-     reads 35% of frame height against the reference's own 48.1%. The old lens
-     (k 1.46 on 676,402) spent its left quarter on the backdrop. */
-  door:  [700, 430, 2.00],
+     out of it. Composed on the two of them (cab body 523..707 since the
+     round-4 re-park, Norton 612..648) and on the plate's painted content,
+     which runs out at x 150 — at k 2.00 the frame is x 308..1012, every
+     pixel of it painting. The old lens (k 1.46 on 676,402) spent its left
+     quarter on the backdrop. */
+  door:  [660, 430, 2.00],
   lane:  [800, 430, 1.12],
   /* HER LANDAU, at the rail position the intro leaves it on (ROLL.lead[0],
-     now 0.478 — see the parking law at ROLL). The old lens sat at 700,452 —
+     now 0.492 — see the parking law at ROLL). The old lens sat at 700,452 —
      the pavement she had already driven away from; the 951-centred one was
      composed on the old park, on lamp3's column. This one is composed on the
-     new park (u 0.478: body right edge 12 px clear of lamp3's column, rear
-     tip under exempt lamp2's front cut, centre 848, ground 447) and its
-     frame 438..1257 still holds the hall door (663) and both gas standards. */
+     new park (u 0.492: body 787..933 measured by the lap's own gate, >= 10
+     px of daylight to both posts, centre 860, ground 446) and its frame
+     438..1257 still holds the hall door (663) and both gas standards. The
+     follow's roll end (0.509) parks in the same clear block; the two never
+     stand there at the same time. */
   her:   [848, 410, 1.72],
   /* THE GATE LENS. A gate's target must be reachable the MOMENT its cue asks
      for it, and the reference measured its own 2.8 s push leaving the cab
@@ -152,7 +156,15 @@ const RIG = {
    would be drawn over the man who has just stepped out of it. 0.36 puts the
    cab's back wheel just past him — he is between the reader and his own cab,
    which is also the only order in which the two read as one event. */
-const CAB_AT_DOOR = 0.36;
+/* u 0.36 put the parked cab's body (664..829) square across lamp2's column
+   (719..778) for a three-unit dwell. The front cut drew the post honestly in
+   front of it, and round 3 called that "physically correct" — the user's eye
+   called it the carriage still stuck behind the light, and the eye is the
+   acceptance test. The parking law now covers EVERY lamp column at every
+   settle: he pulls up just short of the standard (body 523..707, 12 px
+   clear), with the lit door over the cab's right half — Norton still springs
+   out at 612..648, in front of his own cab, which is what the text says. */
+const CAB_AT_DOOR = 0.20;
 const NORTON_AT_DOOR = 0.29;
 /* how far below the near end of the rail a rig is still drawn (faded) */
 const U_IN = -0.055;
