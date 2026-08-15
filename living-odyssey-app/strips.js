@@ -1,3 +1,17 @@
+/**
+ * strips.js — THE STRIP REGISTRY, SHIPPED. Generated VERBATIM from
+ * tools/ody/strips.json (the build-gated registry: cells gated by
+ * strip_slice_gate.py, per-frame foot anchors measured off each cell's own
+ * alpha, sha256 of the file as shipped). The SETS read n/cell/srcH/anchors
+ * from HERE — no set may hardcode a frame count again (the n=4 -> n=10
+ * retune is why). The lap asserts this module deep-equals the registry and
+ * that the served strip bytes match each sha, so a drift in either direction
+ * is a lap failure, not a quiet lie.
+ *
+ * Regenerate: node -e '…' (see tools/ody/lap-ody.mjs, the registry-shipped
+ * gate) — or simply re-run the strip lane, which rewrites both.
+ */
+export const STRIPS =
 {
  "ulysses-walk": {
   "file": "actor/ulysses-walk-strip.png",
@@ -136,4 +150,4 @@
   "action": "ovine trot (distance-driven; AUTHORED FACING LEFT \u2014 the flockOut stream's own way, no flip on the escape; palette stat-matched to the canonical ram-walk cut + measured R-4/B+4 rebalance 2026-08-15 because the raw slice failed identity at +85..+90 warm (cream fleece, gold horns) \u2014 after: delta +9.6..+14.7, scale drift 0.44%, anchored XOR 22.2-28.6%)",
   "source": "seedance"
  }
-}
+};

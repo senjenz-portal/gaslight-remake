@@ -56,7 +56,9 @@
  * to step(). A settled act leaves the world at its END (WIRING §2).
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
-         emissives, placeStrip, stripProof } from '../setkit.js';
+         emissives, placeStrip, stripProof, stripPxPerFrame,
+         walkToward } from '../setkit.js';
+import { STRIPS } from '../strips.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SCALE = { pxPerM: 11.3, ulysses: 20, crew: 19 };
@@ -155,27 +157,39 @@ const ART = {
 const CREW_N = 12;                   // the twelve best (i-10); three of them are
                                      // the camp/council party before that
 
-/* ---- THE WALK STRIPS: tools/ody/strips.json, transcribed verbatim ------ *
- * Build-gated cells (identity/scale/anchors/action; the lap asserts the
- * registry sha over the shipped bytes). The pose-swap stride this set used
- * to perform is upgraded: while a pose is actually COVERING GROUND — the
- * wade, the council re-stage, the boarding line — the strip is the walk and
- * the cut is the stand, never both (the room.js swap law). Frame is driven
- * by CUMULATIVE DISTANCE, so the damp's eased speed profile cannot skate
- * the feet; pxPerFrame is half a stride at this plate's 11.3 px/m
- * (0.75 m stride -> 8.5 px -> 4.2; the crew's 19 px gait a touch shorter). */
+/* ---- THE WALK STRIPS: the shipped registry, READ, not transcribed ------ *
+ * strips.js is generated verbatim from tools/ody/strips.json (build-gated
+ * cells: identity/scale/anchors/action; the lap asserts the registry sha
+ * over the shipped bytes AND the shipped module against the registry), so
+ * n / cell / srcH / anchors arrive here as the registry's own numbers — the
+ * n=4 -> n=10 seedance recut changed all four and no set may hardcode them
+ * again. While a pose is actually COVERING GROUND — the wade, the council
+ * re-stage, the boarding line — the strip is the walk and the cut is the
+ * stand, never both (the room.js swap law). Frame is driven by CUMULATIVE
+ * DISTANCE, and pxPerFrame is the King law read off each strip
+ * (setkit stripPxPerFrame: stride / (n/2)) at this plate's 11.3 px/m —
+ * Ulysses' 0.75 m stride -> 8.5 px -> 1.70 px/frame over the 10 cells; the
+ * crew's 19 px gait a touch shorter (0.71 m -> 8.0 px -> 1.60). */
 const STRIP = {
-  ulysses: { file: 'actor/ulysses-walk-strip.png', cell: [330, 591], n: 4,
-             srcH: 581.8, anchors: [204.5, 182.0, 154.0, 139.5] },
-  crew:    { file: 'actor/crew-walk-strip.png', cell: [247, 441], n: 4,
-             srcH: 432.0, anchors: [136.5, 125.5, 134.0, 123.0] },
+  ulysses: STRIPS['ulysses-walk'],
+  crew: STRIPS['crew-walk'],
 };
-const PX_PER_FRAME = { ulysses: 4.2, crew: 4.0 };
+const PX_PER_FRAME = {
+  ulysses: stripPxPerFrame(STRIP.ulysses, 0.75 * SCALE.pxPerM),   // 1.70
+  crew: stripPxPerFrame(STRIP.crew, 0.71 * SCALE.pxPerM),         // 1.60
+};
 /* a stride is MEASURED off the pose the frame actually moved (seg and damp
    alike), never named by its cause; a teleport (fade-through reland, a
    settled snap) is not a stride */
 const STRIDE_MIN_SPEED = 6;          // plate px/s — under it the damp tail stands
 const STRIDE_TELEPORT = 40;          // plate px in one step is a re-stage, not a step
+/* HONEST GROUND SPEED (the anti-skate law's other half): the damp's first
+   step opens at lambda x distance px/s — 1.8 x 120 px = 216 px/s, a 19 m/s
+   sprint at 11.3 px/m — so every damped walk is capped at the actor's own
+   walking speed. The planted foot glides at ground speed by construction
+   (each frame's anchor is pinned on the moving mark), so ground speed IS
+   the skate, and 1.5 m/s / 1.4 m/s is what a walk may spend. */
+const WALK_V = { ulysses: 1.5 * SCALE.pxPerM, crew: 1.4 * SCALE.pxPerM };
 
 /* place a cut by its measured pin. Returns the drawn box for the snapshot. */
 function pinSprite(node, art, at, hPx, flip, bob) {
@@ -619,8 +633,10 @@ export class ShoreSet {
       if (far) {
         P.op = damp(P.op, 0, 5.0, dt);               // fade out where he was…
       } else {
-        P.x = damp(P.x, W.at[0], 1.8, dt);           // …or walk the last stretch
-        P.y = damp(P.y, W.at[1], 1.8, dt);
+        /* …or WALK the last stretch: the damp shapes the tail, the cap keeps
+           the ground speed a walking speed (see WALK_V — the skate law) */
+        walkToward(P, W.at[0], W.at[1], 1.8,
+                   key === 'u' ? WALK_V.ulysses : WALK_V.crew, dt);
         P.op = damp(P.op, 1, 4.0, dt);
         P.flip = W.flip;
       }

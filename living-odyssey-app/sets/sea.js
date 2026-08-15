@@ -57,6 +57,7 @@
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp,
          emissives, breathe, placeStrip, stripProof } from '../setkit.js';
+import { STRIPS } from '../strips.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SHIP = {
@@ -179,19 +180,22 @@ const FOCUS = {
   moonpath:     [590, 340, 3.20],
 };
 
-/* ---- THE ROW STRIP: tools/ody/strips.json, transcribed verbatim -------- *
- * Build-gated cells (the lap asserts the registry sha over the shipped
- * bytes). The oar stroke — catch/drive/finish/recovery — as a 4-cell loop
- * riding setkit placeStrip; anchors are the MAN's feet, not the sweeping
- * blade (the stake-pin lesson transposed: anchor the fact that must hold
- * still). TIME-DRIVEN, not distance (the ship is the world's origin — the
- * rowers never travel): the stroke phase advances ∝ rowEffort over the
- * existing 1.9 s period, so at effort 0 the loop stands and under reduced
- * motion the STORY strokes still row (effort was never amb-gated; the
- * ambient bench bob still dies with amb). Per-bench phase keeps the six
- * from lockstep (the existing i x 0.9 rad stagger, in cycles). */
-const STRIP_ROW = { file: 'actor/crew-row-strip.png', cell: [256, 413], n: 4,
-                    srcH: 362.8, anchors: [75.0, 53.0, 86.0, 65.0],
+/* ---- THE ROW STRIP: the shipped registry, READ, not transcribed -------- *
+ * strips.js is generated verbatim from tools/ody/strips.json (build-gated
+ * cells; the lap asserts the registry sha over the shipped bytes AND the
+ * shipped module against the registry), so n / cell / srcH / anchors are the
+ * registry's own — crew-row is the KEPT 4-cell loop while the walks went to
+ * 10, and this driver must not care either way. The oar stroke —
+ * catch/drive/finish/recovery — rides setkit placeStrip; anchors are the
+ * MAN's feet, not the sweeping blade (the stake-pin lesson transposed:
+ * anchor the fact that must hold still). TIME-DRIVEN, not distance (the
+ * ship is the world's origin — the rowers never travel): the stroke phase
+ * advances ∝ rowEffort over the existing 1.9 s period, so at effort 0 the
+ * loop stands and under reduced motion the STORY strokes still row (effort
+ * was never amb-gated; the ambient bench bob still dies with amb).
+ * Per-bench phase keeps the six from lockstep (the existing i x 0.9 rad
+ * stagger, in cycles). */
+const STRIP_ROW = { ...STRIPS['crew-row'],
                     period: 1.9, phase: 0.9 / (2 * Math.PI) };
 
 /* the G6 anchor: the VISIBLE giant's body centre, the ledger's (860,168) —

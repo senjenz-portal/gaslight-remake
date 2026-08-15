@@ -222,6 +222,20 @@ const SPRAWL_CLEAR_MIN = 10;
  * translateY on top (sea.js stepRowers), so their law is 1.5 + 1.7. */
 const STRIP_DY_MAX = 1.5;
 const STRIP_ROWER_DY_MAX = 3.2;
+/* [anti-skate] THE PLANTED FOOT'S OWN LAW (the King law's proof, on top of
+ * the anchor law above): placeStrip pins each frame's registry anchor — the
+ * planted foot — ON the moving mark, so the foot GLIDES at ground speed by
+ * construction and ground speed is the skate. The gate single-steps the sim
+ * (FIXED_DT = 1/60) through each walk and holds: while the strip frame (and
+ * with it the anchor / the planted foot) is UNCHANGED between consecutive
+ * steps, the foot's screen x moves <= 2.5 css px per step — 150 css px/s;
+ * the walk that spends more is a slide whatever its frames are doing. Every
+ * walk family must be caught MID-MOTION at least 4 times or the gate never
+ * ran (a lap hole, not a pass). Frame-swap steps are the anchor law's
+ * business (worst |dx|/|dy| at the strip tally), not this gate's. */
+const SKATE_MAX = 2.5;                // css px per fixed 1/60 s step
+const SKATE_MIN_SAMPLES = 4;          // mid-motion samples per walk family
+const SKATE_FAMS = ['shore-ulysses', 'shore-crew', 'crew-cave', 'giant', 'ram'];
 
 /* ---- the ledger's floors + obstacles, transcribed once ---------------- */
 const FL = {
@@ -437,6 +451,32 @@ async function main() {
     }
     if (shaOK === Object.keys(STRIPS).length) {
       note(`[strips] identity: ${shaOK}/${shaOK} served strip files match their build-gated registry sha`);
+    }
+  }
+
+  /* ---- [strips] the registry is SHIPPED, and shipped VERBATIM ------------ *
+   * The sets read n / cell / srcH / anchors from app/strips.js (the n=4 ->
+   * n=10 seedance recut is why no set may hardcode a frame count again); that
+   * module must deep-equal tools/ody/strips.json, or every driver on the page
+   * is tuned to a registry other than the one the cells were gated against. */
+  {
+    const res = await page.request.get(new URL('./app/strips.js', URL_).toString());
+    if (!res.ok()) {
+      bad(`[strips] app/strips.js (the shipped registry) did not load (${res.status()})`);
+    } else {
+      const m = /export const STRIPS =\n([\s\S]*?);\s*$/.exec(await res.text());
+      let shipped = null;
+      try { shipped = m && JSON.parse(m[1]); } catch (_) { /* falls to bad below */ }
+      if (!shipped) {
+        bad('[strips] app/strips.js does not carry a parseable STRIPS registry');
+      } else if (JSON.stringify(shipped) !== JSON.stringify(STRIPS)) {
+        bad('[strips] the SHIPPED registry (app/strips.js) has drifted off ' +
+            'tools/ody/strips.json — the drivers are reading different numbers ' +
+            'than the cells were gated against');
+      } else {
+        note('[strips] the shipped registry deep-equals tools/ody/strips.json (' +
+             Object.entries(shipped).map(([k, s]) => `${k} n=${s.n}`).join(', ') + ')');
+      }
     }
   }
 
@@ -677,6 +717,56 @@ async function main() {
   };
   /* the held segs whose walks the strips now perform: sampled while they run */
   const STRIP_SEG_KEYS = new Set(['return2', 'return3', 'quiverlid']);
+
+  /* ---- [anti-skate] the single-stepped walk probe ------------------------ *
+   * Advances the sim ONE FIXED FRAME (1/60 s) at a time and reads, at every
+   * step, each live walk strip's proof (frame + rendered foot + the registry
+   * anchor the snapshot now carries) and the live magnification (stage F x
+   * cam k — plate px to css px). Consecutive steps that HOLD the frame hold
+   * the anchor — the planted foot — and the foot's css drift between them is
+   * the skate the tally gates. Every probed proof also feeds the cycling /
+   * anchor-law tally, so the two laws measure the same walks. */
+  const skateEv = {};
+  for (const k of SKATE_FAMS) skateEv[k] = { samples: 0, pairs: 0, worst: 0, worstAt: null };
+  const skateProbe = async (unitKey, nFrames = 90) => {
+    const rows = await page.evaluate((n) => {
+      const out = [];
+      for (let i = 0; i < n; i++) {
+        window.__advance(1 / 60);
+        const q = window.__state();
+        const sg = window.__refs.stage;
+        const sn = (q && q.stage) || {};
+        const S = sn.strips || {};
+        const w = [];
+        if (sn.set === 'shore') {
+          if (S.ulysses) w.push(['shore-ulysses', 'u', S.ulysses]);
+          (S.crew || []).forEach((p, j) => p && w.push(['shore-crew', 'c' + j, p]));
+        } else if (sn.set === 'cave') {
+          if (S.giant) w.push(['giant', 'g', S.giant]);
+          (S.crew || []).forEach((p, j) => p && w.push(['crew-cave', 'c' + j, p]));
+          (S.rams || []).forEach((p, j) => p && w.push(['ram', 'r' + j, p]));
+        }
+        out.push({ css: sg.F * sg.cam3.k, w });
+      }
+      return out;
+    }, nFrames);
+    const held = {};
+    for (const row of rows) {
+      for (const [fam, id, p] of row.w) {
+        const ev = skateEv[fam];
+        if (!ev) continue;
+        ev.samples++;
+        sSample(fam, p, unitKey);
+        const prev = held[fam + ':' + id];
+        if (prev && p.frame === prev.frame) {   // the anchor held: same planted foot
+          ev.pairs++;
+          const slide = Math.abs(p.foot[0] - prev.x) * row.css;
+          if (slide > ev.worst) { ev.worst = slide; ev.worstAt = unitKey; }
+        }
+        held[fam + ':' + id] = { frame: p.frame, x: p.foot[0] };
+      }
+    }
+  };
 
   const marginHas = (q, text, tag) => {
     if (!norm(q.unit.blocks).includes(norm(text))) {
@@ -957,6 +1047,17 @@ async function main() {
 
       /* ---- the per-fact gates, at the unit that carries each ------------ */
       switch (u.key) {
+        case 'troy': {
+          /* [anti-skate]/[strips] THE WADE WALK: this lap's own pacing cuts
+             the landfall seg at iamulysses (fire-ulysses re-states the camp),
+             which hands the party to the DAMPED walk — Ulysses covers the
+             ~200 px from the shallows to the fire at his honest 1.5 m/s
+             across troy/lawless/dawn1, and by `smoke` he has a stride left.
+             So HIS walk is single-stepped here, mid-crossing; the council
+             re-stage at `smoke` still probes the camp men's own walks. */
+          await skateProbe('troy', 90);
+          break;
+        }
         case 'iamulysses': {
           const c = q0.cameo || {};
           if (!(c.on && c.id === 'ulysses' && /Ithaca/i.test(c.caption || ''))) {
@@ -1007,7 +1108,11 @@ async function main() {
         case 'smoke': case 'twentyone': {
           /* [strips] the shore crossings: the council re-stage (i-06) and the
              boarding line (i-10) are strip-driven WALKS now — sample while
-             the troupe covers the ground (cycled + feet held at the tally) */
+             the troupe covers the ground (cycled + feet held at the tally).
+             [anti-skate] the re-stage is single-stepped first: Ulysses' 120 px
+             crossing and the three camp men's short walks, planted feet held
+             frame by frame. */
+          if (u.key === 'smoke') await skateProbe('smoke', 96);
           for (let i = 0; i < 8; i++) {
             const q = await st();
             if (!q.unit || q.unit.key !== u.key) break;
@@ -1310,7 +1415,9 @@ async function main() {
         }
         case 'dawn5': {
           /* [strips] the dawn stream (v-05): the escape's walkers ride the
-             ram strip — sample the trot while the flock crosses the floor */
+             ram strip — sample the trot while the flock crosses the floor.
+             [anti-skate] single-step the stream first, planted hooves held. */
+          await skateProbe('dawn5', 90);
           for (let i = 0; i < 8; i++) {
             const q = await st();
             if (!q.unit || q.unit.key !== 'dawn5') break;
@@ -1478,7 +1585,9 @@ async function main() {
           const R = rectI(dev, await stageBox());
           mouthOpenLuma = f && R ? lumaStats(f, R).mean : null;
           /* [strips] the entry file (K1): the twelve walk in on the crew
-             strip while the entry seg still runs — sample the stride */
+             strip while the entry seg still runs — sample the stride.
+             [anti-skate] single-step the file first, planted feet held. */
+          await skateProbe('head2', 90);
           for (let i = 0; i < 6; i++) {
             const q2 = await st();
             if (!q2.unit || q2.unit.key !== 'head2') break;
@@ -1531,7 +1640,10 @@ async function main() {
         }
         await latchProbe(u);
         /* [strips] the held segs whose walks are strip-driven (the giant's
-           entrance and both flock crossings) are sampled as they play out */
+           entrance and both flock crossings) are sampled as they play out;
+           [anti-skate] each is single-stepped first, mid-walk, planted feet
+           held frame by frame */
+        if (STRIP_SEG_KEYS.has(u.key)) await skateProbe(u.key, 90);
         await waitRelease(u, STRIP_SEG_KEYS.has(u.key) ? stripPoll : undefined);
         continue;
       }
@@ -1944,6 +2056,33 @@ async function main() {
         `(the per-bench phase stagger is gone)`);
   }
 
+  /* ---- 9.6 THE ANTI-SKATE LAW, tallied (the King law's proof) ------------- *
+   * Per walk family, single-stepped mid-motion evidence: while the strip
+   * frame — the registry anchor, the planted foot — HELD between consecutive
+   * fixed 1/60 s steps, the rendered foot's screen x moved <= SKATE_MAX css
+   * px. Too few mid-motion samples means the probe never caught the walk:
+   * a lap hole, not a pass. */
+  for (const fam of SKATE_FAMS) {
+    const ev = skateEv[fam];
+    if (ev.samples < SKATE_MIN_SAMPLES) {
+      bad(`[anti-skate] ${fam}: only ${ev.samples} mid-motion samples ` +
+          `(law >= ${SKATE_MIN_SAMPLES}) — the walk was never single-stepped`);
+      continue;
+    }
+    if (!ev.pairs) {
+      bad(`[anti-skate] ${fam}: no frame ever HELD across consecutive steps — ` +
+          `nothing anchored to measure`);
+      continue;
+    }
+    if (ev.worst > SKATE_MAX) {
+      bad(`[anti-skate] ${fam}: the planted foot slides ${ev.worst.toFixed(2)} css px/frame ` +
+          `at ${ev.worstAt} (law <= ${SKATE_MAX} while the anchor holds)`);
+    } else {
+      note(`[anti-skate] ${fam}: ${ev.samples} mid-motion samples, ${ev.pairs} held-anchor ` +
+           `pairs, worst planted-foot slide ${ev.worst.toFixed(3)} css px/frame (<= ${SKATE_MAX})`);
+    }
+  }
+
   /* ---- 10. the fact ledger, printed --------------------------------------- */
   for (const id of ['O.1', 'O.2', 'O.3', 'O.4', 'O.5', 'O.6', 'O.7', 'O.8a', 'O.8b',
                     'O.9', 'O.10', 'O.11', 'O.12', 'O.13a', 'O.13b', 'O.14a', 'O.14b']) {
@@ -1970,6 +2109,11 @@ async function main() {
       worst: +stripEv[k].worst.toFixed(2), worstAt: stripEv[k].worstAt,
     }])),
     rowerLockstep,
+    skate: Object.fromEntries(SKATE_FAMS.map((k) => [k, {
+      samples: skateEv[k].samples, pairs: skateEv[k].pairs,
+      worst: +skateEv[k].worst.toFixed(3), worstAt: skateEv[k].worstAt,
+      max: SKATE_MAX,
+    }])),
     feetViolations: dedupe(feetBad), parkingViolations: dedupe(parkBad),
     eye, inset: skinCard, gaps,
     audio: { bed: audio.bedId, cues: audio.log.length },

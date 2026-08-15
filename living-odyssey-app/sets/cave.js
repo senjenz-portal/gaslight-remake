@@ -94,7 +94,9 @@
  * to step(). A settled act leaves the world at its END (WIRING §2).
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
-         emissives, placeStrip, stripProof } from '../setkit.js';
+         emissives, placeStrip, stripProof, stripPxPerFrame, pathLen,
+         alongPathArc, walkToward } from '../setkit.js';
+import { STRIPS } from '../strips.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SCALE = { pxPerM: 43, ulysses: 75, crew: 73, giantStand: 300,
@@ -295,31 +297,45 @@ const PROP_H = { bowl: 16, sword: 12, stakeW: 84 };
 
 const CREW_N = 12;                    // twelve enter; the meals do the counting
 
-/* ---- THE STRIPS: tools/ody/strips.json, transcribed verbatim ----------- *
- * Build-gated cells (identity/scale/anchors/action; the lap asserts the
- * registry sha over the shipped bytes) riding the room.js KING.walk
- * machinery via setkit placeStrip. Frame sources per STRIPS.md: cumulative
- * DISTANCE for the walks (an eased profile cannot skate the feet),
- * THE BLINDING CLOCK for the auger twist. pxPerFrame is half a stride at
- * 43 px/m: the giant's 2.6 m stride -> 112 px -> 56; the crew's 0.75 m ->
- * 32 px -> 16; the ovine 0.6 m -> 26 px -> 13. The ram strip is AUTHORED
- * FACING LEFT (the flockOut stream's own way — no flip on the escape);
- * every other strip is authored facing right. */
+/* ---- THE STRIPS: the shipped registry, READ, not transcribed ----------- *
+ * strips.js is generated verbatim from tools/ody/strips.json (build-gated
+ * cells: identity/scale/anchors/action; the lap asserts the registry sha
+ * over the shipped bytes AND the shipped module against the registry), so
+ * n / cell / srcH / anchors are the registry's own numbers — the n=4 -> n=10
+ * seedance recut changed all four and no set may hardcode them again. The
+ * machinery is room.js KING.walk via setkit placeStrip; frame sources per
+ * STRIPS.md: cumulative DISTANCE for the walks (an eased profile cannot
+ * skate the feet), THE BLINDING CLOCK for the auger twist. pxPerFrame is
+ * the King law read off each strip (setkit stripPxPerFrame: stride / (n/2))
+ * at 43 px/m: the giant's 2.6 m stride -> 111.8 px -> 22.4 over 10 cells;
+ * the crew's 0.75 m -> 32.3 px -> 6.45; the ovine 0.6 m -> 25.8 px -> 5.16.
+ * The ram strip is AUTHORED FACING LEFT (the flockOut stream's own way — no
+ * flip on the escape); every other strip is authored facing right. */
 const STRIP = {
-  giant: { file: 'actor/polyphemus-walk-strip.png', cell: [317, 542], n: 4,
-           srcH: 536.0, anchors: [134.5, 127.5, 135.5, 125.0], pxPerFrame: 56 },
-  crew:  { file: 'actor/crew-walk-strip.png', cell: [247, 441], n: 4,
-           srcH: 432.0, anchors: [136.5, 125.5, 134.0, 123.0], pxPerFrame: 16 },
-  twist: { file: 'actor/stake-twist-strip.png', cell: [349, 350], n: 4,
-           srcH: 341.0, anchors: [136.0, 130.0, 115.0, 98.0], period: 1.1 },
-  ram:   { file: 'actor/ram-walk-strip.png', cell: [294, 242], n: 4,
-           srcH: 236.0, anchors: [166.0, 172.5, 183.0, 173.0], pxPerFrame: 13 },
+  giant: { ...STRIPS['polyphemus-walk'],
+           pxPerFrame: stripPxPerFrame(STRIPS['polyphemus-walk'], 2.6 * SCALE.pxPerM) },
+  crew:  { ...STRIPS['crew-walk'],
+           pxPerFrame: stripPxPerFrame(STRIPS['crew-walk'], 0.75 * SCALE.pxPerM) },
+  twist: { ...STRIPS['stake-twist'], period: 1.1 },   // the verb's own clock:
+                                                      // n frames / 1.1 s, monotone
+  ram:   { ...STRIPS['ram-walk'],
+           pxPerFrame: stripPxPerFrame(STRIPS['ram-walk'], 0.6 * SCALE.pxPerM) },
 };
 /* the stride is MEASURED off the pose the frame actually moved (seg and
    damp alike); a teleport (fade-through reland, a settled snap) is not a
    stride, and a SEIZED man is dragged, not walking */
 const STRIDE_MIN_SPEED = 6;           // plate px/s
 const STRIDE_TELEPORT = 40;           // plate px in one step is a re-stage
+/* HONEST GROUND SPEED (the anti-skate law's other half): the planted foot
+   glides at ground speed by construction (each frame's anchor is pinned on
+   the moving mark), so ground speed IS the skate and it is bounded like one:
+   a man walks 2.0 m/s at most (86 px/s here — the damp's 2.2 x 250 px
+   opening step is a 12.8 m/s sprint no feet perform), and the giant's
+   2.6 m stride at his unhurried shepherd's cadence spends 1.8 m/s (78 px/s)
+   — his strip walks are ARC-PARAMETERISED against this cap (stepGiant), so
+   a short seg cannot make him sprint; the seg simply hands him the floor a
+   beat longer. */
+const WALK_V = { man: 2.0 * SCALE.pxPerM, giant: 1.8 * SCALE.pxPerM };
 
 /* place a cut by its measured pin. Returns the drawn box for the snapshot. */
 function pinCut(node, art, at, hPx, { flip = false, bob = 0, rot = 0 } = {}) {
@@ -951,12 +967,16 @@ export class CaveSet {
       G.pose = endPose; G.x = end[0]; G.y = end[1]; G.walk = null;
       return;
     }
-    /* dist/lx/ly are the STRIP's gait clock (frame = travelled / pxPerFrame),
-       zeroed at the path head so a walk always starts on frame 0 */
+    /* s is the STRIP's gait clock (frame = s / pxPerFrame), zeroed at the
+       path head so a walk always starts on frame 0; len/vmax are the honest
+       ground-speed law's (WALK_V.giant — the grope is a blind hand-over-hand
+       shuffle on its own eased clock, not a stride: no cap, no strip) */
+    const grope = path === PATH.giantGrope;
     G.walk = { path, t0: this.state.t, dur, endPose,
-               dist: 0, lx: path[0][0], ly: path[0][1] };
+               s: 0, len: pathLen(path),
+               vmax: grope ? Infinity : WALK_V.giant };
     G.x = path[0][0]; G.y = path[0][1];
-    G.pose = path === PATH.giantGrope ? 'grope' : 'stand';
+    G.pose = grope ? 'grope' : 'stand';
   }
 
   /** The pantomimes the unit list names (t0 already rewound when settled):
@@ -1307,19 +1327,22 @@ export class CaveSet {
     const seg = S.seg;
     const segK = seg ? clamp01((t - seg.t0) / seg.dur) : null;
 
-    /* the walks (paths swept clear of the hearth). Distance accumulates
-       along the eased path — the strip's frame source (STRIPS.md: distance
-       drives the frame, not time, so the ease cannot skate the feet). */
+    /* the walks (paths swept clear of the hearth), ARC-PARAMETERISED against
+       the honest ground speed: the eased profile ASKS for an arc length, the
+       gait GRANTS at most vmax x dt of it — the planted foot glides at
+       ground speed by construction, so the cap IS the anti-skate law, and a
+       short seg cannot make a 7 m giant sprint. The arc `s` is the strip's
+       own frame source (distance drives the frame, not time). The walk ends
+       when the PATH is spent, not the clock: a capped walk hands back a beat
+       late instead of popping to the end. */
     if (G.walk) {
-      const k = clamp01((t - G.walk.t0) / G.walk.dur);
-      const p = alongPath(G.walk.path, easeInOut(k));
-      if (G.walk.dist != null) {
-        G.walk.dist += Math.hypot(p[0] - G.walk.lx, p[1] - G.walk.ly);
-        G.walk.lx = p[0]; G.walk.ly = p[1];
-      }
+      const W = G.walk;
+      const k = clamp01((t - W.t0) / W.dur);
+      W.s = Math.min(easeInOut(k) * W.len, W.s + W.vmax * dt);
+      const p = alongPathArc(W.path, W.s);
       G.x = p[0]; G.y = p[1];
-      if (k >= 1) {
-        const end = G.walk.endPose;
+      if (k >= 1 && W.s >= W.len - 1e-6) {
+        const end = W.endPose;
         G.walk = null;
         if (end === 'away') G.pose = 'away';
         else this.giantPose(end, null, true);
@@ -1356,8 +1379,9 @@ export class CaveSet {
          settles down among the sheep, a short eased slide in the ember dark */
       G.next = null;
       G.pose = 'sprawl';
-      G.walk = { path: [[G.x, G.y], SPRAWL.at], t0: t, dur: 1.2,
-                 endPose: 'sprawl' };
+      const slide = [[G.x, G.y], SPRAWL.at];      // a tip-over, not a stride:
+      G.walk = { path: slide, t0: t, dur: 1.2,    // no cap, no strip
+                 endPose: 'sprawl', s: 0, len: pathLen(slide), vmax: Infinity };
     }
 
     /* the pours' pantomime (O.7): each drain is the drink pose; the sway
@@ -1383,11 +1407,11 @@ export class CaveSet {
        flock-out exit, the flock-in return, all on the one gait clock. The
        swap to the arrival pose lands ON the landing frame (walk end above).
        Facing follows the path's own direction (authored facing right). */
-    const walking = !!(G.walk && G.pose === 'stand' && G.walk.dist != null);
+    const walking = !!(G.walk && G.pose === 'stand');
     this.giantWalking = walking;
     if (walking) {
       const W = G.walk;
-      G.frame = Math.floor(W.dist / STRIP.giant.pxPerFrame) % STRIP.giant.n;
+      G.frame = Math.floor(W.s / STRIP.giant.pxPerFrame) % STRIP.giant.n;
       G.flip = W.path[W.path.length - 1][0] < W.path[0][0];
       const b = placeStrip(this.giantStripN, STRIP.giant, [G.x, G.y],
                            GIANT_H.stand, G.frame, { flip: G.flip });
@@ -1553,8 +1577,9 @@ export class CaveSet {
       if (P.op < 0.06) { P.x = W.at[0]; P.y = W.at[1]; }
       if (far && P.op >= 0.06) P.op = damp(P.op, 0, 5.0, dt);
       else {
-        P.x = damp(P.x, W.at[0], 2.2, dt);
-        P.y = damp(P.y, W.at[1], 2.2, dt);
+        /* the damp shapes the tail; the cap keeps the ground speed a
+           WALKING speed (WALK_V.man — the anti-skate law's own bound) */
+        walkToward(P, W.at[0], W.at[1], 2.2, WALK_V.man, dt);
         P.op = damp(P.op, W.vis, 4.0, dt);
       }
     }
