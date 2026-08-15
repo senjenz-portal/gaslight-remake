@@ -56,7 +56,7 @@
  * to step(). A settled act leaves the world at its END (WIRING §2).
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
-         emissives } from '../setkit.js';
+         emissives, placeStrip, stripProof } from '../setkit.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SCALE = { pxPerM: 11.3, ulysses: 20, crew: 19 };
@@ -148,13 +148,34 @@ const DIM_SCRIM = 0.45;              // the scrim's ceiling at full plate
  * anchor an isometric plate allows (WIRING §7). */
 const ART = {
   ulyssesStand: { file: 'actor/ulysses-stand.png', px: [316, 682], pin: [125, 676] },
-  ulyssesWalk:  { file: 'actor/ulysses-walk.png',  px: [304, 664], pin: [208, 658] },
   crewA:        { file: 'actor/crew-a-stand.png',  px: [266, 620], pin: [132, 614] },
   crewB:        { file: 'actor/crew-b-stand.png',  px: [276, 635], pin: [140, 629] },
   skin:         { file: 'actor/prop-wineskin.png', px: [622, 497], pin: [347, 491] },
 };
 const CREW_N = 12;                   // the twelve best (i-10); three of them are
                                      // the camp/council party before that
+
+/* ---- THE WALK STRIPS: tools/ody/strips.json, transcribed verbatim ------ *
+ * Build-gated cells (identity/scale/anchors/action; the lap asserts the
+ * registry sha over the shipped bytes). The pose-swap stride this set used
+ * to perform is upgraded: while a pose is actually COVERING GROUND — the
+ * wade, the council re-stage, the boarding line — the strip is the walk and
+ * the cut is the stand, never both (the room.js swap law). Frame is driven
+ * by CUMULATIVE DISTANCE, so the damp's eased speed profile cannot skate
+ * the feet; pxPerFrame is half a stride at this plate's 11.3 px/m
+ * (0.75 m stride -> 8.5 px -> 4.2; the crew's 19 px gait a touch shorter). */
+const STRIP = {
+  ulysses: { file: 'actor/ulysses-walk-strip.png', cell: [330, 591], n: 4,
+             srcH: 581.8, anchors: [204.5, 182.0, 154.0, 139.5] },
+  crew:    { file: 'actor/crew-walk-strip.png', cell: [247, 441], n: 4,
+             srcH: 432.0, anchors: [136.5, 125.5, 134.0, 123.0] },
+};
+const PX_PER_FRAME = { ulysses: 4.2, crew: 4.0 };
+/* a stride is MEASURED off the pose the frame actually moved (seg and damp
+   alike), never named by its cause; a teleport (fade-through reland, a
+   settled snap) is not a stride */
+const STRIDE_MIN_SPEED = 6;          // plate px/s — under it the damp tail stands
+const STRIDE_TELEPORT = 40;          // plate px in one step is a re-stage, not a step
 
 /* place a cut by its measured pin. Returns the drawn box for the snapshot. */
 function pinSprite(node, art, at, hPx, flip, bob) {
@@ -280,13 +301,21 @@ export class ShoreSet {
     /* ---- THE ACTORS (isolated, so the dim matrix is theirs alone) ---- */
     this.actors = el('div', 'actors', root);
     this.ulysses = img(ART.ulyssesStand.file, 'lyr', this.actors);
-    this.ulyssesWalk = img(ART.ulyssesWalk.file, 'lyr', this.actors);
-    this.ulyssesWalk.style.opacity = '0';
+    /* the WALK STRIP replaces the old single walk-pose cut: decoded at boot
+       via st.bitmap (room.js: the first walk frame never flashes white) */
+    this.uStripN = el('div', 'lyr walk', this.actors);
+    this.uStripN.style.backgroundImage = st.bitmap(STRIP.ulysses.file);
+    this.uStripN.style.opacity = '0';
     this.crew = [];
+    this.crewStripN = [];
     for (let i = 0; i < CREW_N; i++) {
       const node = img(i % 2 ? ART.crewB.file : ART.crewA.file, 'lyr', this.actors);
       node.style.opacity = '0';
       this.crew.push(node);
+      const w = el('div', 'lyr walk', this.actors);
+      w.style.backgroundImage = st.bitmap(STRIP.crew.file);
+      w.style.opacity = '0';
+      this.crewStripN.push(w);
     }
     /* the skin rides Ulysses' shoulder from i-10 on — drawn after him so the
        strap sits over the shoulder it hangs from. ~0.62 m of goatskin = 7 px. */
@@ -319,9 +348,12 @@ export class ShoreSet {
     };
     /* presentation pose per actor: where the cut IS, distinct from where the
        staging wants it. op 0 = off stage; an invisible actor snaps to its
-       next mark instead of sliding to it. */
-    this.pose = { u: { x: 0, y: 0, op: 0, flip: false } };
-    for (let i = 0; i < CREW_N; i++) this.pose['c' + i] = { x: 0, y: 0, op: 0, flip: false };
+       next mark instead of sliding to it. The stride fields (dist/lx/ly/
+       walking/face/frame) are the strip driver's — trackStride owns them. */
+    const pose = () => ({ x: 0, y: 0, op: 0, flip: false, walking: false,
+                          dist: 0, lx: null, ly: null, face: 1, frame: 0 });
+    this.pose = { u: pose() };
+    for (let i = 0; i < CREW_N; i++) this.pose['c' + i] = pose();
     if (this.skinNode) this.skinNode.style.opacity = '0';
   }
 
@@ -549,7 +581,7 @@ export class ShoreSet {
         put('u', WADE.u, want.u.at);
         for (let i = 0; i < 3; i++) put('c' + i, WADE.crew[i], want['c' + i].at);
         for (let i = 3; i < CREW_N; i++) this.pose['c' + i].op = 0;
-        this.paintTroupe(t, amb, true);
+        this.paintTroupe(t, dt, amb);
         return;
       } else if (seg.name === 'hunt') {
         /* two men dash out after the goats; everyone else holds the camp.
@@ -594,24 +626,46 @@ export class ShoreSet {
       }
     }
     if (S.snap) S.snap = false;
-    this.paintTroupe(t, amb, false);
+    this.paintTroupe(t, dt, amb);
   }
 
-  /** write every cut: pin-anchored, breathing, walk pose while moving */
-  paintTroupe(t, amb, wading) {
-    const S = this.state;
-    const lay = STAGE[S.staging] || STAGE.empty;
+  /** THE STRIDE, measured: the pose moved this frame at walking speed, or it
+   *  stands. Distance accumulates while the stride runs (the frame source),
+   *  the facing follows the travel, and a teleport resets the gait clock. */
+  trackStride(P, dt) {
+    const dd = P.lx === null ? 0 : Math.hypot(P.x - P.lx, P.y - P.ly);
+    const stride = P.op > 0.3 && dd < STRIDE_TELEPORT &&
+                   dd / Math.max(dt, 1e-6) > STRIDE_MIN_SPEED;
+    if (stride) {
+      P.dist += dd;
+      if (Math.abs(P.x - P.lx) > 0.01) P.face = P.x > P.lx ? 1 : -1;
+    } else if (!(P.op > 0.3) || dd >= STRIDE_TELEPORT) {
+      P.dist = 0;
+    }
+    P.walking = stride;
+    P.lx = P.x; P.ly = P.y;
+  }
 
-    /* Ulysses: the walk cut shows while he is actually covering ground —
-       there is no strip at this scale, the pose swap IS the stride */
+  /** write every cut: pin-anchored, breathing, THE STRIP while striding —
+   *  strip and cut are never both visible (the room.js swap law) */
+  paintTroupe(t, dt, amb) {
+    const S = this.state;
     const U = this.pose.u;
-    const goal = lay.u ? lay.u.at : [U.x, U.y];
-    const moving = wading || (U.op > 0.5 && Math.hypot(U.x - goal[0], U.y - goal[1]) > 3);
+    this.trackStride(U, dt);
+    for (let i = 0; i < CREW_N; i++) this.trackStride(this.pose['c' + i], dt);
+
+    const moving = U.walking;
     const bobU = amb * 0.4 * Math.sin(2 * Math.PI * t / 4.6);
     pinSprite(this.ulysses, ART.ulyssesStand, [U.x, U.y], SCALE.ulysses, U.flip, bobU);
-    pinSprite(this.ulyssesWalk, ART.ulyssesWalk, [U.x, U.y], SCALE.ulysses, U.flip, bobU);
     this.ulysses.style.opacity = (moving ? 0 : U.op).toFixed(3);
-    this.ulyssesWalk.style.opacity = (moving ? U.op : 0).toFixed(3);
+    if (moving) {
+      U.frame = Math.floor(U.dist / PX_PER_FRAME.ulysses) % STRIP.ulysses.n;
+      placeStrip(this.uStripN, STRIP.ulysses, [U.x, U.y], SCALE.ulysses,
+                 U.frame, { flip: U.face < 0 });
+      this.uStripN.style.opacity = U.op.toFixed(3);
+    } else {
+      this.uStripN.style.opacity = '0';
+    }
     this.uMoving = moving;
 
     for (let i = 0; i < CREW_N; i++) {
@@ -619,7 +673,16 @@ export class ShoreSet {
       const bob = amb * 0.35 * Math.sin(2 * Math.PI * t / 5.1 + i * 1.3);
       pinSprite(this.crew[i], i % 2 ? ART.crewB : ART.crewA,
                 [P.x, P.y], SCALE.crew, P.flip, bob);
-      this.crew[i].style.opacity = P.op.toFixed(3);
+      this.crew[i].style.opacity = (P.walking ? 0 : P.op).toFixed(3);
+      if (P.walking) {
+        /* variety law: per-man frame phase (+i), flip from his own travel */
+        P.frame = (Math.floor(P.dist / PX_PER_FRAME.crew) + i) % STRIP.crew.n;
+        placeStrip(this.crewStripN[i], STRIP.crew, [P.x, P.y], SCALE.crew,
+                   P.frame, { flip: P.face < 0 });
+        this.crewStripN[i].style.opacity = P.op.toFixed(3);
+      } else {
+        this.crewStripN[i].style.opacity = '0';
+      }
     }
 
     /* the skin on his shoulder: hangs off his own pose, so it cannot drift
@@ -702,7 +765,7 @@ export class ShoreSet {
       cast: {
         ulysses: { mark: [+this.pose.u.x.toFixed(1), +this.pose.u.y.toFixed(1)],
                    op: +this.pose.u.op.toFixed(3), moving: !!this.uMoving,
-                   box: this.drawnBox(this.uMoving ? this.ulyssesWalk : this.ulysses) },
+                   box: this.drawnBox(this.uMoving ? this.uStripN : this.ulysses) },
         skin: { shouldered: S.skin,
                 box: this.skinBox ? this.drawnBox(this.skinNode) : null },
         crew: this.crew.map((node, i) => ({
@@ -712,6 +775,22 @@ export class ShoreSet {
         })),
         onStage: 1 * (this.pose.u.op > 0.5) +
                  this.crew.reduce((n, _, i) => n + (this.pose['c' + i].op > 0.5 ? 1 : 0), 0),
+      },
+      /* THE STRIP PROOF (the sherlock walk law): per walking actor, the frame
+         and the foot measured off the RENDERED box vs the pose's own mark —
+         the lap holds cycling (>= 2 frames) and |dx|,|dy| against these */
+      strips: {
+        ulysses: this.pose.u.walking
+          ? stripProof(this.st, this.uStripN, STRIP.ulysses, this.pose.u.frame,
+                       [this.pose.u.x, this.pose.u.y], this.pose.u.face < 0)
+          : null,
+        crew: this.crew.map((_, i) => {
+          const P = this.pose['c' + i];
+          return P.walking
+            ? stripProof(this.st, this.crewStripN[i], STRIP.crew, P.frame,
+                         [P.x, P.y], P.face < 0)
+            : null;
+        }),
       },
       /* the inset and THE DIM's honest deviation (see header) */
       inset: { wineskin: +((this.st.state.plate || {}).wineskin || 0).toFixed(3) },

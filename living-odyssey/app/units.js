@@ -599,7 +599,7 @@ export const UNITS = [
     text: 'Then, when I had got as far out as my voice would reach, I began to jeer at the Cyclops.',
     speaker: '', verb: 'target', target: 'cyclops', gateAct: 'jeer',
     gateSfx: 'shout', cue: 'click the Cyclops · jeer at him',
-    focus: 'establishing', page: 5, beat: 6, set: 'sea', clear: true,
+    focus: 'gate-wide', page: 5, beat: 6, set: 'sea', clear: true,
     bed: 'sea', act: 'establish' },
 
   /* 6.2 — fires on gate 1 — whip to the stern, arm flung at the cliff; the blinded head
@@ -616,7 +616,7 @@ export const UNITS = [
    */
   { id: 'ody-vi-03-rock1', key: 'rock1',
     text: 'He got more and more furious as he heard me, so he tore the top from off a high mountain…',
-    speaker: '', verb: 'clock', at: 7.0, wait: 'rock1', focus: 'establishing',
+    speaker: '', verb: 'clock', at: 7.0, wait: 'rock1', focus: 'gate-wide',
     page: 5, beat: 6, set: 'sea', clear: true, sfx: 'rock-tear' },
 
   /* 6.4 — double distance — headland layer scaled back; THE MEN turn from their oars.

@@ -54,6 +54,55 @@ export function placeSprite(node, art, at, h, { frame = 0, flip = false, scale =
   return { w, h: hh, footY };
 }
 
+/**
+ * A SPRITE STRIP placed by THE ANCHOR LAW (room.js KING.walk, the proven
+ * machinery): `anchors[frame]` is the centre of the FOOT SPAN in each cell's
+ * bottom 20 alpha rows, measured per frame off the cell's own alpha —
+ * anchoring each frame on its own feet is what stops a cell-to-cell
+ * difference in where the feet sit from reading as a lurch. `srcH` is the
+ * foot-baseline height inside a cell, so `ws = hPx / srcH` is scale-free.
+ * The transform-origin sits ON the foot anchor, so flip (a strip authored
+ * facing one way) cannot move the feet by construction. The FRAME is the
+ * caller's law: cumulative DISTANCE for a walk (an eased speed profile can
+ * never skate the feet), the verb's own clock for a loop (oars, the auger).
+ *
+ *   strip  { cell:[w,h], n, srcH, anchors }   — tools/ody/strips.json verbatim
+ *   at     [x, y] in plate px — where the FEET are
+ *   hPx    drawn foot-baseline height in plate px
+ */
+export function placeStrip(node, strip, at, hPx, frame, { flip = false } = {}) {
+  const ws = hPx / strip.srcH;
+  const cw = strip.cell[0] * ws, ch = strip.cell[1] * ws;
+  const ax = strip.anchors[frame] * ws;
+  node.style.left = (at[0] - ax).toFixed(2) + 'px';
+  node.style.top = (at[1] - hPx).toFixed(2) + 'px';
+  node.style.width = cw.toFixed(2) + 'px';
+  node.style.height = ch.toFixed(2) + 'px';
+  node.style.backgroundSize = `${(cw * strip.n).toFixed(2)}px ${ch.toFixed(2)}px`;
+  node.style.backgroundPosition = `${(-frame * cw).toFixed(2)}px 0px`;
+  node.style.transformOrigin = `${ax.toFixed(2)}px ${hPx.toFixed(2)}px`;
+  node.style.transform = flip ? 'scaleX(-1)' : 'none';
+  return { w: cw, h: ch, ax };
+}
+
+/**
+ * The strip PROOF (the sherlock verifier's law: "a wrong transform cannot
+ * describe itself correctly") — the foot measured off the RENDERED box
+ * (getBoundingClientRect -> toPlate) against the mark the paint was asked
+ * for. Returns { frame, foot, dx, dy } or null while the node is dark.
+ */
+export function stripProof(st, node, strip, frame, at, flip) {
+  const r = node.getBoundingClientRect();
+  if (!r.width || !r.height) return null;
+  const a = st.toPlate(r.left, r.top), b = st.toPlate(r.right, r.bottom);
+  const axk = strip.anchors[frame] / strip.cell[0];
+  const fx = a.x + (b.x - a.x) * (flip ? 1 - axk : axk);
+  const fy = a.y + (b.y - a.y) * (strip.srcH / strip.cell[1]);
+  return { frame,
+           foot: [+fx.toFixed(2), +fy.toFixed(2)],
+           dx: +(fx - at[0]).toFixed(2), dy: +(fy - at[1]).toFixed(2) };
+}
+
 /** A polyline floor: y where a foot at plate-x lands. Sets carry their own. */
 export function floorY(points, x) {
   if (x <= points[0][0]) return points[0][1];
