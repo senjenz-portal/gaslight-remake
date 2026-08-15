@@ -1,0 +1,8 @@
+[
+{
+ "id": "plate-door-darker",
+ "image": "/Users/samz/Documents/gaslight-remake/assets/plates/beat1/plate-door.png",
+ "out":   "/Users/samz/Documents/gaslight-remake/assets/raw/beat1/plate-door-darker.png",
+ "prompt": "EDIT THIS IMAGE. Change ONLY the brightness of the light inside the room. Add NOTHING. Remove NOTHING. Move NOTHING.\n\nTHE ONE CHANGE: the room's lamps are turned DOWN. The fire in the grate burns lower so its warm spill on the floorboards, the hearth and the surrounding wall shrinks and dims; the tall window's glow drops to a soft dull amber; the blue walls, the shelves, the desk, the armchair, the panelled door on the left and the floorboards all sink into deeper, cooler, darker shadow with much less warm bounce. The standing man in the purple gown and the seated man reading stay exactly where they are, same size, same shape, same pose, just dimmer and closer to silhouette while still readable. The tall panelled door on the left stays exactly where it is, same size, same shape, same panels, same brass knob, just dimmer.\n\nFORBIDDEN: do NOT add a fence, railing, balustrade, posts or any new object anywhere, especially not near the street gas lamp on the right; do NOT redraw or reshape the street gas lamp or its glow - it is outdoors and keeps its exact present brightness, shape and halo; do NOT change the shape of the fire, the grate, the window frame, its panes, or the door; do NOT resize, move or restyle any object; do NOT change the camera, framing or crop; do NOT change the deep navy background, the vignette, or the floating rock; do NOT change the low-poly faceted style.\n\nReturn the SAME picture, pixel-aligned, with only the interior lights turned down."
+}
+]

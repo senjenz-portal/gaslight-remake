@@ -1,0 +1,807 @@
+/**
+ * sets/sea.js — the strait under the Cyclops' cliff. Leaf 5, Beat VI, THE TAUNT.
+ *
+ * ONE MASTER (sea.jpg: night, moon, lit cave at the cliff base) and THE SHIP IS
+ * PAINTED INTO IT — the ledger's own yardstick is measured off the master's hull
+ * (sternpost waterline 495,462 -> bow tip 678,516). So the ship cannot translate
+ * a pixel, and the two washes and the glide-out are performed the only way a
+ * painted diorama can perform them: THE WHOLE WORLD MOVES. Everything this set
+ * paints — master, fog, emissives, actors, blooms — lives in one `world` group
+ * whose transform-origin is the ship's own deck centre (575,450), and distance
+ * is what distance is in an isometric diorama: SIZE. Driven back toward land,
+ * the world scales UP about the deck (the island looms); the oars bite and it
+ * scales down past rest (the headland "scaled back" — the ledger's receding-
+ * shore transform, "a transform, not an asset"); rock 2's wash shoves it
+ * further; sailedon glides it out. The crew stand ON the painted hull, inside
+ * the group, so they ride the transform and cannot slide off their marks. Every
+ * plate-px answer this set gives the engine (targetPlate, headPlate, focus
+ * centres, hit tests) is mapped through that same transform — worldMap() — so
+ * the gate ring stands on the giant wherever the recede has put him.
+ *
+ * THE TWO CLOCKS (ruseT law). `clock` units are timed against ruseT() zero:
+ *   zero 1  the JEER gate's resolution (gateAct `jeer`) — rock1's clock.
+ *           taunt's 6.0 s dwell spends under it and ody-vi-03 arrives at t+7.0.
+ *   zero 2  the CURSE act (ody-vi-11 entry) RE-ZEROES the clock — rock2's.
+ *           ody-vi-12 `heard` is gated at t+1.2. NOTE THE ENGINE'S OWN SHAPE:
+ *           curse is a CLICK unit, so `heard` enters on the reader's click (at
+ *           1.2 s earliest), and the engine fires nothing at the set on a clock
+ *           unit's entry. Rock 2 therefore rides the curse clock as a pure
+ *           function — the tear at t+3.0 — and for a slow reader the near-miss
+ *           punctuates the curse itself, which is what "the line's punctuation"
+ *           already means; `wait: rock2` still holds the page for the fast one.
+ *
+ * THE GATE, TWICE (G6). One target, `cyclops`, anchored on the VISIBLE giant's
+ * body centre (the sherlock lit-window rule): mark (860,210), body 89 px, so
+ * (860,168) — the ledger's own number — mapped through the world. The first
+ * click is the jeer; the second resolves OVER the men's still-lit plea and arms
+ * `myname`, the reader's hubris (O.12) — the set counts both resolutions and
+ * the snapshot says whether the name has been given.
+ *
+ * THE GIANT'S THREE POSES are acts of the clocks, crossfaded the way room-dim
+ * crossfades its plate: hurl during the two rock windows, curse with both arms
+ * to the firmament from the curse act until the second tear (the document-
+ * weight frame: sky darkened a stop by an authored veil, bed to near-silence),
+ * stand between and after.
+ *
+ * OPEN GAPS THIS SET DEGRADES ON, honestly (ledger objectLedger):
+ *   - sea dawn state: NO dawn master ships. `sea-dawn` is performed as the
+ *     night lights going out, the fog thinning, and one authored warm horizon
+ *     glow — a stand-in, stated in the snapshot as state 'sea-dawn'.
+ *   - island-beach return layer: NOT shipped, so seg `return-beach` performs
+ *     only what exists — the glide on, the cave fire left astern, the oars.
+ *     The driftwood altar and the flock ashore have no pixels to stand on.
+ *
+ * Every mark, lens, splash point and emissive below is tools/ody/ledger.json /
+ * layers-sea.json VERBATIM; actor pins are tools/ody/actors.json verbatim;
+ * actor heights are the stage proof's (tools/ody/stageproof_sea.py).
+ */
+import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp,
+         emissives, breathe } from '../setkit.js';
+
+/* ---- the ledger, transcribed ---------------------------------------- */
+const SHIP = {
+  sternTip: [495, 462], bowTip: [678, 516],
+  mastFoot: [578, 462], mastTop: [580, 350],
+  deckCentre: [575, 450],                   // the world transform's origin
+};
+const SPLASH1 = [468, 505];   // rock 1: ahead of the rudder, off the sternpost
+const SPLASH2 = [455, 540];   // rock 2: astern, nearer the camera — the near-miss
+const BOULDERS = [[850, 30], [1100, 170]];  // the ammunition, painted behind him
+const RELEASE = [852, 112];   // where the hurl lets go: the raised hands over the brow
+
+const MARKS = {
+  'clifftop-giant': [860, 210],
+  'stern-ulysses':  [518, 426],
+  'stern-rail':     [506, 406],
+  'rower-1n': [556, 444], 'rower-2n': [586, 455], 'rower-3n': [616, 466],
+  'rower-1f': [573, 430], 'rower-2f': [603, 441], 'rower-3f': [633, 452],
+};
+const ROWER_MARKS = ['rower-1f', 'rower-1n', 'rower-2f', 'rower-2n',
+                     'rower-3f', 'rower-3n'];   // ascending mark y = painter order
+
+/* the measured light (layers-sea.json emis, verbatim) */
+const EMIS = [
+  { id: 'moon',     at: [474, 242], r: 143, rgb: '223,240,255', a: 0.10, per: 9.5, amp: 0.18 },
+  { id: 'moonpath', at: [475, 356], r: 74,  rgb: '223,241,255', a: 0.09, per: 7.3, amp: 0.35 },
+  { id: 'cave',     at: [818, 457], r: 60,  rgb: '255,185,50',  a: 0.20, per: 3.2, amp: 0.55 },
+  { id: 'crag',     at: [820, 339], r: 90,  rgb: '255,185,50',  a: 0.10, per: 3.2, amp: 0.45 },
+];
+
+/* the measured layers (layers-sea.json), boxes and opacity ranges verbatim */
+const LAYER = {
+  fog:       { box: [225, 215, 732, 407], op: [0.45, 0.70], drift: 90, per: 23.0 },
+  bloomCave: { box: [634, 189, 265, 376], op: [0.20, 0.75], per: 3.2 },
+  bloomMoon: { box: [301,  69, 344, 344], op: [0.10, 0.28], per: 9.5 },
+};
+
+/* THE SCALE LAW: 12.7 px/m off the painted hull (15 m, 190.8 px tip-to-tip).
+ * ulysses 22 px, a seated rower 15 px, the giant's BODY 89 px on the brow —
+ * the arms-up cuts (hurl, curse) run 105 px TOTAL so the body still reads 89
+ * (the stage proof's own arithmetic). */
+const PX_PER_M = 12.7;
+const ULY_H = 22, ROWER_H = 15, GIANT_H = 89, GIANT_ARMS_H = 105;
+const SPLASH_H = 76;                        // a 6 m plume at 12.7 px/m
+
+/* the cuts, tools/ody/actors.json verbatim: [w,h], the foot PIN on the
+ * baseline. A cut hangs off its PIN, not off its box centre — the pin is the
+ * measured foot, and anchoring anywhere else lets a re-crop move the feet. */
+const ART = {
+  crewRow:    { px: [781, 954],  pin: [75, 948] },
+  ulyStand:   { px: [316, 682],  pin: [125, 676] },
+  ulyTaunt:   { px: [294, 680],  pin: [43, 674] },   // faces the wrong way raw;
+                                                     // flipped at the stern (proof)
+  giantStand: { px: [674, 1244], pin: [473, 1238] },
+  giantHurl:  { px: [640, 1286], pin: [57, 1280] },
+  giantCurse: { px: [719, 1287], pin: [440, 1281] },
+  rock:       { px: [776, 568],  pin: [225, 562] },
+  splash:     { px: [510, 1127], pin: [253, 1121] },
+};
+
+/* ---- THE TWO ROCK CLOCKS, in seconds on their own ruseT zero ---------- *
+ * ROCK1 zero = the jeer gate. The unit itself arrives at 7.0 (units.js `at`),
+ * with the tear; done at 18.8 — the "~12 s clock" measured from the unit.
+ * ROCK2 zero = the curse act. `heard` is gated at 1.2; the tear waits until
+ * 3.0 so the curse's arms-up document frame holds a beat before the answer. */
+const ROCK1 = { tear: 7.0, loose: 8.6, land: 10.8,
+                wash: [10.8, 14.4], oars: [14.4, 18.2], done: 18.8 };
+const ROCK2 = { tear: 3.0, loose: 4.6, land: 6.8,
+                wash: [6.8, 11.4], done: 12.2 };
+const DAWN_GLIDE = 8.0;       // sailedon's own dwell: the glide out under it
+
+/* THE WORLD'S FOUR STATIONS, as scale about the deck. 1.0 is "as far out as my
+ * voice would reach". The wash looms the island to 1.07 (driven BACK — "drove
+ * us back again to the mainland"), the oars pull out to 0.86 (twice as far,
+ * the headland scaled back), rock 2's wash drives on to 0.76, and the return
+ * seg + the dawn glide take it to ~0.56 as the page turns to the card. */
+const WORLD = { back: 0.07, out: 0.21, onward: 0.10, seg: 0.06, dawn: 0.14 };
+
+const FOCUS = {
+  /* the ledger's sea lenses, verbatim. The wide is the two-plane frame the
+     FIRST gate keeps, so the pleading men and the target share it. Close-lens
+     CENTRES are mapped through the world transform every frame (the subject
+     cannot leave its own lens when the shore recedes); their k stays the
+     ledger's, so the recede is allowed to read in every frame.
+
+     THE RECEDE'S OWN LENSES (round 3, sherlock F2). The paint of this master
+     is concentrated — cliff right, ship mid-left, open navy elsewhere — and
+     once the washes have scaled the world down (0.86 by the second gate, 0.70
+     by the ram, ~0.69 under the closing turn's cover) the k=1 wide frames
+     more void and dead water than painting: measured 28-36% dead band on
+     defy/heard/ram/sailedon against the 22% law. So every unit that plays
+     AFTER the first wash composes INSIDE the painting at its own k:
+       strait    the two-plane frame tightened to the painted strait — stern,
+                 rowers, splash water and the whole cursing giant in one
+                 window (x 233..937, y 138..522 at rest), so the second gate
+                 still holds pleaders and target together, and rock 2's
+                 splash point (455,540) stays in frame through the wash;
+       homeward  the row home — ship centred, the cave fire falling astern;
+       moonpath  sailedon/the end: follows the ship toward the painted
+                 moonpath and moon (475,356 / 474,242), not the open water —
+                 it is the frame the closing cover rises over, composed for
+                 the world at ~0.69 of its rest scale. */
+  establishing: [704, 384, 1.00],
+  stern:        [530, 430, 2.80],
+  'ship-deck':  [575, 450, 2.60],
+  clifftop:     [870, 195, 2.80],
+  curse:        [870, 180, 2.20],
+  strait:       [585, 330, 2.00],
+  homeward:     [575, 380, 2.60],
+  moonpath:     [590, 340, 3.20],
+};
+
+/* the G6 anchor: the VISIBLE giant's body centre, the ledger's (860,168) —
+ * mark y 210 minus half the 89 px body, kept as the ledger wrote it */
+const TARGETS = { cyclops: { at: [860, 168], r: 52 } };
+
+/* No relight plate ships for the sea and no inset ever rises on this leaf
+ * (static insets = {}), so the matrix is never exercised — but the surface
+ * requires one, and this one is DERIVED, not guessed: the void model's own
+ * per-channel constants (layers-sea.json analysis.void: 54.93 / 68.18 / 95.36)
+ * normalised to blue. A dim over this plate keeps the navy night's balance. */
+const DIM_MATRIX = [0.576, 0.715, 1.0];
+
+const bump = (k) => Math.sin(Math.PI * clamp01(k));
+
+export class SeaSet {
+  static id = 'sea';
+  static insets = {};                 // Beat VI raises none — the inset was Beat I's
+  static beds = ['sea'];
+
+  constructor(root, st) {
+    this.st = st;
+    this.root = root;
+    this.FOCUS = FOCUS;
+    this.dimMatrix = DIM_MATRIX;
+    const img = (f, c, p) => st.img(f, c, p || root);
+
+    /* ---- THE WORLD GROUP: everything the recede moves ---------------- *
+     * One div, transform-origin at the painted deck centre. The master, the
+     * fog, the measured lights, the actors and the blooms all ride it; the
+     * curse veil and the dawn glow stand OUTSIDE it, because the sky is the
+     * page's, not the diorama's. */
+    this.world = el('div', 'lyr world', root);
+    box(this.world, 0, 0, PLATE.w, PLATE.h);
+    this.world.style.transformOrigin =
+      `${SHIP.deckCentre[0]}px ${SHIP.deckCentre[1]}px`;
+
+    /* ---- the one master (layers-sea.json drawOrder) ------------------- */
+    this.base = img('set/sea/sea.jpg', 'lyr plate', this.world);
+    box(this.base, 0, 0, PLATE.w, PLATE.h);
+
+    /* the sea breath — screen-blended, drifting, feathered by its own alpha */
+    this.fog = img('set/sea/sea-fog.png', 'lyr', this.world);
+    box(this.fog, ...LAYER.fog.box);
+    this.fog.style.mixBlendMode = 'screen';
+
+    /* the measured lights breathe (moon + one fire: cave and crag share a clock) */
+    this.emis = emissives(EMIS, this.world);
+
+    /* ---- THE ACTORS (isolated; painter order is ascending mark y) ----- */
+    this.actors = el('div', 'actors', this.world);
+
+    // the blinded giant on the brow: three poses stacked, crossfaded like a
+    // plate state — the mark never moves, only the picture over it
+    this.giant = {
+      stand: img('actor/polyphemus-stand.png', 'lyr', this.actors),
+      hurl:  img('actor/polyphemus-hurl.png',  'lyr', this.actors),
+      curse: img('actor/polyphemus-curse.png', 'lyr', this.actors),
+    };
+    this.pinAt(this.giant.stand, ART.giantStand, MARKS['clifftop-giant'], GIANT_H);
+    this.pinAt(this.giant.hurl,  ART.giantHurl,  MARKS['clifftop-giant'], GIANT_ARMS_H);
+    this.pinAt(this.giant.curse, ART.giantCurse, MARKS['clifftop-giant'], GIANT_ARMS_H);
+    for (const e of [this.giant.hurl, this.giant.curse]) e.style.opacity = '0';
+
+    // ulysses at the stern: stand and taunt stacked on one moving mark. The
+    // taunt cut is FLIPPED — mirrored about its own pin — so the flung arm
+    // points at the cliff (the stage proof's own mount).
+    this.uly = {
+      stand: img('actor/ulysses-stand.png', 'lyr', this.actors),
+      taunt: img('actor/ulysses-taunt.png', 'lyr', this.actors),
+    };
+    this.pinAt(this.uly.stand, ART.ulyStand, MARKS['stern-ulysses'], ULY_H);
+    this.pinAt(this.uly.taunt, ART.ulyTaunt, MARKS['stern-ulysses'], ULY_H, true);
+    this.uly.taunt.style.opacity = '0';
+
+    /* the six survivors at the oars — one cut, DOUBLED across the two files
+       (three marks near, three far), 15 px seated at the ledger's rower marks */
+    this.rowers = ROWER_MARKS.map((m) => {
+      const e = img('actor/crew-row.png', 'lyr', this.actors);
+      this.pinAt(e, ART.crewRow, MARKS[m], ROWER_H);
+      return { mark: m, el: e };
+    });
+
+    // the two rocks are ONE prop (their windows never overlap), and so is the
+    // splash; both born at fire time zero-opacity and driven by the clocks
+    this.rock = img('actor/prop-rock.png', 'lyr', this.actors);
+    this.rock.style.opacity = '0';
+    this.splash = img('actor/prop-splash.png', 'lyr', this.actors);
+    this.splash.style.opacity = '0';
+
+    /* ---- the blooms go OVER the actors (drawOrder law), screen-blended,
+     * OUTSIDE the isolated group or they composite to black rectangles ---- */
+    this.bloomCave = img('set/sea/sea-bloom-cave.png', 'lyr', this.world);
+    box(this.bloomCave, ...LAYER.bloomCave.box);
+    this.bloomCave.style.mixBlendMode = 'screen';
+    this.bloomMoon = img('set/sea/sea-bloom-moon.png', 'lyr', this.world);
+    box(this.bloomMoon, ...LAYER.bloomMoon.box);
+    this.bloomMoon.style.mixBlendMode = 'screen';
+
+    /* ---- the sky, which is the page's --------------------------------- *
+     * The curse veil: "sky darkened a stop" for the document-weight frame.
+     * The dawn glow: the missing dawn master's stated stand-in — one warm
+     * authored light on the horizon while the night lights go out. */
+    this.veil = el('div', 'lyr', root);
+    box(this.veil, 0, 0, PLATE.w, PLATE.h);
+    this.veil.style.background = 'rgba(4,6,14,1)';
+    this.veil.style.opacity = '0';
+    this.dawnGlow = el('div', 'emis', root);
+    box(this.dawnGlow, 940, 100, 468, 520);
+    this.dawnGlow.style.background =
+      'radial-gradient(ellipse at 62% 45%,rgba(255,196,128,.34) 0%,' +
+      'rgba(255,170,96,.14) 42%,rgba(255,150,80,0) 74%)';
+    this.dawnGlow.style.opacity = '0';
+
+    this.reset();
+  }
+
+  /** A cut hung off its actors.json PIN: left/top so the pin lands on the
+   *  mark, transform-origin ON the pin so flip and sway cannot move the feet. */
+  pinAt(node, a, at, h, flip = false) {
+    const k = h / a.px[1];
+    box(node, at[0] - a.pin[0] * k, at[1] - a.pin[1] * k, a.px[0] * k, a.px[1] * k);
+    node.style.transformOrigin =
+      `${(a.pin[0] * k).toFixed(2)}px ${(a.pin[1] * k).toFixed(2)}px`;
+    if (flip) node.style.transform = 'scaleX(-1)';
+    return k;
+  }
+
+  /** The world as ody-vi-01 finds it: ship at voice's reach, oars shipped,
+   *  the giant standing dark on the brow, no clock running. */
+  reset() {
+    this.state = {
+      t: this.state ? this.state.t : 0,
+      jeer0: -1e9, curse0: -1e9, dawn0: -1e9,       // the three timestamps
+      seg: null, segT0: -1e9, segDur: 8.0,          // return-beach, once run
+      resolutions: 0, myname: false,                // G6 x2; the hubris armed
+      uly: { at: 'stern-ulysses', from: 'stern-ulysses',
+             to: 'stern-ulysses', t0: -1e9, dur: 0.7, pose: 'stand' },
+      giantPose: 'stand',
+      k: { hurl: 0, curse: 0, taunt: 0, veil: 0, dawn: 0 },   // the crossfades
+    };
+    this._wk = 1; this._wdx = 0; this._wdy = 0;     // the world transform, at rest
+  }
+
+  /* ---- the two clocks -------------------------------------------------- */
+  jeerT()  { const d = this.state.t - this.state.jeer0;  return this.state.jeer0  > -1e8 && d >= 0 ? d : null; }
+  curseT() { const d = this.state.t - this.state.curse0; return this.state.curse0 > -1e8 && d >= 0 ? d : null; }
+  dawnT()  { const d = this.state.t - this.state.dawn0;  return this.state.dawn0  > -1e8 && d >= 0 ? d : null; }
+
+  /** The beat-local clock `verb:'clock'` units are timed against. The curse
+   *  RE-ZEROES it — ody-vi-12's `at: 1.2` is 1.2 s past the curse, not past
+   *  the jeer — and until the jeer there is no clock at all. */
+  ruseT() {
+    const c = this.curseT();
+    if (c !== null) return c;
+    return this.jeerT();
+  }
+
+  /** Has the named thing happened ON STAGE yet (`wait:` units hold on this). */
+  waitDone(name) {
+    if (name === 'rock1') { const j = this.jeerT();  return j !== null && j >= ROCK1.done; }
+    if (name === 'rock2') { const c = this.curseT(); return c !== null && c >= ROCK2.done; }
+    return true;
+  }
+
+  /* ---- the world transform, and the map through it --------------------- *
+   * Everything below is a pure function of the three timestamps and t, so a
+   * replayed lap lands on the same pixels. Scale about the deck centre is the
+   * ONLY transform under which two things painted into one plate can change
+   * distance: nearer is bigger, and the ship — the origin — holds station. */
+  worldPose(t, amb) {
+    const j = this.jeerT(), c = this.curseT(), d = this.dawnT();
+    let k = 1, dx = 0;
+    if (j !== null) {
+      const back = easeOut(clamp01((j - ROCK1.land) / 1.1));
+      const out = easeInOut(clamp01(
+        (j - ROCK1.oars[0]) / (ROCK1.oars[1] - ROCK1.oars[0])));
+      k += WORLD.back * back - WORLD.out * out;   // 1 -> 1.07 -> 0.86
+      dx += 30 * bump((j - ROCK1.land) / 3.4);    // the shove shoreward
+    }
+    if (c !== null) {
+      const on = easeInOut(clamp01(
+        (c - ROCK2.wash[0]) / (ROCK2.wash[1] - ROCK2.wash[0])));
+      k -= WORLD.onward * on;                     // -> 0.76, driven onward
+      dx -= 24 * bump((c - ROCK2.land) / 3.0);    // the shove seaward
+    }
+    if (this.state.segT0 > -1e8) {                // the return home, kept for good
+      k -= WORLD.seg * easeInOut(clamp01((t - this.state.segT0) / this.state.segDur));
+    }
+    if (d !== null) {                             // sailedon: the glide out
+      const g = easeInOut(clamp01(d / DAWN_GLIDE));
+      k -= WORLD.dawn * g;
+      dx -= 46 * g;
+    }
+    // the swell: ambient only — a reader who asked for less motion keeps the
+    // story's washes and loses the bob
+    const dy = amb * 1.5 * Math.sin(2 * Math.PI * t / 6.1);
+    dx += amb * 1.0 * Math.sin(2 * Math.PI * t / 9.7);
+    return { k, dx, dy };
+  }
+
+  /** ledger plate px -> where the world transform has put them */
+  worldMap(p) {
+    const o = SHIP.deckCentre;
+    return [o[0] + (p[0] - o[0]) * this._wk + this._wdx,
+            o[1] + (p[1] - o[1]) * this._wk + this._wdy];
+  }
+
+  /* ---- the camera ------------------------------------------------------ */
+  focusPlate(name) {
+    const f = FOCUS[name] || FOCUS.establishing;
+    if (f[2] === 1.0) return f;         // the wide is the plate's own frame
+    const m = this.worldMap([f[0], f[1]]);
+    return [m[0], m[1], f[2]];
+  }
+
+  /* The camera stays the units': both rock flights play on the establishing
+   * wide the clock units themselves ask for, so no override is needed. */
+  camOverride() { return null; }
+
+  /* ---- what the reader can point at ------------------------------------ */
+  targetPlate(name) {
+    const T = TARGETS[name];
+    return T ? this.worldMap(T.at) : null;    // the anchor RIDES the actor's mark
+  }
+
+  /** The giant never leaves the brow on this leaf, so the gate's thing is on
+   *  frame from establish to the card — both resolutions find him lit. */
+  targetLive(name) { return name === 'cyclops'; }
+
+  targetHit(name, p) {
+    if (!this.targetLive(name)) return false;
+    const at = this.targetPlate(name);
+    const r = Math.max(34, TARGETS[name].r * this._wk);  // the body shrinks with
+    return Math.hypot(p.x - at[0], p.y - at[1]) <= r;    // the world; the ring too
+  }
+
+  headPlate(who) {
+    if (who === 'ULYSSES') {
+      const u = this.ulyAt();
+      return this.worldMap([u[0], u[1] - ULY_H * 0.92]);
+    }
+    if (who === 'POLYPHEMUS') {
+      const m = MARKS['clifftop-giant'];
+      return this.worldMap([m[0], m[1] - GIANT_H * 0.90]);
+    }
+    if (who === 'THE MEN') {
+      const m = MARKS['rower-2n'];                 // the near file's middle bench
+      return this.worldMap([m[0], m[1] - ROWER_H * 0.85]);
+    }
+    return null;
+  }
+
+  holdAnchor() { return null; }        // no hold verb plays on this leaf
+
+  /* ---- the verbs the units fire ----------------------------------------- *
+   * `settled` = a replayed jump: leave the world at the act's END — clocks
+   * dated past their own sequences so every wait answers and every wash has
+   * already washed. */
+  fire(act, settled = false) {
+    const S = this.state, t = S.t;
+    switch (act) {
+      case 'establish':
+        /* the arrival state, stated as an act: no clock, no rock flown, the
+           name not yet given. reset() and a fresh mount both land here. */
+        S.jeer0 = -1e9; S.curse0 = -1e9; S.dawn0 = -1e9;
+        S.seg = null; S.segT0 = -1e9;
+        S.resolutions = 0; S.myname = false;
+        S.uly = { at: 'stern-ulysses', from: 'stern-ulysses',
+                  to: 'stern-ulysses', t0: -1e9, dur: 0.7, pose: 'stand' };
+        break;
+      /* G6, FIRST RESOLUTION — the jeer starts rock1's clock. Settled, the
+         whole ~12 s has already run: the splash risen, the wash washed, the
+         oars bitten, the strait doubled. */
+      /* settled clocks are dated HALF A SECOND past their own done mark, not
+         onto it: `t - done` exactly is a float equality and waitDone lost it
+         by 3e-15 in the smoke test — the world lands at rest, provably past. */
+      case 'jeer':
+        S.jeer0 = settled ? t - ROCK1.done - 0.5 : t;
+        S.resolutions = Math.max(S.resolutions, 1);
+        S.uly.pose = 'taunt';
+        if (!settled) {
+          this.st.cue('splash', ROCK1.land);      // scheduled on the clock's own
+          this.st.cue('oars', ROCK1.oars[0]);     // numbers, at fire time
+        }
+        break;
+      /* G6, SECOND RESOLUTION — the click OVER the men's still-lit plea.
+         This one arms the name (O.12); the world consequence rides `curse`. */
+      case 'defy':
+        S.resolutions = 2; S.myname = true;
+        S.uly.pose = 'taunt';
+        break;
+      case 'stern-ulysses':                        // the whip, and the flat answer
+        this.ulyTo('stern-ulysses', settled);
+        S.uly.pose = 'taunt';
+        break;
+      /* he steps ONTO the rail — O.12. A SNAP, not a walk: the hubris is one
+         planted step, and the unit is an `auto` whose first visible frame
+         must already have his pinned foot (actors.json ulysses-taunt, pin
+         43,674) ON the ledger's mark — the eased walk left it measured at
+         (516.7,423.8), 21 px off (506,406), a [feet] violation. */
+      case 'stern-rail':
+        this.ulyTo('stern-rail', true);
+        S.uly.pose = 'taunt';
+        break;
+      /* THE CURSE re-zeroes the beat clock and holds the document frame: arms
+         to the firmament, sky down a stop, bed to near-silence. Rock 2 rides
+         this clock — tear at 3.0, astern at 6.8, driven onward by 12.2. */
+      case 'curse':
+        S.curse0 = settled ? t - ROCK2.done - 0.5 : t;
+        S.uly.pose = 'stand';                      // all eyes go up
+        if (!settled) {
+          this.st.cue('splash', ROCK2.land);
+          this.st.cue('oars', ROCK2.wash[0]);
+        }
+        break;
+      /* the dawn that has no master: night lights out, fog thinned, one warm
+         horizon glow, and the glide out under sailedon's own dwell */
+      case 'sea-dawn':
+        S.dawn0 = settled ? t - DAWN_GLIDE : t;
+        S.uly.pose = 'stand';
+        break;
+      /* the engine's enterEndLeaf still fires the sherlock name at whatever
+         set is up (WIRING TODO). The card is already over the stage; nothing
+         here needs to leave. */
+      case 'kingOffstage': break;
+      default: break;
+    }
+  }
+
+  /** send ulysses between his two stern marks; settled = already there */
+  ulyTo(mark, settled) {
+    const U = this.state.uly;
+    if (U.at === mark && !this.ulyWalking()) return;
+    if (settled || this.st.reduced) {
+      U.at = mark; U.from = mark; U.to = mark; U.t0 = -1e9;
+      return;
+    }
+    U.from = U.at; U.to = mark; U.t0 = this.state.t; U.at = mark;
+  }
+
+  ulyWalking() {
+    const U = this.state.uly;
+    return U.t0 > -1e8 && this.state.t - U.t0 < U.dur;
+  }
+
+  /** his feet right now, in LEDGER plate px (worldMap is the caller's job) */
+  ulyAt() {
+    const U = this.state.uly;
+    const a = MARKS[U.from], b = MARKS[U.to];
+    const k = U.t0 > -1e8 ? easeInOut(clamp01((this.state.t - U.t0) / U.dur)) : 1;
+    return [lerp(a[0], b[0], k), lerp(a[1], b[1], k)];
+  }
+
+  /** the one segment this set performs: the row home to the island beach.
+   *  Its timestamp is KEPT after it ends — the distance it bought stays. */
+  startSeg(name, dur, t0) {
+    if (name !== 'return-beach') return;
+    this.state.seg = name;
+    this.state.segT0 = t0;
+    this.state.segDur = dur || 8.0;
+  }
+
+  /* ---- one fixed step --------------------------------------------------- */
+  step(t, dt, ctx) {
+    const S = this.state;
+    S.t = t;
+    const amb = this.st.reduced ? 0 : 1;
+    const j = this.jeerT(), c = this.curseT(), d = this.dawnT();
+    const dawnK = d !== null ? easeInOut(clamp01(d / DAWN_GLIDE)) : 0;
+
+    /* ---- the world moves ------------------------------------------------ */
+    const W = this.worldPose(t, amb);
+    this._wk = W.k; this._wdx = W.dx; this._wdy = W.dy;
+    this.world.style.transform =
+      `translate(${W.dx.toFixed(2)}px,${W.dy.toFixed(2)}px) scale(${W.k.toFixed(4)})`;
+
+    /* ---- the light breathes, then the states take their share ----------- */
+    breathe(this.emis, EMIS, t, amb);
+    const nightK = 1 - dawnK;
+    const veilWant = this.curseVeilWant(c);
+    S.k.veil = this.st.damp(S.k.veil, veilWant, 4.0, dt);
+    S.k.dawn = dawnK;
+    // one fire feeds cave and crag; the moon takes the veil; dawn takes it all
+    this.emis.cave.style.opacity =
+      (+this.emis.cave.style.opacity * nightK * this.fireLeftK(t)).toFixed(3);
+    this.emis.crag.style.opacity =
+      (+this.emis.crag.style.opacity * nightK * this.fireLeftK(t)).toFixed(3);
+    this.emis.moon.style.opacity =
+      (+this.emis.moon.style.opacity * nightK * (1 - 0.45 * S.k.veil)).toFixed(3);
+    this.emis.moonpath.style.opacity =
+      (+this.emis.moonpath.style.opacity * nightK * (1 - 0.45 * S.k.veil)).toFixed(3);
+
+    /* the layers ride their measured ranges (layers-sea.json opacity) */
+    const breath = (per) => 0.5 + 0.5 * Math.sin(2 * Math.PI * t / per) * amb;
+    const F = LAYER.fog;
+    this.fog.style.opacity =
+      ((F.op[0] + (F.op[1] - F.op[0]) * breath(F.per)) * (1 - 0.5 * dawnK)).toFixed(3);
+    this.fog.style.transform =
+      `translateX(${(amb * F.drift * Math.sin(2 * Math.PI * t / F.per)).toFixed(1)}px)`;
+    const BC = LAYER.bloomCave;
+    this.bloomCave.style.opacity =
+      ((BC.op[0] + (BC.op[1] - BC.op[0]) * breath(BC.per)) * nightK *
+       this.fireLeftK(t)).toFixed(3);
+    const BM = LAYER.bloomMoon;
+    this.bloomMoon.style.opacity =
+      ((BM.op[0] + (BM.op[1] - BM.op[0]) * breath(BM.per)) * nightK *
+       (1 - 0.5 * S.k.veil)).toFixed(3);
+
+    /* the sky: the curse's stop of darkness, the dawn's stand-in glow */
+    this.veil.style.opacity = (0.20 * S.k.veil).toFixed(3);
+    this.dawnGlow.style.opacity = dawnK.toFixed(3);
+
+    /* the bed leans with the oars and hushes under the curse (street idiom) */
+    this.st.gain('sea', 0.8 + 0.5 * this.rowEffort(t) - 0.6 * S.k.veil);
+
+    this.stepGiant(t, dt, c, j);
+    this.stepUlysses(t, dt, amb);
+    this.stepRowers(t, amb);
+    this.stepRocks(t);
+  }
+
+  /** how hard the six are pulling: story motion, not ambience */
+  rowEffort(t) {
+    const j = this.jeerT(), c = this.curseT(), d = this.dawnT();
+    let e = 0;
+    if (j !== null) e = Math.max(e, easeInOut(clamp01((j - ROCK1.oars[0]) / 1.2)) *
+                                    (1 - easeInOut(clamp01((j - ROCK1.done) / 3.0))));
+    if (c !== null) e = Math.max(e, easeInOut(clamp01((c - ROCK2.wash[0]) / 1.2)) *
+                                    (1 - easeInOut(clamp01((c - ROCK2.done) / 3.0))));
+    if (this.state.segT0 > -1e8) {
+      e = Math.max(e, bump((t - this.state.segT0) / this.state.segDur));
+    }
+    if (d !== null) e = Math.max(e, easeInOut(clamp01(d / 2.0)));
+    return e;
+  }
+
+  /** the cave fire falls astern once the return seg rows them home */
+  fireLeftK(t) {
+    if (this.state.segT0 < -1e8) return 1;
+    return 1 - 0.6 * easeInOut(clamp01((t - this.state.segT0) / this.state.segDur));
+  }
+
+  /** the sky is down a stop from the curse until rock 2 is in the air */
+  curseVeilWant(c) {
+    if (c === null) return 0;
+    if (c < ROCK2.wash[0]) return 1;
+    return clamp01(1 - (c - ROCK2.wash[0]) / 2.0);
+  }
+
+  /* ---- the giant: pose is a pure function of the two clocks ------------- */
+  giantPoseAt(c, j) {
+    if (c !== null) {
+      if (c >= ROCK2.tear && c <= ROCK2.land + 0.8) return 'hurl';
+      if (c < ROCK2.tear) return 'curse';          // arms to the firmament
+      return 'stand';
+    }
+    if (j !== null && j >= ROCK1.tear && j <= ROCK1.land + 0.8) return 'hurl';
+    return 'stand';
+  }
+
+  stepGiant(t, dt, c, j) {
+    const S = this.state;
+    S.giantPose = this.giantPoseAt(c, j);
+    // the pose swap is a crossfade, exactly the room-dim law: pictures stacked
+    // on one mark, opacities damped toward the state
+    S.k.hurl = this.st.damp(S.k.hurl, S.giantPose === 'hurl' ? 1 : 0, 6.0, dt);
+    S.k.curse = this.st.damp(S.k.curse, S.giantPose === 'curse' ? 1 : 0, 6.0, dt);
+    const standK = clamp01(1 - S.k.hurl - S.k.curse);
+    this.giant.stand.style.opacity = standK.toFixed(3);
+    this.giant.hurl.style.opacity = S.k.hurl.toFixed(3);
+    this.giant.curse.style.opacity = S.k.curse.toFixed(3);
+    // a blinded giant listens with his whole body: breath only, on the pin
+    const amb = this.st.reduced ? 0 : 1;
+    const br = amb * Math.sin(2 * Math.PI * t / 5.3);
+    for (const e of Object.values(this.giant)) {
+      e.style.transform = `scaleY(${(1 + 0.006 * br).toFixed(5)})`;
+    }
+  }
+
+  stepUlysses(t, dt, amb) {
+    const S = this.state;
+    const at = this.ulyAt();
+    const sway = amb * 0.5 * Math.sin(2 * Math.PI * t / 7.3);
+    const mark = [at[0], at[1] + 0.4 * sway];
+    this.pinAt(this.uly.stand, ART.ulyStand, mark, ULY_H);
+    this.pinAt(this.uly.taunt, ART.ulyTaunt, mark, ULY_H, true);  // flipped: the
+    const taunt = S.uly.pose === 'taunt' ? 1 : 0;                 // arm at the cliff
+    S.k.taunt = this.st.damp(S.k.taunt, taunt, 6.0, dt);
+    this.uly.stand.style.opacity = (1 - S.k.taunt).toFixed(3);
+    this.uly.taunt.style.opacity = S.k.taunt.toFixed(3);
+  }
+
+  stepRowers(t, amb) {
+    const effort = this.rowEffort(t);
+    const amp = amb * 0.35 + effort;               // idle breath vs the pull
+    this.rowers.forEach((r, i) => {
+      const ph = 2 * Math.PI * (t / 1.9) + i * 0.9;
+      r.el.style.transform =
+        `translateY(${(-1.2 * amp * Math.sin(ph)).toFixed(2)}px) ` +
+        `rotate(${(2.2 * amp * Math.sin(ph + 0.6)).toFixed(2)}deg)`;
+    });
+  }
+
+  /* ---- the rocks: one prop, two flights, both pure functions ------------ *
+   * Each flight is (clock - loose)/(land - loose) from the raised hands over
+   * the brow to the LEDGER'S OWN splash point — rock 1 ahead of the rudder at
+   * (468,505), rock 2 astern at (455,540) — and the splash stands its 76 px
+   * (6 m) plume on that same point. The wind-up itself is the hurl pose's;
+   * the rock is born at the release. */
+  rockFlight() {
+    const j = this.jeerT(), c = this.curseT();
+    if (c !== null && c >= ROCK2.loose && c <= ROCK2.land) {
+      return { R: ROCK2, clock: c, to: SPLASH2, grow: 52, id: 'rock2' };
+    }
+    if (c === null && j !== null && j >= ROCK1.loose && j <= ROCK1.land) {
+      return { R: ROCK1, clock: j, to: SPLASH1, grow: 48, id: 'rock1' };
+    }
+    return null;
+  }
+
+  splashLevel() {
+    const j = this.jeerT(), c = this.curseT();
+    const at = (clock, R) => {
+      if (clock === null) return 0;
+      const u = (clock - R.land) / 2.0;
+      if (u < 0 || u > 1) return 0;
+      return bump(u);
+    };
+    const k2 = at(c, ROCK2);
+    if (k2 > 0) return { k: k2, to: SPLASH2, id: 'rock2' };
+    const k1 = c === null ? at(j, ROCK1) : 0;      // rock1's window is long past
+    if (k1 > 0) return { k: k1, to: SPLASH1, id: 'rock1' };
+    return { k: 0, to: SPLASH1, id: null };
+  }
+
+  stepRocks(t) {
+    const f = this.rockFlight();
+    if (f) {
+      const k = clamp01((f.clock - f.R.loose) / (f.R.land - f.R.loose));
+      const x = lerp(RELEASE[0], f.to[0], k);
+      const y = lerp(RELEASE[1], f.to[1], k * k) - Math.sin(Math.PI * k) * 90;
+      const h = lerp(34, f.grow, k);               // nearer is bigger, isometric law
+      const w = h * (ART.rock.px[0] / ART.rock.px[1]);
+      box(this.rock, x - w / 2, y - h / 2, w, h);
+      this.rock.style.transform = `rotate(${(k * 240).toFixed(1)}deg)`;
+      this.rock.style.opacity = '1';
+      this._rockAt = [x, y];
+    } else {
+      this.rock.style.opacity = '0';
+      this._rockAt = null;
+    }
+
+    const sp = this.splashLevel();
+    if (sp.k > 0) {
+      // the plume rises out of its own foot: pinned to the splash point,
+      // scaled up from the water along the pin the transform-origin sits on
+      this.pinAt(this.splash, ART.splash, sp.to, SPLASH_H);
+      this.splash.style.transform = `scaleY(${easeOut(sp.k).toFixed(3)})`;
+      this.splash.style.opacity = (0.95 * sp.k).toFixed(3);
+    } else {
+      this.splash.style.opacity = '0';
+    }
+    this._splash = sp;
+  }
+
+  /* ---- harness ----------------------------------------------------------- *
+   * What the lap must be able to measure without re-deriving the set: the
+   * state name, both clocks, both rocks, the world transform and its origin,
+   * the gate's anchor and count, the waits, and EVERY actor's rendered box in
+   * plate px — the parking-law pattern: boxes read off the elements the
+   * browser is drawing (so they include the world transform), not off the
+   * numbers that asked for them. */
+  snapshot() {
+    const S = this.state;
+    const j = this.jeerT(), c = this.curseT(), d = this.dawnT();
+    const pbox = (e) => {
+      const r = e.getBoundingClientRect();
+      if (!r.width || !r.height) return null;
+      const a = this.st.toPlate(r.left, r.top);
+      const b = this.st.toPlate(r.right, r.bottom);
+      return [+a.x.toFixed(1), +a.y.toFixed(1),
+              +(b.x - a.x).toFixed(1), +(b.y - a.y).toFixed(1)];
+    };
+    const phase = (clock, R, oars) => {
+      if (clock === null) return 'idle';
+      if (clock < R.tear) return 'idle';
+      if (clock < R.loose) return 'tear';
+      if (clock < R.land) return 'flight';
+      if (clock < R.wash[1]) return 'wash';
+      if (oars && clock < R.oars[1]) return 'oars';
+      if (clock < R.done) return 'settling';
+      return 'done';
+    };
+    const giantEl = S.k.curse > Math.max(S.k.hurl, 1 - S.k.hurl - S.k.curse)
+      ? this.giant.curse
+      : (S.k.hurl > 0.5 ? this.giant.hurl : this.giant.stand);
+    const ulyEl = S.k.taunt > 0.5 ? this.uly.taunt : this.uly.stand;
+    return {
+      state: d !== null ? 'sea-dawn' : 'sea',
+      world: { k: +this._wk.toFixed(4), dx: +this._wdx.toFixed(2),
+               dy: +this._wdy.toFixed(2), origin: SHIP.deckCentre },
+      clock: { jeer: j === null ? null : +j.toFixed(2),
+               curse: c === null ? null : +c.toFixed(2),
+               ruse: this.ruseT() === null ? null : +this.ruseT().toFixed(2) },
+      rock1: { phase: phase(j !== null && c !== null ? Math.max(j, ROCK1.done) : j,
+                            ROCK1, true),
+               splashAt: SPLASH1, done: this.waitDone('rock1') },
+      rock2: { phase: phase(c, ROCK2, false),
+               splashAt: SPLASH2, done: this.waitDone('rock2') },
+      rockAt: this._rockAt ? this._rockAt.map((v) => +v.toFixed(1)) : null,
+      splash: { k: +(this._splash ? this._splash.k : 0).toFixed(3),
+                of: this._splash ? this._splash.id : null },
+      gate: { target: 'cyclops', at: this.targetPlate('cyclops').map((v) => +v.toFixed(1)),
+              live: this.targetLive('cyclops'),
+              resolutions: S.resolutions, myname: S.myname },
+      waits: { rock1: this.waitDone('rock1'), rock2: this.waitDone('rock2') },
+      seg: S.segT0 > -1e8
+        ? { name: 'return-beach',
+            k: +clamp01((S.t - S.segT0) / S.segDur).toFixed(3) }
+        : null,
+      dawn: +S.k.dawn.toFixed(3),
+      veil: +S.k.veil.toFixed(3),
+      giant: { pose: S.giantPose, mark: MARKS['clifftop-giant'],
+               box: pbox(giantEl) },
+      ulysses: { mark: S.uly.at, pose: S.uly.pose,
+                 at: this.ulyAt().map((v) => +v.toFixed(1)),
+                 box: pbox(ulyEl) },
+      rowers: this.rowers.map((r) => ({ mark: r.mark, at: MARKS[r.mark],
+                                        box: pbox(r.el) })),
+      rowEffort: +this.rowEffort(S.t).toFixed(3),
+      marks: MARKS,
+    };
+  }
+}
+
+export { FOCUS, MARKS, TARGETS, DIM_MATRIX, SHIP, SPLASH1, SPLASH2,
+         ROCK1, ROCK2, WORLD, PX_PER_M };

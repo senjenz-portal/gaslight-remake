@@ -1,0 +1,398 @@
+{
+ "crew-a-stand": {
+  "file": "assets/actor/crew-a-stand.png",
+  "px": [
+   266,
+   620
+  ],
+  "baseline": 614,
+  "pin": [
+   132,
+   614
+  ]
+ },
+ "crew-b-stand": {
+  "file": "assets/actor/crew-b-stand.png",
+  "px": [
+   276,
+   635
+  ],
+  "baseline": 629,
+  "pin": [
+   140,
+   629
+  ]
+ },
+ "crew-carry": {
+  "file": "assets/actor/crew-carry.png",
+  "px": [
+   849,
+   628
+  ],
+  "baseline": 622,
+  "pin": [
+   499,
+   622
+  ]
+ },
+ "crew-plead": {
+  "file": "assets/actor/crew-plead.png",
+  "px": [
+   570,
+   931
+  ],
+  "baseline": 925,
+  "pin": [
+   208,
+   925
+  ]
+ },
+ "crew-row": {
+  "file": "assets/actor/crew-row.png",
+  "px": [
+   781,
+   954
+  ],
+  "baseline": 948,
+  "pin": [
+   75,
+   948
+  ]
+ },
+ "crew-slung": {
+  "file": "assets/actor/crew-slung.png",
+  "px": [
+   799,
+   408
+  ],
+  "baseline": 402,
+  "pin": [
+   491,
+   402
+  ]
+ },
+ "polyphemus-blinded-grope": {
+  "file": "assets/actor/polyphemus-blinded-grope.png",
+  "px": [
+   744,
+   609
+  ],
+  "baseline": 603,
+  "pin": [
+   361,
+   603
+  ]
+ },
+ "polyphemus-clutch": {
+  "file": "assets/actor/polyphemus-clutch.png",
+  "px": [
+   665,
+   1208
+  ],
+  "baseline": 1202,
+  "pin": [
+   509,
+   1202
+  ]
+ },
+ "polyphemus-curse": {
+  "file": "assets/actor/polyphemus-curse.png",
+  "px": [
+   719,
+   1287
+  ],
+  "baseline": 1281,
+  "pin": [
+   440,
+   1281
+  ]
+ },
+ "polyphemus-drink": {
+  "file": "assets/actor/polyphemus-drink.png",
+  "px": [
+   672,
+   1255
+  ],
+  "baseline": 1249,
+  "pin": [
+   451,
+   1249
+  ]
+ },
+ "polyphemus-hurl": {
+  "file": "assets/actor/polyphemus-hurl.png",
+  "px": [
+   640,
+   1286
+  ],
+  "baseline": 1280,
+  "pin": [
+   57,
+   1280
+  ]
+ },
+ "polyphemus-seated": {
+  "file": "assets/actor/polyphemus-seated.png",
+  "px": [
+   694,
+   973
+  ],
+  "baseline": 967,
+  "pin": [
+   187,
+   967
+  ]
+ },
+ "polyphemus-sprawl": {
+  "file": "assets/actor/polyphemus-sprawl.png",
+  "px": [
+   1306,
+   451
+  ],
+  "baseline": 445,
+  "pin": [
+   119,
+   445
+  ]
+ },
+ "polyphemus-stand": {
+  "file": "assets/actor/polyphemus-stand.png",
+  "px": [
+   674,
+   1244
+  ],
+  "baseline": 1238,
+  "pin": [
+   473,
+   1238
+  ]
+ },
+ "polyphemus-stroke": {
+  "file": "assets/actor/polyphemus-stroke.png",
+  "px": [
+   712,
+   1208
+  ],
+  "baseline": 1202,
+  "pin": [
+   428,
+   1202
+  ]
+ },
+ "prop-bowl": {
+  "file": "assets/actor/prop-bowl.png",
+  "px": [
+   862,
+   449
+  ],
+  "baseline": 443,
+  "pin": [
+   426,
+   443
+  ]
+ },
+ "prop-rock": {
+  "file": "assets/actor/prop-rock.png",
+  "px": [
+   776,
+   568
+  ],
+  "baseline": 562,
+  "pin": [
+   225,
+   562
+  ]
+ },
+ "prop-splash": {
+  "file": "assets/actor/prop-splash.png",
+  "px": [
+   510,
+   1127
+  ],
+  "baseline": 1121,
+  "pin": [
+   253,
+   1121
+  ]
+ },
+ "prop-stake-glowing": {
+  "file": "assets/actor/prop-stake-glowing.png",
+  "px": [
+   1143,
+   582
+  ],
+  "baseline": 576,
+  "pin": [
+   1000,
+   576
+  ]
+ },
+ "prop-stake": {
+  "file": "assets/actor/prop-stake.png",
+  "px": [
+   1217,
+   592
+  ],
+  "baseline": 586,
+  "pin": [
+   56,
+   586
+  ]
+ },
+ "prop-sword": {
+  "file": "assets/actor/prop-sword.png",
+  "px": [
+   910,
+   499
+  ],
+  "baseline": 493,
+  "pin": [
+   13,
+   493
+  ]
+ },
+ "prop-wineskin": {
+  "file": "assets/actor/prop-wineskin.png",
+  "px": [
+   622,
+   497
+  ],
+  "baseline": 491,
+  "pin": [
+   347,
+   491
+  ]
+ },
+ "ram-great-slung": {
+  "file": "assets/actor/ram-great-slung.png",
+  "px": [
+   867,
+   689
+  ],
+  "baseline": 683,
+  "pin": [
+   375,
+   683
+  ]
+ },
+ "ram-great": {
+  "file": "assets/actor/ram-great.png",
+  "px": [
+   867,
+   687
+  ],
+  "baseline": 681,
+  "pin": [
+   376,
+   681
+  ]
+ },
+ "ram-pair-slung": {
+  "file": "assets/actor/ram-pair-slung.png",
+  "px": [
+   1213,
+   579
+  ],
+  "baseline": 573,
+  "pin": [
+   675,
+   573
+  ]
+ },
+ "ram-walk": {
+  "file": "assets/actor/ram-walk.png",
+  "px": [
+   815,
+   663
+  ],
+  "baseline": 657,
+  "pin": [
+   343,
+   657
+  ]
+ },
+ "ulysses-drive": {
+  "file": "assets/actor/ulysses-drive.png",
+  "px": [
+   880,
+   559
+  ],
+  "baseline": 553,
+  "pin": [
+   451,
+   553
+  ]
+ },
+ "ulysses-offer": {
+  "file": "assets/actor/ulysses-offer.png",
+  "px": [
+   405,
+   684
+  ],
+  "baseline": 678,
+  "pin": [
+   67,
+   678
+  ]
+ },
+ "ulysses-slung": {
+  "file": "assets/actor/ulysses-slung.png",
+  "px": [
+   1144,
+   311
+  ],
+  "baseline": 305,
+  "pin": [
+   1079,
+   305
+  ]
+ },
+ "ulysses-stand": {
+  "file": "assets/actor/ulysses-stand.png",
+  "px": [
+   316,
+   682
+  ],
+  "baseline": 676,
+  "pin": [
+   125,
+   676
+  ]
+ },
+ "ulysses-sword": {
+  "file": "assets/actor/ulysses-sword.png",
+  "px": [
+   361,
+   666
+  ],
+  "baseline": 660,
+  "pin": [
+   125,
+   660
+  ]
+ },
+ "ulysses-taunt": {
+  "file": "assets/actor/ulysses-taunt.png",
+  "px": [
+   294,
+   680
+  ],
+  "baseline": 674,
+  "pin": [
+   43,
+   674
+  ]
+ },
+ "ulysses-walk": {
+  "file": "assets/actor/ulysses-walk.png",
+  "px": [
+   304,
+   664
+  ],
+  "baseline": 658,
+  "pin": [
+   208,
+   658
+  ]
+ }
+}

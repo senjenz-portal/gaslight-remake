@@ -1,0 +1,352 @@
+{
+ "lane": "ody-sea-layers",
+ "created": "2026-08-14T21:24:13-0700",
+ "source": {
+  "path": "/Users/samz/Documents/gaslight-remake/site-deploy/living-odyssey/assets/set/sea/sea.jpg",
+  "sha256": "6c38bc900fd5a3a939443cdba3b0c7deb616e45ef39b09ef9fe9515d5636e0f4",
+  "size": [
+   1408,
+   768
+  ],
+  "states": [
+   "sea"
+  ],
+  "note": "single master; no state variants shipped"
+ },
+ "generator": "tools/ody/slice_sea.py (helpers imported from tools/lanea/slice_plate.py)",
+ "lightSources": "moon + cave-glow at the cliff base (moonpath and crag are their measured spill)",
+ "geometry": {
+  "hullIsland": [
+   [
+    705,
+    180
+   ],
+   [
+    770,
+    100
+   ],
+   [
+    855,
+    12
+   ],
+   [
+    975,
+    10
+   ],
+   [
+    1045,
+    45
+   ],
+   [
+    1100,
+    95
+   ],
+   [
+    1135,
+    180
+   ],
+   [
+    1160,
+    330
+   ],
+   [
+    1165,
+    480
+   ],
+   [
+    1000,
+    600
+   ],
+   [
+    860,
+    665
+   ],
+   [
+    715,
+    715
+   ],
+   [
+    640,
+    712
+   ],
+   [
+    450,
+    610
+   ],
+   [
+    300,
+    530
+   ],
+   [
+    225,
+    455
+   ],
+   [
+    225,
+    435
+   ],
+   [
+    610,
+    220
+   ]
+  ],
+  "moonExclR": 175,
+  "caveGate": [
+   [
+    656,
+    190
+   ],
+   [
+    912,
+    190
+   ],
+   [
+    912,
+    578
+   ],
+   [
+    656,
+    578
+   ]
+  ],
+  "rockRef": [
+   995,
+   1005,
+   295,
+   305
+  ]
+ },
+ "emis": [
+  {
+   "id": "moon",
+   "at": [
+    474,
+    242
+   ],
+   "r": 143,
+   "rgb": "223,240,255",
+   "a": 0.1,
+   "per": 9.5,
+   "amp": 0.18,
+   "role": "source"
+  },
+  {
+   "id": "moonpath",
+   "at": [
+    475,
+    356
+   ],
+   "r": 74,
+   "rgb": "223,241,255",
+   "a": 0.09,
+   "per": 7.3,
+   "amp": 0.35,
+   "role": "spill of moon"
+  },
+  {
+   "id": "cave",
+   "at": [
+    818,
+    457
+   ],
+   "r": 60,
+   "rgb": "255,185,50",
+   "a": 0.2,
+   "per": 3.2,
+   "amp": 0.55,
+   "role": "source"
+  },
+  {
+   "id": "crag",
+   "at": [
+    820,
+    339
+   ],
+   "r": 90,
+   "rgb": "255,185,50",
+   "a": 0.1,
+   "per": 3.2,
+   "amp": 0.45,
+   "role": "spill of cave up the cliff face (same clock: one fire)"
+  }
+ ],
+ "emisNote": "at/r/rgb MEASURED off the plate (weighted centroids, 90%-mass radii, additive peak colours); a/per/amp authored breathing params, street.js idiom",
+ "layers": {
+  "sea-bloom-moon.png": {
+   "box": [
+    301,
+    69,
+    344,
+    344
+   ],
+   "blend": "screen",
+   "note": "the moon halo, measured radial profile; breathe on EMIS moon",
+   "opacity": [
+    0.1,
+    0.28
+   ]
+  },
+  "sea-bloom-cave.png": {
+   "box": [
+    634,
+    189,
+    265,
+    376
+   ],
+   "blend": "screen",
+   "note": "the cave fire (mouth + lit path + crag), measured warm residual; flicker on EMIS cave clock",
+   "opacity": [
+    0.2,
+    0.75
+   ]
+  },
+  "sea-fog.png": {
+   "box": [
+    225,
+    215,
+    732,
+    407
+   ],
+   "blend": "screen",
+   "note": "the sea breath; drift +/-90 px, feather in CSS like street mist",
+   "opacity": [
+    0.45,
+    0.7
+   ]
+  }
+ },
+ "drawOrder": [
+  "sea.jpg",
+  "sea-fog.png (screen, drifts)",
+  "<ACTORS>",
+  "sea-bloom-cave.png (screen, flickers)",
+  "sea-bloom-moon.png (screen, breathes)"
+ ],
+ "analysis": {
+  "void": {
+   "center": [
+    450,
+    200
+   ],
+   "model": "quadratic in r, per channel",
+   "centerSearch": "coarse grid 400..1000 x 100..500, step 50; island hull polygon + moon circle excluded",
+   "coeffs": [
+    [
+     54.927940507939525,
+     -0.13749127053416052,
+     9.089134300084812e-05
+    ],
+    [
+     68.18041147366965,
+     -0.16194081034804683,
+     0.00010938722139050843
+    ],
+    [
+     95.35549432549125,
+     -0.15769838311464773,
+     0.0001029101045544467
+    ]
+   ],
+   "residualRmsOnVoid": 3.422
+  },
+  "moon": {
+   "disc": [
+    473.7,
+    241.7
+   ],
+   "discRadius": 41.6,
+   "maxRadius": 168,
+   "r90": 142.8,
+   "peakRgb": [
+    24.8,
+    28.5,
+    24.5
+   ],
+   "note": "additive halo measured on void pixels only; the disc is painted content and stays in the plate"
+  },
+  "moonpath": {
+   "centroid": [
+    475.2,
+    356.2
+   ],
+   "r90": 73.7,
+   "px": 10136,
+   "meanRgb": [
+    188.3,
+    203.6,
+    215.5
+   ]
+  },
+  "cave": {
+   "mouth": [
+    817.8,
+    457.1
+   ],
+   "r90": 59.7,
+   "rockRef": [
+    18.2,
+    18.2,
+    30.2
+   ],
+   "peakRgb": [
+    242.3,
+    181.1,
+    74.3
+   ],
+   "fireColourPerWarm": [
+    1.494,
+    1.086,
+    0.294
+   ],
+   "model": "bloom = min(clip(R-B-18,0) * fireColour, plate); anisotropic by construction",
+   "crag": {
+    "centroid": [
+     820.1,
+     339.4
+    ],
+    "r90": 89.6
+   }
+  },
+  "fog": {
+   "band": "gaussian in y about 417, sigma 66.2, clipped to the measured water mask",
+   "waterYPercentiles": {
+    "p10": 257.0,
+    "p60": 417.0,
+    "p90": 558.0
+   },
+   "moonpathThin": 0.35,
+   "wisp": {
+    "at": [
+     788.8,
+     517.9
+    ],
+    "sigma": [
+     56,
+     34
+    ],
+    "gain": 0.8
+   },
+   "peakRgb": [
+    154,
+    166,
+    176
+   ],
+   "tintSource": "mean moonpath glint colour, normalised",
+   "note": "screen-blended, drifts; the sea gets the most breath of the three odyssey sets"
+  }
+ },
+ "files": {
+  "sea-bloom-moon.png": {
+   "bytes": 11499,
+   "sha256": "7ef755bcee17213596d7abfe6efdc54f0b1e2514c857334ca38d8beeb8be7313"
+  },
+  "sea-bloom-cave.png": {
+   "bytes": 25887,
+   "sha256": "16664fe0a6e2e415d71d3756a143b8f1d8f54d80042ae8bdfb3f41b6e110841b"
+  },
+  "sea-fog.png": {
+   "bytes": 73686,
+   "sha256": "9d48d13f89fe2f9c7985ff74b8030d2bc0b1dd8d56202a48af752bd134217ca4"
+  }
+ }
+}

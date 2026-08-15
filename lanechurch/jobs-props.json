@@ -1,0 +1,44 @@
+[
+ {
+  "id": "prop-ring-a",
+  "manifest": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/manifest.json",
+  "aspect": "1:1",
+  "out": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/gen/prop-ring-a.png",
+  "prompt": "OUTPUT ONE SINGLE NEW IMAGE containing ONLY one plain gold wedding ring.\n\nWHAT: a plain, unornamented Victorian gold wedding band - a simple smooth round hoop with a visible band thickness and a clean round hole through the middle. It is tilted about 35 degrees away from the viewer so the hoop reads as an ELLIPSE with the hole clearly open, and its front rim catches the candle. Nothing set into it, no stone, no pattern.\n\nSTYLE LAW: stylized low-poly 3D game diorama render to match a Victorian church interior at night - matte flat-shaded chunky facets, clean simple shapes, soft ambient occlusion, NO outlines, NO texture grain, NO photographic macro detail, NO text, NO letters, NO numerals, NO engraving that reads as writing.\n\nLIGHT: warm candlelight key from the upper LEFT, the gold burning amber where it catches, one small hot white specular highlight, deep blue-grey shadow on the far side.\n\nCANVAS: ONE object alone, centred, on a completely flat solid MAGENTA (#FF00FF) field with clear empty magenta margin on all four sides. No hand, no finger, no table, no cloth, no box, no ground, no cast shadow, no reflection, no second object. Magenta everywhere the object is not."
+ },
+ {
+  "id": "prop-ring-b",
+  "manifest": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/manifest.json",
+  "aspect": "1:1",
+  "out": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/gen/prop-ring-b.png",
+  "prompt": "OUTPUT ONE SINGLE NEW IMAGE containing ONLY one plain gold wedding ring.\n\nWHAT: a plain, unornamented Victorian gold wedding band - a simple smooth round hoop with a visible band thickness and a clean round hole through the middle. It is tilted about 35 degrees away from the viewer so the hoop reads as an ELLIPSE with the hole clearly open, and its front rim catches the candle. Nothing set into it, no stone, no pattern.\n\nSTYLE LAW: stylized low-poly 3D game diorama render to match a Victorian church interior at night - matte flat-shaded chunky facets, clean simple shapes, soft ambient occlusion, NO outlines, NO texture grain, NO photographic macro detail, NO text, NO letters, NO numerals, NO engraving that reads as writing.\n\nLIGHT: warm candlelight key from the upper LEFT, the gold burning amber where it catches, one small hot white specular highlight, deep blue-grey shadow on the far side.\n\nCANVAS: ONE object alone, centred, on a completely flat solid MAGENTA (#FF00FF) field with clear empty magenta margin on all four sides. No hand, no finger, no table, no cloth, no box, no ground, no cast shadow, no reflection, no second object. Magenta everywhere the object is not."
+ },
+ {
+  "id": "prop-sovereign-a",
+  "manifest": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/manifest.json",
+  "aspect": "1:1",
+  "out": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/gen/prop-sovereign-a.png",
+  "prompt": "OUTPUT ONE SINGLE NEW IMAGE containing ONLY one gold sovereign coin.\n\nWHAT: a Victorian gold sovereign - a thick round gold coin with a MILLED (finely ridged) edge, tilted about 30 degrees away from the viewer so it reads as a shallow ellipse with its edge thickness visible. Its face carries a very shallow, soft, low-relief suggestion of a profile portrait - shape and shadow only, absolutely no legible lettering, numerals or inscription anywhere.\n\nSTYLE LAW: stylized low-poly 3D game diorama render to match a Victorian church interior at night - matte flat-shaded chunky facets, clean simple shapes, soft ambient occlusion, NO outlines, NO texture grain, NO photographic macro detail, NO text, NO letters, NO numerals, NO engraving that reads as writing.\n\nLIGHT: warm candlelight key from the upper LEFT, the gold burning amber where it catches, one small hot white specular highlight, deep blue-grey shadow on the far side.\n\nCANVAS: ONE object alone, centred, on a completely flat solid MAGENTA (#FF00FF) field with clear empty magenta margin on all four sides. No hand, no finger, no table, no cloth, no box, no ground, no cast shadow, no reflection, no second object. Magenta everywhere the object is not."
+ },
+ {
+  "id": "prop-sovereign-b",
+  "manifest": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/manifest.json",
+  "aspect": "1:1",
+  "out": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/gen/prop-sovereign-b.png",
+  "prompt": "OUTPUT ONE SINGLE NEW IMAGE containing ONLY one gold sovereign coin.\n\nWHAT: a Victorian gold sovereign - a thick round gold coin with a MILLED (finely ridged) edge, tilted about 30 degrees away from the viewer so it reads as a shallow ellipse with its edge thickness visible. Its face carries a very shallow, soft, low-relief suggestion of a profile portrait - shape and shadow only, absolutely no legible lettering, numerals or inscription anywhere.\n\nSTYLE LAW: stylized low-poly 3D game diorama render to match a Victorian church interior at night - matte flat-shaded chunky facets, clean simple shapes, soft ambient occlusion, NO outlines, NO texture grain, NO photographic macro detail, NO text, NO letters, NO numerals, NO engraving that reads as writing.\n\nLIGHT: warm candlelight key from the upper LEFT, the gold burning amber where it catches, one small hot white specular highlight, deep blue-grey shadow on the far side.\n\nCANVAS: ONE object alone, centred, on a completely flat solid MAGENTA (#FF00FF) field with clear empty magenta margin on all four sides. No hand, no finger, no table, no cloth, no box, no ground, no cast shadow, no reflection, no second object. Magenta everywhere the object is not."
+ },
+ {
+  "id": "prop-chain-a",
+  "manifest": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/manifest.json",
+  "aspect": "1:1",
+  "out": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/gen/prop-chain-a.png",
+  "prompt": "OUTPUT ONE SINGLE NEW IMAGE containing ONLY one gold watch chain.\n\nWHAT: a Victorian gentleman's gold albert watch chain as it hangs across a waistcoat: a short swag of fine gold links dipping in a shallow curve between two ends, with a small T-bar at one end. Just the chain itself, hanging free in the frame - no waistcoat, no watch, no pocket, no man.\n\nSTYLE LAW: stylized low-poly 3D game diorama render to match a Victorian church interior at night - matte flat-shaded chunky facets, clean simple shapes, soft ambient occlusion, NO outlines, NO texture grain, NO photographic macro detail, NO text, NO letters, NO numerals, NO engraving that reads as writing.\n\nLIGHT: warm candlelight key from the upper LEFT, the gold burning amber where it catches, one small hot white specular highlight, deep blue-grey shadow on the far side.\n\nCANVAS: ONE object alone, centred, on a completely flat solid MAGENTA (#FF00FF) field with clear empty magenta margin on all four sides. No hand, no finger, no table, no cloth, no box, no ground, no cast shadow, no reflection, no second object. Magenta everywhere the object is not."
+ },
+ {
+  "id": "prop-chain-b",
+  "manifest": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/manifest.json",
+  "aspect": "1:1",
+  "out": "/Users/samz/Documents/gaslight-remake/assets/raw/book-church/props/gen/prop-chain-b.png",
+  "prompt": "OUTPUT ONE SINGLE NEW IMAGE containing ONLY one gold watch chain.\n\nWHAT: a Victorian gentleman's gold albert watch chain as it hangs across a waistcoat: a short swag of fine gold links dipping in a shallow curve between two ends, with a small T-bar at one end. Just the chain itself, hanging free in the frame - no waistcoat, no watch, no pocket, no man.\n\nSTYLE LAW: stylized low-poly 3D game diorama render to match a Victorian church interior at night - matte flat-shaded chunky facets, clean simple shapes, soft ambient occlusion, NO outlines, NO texture grain, NO photographic macro detail, NO text, NO letters, NO numerals, NO engraving that reads as writing.\n\nLIGHT: warm candlelight key from the upper LEFT, the gold burning amber where it catches, one small hot white specular highlight, deep blue-grey shadow on the far side.\n\nCANVAS: ONE object alone, centred, on a completely flat solid MAGENTA (#FF00FF) field with clear empty magenta margin on all four sides. No hand, no finger, no table, no cloth, no box, no ground, no cast shadow, no reflection, no second object. Magenta everywhere the object is not."
+ }
+]

@@ -1,0 +1,216 @@
+{
+ "lane": "ody-shore-layers",
+ "plate": [
+  1408,
+  768
+ ],
+ "created": "2026-08-14T21:17:59-0700",
+ "source": {
+  "path": "/Users/samz/Documents/gaslight-remake/site-deploy/living-odyssey/assets/set/shore/shore.jpg",
+  "sha256": "fed5307a4f9796c46a972a4bca334b170b2c16cd84e6ccc800a3e0ff92ac74d3",
+  "size": [
+   1408,
+   768
+  ]
+ },
+ "states": {
+  "shore": {
+   "file": "shore.jpg",
+   "gains": {
+    "fire": 1,
+    "moon-throat": 1,
+    "moon-glint": 1,
+    "moon-wash": 1
+   }
+  },
+  "shore-day": {
+   "file": "shore-day.jpg",
+   "sha256": "df09ab809f3391d8f58dba0156017add850ca1e94145972cd15e9fb453994caf",
+   "gains": {
+    "fire": 0,
+    "moon-throat": 0.5,
+    "moon-glint": 0.5,
+    "moon-wash": 0.5
+   },
+   "note": "the fire is painted OUT (dead coals, goats loose); the band is the SUN's path -- the anchors hold, the night tint does not, so the day state halves them rather than recolours"
+  }
+ },
+ "generator": "tools/ody/slice_shore.py (helpers imported from tools/lanea/slice_plate.py)",
+ "emissives": [
+  {
+   "id": "fire",
+   "at": [
+    438,
+    466
+   ],
+   "r": 160,
+   "rgb": "255,153,111",
+   "a": 0.17,
+   "per": 3.4,
+   "amp": 0.5,
+   "note": "the campfire on the beach; centre + radius + tint are shore-bloom.png's own measured profile. OUT in shore-day (the state paints dead coals): gain 0."
+  },
+  {
+   "id": "moon-throat",
+   "at": [
+    720.2,
+    316.2
+   ],
+   "r": 69,
+   "rgb": "247,251,255",
+   "a": 0.08,
+   "per": 9.7,
+   "amp": 0.22,
+   "note": "the moonpath where it enters the inlet (top third of the glint band)"
+  },
+  {
+   "id": "moon-glint",
+   "at": [
+    715.6,
+    374.7
+   ],
+   "r": 71,
+   "rgb": "247,251,255",
+   "a": 0.1,
+   "per": 7.9,
+   "amp": 0.26,
+   "note": "the brightest reach of the path, mid-band between the ships and the far bank"
+  },
+  {
+   "id": "moon-wash",
+   "at": [
+    729.6,
+    450.4
+   ],
+   "r": 84,
+   "rgb": "247,251,255",
+   "a": 0.07,
+   "per": 8.6,
+   "amp": 0.3,
+   "note": "the path dying against the beach shallows (bottom third)"
+  }
+ ],
+ "layers": {
+  "bloom": {
+   "file": "shore-bloom.png",
+   "box": [
+    243,
+    272,
+    388,
+    388
+   ],
+   "blend": "screen",
+   "per": 3.4,
+   "amp": 0.35,
+   "note": "the measured additive fire bloom; pulse its opacity with the fire emissive, gain 0 in shore-day"
+  },
+  "fog": {
+   "file": "shore-fog.png",
+   "box": [
+    380,
+    344,
+    800,
+    324
+   ],
+   "blend": "screen",
+   "driftPxPerSec": 2.6,
+   "per": 12.0,
+   "baseOpacity": 0.5,
+   "note": "the waterline breath; alpha feather baked in, no CSS mask needed"
+  }
+ },
+ "drawOrder": [
+  "shore.jpg (or state)",
+  "shore-fog.png (screen)",
+  "<ACTORS>",
+  "shore-bloom.png (screen)",
+  "EMIS divs (setkit emissives, breathe)"
+ ],
+ "analysis": {
+  "fireBloom": {
+   "center": [
+    437.6,
+    466.1
+   ],
+   "maxRadius": 190,
+   "emissiveRadius": 160,
+   "peakRgb": [
+    195.3,
+    117.2,
+    84.9
+   ],
+   "peakWarmExcess": 113.1,
+   "baseWarmExcess": 3.5,
+   "tintPerWarmUnit": [
+    1.726,
+    1.036,
+    0.75
+   ],
+   "model": "falloff = median (R-B) profile over the sand sector, base = its own tail (r 170..190), tail clamped to 0, boxcar(5)x2 + monotone envelope against facet ringing; tint = (sand at r 20..45 - sand at r 115..145) / their warm-excess delta, so the sand albedo cancels and what remains is the light",
+   "note": "additive bloom; ships as a screen layer the set pulses"
+  },
+  "moonpath": {
+   "bbox": [
+    444,
+    275,
+    821,
+    554
+   ],
+   "coolBrightPx": 18032,
+   "glintMeanRgb": [
+    237.5,
+    241.4,
+    245.6
+   ],
+   "anchors": [
+    {
+     "at": [
+      720.2,
+      316.2
+     ],
+     "r": 69,
+     "n": 6016
+    },
+    {
+     "at": [
+      715.6,
+      374.7
+     ],
+     "r": 71,
+     "n": 6055
+    },
+    {
+     "at": [
+      729.6,
+      450.4
+     ],
+     "r": 84,
+     "n": 6161
+    }
+   ],
+   "model": "lum>150 & B>R-12 in the inlet window, split at the 33rd/66th y-percentiles; luminance-weighted centroid + 1.8x rms radius",
+   "note": "a specular band is not a halo: it breathes as EMIS anchors, the way street chained bay -> spill -> wet"
+  },
+  "fog": {
+   "tintRgb": [
+    162.1,
+    178.5,
+    219.1
+   ],
+   "tintModel": "0.5*glintMean + 0.5*(backdrop hue raised to 0.8x glint luminance); backdrop = median of plate px with lum<45",
+   "band": "gaussian in y about 506, sigma 54; x ramps [380.0, 470.0] up, [1080.0, 1180.0] down",
+   "peakAlpha": 0.62,
+   "note": "screen-blended, drifts; feather baked into the alpha so no CSS mask is needed (street shipped the seam, sec street.js)"
+  }
+ },
+ "files": {
+  "shore-bloom.png": {
+   "bytes": 30083,
+   "sha256": "f0b6a10aa4dc71e6ac86ab80e9b600dd87f91eec8be5abfd643d4d6e494d822b"
+  },
+  "shore-fog.png": {
+   "bytes": 10132,
+   "sha256": "a58dc3ee1076cf4f9ab9c6f0d423aecfaf0322560b6296eefafc852658a280b9"
+  }
+ }
+}

@@ -1,0 +1,279 @@
+{
+ "feet": [
+  {
+   "cut": "witness",
+   "baseline": 583.1,
+   "alphaBottom": 584,
+   "plateErr": 0.3
+  },
+  {
+   "cut": "witnessAltar",
+   "baseline": 583.1,
+   "alphaBottom": 585,
+   "plateErr": 0.63
+  },
+  {
+   "cut": "groom",
+   "baseline": 561.1,
+   "alphaBottom": 562,
+   "plateErr": 0.3
+  },
+  {
+   "cut": "groomBeck",
+   "baseline": 561.1,
+   "alphaBottom": 563,
+   "plateErr": 0.63
+  },
+  {
+   "cut": "bride",
+   "baseline": 524.0,
+   "alphaBottom": 525,
+   "plateErr": 0.33
+  },
+  {
+   "cut": "clergyman",
+   "baseline": 545.8,
+   "alphaBottom": 547,
+   "plateErr": 0.4
+  },
+  {
+   "cut": "witnessWalk",
+   "baseline": 461,
+   "alphaBottom": [
+    460,
+    460,
+    460,
+    460
+   ],
+   "plateErr": [
+    -0.42,
+    -0.42,
+    -0.42,
+    -0.42
+   ]
+  },
+  {
+   "cut": "groomRun",
+   "baseline": 502,
+   "alphaBottom": [
+    501,
+    501,
+    501,
+    501
+   ],
+   "plateErr": [
+    -0.37,
+    -0.37,
+    -0.37,
+    -0.37
+   ]
+  }
+ ],
+ "frame": [
+  {
+   "unit": "head4",
+   "lens": "nave",
+   "onMarriage": false,
+   "frame": [
+    0.0,
+    0.0,
+    1408.0,
+    768.0
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 0.0,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  },
+  {
+   "unit": "notasoul",
+   "lens": "knot",
+   "onMarriage": false,
+   "frame": [
+    233.3,
+    100.0,
+    1173.3,
+    640.0
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 0.0,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  },
+  {
+   "unit": "lounged",
+   "lens": "aisle",
+   "onMarriage": false,
+   "frame": [
+    218.4,
+    346.4,
+    563.2,
+    307.2
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 165.9,
+    "witness": 0.0,
+    "groom": 47.6
+   }
+  },
+  {
+   "unit": "facedround",
+   "lens": "aisle",
+   "onMarriage": false,
+   "frame": [
+    218.4,
+    346.4,
+    563.2,
+    307.2
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 165.9,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  },
+  {
+   "unit": "comeman",
+   "lens": "aisle",
+   "onMarriage": false,
+   "frame": [
+    218.4,
+    346.4,
+    563.2,
+    307.2
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 165.9,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  },
+  {
+   "unit": "halfdragged",
+   "lens": "knot",
+   "onMarriage": true,
+   "frame": [
+    233.3,
+    100.0,
+    1173.3,
+    640.0
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 0.0,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  },
+  {
+   "unit": "tyingup",
+   "lens": "ring",
+   "onMarriage": true,
+   "frame": [
+    539.2,
+    291.7,
+    440.0,
+    240.0
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 0.0,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  },
+  {
+   "unit": "preposterous",
+   "lens": "ring",
+   "onMarriage": true,
+   "frame": [
+    539.2,
+    291.7,
+    440.0,
+    240.0
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 0.0,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  },
+  {
+   "unit": "license",
+   "lens": "knot",
+   "onMarriage": true,
+   "frame": [
+    233.3,
+    100.0,
+    1173.3,
+    640.0
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 0.0,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  },
+  {
+   "unit": "sovereigngift",
+   "lens": "coin",
+   "onMarriage": true,
+   "frame": [
+    514.0,
+    302.0,
+    440.0,
+    240.0
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 0.0,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  },
+  {
+   "unit": "unexpected",
+   "lens": "nave",
+   "onMarriage": true,
+   "frame": [
+    0.0,
+    0.0,
+    1408.0,
+    768.0
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 0.0,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  },
+  {
+   "unit": "parkatfive",
+   "lens": "nave",
+   "onMarriage": true,
+   "frame": [
+    0.0,
+    0.0,
+    1408.0,
+    768.0
+   ],
+   "clipped": {
+    "bride": 0.0,
+    "clergyman": 0.0,
+    "witness": 0.0,
+    "groom": 0.0
+   }
+  }
+ ],
+ "worstFeetErr": 0.63
+}

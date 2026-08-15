@@ -1,0 +1,1868 @@
+{
+ "lane": "ody-scene-ledger",
+ "runbook": "\u00a72.5 measured scene ledger + \u00a73.2 object ledger",
+ "created": "2026-08-14",
+ "plate": [
+  1408,
+  768
+ ],
+ "projection": "isometric \u2014 actor height does not change with depth; only the floor line moves (WIRING \u00a77). All values in plate px.",
+ "lensLaw": "camera centre [x,y] at zoom k; visible box = 1408/k x 768/k landscape, 1060/k x 768/k portrait; no dead band means both margins >= 0 (sherlock F2 lesson). k=1.0 forces [704,384].",
+ "sets": {
+  "shore": {
+   "masters": {
+    "shore.jpg": "night-mist (fire lit, moonpath)",
+    "shore-day.jpg": "day (goats out, fire dead)"
+   },
+   "layers": [
+    "shore-fog.png (waterline breath)",
+    "shore-bloom.png (fire bloom)"
+   ],
+   "emissivesFrom": "tools/ody/layers-shore.json (fire 438,466 r160; moon-throat/glint/wash)",
+   "scale": {
+    "pxPerM": 11.3,
+    "yardstick": "ship-2, the beached crossing galley. Painted hull shows 8 rowlocks a side = a twenty-oarer, Butler's own hull class (cut III-6 simile) ~= 15 m tip-to-tip.",
+    "arithmetic": "sternpost curl (516,432) -> prow curl (686,428): sqrt(170^2+4^2)=170 px; 170/15 = 11.3 px/m",
+    "crossCheck": "ship-1 mast foot (508,392) -> head (505,287) = 105 px = 9.3 m at 11.3 px/m \u2014 right for a 15 m hull",
+    "actorHeightPx": {
+     "ulysses_1.75m": 20
+    },
+    "deviations": "campfire ring 70 px = 6.2 m at set scale (painted hero-scale light source, not a stand-to object); mainland pen sheep ~19 px = 1.7 m (far-lobe dressing). RULING: the ship wins \u2014 actors board it, line along it, click it."
+   },
+   "floors": {
+    "beach": {
+     "polyline": [
+      [
+       300,
+       455
+      ],
+      [
+       438,
+       486
+      ],
+      [
+       540,
+       500
+      ],
+      [
+       610,
+       505
+      ]
+     ],
+     "band": 18,
+     "note": "camp sand apron, walk line mid-apron; slope ~0.16"
+    },
+    "mainlandApron": {
+     "polyline": [
+      [
+       950,
+       252
+      ],
+      [
+       1008,
+       268
+      ],
+      [
+       1040,
+       272
+      ]
+     ],
+     "band": 8,
+     "note": "grass threshold before the mouth, laurel-flanked"
+    },
+    "mainlandYard": {
+     "polyline": [
+      [
+       940,
+       300
+      ],
+      [
+       1010,
+       318
+      ],
+      [
+       1090,
+       330
+      ]
+     ],
+     "band": 10,
+     "note": "yard floor along the stone wall + pens"
+    }
+   },
+   "marks": {
+    "fire-ulysses": {
+     "at": [
+      390,
+      480
+     ],
+     "serves": [
+      "ody-i-02",
+      "ody-i-03"
+     ],
+     "note": "left of the fire ring (405..475), facing it; embers-camp stand"
+    },
+    "council-ulysses": {
+     "at": [
+      510,
+      492
+     ],
+     "serves": [
+      "ody-i-06",
+      "ody-i-07"
+     ],
+     "note": "open sand, faces the crew arc, back to the strait"
+    },
+    "council-crew": {
+     "at": [
+      445,
+      507
+     ],
+     "serves": [
+      "ody-i-06",
+      "ody-i-07"
+     ],
+     "note": "crew arc centroid facing Ulysses"
+    },
+    "twelve-at-ship": {
+     "at": [
+      560,
+      503
+     ],
+     "serves": [
+      "ody-i-10"
+     ],
+     "note": "the twelve lined on the sand along ship-2's hull; 20 px men fit ~8 abreast on the 170 px hull"
+    },
+    "entry-mainland": {
+     "at": [
+      1008,
+      268
+     ],
+     "serves": [
+      "ody-i-08",
+      "ody-i-09",
+      "ody-i-12"
+     ],
+     "note": "grass apron at the mouth, between the flanking laurels; verified v-entry.png"
+    },
+    "climb-path": {
+     "at": [
+      940,
+      325
+     ],
+     "serves": [
+      "ody-i-12"
+     ],
+     "note": "the party climbing behind the risen wineskin plate; beach path below the yard wall"
+    }
+   },
+   "objects": {
+    "ship-1": {
+     "bow": [
+      440,
+      400
+     ],
+     "sternCurl": [
+      598,
+      345
+     ],
+     "mastFoot": [
+      508,
+      392
+     ],
+     "mastTop": [
+      505,
+      287
+     ]
+    },
+    "ship-2": {
+     "sternCurl": [
+      516,
+      432
+     ],
+     "prowCurl": [
+      686,
+      428
+     ],
+     "hullCentre": [
+      600,
+      455
+     ]
+    },
+    "campfire": [
+     438,
+     466
+    ],
+    "mainlandMouth": {
+     "aperture": [
+      [
+       945,
+       180
+      ],
+      [
+       1055,
+       250
+      ]
+     ],
+     "note": "dark opening, laurels overhang"
+    },
+    "yardWall": [
+     [
+      942,
+      287
+     ],
+     [
+      1062,
+      345
+     ]
+    ],
+    "smokeColumns": [
+     [
+      955,
+      0
+     ],
+     [
+      1030,
+      0
+     ],
+     [
+      1140,
+      60
+     ]
+    ],
+    "boulderNote": "none on shore; the smoke of the lawless race is the far-lobe carrier of O.1a"
+   },
+   "lenses": [
+    {
+     "name": "establishing",
+     "at": [
+      704,
+      384
+     ],
+     "k": 1.0,
+     "serves": [
+      "ody-i-00",
+      "ody-i-01",
+      "ody-i-05",
+      "ody-i-06"
+     ],
+     "note": "the black strait wide; day state reuses it",
+     "landscapeMargin": 0.0,
+     "portraitMargin": 0.0,
+     "ok": true
+    },
+    {
+     "name": "smoke",
+     "at": [
+      980,
+      205
+     ],
+     "k": 1.9,
+     "serves": [
+      "ody-i-04"
+     ],
+     "note": "lift to the mainland lobe + stubble-fire smoke \u2014 O.1a carrier frame",
+     "landscapeMargin": 2.9,
+     "portraitMargin": 2.9,
+     "ok": true
+    },
+    {
+     "name": "council",
+     "at": [
+      505,
+      470
+     ],
+     "k": 2.2,
+     "serves": [
+      "ody-i-06",
+      "ody-i-07"
+     ],
+     "landscapeMargin": 123.5,
+     "portraitMargin": 123.5,
+     "ok": true
+    },
+    {
+     "name": "camp-fire",
+     "at": [
+      430,
+      468
+     ],
+     "k": 2.4,
+     "serves": [
+      "ody-i-02",
+      "ody-i-03"
+     ],
+     "landscapeMargin": 136.7,
+     "portraitMargin": 140.0,
+     "ok": true
+    },
+    {
+     "name": "ship-mid",
+     "at": [
+      560,
+      470
+     ],
+     "k": 3.0,
+     "serves": [
+      "ody-i-10"
+     ],
+     "note": "mid lens on Ulysses shouldering the skin at the hull",
+     "landscapeMargin": 170.0,
+     "portraitMargin": 170.0,
+     "ok": true
+    },
+    {
+     "name": "skin-close",
+     "at": [
+      560,
+      470
+     ],
+     "k": 4.5,
+     "serves": [
+      "ody-i-11"
+     ],
+     "note": "the skin close IN-WORLD (not the inset)",
+     "landscapeMargin": 212.7,
+     "portraitMargin": 212.7,
+     "ok": true
+    },
+    {
+     "name": "cavemouth-push-from",
+     "at": [
+      850,
+      345
+     ],
+     "k": 1.6,
+     "serves": [
+      "ody-i-08"
+     ],
+     "note": "push start; animates to cavemouth-push-to",
+     "landscapeMargin": 105.0,
+     "portraitMargin": 105.0,
+     "ok": true
+    },
+    {
+     "name": "cavemouth-push-to",
+     "at": [
+      1008,
+      290
+     ],
+     "k": 2.6,
+     "serves": [
+      "ody-i-08",
+      "ody-i-09",
+      "ody-i-12"
+     ],
+     "note": "push end on the laurel mouth",
+     "landscapeMargin": 129.2,
+     "portraitMargin": 142.3,
+     "ok": true
+    },
+    {
+     "name": "crag-tilt",
+     "at": [
+      1050,
+      165
+     ],
+     "k": 2.4,
+     "serves": [
+      "ody-i-09"
+     ],
+     "note": "bare cliff-top against the sky \u2014 Beat VI pre-echo",
+     "landscapeMargin": 5.0,
+     "portraitMargin": 5.0,
+     "ok": true
+    }
+   ],
+   "gates": [
+    {
+     "id": "G1-ship",
+     "unit": "ody-i-07",
+     "verb": "target",
+     "target": "ship",
+     "targetPlate": [
+      600,
+      455
+     ],
+     "anchoredOn": "ship-2 hull centre (the measured painted object)",
+     "gateAct": "crossing",
+     "note": "cue: click the ship \u2014 cross to the mainland"
+    }
+   ]
+  },
+  "cave": {
+   "masters": {
+    "cave.jpg": "boulder-open night (moon mouth)",
+    "cave-shut.jpg": "boulder-shut firelight",
+    "cave-embers.jpg": "low-fire night",
+    "cave-predawn.jpg": "pre-dawn dark",
+    "cave-dawn.jpg": "boulder-open dawn shaft"
+   },
+   "layers": [
+    "cave-fog.png (mouth moon-mist)",
+    "cave-bloom.png (lamps+mouth)",
+    "cave-bloom-fire.png (blaze)"
+   ],
+   "emissivesFrom": "tools/ody/layers-cave.json (lampL 248,356; lampR 1260,371; mouth 337,312; fire 638,427; embers 662,456)",
+   "scale": {
+    "pxPerM": 43,
+    "yardstick": "the penned ewes \u2014 the one in-plate object with a fixed real size (low-poly ewe ~1.05 m nose-to-tail).",
+    "arithmetic": "three ewes measured: (960..1005,302..325)=45 px, (935..985,455..480)=50 px, (830..870,330..350)=40 px; mean 45 px / 1.05 m = 42.9 ~= 43 px/m",
+    "crossCheck": "wicker pen fence ~36 px = 0.84 m (true sheep-fence height); mouth aperture 160 px tall = 3.7 m \u2014 seats a ~7 m giant (300 px standing, ~165 px seated) filling the doorway, exactly Beat V's tableau",
+    "actorHeightPx": {
+     "ulysses_1.75m": 75,
+     "polyphemus_7m_standing": 300,
+     "polyphemus_seated": 165,
+     "stake_6ft": 77,
+     "greatRam_authored": "100-110 px long \u2014 must hide a slung 75 px Ulysses (O.11); the painted 45 px ewes stay normal so the anomaly reads"
+    },
+    "deviations": "club visible run 205 px = 4.8 m (butt hidden behind the bed; Butler's twenty-oar-mast simile is performed by the wide lens, no metric fact rides it); bed 208 px = 4.8 m (the giant sleeps on the FLOOR among the sheep \u2014 the bed is dressing)"
+   },
+   "floors": {
+    "downstageEdge": {
+     "polyline": [
+      [
+       270,
+       455
+      ],
+      [
+       450,
+       520
+      ],
+      [
+       620,
+       555
+      ],
+      [
+       800,
+       565
+      ],
+      [
+       980,
+       550
+      ],
+      [
+       1120,
+       515
+      ],
+      [
+       1230,
+       475
+      ]
+     ],
+     "note": "floor meets the island rim"
+    },
+    "upstageLimit": {
+     "polyline": [
+      [
+       450,
+       400
+      ],
+      [
+       530,
+       388
+      ],
+      [
+       700,
+       345
+      ],
+      [
+       880,
+       330
+      ],
+      [
+       1000,
+       390
+      ],
+      [
+       1020,
+       430
+      ]
+     ],
+     "note": "back-wall/rack/pen feet; stand between the two polylines"
+    }
+   },
+   "marks": {
+    "entry": {
+     "at": [
+      360,
+      450
+     ],
+     "serves": [
+      "ody-ii-00"
+     ],
+     "note": "lit threshold inside the mouth; the men slip in (K1)"
+    },
+    "cheese-rack": {
+     "at": [
+      640,
+      405
+     ],
+     "serves": [
+      "ody-ii-01"
+     ],
+     "note": "O.3 tableau \u2014 laden men before rack B, heads jerked seaward; racks A..D feet x 535..880"
+    },
+    "huddle-far": {
+     "at": [
+      1160,
+      465
+     ],
+     "serves": [
+      "ody-ii-03",
+      "ody-ii-05",
+      "ody-ii-13",
+      "ody-iii-03"
+     ],
+     "note": "far dark right of the bed, under lampR"
+    },
+    "suppliant": {
+     "at": [
+      690,
+      495
+     ],
+     "serves": [
+      "ody-ii-06"
+     ],
+     "note": "arms wide, firelight between him and the seated bulk"
+    },
+    "giant-seat": {
+     "at": [
+      760,
+      452
+     ],
+     "serves": [
+      "ody-ii-05",
+      "ody-ii-07",
+      "ody-ii-08",
+      "ody-iii-08",
+      "ody-iii-09"
+     ],
+     "note": "the giant's working seat by the fire, milk bowls at his knee"
+    },
+    "milking": {
+     "at": [
+      852,
+      470
+     ],
+     "serves": [
+      "ody-ii-04 K7/K8",
+      "ody-iii-01 c1",
+      "ody-iii-07 c9"
+     ],
+     "note": "the tub (865..915,470..520) + clay bowl (805..860,505..535) cluster"
+    },
+    "sprawl-head": {
+     "at": [
+      795,
+      450
+     ],
+     "serves": [
+      "ody-ii-10",
+      "ody-ii-11",
+      "ody-iii-13",
+      "ody-iv-*"
+     ],
+     "note": "sprawl axis head; feet at (975,470) \u2014 full length among the sheep"
+    },
+    "sword-ulysses": {
+     "at": [
+      768,
+      462
+     ],
+     "serves": [
+      "ody-ii-11",
+      "ody-ii-12"
+     ],
+     "note": "at the sleeping throat; G2 rides this mark"
+    },
+    "scheme": {
+     "at": [
+      640,
+      480
+     ],
+     "serves": [
+      "ody-iii-03"
+     ],
+     "note": "Ulysses alone among the pens, push-in pivot"
+    },
+    "lots-circle": {
+     "at": [
+      600,
+      505
+     ],
+     "serves": [
+      "ody-iii-05"
+     ],
+     "note": "open floor left-front of the fire; overhead lens"
+    },
+    "stake-hide": {
+     "at": [
+      790,
+      500
+     ],
+     "serves": [
+      "ody-iii-05",
+      "ody-iv-01"
+     ],
+     "note": "under the dung-litter flecks painted at (770..800,485..495)"
+    },
+    "bowl-offer": {
+     "at": [
+      700,
+      468
+     ],
+     "serves": [
+      "ody-iii-08",
+      "ody-iii-10",
+      "ody-iii-11"
+     ],
+     "note": "the walk-to-the-fire stand; G3 holdAnchor rides the raised bowl at chest (700,441)"
+    },
+    "ram-stand": {
+     "at": [
+      838,
+      430
+     ],
+     "serves": [
+      "ody-v-04"
+     ],
+     "note": "apart at the front pen's left rail; G5 anchor = ram body centre (838,415)"
+    },
+    "ram-at-mouth": {
+     "at": [
+      395,
+      438
+     ],
+     "serves": [
+      "ody-v-07",
+      "ody-v-08",
+      "ody-v-09",
+      "ody-v-10"
+     ],
+     "note": "halted under the palm in the doorway"
+    },
+    "doorway-seat": {
+     "at": [
+      345,
+      420
+     ],
+     "serves": [
+      "ody-iv-12",
+      "ody-v-00",
+      "ody-v-05",
+      "ody-v-06"
+     ],
+     "note": "the blind giant seated filling the mouth, hands spread"
+    }
+   },
+   "objects": {
+    "mouthAperture": [
+     [
+      290,
+      250
+     ],
+     [
+      405,
+      415
+     ]
+    ],
+    "boulderOpen": [
+     455,
+     330
+    ],
+    "boulderShut": [
+     355,
+     325
+    ],
+    "racks": {
+     "A": [
+      [
+       535,
+       195
+      ],
+      [
+       625,
+       385
+      ]
+     ],
+     "B": [
+      [
+       638,
+       160
+      ],
+      [
+       712,
+       345
+      ]
+     ],
+     "C": [
+      [
+       716,
+       135
+      ],
+      [
+       792,
+       340
+      ]
+     ],
+     "D": [
+      [
+       800,
+       130
+      ],
+      [
+       880,
+       330
+      ]
+     ]
+    },
+    "floorCheeses": [
+     [
+      600,
+      342
+     ],
+     [
+      665,
+      390
+     ]
+    ],
+    "fireRing": {
+     "outer": [
+      [
+       527,
+       418
+      ],
+      [
+       733,
+       500
+      ]
+     ],
+     "pitCentre": [
+      630,
+      460
+     ],
+     "blazeLight": [
+      638,
+      427
+     ],
+     "embers": [
+      662,
+      456
+     ]
+    },
+    "firewood": [
+     [
+      495,
+      495
+     ],
+     [
+      620,
+      555
+     ]
+    ],
+    "mainPen": [
+     [
+      775,
+      290
+     ],
+     [
+      1050,
+      425
+     ]
+    ],
+    "frontPen": [
+     [
+      860,
+      425
+     ],
+     [
+      1090,
+      525
+     ]
+    ],
+    "paintedBigRam": [
+     925,
+     362
+    ],
+    "club": {
+     "tip": [
+      1097,
+      200
+     ],
+     "visibleButt": [
+      1042,
+      398
+     ]
+    },
+    "bed": [
+     [
+      1025,
+      330
+     ],
+     [
+      1240,
+      500
+     ]
+    ],
+    "milkTub": [
+     890,
+     495
+    ],
+    "wheyTub": [
+     740,
+     366
+    ],
+    "clayBowl": [
+     832,
+     520
+    ],
+    "creamBowl": [
+     800,
+     408
+    ],
+    "dungFlecks": [
+     [
+      770,
+      490
+     ],
+     [
+      555,
+      570
+     ],
+     [
+      885,
+      552
+     ]
+    ],
+    "logsRight": [
+     [
+      1105,
+      480
+     ],
+     [
+      1180,
+      520
+     ]
+    ]
+   },
+   "lenses": [
+    {
+     "name": "establishing",
+     "at": [
+      704,
+      384
+     ],
+     "k": 1.0,
+     "serves": [
+      "ody-ii-00",
+      "ody-ii-13",
+      "ody-iii-00",
+      "ody-v-00",
+      "ody-v-05"
+     ],
+     "note": "the one-wall cutaway wide; tillmorning's widest; dawn state reuses",
+     "landscapeMargin": 0.0,
+     "portraitMargin": 0.0,
+     "ok": true
+    },
+    {
+     "name": "racks-sweep",
+     "at": [
+      700,
+      300
+     ],
+     "k": 2.0,
+     "serves": [
+      "ody-ii-01"
+     ],
+     "note": "sweep keyframe centre over racks + ranked pens (K2)",
+     "landscapeMargin": 108.0,
+     "portraitMargin": 108.0,
+     "ok": true
+    },
+    {
+     "name": "doorlight-hinge",
+     "at": [
+      480,
+      400
+     ],
+     "k": 2.2,
+     "serves": [
+      "ody-ii-02"
+     ],
+     "note": "holds on the doorway light \u2014 the tragic hinge",
+     "landscapeMargin": 160.0,
+     "portraitMargin": 193.5,
+     "ok": true
+    },
+    {
+     "name": "mouth",
+     "at": [
+      345,
+      340
+     ],
+     "k": 2.4,
+     "serves": [
+      "ody-ii-04",
+      "ody-iii-02",
+      "ody-iv-07",
+      "ody-iv-08",
+      "ody-iv-09",
+      "ody-iv-10",
+      "ody-iv-11"
+     ],
+     "note": "boulder settling / quiver-lid clap / lamplight seams / stone drawn",
+     "landscapeMargin": 51.7,
+     "portraitMargin": 124.2,
+     "ok": true
+    },
+    {
+     "name": "discovery-low",
+     "at": [
+      900,
+      430
+     ],
+     "k": 1.8,
+     "serves": [
+      "ody-ii-03"
+     ],
+     "note": "low, from the men's hiding place",
+     "landscapeMargin": 116.9,
+     "portraitMargin": 124.7,
+     "ok": true
+    },
+    {
+     "name": "eye-close",
+     "at": [
+      745,
+      295
+     ],
+     "k": 3.6,
+     "serves": [
+      "ody-ii-05"
+     ],
+     "note": "FIRST close lens on the single eye \u2014 O.1's visual half; head of the seated 300 px giant",
+     "landscapeMargin": 188.3,
+     "portraitMargin": 188.3,
+     "ok": true
+    },
+    {
+     "name": "twoshot",
+     "at": [
+      700,
+      400
+     ],
+     "k": 2.6,
+     "serves": [
+      "ody-ii-07",
+      "ody-ii-08",
+      "ody-ii-09",
+      "ody-iii-11",
+      "ody-iii-12"
+     ],
+     "note": "small figure vs seated bulk; noman low angle",
+     "landscapeMargin": 220.3,
+     "portraitMargin": 220.3,
+     "ok": true
+    },
+    {
+     "name": "meal-close",
+     "at": [
+      780,
+      430
+     ],
+     "k": 2.8,
+     "serves": [
+      "ody-ii-10",
+      "ody-iii-01",
+      "ody-iii-07"
+     ],
+     "note": "the two-at-a-clutch IN SHADOW against the fire \u2014 staged identically x3 (O.6)",
+     "landscapeMargin": 200.9,
+     "portraitMargin": 200.9,
+     "ok": true
+    },
+    {
+     "name": "sword",
+     "at": [
+      740,
+      440
+     ],
+     "k": 3.2,
+     "serves": [
+      "ody-ii-11",
+      "ody-ii-12"
+     ],
+     "note": "the glint at the hip; pan START \u2014 pan lands on mouth lens",
+     "landscapeMargin": 208.0,
+     "portraitMargin": 208.0,
+     "ok": true
+    },
+    {
+     "name": "scheme-push",
+     "at": [
+      640,
+      470
+     ],
+     "k": 3.0,
+     "serves": [
+      "ody-iii-03"
+     ],
+     "landscapeMargin": 170.0,
+     "portraitMargin": 170.0,
+     "ok": true
+    },
+    {
+     "name": "club-wide",
+     "at": [
+      880,
+      360
+     ],
+     "k": 1.6,
+     "serves": [
+      "ody-iii-04"
+     ],
+     "note": "figures tiny beside the club \u2014 the mast-scale delivered visually",
+     "landscapeMargin": 88.0,
+     "portraitMargin": 120.0,
+     "ok": true
+    },
+    {
+     "name": "lots-overhead",
+     "at": [
+      600,
+      490
+     ],
+     "k": 3.0,
+     "serves": [
+      "ody-iii-05"
+     ],
+     "landscapeMargin": 150.0,
+     "portraitMargin": 150.0,
+     "ok": true
+    },
+    {
+     "name": "bowl-close",
+     "at": [
+      690,
+      440
+     ],
+     "k": 3.4,
+     "serves": [
+      "ody-iii-08",
+      "ody-iii-10"
+     ],
+     "note": "G3 hold frame; bowl fills in it",
+     "landscapeMargin": 215.1,
+     "portraitMargin": 215.1,
+     "ok": true
+    },
+    {
+     "name": "face-flush",
+     "at": [
+      710,
+      380
+     ],
+     "k": 4.0,
+     "serves": [
+      "ody-iii-09"
+     ],
+     "note": "the flushed face leaning down, the one eye glittering",
+     "landscapeMargin": 284.0,
+     "portraitMargin": 284.0,
+     "ok": true
+    },
+    {
+     "name": "ember-close",
+     "at": [
+      655,
+      450
+     ],
+     "k": 3.8,
+     "serves": [
+      "ody-iv-01",
+      "ody-iv-02"
+     ],
+     "note": "G4 hold frame on the fire-pit, point brightening",
+     "landscapeMargin": 216.9,
+     "portraitMargin": 216.9,
+     "ok": true
+    },
+    {
+     "name": "drive-tight",
+     "at": [
+      780,
+      430
+     ],
+     "k": 3.4,
+     "serves": [
+      "ody-iv-03",
+      "ody-iv-04",
+      "ody-iv-05"
+     ],
+     "note": "leaning bodies, turning shaft, at the sprawl head",
+     "landscapeMargin": 225.1,
+     "portraitMargin": 225.1,
+     "ok": true
+    },
+    {
+     "name": "ram-close",
+     "at": [
+      838,
+      425
+     ],
+     "k": 3.2,
+     "serves": [
+      "ody-v-04"
+     ],
+     "note": "push to the great ram at the rail (G5)",
+     "landscapeMargin": 223.0,
+     "portraitMargin": 223.0,
+     "ok": true
+    },
+    {
+     "name": "handpass-tight",
+     "at": [
+      370,
+      400
+     ],
+     "k": 3.6,
+     "serves": [
+      "ody-v-06"
+     ],
+     "note": "hand-over-wool with a crew face beneath \u2014 O.11 core image",
+     "landscapeMargin": 174.4,
+     "portraitMargin": 222.8,
+     "ok": true
+    },
+    {
+     "name": "doorway-twoshot",
+     "at": [
+      370,
+      380
+     ],
+     "k": 3.0,
+     "serves": [
+      "ody-v-07",
+      "ody-v-08",
+      "ody-v-09",
+      "ody-v-10"
+     ],
+     "note": "ruined face above, Ulysses face-up in the wool below",
+     "landscapeMargin": 135.3,
+     "portraitMargin": 193.3,
+     "ok": true
+    },
+    {
+     "name": "freed-overshoulder",
+     "at": [
+      430,
+      430
+     ],
+     "k": 2.0,
+     "serves": [
+      "ody-v-11"
+     ],
+     "note": "back at the mouth, the giant small now",
+     "landscapeMargin": 78.0,
+     "portraitMargin": 146.0,
+     "ok": true
+    }
+   ],
+   "gates": [
+    {
+     "id": "G2-sword",
+     "unit": "ody-ii-11",
+     "verb": "target",
+     "target": "sword",
+     "targetPlate": [
+      768,
+      445
+     ],
+     "anchoredOn": "ACTOR PROP \u2014 the sword at Ulysses' hip: mark (768,462) + hip offset 17 px; anchor rides the mounted actor, this is its staged rest",
+     "gateAct": "swordDraw",
+     "note": "targetLive only while the ulysses actor is mounted at sword-ulysses"
+    },
+    {
+     "id": "G3-bowl",
+     "unit": "ody-iii-08",
+     "verb": "hold",
+     "holds": 3,
+     "holdAnchor": [
+      700,
+      441
+     ],
+     "anchoredOn": "the raised ivy bowl at chest height on the bowl-offer mark (700,468)",
+     "note": "fills proportional to hold, THREE pours; ody-iii-09 fires on pour-1 release, ody-iii-10 on pour-3"
+    },
+    {
+     "id": "G4-embers",
+     "unit": "ody-iv-01",
+     "verb": "hold",
+     "holdAnchor": [
+      662,
+      456
+     ],
+     "anchoredOn": "the measured embers emissive centre (layers-cave.json) \u2014 glow rides the hold, watermark law",
+     "note": "at full heat the drive fires itself; blinding clock ~14 s"
+    },
+    {
+     "id": "G5-ram-great",
+     "unit": "ody-v-04",
+     "verb": "target",
+     "target": "ram-great",
+     "targetPlate": [
+      838,
+      415
+     ],
+     "anchoredOn": "the great-ram ACTOR body centre at ram-stand (838,430); a GAP asset \u2014 anchor rides it",
+     "gateAct": "slingUnder",
+     "note": "the no-text moment (cut C1); reader's click IS the sling-under"
+    }
+   ]
+  },
+  "sea": {
+   "masters": {
+    "sea.jpg": "single master \u2014 night, moon, lit cave at cliff base"
+   },
+   "layers": [
+    "sea-fog.png",
+    "sea-bloom-moon.png",
+    "sea-bloom-cave.png"
+   ],
+   "emissivesFrom": "tools/ody/layers-sea.json (moon 474,242; moonpath 475,356; cave 818,457; crag 820,339)",
+   "scale": {
+    "pxPerM": 12.7,
+    "yardstick": "the ship \u2014 the same twenty-oarer (8 rowlocks a side painted), 15 m tip-to-tip.",
+    "arithmetic": "sternpost waterline (495,462) -> bow tip (678,516): sqrt(183^2+54^2)=190.8 px; 190.8/15 = 12.7 px/m",
+    "crossCheck": "mast foot (578,462) -> head (580,350) = 112 px = 8.8 m; cliff base (770,540) -> plateau brow (790,192) ~= 350 px = 27.5 m headland; a 7 m giant = 89 px on the brow \u2014 reads from the ship",
+    "actorHeightPx": {
+     "ulysses_1.75m": 22,
+     "rower_seated": 15,
+     "polyphemus_7m": 89
+    },
+    "deviations": "in-fiction the taunt carries over far more water; the diorama compresses the strait \u2014 the receding-shore state (headland layer scaled back) performs the distance"
+   },
+   "floors": {
+    "deck": {
+     "polyline": [
+      [
+       515,
+       420
+      ],
+      [
+       660,
+       490
+      ]
+     ],
+     "note": "deck walk line stern->bow; y = 420 + 0.483(x-515)"
+    },
+    "clifftopLedge": {
+     "polyline": [
+      [
+       790,
+       195
+      ],
+      [
+       870,
+       215
+      ],
+      [
+       955,
+       238
+      ],
+      [
+       1120,
+       230
+      ]
+     ],
+     "note": "the seaward brow; the ONLY land floor on this set \u2014 sea otherwise n/a"
+    }
+   },
+   "marks": {
+    "clifftop-giant": {
+     "at": [
+      860,
+      210
+     ],
+     "serves": [
+      "ody-vi-01",
+      "ody-vi-03",
+      "ody-vi-08",
+      "ody-vi-09",
+      "ody-vi-11",
+      "ody-vi-12"
+     ],
+     "note": "feet on the brow, boulders (the ammunition) painted behind at (850..1100, 30..170)"
+    },
+    "stern-ulysses": {
+     "at": [
+      518,
+      426
+     ],
+     "serves": [
+      "ody-vi-02",
+      "ody-vi-04",
+      "ody-vi-06",
+      "ody-vi-10"
+     ],
+     "note": "standing at the stern, arm flung at the cliff"
+    },
+    "stern-rail": {
+     "at": [
+      506,
+      406
+     ],
+     "serves": [
+      "ody-vi-07"
+     ],
+     "note": "steps ONTO the rail for the self-naming (O.12) — a SNAP, not a walk: ody-vi-07 is an auto whose first frame must already stand the taunt pin (actors.json ulysses-taunt 43,674) on this mark"
+    },
+    "rower-1n": {
+     "at": [
+      556,
+      444
+     ],
+     "serves": [
+      "ody-vi-*"
+     ]
+    },
+    "rower-2n": {
+     "at": [
+      586,
+      455
+     ],
+     "serves": [
+      "ody-vi-*"
+     ]
+    },
+    "rower-3n": {
+     "at": [
+      616,
+      466
+     ],
+     "serves": [
+      "ody-vi-*"
+     ]
+    },
+    "rower-1f": {
+     "at": [
+      573,
+      430
+     ],
+     "serves": [
+      "ody-vi-*"
+     ]
+    },
+    "rower-2f": {
+     "at": [
+      603,
+      441
+     ],
+     "serves": [
+      "ody-vi-*"
+     ]
+    },
+    "rower-3f": {
+     "at": [
+      633,
+      452
+     ],
+     "serves": [
+      "ody-vi-*"
+     ],
+     "note": "six survivors at the oars; menbeg turns them to Ulysses"
+    }
+   },
+   "objects": {
+    "ship": {
+     "sternTip": [
+      495,
+      462
+     ],
+     "bowTip": [
+      678,
+      516
+     ],
+     "mastFoot": [
+      578,
+      462
+     ],
+     "mastTop": [
+      580,
+      350
+     ],
+     "deckCentre": [
+      575,
+      450
+     ]
+    },
+    "clifftopBoulders": [
+     [
+      850,
+      30
+     ],
+     [
+      1100,
+      170
+     ]
+    ],
+    "caveMouthGlow": [
+     818,
+     457
+    ],
+    "cragSpill": [
+     820,
+     339
+    ],
+    "splashRock1": [
+     468,
+     505
+    ],
+    "splashRock2": [
+     455,
+     540
+    ],
+    "moonDisc": [
+     474,
+     242
+    ]
+   },
+   "lenses": [
+    {
+     "name": "establishing",
+     "at": [
+      704,
+      384
+     ],
+     "k": 1.0,
+     "serves": [
+      "ody-vi-01",
+      "ody-vi-03"
+     ],
+     "note": "the two-plane wide: ship foreground, blinded figure on the cliff \u2014 the FIRST gate and rock 1 keep it (world still at rest scale); units after the first wash use the recede lenses below (F2 recompose, round 3)",
+     "landscapeMargin": 0.0,
+     "portraitMargin": 0.0,
+     "ok": true
+    },
+    {
+     "name": "stern",
+     "at": [
+      530,
+      430
+     ],
+     "k": 2.8,
+     "serves": [
+      "ody-vi-02",
+      "ody-vi-07",
+      "ody-vi-10"
+     ],
+     "note": "whip to Ulysses at the stern; the name-line; the flat Hades answer",
+     "landscapeMargin": 200.9,
+     "portraitMargin": 200.9,
+     "ok": true
+    },
+    {
+     "name": "ship-deck",
+     "at": [
+      575,
+      450
+     ],
+     "k": 2.6,
+     "serves": [
+      "ody-vi-04",
+      "ody-vi-05"
+     ],
+     "note": "ship-interior three-quarter \u2014 THE MEN turn from their oars",
+     "landscapeMargin": 170.3,
+     "portraitMargin": 170.3,
+     "ok": true
+    },
+    {
+     "name": "clifftop",
+     "at": [
+      870,
+      195
+     ],
+     "k": 2.8,
+     "serves": [
+      "ody-vi-08",
+      "ody-vi-09"
+     ],
+     "note": "past the ship to the cliff-top close, ruined eye toward the sea",
+     "landscapeMargin": 57.9,
+     "portraitMargin": 57.9,
+     "ok": true
+    },
+    {
+     "name": "curse",
+     "at": [
+      870,
+      180
+     ],
+     "k": 2.2,
+     "serves": [
+      "ody-vi-11"
+     ],
+     "note": "document-weight frame: both hands to the firmament, sky darkened a stop",
+     "landscapeMargin": 5.5,
+     "portraitMargin": 5.5,
+     "ok": true
+    },
+    {
+     "name": "strait",
+     "at": [
+      585,
+      330
+     ],
+     "k": 2.0,
+     "serves": [
+      "ody-vi-06",
+      "ody-vi-12"
+     ],
+     "note": "F2 recompose (round 3): the two-plane frame tightened to the painted strait for the units after the first wash (world 0.86) — stern, rowers, splash water (455,540) and the whole cursing giant in one window; the k=1 wide read 28% dead band here against the 22% law",
+     "landscapeMargin": 138.0,
+     "portraitMargin": 138.0,
+     "ok": true
+    },
+    {
+     "name": "homeward",
+     "at": [
+      575,
+      380
+     ],
+     "k": 2.6,
+     "serves": [
+      "ody-vi-13"
+     ],
+     "note": "F2 recompose (round 3): the row home — ship centred, cave fire falling astern; composed inside the painting at world ~0.76 (the k=1 wide read 32% dead band)",
+     "landscapeMargin": 232.3,
+     "portraitMargin": 232.3,
+     "ok": true
+    },
+    {
+     "name": "moonpath",
+     "at": [
+      590,
+      340
+     ],
+     "k": 3.2,
+     "serves": [
+      "ody-vi-14"
+     ],
+     "note": "F2 recompose (round 3): sailedon and the closing turn — follows the ship toward the painted moonpath and moon (475,356 / 474,242), not open water; composed for world ~0.69 under the end cover (the k=1 wide read 36% dead band on both frames)",
+     "landscapeMargin": 220.0,
+     "portraitMargin": 220.0,
+     "ok": true
+    }
+   ],
+   "gates": [
+    {
+     "id": "G6-cyclops",
+     "units": [
+      "ody-vi-01",
+      "ody-vi-06"
+     ],
+     "verb": "target",
+     "target": "cyclops",
+     "resolutions": 2,
+     "targetPlate": [
+      860,
+      168
+     ],
+     "anchoredOn": "the VISIBLE Cyclops figure on the clifftop (sherlock lit-window rule) \u2014 body centre of the 89 px giant standing at clifftop-giant (860,210); a GAP actor, anchor rides it",
+     "note": "second click resolves OVER the men's still-lit plea \u2014 O.12's mechanism"
+    }
+   ]
+  }
+ },
+ "objectLedger": [
+  {
+   "object": "ULYSSES actor (walk/climb/shoulder-skin/suppliant/pour/half-bow/drive-lean/sling-under/stern-shout poses)",
+   "sets": [
+    "shore",
+    "cave",
+    "sea"
+   ],
+   "status": "GAP",
+   "lane": "ody-actors",
+   "test": "20 px (shore) / 75 px (cave) / 22 px (sea) foot-baselined at every ledger mark; hairline leader hits headPlate at all named lenses; hip sword anchor live for G2",
+   "unitsServed": 74
+  },
+  {
+   "object": "POLYPHEMUS giant actor (enter-under-load / seated-working / sprawled-face-up / groping / doorway-seat / clifftop-blind / arms-lifted poses; sighted + blinded head)",
+   "sets": [
+    "cave",
+    "sea"
+   ],
+   "status": "GAP",
+   "lane": "ody-actors",
+   "test": "300 px standing at 43 px/m; seated fills the 160 px mouth (doorway-seat tableau); single eye reads at eye-close k=3.6; 89 px on the sea brow, hit-target for G6 both clicks",
+   "unitsServed": 60
+  },
+  {
+   "object": "THE CREW actors (twelve -> ten -> eight -> six; huddle / laden-with-cheeses / lots / stake-five / under-ram / rower variants)",
+   "sets": [
+    "shore",
+    "cave",
+    "sea"
+   ],
+   "status": "GAP",
+   "lane": "ody-actors",
+   "test": "headcount law: 12 at the ship, 12 enter the cave, 2 fewer after each of three identical meals (O.6), 5 at the stake, 6 under rams, 6 at the oars; the seize pantomime restages IDENTICALLY x3",
+   "unitsServed": 60
+  },
+  {
+   "object": "THE GREAT RAM actor + three lashed ram-trios",
+   "sets": [
+    "cave"
+   ],
+   "status": "GAP",
+   "lane": "ody-actors",
+   "test": "great ram 100-110 px long (hides a slung 75 px Ulysses at handpass-tight k=3.6 \u2014 O.11); trios shuffle under the spread palm at ram-at-mouth; G5 raycast on the body",
+   "unitsServed": 12
+  },
+  {
+   "object": "THE STAKE diorama prop (green beam -> pointed -> charred -> hidden -> ember-glowing -> driven -> plucked)",
+   "sets": [
+    "cave"
+   ],
+   "status": "GAP",
+   "lane": "ody-props",
+   "test": "77 px (6 ft at 43 px/m); glow rides G4 hold level (watermark law); hides under the painted dung fleck at stake-hide; the auger twist reads at drive-tight",
+   "unitsServed": 9
+  },
+  {
+   "object": "IVY-WOOD BOWL prop (empty / filling / thrust-back)",
+   "sets": [
+    "cave"
+   ],
+   "status": "GAP",
+   "lane": "ody-props",
+   "test": "fill level proportional to G3 hold, three pours, drained in pantomime each release; teal affordance migrates to it on ody-iii-07",
+   "unitsServed": 6
+  },
+  {
+   "object": "WINESKIN (shouldered prop + plate-wineskin INSET art)",
+   "sets": [
+    "shore"
+   ],
+   "status": "GAP",
+   "lane": "ody-insets",
+   "test": "the chapter's ONLY inset (inset law \u00a76): rises on misgave, resolves O.2 (priest's gift read as foresight \u2014 temple motif per cuts c-sack/c-secret); prop sloshes on ody-i-10",
+   "unitsServed": 3
+  },
+  {
+   "object": "SWORD prop (hip-rest / drawn-over-throat / sheathed)",
+   "sets": [
+    "cave"
+   ],
+   "status": "GAP",
+   "lane": "ody-props",
+   "test": "breathing glint at G2 anchor (768,445) in low-fire state; on click the POV draw STOPS mid-air and the pan refuses it (O.5)",
+   "unitsServed": 2
+  },
+  {
+   "object": "CAMEO art x4 \u2014 ULYSSES, POLYPHEMUS (single-eye \u2014 O.1's visual half), A CYCLOPS voice-card, THE MEN",
+   "sets": [
+    "all"
+   ],
+   "status": "GAP",
+   "lane": "ody-cameo",
+   "test": "decode before __ready; POLYPHEMUS card + eye-close lens together land O.1's one-eye half BEFORE the blinding; degrades to monogram never breaks",
+   "unitsServed": 4
+  },
+  {
+   "object": "ROCKS 1+2 actors (tear-free / arc / splash / wash)",
+   "sets": [
+    "sea"
+   ],
+   "status": "GAP",
+   "lane": "ody-props",
+   "test": "arc from the clifftop boulder pile to splashRock1 (468,505) ahead of the rudder then splashRock2 (455,540) astern; wash drives the ship BACK then ONWARD on the two ~12 s clocks",
+   "unitsServed": 2
+  },
+  {
+   "object": "ISLAND-BEACH return layer + sea dawn state",
+   "sets": [
+    "sea"
+   ],
+   "status": "GAP",
+   "lane": "ody-layers",
+   "test": "beach layer rises for cuts c6-c8 (comrades, flock ashore, ram at the driftwood altar, thigh-fire smoke straight up, NO sign); dawn state for sailedon \u2014 sea ships only ONE master today",
+   "unitsServed": 2
+  },
+  {
+   "object": "LAMPLIGHT-SEAMS choreography (the neighbours' lamps beyond the shut boulder, gathering then receding)",
+   "sets": [
+    "cave"
+   ],
+   "status": "GAP",
+   "lane": "ody-layers",
+   "test": "seams glow through the boulder rim in embers state, dim one by one on wentaway (O.10 completes); buildable by choreographing the measured mouth emissive + a thin rim card",
+   "unitsServed": 5
+  },
+  {
+   "object": "GOAT-HUNT + beach-feast pantomime dressing (bows, spits, cups)",
+   "sets": [
+    "shore"
+   ],
+   "status": "GAP",
+   "lane": "ody-props",
+   "test": "day state's painted goats carry the island; hunt/feast props ride the crew actors (cuts c-hunt, c-tally)",
+   "unitsServed": 2
+  },
+  {
+   "object": "HELMET for the lots + wallet of provisions",
+   "sets": [
+    "cave",
+    "shore"
+   ],
+   "status": "GAP",
+   "lane": "ody-props",
+   "test": "shaken helmet at lots-circle under the overhead lens; wallet dresses the ody-i-12 climb",
+   "unitsServed": 2
+  },
+  {
+   "object": "SHORE set \u2014 night master + day state, fog + fire-bloom layers, 4 measured emissives",
+   "sets": [
+    "shore"
+   ],
+   "status": "EXISTS",
+   "lane": "ody-set (layers-shore.json)",
+   "test": "shipped; gains per state in stateLightMap",
+   "unitsServed": 12
+  },
+  {
+   "object": "CAVE set \u2014 5 state masters (open/shut/embers/predawn/dawn), fog + 2 bloom layers, 5 measured emissives, boulder in BOTH positions painted",
+   "sets": [
+    "cave"
+   ],
+   "status": "EXISTS",
+   "lane": "ody-set (layers-cave.json)",
+   "test": "shipped; boulder-shut = states shut/embers/predawn, boulder-open = cave/dawn \u2014 the shut pantomime is a state swap under the grind-boom sfx",
+   "unitsServed": 51
+  },
+  {
+   "object": "SEA set \u2014 single master, fog + moon/cave blooms, 4 measured emissives",
+   "sets": [
+    "sea"
+   ],
+   "status": "EXISTS",
+   "lane": "ody-set (layers-sea.json)",
+   "test": "shipped; receding-shore is a transform, not an asset; dawn state MISSING (see GAP row)",
+   "unitsServed": 14
+  },
+  {
+   "object": "Cheese racks, floor cheeses, milk tub/whey tub/bowls, club, bed, firewood, dung litter, pens + painted flock, yard wall, smoke columns, moonpath",
+   "sets": [
+    "shore",
+    "cave"
+   ],
+   "status": "EXISTS (painted in-plate)",
+   "lane": "ody-set",
+   "test": "coordinates in objects tables; K2/K8/III-8/c-station etc. perform on them",
+   "unitsServed": "dressing across all leaves"
+  }
+ ],
+ "inventory": {
+  "exists": {
+   "masters": 3,
+   "stateVariants": {
+    "shore": 2,
+    "cave": 5,
+    "sea": 1
+   },
+   "layers": {
+    "shore": [
+     "fog",
+     "bloom"
+    ],
+    "cave": [
+     "fog",
+     "bloom",
+     "bloom-fire"
+    ],
+    "sea": [
+     "fog",
+     "bloom-moon",
+     "bloom-cave"
+    ]
+   },
+   "measured": "all emissives/blooms/fogs in tools/ody/layers-{shore,cave,sea}.json; engine skeleton copied (WIRING.md); slice + gate-state scripts in tools/ody/"
+  },
+  "gap": {
+   "rankedByUnitsBlocked": [
+    [
+     "ULYSSES actor",
+     74
+    ],
+    [
+     "POLYPHEMUS actor",
+     60
+    ],
+    [
+     "THE CREW actors",
+     60
+    ],
+    [
+     "GREAT RAM + trios",
+     12
+    ],
+    [
+     "THE STAKE",
+     9
+    ],
+    [
+     "IVY BOWL",
+     6
+    ],
+    [
+     "LAMPLIGHT SEAMS",
+     5
+    ],
+    [
+     "CAMEO ART x4",
+     4
+    ],
+    [
+     "WINESKIN prop+inset",
+     3
+    ],
+    [
+     "ROCKS 1+2",
+     2
+    ],
+    [
+     "ISLAND-BEACH layer + sea dawn",
+     2
+    ],
+    [
+     "hunt/feast dressing",
+     2
+    ],
+    [
+     "helmet+wallet",
+     2
+    ]
+   ],
+   "factCarriersAtRisk": {
+    "O.1": "POLYPHEMUS cameo art + eye-close lens (art GAP)",
+    "O.2": "plate-wineskin inset (GAP)",
+    "O.5": "sword prop (GAP)",
+    "O.7": "ivy bowl (GAP)",
+    "O.9": "stake (GAP)",
+    "O.11": "great ram + trios (GAP)",
+    "O.12/O.14": "clifftop giant actor (GAP) \u2014 G6 cannot anchor until it mounts"
+   }
+  }
+ },
+ "counts": {
+  "marks": 30,
+  "lenses": 37,
+  "gates": 6,
+  "gateResolutions": 7,
+  "lensDeadBandFailures": []
+ }
+}

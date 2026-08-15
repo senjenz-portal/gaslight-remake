@@ -1,0 +1,345 @@
+{
+ "lane": "ody-layers-cave",
+ "created": "2026-08-14T21:17:00-0700",
+ "generator": "tools/ody/slice_cave.py (helpers imported from tools/lanea/slice_plate.py)",
+ "plate": [
+  1408,
+  768
+ ],
+ "sources": {
+  "cave-dawn.jpg": {
+   "sha256": "3786d632d5e050ddd77228b7fdd20a38ea2ecea6b74389c168c23c25f0937d1e"
+  },
+  "cave-embers.jpg": {
+   "sha256": "a88dd06c8f8967374d36e204cae7eded9b175b92142948e87d41a19f519918a1"
+  },
+  "cave-predawn.jpg": {
+   "sha256": "a75a2af8088baa7913c309512fc3fc74c5e2b24ef3e2a049c3b40666a2cb0748"
+  },
+  "cave-shut.jpg": {
+   "sha256": "b6137386780c65249c4c2ce874364c859887b2c687a89daa0071fecf453f5f81"
+  },
+  "cave.jpg": {
+   "sha256": "ee756bd0920d21e3d08b3f0682984eeb475cc30bc6d66d8b41e27949659b30e1"
+  }
+ },
+ "method": "bloom = per-source additive radial profile (annulus median about a metric-weighted centroid, tail-fifth baseline subtracted, clipped, tail clamped), re-synthesised isotropically -- slice_plate.py step 2, per source. The fire is isolated by plate subtraction instead of a void model. Deterministic, no model calls.",
+ "emissives": [
+  {
+   "id": "lampL",
+   "at": [
+    248,
+    356
+   ],
+   "r": 50,
+   "rgb": "255,133,6",
+   "a": 0.15,
+   "per": 5.7,
+   "amp": 0.3,
+   "note": "the west lantern, on the rock left of the mouth; lit in every state. Profile measured in the x<268 sector so the mouth's blue never leaks into it"
+  },
+  {
+   "id": "lampR",
+   "at": [
+    1260,
+    371
+   ],
+   "r": 76,
+   "rgb": "255,215,100",
+   "a": 0.15,
+   "per": 6.3,
+   "amp": 0.3,
+   "note": "the east lantern, over the bed; lit in every state"
+  },
+  {
+   "id": "mouth",
+   "at": [
+    337,
+    312
+   ],
+   "r": 80,
+   "rgb": "160,226,255",
+   "a": 0.16,
+   "per": 9.7,
+   "amp": 0.22,
+   "note": "the moon through the open mouth, aperture + spill. DARK whenever the boulder is in (shut/embers/predawn); the dawn plate repaints it warm and this channel keeps breathing it"
+  },
+  {
+   "id": "fire",
+   "at": [
+    638,
+    427
+   ],
+   "r": 238,
+   "rgb": "255,191,74",
+   "a": 0.34,
+   "per": 3.1,
+   "amp": 0.55,
+   "gain": 0,
+   "note": "the fire pit ablaze: centre/reach/colour measured on clip(cave-shut - cave-embers, 0). Alpha 0.34 but gain 0 at rest -- the shut state drives it, street-fire-style"
+  },
+  {
+   "id": "embers",
+   "at": [
+    662,
+    456
+   ],
+   "r": 61,
+   "rgb": "255,45,70",
+   "a": 0.2,
+   "per": 4.6,
+   "amp": 0.5,
+   "gain": 0,
+   "note": "the banked coals of cave-embers/cave-predawn: gain 0 at rest, the ember states raise it and it only smoulders"
+  }
+ ],
+ "layers": {
+  "cave-bloom.png": {
+   "sources": [
+    "lampL",
+    "lampR",
+    "mouth"
+   ],
+   "cropOrigin": [
+    186,
+    195
+   ],
+   "cropSize": [
+    1196,
+    298
+   ],
+   "blend": "screen"
+  },
+  "cave-bloom-fire.png": {
+   "sources": [
+    "fire"
+   ],
+   "isolation": "clip(cave-shut - cave-embers, 0): same geometry, so the difference is the blaze's light and nothing else. Core chroma (r<50) is the material swap of white flame over red coals, so the card keeps the measured luminance there and the spill's measured chroma throughout",
+   "cropOrigin": [
+    371,
+    159
+   ],
+   "cropSize": [
+    536,
+    536
+   ],
+   "blend": "screen",
+   "restOpacity": 0,
+   "drive": "the shut state's blaze; embers states hold it near 0 and pulse the embers channel"
+  },
+  "cave-fog.png": {
+   "cropOrigin": [
+    161,
+    156
+   ],
+   "cropSize": [
+    446,
+    390
+   ],
+   "blend": "screen",
+   "restOpacity": 0.45,
+   "driftPxPerSec": 2.4,
+   "per": 13.0,
+   "aperture": {
+    "at": [
+     339.1,
+     322.7
+    ],
+    "sigma": [
+     29.6,
+     41.5
+    ]
+   },
+   "pool": {
+    "at": [
+     383.7,
+     439.2
+    ],
+    "sigma": [
+     58.5,
+     27.4
+    ]
+   },
+   "placement": "centroid + sigma moments of clip(B-R-10,0) in the mouth aperture (y 240..400) and its floor spill (y 400..500); gaussians at those moments, inflated 1.25x. Colour is the mouth's own measured light. Gains (115/70) and rest opacity are the authored numbers",
+   "note": "the cave's breath is moon mist at the mouth. Dark states (shut/embers/predawn) should fade it with the mouth channel; the sea set carries the heavy weather"
+  }
+ },
+ "stateLightMap": {
+  "cave.jpg": {
+   "lampL": 1,
+   "lampR": 1,
+   "mouth": 1,
+   "fire": 0,
+   "embers": 0,
+   "fog": 1
+  },
+  "cave-dawn.jpg": {
+   "lampL": 1,
+   "lampR": 1,
+   "mouth": 1,
+   "fire": 0,
+   "embers": 0,
+   "fog": 0.5
+  },
+  "cave-shut.jpg": {
+   "lampL": 1,
+   "lampR": 1,
+   "mouth": 0,
+   "fire": 1,
+   "embers": 0,
+   "fog": 0
+  },
+  "cave-embers.jpg": {
+   "lampL": 1,
+   "lampR": 1,
+   "mouth": 0,
+   "fire": 0,
+   "embers": 1,
+   "fog": 0
+  },
+  "cave-predawn.jpg": {
+   "lampL": 1,
+   "lampR": 1,
+   "mouth": 0,
+   "fire": 0,
+   "embers": 0.5,
+   "fog": 0
+  }
+ },
+ "measurement": {
+  "lampL": {
+   "center": [
+    248.5,
+    356.3
+   ],
+   "reachPx": 50,
+   "peakAdditiveRgb": [
+    210.5,
+    109.5,
+    5.0
+   ],
+   "baselineRgb": [
+    32.0,
+    32.5,
+    43.0
+   ],
+   "measuredOn": "cave.jpg",
+   "seedBox": [
+    225,
+    285,
+    320,
+    395
+   ]
+  },
+  "lampR": {
+   "center": [
+    1259.9,
+    370.6
+   ],
+   "reachPx": 76,
+   "peakAdditiveRgb": [
+    227.0,
+    191.5,
+    89.0
+   ],
+   "baselineRgb": [
+    21.0,
+    30.0,
+    45.0
+   ],
+   "measuredOn": "cave.jpg",
+   "seedBox": [
+    1235,
+    1295,
+    330,
+    400
+   ]
+  },
+  "mouth": {
+   "center": [
+    337.4,
+    311.6
+   ],
+   "reachPx": 80,
+   "peakAdditiveRgb": [
+    122.0,
+    173.0,
+    195.0
+   ],
+   "baselineRgb": [
+    87.0,
+    65.0,
+    56.0
+   ],
+   "measuredOn": "cave.jpg",
+   "seedBox": [
+    260,
+    430,
+    240,
+    420
+   ]
+  },
+  "fire": {
+   "center": [
+    638.1,
+    427.0
+   ],
+   "reachPx": 238,
+   "peakAdditiveRgb": [
+    29.7,
+    22.2,
+    8.7
+   ],
+   "baselineRgb": [
+    29.0,
+    10.0,
+    2.0
+   ],
+   "measuredOn": "DIFF:cave-shut.jpg-cave-embers.jpg",
+   "seedBox": [
+    520,
+    780,
+    300,
+    520
+   ]
+  },
+  "embers": {
+   "center": [
+    662.1,
+    456.5
+   ],
+   "reachPx": 61,
+   "peakAdditiveRgb": [
+    24.4,
+    4.3,
+    6.7
+   ],
+   "baselineRgb": [
+    97.0,
+    60.0,
+    50.0
+   ],
+   "measuredOn": "cave-embers.jpg",
+   "seedBox": [
+    560,
+    720,
+    425,
+    495
+   ]
+  }
+ },
+ "files": {
+  "cave-bloom.png": {
+   "bytes": 43102,
+   "sha256": "b4301ba6541b7c8acbc44294815fa6dce1fbc91e3259547a7aed5e456ab7738c"
+  },
+  "cave-bloom-fire.png": {
+   "bytes": 45324,
+   "sha256": "e7196089550da4235a11f4e9c3ead37ec2f29aa12cf72db08ad1f0b7e8f5a00d"
+  },
+  "cave-fog.png": {
+   "bytes": 28413,
+   "sha256": "12096eba852660e8acff0f1487d1856cf72048eb4c308ccd6a0ff09ec96d8236"
+  }
+ }
+}
