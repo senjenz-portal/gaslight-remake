@@ -56,7 +56,7 @@
  * actor heights are the stage proof's (tools/ody/stageproof_sea.py).
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp,
-         emissives, breathe } from '../setkit.js';
+         emissives, breathe, placeStrip, stripProof } from '../setkit.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SHIP = {
@@ -106,7 +106,6 @@ const SPLASH_H = 76;                        // a 6 m plume at 12.7 px/m
  * baseline. A cut hangs off its PIN, not off its box centre — the pin is the
  * measured foot, and anchoring anywhere else lets a re-crop move the feet. */
 const ART = {
-  crewRow:    { px: [781, 954],  pin: [75, 948] },
   ulyStand:   { px: [316, 682],  pin: [125, 676] },
   ulyTaunt:   { px: [294, 680],  pin: [43, 674] },   // faces the wrong way raw;
                                                      // flipped at the stern (proof)
@@ -160,6 +159,17 @@ const FOCUS = {
                  it is the frame the closing cover rises over, composed for
                  the world at ~0.69 of its rest scale. */
   establishing: [704, 384, 1.00],
+  /* THE FIRST-GATE WIDE (round 4, the same F2 law as the three recede lenses
+     below): the k=1 wide's right band is the plate's own night — measured
+     317 px of >= 94% near-black columns, 22.5% of the frame, so the dead-band
+     verdict rode the fog/crag BREATH's phase (20% one lap, 24% the next).
+     jeer/rock1 now compose INSIDE the painting: window x 64..1156 y 27..623
+     holds both planes — the giant with his raised arms and the painted
+     ammunition (850,30 / 1100,170), the release (852,112), rock 1's whole
+     arc to the splash (468,505) with its 76 px plume, the ship, the six
+     benches and the moon — and the static plate measures dead L4 R4 T0 B0
+     (max 4% against the 22% law; the breath can only ADD light). */
+  'gate-wide':  [610, 325, 1.29],
   stern:        [530, 430, 2.80],
   'ship-deck':  [575, 450, 2.60],
   clifftop:     [870, 195, 2.80],
@@ -168,6 +178,21 @@ const FOCUS = {
   homeward:     [575, 380, 2.60],
   moonpath:     [590, 340, 3.20],
 };
+
+/* ---- THE ROW STRIP: tools/ody/strips.json, transcribed verbatim -------- *
+ * Build-gated cells (the lap asserts the registry sha over the shipped
+ * bytes). The oar stroke — catch/drive/finish/recovery — as a 4-cell loop
+ * riding setkit placeStrip; anchors are the MAN's feet, not the sweeping
+ * blade (the stake-pin lesson transposed: anchor the fact that must hold
+ * still). TIME-DRIVEN, not distance (the ship is the world's origin — the
+ * rowers never travel): the stroke phase advances ∝ rowEffort over the
+ * existing 1.9 s period, so at effort 0 the loop stands and under reduced
+ * motion the STORY strokes still row (effort was never amb-gated; the
+ * ambient bench bob still dies with amb). Per-bench phase keeps the six
+ * from lockstep (the existing i x 0.9 rad stagger, in cycles). */
+const STRIP_ROW = { file: 'actor/crew-row-strip.png', cell: [256, 413], n: 4,
+                    srcH: 362.8, anchors: [75.0, 53.0, 86.0, 65.0],
+                    period: 1.9, phase: 0.9 / (2 * Math.PI) };
 
 /* the G6 anchor: the VISIBLE giant's body centre, the ledger's (860,168) —
  * mark y 210 minus half the 89 px body, kept as the ledger wrote it */
@@ -242,11 +267,14 @@ export class SeaSet {
     this.pinAt(this.uly.taunt, ART.ulyTaunt, MARKS['stern-ulysses'], ULY_H, true);
     this.uly.taunt.style.opacity = '0';
 
-    /* the six survivors at the oars — one cut, DOUBLED across the two files
-       (three marks near, three far), 15 px seated at the ledger's rower marks */
+    /* the six survivors at the oars — ONE STRIP, DOUBLED across the two
+       files (three marks near, three far), 15 px seated at the ledger's
+       rower marks. Decoded at boot via st.bitmap (the room.js walk law);
+       the static crew-row cut is retired — the strip's frame 0 is the rest. */
     this.rowers = ROWER_MARKS.map((m) => {
-      const e = img('actor/crew-row.png', 'lyr', this.actors);
-      this.pinAt(e, ART.crewRow, MARKS[m], ROWER_H);
+      const e = el('div', 'lyr walk', this.actors);
+      e.style.backgroundImage = st.bitmap(STRIP_ROW.file);
+      placeStrip(e, STRIP_ROW, MARKS[m], ROWER_H, 0);
       return { mark: m, el: e };
     });
 
@@ -307,8 +335,10 @@ export class SeaSet {
              to: 'stern-ulysses', t0: -1e9, dur: 0.7, pose: 'stand' },
       giantPose: 'stand',
       k: { hurl: 0, curse: 0, taunt: 0, veil: 0, dawn: 0 },   // the crossfades
+      rowPhase: 0,               // the stroke clock, in cycles — advances ∝ effort
     };
     this._wk = 1; this._wdx = 0; this._wdy = 0;     // the world transform, at rest
+    this.rowerFrames = [0, 0, 0, 0, 0, 0];
   }
 
   /* ---- the two clocks -------------------------------------------------- */
@@ -585,7 +615,7 @@ export class SeaSet {
 
     this.stepGiant(t, dt, c, j);
     this.stepUlysses(t, dt, amb);
-    this.stepRowers(t, amb);
+    this.stepRowers(t, dt, amb);
     this.stepRocks(t);
   }
 
@@ -660,14 +690,24 @@ export class SeaSet {
     this.uly.taunt.style.opacity = S.k.taunt.toFixed(3);
   }
 
-  stepRowers(t, amb) {
+  /** THE OARS BITE (STRIPS.md #4): the strip's frame rides the stroke clock,
+   *  which advances ∝ effort — story motion, so reduced motion keeps the
+   *  pull and loses only the ambient bench bob. The old fake-stroke rotate
+   *  is retired: the strip IS the stroke now, and rocking the whole bench on
+   *  top of it would be double motion. Feet stay pinned: placeStrip anchors
+   *  each frame on the MAN's own measured foot span. */
+  stepRowers(t, dt, amb) {
+    const S = this.state;
     const effort = this.rowEffort(t);
+    S.rowPhase += dt * effort / STRIP_ROW.period;
     const amp = amb * 0.35 + effort;               // idle breath vs the pull
     this.rowers.forEach((r, i) => {
-      const ph = 2 * Math.PI * (t / 1.9) + i * 0.9;
+      const ph = S.rowPhase + i * STRIP_ROW.phase; // per-bench stagger, in cycles
+      const frame = Math.floor((ph % 1) * STRIP_ROW.n) % STRIP_ROW.n;
+      this.rowerFrames[i] = frame;
+      placeStrip(r.el, STRIP_ROW, MARKS[r.mark], ROWER_H, frame);
       r.el.style.transform =
-        `translateY(${(-1.2 * amp * Math.sin(ph)).toFixed(2)}px) ` +
-        `rotate(${(2.2 * amp * Math.sin(ph + 0.6)).toFixed(2)}deg)`;
+        `translateY(${(-1.2 * amp * Math.sin(2 * Math.PI * (t / STRIP_ROW.period) + i * 0.9)).toFixed(2)}px)`;
     });
   }
 
@@ -795,8 +835,15 @@ export class SeaSet {
       ulysses: { mark: S.uly.at, pose: S.uly.pose,
                  at: this.ulyAt().map((v) => +v.toFixed(1)),
                  box: pbox(ulyEl) },
-      rowers: this.rowers.map((r) => ({ mark: r.mark, at: MARKS[r.mark],
-                                        box: pbox(r.el) })),
+      /* THE STRIP PROOF (the sherlock walk law): frame + the man's foot off
+         the RENDERED box vs the mark THROUGH the world transform — the lap
+         holds cycling, the bench stagger and |dx|,|dy| (± the bench bob) */
+      rowers: this.rowers.map((r, i) => ({
+        mark: r.mark, at: MARKS[r.mark], box: pbox(r.el),
+        strip: stripProof(this.st, r.el, STRIP_ROW, this.rowerFrames[i],
+                          this.worldMap(MARKS[r.mark]), false),
+      })),
+      rowPhase: +S.rowPhase.toFixed(4),
       rowEffort: +this.rowEffort(S.t).toFixed(3),
       marks: MARKS,
     };

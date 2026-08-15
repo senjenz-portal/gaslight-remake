@@ -36,6 +36,7 @@
  */
 import { chromium } from 'playwright';
 import { createServer } from 'node:http';
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { decodePng, pixelDiff } from '../png.mjs';
 import { edgeBands, LANDSCAPE_MAX } from '../living/lenslaw.mjs';
@@ -76,6 +77,11 @@ function serve(dir, port) {
  * tools/ody/ledger.json is the world's (floors, painted obstacles, marks,
  * scales). Nothing below re-measures either. */
 const LEDGER = JSON.parse(fs.readFileSync(path.join(HERE, 'ledger.json'), 'utf8'));
+/* tools/ody/strips.json — the strip REGISTRY: cells build-gated by
+ * strip_slice_gate.py, per-frame foot anchors measured off each cell's own
+ * alpha, and the sha256 of the file as shipped. The lap asserts the served
+ * bytes ARE the registry's (the identity gate). */
+const STRIPS = JSON.parse(fs.readFileSync(path.join(HERE, 'strips.json'), 'utf8'));
 
 function contentUnits() {
   const md = fs.readFileSync(path.join(ROOT, 'CONTENT-odyssey.md'), 'utf8');
@@ -204,6 +210,18 @@ const FEET_SLACK = 8;
  * the sprawl's own clearance law is the ledger's >= 10 px, read off the
  * snapshot the set re-measures every frame. */
 const SPRAWL_CLEAR_MIN = 10;
+/* [strips] the sprite-strip laws (sherlock stepKing/stepHolmesWalk carried
+ * over): every wired strip must (a) CYCLE while its motion runs — >= 2
+ * distinct frames seen, the sherlock 'walk strip never cycled' gate; (b)
+ * keep its per-frame FOOT on the mark it was painted at — |dx| and |dy|
+ * measured off the RENDERED box (getBoundingClientRect -> toPlate, the
+ * verifier that a wrong transform cannot fool) against the set's own pose,
+ * the anchor law's proof; (c) BE the registry's build-gated bytes (sha256).
+ * Holmes' verifier held worst |dy| 0.45 px; the tolerance is the sherlock
+ * lap's 1.5. The rowers alone carry a documented ±1.6 px bench-bob
+ * translateY on top (sea.js stepRowers), so their law is 1.5 + 1.7. */
+const STRIP_DY_MAX = 1.5;
+const STRIP_ROWER_DY_MAX = 3.2;
 
 /* ---- the ledger's floors + obstacles, transcribed once ---------------- */
 const FL = {
@@ -402,6 +420,26 @@ async function main() {
     bad(`lazy law: boot built ${JSON.stringify(boot.stage.mounted)} — only 'shore' may exist at __ready`);
   }
 
+  /* ---- [strips] identity: every wired strip FILE is the registry's ------- *
+   * The cells were gated at build (strip_slice_gate.py: identity/scale/
+   * anchors/action); what the page serves must be those bytes and no others,
+   * or every anchor the sets transcribed is a number about a different file. */
+  {
+    let shaOK = 0;
+    for (const [name, s] of Object.entries(STRIPS)) {
+      const res = await page.request.get(new URL('./assets/' + s.file, URL_).toString());
+      if (!res.ok()) { bad(`[strips] ${name}: ${s.file} did not load (${res.status()})`); continue; }
+      const sha = createHash('sha256').update(await res.body()).digest('hex');
+      if (sha !== s.sha256) {
+        bad(`[strips] ${name}: the served ${s.file} is NOT the registered build-gated ` +
+            `file (sha ${sha.slice(0, 12)}… != registry ${String(s.sha256).slice(0, 12)}…)`);
+      } else shaOK++;
+    }
+    if (shaOK === Object.keys(STRIPS).length) {
+      note(`[strips] identity: ${shaOK}/${shaOK} served strip files match their build-gated registry sha`);
+    }
+  }
+
   /* ---- the evidence the read collects ----------------------------------- */
   const seen = [];
   const beatsSeen = {};
@@ -593,6 +631,52 @@ async function main() {
       }
     }
   };
+
+  /* ---- [strips] the cycling + foot evidence, sampled in clean windows ---- *
+   * (never during the hiss/fright screen shake — the root transform would
+   * contaminate the rendered-box proof with the shake's own pixels). Each
+   * family accumulates the frames seen and the worst |dx|/|dy| off the
+   * rendered box vs the set's own mark; the tally holds the three laws. */
+  const stripEv = {};
+  for (const k of ['giant', 'crew-cave', 'twist', 'ram', 'rower',
+                   'shore-ulysses', 'shore-crew']) {
+    stripEv[k] = { frames: new Set(), n: 0, worst: 0, worstAt: null };
+  }
+  let rowerLockstep = null;
+  const sSample = (key, p, unit) => {
+    const ev = stripEv[key];
+    ev.n++;
+    ev.frames.add(p.frame);
+    const err = Math.max(Math.abs(p.dx || 0), Math.abs(p.dy || 0));
+    if (err > ev.worst) { ev.worst = err; ev.worstAt = unit; }
+  };
+  const stripPoll = (q) => {
+    const sn = (q && q.stage) || {};
+    const S = sn.strips;
+    const unit = q && q.unit && q.unit.key;
+    if (sn.set === 'shore' && S) {
+      if (S.ulysses) sSample('shore-ulysses', S.ulysses, unit);
+      (S.crew || []).forEach((p) => p && sSample('shore-crew', p, unit));
+    }
+    if (sn.set === 'cave' && S) {
+      if (S.giant) sSample('giant', S.giant, unit);
+      (S.crew || []).forEach((p) => p && sSample('crew-cave', p, unit));
+      if (S.twist) sSample('twist', S.twist, unit);
+      (S.rams || []).forEach((p) => p && sSample('ram', p, unit));
+    }
+    if (sn.set === 'sea' && sn.rowers) {
+      sn.rowers.forEach((r) => r.strip && sSample('rower', r.strip, unit));
+      /* the six benches must never stroke in phase-lock while pulling */
+      if ((sn.rowEffort || 0) > 0.5 && !rowerLockstep) {
+        const fr = sn.rowers.map((r) => r.strip && r.strip.frame);
+        if (fr.length === 6 && fr.every((f) => f === fr[0])) {
+          rowerLockstep = `frames ${JSON.stringify(fr)} at ${unit}`;
+        }
+      }
+    }
+  };
+  /* the held segs whose walks the strips now perform: sampled while they run */
+  const STRIP_SEG_KEYS = new Set(['return2', 'return3', 'quiverlid']);
 
   const marginHas = (q, text, tag) => {
     if (!norm(q.unit.blocks).includes(norm(text))) {
@@ -920,6 +1004,18 @@ async function main() {
                           `${pale} pale px, column excess ${excess} luma`;
           break;
         }
+        case 'smoke': case 'twentyone': {
+          /* [strips] the shore crossings: the council re-stage (i-06) and the
+             boarding line (i-10) are strip-driven WALKS now — sample while
+             the troupe covers the ground (cycled + feet held at the tally) */
+          for (let i = 0; i < 8; i++) {
+            const q = await st();
+            if (!q.unit || q.unit.key !== u.key) break;
+            stripPoll(q);
+            await T(0.22);
+          }
+          break;
+        }
         case 'misgave': {
           /* [O.2] the chapter's ONLY inset, raised, and its bytes a dark skin */
           await T(1.2);
@@ -1089,9 +1185,11 @@ async function main() {
              sprawled giant, with the set's live eye ON the lap's law. */
           const tick = DRIVE_TICKS[u.key];
           let q = await st();
+          stripPoll(q);                    // [strips] the auger twist, en route
           for (let i = 0; i < 40 && (!q.stage.drive || q.stage.drive.t < tick); i++) {
             await T(0.2);
             q = await st();
+            stripPoll(q);                  // …and at every clock step to the tick
           }
           const d = q.stage.drive;
           if (!d) bad(`${u.key}: [O.9] the blinding clock is not running`);
@@ -1207,6 +1305,17 @@ async function main() {
           const g = q.stage.giant || {};
           if (!(g.pose === 'doorway' && g.blinded)) {
             bad(`doorway: the blind giant is not seated in the mouth (pose=${g.pose}, blinded=${g.blinded})`);
+          }
+          break;
+        }
+        case 'dawn5': {
+          /* [strips] the dawn stream (v-05): the escape's walkers ride the
+             ram strip — sample the trot while the flock crosses the floor */
+          for (let i = 0; i < 8; i++) {
+            const q = await st();
+            if (!q.unit || q.unit.key !== 'dawn5') break;
+            stripPoll(q);
+            await T(0.35);
           }
           break;
         }
@@ -1368,6 +1477,14 @@ async function main() {
           const dev = await plateBox([m[0][0], m[0][1], m[1][0] - m[0][0], m[1][1] - m[0][1]]);
           const R = rectI(dev, await stageBox());
           mouthOpenLuma = f && R ? lumaStats(f, R).mean : null;
+          /* [strips] the entry file (K1): the twelve walk in on the crew
+             strip while the entry seg still runs — sample the stride */
+          for (let i = 0; i < 6; i++) {
+            const q2 = await st();
+            if (!q2.unit || q2.unit.key !== 'head2') break;
+            stripPoll(q2);
+            await T(0.3);
+          }
         }
         if (u.key === 'rock1' || u.key === 'heard') {
           /* [O.14b]/rock clocks: watch the rock fly and the splash land */
@@ -1377,6 +1494,7 @@ async function main() {
           for (let i = 0; i < 80; i++) {
             const q = await st();
             if (!q.unit || q.unit.id !== u.id || q.turn.active) break;
+            stripPoll(q);                  // [strips] the crew-row loop + stagger
             const rk = q.stage[which] || {};
             if (['tear', 'flight'].includes(rk.phase)) sawFlight = true;
             const sp = q.stage.splash || {};
@@ -1412,7 +1530,9 @@ async function main() {
           continue;
         }
         await latchProbe(u);
-        await waitRelease(u);
+        /* [strips] the held segs whose walks are strip-driven (the giant's
+           entrance and both flock crossings) are sampled as they play out */
+        await waitRelease(u, STRIP_SEG_KEYS.has(u.key) ? stripPoll : undefined);
         continue;
       }
     }
@@ -1785,6 +1905,45 @@ async function main() {
     bad('[parking] no settled frame was ever sampled — the parking law did not run');
   }
 
+  /* ---- 9.5 THE STRIPS, tallied: cycled + feet anchored (sha was gate 0) --- *
+   * The sherlock pair, per wired strip: 'the walk strip never cycled'
+   * (>= 2 distinct frames over the samples), and the foot off the RENDERED
+   * box within the anchor law's tolerance of the set's own mark. A family
+   * with NO samples means the wiring never ran — that is a lap hole, not a
+   * pass. */
+  const STRIP_LAW = [
+    ['giant', 'polyphemus-walk (cave, the Beat II entrance + flock crossings)', STRIP_DY_MAX],
+    ['crew-cave', 'crew-walk (cave, the entry file / scatter)', STRIP_DY_MAX],
+    ['twist', 'stake-twist (cave, the auger on the blinding clock)', STRIP_DY_MAX],
+    ['ram', 'ram-walk (cave, the dawn stream)', STRIP_DY_MAX],
+    ['rower', 'crew-row (sea, the six benches)', STRIP_ROWER_DY_MAX],
+    ['shore-ulysses', 'ulysses-walk (shore, the council/boarding crossings)', STRIP_DY_MAX],
+    ['shore-crew', 'crew-walk (shore, the council/boarding crossings)', STRIP_DY_MAX],
+  ];
+  for (const [key, name, tol] of STRIP_LAW) {
+    const ev = stripEv[key];
+    if (!ev.n) {
+      bad(`[strips] ${name} was never seen live — the wiring (or this lap's sampling) did not run`);
+      continue;
+    }
+    if (ev.frames.size < 2) {
+      bad(`[strips] the ${key} walk strip never cycled (frames ${JSON.stringify([...ev.frames])} ` +
+          `over ${ev.n} samples)`);
+    }
+    if (ev.worst > tol) {
+      bad(`[strips] the ${key} strip's foot leaves its mark by ${ev.worst.toFixed(2)} plate px ` +
+          `at ${ev.worstAt} (law <= ${tol}; rendered box vs the set's own pose — the anchor law)`);
+    }
+    if (ev.frames.size >= 2 && ev.worst <= tol) {
+      note(`[strips] ${key}: ${ev.frames.size} frames over ${ev.n} samples, ` +
+           `worst foot error ${ev.worst.toFixed(2)} px (<= ${tol})`);
+    }
+  }
+  if (rowerLockstep) {
+    bad(`[strips] the six benches rowed in LOCKSTEP under effort — ${rowerLockstep} ` +
+        `(the per-bench phase stagger is gone)`);
+  }
+
   /* ---- 10. the fact ledger, printed --------------------------------------- */
   for (const id of ['O.1', 'O.2', 'O.3', 'O.4', 'O.5', 'O.6', 'O.7', 'O.8a', 'O.8b',
                     'O.9', 'O.10', 'O.11', 'O.12', 'O.13a', 'O.13b', 'O.14a', 'O.14b']) {
@@ -1806,6 +1965,11 @@ async function main() {
     facts, cameoLog, sprawl: sprawlLedger, insetStuck,
     deadBands: bandRows.slice(0, 14), limit: LANDSCAPE_MAX,
     feetSamples, parkSamples,
+    strips: Object.fromEntries(STRIP_LAW.map(([k]) => [k, {
+      frames: [...stripEv[k].frames].sort(), n: stripEv[k].n,
+      worst: +stripEv[k].worst.toFixed(2), worstAt: stripEv[k].worstAt,
+    }])),
+    rowerLockstep,
     feetViolations: dedupe(feetBad), parkingViolations: dedupe(parkBad),
     eye, inset: skinCard, gaps,
     audio: { bed: audio.bedId, cues: audio.log.length },

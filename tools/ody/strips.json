@@ -1,0 +1,104 @@
+{
+ "ulysses-walk": {
+  "file": "actor/ulysses-walk-strip.png",
+  "cell": [
+   330,
+   591
+  ],
+  "n": 4,
+  "srcH": 581.8,
+  "anchors": [
+   204.5,
+   182.0,
+   154.0,
+   139.5
+  ],
+  "sha256": "121469ed91b1119ff04df61e7404c2d470898c5fd580acbd826e8cb3d3a0fbf2",
+  "action": "walk cycle (distance-driven; authored facing right, scaleX(-1) about foot origin for leftward)"
+ },
+ "crew-walk": {
+  "file": "actor/crew-walk-strip.png",
+  "cell": [
+   247,
+   441
+  ],
+  "n": 4,
+  "srcH": 432.0,
+  "anchors": [
+   136.5,
+   125.5,
+   134.0,
+   123.0
+  ],
+  "sha256": "c7a46a1bc1fb2f57cb9c213c580f31182853a1d30385daf2807436469800a9ec",
+  "action": "walk cycle (distance-driven; ochre crew man, variety = flip + per-man frame phase)"
+ },
+ "crew-row": {
+  "file": "actor/crew-row-strip.png",
+  "cell": [
+   256,
+   413
+  ],
+  "n": 4,
+  "srcH": 362.8,
+  "anchors": [
+   75.0,
+   53.0,
+   86.0,
+   65.0
+  ],
+  "sha256": "9078f1c073a6d84d336855467ba09a6e609c393df390f0f71141ebc478b59a56",
+  "action": "seated oar pull loop (time-driven on the row period x effort; catch/drive/finish/recovery, oar in every frame; anchors are the MAN's feet, not the sweeping blade)"
+ },
+ "stake-twist": {
+  "file": "actor/stake-twist-strip.png",
+  "cell": [
+   349,
+   350
+  ],
+  "n": 4,
+  "srcH": 341.0,
+  "anchors": [
+   136.0,
+   130.0,
+   115.0,
+   98.0
+  ],
+  "sha256": "13efa5a4458be8f553d2d536d2e604d32d2e6d5e194761066b89dbe5bf709ab1",
+  "action": "auger twist loop (verb-clock; braced stance, hands+shoulders roll the grip, beam constant: row-y band 8px, width 298-312)"
+ },
+ "polyphemus-walk": {
+  "file": "actor/polyphemus-walk-strip.png",
+  "cell": [
+   317,
+   542
+  ],
+  "n": 4,
+  "srcH": 536.0,
+  "anchors": [
+   134.5,
+   127.5,
+   135.5,
+   125.0
+  ],
+  "sha256": "aeb2fe4bdb93baa35afc38a2ef30e5438aad2a47f645b32bf52833cd10008287",
+  "action": "striding giant (distance-driven; authored facing right; gated 2026-08-15 on the sliced cells: identity delta +3.9..+7.5 vs polyphemus-stand, scale drift 0.19%, anchored XOR 24.1-27.6%)"
+ },
+ "ram-walk": {
+  "file": "actor/ram-walk-strip.png",
+  "cell": [
+   294,
+   242
+  ],
+  "n": 4,
+  "srcH": 236.0,
+  "anchors": [
+   166.0,
+   172.5,
+   183.0,
+   173.0
+  ],
+  "sha256": "e18a3d9d055a17e4503d0d161e5389da1d9d22d7bce5d140b35ceb00923336e3",
+  "action": "ovine trot (distance-driven; AUTHORED FACING LEFT — the flockOut stream's own way, no flip on the escape; palette stat-matched to the canonical ram-walk cut + measured R-4/B+4 rebalance 2026-08-15 because the raw slice failed identity at +85..+90 warm (cream fleece, gold horns) — after: delta +9.6..+14.7, scale drift 0.44%, anchored XOR 22.2-28.6%)"
+ }
+}

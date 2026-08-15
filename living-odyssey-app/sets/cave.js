@@ -94,7 +94,7 @@
  * to step(). A settled act leaves the world at its END (WIRING §2).
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
-         emissives } from '../setkit.js';
+         emissives, placeStrip, stripProof } from '../setkit.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SCALE = { pxPerM: 43, ulysses: 75, crew: 73, giantStand: 300,
@@ -295,6 +295,32 @@ const PROP_H = { bowl: 16, sword: 12, stakeW: 84 };
 
 const CREW_N = 12;                    // twelve enter; the meals do the counting
 
+/* ---- THE STRIPS: tools/ody/strips.json, transcribed verbatim ----------- *
+ * Build-gated cells (identity/scale/anchors/action; the lap asserts the
+ * registry sha over the shipped bytes) riding the room.js KING.walk
+ * machinery via setkit placeStrip. Frame sources per STRIPS.md: cumulative
+ * DISTANCE for the walks (an eased profile cannot skate the feet),
+ * THE BLINDING CLOCK for the auger twist. pxPerFrame is half a stride at
+ * 43 px/m: the giant's 2.6 m stride -> 112 px -> 56; the crew's 0.75 m ->
+ * 32 px -> 16; the ovine 0.6 m -> 26 px -> 13. The ram strip is AUTHORED
+ * FACING LEFT (the flockOut stream's own way — no flip on the escape);
+ * every other strip is authored facing right. */
+const STRIP = {
+  giant: { file: 'actor/polyphemus-walk-strip.png', cell: [317, 542], n: 4,
+           srcH: 536.0, anchors: [134.5, 127.5, 135.5, 125.0], pxPerFrame: 56 },
+  crew:  { file: 'actor/crew-walk-strip.png', cell: [247, 441], n: 4,
+           srcH: 432.0, anchors: [136.5, 125.5, 134.0, 123.0], pxPerFrame: 16 },
+  twist: { file: 'actor/stake-twist-strip.png', cell: [349, 350], n: 4,
+           srcH: 341.0, anchors: [136.0, 130.0, 115.0, 98.0], period: 1.1 },
+  ram:   { file: 'actor/ram-walk-strip.png', cell: [294, 242], n: 4,
+           srcH: 236.0, anchors: [166.0, 172.5, 183.0, 173.0], pxPerFrame: 13 },
+};
+/* the stride is MEASURED off the pose the frame actually moved (seg and
+   damp alike); a teleport (fade-through reland, a settled snap) is not a
+   stride, and a SEIZED man is dragged, not walking */
+const STRIDE_MIN_SPEED = 6;           // plate px/s
+const STRIDE_TELEPORT = 40;           // plate px in one step is a re-stage
+
 /* place a cut by its measured pin. Returns the drawn box for the snapshot. */
 function pinCut(node, art, at, hPx, { flip = false, bob = 0, rot = 0 } = {}) {
   const k = hPx / art.px[1];
@@ -459,6 +485,15 @@ export class CaveSet {
       n.style.opacity = '0';
       this.giantN[pose] = n;
     }
+    /* THE WALK STRIPS (decoded at boot via st.bitmap — room.js: the first
+       walk frame never flashes white). The strip is the walk, the cut is the
+       stand/seat, and they are never both visible (the swap law). */
+    this.giantStripN = el('div', 'lyr walk', this.actors);
+    this.giantStripN.style.backgroundImage = st.bitmap(STRIP.giant.file);
+    this.giantStripN.style.opacity = '0';
+    this.twistN = el('div', 'lyr walk', this.actors);
+    this.twistN.style.backgroundImage = st.bitmap(STRIP.twist.file);
+    this.twistN.style.opacity = '0';
     this.uN = {};
     for (const [pose, art] of [['stand', ART.ulyssesStand], ['walk', ART.ulyssesWalk],
         ['offer', ART.ulyssesOffer], ['sword', ART.ulyssesSword],
@@ -468,10 +503,15 @@ export class CaveSet {
       this.uN[pose] = n;
     }
     this.crew = [];
+    this.crewStripN = [];
     for (let i = 0; i < CREW_N; i++) {
       const n = img(i % 2 ? ART.crewB.file : ART.crewA.file, 'lyr', this.actors);
       n.style.opacity = '0';
       this.crew.push(n);
+      const w = el('div', 'lyr walk', this.actors);
+      w.style.backgroundImage = st.bitmap(STRIP.crew.file);
+      w.style.opacity = '0';
+      this.crewStripN.push(w);
     }
     this.carry = [];
     for (let i = 0; i < CREW_N; i++) {
@@ -479,9 +519,13 @@ export class CaveSet {
       n.style.opacity = '0';
       this.carry.push(n);
     }
+    /* the dawn stream's walkers are STRIP-backed now (the herd of statues on
+       casters is retired); the GREAT ram keeps his cuts — he is G5's gate
+       target and his slung/halt beats are poses, not strides (STRIPS.md) */
     this.rams = [];
     for (let i = 0; i < FLOCK_N; i++) {
-      const n = img(ART.ramWalk.file, 'lyr', this.actors);
+      const n = el('div', 'lyr walk', this.actors);
+      n.style.backgroundImage = st.bitmap(STRIP.ram.file);
       n.style.opacity = '0';
       this.rams.push(n);
     }
@@ -580,11 +624,21 @@ export class CaveSet {
     };
     this.uMark = null;                       // an act's own mark outranks the form
     /* presentation pose per human: where the cut IS (damped), distinct from
-       where the formation wants it — the shore troupe law */
-    this.pose = { u: { x: 0, y: 0, op: 0, flip: false, kind: 'stand' } };
+       where the formation wants it — the shore troupe law. The stride fields
+       (dist/lx/ly/walking/face/frame) are the strip driver's. */
+    this.pose = { u: { x: 0, y: 0, op: 0, flip: false, kind: 'stand', frame: 0 } };
     for (let i = 0; i < CREW_N; i++) {
-      this.pose['c' + i] = { x: 0, y: 0, op: 0, flip: false, carry: false };
+      this.pose['c' + i] = { x: 0, y: 0, op: 0, flip: false, carry: false,
+                             walking: false, striding: false, dist: 0,
+                             lx: null, ly: null, face: 1, frame: 0 };
     }
+    /* the dawn stream's gait clocks (one per walker) + the twist/walk flags */
+    this.ramGait = [];
+    for (let i = 0; i < FLOCK_N; i++) {
+      this.ramGait.push({ dist: 0, lx: null, ly: null, at: null, frame: 0 });
+    }
+    this.giantWalking = false;
+    this.twisting = false;
   }
 
   /* ---- the camera ------------------------------------------------------ */
@@ -897,7 +951,11 @@ export class CaveSet {
       G.pose = endPose; G.x = end[0]; G.y = end[1]; G.walk = null;
       return;
     }
-    G.walk = { path, t0: this.state.t, dur, endPose };
+    /* dist/lx/ly are the STRIP's gait clock (frame = travelled / pxPerFrame),
+       zeroed at the path head so a walk always starts on frame 0 */
+    G.walk = { path, t0: this.state.t, dur, endPose,
+               dist: 0, lx: path[0][0], ly: path[0][1] };
+    G.x = path[0][0]; G.y = path[0][1];
     G.pose = path === PATH.giantGrope ? 'grope' : 'stand';
   }
 
@@ -1249,10 +1307,16 @@ export class CaveSet {
     const seg = S.seg;
     const segK = seg ? clamp01((t - seg.t0) / seg.dur) : null;
 
-    /* the walks (paths swept clear of the hearth) */
+    /* the walks (paths swept clear of the hearth). Distance accumulates
+       along the eased path — the strip's frame source (STRIPS.md: distance
+       drives the frame, not time, so the ease cannot skate the feet). */
     if (G.walk) {
       const k = clamp01((t - G.walk.t0) / G.walk.dur);
       const p = alongPath(G.walk.path, easeInOut(k));
+      if (G.walk.dist != null) {
+        G.walk.dist += Math.hypot(p[0] - G.walk.lx, p[1] - G.walk.ly);
+        G.walk.lx = p[0]; G.walk.ly = p[1];
+      }
       G.x = p[0]; G.y = p[1];
       if (k >= 1) {
         const end = G.walk.endPose;
@@ -1314,6 +1378,26 @@ export class CaveSet {
       rot = 3.5 * Math.sin(2 * Math.PI * segK * 2.5) * Math.sin(Math.PI * segK);
     }
 
+    /* THE STRIDING GIANT (STRIPS.md #1): while a stand-pose walk runs, the
+       strip IS the giant and every cut goes dark — the Beat II entrance, the
+       flock-out exit, the flock-in return, all on the one gait clock. The
+       swap to the arrival pose lands ON the landing frame (walk end above).
+       Facing follows the path's own direction (authored facing right). */
+    const walking = !!(G.walk && G.pose === 'stand' && G.walk.dist != null);
+    this.giantWalking = walking;
+    if (walking) {
+      const W = G.walk;
+      G.frame = Math.floor(W.dist / STRIP.giant.pxPerFrame) % STRIP.giant.n;
+      G.flip = W.path[W.path.length - 1][0] < W.path[0][0];
+      const b = placeStrip(this.giantStripN, STRIP.giant, [G.x, G.y],
+                           GIANT_H.stand, G.frame, { flip: G.flip });
+      this.giantStripN.style.opacity = '1';
+      this.giantBox = [G.x - (G.flip ? b.w - b.ax : b.ax), G.y - GIANT_H.stand,
+                       b.w, b.h].map((v) => +v.toFixed(1));
+    } else {
+      this.giantStripN.style.opacity = '0';
+    }
+
     /* paint the one live pose; the rest go dark. `doorway` draws the GROPE
        cut seated in the mouth arch — hands spread to catch anyone going out
        with the sheep — at the seated height that fills the aperture. */
@@ -1323,9 +1407,9 @@ export class CaveSet {
                    clutch: ART.giantClutch, drink: ART.giantDrink,
                    sprawl: ART.giantSprawl, grope: ART.giantGrope,
                    stroke: ART.giantStroke };
-    this.giantBox = null;
+    if (!walking) this.giantBox = null;
     for (const [pose, node] of Object.entries(this.giantN)) {
-      if (G.pose === 'away' || pose !== nodeKey) {
+      if (G.pose === 'away' || pose !== nodeKey || walking) {
         node.style.opacity = '0';
         continue;
       }
@@ -1476,18 +1560,35 @@ export class CaveSet {
     }
     if (S.snap) S.snap = false;
 
-    /* paint the men */
+    /* paint the men: THE STRIDE swaps stand cut -> walk strip while a man is
+       actually covering ground (the room.js swap law) — the entry file, the
+       scatter to the far dark, the freed men. A CARRIED load keeps the carry
+       cut (STRIPS.md: the strip replaces STAND-cut travel only) and a SEIZED
+       man is dragged, not walking. */
+    const dragged = !!(seg && seg.name === 'seize');
     for (let i = 0; i < CREW_N; i++) {
       const P = this.pose['c' + i];
+      this.trackStride(P, dt);
       const carry = (S.form === 'racks' ||
                      (S.form === 'stakefive' && i < 4)) && P.op > 0.05;
+      const striding = P.walking && !carry && !dragged;
       const bob = amb * 0.5 * Math.sin(2 * Math.PI * t / 5.3 + i * 1.1);
       const stand = i % 2 ? ART.crewB : ART.crewA;
       pinCut(this.crew[i], stand, [P.x, P.y], SCALE.crew, { bob, flip: i % 3 === 1 });
       pinCut(this.carry[i], ART.crewCarry, [P.x, P.y], SCALE.crew * 0.96, { bob });
-      this.crew[i].style.opacity = (carry ? 0 : P.op).toFixed(3);
+      this.crew[i].style.opacity = (carry || striding ? 0 : P.op).toFixed(3);
       this.carry[i].style.opacity = (carry ? P.op : 0).toFixed(3);
+      if (striding) {
+        /* variety law: per-man frame phase (+i), flip from his own travel */
+        P.frame = (Math.floor(P.dist / STRIP.crew.pxPerFrame) + i) % STRIP.crew.n;
+        placeStrip(this.crewStripN[i], STRIP.crew, [P.x, P.y], SCALE.crew,
+                   P.frame, { flip: P.face < 0 });
+        this.crewStripN[i].style.opacity = P.op.toFixed(3);
+      } else {
+        this.crewStripN[i].style.opacity = '0';
+      }
       P.carry = carry;
+      P.striding = striding;
     }
     /* Ulysses: the pose the moment asks for — offer at the bowl, the hip
        stance at the sword, the lean at the stake, the walk between marks */
@@ -1500,9 +1601,28 @@ export class CaveSet {
         (S.holdMode === 'embers' || this.ruseT() !== null)) kind = 'drive';
     if (moving) kind = 'walk';
     U.kind = kind;
+    /* THE AUGER (STRIPS.md #3, O.9's carrier): while the blinding clock runs
+       and before the fright, the braced twist strip IS the driver — hands
+       and shoulders rolling the grip on the verb's own clock, frame advance
+       MONOTONE (one-way drill: 4 frames / 1.1 s, never ping-pong). The heat
+       phase (drive null) holds today's static drive cut unchanged, and the
+       pluck-and-hurl reverts to it at the fright. E2's law is untouched:
+       the stake itself is still the glowing cut alone, pinned tip-on-eye. */
+    const drive = this.ruseT();
+    const twisting = kind === 'drive' && drive !== null && drive < DRIVE.fright;
+    this.twisting = twisting;
     const bobU = amb * 0.4 * Math.sin(2 * Math.PI * t / 4.6);
+    if (twisting) {
+      U.frame = Math.floor(drive / (STRIP.twist.period / STRIP.twist.n))
+                % STRIP.twist.n;
+      const b = placeStrip(this.twistN, STRIP.twist, [U.x, U.y], 66, U.frame);
+      this.twistN.style.opacity = U.op.toFixed(3);
+      this.uBox = [U.x - b.ax, U.y - 66, b.w, b.h].map((v) => +v.toFixed(1));
+    } else {
+      this.twistN.style.opacity = '0';
+    }
     for (const [pose, node] of Object.entries(this.uN)) {
-      if (pose !== kind) { node.style.opacity = '0'; continue; }
+      if (pose !== kind || twisting) { node.style.opacity = '0'; continue; }
       const art = { stand: ART.ulyssesStand, walk: ART.ulyssesWalk,
                     offer: ART.ulyssesOffer, sword: ART.ulyssesSword,
                     drive: ART.ulyssesDrive }[pose];
@@ -1513,6 +1633,24 @@ export class CaveSet {
                    U.y - art.pin[1] * h / art.px[1], b.w, b.h]
         .map((v) => +v.toFixed(1));
     }
+  }
+
+  /** THE STRIDE, measured (the shore troupe law's own instrument): the pose
+   *  moved this frame at walking speed, or it stands. Distance accumulates
+   *  while the stride runs (the strip's frame source), facing follows the
+   *  travel, and a teleport resets the gait clock. */
+  trackStride(P, dt) {
+    const dd = P.lx === null ? 0 : Math.hypot(P.x - P.lx, P.y - P.ly);
+    const stride = P.op > 0.3 && dd < STRIDE_TELEPORT &&
+                   dd / Math.max(dt, 1e-6) > STRIDE_MIN_SPEED;
+    if (stride) {
+      P.dist += dd;
+      if (Math.abs(P.x - P.lx) > 0.01) P.face = P.x > P.lx ? 1 : -1;
+    } else if (!(P.op > 0.3) || dd >= STRIDE_TELEPORT) {
+      P.dist = 0;
+    }
+    P.walking = stride;
+    P.lx = P.x; P.ly = P.y;
   }
 
   /* ---- the flock and the rams (O.11) -------------------------------------- */
@@ -1526,19 +1664,31 @@ export class CaveSet {
        (iii-02 out, iii-06 in) keep their mouth-ajar light lift (flockAjarK)
        and the giant's own walk, but stage no cutouts; iii-06's overfull
        pens are a recorded fact (S.parked), never a parked actor. */
+    /* THE TROT (STRIPS.md #5): the dawn stream's walkers ride the ram strip,
+       frame from each walker's own travelled distance (+i phase from the
+       existing stagger, so the herd is never in lockstep). The 1.7 s bob is
+       REMOVED while the strip runs — gait and bob together is double motion.
+       The strip is AUTHORED LEFT, the stream's own way: no flip. */
     for (const [i, node] of this.rams.entries()) {
-      let at = null, flip = false;
+      let at = null;
+      const gait = this.ramGait[i];
       if (fl && k < 1 && fl.mode === 'escape') {
         const ki = clamp01((k - i * 0.07) / 0.6);
         if (ki > 0 && ki < 1) {
           at = alongPath(PATH.flockOut, easeInOut(ki));
           at[1] += (i % 3 - 1) * 6;
-          flip = true;
         }
       }
-      if (!at) { node.style.opacity = '0'; continue; }
-      const bob = amb * 0.5 * Math.sin(2 * Math.PI * t / 1.7 + i * 2.2);
-      pinCut(node, ART.ramWalk, at, RAM_H.walk, { flip, bob });
+      if (!at) {
+        node.style.opacity = '0';
+        gait.dist = 0; gait.lx = null; gait.at = null;
+        continue;
+      }
+      const dd = gait.lx === null ? 0 : Math.hypot(at[0] - gait.lx, at[1] - gait.ly);
+      gait.dist = dd < STRIDE_TELEPORT ? gait.dist + dd : 0;
+      gait.lx = at[0]; gait.ly = at[1]; gait.at = at.slice();
+      gait.frame = (Math.floor(gait.dist / STRIP.ram.pxPerFrame) + i) % STRIP.ram.n;
+      placeStrip(node, STRIP.ram, at, RAM_H.walk, gait.frame);
       node.style.opacity = '1';
     }
 
@@ -1624,12 +1774,14 @@ export class CaveSet {
     const S = this.state;
     const entries = [];
     const G = S.giant;
-    entries.push({ y: G.pose === 'away' ? -1e9 : G.y, nodes: Object.values(this.giantN) });
+    entries.push({ y: G.pose === 'away' ? -1e9 : G.y,
+                   nodes: [...Object.values(this.giantN), this.giantStripN] });
     entries.push({ y: this.pose.u.y + 0.01,
-                   nodes: [...Object.values(this.uN), this.bowlN, this.bowlFill,
-                           this.swordN, this.swordGlint] });
+                   nodes: [...Object.values(this.uN), this.twistN, this.bowlN,
+                           this.bowlFill, this.swordN, this.swordGlint] });
     for (let i = 0; i < CREW_N; i++) {
-      entries.push({ y: this.pose['c' + i].y, nodes: [this.crew[i], this.carry[i]] });
+      entries.push({ y: this.pose['c' + i].y,
+                     nodes: [this.crew[i], this.carry[i], this.crewStripN[i]] });
     }
     for (const [i, n] of this.rams.entries()) {
       entries.push({ y: parseFloat(n.style.top || '0') + parseFloat(n.style.height || '0'),
@@ -1770,6 +1922,33 @@ export class CaveSet {
         parked: S.parked,
         ram: { on: S.ramOn, at: S.ramAt ? S.ramAt.map((v) => +v.toFixed(1)) : null,
                slung: S.sling > -1e8, box: this.ramBox },
+      },
+      /* THE STRIP PROOF (the sherlock walk law): per live strip, the frame
+         and the foot measured off the RENDERED box vs the mark the paint was
+         asked for — the lap holds cycling (>= 2 distinct frames, the 'walk
+         strip never cycled' gate) and |dx|,|dy| against these */
+      strips: {
+        giant: this.giantWalking
+          ? stripProof(this.st, this.giantStripN, STRIP.giant,
+                       S.giant.frame || 0, [S.giant.x, S.giant.y], !!S.giant.flip)
+          : null,
+        crew: this.crew.map((_, i) => {
+          const P = this.pose['c' + i];
+          return P.striding
+            ? stripProof(this.st, this.crewStripN[i], STRIP.crew, P.frame,
+                         [P.x, P.y], P.face < 0)
+            : null;
+        }),
+        twist: this.twisting
+          ? stripProof(this.st, this.twistN, STRIP.twist, this.pose.u.frame || 0,
+                       [this.pose.u.x, this.pose.u.y], false)
+          : null,
+        rams: this.rams.map((n, i) => {
+          const g = this.ramGait[i];
+          return g.at && +n.style.opacity > 0
+            ? stripProof(this.st, n, STRIP.ram, g.frame, g.at, false)
+            : null;
+        }),
       },
       /* the declared leaf-3/leaf-4 ambiguity (header): true while the world
          was staged by a VIRGIN cave-predawn and no Beat-V hook has spoken */
