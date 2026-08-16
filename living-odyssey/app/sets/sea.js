@@ -56,7 +56,8 @@
  * actor heights are the stage proof's (tools/ody/stageproof_sea.py).
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp,
-         emissives, breathe, placeStrip, stripProof } from '../setkit.js';
+         emissives, breathe, placeStrip, stripProof,
+         bridgeFrame, loopFrame } from '../setkit.js';
 import { STRIPS } from '../strips.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
@@ -195,8 +196,29 @@ const FOCUS = {
  * was never amb-gated; the ambient bench bob still dies with amb).
  * Per-bench phase keeps the six from lockstep (the existing i x 0.9 rad
  * stagger, in cycles). */
-const STRIP_ROW = { ...STRIPS['crew-row'],
+const STRIP_ROW = { ...STRIPS['crew-row-retry'],
                     period: 1.9, phase: 0.9 / (2 * Math.PI) };
+/* crew-row-retry SUPERSEDES the n=4 crew-row (registry `supersedes`): the
+ * rower re-matted centred so the whole oar sweep lives in frame — same
+ * driver, the registry's own n/anchors (the MAN's feet, never the blade).
+ * hPx 14 re-derives the old strip's ~16.3 px drawn man through the retry
+ * cells' own srcH (398 vs 362.8) and taller matting. */
+const ROWER_STRIP_H = 14;
+
+/* THE GIANT'S TWO MOTIONS (ody-video2, registry-read):
+ *   hurl-windup   kind:'bridge', stand -> hurl, PLAY-ONCE per rock clock
+ *                 (playCount 2): frame = bridgeFrame(strip, k) with k the
+ *                 clock's own tear->loose progress — the windup plays forward
+ *                 once and parks on its gated landing frame; the static hurl
+ *                 cut (pose B) takes the frame from there, within one frame
+ *                 by the build's endpoint gate.
+ *   curse-sway    kind:'loop', verb-clock (loopFrame): the arms-to-firmament
+ *                 prayer sway holds the document frame live until the tear.
+ * hPx is end-pose continuity measured off the cells' alpha (2026-08-16):
+ * the landing hurl figure at the engine's 105 px arms-up height (ws
+ * 105/568 through srcH 635 -> 117); the curse figure likewise (573 -> 109). */
+const STRIP_HURL = { ...STRIPS['hurl-windup'], hPx: 117 };
+const STRIP_CURSE = { ...STRIPS['curse-sway'], hPx: 109, period: 2.6 };
 
 /* the G6 anchor: the VISIBLE giant's body centre, the ledger's (860,168) —
  * mark y 210 minus half the 89 px body, kept as the ledger wrote it */
@@ -259,6 +281,14 @@ export class SeaSet {
     this.pinAt(this.giant.hurl,  ART.giantHurl,  MARKS['clifftop-giant'], GIANT_ARMS_H);
     this.pinAt(this.giant.curse, ART.giantCurse, MARKS['clifftop-giant'], GIANT_ARMS_H);
     for (const e of [this.giant.hurl, this.giant.curse]) e.style.opacity = '0';
+    /* the windup bridge + the curse sway (ody-video2): strip nodes on the
+       same mark, decoded at boot via st.bitmap (the room.js walk law) */
+    this.gHurlN = el('div', 'lyr walk', this.actors);
+    this.gHurlN.style.backgroundImage = st.bitmap(STRIP_HURL.file);
+    this.gHurlN.style.opacity = '0';
+    this.gCurseN = el('div', 'lyr walk', this.actors);
+    this.gCurseN.style.backgroundImage = st.bitmap(STRIP_CURSE.file);
+    this.gCurseN.style.opacity = '0';
 
     // ulysses at the stern: stand and taunt stacked on one moving mark. The
     // taunt cut is FLIPPED — mirrored about its own pin — so the flung arm
@@ -278,7 +308,7 @@ export class SeaSet {
     this.rowers = ROWER_MARKS.map((m) => {
       const e = el('div', 'lyr walk', this.actors);
       e.style.backgroundImage = st.bitmap(STRIP_ROW.file);
-      placeStrip(e, STRIP_ROW, MARKS[m], ROWER_H, 0);
+      placeStrip(e, STRIP_ROW, MARKS[m], ROWER_STRIP_H, 0);
       return { mark: m, el: e };
     });
 
@@ -343,6 +373,8 @@ export class SeaSet {
     };
     this._wk = 1; this._wdx = 0; this._wdy = 0;     // the world transform, at rest
     this.rowerFrames = [0, 0, 0, 0, 0, 0];
+    this.giantBridge = null;                        // the windup, mid-play
+    this.curseLoop = null;                          // the sway, live
   }
 
   /* ---- the two clocks -------------------------------------------------- */
@@ -669,10 +701,43 @@ export class SeaSet {
     // on one mark, opacities damped toward the state
     S.k.hurl = this.st.damp(S.k.hurl, S.giantPose === 'hurl' ? 1 : 0, 6.0, dt);
     S.k.curse = this.st.damp(S.k.curse, S.giantPose === 'curse' ? 1 : 0, 6.0, dt);
+
+    /* THE WINDUP BRIDGE (hurl-windup, play-once x2): each rock clock's
+       tear->loose window IS the windup — the clock's own progress drives the
+       frame (bridgeFrame), the strip owns the picture, and it parks on its
+       gated landing frame as the clock crosses `loose`; the static hurl cut
+       (pose B, damped to full through the same window) takes the frame
+       within one frame by the build's endpoint gate. THE CURSE SWAY
+       (curse-sway, loop): the prayer sway holds the document frame live on
+       the verb's own period until the tear. One live picture, never two. */
+    this.giantBridge = null;
+    if (c !== null && c >= ROCK2.tear && c < ROCK2.loose) {
+      this.giantBridge = { play: 2, k: (c - ROCK2.tear) / (ROCK2.loose - ROCK2.tear) };
+    } else if (c === null && j !== null && j >= ROCK1.tear && j < ROCK1.loose) {
+      this.giantBridge = { play: 1, k: (j - ROCK1.tear) / (ROCK1.loose - ROCK1.tear) };
+    }
+    if (this.giantBridge) {
+      this.giantBridge.k = +clamp01(this.giantBridge.k).toFixed(4);
+      this.giantBridge.frame = bridgeFrame(STRIP_HURL, this.giantBridge.k);
+    }
+    this.curseLoop = !this.giantBridge && S.giantPose === 'curse'
+      ? { frame: loopFrame(STRIP_CURSE, t, STRIP_CURSE.period) } : null;
+
+    const M = MARKS['clifftop-giant'];
+    if (this.giantBridge) {
+      placeStrip(this.gHurlN, STRIP_HURL, M, STRIP_HURL.hPx, this.giantBridge.frame);
+      this.gHurlN.style.opacity = '1';
+    } else this.gHurlN.style.opacity = '0';
+    if (this.curseLoop) {
+      placeStrip(this.gCurseN, STRIP_CURSE, M, STRIP_CURSE.hPx, this.curseLoop.frame);
+      this.gCurseN.style.opacity = '1';
+    } else this.gCurseN.style.opacity = '0';
+
+    const stripLive = !!(this.giantBridge || this.curseLoop);
     const standK = clamp01(1 - S.k.hurl - S.k.curse);
-    this.giant.stand.style.opacity = standK.toFixed(3);
-    this.giant.hurl.style.opacity = S.k.hurl.toFixed(3);
-    this.giant.curse.style.opacity = S.k.curse.toFixed(3);
+    this.giant.stand.style.opacity = (stripLive ? 0 : standK).toFixed(3);
+    this.giant.hurl.style.opacity = (stripLive ? 0 : S.k.hurl).toFixed(3);
+    this.giant.curse.style.opacity = (stripLive ? 0 : S.k.curse).toFixed(3);
     // a blinded giant listens with his whole body: breath only, on the pin
     const amb = this.st.reduced ? 0 : 1;
     const br = amb * Math.sin(2 * Math.PI * t / 5.3);
@@ -709,7 +774,7 @@ export class SeaSet {
       const ph = S.rowPhase + i * STRIP_ROW.phase; // per-bench stagger, in cycles
       const frame = Math.floor((ph % 1) * STRIP_ROW.n) % STRIP_ROW.n;
       this.rowerFrames[i] = frame;
-      placeStrip(r.el, STRIP_ROW, MARKS[r.mark], ROWER_H, frame);
+      placeStrip(r.el, STRIP_ROW, MARKS[r.mark], ROWER_STRIP_H, frame);
       r.el.style.transform =
         `translateY(${(-1.2 * amp * Math.sin(2 * Math.PI * (t / STRIP_ROW.period) + i * 0.9)).toFixed(2)}px)`;
     });
@@ -805,7 +870,9 @@ export class SeaSet {
       if (clock < R.done) return 'settling';
       return 'done';
     };
-    const giantEl = S.k.curse > Math.max(S.k.hurl, 1 - S.k.hurl - S.k.curse)
+    const giantEl = this.giantBridge ? this.gHurlN
+      : this.curseLoop ? this.gCurseN
+      : S.k.curse > Math.max(S.k.hurl, 1 - S.k.hurl - S.k.curse)
       ? this.giant.curse
       : (S.k.hurl > 0.5 ? this.giant.hurl : this.giant.stand);
     const ulyEl = S.k.taunt > 0.5 ? this.uly.taunt : this.uly.stand;
@@ -836,6 +903,21 @@ export class SeaSet {
       veil: +S.k.veil.toFixed(3),
       giant: { pose: S.giantPose, mark: MARKS['clifftop-giant'],
                box: pbox(giantEl) },
+      /* the windup bridge / curse sway, same proof style as the rowers:
+         frame + the foot off the RENDERED box vs the world-mapped mark;
+         `done` flags say each rock's windup has parked on pose B */
+      giantStrip: this.giantBridge ? {
+        mode: 'bridge', key: 'hurl-windup', play: this.giantBridge.play,
+        k: this.giantBridge.k, n: STRIP_HURL.n,
+        ...stripProof(this.st, this.gHurlN, STRIP_HURL, this.giantBridge.frame,
+                      this.worldMap(MARKS['clifftop-giant']), false),
+      } : this.curseLoop ? {
+        mode: 'loop', key: 'curse-sway', n: STRIP_CURSE.n,
+        ...stripProof(this.st, this.gCurseN, STRIP_CURSE, this.curseLoop.frame,
+                      this.worldMap(MARKS['clifftop-giant']), false),
+      } : null,
+      hurlDone: { rock1: j !== null && j >= ROCK1.loose,
+                  rock2: c !== null && c >= ROCK2.loose },
       ulysses: { mark: S.uly.at, pose: S.uly.pose,
                  at: this.ulyAt().map((v) => +v.toFixed(1)),
                  box: pbox(ulyEl) },

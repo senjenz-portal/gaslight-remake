@@ -95,7 +95,7 @@
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
          emissives, placeStrip, stripProof, stripPxPerFrame, pathLen,
-         alongPathArc, walkToward } from '../setkit.js';
+         alongPathArc, walkToward, bridgeFrame, loopFrame } from '../setkit.js';
 import { STRIPS } from '../strips.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
@@ -321,6 +321,37 @@ const STRIP = {
   ram:   { ...STRIPS['ram-walk'],
            pxPerFrame: stripPxPerFrame(STRIPS['ram-walk'], 0.6 * SCALE.pxPerM) },
 };
+/* THE GIANT'S OWN MOTIONS (ody-video2 wave, registry-read like the walks).
+ * BRIDGES (kind:'bridge') are PLAY-ONCE: frame = bridgeFrame(strip, k) — the
+ * act's own progress drives the index the way distance drives a walk, so the
+ * transition plays forward exactly once and parks on its last cell, which the
+ * build gate proved against pose B (endpoint XOR law); the set then swaps to
+ * the static pose B cut it already uses. LOOPS (kind:'loop') ride loopFrame
+ * on the verb's own period. `hPx` per strip is END-POSE CONTINUITY, measured
+ * off the cells' own alpha (2026-08-16): the landing frame's figure drawn at
+ * the same height the engine draws that pose's cut (clutch 190 / drink 175 /
+ * sprawl 202.7-long / seat 165 / stroke 190 / doorway-grope 165), scaled
+ * through each cell's srcH. */
+const GSTRIP = {
+  seize:    { ...STRIPS['seize'],            hPx: 194 },   // seat -> clutch (x3 meals)
+  drink:    { ...STRIPS['drink'],            hPx: 182 },   // seat -> drink (x3 pours)
+  collapse: { ...STRIPS['collapse'],         hPx: 196 },   // drink -> sprawl (neck)
+  milk:     { ...STRIPS['giant-milk'],       hPx: 168, period: 1.6 },
+  stroke:   { ...STRIPS['giant-stroke'],     hPx: 193, period: 1.8 },
+  grope:    { ...STRIPS['giant-grope-sway'], hPx: 168, period: 2.2 },
+};
+/* the seize bridge's window inside the 6 s meal seg: play over k 0.02..0.42
+ * (the same beat the old static pop landed clutch), so the O.6 sample at
+ * segK 0.5 is already the static clutch, identical all three meals */
+const SEIZE_WIN = [0.02, 0.42];
+/* the drink bridge's own window: the first 0.9 s of each drain (the reach and
+ * the head-back), then the static drink cut holds the drain out */
+const DRINK_BRIDGE = 0.9;
+/* the collapse bridge spends k 0..0.85 of the 6 s seg; the landing frame's
+ * lying body centres 7.9 drawn px right of its measured anchor, so the end
+ * mark below parks that centre on the sprawl cut's own (746.9, 546.9) */
+const COLLAPSE_END = [739, 547];
+const COLLAPSE_WIN = 0.85;
 /* the stride is MEASURED off the pose the frame actually moved (seg and
    damp alike); a teleport (fade-through reland, a settled snap) is not a
    stride, and a SEIZED man is dragged, not walking */
@@ -507,6 +538,15 @@ export class CaveSet {
     this.giantStripN = el('div', 'lyr walk', this.actors);
     this.giantStripN.style.backgroundImage = st.bitmap(STRIP.giant.file);
     this.giantStripN.style.opacity = '0';
+    /* the giant's bridge/loop strips (ody-video2): one node per registry
+       file, decoded at boot like every strip (room.js: no white flash) */
+    this.gMotionN = {};
+    for (const key of Object.keys(GSTRIP)) {
+      const n = el('div', 'lyr walk', this.actors);
+      n.style.backgroundImage = st.bitmap(GSTRIP[key].file);
+      n.style.opacity = '0';
+      this.gMotionN[key] = n;
+    }
     this.twistN = el('div', 'lyr walk', this.actors);
     this.twistN.style.backgroundImage = st.bitmap(STRIP.twist.file);
     this.twistN.style.opacity = '0';
@@ -637,7 +677,10 @@ export class CaveSet {
       seizeBase: CREW_N, seizeLatched: true, // the meal's victims, per staging
       parked: false,                         // iii-06's overfull pens
       boomAt: -1e9,                          // the settling boom's cue latch
+      milkUntil: -1e9,                       // the milking loop's window (act/seg)
     };
+    this.giantBridge = null;                 // { key, frame, k, at, hPx, flip }
+    this.giantLoop = null;                   // { key, frame, at, hPx, flip }
     this.uMark = null;                       // an act's own mark outranks the form
     /* presentation pose per human: where the cut IS (damped), distinct from
        where the formation wants it — the shore troupe law. The stride fields
@@ -875,6 +918,10 @@ export class CaveSet {
         break;
       case 'milking':                   // iii-01: the dawn routine; he rises
         this.giantPose('seat', MARKS['giant-seat'], settled);
+        /* the milking LOOP (giant-milk, ody-video2): the dawn routine plays
+           the working pull at the seat — live only; a settled jump lands on
+           the routine already done */
+        if (!settled) S.milkUntil = t + 4.0;
         break;
       case 'scheme':                    // iii-03: alone among the pens
         this.uTo(MARKS.scheme, 'stand', settled);
@@ -1351,7 +1398,12 @@ export class CaveSet {
 
     /* THE MEAL, identical x3 (O.6): the clutch at the giant-seat mark. The
        curve below is the staging — the same lunge, the same held clutch, the
-       same return, whichever meal this is. */
+       same return, whichever meal this is. THE SEIZE BRIDGE (play-once,
+       ody-video2) performs the seat -> clutch transition over SEIZE_WIN of
+       the same curve — the old static pop's own beat — and parks on its
+       gated landing frame; the static clutch cut takes the frame from there,
+       so the O.6 sample at segK 0.5 measures the identical clutch x3. */
+    this.giantBridge = null;
     if (seg && seg.name === 'seize') {
       const k = segK;
       const M = MARKS['giant-seat'];
@@ -1359,21 +1411,36 @@ export class CaveSet {
       G.x = M[0] + 58 * lunge;
       G.y = M[1] + 8 * lunge;
       G.pose = k < 0.06 || k > 0.9 ? 'seat' : 'clutch';
+      const bk = (k - SEIZE_WIN[0]) / (SEIZE_WIN[1] - SEIZE_WIN[0]);
+      if (bk >= 0 && bk < 1 && k <= 0.9) {
+        this.giantBridge = { key: 'seize', k: +bk.toFixed(4),
+                             frame: bridgeFrame(GSTRIP.seize, bk),
+                             at: [G.x, G.y], hPx: GSTRIP.seize.hPx, flip: false };
+      }
       if (!S.seizeLatched && k >= 0.4) { S.seizeLatched = true; S.meals++; }
     }
 
-    /* the collapse (iii-13): the neck goes back, then the slide to the mark */
+    /* the collapse (iii-13): THE COLLAPSE BRIDGE (play-once, ody-video2)
+       performs the whole reel-buckle-fall over k 0..COLLAPSE_WIN of the seg
+       — drink -> sprawl in the strip's own tumble, the mark easing from the
+       seat to COLLAPSE_END (where the landing frame's lying body centres on
+       the sprawl cut's own footprint) — and parks on its gated last cell;
+       the static sprawl at SPRAWL.at takes the frame from there. */
     if (seg && seg.name === 'collapse') {
       const k = segK;
       const M = MARKS['giant-seat'];
-      if (k < 0.5) { G.pose = 'drink'; G.x = M[0]; G.y = M[1]; }
-      else {
-        G.pose = 'sprawl';
-        const e = easeInOut((k - 0.5) / 0.5);
-        G.x = lerp(M[0], SPRAWL.at[0], e);
-        G.y = lerp(M[1], SPRAWL.at[1], e);
+      const bk = k / COLLAPSE_WIN;
+      if (bk < 1) {
+        G.pose = k < 0.5 ? 'drink' : 'sprawl';
+        const e = easeInOut(bk);
+        G.x = lerp(M[0], COLLAPSE_END[0], e);
+        G.y = lerp(M[1], COLLAPSE_END[1], e);
+        this.giantBridge = { key: 'collapse', k: +clamp01(bk).toFixed(4),
+                             frame: bridgeFrame(GSTRIP.collapse, bk),
+                             at: [G.x, G.y], hPx: GSTRIP.collapse.hPx, flip: false };
+      } else {
+        G.pose = 'sprawl'; G.x = SPRAWL.at[0]; G.y = SPRAWL.at[1];
       }
-      if (k >= 1) { G.pose = 'sprawl'; G.x = SPRAWL.at[0]; G.y = SPRAWL.at[1]; }
     } else if (G.next === 'sprawl' && !seg && !G.walk) {
       /* ii-10: the sprawl follows the seize — he tips over where he sat and
          settles down among the sheep, a short eased slide in the ember dark */
@@ -1390,16 +1457,49 @@ export class CaveSet {
     if (S.pour > -1e8 && (G.pose === 'seat' || G.pose === 'drink')) {
       const d = t - S.pour;
       let drinking = false;
-      for (const [a, b] of POURS.drains) if (d >= a && d <= b) drinking = true;
+      for (const [j, [a, b]] of POURS.drains.entries()) {
+        if (d < a || d > b) continue;
+        drinking = true;
+        /* THE DRINK BRIDGE (play-once x3, ody-video2): each drain opens with
+           the reach-and-head-back — the strip over the drain's first
+           DRINK_BRIDGE seconds, frame clamped to the drain's own progress —
+           then parks on its gated landing frame and the static drink cut
+           (pose B) holds the rest of the drain, exactly as before. */
+        const bk = (d - a) / DRINK_BRIDGE;
+        if (bk < 1) {
+          this.giantBridge = { key: 'drink', k: +clamp01(bk).toFixed(4),
+                               frame: bridgeFrame(GSTRIP.drink, bk), play: j + 1,
+                               at: [G.x, G.y], hPx: GSTRIP.drink.hPx, flip: false };
+        }
+      }
       G.pose = drinking ? 'drink' : 'seat';
       if (d >= POURS.swayFrom) {
         rot = 5.5 * clamp01((d - POURS.swayFrom) / 3.0) *
               Math.sin(2 * Math.PI * (d - POURS.swayFrom) / 3.4);
       }
     }
-    /* the milking lean (ii-05, K7/K8): the working cycle at the seat */
-    if (seg && seg.name === 'milking' && G.pose === 'seat') {
-      rot = 3.5 * Math.sin(2 * Math.PI * segK * 2.5) * Math.sin(Math.PI * segK);
+    /* THE LOOPS (ody-video2, verb-clock via loopFrame — pure functions of t):
+       the MILKING routine at the seat (ii-05's seg + iii-01's act window),
+       the ram-back HAND-PASS wherever the stroke pose stands (v-05..v-10),
+       the blinded doorway GROPE-SWAY while he fills the mouth (iv-12 on).
+       The strip replaces the static cut — never both (the swap law) — and
+       the old authored wiggles (the milking lean rot, the cut's bob) go
+       with the cut: gait and bob together is double motion. The grope WALK
+       (iv-11) keeps its cut glide — a blind hand-over-hand shuffle reads as
+       intent (STRIPS.md bench note), and the sway loop is a seated verb. */
+    this.giantLoop = null;
+    const milking = (seg && seg.name === 'milking') || t < S.milkUntil;
+    if (!this.giantBridge && !G.walk) {
+      if (G.pose === 'seat' && milking) {
+        this.giantLoop = { key: 'milk', frame: loopFrame(GSTRIP.milk, t, GSTRIP.milk.period),
+                           at: [G.x, G.y], hPx: GSTRIP.milk.hPx, flip: false };
+      } else if (G.pose === 'stroke') {
+        this.giantLoop = { key: 'stroke', frame: loopFrame(GSTRIP.stroke, t, GSTRIP.stroke.period),
+                           at: [G.x, G.y], hPx: GSTRIP.stroke.hPx, flip: true };
+      } else if (G.pose === 'doorway') {
+        this.giantLoop = { key: 'grope', frame: loopFrame(GSTRIP.grope, t, GSTRIP.grope.period),
+                           at: [G.x, G.y], hPx: GSTRIP.grope.hPx, flip: false };
+      }
     }
 
     /* THE STRIDING GIANT (STRIPS.md #1): while a stand-pose walk runs, the
@@ -1422,6 +1522,23 @@ export class CaveSet {
       this.giantStripN.style.opacity = '0';
     }
 
+    /* THE BRIDGE/LOOP STRIP takes the frame from the cuts while it plays —
+       one live picture, never two (the swap law). placeStrip pins each cell's
+       measured foot anchor ON the mark, so the transitions cannot skate. */
+    const BL = walking ? null : (this.giantBridge || this.giantLoop);
+    if (walking) { this.giantBridge = null; this.giantLoop = null; }
+    for (const [key, node] of Object.entries(this.gMotionN)) {
+      if (BL && BL.key === key && G.pose !== 'away') {
+        const b = placeStrip(node, GSTRIP[key], BL.at, BL.hPx, BL.frame,
+                             { flip: BL.flip });
+        node.style.opacity = '1';
+        this.giantBox = [BL.at[0] - (BL.flip ? b.w - b.ax : b.ax),
+                         BL.at[1] - BL.hPx, b.w, b.h].map((v) => +v.toFixed(1));
+      } else {
+        node.style.opacity = '0';
+      }
+    }
+
     /* paint the one live pose; the rest go dark. `doorway` draws the GROPE
        cut seated in the mouth arch — hands spread to catch anyone going out
        with the sheep — at the seated height that fills the aperture. */
@@ -1431,9 +1548,9 @@ export class CaveSet {
                    clutch: ART.giantClutch, drink: ART.giantDrink,
                    sprawl: ART.giantSprawl, grope: ART.giantGrope,
                    stroke: ART.giantStroke };
-    if (!walking) this.giantBox = null;
+    if (!walking && !BL) this.giantBox = null;
     for (const [pose, node] of Object.entries(this.giantN)) {
-      if (G.pose === 'away' || pose !== nodeKey || walking) {
+      if (G.pose === 'away' || pose !== nodeKey || walking || BL) {
         node.style.opacity = '0';
         continue;
       }
@@ -1800,7 +1917,8 @@ export class CaveSet {
     const entries = [];
     const G = S.giant;
     entries.push({ y: G.pose === 'away' ? -1e9 : G.y,
-                   nodes: [...Object.values(this.giantN), this.giantStripN] });
+                   nodes: [...Object.values(this.giantN), this.giantStripN,
+                           ...Object.values(this.gMotionN)] });
     entries.push({ y: this.pose.u.y + 0.01,
                    nodes: [...Object.values(this.uN), this.twistN, this.bowlN,
                            this.bowlFill, this.swordN, this.swordGlint] });
@@ -1838,6 +1956,13 @@ export class CaveSet {
   }
 
   /* ---- harness --------------------------------------------------------------- */
+  /** the node the STROKE is being drawn on right now (the O.11 gate measures
+   *  the palm off the rendered picture, whichever machinery is painting it) */
+  strokeVisN() {
+    return this.giantLoop && this.giantLoop.key === 'stroke'
+      ? this.gMotionN.stroke : this.giantN.stroke;
+  }
+
   drawnBox(node) {
     const l = parseFloat(node.style.left), tp = parseFloat(node.style.top);
     const w = parseFloat(node.style.width), h = parseFloat(node.style.height);
@@ -1974,7 +2099,29 @@ export class CaveSet {
             ? stripProof(this.st, n, STRIP.ram, g.frame, g.at, false)
             : null;
         }),
+        /* THE BRIDGES (play-once) and LOOPS (verb-clock), same proof style:
+           frame + the foot off the RENDERED box vs the mark it was pinned on.
+           `k` is the act's own progress (the frame's driver); `play` numbers
+           the drink bridge's three performances. */
+        bridge: this.giantBridge ? {
+          key: this.giantBridge.key, k: this.giantBridge.k,
+          play: this.giantBridge.play || 1, n: GSTRIP[this.giantBridge.key].n,
+          ...stripProof(this.st, this.gMotionN[this.giantBridge.key],
+                        GSTRIP[this.giantBridge.key], this.giantBridge.frame,
+                        this.giantBridge.at, this.giantBridge.flip),
+        } : null,
+        loop: this.giantLoop ? {
+          key: this.giantLoop.key, n: GSTRIP[this.giantLoop.key].n,
+          ...stripProof(this.st, this.gMotionN[this.giantLoop.key],
+                        GSTRIP[this.giantLoop.key], this.giantLoop.frame,
+                        this.giantLoop.at, this.giantLoop.flip),
+        } : null,
       },
+      /* the drink bridge's completed performances — a pure function of the
+         bowl's own clock (a play is complete once its drain has run
+         DRINK_BRIDGE seconds), so the lap can hold playCount 3 */
+      drinkPlays: S.pour < -1e8 ? 0
+        : POURS.drains.filter(([a]) => S.t - S.pour >= a + DRINK_BRIDGE).length,
       /* the declared leaf-3/leaf-4 ambiguity (header): true while the world
          was staged by a VIRGIN cave-predawn and no Beat-V hook has spoken */
       beatVAmbiguous: (S.swap ? S.swap.to : S.stateName) === 'predawn' &&
