@@ -10,10 +10,8 @@ function serve(dir,port){const s=createServer(async(q,r)=>{try{const u=decodeURI
 
 // [unitId, seconds to sample, step]
 const RUNS = [
-  ['return2', 6.0, 0.40],   // Beat II: the giant STRIDES in (polyphemus-walk strip)
-  ['auger',   6.0, 0.40],   // the twist loop at the eye
-  ['dawn5',   6.0, 0.40],   // dawn: the ram stream (ram-walk strip)
-  ['jeer',    6.0, 0.40],   // sea: the rowing loop
+  ['firstmeal', 5.0, 0.35],  // the seize bridge
+  ['neck',      5.0, 0.35],  // the collapse bridge
 ];
 
 fs.mkdirSync('/tmp/crossing', {recursive:true});

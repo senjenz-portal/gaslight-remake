@@ -173,11 +173,25 @@ const CREW_N = 12;                   // the twelve best (i-10); three of them ar
 const STRIP = {
   ulysses: STRIPS['ulysses-walk'],
   crew: STRIPS['crew-walk'],
+  run: STRIPS['crew-run'],
 };
 const PX_PER_FRAME = {
   ulysses: stripPxPerFrame(STRIP.ulysses, 0.75 * SCALE.pxPerM),   // 1.70
   crew: stripPxPerFrame(STRIP.crew, 0.71 * SCALE.pxPerM),         // 1.60
+  run: stripPxPerFrame(STRIP.run, 1.5 * SCALE.pxPerM),            // 3.39 (a sprint stride)
 };
+/* THE DASH ABOARD (crew-run, ody-video2 — PLAN i-07 'council', cut c-board):
+ * the reader's click on the hull sends the three council men SPRINTING down
+ * the sand to the galley at push-off, and they go aboard (fade at the hull)
+ * as the crossing's first leg takes the frame up the moonpath. Distance
+ * drives the frame exactly like the walks (the King law) — the run is just
+ * a faster gait with its own strip and its own honest ground speed. hPx 19.8
+ * is end-continuity off the cells' alpha (fig 513 px ~ the 19 px crewman). */
+const RUN_V = 3.8 * SCALE.pxPerM;      // 42.9 px/s — a laden beach sprint
+const RUN_H = 19.8;
+const bY = (x) => floorY(FLOORS.beach, x);         // the boarding spots stand
+const BOARD = [[544, bY(544)], [552, bY(552) + 2], [536, bY(536) - 1]];  // on the
+                                                   // ledger's own beach line
 /* a stride is MEASURED off the pose the frame actually moved (seg and damp
    alike), never named by its cause; a teleport (fade-through reland, a
    settled snap) is not a stride */
@@ -331,6 +345,14 @@ export class ShoreSet {
       w.style.opacity = '0';
       this.crewStripN.push(w);
     }
+    /* the RUN strip nodes for the three boarding men (the dash aboard) */
+    this.runStripN = [];
+    for (let i = 0; i < 3; i++) {
+      const w = el('div', 'lyr walk', this.actors);
+      w.style.backgroundImage = st.bitmap(STRIP.run.file);
+      w.style.opacity = '0';
+      this.runStripN.push(w);
+    }
     /* the skin rides Ulysses' shoulder from i-10 on — drawn after him so the
        strap sits over the shoulder it hangs from. ~0.62 m of goatskin = 7 px. */
     this.skinNode = img(ART.skin.file, 'lyr', this.actors);
@@ -359,12 +381,14 @@ export class ShoreSet {
       dayAt: -1e9,                     // shore-day crossfade start
       cross: -1e9,                     // the G1 crossing clock's zero
       skin: false,                     // the wineskin is shouldered (i-10 on)
+      board: null,                     // { t0 } — the dash aboard, live
     };
     /* presentation pose per actor: where the cut IS, distinct from where the
        staging wants it. op 0 = off stage; an invisible actor snaps to its
        next mark instead of sliding to it. The stride fields (dist/lx/ly/
        walking/face/frame) are the strip driver's — trackStride owns them. */
     const pose = () => ({ x: 0, y: 0, op: 0, flip: false, walking: false,
+                          running: false,
                           dist: 0, lx: null, ly: null, face: 1, frame: 0 });
     this.pose = { u: pose() };
     for (let i = 0; i < CREW_N; i++) this.pose['c' + i] = pose();
@@ -453,7 +477,7 @@ export class ShoreSet {
     switch (act) {
       case 'establish':                // i-00: night, the strait wide, sand empty
         this.setStaging('empty', true);
-        S.dayAt = -1e9; S.cross = -1e9; S.skin = false;
+        S.dayAt = -1e9; S.cross = -1e9; S.skin = false; S.board = null;
         break;
       case 'fire-ulysses':             // i-02: he stands to the fire's left
         this.setStaging('camp', settled);
@@ -466,6 +490,9 @@ export class ShoreSet {
         break;
       case 'crossing':                 // G1 gateAct: the strait (lens travel)
         S.cross = settled ? t - CROSS.dur : t;
+        /* the dash aboard (cut c-board): live only — a settled crossing has
+           the party already over the water */
+        S.board = settled ? null : { t0: t };
         break;
       case 'entry-mainland':           // i-08: the party small on the apron
         this.setStaging('mainland', settled);
@@ -576,6 +603,38 @@ export class ShoreSet {
     const ck = this.crossK();
     if (S.staging === 'mainland' && ck !== null && ck < 0.5) {
       for (const k of Object.keys(want)) want[k].vis = 0;
+    }
+
+    /* THE DASH ABOARD (crew-run): the gate's click IS the push-off — it
+       sends the three council men sprinting for the hull at the run's own
+       honest ground speed, and they go aboard (fade at the boarding spot)
+       under the crossing's FIRST LEG. The dash rides the crossing's own
+       clock, not the staging: the gate's advance enters i-08 (whose
+       entry-mainland act re-stages at once, hidden until the lens has
+       crossed the water anyway), so the crossing clock is the one owner
+       that spans the whole dash. Distance drives the run strip's frames in
+       paintTroupe, the same King law as every walk. */
+    const ckb = this.crossK();
+    if (S.board && (ckb === null || ckb >= CROSS.glideEnd)) S.board = null;
+    if (S.board) {
+      for (let i = 0; i < 3; i++) {
+        const key = 'c' + i, P = this.pose[key], to = BOARD[i];
+        const dx = to[0] - P.x, dy = to[1] - P.y;
+        const dd = Math.hypot(dx, dy), step = RUN_V * dt;
+        if (dd > 1.5 && P.op > 0.05) {
+          const u = Math.min(1, step / dd);
+          P.x += dx * u; P.y += dy * u;
+          P.running = true;
+          P.op = 1;
+          P.flip = dx < 0;
+        } else {
+          P.running = false;
+          P.op = damp(P.op, 0, 3.2, dt);       // up the ladder and aboard
+        }
+        want[key].vis = -1;
+      }
+    } else {
+      for (let i = 0; i < 3; i++) this.pose['c' + i].running = false;
     }
 
     /* the segs write positions DIRECTLY while they run — a pantomime is a
@@ -690,14 +749,22 @@ export class ShoreSet {
       pinSprite(this.crew[i], i % 2 ? ART.crewB : ART.crewA,
                 [P.x, P.y], SCALE.crew, P.flip, bob);
       this.crew[i].style.opacity = (P.walking ? 0 : P.op).toFixed(3);
+      const runN = i < 3 ? this.runStripN[i] : null;
       if (P.walking) {
-        /* variety law: per-man frame phase (+i), flip from his own travel */
-        P.frame = (Math.floor(P.dist / PX_PER_FRAME.crew) + i) % STRIP.crew.n;
-        placeStrip(this.crewStripN[i], STRIP.crew, [P.x, P.y], SCALE.crew,
-                   P.frame, { flip: P.face < 0 });
-        this.crewStripN[i].style.opacity = P.op.toFixed(3);
+        /* variety law: per-man frame phase (+i), flip from his own travel.
+           A RUNNING man rides the crew-run strip at the sprint's own
+           px-per-frame; a walking man keeps the walk strip — never both. */
+        const run = !!(P.running && runN);
+        const strip = run ? STRIP.run : STRIP.crew;
+        P.frame = (Math.floor(P.dist / (run ? PX_PER_FRAME.run : PX_PER_FRAME.crew)) + i)
+                  % strip.n;
+        placeStrip(run ? runN : this.crewStripN[i], strip, [P.x, P.y],
+                   run ? RUN_H : SCALE.crew, P.frame, { flip: P.face < 0 });
+        (run ? runN : this.crewStripN[i]).style.opacity = P.op.toFixed(3);
+        (run ? this.crewStripN[i] : runN || { style: {} }).style.opacity = '0';
       } else {
         this.crewStripN[i].style.opacity = '0';
+        if (runN) runN.style.opacity = '0';
       }
     }
 
@@ -802,12 +869,20 @@ export class ShoreSet {
           : null,
         crew: this.crew.map((_, i) => {
           const P = this.pose['c' + i];
-          return P.walking
+          return P.walking && !P.running
             ? stripProof(this.st, this.crewStripN[i], STRIP.crew, P.frame,
                          [P.x, P.y], P.face < 0)
             : null;
         }),
+        /* the dash aboard: the run strip's own proof, per sprinting man */
+        run: this.runStripN.map((n, i) => {
+          const P = this.pose['c' + i];
+          return P.running && P.walking
+            ? stripProof(this.st, n, STRIP.run, P.frame, [P.x, P.y], P.face < 0)
+            : null;
+        }),
       },
+      board: !!S.board,
       /* the inset and THE DIM's honest deviation (see header) */
       inset: { wineskin: +((this.st.state.plate || {}).wineskin || 0).toFixed(3) },
       dim: { scrim: +(+this.scrim.style.opacity || 0).toFixed(3),

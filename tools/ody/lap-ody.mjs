@@ -679,7 +679,8 @@ async function main() {
    * rendered box vs the set's own mark; the tally holds the three laws. */
   const stripEv = {};
   for (const k of ['giant', 'crew-cave', 'twist', 'ram', 'rower',
-                   'shore-ulysses', 'shore-crew']) {
+                   'shore-ulysses', 'shore-crew',
+                   'milk', 'stroke', 'grope', 'curse', 'run']) {
     stripEv[k] = { frames: new Set(), n: 0, worst: 0, worstAt: null };
   }
   let rowerLockstep = null;
@@ -690,6 +691,23 @@ async function main() {
     const err = Math.max(Math.abs(p.dx || 0), Math.abs(p.dy || 0));
     if (err > ev.worst) { ev.worst = err; ev.worstAt = unit; }
   };
+  /* [bridges] PLAY-ONCE evidence (ody-video2): per bridge PLAY, the frames
+   * sampled while the act drove them (bridgeFrame = clamped progress), the
+   * anchor-law worst foot error, and the play's own n. The tally holds the
+   * play-once law: frames MONOTONE nondecreasing (a bridge can only play
+   * forward), the landing frame REACHED (pose B within one frame, by the
+   * build's endpoint gate), and each pose-B swap asserted at its own unit. */
+  const bridgeEv = {};                // '<key>:<play>' -> { n, frames, worst, at }
+  const bSample = (key, tag, b, unit) => {
+    const id = key + ':' + tag;
+    const ev = bridgeEv[id] = bridgeEv[id] || { n: b.n, frames: [], worst: 0, at: unit };
+    ev.frames.push(b.frame);
+    const err = Math.max(Math.abs(b.dx || 0), Math.abs(b.dy || 0));
+    if (err > ev.worst) ev.worst = err;
+  };
+  let drinkPlaysSeen = 0;
+  const hurlDoneSeen = { rock1: false, rock2: false };
+  const CAVE_LOOP_FAM = { milk: 'milk', stroke: 'stroke', grope: 'grope' };
   const stripPoll = (q) => {
     const sn = (q && q.stage) || {};
     const S = sn.strips;
@@ -697,26 +715,48 @@ async function main() {
     if (sn.set === 'shore' && S) {
       if (S.ulysses) sSample('shore-ulysses', S.ulysses, unit);
       (S.crew || []).forEach((p) => p && sSample('shore-crew', p, unit));
+      (S.run || []).forEach((p) => p && sSample('run', p, unit));
     }
     if (sn.set === 'cave' && S) {
       if (S.giant) sSample('giant', S.giant, unit);
       (S.crew || []).forEach((p) => p && sSample('crew-cave', p, unit));
       if (S.twist) sSample('twist', S.twist, unit);
       (S.rams || []).forEach((p) => p && sSample('ram', p, unit));
+      if (S.loop && CAVE_LOOP_FAM[S.loop.key]) {
+        sSample(CAVE_LOOP_FAM[S.loop.key], S.loop, unit);
+      }
+      if (S.bridge) {
+        const tag = S.bridge.key === 'seize' ? unit
+                  : S.bridge.key === 'drink' ? 'play' + S.bridge.play : 'play1';
+        bSample(S.bridge.key, tag, S.bridge, unit);
+      }
+      if (typeof sn.drinkPlays === 'number') {
+        drinkPlaysSeen = Math.max(drinkPlaysSeen, sn.drinkPlays);
+      }
     }
-    if (sn.set === 'sea' && sn.rowers) {
-      sn.rowers.forEach((r) => r.strip && sSample('rower', r.strip, unit));
-      /* the six benches must never stroke in phase-lock while pulling */
-      if ((sn.rowEffort || 0) > 0.5 && !rowerLockstep) {
-        const fr = sn.rowers.map((r) => r.strip && r.strip.frame);
-        if (fr.length === 6 && fr.every((f) => f === fr[0])) {
-          rowerLockstep = `frames ${JSON.stringify(fr)} at ${unit}`;
+    if (sn.set === 'sea') {
+      const G = sn.giantStrip;
+      if (G && G.mode === 'loop') sSample('curse', G, unit);
+      if (G && G.mode === 'bridge') bSample('hurl-windup', 'play' + G.play, G, unit);
+      if (sn.hurlDone) {
+        if (sn.hurlDone.rock1) hurlDoneSeen.rock1 = true;
+        if (sn.hurlDone.rock2) hurlDoneSeen.rock2 = true;
+      }
+      if (sn.rowers) {
+        sn.rowers.forEach((r) => r.strip && sSample('rower', r.strip, unit));
+        /* the six benches must never stroke in phase-lock while pulling */
+        if ((sn.rowEffort || 0) > 0.5 && !rowerLockstep) {
+          const fr = sn.rowers.map((r) => r.strip && r.strip.frame);
+          if (fr.length === 6 && fr.every((f) => f === fr[0])) {
+            rowerLockstep = `frames ${JSON.stringify(fr)} at ${unit}`;
+          }
         }
       }
     }
   };
-  /* the held segs whose walks the strips now perform: sampled while they run */
-  const STRIP_SEG_KEYS = new Set(['return2', 'return3', 'quiverlid']);
+  /* the held segs whose walks the strips now perform: sampled while they run
+   * ('strangers' is the milking seg — the giant-milk loop's own window) */
+  const STRIP_SEG_KEYS = new Set(['return2', 'return3', 'quiverlid', 'strangers']);
 
   /* ---- [anti-skate] the single-stepped walk probe ------------------------ *
    * Advances the sim ONE FIXED FRAME (1/60 s) at a time and reads, at every
@@ -853,6 +893,12 @@ async function main() {
         bad(`lookhere: [O.7] pour 1 did not start on the full bowl (${JSON.stringify(done.stage.pours)})`);
       }
       facts['O.7-hold'] = `bowl fill rode the hold (k ${m1.hold.k} -> fill ${v1}), pour 1 on resolve`;
+      /* [bridges] pour 1's drink bridge plays on the fresh pour clock —
+         sampled here, before the resolved shot, while the drain is young */
+      for (let i = 0; i < 7; i++) {
+        stripPoll(await st());
+        await T(0.2);
+      }
     } else {
       if (!(done.stage.drive !== null && done.stage.drive !== undefined && done.stage.drive)) {
         bad(`embers: [O.9] full heat did not fire the blinding clock (drive=${JSON.stringify(done.stage.drive)})`);
@@ -1218,9 +1264,20 @@ async function main() {
           break;
         }
         case 'firstmeal': case 'morningmeal': case 'suppertwo': {
+          /* [bridges] THE SEIZE, walked to mid-clutch in 0.15 s steps so the
+             play-once law has dense frames: the bridge (seat -> clutch) rides
+             segK 0.02..0.42 and must be monotone, land on its last cell, and
+             hand the frame to the static clutch the O.6 gate then measures. */
+          let qm = q0;
+          for (let i = 0; i < 40; i++) {
+            if (!qm.unit || qm.unit.key !== u.key || (qm.unitT || 0) >= MEAL_SEG_T) break;
+            stripPoll(qm);
+            await T(0.15);
+            qm = await st();
+          }
           /* [O.6] THE MEAL, sampled at the identical instant of the identical
              curve: segK 0.5 — mid-clutch. */
-          await T(Math.max(0, MEAL_SEG_T - q0.unitT));
+          await T(Math.max(0, MEAL_SEG_T - qm.unitT));
           await page.evaluate(() => window.__renderNow());
           const q = await st();
           const name = `b${u.beat}-O6-meal-${u.key}`;
@@ -1260,6 +1317,21 @@ async function main() {
             facts['O.5'] = `sword drawn, pan reached within ${nearest.toFixed(0)} px of the mouth lens`;
           }
           await shot('b2-O5-pan-at-stone');
+          break;
+        }
+        case 'neck': {
+          /* [bridges] THE COLLAPSE, densely from the top of its own seg: the
+             drink -> sprawl bridge rides segK 0..0.85 of the 6 s neck, so
+             the play-once law gets the whole chain, frame 0 up (the unit is
+             blocked by its segHold, which never samples on its own) */
+          for (let i = 0; i < 36; i++) {
+            const q = await st();
+            if (!q.unit || q.unit.key !== 'neck') break;
+            stripPoll(q);
+            const b = (q.stage.strips || {}).bridge;
+            if (i > 2 && !(b && b.key === 'collapse')) break;
+            await T(0.2);
+          }
           break;
         }
         case 'noman': {
@@ -1411,6 +1483,11 @@ async function main() {
           if (!(g.pose === 'doorway' && g.blinded)) {
             bad(`doorway: the blind giant is not seated in the mouth (pose=${g.pose}, blinded=${g.blinded})`);
           }
+          /* [strips] the grope-sway loop holds the doorway bulk live */
+          for (let i = 0; i < 6; i++) {
+            stripPoll(await st());
+            await T(0.3);
+          }
           break;
         }
         case 'dawn5': {
@@ -1461,8 +1538,11 @@ async function main() {
                 const p0 = s.toPlate(r.left, r.top), p1 = s.toPlate(r.right, r.bottom);
                 return [p0.x, p0.y, p1.x - p0.x, p1.y - p0.y];
               };
-              return { stroke: box(a.giantN.stroke), ram: box(a.ramSlungN),
-                       strokeOp: +a.giantN.stroke.style.opacity };
+              /* the stroke is a LOOP STRIP now (giant-stroke): measure the
+                 node the set is actually painting the hand-pass on */
+              const sN = a.strokeVisN ? a.strokeVisN() : a.giantN.stroke;
+              return { stroke: box(sN), ram: box(a.ramSlungN),
+                       strokeOp: +sN.style.opacity };
             });
             if (!(geo.strokeOp > 0.5)) {
               bad('lastofall: [O.11] the stroke cut is not the pose over the halted ram');
@@ -1565,6 +1645,11 @@ async function main() {
             bad(`curse: [O.14] the sky never darkened — veil ${q.stage.veil} (floor ${CURSE_VEIL_MIN})`);
           }
           await shot('b6-O14-curse');
+          /* [strips] the curse-sway loop holds the document frame live */
+          for (let i = 0; i < 5; i++) {
+            stripPoll(await st());
+            await T(0.3);
+          }
           break;
         }
         default: break;
@@ -1600,6 +1685,18 @@ async function main() {
           const which = u.key === 'rock1' ? 'rock1' : 'rock2';
           let sawFlight = false, sawSplash = 0, palePx = 0;
           await latchProbe(u);
+          /* [bridges] the WINDUP first, densely: the tear->loose window is
+             1.6 s and the entry settle has already spent part of it, so the
+             play-once law's frames are sampled at 0.15 s while the bridge
+             is live (two grace polls in case the tear is still ahead) */
+          for (let i = 0; i < 14; i++) {
+            const qd = await st();
+            if (!qd.unit || qd.unit.id !== u.id) break;
+            stripPoll(qd);
+            const gs = qd.stage.giantStrip;
+            if (i > 1 && !(gs && gs.mode === 'bridge')) break;
+            await T(0.15);
+          }
           for (let i = 0; i < 80; i++) {
             const q = await st();
             if (!q.unit || q.unit.id !== u.id || q.turn.active) break;
@@ -1653,9 +1750,17 @@ async function main() {
     const sv = await st();
     if (!sv.unit || sv.unit.id !== u.id || sv.turn.active || sv.end.active) continue;
     if (u.verb === 'auto') {
-      /* poll it out, sampling the pour machine where O.7 rides the autos */
-      for (let i = 0; i < 60; i++) {
+      /* poll it out, sampling the pour machine where O.7 rides the autos —
+         and the BRIDGES where they play: the drink bridge opens each drain
+         (besokind/thrice) and the collapse bridge is neck's whole seg, so
+         those three poll at 0.25 s for the play-once law's frames */
+      const dense = ['besokind', 'thrice', 'neck'].includes(u.key);
+      for (let i = 0; i < (dense ? 100 : 60); i++) {
         const q = await st();
+        /* sample BEFORE the break: the frame that ends an auto is the NEXT
+           unit's first — taunt's last poll is rock1's tear, the windup
+           bridge's own frame 0 (play-once needs the start of the chain) */
+        stripPoll(q);
         if (!q.unit || q.unit.id !== u.id || q.turn.active || q.end.active) break;
         if (u.key === 'besokind' || u.key === 'thrice') {
           const p = q.stage.pours || {};
@@ -1663,7 +1768,7 @@ async function main() {
           if (q.stage.giant && q.stage.giant.pose === 'drink') facts['O.7-drink'] = true;
           if (p.swaying) facts['O.7-sway'] = true;
         }
-        await T(0.45);
+        await T(dense ? 0.25 : 0.45);
       }
       if (u.key === 'thrice') {
         const q = await st();
@@ -1708,13 +1813,16 @@ async function main() {
       gatesDone.add(u.id);
       await doTarget(u);
       if (u.key === 'council') {
-        /* [G1] the crossing owns the frame: prove it on the unit it lands in */
+        /* [G1] the crossing owns the frame: prove it on the unit it lands in.
+           [strips] the DASH ABOARD (crew-run, cut c-board) sprints under the
+           crossing's first leg — sampled here for the cycle + anchor laws. */
         let done = false;
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 50; i++) {
           const q = await st();
+          stripPoll(q);
           const c = q.stage.crossing;
           if (c && c.done) { done = true; break; }
-          await T(0.5);
+          await T(0.3);
         }
         if (!done) bad('council: the G1 crossing never completed its two legs');
         else {
@@ -2028,9 +2136,15 @@ async function main() {
     ['crew-cave', 'crew-walk (cave, the entry file / scatter)', STRIP_DY_MAX],
     ['twist', 'stake-twist (cave, the auger on the blinding clock)', STRIP_DY_MAX],
     ['ram', 'ram-walk (cave, the dawn stream)', STRIP_DY_MAX],
-    ['rower', 'crew-row (sea, the six benches)', STRIP_ROWER_DY_MAX],
+    ['rower', 'crew-row-retry (sea, the six benches — supersedes the n=4 loop)', STRIP_ROWER_DY_MAX],
     ['shore-ulysses', 'ulysses-walk (shore, the council/boarding crossings)', STRIP_DY_MAX],
     ['shore-crew', 'crew-walk (shore, the council/boarding crossings)', STRIP_DY_MAX],
+    /* the ody-video2 LOOPS: same pair of laws (cycled + anchored feet) */
+    ['milk', 'giant-milk (cave, the milking routine at the seat)', STRIP_DY_MAX],
+    ['stroke', 'giant-stroke (cave, the ram-back hand-pass)', STRIP_DY_MAX],
+    ['grope', 'giant-grope-sway (cave, the blinded doorway bulk)', STRIP_DY_MAX],
+    ['curse', 'curse-sway (sea, the O.14a document frame)', STRIP_DY_MAX],
+    ['run', 'crew-run (shore, the dash aboard at push-off)', STRIP_DY_MAX],
   ];
   for (const [key, name, tol] of STRIP_LAW) {
     const ev = stripEv[key];
@@ -2083,6 +2197,77 @@ async function main() {
     }
   }
 
+  /* ---- 9.7 THE BRIDGES, tallied: PLAY-ONCE (the ody-video2 law) ----------- *
+   * A bridge (kind:'bridge') is a pose transition whose frame is the act's
+   * own clamped progress (setkit bridgeFrame), so on stage it must have been
+   * seen to (a) play FORWARD ONLY — sampled frames monotone nondecreasing,
+   * with >= minSamples mid-play samples or the wiring never ran; (b) START
+   * near its pose-A cell and (c) REACH its landing cell (endMin — n-1 where
+   * the sampling is dense, n-3 where the play is short against the poll),
+   * whose pixels the build gate proved against pose B (endpoint XOR law) —
+   * the set swaps to the static pose B cut it already uses from there, and
+   * the pose-B swap itself is asserted at its own unit (clutch at the O.6
+   * sample, drink at O.7, sprawl under the drive, hurl on the rock clocks);
+   * (d) keep its FEET on the mark (the anchor law, same tolerance as every
+   * walk). The drink bridge additionally owes its playCount (3 — the set's
+   * own drinkPlays, a pure function of the bowl clock) and the windup its
+   * two parked plays (the set's hurlDone flags). */
+  {
+    const N10 = 10;
+    const BRIDGE_LAW = [
+      /* key:play                          what                minS firstMax endMin */
+      ['seize:firstmeal', 'seize (seat->clutch, meal 1 of the O.6 triple)', 4, 4, N10 - 1],
+      ['seize:morningmeal', 'seize (meal 2 — staged identically)', 4, 4, N10 - 1],
+      ['seize:suppertwo', 'seize (meal 3 — staged identically)', 4, 4, N10 - 1],
+      ['drink:play1', 'drink (pour 1, the reader\'s own hold)', 2, 5, N10 - 4],
+      ['drink:play2', 'drink (pour 2, the pantomime refill)', 2, 5, N10 - 4],
+      ['drink:play3', 'drink (pour 3 — O.7\'s three heedless drains)', 2, 5, N10 - 4],
+      ['collapse:play1', 'collapse (drink->sprawl, the ~6 s neck)', 6, 1, N10 - 1],
+      ['hurl-windup:play1', 'hurl-windup (rock 1\'s clock)', 2, 6, N10 - 3],
+      ['hurl-windup:play2', 'hurl-windup (rock 2, O.14b)', 2, 6, N10 - 3],
+    ];
+    for (const [id, name, minS, firstMax, endMin] of BRIDGE_LAW) {
+      const ev = bridgeEv[id];
+      if (!ev || ev.frames.length < minS) {
+        bad(`[bridges] ${name} was never seen mid-play (${ev ? ev.frames.length : 0} ` +
+            `samples, law >= ${minS}) — the play-once wiring (or its sampling) did not run`);
+        continue;
+      }
+      const f = ev.frames;
+      const backstep = f.findIndex((v, i) => i > 0 && v < f[i - 1]);
+      if (backstep >= 0) {
+        bad(`[bridges] ${name} PLAYED BACKWARD — frames ${JSON.stringify(f)} ` +
+            `(a bridge is play-once: clamped progress can never ping-pong)`);
+      }
+      if (!(f[0] <= firstMax)) {
+        bad(`[bridges] ${name} was first seen at frame ${f[0]} (law <= ${firstMax}) — ` +
+            `the play did not start from pose A's end of the chain`);
+      }
+      if (!(Math.max(...f) >= endMin)) {
+        bad(`[bridges] ${name} never REACHED its landing cell — max frame ` +
+            `${Math.max(...f)} of ${N10 - 1} (law >= ${endMin}; the landing cell is ` +
+            `the build-gated pose B match, so short of it the swap is a pop)`);
+      }
+      if (ev.worst > STRIP_DY_MAX) {
+        bad(`[bridges] ${name}: the foot leaves its mark by ${ev.worst.toFixed(2)} ` +
+            `plate px at ${ev.at} (the anchor law, <= ${STRIP_DY_MAX})`);
+      }
+      if (backstep < 0 && f[0] <= firstMax && Math.max(...f) >= endMin &&
+          ev.worst <= STRIP_DY_MAX) {
+        note(`[bridges] ${id}: ${f.length} samples ${f[0]}..${Math.max(...f)}, ` +
+             `monotone, worst foot ${ev.worst.toFixed(2)} px`);
+      }
+    }
+    if (drinkPlaysSeen !== 3) {
+      bad(`[bridges] the drink bridge's playCount is ${drinkPlaysSeen}, the plan's ` +
+          `law is 3 (three fills, three heedless drains — O.7's carrier)`);
+    }
+    if (!hurlDoneSeen.rock1 || !hurlDoneSeen.rock2) {
+      bad(`[bridges] the windup never PARKED on pose B — hurlDone ` +
+          `${JSON.stringify(hurlDoneSeen)} (both rock clocks must cross 'loose')`);
+    }
+  }
+
   /* ---- 10. the fact ledger, printed --------------------------------------- */
   for (const id of ['O.1', 'O.2', 'O.3', 'O.4', 'O.5', 'O.6', 'O.7', 'O.8a', 'O.8b',
                     'O.9', 'O.10', 'O.11', 'O.12', 'O.13a', 'O.13b', 'O.14a', 'O.14b']) {
@@ -2109,6 +2294,10 @@ async function main() {
       worst: +stripEv[k].worst.toFixed(2), worstAt: stripEv[k].worstAt,
     }])),
     rowerLockstep,
+    bridges: Object.fromEntries(Object.entries(bridgeEv).map(([k, e]) => [k, {
+      frames: e.frames, worst: +e.worst.toFixed(2), at: e.at,
+    }])),
+    drinkPlays: drinkPlaysSeen, hurlDone: hurlDoneSeen,
     skate: Object.fromEntries(SKATE_FAMS.map((k) => [k, {
       samples: skateEv[k].samples, pairs: skateEv[k].pairs,
       worst: +skateEv[k].worst.toFixed(3), worstAt: skateEv[k].worstAt,

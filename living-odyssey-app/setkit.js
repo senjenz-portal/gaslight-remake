@@ -107,6 +107,24 @@ export function stripPxPerFrame(strip, stridePx) {
   return stridePx / (strip.n / 2);
 }
 
+/**
+ * PLAY-ONCE MODE, for kind:'bridge' strips (registry `from` -> `to` pose
+ * transitions): the frame index is CLAMPED PROGRESS — the act's own k drives
+ * it exactly the way distance drives a walk's frames (the King law with the
+ * act for ground), so the bridge can only ever play forward, once, and its
+ * last cell — gated by the build to match pose B within the endpoint law —
+ * is where it parks. On completion (k >= 1) the set swaps to the static
+ * pose B cut it already uses; frame n-1 matches that cut by gate, so the
+ * swap is within one frame by construction.
+ */
+export const bridgeFrame = (strip, k) =>
+  Math.min(strip.n - 1, Math.floor(clamp01(k) * strip.n));
+
+/** LOOP MODE, for kind:'loop' strips: the verb's own clock over the loop's
+ *  period — a pure function of t, so a replayed lap lands on the same cell. */
+export const loopFrame = (strip, t, period) =>
+  Math.floor((((t / period) % 1) + 1) % 1 * strip.n) % strip.n;
+
 /** polyline arc length, for the arc-parameterised walks below */
 export function pathLen(pts) {
   let L = 0;
