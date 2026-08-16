@@ -175,9 +175,25 @@ const MEAL_SEG_T = 3.0;            // sample the identical curve at segK 0.5
 const MEAL_BOX_TOL = 4.0;          // plate px of drift allowed between meals
 const MEAL_DIFF_MAX = 0.30;        // fraction of masked px changed > 26 luma
 /* [O.7]/[O.9] the two holds: fill/glow ride the hold (watermark law), so at
- * a partial hold the fill must TRACK k, a release must DECAY it, and only a
- * full hold resolves. */
+ * a partial hold the fill must TRACK k, and only a full hold resolves.
+ * AMENDMENT 2026-08-16 (rest is allowed): both big holds carry `rest: true`
+ * now — a release PERSISTS the progress (no decay, no reset) and the hold
+ * resumes on re-press. The old decay assertion is inverted: the [rest] gate
+ * fills to ~50%, lets go for 2 s, and holds that NOTHING dropped. */
 const HOLD_TRACK_TOL = 0.22;
+const REST_K_TOL = 0.01;           // k after a 2 s rest, vs k at release
+const REST_CARRIER_TOL = 0.05;     // the fill/glow the k carries, same law
+/* [release] the RELEASE verb (myname, AMENDMENT 2026-08-16): press >= this
+ * threshold arms the shout; the advance must land ON the release frame. */
+const RELEASE_THRESHOLD = 0.6;     // units.js ody-vi-07-myname hold, verbatim
+/* [memory] HESITATION MEMORY (defy, AMENDMENT A2): main.js times the pause
+ * from the defy gate arming to its resolving click and the closing card's
+ * sub gains ONE clause by the 4 s threshold — under it the eager clause,
+ * at/over it the reluctant one. The two strings are units.js END_CARD's own
+ * (subEager/subHeld); the lap asserts each clause at a lap that earned it. */
+const HESIT_EAGER_S = 4;                                   // main.js, verbatim
+const HESIT_EAGER_RE = /he gave the monster his name at once/;
+const HESIT_HELD_RE = /he held his name as long as he could/;
 const POUR_CUES_MIN = 3;           // entry pour + two pantomime refills
 /* [O.9] the stake tip during the blinding clock: pinned on the measured EYE
  * (cave.js's own drive anchor, restaged per the round-2 eye review E2 — the
@@ -210,6 +226,26 @@ const FEET_SLACK = 8;
  * the sprawl's own clearance law is the ledger's >= 10 px, read off the
  * snapshot the set re-measures every frame. */
 const SPRAWL_CLEAR_MIN = 10;
+/* [idle] MICRO-IDLE (the sherlock King law, room.js stepKing, ported): a
+ * SETTLED principal breathes — translateY(0.7*br for a man / 0.8 for the
+ * giant), rotate(<= 0.3 deg), scaleY(1 +/- 0.0035; the sea giant 0.006; the
+ * sprawl's chest-rise 0.010) — all about the pinned FEET. The gate samples
+ * the set's rendered (transform-applied) idle box 3 s apart, twice, and
+ * holds: (a) the box MOVES (a dead cut fails), (b) never past the law's own
+ * amplitudes (caps below are peak-to-peak + the rotation's AABB inflation +
+ * measurement slack), (c) the FOOT (box bottom) stays put within the bob's
+ * own reach, and the mark stays put exactly (feet on the floor line — the
+ * [feet] law already proved the mark IS the floor). The sprawl's amplitude
+ * was verified against the ledger: the frontPen's tight 11.8 px clearance
+ * is an X gap the chest's scaleY cannot touch; its y-clearance is 52 px
+ * against a <= 0.7 px rise. Sea boxes ride the world transform's ambient
+ * drift, so the sea caps carry its measured <= 2 px allowance. */
+const IDLE_DY = { man: 0.7, giant: 0.8, sprawl: 0 };       // the bobs, verbatim
+const IDLE_SY = { man: 0.0035, giant: 0.0035, seaGiant: 0.006, sprawl: 0.010 };
+const IDLE_ROT_SIN = 0.0105;       // 2*sin(0.3 deg) — the sway's AABB inflation
+const IDLE_MOVE_MIN = 0.04;        // plate px: below this the cut is DEAD
+const IDLE_SLACK = 0.6;            // plate px of measurement slack
+const IDLE_SEA_DRIFT = 2.0;        // the sea world's ambient drift allowance
 /* [strips] the sprite-strip laws (sherlock stepKing/stepHolmesWalk carried
  * over): every wired strip must (a) CYCLE while its motion runs — >= 2
  * distinct frames seen, the sherlock 'walk strip never cycled' gate; (b)
@@ -501,6 +537,8 @@ async function main() {
   const meals = [];                  // {key, box, crewN, pose, rect, frame}
   const facts = {};                  // fact id -> the evidence line
   let latchProof = null;
+  const restProof = {};              // [rest] per big hold: k across the 2 s rest
+  let releaseProof = null;           // [release] myname's held/released evidence
   let mouthOpenLuma = null;
   let seaStandBox = null;
   let lastId = null, page_ = 1, leafImgs = await imgCount();
@@ -817,15 +855,18 @@ async function main() {
     return true;
   };
 
-  /* ---- the two hold gates, each FAILED FIRST by letting go early -------- */
+  /* ---- the two hold gates, each RESTED FIRST by letting go halfway ------- *
+   * AMENDMENT 2026-08-16 (rest is allowed): the early let-go still must not
+   * resolve and must not advance, but the progress now PERSISTS — fill to
+   * ~50%, rest 2 s, and neither the k nor the carrier it drives may drop. */
   const doHold = async (u) => {
     const isBowl = u.key === 'lookhere';
     const tag = isBowl ? '[O.7]' : '[O.9]';
     const before = (await st()).i;
-    /* the miss: press, let go early. It must not resolve, must not advance,
-       and what the hold had raised has to go back down. */
+    /* the rest: press to ~50% of the hold, let go for 2 s. It must not
+       resolve, must not advance, and what the hold raised has to STAY UP. */
     await page.evaluate(() => window.__holdStart());
-    await T(u.key === 'embers' ? 1.2 : 0.6);
+    await T(isBowl ? 0.8 : 1.5);            // ~k 0.5 of 1.6 s / 3.0 s
     const peek = await st();
     const peekFill = await page.evaluate(() => {
       const a = window.__refs.stage.active;
@@ -833,7 +874,7 @@ async function main() {
                glow: a.stakeGlowOp == null ? null : +a.stakeGlowOp.toFixed(3) };
     });
     await page.evaluate(() => window.__holdEnd());
-    await T(0.8);
+    await T(2.0);                           // the rest itself
     const letGo = await st();
     const goFill = await page.evaluate(() => {
       const a = window.__refs.stage.active;
@@ -842,28 +883,37 @@ async function main() {
     });
     if (letGo.hold.resolved) bad(`${u.key}: ${tag} the hold resolved on an early release`);
     if (letGo.i !== before) bad(`${u.key}: ${tag} the hold gate advanced on an early release`);
-    if (!(letGo.hold.k < peek.hold.k)) {
-      bad(`${u.key}: ${tag} the hold did not decay after release (${peek.hold.k} -> ${letGo.hold.k})`);
+    if (!(peek.hold.k > 0.3 && peek.hold.k < 0.7)) {
+      bad(`${u.key}: [rest] the probe missed the ~50% window (k=${peek.hold.k})`);
     }
-    if (isBowl && !(goFill.fill < peekFill.fill)) {
-      bad(`${u.key}: [O.7] the bowl's fill RATCHETED — ${peekFill.fill} -> ${goFill.fill} after release`);
+    if (letGo.hold.k < peek.hold.k - REST_K_TOL) {
+      bad(`${u.key}: [rest] the hold DROPPED across a 2 s rest — k ${peek.hold.k} -> ` +
+          `${letGo.hold.k} (rest is allowed: progress persists, tol ${REST_K_TOL})`);
     }
-    if (!isBowl && !(goFill.glow < peekFill.glow)) {
-      bad(`${u.key}: [O.9] the ember glow ratcheted — ${peekFill.glow} -> ${goFill.glow} after release`);
+    if (isBowl && goFill.fill < peekFill.fill - REST_CARRIER_TOL) {
+      bad(`${u.key}: [rest][O.7] the bowl's fill drained across the rest — ` +
+          `${peekFill.fill} -> ${goFill.fill} (tol ${REST_CARRIER_TOL})`);
     }
-    gates.push({ beat: u.beat, gate: (isBowl ? 'bowl' : 'embers') + '-release',
+    if (!isBowl && goFill.glow < peekFill.glow - REST_CARRIER_TOL) {
+      bad(`${u.key}: [rest][O.9] the ember glow cooled across the rest — ` +
+          `${peekFill.glow} -> ${goFill.glow} (tol ${REST_CARRIER_TOL})`);
+    }
+    restProof[u.key] = { kAtRelease: peek.hold.k, kAfter2s: letGo.hold.k,
+                         carrierAtRelease: isBowl ? peekFill.fill : peekFill.glow,
+                         carrierAfter2s: isBowl ? goFill.fill : goFill.glow };
+    gates.push({ beat: u.beat, gate: (isBowl ? 'bowl' : 'embers') + '-rest',
                  missed: true, resolved: letGo.hold.resolved });
-    /* the hold, held: the fill/glow must TRACK k (the watermark law), at two
-       partial samples, monotone */
+    /* the hold RESUMED from the rested k: the fill/glow must TRACK k (the
+       watermark law), at two partial samples, monotone, and complete */
     await page.evaluate(() => window.__holdStart());
-    await T(isBowl ? 0.6 : 1.1);
+    await T(isBowl ? 0.35 : 0.7);
     const m1 = await st();
     const f1 = await page.evaluate(() => {
       const a = window.__refs.stage.active;
       return { fill: a.bowlFillK, glow: a.stakeGlowOp, heat: a.heat ? a.heat() : null };
     });
     await shot(`b${u.beat}-hold-${u.key}-mid`);
-    await T(isBowl ? 0.5 : 1.0);
+    await T(isBowl ? 0.4 : 1.0);
     const m2 = await st();
     const f2 = await page.evaluate(() => {
       const a = window.__refs.stage.active;
@@ -882,7 +932,11 @@ async function main() {
       bad(`${u.key}: ${tag} the ${isBowl ? 'fill' : 'glow'} is not monotone with the hold ` +
           `(${v1} -> ${v2} while k ${m1.hold.k} -> ${m2.hold.k})`);
     }
-    await T(isBowl ? 1.2 : 1.6);
+    /* the bowl finishes on a SHORT walk-out: from the rested-and-resumed k the
+       full fill is ~0.05 s away, and pour 1's drink bridge (the drain's first
+       0.9 s, from pour age 0.3) has to still be YOUNG when the sampling loop
+       below reads it — the old 1.2 s spend-down left the bridge half over. */
+    await T(isBowl ? 0.35 : 1.6);
     await page.evaluate(() => window.__holdEnd());
     const done = await st();
     if (!done.hold.resolved) bad(`${u.key}: ${tag} the hold never resolved at full`);
@@ -1019,6 +1073,65 @@ async function main() {
         facts['O.12'] = 'the name is given only by the reader\'s second click on the Cyclops, over the plea';
       }
     }
+  };
+
+  /* ---- the RELEASE verb (myname), FAILED FIRST by a stray click ----------- *
+   * AMENDMENT 2026-08-16: press-and-hold is the drawn breath (NO advance while
+   * held, the taunt cut swelling on the k), and the story advances ON the
+   * frame of the release itself — pressUp resolves it synchronously, so the
+   * state read straight after __holdEnd, with no sim step in between, must
+   * already have moved. A press under the 0.6 s threshold is a stray click:
+   * a beat, not a turn. */
+  const doRelease = async (u) => {
+    const s0 = await st();
+    const before = s0.i;
+    const shoutsBefore = ((await page.evaluate(() => window.__audio())).log || [])
+      .filter((l) => l.kind === 'cue' && l.id === 'shout').length;
+    /* the stray click: under the threshold, the page holds */
+    await page.evaluate(() => window.__holdStart());
+    await T(0.2);
+    await page.evaluate(() => window.__holdEnd());
+    await T(0.5);
+    const stray = await st();
+    if (stray.i !== before || stray.turn.active || stray.end.active) {
+      bad(`myname: [release] a 0.2 s stray click turned the page ` +
+          `(threshold ${RELEASE_THRESHOLD} s)`);
+    }
+    /* the breath: press and hold a full second — NO advance while held */
+    await page.evaluate(() => window.__holdStart());
+    await T(1.0);
+    const held = await st();
+    if (held.i !== before || held.turn.active || held.end.active) {
+      bad(`myname: [release] the story advanced WHILE HELD (i ${before} -> ${held.i})`);
+    }
+    if (!(held.hold.pressing && held.hold.k >= 1)) {
+      bad(`myname: [release] 1 s of hold left k at ${held.hold.k} ` +
+          `(threshold ${RELEASE_THRESHOLD} s banks k at 1)`);
+    }
+    const swell = held.stage.ulysses && held.stage.ulysses.holdK;
+    if (!(swell >= 0.9)) {
+      bad(`myname: [release] the taunt cut is not swelling on the held k ` +
+          `(set holdK ${swell})`);
+    }
+    await shot('b6-release-myname-held');
+    /* the release: the advance lands ON the release frame — the state is read
+       with NO sim step after __holdEnd */
+    await page.evaluate(() => window.__holdEnd());
+    const after = await st();
+    const moved = after.i !== before || after.turn.active || after.end.active;
+    if (!moved) bad('myname: [release] the shout did not advance ON the release frame');
+    const shoutsAfter = ((await page.evaluate(() => window.__audio())).log || [])
+      .filter((l) => l.kind === 'cue' && l.id === 'shout').length;
+    if (!(shoutsAfter > shoutsBefore)) {
+      bad(`myname: [release] the name never RANG — no new 'shout' cue on the release ` +
+          `(${shoutsBefore} -> ${shoutsAfter})`);
+    }
+    gates.push({ beat: u.beat, gate: 'release@myname', missed: true,
+                 resolved: moved, advanced: moved });
+    releaseProof = { from: before, to: after.i, heldK: held.hold.k, swell,
+                     strayHeld: stray.i === before,
+                     rangOnRelease: shoutsAfter > shoutsBefore };
+    await shot('b6-release-myname-shouted');
   };
 
   /* ======================= 1. THE READ ================================== */
@@ -1805,6 +1918,10 @@ async function main() {
       if (gatesDone.has(u.id)) { await T(0.5); continue; }
       gatesDone.add(u.id);
       await doHold(u);
+    } else if (u.verb === 'release') {
+      if (gatesDone.has(u.id)) { await T(0.5); continue; }
+      gatesDone.add(u.id);
+      await doRelease(u);
     } else if (u.verb === 'target') {
       /* one dispatch per gate: a gate that failed to advance has already been
          charged, and re-missing it forever would double-book the ledger — the
@@ -1859,6 +1976,21 @@ async function main() {
   if (!/END OF BOOK IX/i.test(cardText) || !/The Cyclops/i.test(cardText)) {
     bad(`closing card text: '${cardText}'`);
   }
+  /* [memory] the EAGER half: this read answered the defy gate on the lap's
+     own quick cadence (< ${HESIT_EAGER_S} s from the gate arming), so the
+     card's sub must carry the eager clause — and never the reluctant one. */
+  if (!(fin.hesit !== null && fin.hesit >= 0)) {
+    bad(`[memory] no hesitation was recorded at defy (hesit=${fin.hesit})`);
+  } else if (!(fin.hesit < HESIT_EAGER_S)) {
+    bad(`[memory] this lap dawdled ${fin.hesit}s at defy — the eager half of the ` +
+        `gate needs a fast resolve (< ${HESIT_EAGER_S}s); fix the lap's pacing`);
+  } else if (!HESIT_EAGER_RE.test(cardText) || HESIT_HELD_RE.test(cardText)) {
+    bad(`[memory] hesit=${fin.hesit}s (< ${HESIT_EAGER_S}) but the card's sub is not ` +
+        `the eager clause: '${cardText}'`);
+  } else {
+    note(`[memory] defy answered in ${fin.hesit}s -> the card reads ` +
+         `'…his name at once' (the eager clause)`);
+  }
 
   /* ---- 3. the tally ------------------------------------------------------ */
   const missed = units.map((x) => x.key).filter((k) => !seen.includes(k));
@@ -1874,8 +2006,23 @@ async function main() {
   } else {
     note(`the latch: ${latchProof.unit}'s click inside its ${latchProof.blocked} window was latched`);
   }
-  if (gates.length !== 9) {
-    bad(`gates exercised: ${gates.length}, expected 9 (5 targets + 2 hold releases + 2 holds)`);
+  if (gates.length !== 10) {
+    bad(`gates exercised: ${gates.length}, expected 10 (5 targets + 2 hold rests ` +
+        `+ 2 holds + 1 release)`);
+  }
+  /* [rest] + [release]: the two amendments' own gates, tallied by name */
+  for (const k of ['lookhere', 'embers']) {
+    const r = restProof[k];
+    if (!r) bad(`[rest] the ${k} rest was never exercised — the gate did not run`);
+    else note(`[rest] ${k}: k ${r.kAtRelease} at release -> ${r.kAfter2s} after a 2 s rest; ` +
+              `carrier ${r.carrierAtRelease} -> ${r.carrierAfter2s} (nothing dropped)`);
+  }
+  if (!releaseProof) {
+    bad('[release] the myname release verb was never exercised — the gate did not run');
+  } else {
+    note(`[release] myname: stray click held the page, 1 s hold banked k ${releaseProof.heldK} ` +
+         `(swell ${releaseProof.swell}) with no advance, the shout rang and the story ` +
+         `moved ${releaseProof.from} -> ${releaseProof.to} ON the release frame`);
   }
   if (turns.length !== 4) {
     bad(`page turns during the read: ${turns.length}, expected 4 (III->IV shares leaf 3; ` +
@@ -2056,6 +2203,158 @@ async function main() {
     }
   }
 
+  /* ---- 5.5 THE SEEDED DEDICATION (identity-as-seed, zero generation) ------ *
+   * The closing card's ask: a name typed onto the settled card regenerates,
+   * LIVE PER KEYSTROKE, a laurel sigil that is a PURE FUNCTION of the name —
+   * FNV-1a seeds every leaf angle, length, berry and grain of jitter
+   * (app/sigil.js; no Date.now, no Math.random, by the engine's own law).
+   * Five teeth: (a) the ask rises only after the card settles and reads the
+   * amendment's own string; (b) empty input = NO sigil and no line; (c) the
+   * sigil is byte-deterministic — the same name draws the SAME canvas across
+   * a FULL RELOAD, asserted byte-equal on the canvas's own dataURL AND
+   * pixel-identical on the decoded element screenshots; (d) it regenerates
+   * per keystroke (every distinct trimmed prefix draws a distinct canvas);
+   * (e) it is skippable — a click anywhere else recedes the ask and the
+   * card rests undisturbed. NOTE: this section runs after every probe that
+   * reads this page's performance/audio ledgers, because it RELOADS. */
+  {
+    const DED_NAME = 'Penelope of Ithaca';       // spaces on purpose: the
+                                                 // space key must TYPE, not page
+    const sigilURL = () => page.evaluate(() =>
+      document.getElementById('sigil').toDataURL('image/png'));
+    const dedState = () => page.evaluate(() => ({
+      ...window.__state().ded,
+      op: getComputedStyle(document.getElementById('dedicate')).opacity,
+      ask: document.getElementById('dedname').placeholder,
+      line: document.getElementById('dedline').textContent.replace(/\s+/g, ' ').trim(),
+    }));
+    const typeName = async (perKey) => {
+      await page.focus('#dedname');
+      for (const ch of DED_NAME) {
+        await page.keyboard.type(ch);
+        if (perKey) perKey.push(await sigilURL());
+      }
+    };
+
+    /* (a) the ask rose when the card settled, and it is the amendment's ask */
+    const d0 = await dedState();
+    if (!d0.shown || +d0.op < 0.99) {
+      bad(`[dedication] the ask never rose after the card settled ` +
+          `(shown=${d0.shown}, opacity=${d0.op})`);
+    }
+    if (d0.ask !== 'Who read this?') {
+      bad(`[dedication] the ask reads '${d0.ask}', AMENDMENT A1 says 'Who read this?'`);
+    }
+    /* (b) before any key: no sigil, no line, a blank canvas */
+    const blankPng = await sigilURL();
+    if (d0.named || d0.line) {
+      bad(`[dedication] a sigil/line is up before any name was typed ` +
+          `(named=${d0.named}, line='${d0.line}')`);
+    }
+
+    /* (d) live per keystroke: every distinct trimmed prefix, a distinct sigil */
+    const perKey = [];
+    await typeName(perKey);
+    const wantDistinct = new Set(
+      [...DED_NAME].map((_, i) => DED_NAME.slice(0, i + 1).trim())).size;
+    const gotDistinct = new Set(perKey).size;
+    if (gotDistinct !== wantDistinct) {
+      bad(`[dedication] the sigil did not regenerate LIVE per keystroke — ` +
+          `${gotDistinct} distinct drawings over ${DED_NAME.length} keys ` +
+          `(law: ${wantDistinct}, one per distinct trimmed prefix)`);
+    }
+    if (perKey.includes(blankPng)) {
+      bad('[dedication] a typed name drew a BLANK canvas');
+    }
+    const d1 = await dedState();
+    if (!d1.named) bad('[dedication] the typed name raised no sigil');
+    if (!new RegExp(`^this reading belonged to ${DED_NAME}$`, 'i').test(d1.line)) {
+      bad(`[dedication] the belonged line reads '${d1.line}' ` +
+          `(law: 'This reading belonged to ${DED_NAME}')`);
+    }
+    const hashA = d1.hash, urlA = perKey[perKey.length - 1];
+    await page.evaluate(() => window.__renderNow());
+    const shotA = await page.locator('#sigil').screenshot(
+      { path: path.join(SHOTS, 'end-2-sigil-a.png') });
+    await shot('end-3-dedication');
+
+    /* (c) the reload: same name, same sigil, byte for byte */
+    await page.goto(URL_, { waitUntil: 'load', timeout: 30000 });
+    await page.waitForFunction(() => window.__ready === true, { timeout: 30000 });
+    await page.evaluate(() => window.__mute(true));
+    await page.evaluate(async () => await window.__gotoUnit('sailedon'));
+    await click();                        // sailedon endsBook -> the card's turn
+    await T(3.0);
+    const q2 = await st();
+    if (!(q2.end.card > 0.9 && q2.ded.shown)) {
+      bad(`[dedication] after the reload the card/ask did not rise ` +
+          `(card=${q2.end.card}, shown=${q2.ded && q2.ded.shown})`);
+    }
+    await typeName(null);
+    const urlB = await sigilURL();
+    const d2 = await dedState();
+    await page.evaluate(() => window.__renderNow());
+    const shotB = await page.locator('#sigil').screenshot(
+      { path: path.join(SHOTS, 'end-4-sigil-b-reload.png') });
+    if (d2.hash !== hashA) {
+      bad(`[dedication] the hash is not a pure function of the name ` +
+          `(${hashA} before the reload, ${d2.hash} after)`);
+    }
+    if (urlB !== urlA) {
+      bad('[dedication] the canvas bytes DIFFER across a reload — the sigil ' +
+          'is not fully seeded (dataURL mismatch)');
+    }
+    try {
+      const A = decodePng(shotA), B = decodePng(shotB);
+      if (A.width !== B.width || A.height !== B.height) {
+        bad(`[dedication] the two sigil screenshots differ in size ` +
+            `(${A.width}x${A.height} vs ${B.width}x${B.height})`);
+      } else {
+        const shaA = createHash('sha256').update(A.data).digest('hex');
+        const shaB = createHash('sha256').update(B.data).digest('hex');
+        const dd = pixelDiff(A, B, null, 0, 1);
+        if (shaA !== shaB || dd.changed !== 0) {
+          bad(`[dedication] the sigil is NOT pixel-identical across a reload — ` +
+              `${dd.changed}/${dd.samples} px differ (maxΔ ${dd.maxDelta}, ` +
+              `sha ${shaA.slice(0, 12)}… vs ${shaB.slice(0, 12)}…)`);
+        } else {
+          note(`[dedication] '${DED_NAME}' -> fnv 0x${(hashA >>> 0).toString(16)}: ` +
+               `${gotDistinct} live redraws, the SAME sigil across a reload ` +
+               `(dataURL byte-equal; screenshots sha-equal over ${dd.samples} px)`);
+        }
+      }
+    } catch (e) {
+      bad('[dedication] the sigil screenshots did not decode: ' + e.message);
+    }
+
+    /* (b again, on the live page) empty input = no sigil, canvas back to blank */
+    await page.fill('#dedname', '');
+    const d3 = await dedState();
+    const blank2 = await sigilURL();
+    if (d3.named || d3.line || blank2 !== blankPng) {
+      bad(`[dedication] an emptied input still shows a sigil/line ` +
+          `(named=${d3.named}, line='${d3.line}', canvasBlank=${blank2 === blankPng})`);
+    } else {
+      note('[dedication] empty input = no sigil, no line, the canvas back to its blank bytes');
+    }
+
+    /* (e) the skip: a click anywhere else recedes the ask; the card rests */
+    await page.mouse.click(24, 24);
+    const d4 = await dedState();
+    const q4 = await st();
+    if (!d4.skipped || +d4.op > 0.01) {
+      bad(`[dedication] the skip click did not recede the ask ` +
+          `(skipped=${d4.skipped}, opacity=${d4.op})`);
+    }
+    if (!q4.finished || !q4.blankLeaf || q4.errors.length) {
+      bad(`[dedication] skipping disturbed the rest state (finished=${q4.finished}, ` +
+          `blankLeaf=${q4.blankLeaf}, errors=${q4.errors.length})`);
+    }
+    if (d4.skipped && +d4.op <= 0.01 && q4.finished && q4.blankLeaf) {
+      note('[dedication] the skip: a click elsewhere receded the ask; the card rests');
+    }
+  }
+
   /* ---- 6. soft-fail: no gate is a wall (Beat I excluded by design) ------- */
   await page.evaluate(async () => await window.__gotoUnit('sword'));
   const beforeSoft = (await st()).i;
@@ -2065,6 +2364,145 @@ async function main() {
     bad('the sword gate did not soft-fail after 30 s');
   } else {
     note(`soft-fail: the sword gate satisfied itself after 30 s (softFails=${afterSoft.softFails})`);
+  }
+
+  /* ---- 6b. [memory] the RELUCTANT half: a forced >= 4 s hesitation -------- *
+   * The read above answered defy fast and got the eager clause (section 2).
+   * Here the same gate is re-armed and the resolve is HELD past the
+   * threshold: jump to defy (the jump replays jeer's resolution silently, so
+   * O.12's second-click law still stands), dwell 4.6 s of story time, click,
+   * then walk the card up again off sailedon and hold the sub reads the
+   * RELUCTANT clause. This is the gate-miss pass's dwell made a law. */
+  {
+    await page.evaluate(async () => await window.__gotoUnit('defy'));
+    await T(4.6);                       // the forced hesitation, story seconds
+    const hit = await page.evaluate(() => window.__gateClick());
+    const qh = await st();
+    if (!hit.ok) bad('[memory] the defy gate did not resolve on the dwelled click');
+    if (!(qh.hesit >= HESIT_EAGER_S)) {
+      bad(`[memory] a ${4.6}s dwell recorded hesit=${qh.hesit} ` +
+          `(law: >= ${HESIT_EAGER_S} — the memory is not measuring the pause)`);
+    }
+    await page.evaluate(async () => await window.__gotoUnit('sailedon'));
+    await T(0.6);
+    await click();                      // sailedon endsBook -> the card's turn
+    await T(3.0);
+    const qc = await st();
+    const cardText2 = await page.evaluate(() =>
+      document.getElementById('endcard').textContent.replace(/\s+/g, ' ').trim());
+    if (!(qc.end.card > 0.9)) {
+      bad(`[memory] the closing card did not rise on the reluctant lap (card=${qc.end.card})`);
+    } else if (!HESIT_HELD_RE.test(cardText2) || HESIT_EAGER_RE.test(cardText2)) {
+      bad(`[memory] hesit=${qc.hesit}s (>= ${HESIT_EAGER_S}) but the card's sub is not ` +
+          `the reluctant clause: '${cardText2}'`);
+    } else {
+      note(`[memory] defy held ${qc.hesit}s -> the card reads ` +
+           `'…as long as he could' (the reluctant clause)`);
+    }
+  }
+
+  /* ---- 6c. [idle] the micro-idle law: settled principals breathe ---------- *
+   * Three stages, four principals, the crew's desync — each sampled at a
+   * unit the read already proved settled ([feet]/[parking] ran there):
+   *   shiplie   cave: Ulysses standing + the giant SEATED by the fire
+   *   embers    cave: the sprawl's chest-rise (scaleY, period ~5 s)
+   *   fatherson sea:  Ulysses at the stern + the blinded giant on the brow
+   *   smoke     shore: Ulysses + the camp crew (and the desync law)
+   * Two samples 3 s apart per principal; see the IDLE_* provenance block. */
+  {
+    const idleAt = async (key) => {
+      await page.evaluate(async (k) => await window.__gotoUnit(k), key);
+      await T(1.3);                     // the damped walks settle
+      const out = [];
+      for (let s = 0; s < 3; s++) {     // THREE samples: the bob and the breath
+        const q = await st();           // share one phase, and two samples can
+        out.push({ idle: (q.stage && q.stage.idle) || null, stage: q.stage });
+        if (s < 2) await T(3.0);        // land symmetric about its peak — three
+      }                                 // 3 s apart cannot all coincide
+      return out;
+    };
+    const judge = (who, samples, { dy, sy, drift = 0, markY = null }) => {
+      if (samples.some((s) => !s || !s.box)) {
+        bad(`[idle] ${who}: no settled idle box to sample (${JSON.stringify(samples[0])})`);
+        return;
+      }
+      let breathes = 0, worstTop = 0, worstBot = 0, capTop = 0, capBot = 0;
+      for (let i = 1; i < samples.length; i++) {
+        const [ax, ay, aw, ah] = samples[i - 1].box, [bx, by, bw, bh] = samples[i].box;
+        const dTop = Math.abs(by - ay), dBot = Math.abs((by + bh) - (ay + ah));
+        const moved = dTop + dBot + Math.abs(bw - aw) + Math.abs(bx - ax);
+        if (moved > IDLE_MOVE_MIN) breathes++;
+        /* peak-to-peak caps: bob + the breath's h share + sway inflation */
+        capTop = 2 * dy + 2 * sy * ah + IDLE_ROT_SIN * aw + IDLE_SLACK + drift;
+        capBot = 2 * dy + IDLE_ROT_SIN * aw + IDLE_SLACK + drift;
+        worstTop = Math.max(worstTop, dTop); worstBot = Math.max(worstBot, dBot);
+      }
+      const [fy, fh] = [samples[0].box[1], samples[0].box[3]];
+      if (!breathes) {
+        bad(`[idle] ${who} is DEAD — three samples 3 s apart never moved ` +
+            `> ${IDLE_MOVE_MIN} px (law: a settled principal breathes)`);
+      } else if (worstTop > capTop || worstBot > capBot) {
+        bad(`[idle] ${who} moves PAST the law — top ${worstTop.toFixed(2)} (cap ` +
+            `${capTop.toFixed(2)}), foot ${worstBot.toFixed(2)} (cap ${capBot.toFixed(2)})`);
+      } else if (markY !== null && !(Math.abs((fy + fh) - markY) <= FEET_SLACK)) {
+        bad(`[idle] ${who}'s foot is off its floor mark — box bottom ` +
+            `${(fy + fh).toFixed(1)} vs mark y ${markY} (slack ${FEET_SLACK})`);
+      } else {
+        note(`[idle] ${who}: breathes ${worstTop.toFixed(2)}/${worstBot.toFixed(2)} px ` +
+             `(top/foot, caps ${capTop.toFixed(1)}/${capBot.toFixed(1)}), foot on its mark`);
+      }
+      /* the self-reported amplitudes are the law's own numbers */
+      for (const s of samples) {
+        if (!(Math.abs(s.dy) <= dy + 0.02 && Math.abs(s.sy - 1) <= sy + 0.0002)) {
+          bad(`[idle] ${who} reports an over-law amplitude: dy=${s.dy} (law ${dy}), ` +
+              `sy=${s.sy} (law 1±${sy})`);
+        }
+      }
+    };
+    /* cave: Ulysses standing + the SEATED giant, one visit */
+    const cv = await idleAt('shiplie');
+    const pick = (arr, f) => arr.map((s) => (s.idle && f(s.idle)) || null);
+    judge('cave ulysses (shiplie)', pick(cv, (i) => i.u),
+          { dy: IDLE_DY.man, sy: IDLE_SY.man,
+            markY: cv[0].stage.cast ? cv[0].stage.cast.ulysses.mark[1] : null });
+    judge('cave giant seated (shiplie)',
+          pick(cv, (i) => i.giant && i.giant.pose === 'seat' ? i.giant : null),
+          { dy: IDLE_DY.giant, sy: IDLE_SY.giant,
+            markY: cv[0].stage.giant ? cv[0].stage.giant.mark[1] : null });
+    /* cave: the sprawl's chest-rise — scaleY only, the foot end pinned */
+    const sp = await idleAt('embers');
+    judge('cave sprawl chest-rise (embers)',
+          pick(sp, (i) => i.giant && i.giant.pose === 'sprawl' ? i.giant : null),
+          { dy: IDLE_DY.sprawl, sy: IDLE_SY.sprawl,
+            markY: sp[0].stage.giant ? sp[0].stage.giant.mark[1] : null });
+    /* shore: Ulysses + the crew's DESYNC (per-index phase offsets) */
+    const sh = await idleAt('smoke');
+    judge('shore ulysses (smoke)', pick(sh, (i) => i.u),
+          { dy: IDLE_DY.man, sy: IDLE_SY.man,
+            markY: sh[0].stage.cast ? sh[0].stage.cast.ulysses.mark[1] : null });
+    for (const [where, snap] of [['shore (smoke)', sh[0]], ['cave (shiplie)', cv[0]]]) {
+      const crew = (snap.idle && snap.idle.crew) || [];
+      if (crew.length < 2) {
+        bad(`[idle] ${where}: fewer than 2 settled crewmen to judge the desync`);
+      } else {
+        const dys = crew.map((c) => c.dy);
+        const spread = Math.max(...dys) - Math.min(...dys);
+        if (!(spread > IDLE_MOVE_MIN)) {
+          bad(`[idle] ${where}: the crew breathe in LOCKSTEP (dy spread ` +
+              `${spread.toFixed(3)} over ${crew.length} men — the phase offsets are gone)`);
+        } else {
+          note(`[idle] ${where}: ${crew.length} settled crew desynced, ` +
+               `dy spread ${spread.toFixed(2)} px`);
+        }
+      }
+    }
+    /* sea: Ulysses at the stern + the blinded giant — the world's ambient
+       drift rides the boxes, so these carry IDLE_SEA_DRIFT */
+    const se = await idleAt('fatherson');
+    judge('sea ulysses (fatherson)', pick(se, (i) => i.uly),
+          { dy: IDLE_DY.man, sy: IDLE_SY.man, drift: IDLE_SEA_DRIFT });
+    judge('sea giant clifftop (fatherson)', pick(se, (i) => i.giant),
+          { dy: IDLE_DY.giant, sy: IDLE_SY.seaGiant, drift: IDLE_SEA_DRIFT });
   }
 
   /* ---- 7. portrait: the same dead-band law, the cropped frame ------------ */
@@ -2285,7 +2723,8 @@ async function main() {
     ms: Date.now() - t0,
     units: { total: units.length, entered: seen.length, order: seen },
     beats: beats.map((b) => ({ ...b, entered: beatsSeen[b.n] || 0 })),
-    gates, turns, latchProof, heads, meals: meals.map(({ frame, ...m }) => m),
+    gates, turns, latchProof, restProof, releaseProof,
+    heads, meals: meals.map(({ frame, ...m }) => m),
     facts, cameoLog, sprawl: sprawlLedger, insetStuck,
     deadBands: bandRows.slice(0, 14), limit: LANDSCAPE_MAX,
     feetSamples, parkSamples,

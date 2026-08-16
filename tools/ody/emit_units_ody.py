@@ -66,6 +66,26 @@ def rows():
 # LAW: focus names are ledger LENS names VERBATIM (tools/ody/ledger.json);
 # targets are ledger gate targets VERBATIM; acts are ledger mark / master /
 # object names wherever a staged thing exists in the ledger.
+#
+# AMENDMENTS (Butler is verbatim and untouchable; verbs/cues/END_CARD are OUR
+# authoring — every authored change is recorded here AND in
+# CONTENT-odyssey.md §AMENDMENTS, then units.js re-emitted and the text
+# byte-equality re-verified):
+#   A1 (2026-08-16) THE SEEDED DEDICATION — two authored strings on END_CARD
+#      (emitted in EPILOGUE below): ask='Who read this?' and
+#      belonged='This reading belonged to'. No unit row touched; no Butler
+#      text changed (76/76 verbatim unaffected).
+#   A2 (2026-08-16) HESITATION MEMORY — two authored strings on END_CARD
+#      (emitted in EPILOGUE below): subEager/subHeld, the one clause the
+#      closing card's sub gains by main.js's 4 s defy-hesitation threshold.
+#      No unit row touched; no Butler text changed (76/76 verbatim
+#      unaffected).
+#   A3 (2026-08-16) RELEASE-AS-VERB — ody-vi-07-myname: verb auto/dwell 6.0 ->
+#      release/hold 0.6 + gateAct 'shout' + gateSfx 'shout' + authored cue.
+#      The story advances on the reader's own let-go (see the note at the key).
+#   A4 (2026-08-16) REST IS ALLOWED — ody-iii-08-lookhere and ody-iv-01-embers
+#      gain rest=True (a released hold keeps its progress) and their cues
+#      append ' — rest is allowed'. Butler untouched in both.
 S = {
  # ---- BEAT I - THE TALE BEGUN - SET shore - leaf 1 ------------------------
  'ody-i-00-head': dict(head=True, num='I', text='The Tale Begun', verb='auto',
@@ -252,8 +272,12 @@ S = {
                               c='boulder re-seated + milking repeated (c9); '
                                 'seg seize IDENTICAL a third time — men now '
                                 'six; the ivy bowl becomes the hot object.'),
- 'ody-iii-08-lookhere': dict(verb='hold', hold=1.6,
-                             cue='hold the bowl · fill it — and again — and again',
+ # AMENDMENT 2026-08-16 (rest is allowed): rest=True — a released hold KEEPS
+ # its fill (no decay, no reset) and resumes on re-press; cue amended to say so.
+ # Cues are OUR authoring; Butler's text is untouched.
+ 'ody-iii-08-lookhere': dict(verb='hold', hold=1.6, rest=True,
+                             cue='hold the bowl · fill it — and again — and again'
+                                 ' — rest is allowed',
                              focus='bowl-close', clear=True, act='bowl-offer',
                              sfx='pour',
                              c='GATE G3 — the bowl fills with the hold '
@@ -291,8 +315,11 @@ S = {
                         c='NO page turn — the heading lands on leaf 3 '
                           'already mounted, dark-embers state, the giant '
                           'sprawled by the pens.'),
- 'ody-iv-01-embers': dict(verb='hold', hold=3.0,
-                          cue='hold the stake in the embers · until it glows',
+ # AMENDMENT 2026-08-16 (rest is allowed): rest=True — the glow earned so far
+ # PERSISTS through a release and resumes on re-press; cue amended to say so.
+ 'ody-iv-01-embers': dict(verb='hold', hold=3.0, rest=True,
+                          cue='hold the stake in the embers · until it glows'
+                              ' — rest is allowed',
                           focus='ember-close', clear=True, sfx='embers',
                           c='GATE G4 — glow rides the hold (watermark law); '
                             'at full heat the drive fires itself; the '
@@ -411,9 +438,12 @@ S = {
                            'nod-and-frown hush is its face beat.'),
 
  # ---- BEAT VI - THE TAUNT - SET sea - leaf 5 (NO head unit) ---------------
+ # (S-dict drift fix 2026-08-16: the shipped units.js carried focus 'gate-wide'
+ # here and at rock1 while this dict still said 'establishing' — the dict is
+ # law, so it now records what ships.)
  'ody-vi-01-jeer': dict(verb='target', target='cyclops', gateAct='jeer',
                         gateSfx='shout', cue='click the Cyclops · jeer at him',
-                        focus='establishing', clear=True, bed='sea',
+                        focus='gate-wide', clear=True, bed='sea',
                         act='establish',
                         c='GATE G6, first resolution; the sea SET mounts '
                           'under heading VI · THE TAUNT — NO head unit, the '
@@ -424,7 +454,7 @@ S = {
                            'at the cliff; the blinded head turns toward the '
                            'sound.'),
  'ody-vi-03-rock1': dict(verb='clock', at=7.0, wait='rock1',
-                         focus='establishing', clear=True, sfx='rock-tear',
+                         focus='gate-wide', clear=True, sfx='rock-tear',
                          c='ROCK 1\'s clock (~12 s): tear, arc, splash ahead '
                            'of the rudder, the wash drives the ship BACK, '
                            'pole-push, oars bite; margin cleared for the '
@@ -446,11 +476,21 @@ S = {
                           'lens keeps pleaders and target in one frame, '
                           'composed inside the painting at the doubled '
                           'distance (F2).'),
- 'ody-vi-07-myname': dict(verb='auto', dwell=6.0, focus='stern', clear=True,
+ # AMENDMENT 2026-08-16 (release-as-verb): was auto/dwell 6.0 — the self-naming
+ # is now the reader's own RELEASE. Press-and-hold draws the breath at the
+ # stern (the taunt cut swells on the held k); LETTING GO past the 0.6 s
+ # threshold fires the shout (gateAct 'shout' snaps the pose, gateSfx 'shout'
+ # rings the name — the giant-roar clip, the same cue both cyclops gates
+ # already shout with) and the story advances ON the release frame. A shorter
+ # press is a stray click: it reads as a beat and holds the page. Soft-fail
+ # auto-releases at 30 s (sec 2.6). Verbs are OUR authoring; Butler untouched.
+ 'ody-vi-07-myname': dict(verb='release', hold=0.6, gateAct='shout',
+                          gateSfx='shout', focus='stern', clear=True,
+                          cue='press and hold · draw breath — release the name',
                           act='stern-rail', fact='O.12',
                           c='O.12 lands — he shakes off the gripping hand '
-                            'and steps onto the stern rail; echo off the '
-                            'cliff.'),
+                            'and steps onto the stern rail; the reader\'s own '
+                            'RELEASE fires the shout; echo off the cliff.'),
  'ody-vi-08-prophecy': dict(verb='click', focus='clifftop', clear=True,
                             cameo='off', sfx='groan',
                             c='push past the ship to the cliff-top close; '
@@ -508,7 +548,7 @@ BEAT_BANNER = {
 }
 
 ORDER_KEYS = ['id', 'key', 'head', 'num', 'text', 'speaker', 'verb', 'target',
-              'gateAct', 'gateSfx', 'cue', 'hold', 'reveal', 'dwell', 'at',
+              'gateAct', 'gateSfx', 'cue', 'hold', 'rest', 'reveal', 'dwell', 'at',
               'wait', 'seg', 'segDur', 'segHold', 'endsBeat', 'endsBook',
               'focus', 'page', 'beat', 'set', 'clear', 'drop', 'sfx', 'bed',
               'act', 'cameo', 'cap', 'fact']
@@ -569,6 +609,18 @@ PROLOGUE = """\
  *      states are acts (cave-dawn / cave-shut / cave-embers / cave-predawn),
  *      exactly as sherlock units drove room-dim via acts.
  *
+ * AMENDMENTS (2026-08-16, verbs/cues are OUR authoring — Butler untouched;
+ * recorded in CONTENT-odyssey.md §Amendments):
+ *   release — ody-vi-07-myname is the book's one RELEASE verb: press-and-hold
+ *             draws the breath (>= 0.6 s), LETTING GO fires the shout and the
+ *             story advances on the release frame; soft-fail at 30 s.
+ *   rest    — the two big holds (lookhere 1.6 s, embers 3.0 s) carry
+ *             rest: true — a released hold KEEPS its progress (no decay, no
+ *             reset) and resumes on re-press; their cues say so.
+ *   memory  — the defy gate's hesitation (gate-armed -> resolving click) is
+ *             remembered by main.js and the closing card's sub gains ONE
+ *             clause by the 4 s threshold: END_CARD.subEager / .subHeld.
+ *
  * Schema: site-deploy/living/app/units.js (the sherlock original) — same
  * fields, same field order, same exports.
  */
@@ -605,12 +657,24 @@ export const END_CARD = {
   kicker: 'END OF BOOK IX',
   title: 'The Cyclops',
   sub: 'told by Ulysses at the court of Alcinous',
+  /* AMENDMENT A1 — THE SEEDED DEDICATION (authored, non-Butler): the ask
+   * that rises on the settled card, and the line under the seeded sigil
+   * (app/sigil.js draws it; main.js appends the reader's name). */
+  ask: 'Who read this?',
+  belonged: 'This reading belonged to',
+  /* AMENDMENT A2 — HESITATION MEMORY (authored, non-Butler): at `defy`, the
+   * reader's second click on the Cyclops, main.js times the pause from the
+   * gate arming to the resolving click and the sub gains ONE clause by the
+   * 4 s threshold. The base sub above is untouched. */
+  subEager: ' — he gave the monster his name at once',
+  subHeld: ' — he held his name as long as he could',
 };
 
 /** Verb default affordance labels (a unit's own `cue` wins). */
 export const CUE_DEFAULT = {
   click:  'click to read on',
   hold:   'press and hold',
+  release: 'press and hold · release',
   auto:   '',
   target: 'click the highlighted thing',
   clock:  '',
@@ -648,7 +712,7 @@ export function validateUnits(units = UNITS) {
   const bad = [];
   const seen = new Set();
   const seenKeys = new Set();
-  const VERBS = new Set(['click', 'hold', 'auto', 'target', 'clock']);
+  const VERBS = new Set(['click', 'hold', 'release', 'auto', 'target', 'clock']);
   const ALL_TARGETS = new Set(Object.values(TARGETS_BY_SET).flat());
   const SETS = new Set(Object.keys(TARGETS_BY_SET));
   units.forEach((u, i) => {
@@ -667,6 +731,10 @@ export function validateUnits(units = UNITS) {
     if (!SETS.has(set)) bad.push(`${at}: unknown set '${set}'`);
     if (u.verb === 'auto' && !(u.dwell > 0)) bad.push(`${at}: auto needs dwell`);
     if (u.verb === 'hold' && !(u.hold > 0)) bad.push(`${at}: hold needs hold seconds`);
+    if (u.verb === 'release' && !(u.hold > 0)) {
+      bad.push(`${at}: release needs its hold threshold seconds`);
+    }
+    if (u.rest && u.verb !== 'hold') bad.push(`${at}: rest rides the hold verb only`);
     if (u.verb === 'clock' && !(u.at > 0)) bad.push(`${at}: clock needs its t+ offset`);
     if (u.verb === 'target' && !ALL_TARGETS.has(u.target)) {
       bad.push(`${at}: target verb needs target in {${[...ALL_TARGETS].join(',')}}`);
@@ -744,7 +812,7 @@ def main():
                 u['text'] = r['text']
             u['speaker'] = r['speaker']
             for k in ('verb', 'target', 'gateAct', 'gateSfx', 'cue', 'hold',
-                      'dwell', 'at', 'wait', 'seg', 'segDur', 'segHold',
+                      'rest', 'dwell', 'at', 'wait', 'seg', 'segDur', 'segHold',
                       'endsBeat', 'endsBook'):
                 if k in st:
                     u[k] = st.pop(k)

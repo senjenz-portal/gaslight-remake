@@ -152,7 +152,7 @@ Two more eaten at dawn and two at dusk, the stake made and hidden, and the wine-
 | 5 | ody-iii-05-lots | — | When I had done this I hid it under dung… and told the men to cast lots which of them should venture along with myself to lift it and bore it into the monster’s eye while he was asleep. The lot fell upon the very four whom I should have chosen, and I myself made five. | click | the stake slid under the dung-litter already painted into the cave plate (cut c8 — set dressing performs it); lots pantomime: a shaken helmet, four men step forward, Ulysses the fifth; overhead lens on the circle; sfx potsherd rattle | <!-- src 17146..17186 + 17229..17455 -->
 | 6 | ody-iii-06-return | — | In the evening the wretch came back from shepherding, and drove his flocks into the cave—this time driving them all inside, and not leaving any in the yards; I suppose some fancy must have taken him, or a god must have prompted him to do so. | click | state → **evening firelight**; boulder swings, giant a silhouette under the mouth, the WHOLE flock pours in — pens visibly overfull (the anomaly must read; it pays off in Beat V); sfx bells, hooves, bleating swell | <!-- src 17456..17697 -->
 | 7 | ody-iii-07-suppertwo | — | …he gripped up two more of my men, and made his supper off them. So I went up to him with an ivy-wood bowl of black wine in my hands: | click | boulder re-seated + milking routine repeated in pantomime under the ellipsis (cut c9 — the SAMENESS of his routine is the dread); the seize staged **IDENTICALLY a third time (O.6 co-carrier)**; men now six; then Ulysses rises with the **ivy-wood bowl** — the bowl becomes the hot object, teal affordance migrating to it; lens tracks his walk toward the fire | <!-- src 17914..18046 -->
-| 8 | ody-iii-08-lookhere | ULYSSES | Look here, Cyclops… you have been eating a great deal of man’s flesh, so take this and drink some wine, that you may see what kind of liquor we had on board my ship… | **hold** | **GATE (the beat's one gate): hold the bowl — it fills ∝ hold, THREE pours.** Cue: "hold the bowl · fill it — and again — and again". Bowl raised to the firelit giant; each release he drains it in pantomime (cut c10 — the thrust-back bowl IS his begging); the held-up offer gesture performs the drink-offering plea (trim c11); attribution "said I" dropped to prefix | <!-- src 18050..18068 + 18079..18223 ; comma [18068,18069) absorbed by the … splice over "’ said I, " [18069,18079) (audit fix 2026-08-14) -->
+| 8 | ody-iii-08-lookhere | ULYSSES | Look here, Cyclops… you have been eating a great deal of man’s flesh, so take this and drink some wine, that you may see what kind of liquor we had on board my ship… | **hold** | **GATE (the beat's one gate): hold the bowl — it fills ∝ hold, THREE pours.** Cue: "hold the bowl · fill it — and again — and again — rest is allowed" (AMENDMENT A4: a released hold KEEPS its fill and resumes on re-press). Bowl raised to the firelit giant; each release he drains it in pantomime (cut c10 — the thrust-back bowl IS his begging); the held-up offer gesture performs the drink-offering plea (trim c11); attribution "said I" dropped to prefix | <!-- src 18050..18068 + 18079..18223 ; comma [18068,18069) absorbed by the … splice over "’ said I, " [18069,18079) (audit fix 2026-08-14) -->
 | 9 | ody-iii-09-besokind | POLYPHEMUS | Be so kind… as to give me some more, and tell me your name at once. I want to make you a present that you will be glad to have. We have wine even in this country, for our soil grows grapes and the sun ripens them, but this drinks like Nectar and Ambrosia all in one. | auto | lands on **pour-1 release**, inside the gate (click pacing suspended); the giant leans down into the firelight — first close lens of the flushed face, the one eye glittering; "tell me your name" baits O.8's trap and motivates pours 2–3; the hold cue re-breathes; attribution "he said" dropped to prefix | <!-- src 18664..18674 + 18687..18941 ; comma [18674,18675) absorbed by the … splice over "’ he said, ‘" [18675,18687) (audit fix 2026-08-14) -->
 | 10 | ody-iii-10-thrice | — | I then gave him some more; three times did I fill the bowl for him, and three times did he drain it without thought or heed; then, when I saw that the wine had got into his head, I said to him as plausibly as I could: | auto | lands on **pour-3 release** — **O.7 lands here**: the text confirms what the reader's own hold just did (three fills, three heedless drains, pantomimed identically); the giant sways, the fire sinks toward embers; arms `noman`; colon leads the eye to the next unit | <!-- src 18945..19162 -->
 | 11 | ody-iii-11-noman | ULYSSES | Cyclops, you ask my name and I will tell it you; give me, therefore, the present you promised me; my name is Noman; this is what my father and mother and my friends have always called me. | click | **O.8a — the pun.** Hairline leader to the Ulysses figure at "plausibly" half-bow; the men frozen in the shadows behind him; two-shot, low angle up at the swaying giant; near-silence under the line (bed dips) | <!-- src 19164..19351 -->
@@ -166,7 +166,7 @@ The beam heated in the reader's own hold, the blinding on the beat's clock, the 
 | # | id | prefix | text (verbatim Butler) | verb | staging notes |
 |---|----|--------|------------------------|------|---------------|
 | 0 | ody-iv-00-head | — | beat heading "IV · THE STAKE" | auto | **no page turn** — heading lands on leaf 3 already mounted, as Beat III's collapse segment settles; cave SET in dark-embers state: fire down to coals, POLYPHEMUS sprawled face-up by the pens, neck hung back; the five men creep from the shadows; lens wide, low, firelit |
-| 1 | ody-iv-01-embers | — | "Then I thrust the beam of wood far into the embers to heat it, and encouraged my men lest any of them should turn faint-hearted." | **hold (GATE)** | goal line; the stake drawn from under the dung and laid into the coals — **glow ∝ hold** (the watermark law); cue "hold the stake in the embers · until it glows"; lens close on the fire-pit, the point brightening ember-orange; sfx ember crackle, green-wood hiss; at full heat the drive fires itself | <!-- src 19799..19927 -->
+| 1 | ody-iv-01-embers | — | "Then I thrust the beam of wood far into the embers to heat it, and encouraged my men lest any of them should turn faint-hearted." | **hold (GATE)** | goal line; the stake drawn from under the dung and laid into the coals — **glow ∝ hold** (the watermark law); cue "hold the stake in the embers · until it glows — rest is allowed" (AMENDMENT A4: the glow earned persists through a release, resumes on re-press); lens close on the fire-pit, the point brightening ember-orange; sfx ember crackle, green-wood hiss; at full heat the drive fires itself | <!-- src 19799..19927 -->
 | 2 | ody-iv-02-glowing | — | "When the wood, green though it was, was about to blaze, I drew it out of the fire glowing with heat, and my men gathered round me, for heaven had filled their hearts with courage." | auto | fires on gate completion and starts the blinding **clock (≈14 s)**; the drawn point lights five faces from below; margin cleared for the twist itself (arch §5); lens pulls to the sleeping giant; sfx the beam sliding from the coals | <!-- src 19928..20107 -->
 | 3 | ody-iv-03-auger | — | "…I kept turning it round and round as though I were boring a hole in a ship’s plank with an auger, which two men with a wheel and strap can keep on turning as long as they choose." | clock | rides the clock; the drive itself is PANTOMIME (cut #6 — the five men bear on the beam in silhouette) and the simile **lands ON the twist** — **O.9 carrier**; lens tight on the leaning bodies, the turning shaft; sfx deep grind, the first steam | <!-- src 20206..20384, cut 20108..20205 performed -->
 | 4 | ody-iv-04-bore | — | "Even thus did we bore the red hot beam into his eye, till the boiling blood bubbled all over it as we worked it round and round, so that the steam from the burning eyeball scalded his eyelids and eyebrows, and the roots of the eye sputtered in the fire." | clock | still on the clock; steam plumes up the firelight shaft; the twist staged in shadow against the ember-glow (horror staged, not lingered); sfx bubble-sputter, rising steam | <!-- src 20385..20638 -->
@@ -211,7 +211,7 @@ Offshore: the jeer, rock 1 on a clock, THE MEN beg, the reader's own second clic
 | 4 | `ody-vi-04-twiceasfar` | — | When we had got twice as far as we were before, I was for jeering at the Cyclops again, but the men begged and prayed of me to hold my tongue. | click | Ship re-set at double distance (headland layer scaled back); THE MEN turn from their oars toward Ulysses, oars trailing. Lens pulls to a ship-interior three-quarter. Bed drops to low wash — the hush before the plea. | <!-- src 25845..25987 -->
 | 5 | `ody-vi-05-menbeg` | THE MEN | Do not… be mad enough to provoke this savage creature further; he has thrown one rock at us already which drove us back again to the mainland, and we made sure it had been the death of us; if he had then heard any further sound of voices he would have pounded our heads and our ship’s timbers into a jelly with the rugged rocks he would have heaved at us, for he can throw them a long way. | click | The rowers' faces up at Ulysses, one gripping his arm; leader to the nearest crewman. This unit stays LIT while gate 2 waits — the reader's next click on the Cyclops is a click OVER these words (O.12 mechanism). | <!-- src 25991..25997 + 26017..26398 -->
 | 6 | `ody-vi-06-defy` | — | But I would not listen to them, and shouted out to him in my rage | target:`cyclops` (GATE) | GOAL LINE. The dot breathes on the cliff figure while THE MEN's plea still stands in the margin — the reader defies them with their own hand. Cue "click the Cyclops · name yourself". Camera holds the two-plane so both the pleading men and the target share frame. | <!-- src 26402..26467 -->
-| 7 | `ody-vi-07-myname` | ULYSSES | Cyclops, if any one asks you who it was that put your eye out and spoiled your beauty, say it was the valiant warrior Ulysses, son of Laertes, who lives in Ithaca. | auto (fires on gate 2) | **O.12 lands here.** Ulysses shakes off the gripping hand and steps onto the stern rail; the name-line is SHOUTED (larger set size per house display rule for shouted lines, if any; else standard). Echo sfx off the cliff. POLYPHEMUS goes rigid. | <!-- src 26470..26633 -->
+| 7 | `ody-vi-07-myname` | ULYSSES | Cyclops, if any one asks you who it was that put your eye out and spoiled your beauty, say it was the valiant warrior Ulysses, son of Laertes, who lives in Ithaca. | **release** (hold ≥ 0.6 s · fires on let-go — AMENDMENT A3, was auto) | **O.12 lands here.** Ulysses shakes off the gripping hand and steps onto the stern rail; press-and-hold draws the breath (the taunt cut swells on the held k, the men frozen mid-plea), the READER'S RELEASE fires the shout; cue "press and hold · draw breath — release the name"; the name-line is SHOUTED (larger set size per house display rule for shouted lines, if any; else standard). Echo sfx off the cliff. POLYPHEMUS goes rigid. | <!-- src 26470..26633 -->
 | 8 | `ody-vi-08-prophecy` | POLYPHEMUS | Alas, alas, then the old prophecy about me is coming true. There was a prophet here, at one time, a man both brave and of great stature, Telemus son of Eurymus, who was an excellent seer, and did all the prophesying for the Cyclopes till he grew old; he told me that all this would happen to me some day, and said I should lose my sight by the hand of Ulysses. | click | Lens pushes past the ship to a cliff-top close: the giant groans (groan sfx, staggers half a step — performs cut c2) and gropes at the air, the ruined eye toward the sea. Leader to POLYPHEMUS. | <!-- src 26673..27033 -->
 | 9 | `ody-vi-09-fatherson` | POLYPHEMUS | I have been all along expecting some one of imposing presence and superhuman strength, whereas he turns out to be a little insignificant weakling, who has managed to blind my eye by taking advantage of me in my drink; come here, then, Ulysses, that I may make you presents to show my hospitality, and urge Neptune to help you forward on your journey—for Neptune and I are father and son. He, if he so will, shall heal me, which no one else neither god nor man can do. | click | **O.13b lands here** ("Neptune and I are father and son" — confirms Beat IV's `mustbeill` plant). The giant's tone turns wheedling; he spreads a beckoning hand toward the water ("come here, then, Ulysses"). Hold the cliff close. | <!-- src 27034..27501 -->
 | 10 | `ody-vi-10-hades` | ULYSSES | I wish I could be as sure of killing you outright and sending you down to the house of Hades, as I am that it will take more than Neptune to cure that eye of yours. | click | Cut back to the stern; Ulysses answers flat and cold — no shout sfx this time, the voice carrying level over dead-calm water. Two-shot framing: stern in foreground, cliff figure small and dark behind. | <!-- src 27519..27683 -->
@@ -351,3 +351,87 @@ merged cut list or the beat files' trim tables):
 
 Audited 2026-08-14 against the frozen file. Any re-slice of a unit re-runs
 the script; the contract holds only at 76/76.
+
+## AMENDMENTS — authored, non-Butler (recorded per house law)
+
+Butler's text is untouchable; verbs, cues and the END_CARD are our authoring.
+Every authored change is recorded here AND in `tools/ody/emit_units_ody.py`
+(the AMENDMENTS note above its S dict), then `units.js` is re-emitted and the
+unit-text byte-equality re-verified (81/81 ids, texts and prefixes identical
+across the re-emission; the 76/76 verbatim audit is untouched).
+
+* **A1 · 2026-08-16 · THE SEEDED DEDICATION (closing card, leaf 6).** After
+  the card settles, an ask rises: **"Who read this?"** — skippable (a click
+  anywhere else recedes it), no account, nothing stored beyond the page.
+  Typing regenerates, live per keystroke, a laurel-wreath sigil that is a
+  pure function of the name: FNV-1a hash → leaf count (8–16), leaf angles and
+  lengths, berry positions, hand-drawn jitter — all seeded, drawn by
+  `app/sigil.js` on a small canvas in the house palette (cream ink on the
+  navy card, one crimson berry accent). No Date.now, no Math.random: the
+  engine is deterministic by law, so the same name is the same sigil, byte
+  for byte. Under it: **"This reading belonged to ‹name›"** in the margin
+  small-caps style. The two authored strings live on `units.js` `END_CARD.ask`
+  / `END_CARD.belonged`. Lap gates: `tools/ody/lap-ody.mjs` §5.5 (ask-rises,
+  live-per-keystroke, reload pixel-identity, empty-input, skip).
+
+* **A2 · 2026-08-16 · HESITATION MEMORY (`ody-vi-06-defy` → the closing
+  card).** At `defy` — the reader's SECOND click on the Cyclops, the
+  contract's own "the reader chooses the hubris" — the book records
+  **hesitTime**: story seconds from the gate arming (the unit entered, the
+  ring up) to the resolving click (`main.js resolveGate`; the 30 s soft-fail
+  resolves and records like any click). It persists on the story state and
+  is exposed in the snapshot (`__state().hesit`). The closing card's sub —
+  OUR line, A1's neighbour — gains ONE authored clause by the **4 s**
+  threshold: under it *"— he gave the monster his name at once"*
+  (`END_CARD.subEager`), at or over it *"— he held his name as long as he
+  could"* (`END_CARD.subHeld`); the base sub is untouched, and a book that
+  never passed through the gate's own resolution appends nothing. Both
+  strings live on `units.js` `END_CARD` (emitted from
+  `emit_units_ody.py`). Lap gates: `lap-ody.mjs` §2 [memory] (the read's own
+  fast resolve → the eager clause) and §6b (a forced 4.6 s dwell at the
+  re-armed gate → the reluctant clause).
+
+* **A3 · 2026-08-16 · RELEASE-AS-VERB (`ody-vi-07-myname`, VI.7).** The
+  self-naming — the chapter's hubris, O.12 — is no longer paced FOR the
+  reader (was `auto`, dwell 6.0): it is the book's one **release** verb.
+  Press-and-hold is Ulysses drawing breath at the stern (the taunt cut swells
+  subtly on the held k — `sea.js setHold`/`stepUlysses` — the men frozen
+  mid-plea); LETTING GO past the **0.6 s threshold** fires the shout
+  (`gateAct: 'shout'` snaps the taunt pose, `gateSfx: 'shout'` rings the name
+  — the giant-roar clip both cyclops gates already shout with) and the story
+  advances **on the release frame** (`main.js resolveRelease`, called from
+  `pressUp` itself). A press under the threshold is a stray click: it reads
+  as a beat (the swell subsides) and the page holds. Soft-fail auto-releases
+  at 30 s (sec 2.6). Cue (ours): "press and hold · draw breath — release the
+  name". Lap gate: `lap-ody.mjs doRelease` — stray click held, 1 s hold with
+  NO advance, advance asserted on the release frame, the shout cue counted.
+
+* **A4 · 2026-08-16 · REST IS ALLOWED (the two big holds, `lookhere` G3 and
+  `embers` G4).** Both carry `rest: true` now: a released hold **keeps the
+  progress it earned** — no decay, no reset (the old HOLD_DECAY bleed is
+  waived for these two) — and resumes on re-press; the fill and the glow
+  persist with the k that drives them. Cues (ours) amended to append
+  **" — rest is allowed"**. Lap gate: `lap-ody.mjs doHold` [rest] — fill to
+  ~50%, release 2 s, k and carrier asserted NOT dropped, resume, complete.
+  (The prior gate asserted the decay; it now asserts the rest.)
+
+* **A5 · 2026-08-16 · MICRO-IDLE ON THE PRINCIPALS (staging, no text).** The
+  sherlock King idle (`living/app/sets/room.js stepKing`: `translateY(0.7*br)
+  rotate(sway) scaleY(1+0.0035*br)`, transform-origin ON the pinned feet) is
+  ported to every principal that STANDS OR SITS settled: Ulysses on all three
+  sets (bob 0.7 · sway 0.30°/11 s · breath 0.0035/4.6 s), the seated/standing
+  cave giant (bob 0.8/6.2 s · sway 0.25°/13 s · breath 0.0035) and the
+  blinded clifftop giant (his 0.006 breath keeps its 5.3 s clock and gains
+  the bob + a 0.2° sway). The SPRAWLED giant's snore-heave becomes a
+  **chest-rise**: scaleY 1±0.010 on a ~5 s period about the head pin — no
+  translate, no sway; verified against the ledger (the frontPen's tight
+  11.8 px clearance is an X gap the scaleY cannot touch; y-margin 52 px vs a
+  ≤ 0.7 px rise). Crew idles are DESYNCED per actor index (bob phase i·1.1
+  cave / i·1.3 shore, sway phase i·0.7). The action tableaux (clutch, drink,
+  stroke, grope) keep their bob alone so O.6's three meals stay
+  pixel-comparable; rams and every strip are untouched (they already move).
+  Feet never leave the marks: every idle term turns about the pin. Lap gate:
+  `lap-ody.mjs` §6c [idle] — three rendered-box samples 3 s apart per
+  principal at `shiplie` / `embers` / `smoke` / `fatherson`: the box MUST
+  move, never past the law's amplitudes, foot pinned to its mark; plus the
+  crew-desync spread on both troupe sets.

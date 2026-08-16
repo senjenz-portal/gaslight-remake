@@ -368,15 +368,20 @@ const STRIDE_TELEPORT = 40;           // plate px in one step is a re-stage
    beat longer. */
 const WALK_V = { man: 2.0 * SCALE.pxPerM, giant: 1.8 * SCALE.pxPerM };
 
-/* place a cut by its measured pin. Returns the drawn box for the snapshot. */
-function pinCut(node, art, at, hPx, { flip = false, bob = 0, rot = 0 } = {}) {
+/* place a cut by its measured pin. Returns the drawn box for the snapshot.
+   MICRO-IDLE (the sherlock King law, room.js stepKing): a settled cut may
+   also carry `rot` (the slow sway) and `sy` (the breath's scaleY) — both
+   turn about the PIN, which is the feet, so the idle cannot move a foot
+   off its mark. Amplitude bounds are the lap's [idle] law. */
+function pinCut(node, art, at, hPx, { flip = false, bob = 0, rot = 0, sy = 1 } = {}) {
   const k = hPx / art.px[1];
   const w = art.px[0] * k, h = art.px[1] * k;
   box(node, at[0] - art.pin[0] * k, at[1] - art.pin[1] * k, w, h);
   node.style.transformOrigin =
     `${(art.pin[0] * k).toFixed(2)}px ${(art.pin[1] * k).toFixed(2)}px`;
   node.style.transform = (flip ? 'scaleX(-1) ' : '') +
-    `translateY(${bob.toFixed(2)}px)` + (rot ? ` rotate(${rot.toFixed(2)}deg)` : '');
+    `translateY(${bob.toFixed(2)}px)` + (rot ? ` rotate(${rot.toFixed(3)}deg)` : '') +
+    (sy !== 1 ? ` scaleY(${sy.toFixed(5)})` : '');
   return { w, h };
 }
 
@@ -1549,6 +1554,7 @@ export class CaveSet {
                    sprawl: ART.giantSprawl, grope: ART.giantGrope,
                    stroke: ART.giantStroke };
     if (!walking && !BL) this.giantBox = null;
+    this._idleG = null; this._gLiveN = null;
     for (const [pose, node] of Object.entries(this.giantN)) {
       if (G.pose === 'away' || pose !== nodeKey || walking || BL) {
         node.style.opacity = '0';
@@ -1556,11 +1562,30 @@ export class CaveSet {
       }
       const art = ARTS[pose];
       const h = GIANT_H[G.pose];
-      /* the sprawl breathes as a snore — a slow heave, no sway */
-      const bob = G.pose === 'sprawl' ? 1.2 * br : 0.8 * br;
+      /* MICRO-IDLE (the King law, ported): the settled SEAT and STAND get
+         the full breathe/sway pattern — translateY + a slow rotate + a
+         scaleY breath, all about the pinned feet. The SPRAWL's snore is now
+         a CHEST-RISE: scaleY about the head pin (period ~5 s, amplitude
+         0.010 -> the outline's high edge rises <= 0.7 px against the pens'
+         52 px y-clearance; the frontPen's tight 11.8 px gap is an X gap a
+         scaleY cannot touch — verified against the ledger). The action
+         tableaux (clutch/drink/stroke/grope) keep their bob alone: O.6
+         holds the three meals pixel-comparable. */
+      const settled = G.pose === 'seat' || G.pose === 'stand';
+      const chest = G.pose === 'sprawl';
+      const bob = chest ? 0 : 0.8 * br;
+      const sway = settled ? amb * 0.25 * Math.sin(2 * Math.PI * t / 13.0) : 0;
+      const sy = chest ? 1 + 0.010 * amb * Math.sin(2 * Math.PI * t / 5.0)
+               : settled ? 1 + 0.0035 * br : 1;
       const b = pinCut(node, art, [G.x, G.y], h,
-                       { flip: G.pose === 'stroke', bob, rot });
+                       { flip: G.pose === 'stroke', bob, rot: rot + sway, sy });
       node.style.opacity = '1';
+      /* mid-glide (the grope shuffle, the tip-over) is not a settle */
+      if (!G.walk) {
+        this._idleG = { pose: G.pose, dy: +bob.toFixed(3),
+                        rot: +sway.toFixed(3), sy: +sy.toFixed(5) };
+        this._gLiveN = node;
+      }
       this.giantBox = [G.x - (art.pin[0] * h / art.px[1]),
                        G.y - (art.pin[1] * h / art.px[1]), b.w, b.h]
         .map((v) => +v.toFixed(1));
@@ -1708,16 +1733,30 @@ export class CaveSet {
        cut (STRIPS.md: the strip replaces STAND-cut travel only) and a SEIZED
        man is dragged, not walking. */
     const dragged = !!(seg && seg.name === 'seize');
+    this._idleC = [];
     for (let i = 0; i < CREW_N; i++) {
       const P = this.pose['c' + i];
       this.trackStride(P, dt);
       const carry = (S.form === 'racks' ||
                      (S.form === 'stakefive' && i < 4)) && P.op > 0.05;
       const striding = P.walking && !carry && !dragged;
-      const bob = amb * 0.5 * Math.sin(2 * Math.PI * t / 5.3 + i * 1.1);
+      /* MICRO-IDLE (the King law, ported): the standing man breathes the
+         full pattern, DESYNCED per actor index — a row of synchronized
+         breathers reads mechanical, so the bob keeps its i*1.1 phase and
+         the sway takes its own i*0.7. A carried load keeps the bob alone
+         (braced men do not sway). */
+      const brC = amb * Math.sin(2 * Math.PI * t / 5.3 + i * 1.1);
+      const bob = 0.5 * brC;
+      const swayC = amb * 0.30 * Math.sin(2 * Math.PI * t / 11.0 + i * 0.7);
+      const syC = 1 + 0.0035 * brC;
       const stand = i % 2 ? ART.crewB : ART.crewA;
-      pinCut(this.crew[i], stand, [P.x, P.y], SCALE.crew, { bob, flip: i % 3 === 1 });
+      pinCut(this.crew[i], stand, [P.x, P.y], SCALE.crew,
+             { bob, flip: i % 3 === 1, rot: swayC, sy: syC });
       pinCut(this.carry[i], ART.crewCarry, [P.x, P.y], SCALE.crew * 0.96, { bob });
+      if (P.op > 0.5 && !striding && !carry) {
+        this._idleC.push({ i, dy: +bob.toFixed(3), rot: +swayC.toFixed(3),
+                           sy: +syC.toFixed(5) });
+      }
       this.crew[i].style.opacity = (carry || striding ? 0 : P.op).toFixed(3);
       this.carry[i].style.opacity = (carry ? P.op : 0).toFixed(3);
       if (striding) {
@@ -1753,7 +1792,15 @@ export class CaveSet {
     const drive = this.ruseT();
     const twisting = kind === 'drive' && drive !== null && drive < DRIVE.fright;
     this.twisting = twisting;
-    const bobU = amb * 0.4 * Math.sin(2 * Math.PI * t / 4.6);
+    /* MICRO-IDLE (the King law, ported VERBATIM from room.js stepKing):
+       translateY(0.7*br) rotate(sway) scaleY(1+0.0035*br) about the pinned
+       feet — on the SETTLED poses (stand/offer/sword). The walk cut keeps
+       the bob alone (the stride owns his motion) and the braced drive holds
+       still but for the breath. */
+    const brU = amb * Math.sin(2 * Math.PI * t / 4.6);
+    const bobU = 0.7 * brU;
+    const swayU = amb * 0.30 * Math.sin(2 * Math.PI * t / 11.0);
+    const syU = 1 + 0.0035 * brU;
     if (twisting) {
       U.frame = Math.floor(drive / (STRIP.twist.period / STRIP.twist.n))
                 % STRIP.twist.n;
@@ -1763,14 +1810,23 @@ export class CaveSet {
     } else {
       this.twistN.style.opacity = '0';
     }
+    this._idleU = null; this._uLiveN = null;
     for (const [pose, node] of Object.entries(this.uN)) {
       if (pose !== kind || twisting) { node.style.opacity = '0'; continue; }
       const art = { stand: ART.ulyssesStand, walk: ART.ulyssesWalk,
                     offer: ART.ulyssesOffer, sword: ART.ulyssesSword,
                     drive: ART.ulyssesDrive }[pose];
       const h = pose === 'drive' ? 66 : SCALE.ulysses;
-      const b = pinCut(node, art, [U.x, U.y], h, { bob: bobU, flip: U.flip });
+      const settledU = !moving && (pose === 'stand' || pose === 'offer' || pose === 'sword');
+      const b = pinCut(node, art, [U.x, U.y], h,
+                       { bob: bobU, flip: U.flip,
+                         rot: settledU ? swayU : 0, sy: settledU ? syU : 1 });
       node.style.opacity = U.op.toFixed(3);
+      if (settledU && U.op > 0.5) {
+        this._idleU = { dy: +bobU.toFixed(3), rot: +swayU.toFixed(3),
+                        sy: +syU.toFixed(5) };
+        this._uLiveN = node;
+      }
       this.uBox = [U.x - art.pin[0] * h / art.px[1],
                    U.y - art.pin[1] * h / art.px[1], b.w, b.h]
         .map((v) => +v.toFixed(1));
@@ -1991,7 +2047,26 @@ export class CaveSet {
        once the bulk has LANDED, and every settled frame measures in full */
     const sprawlBox = S.giant.pose === 'sprawl' && !S.giant.walk
       ? this.giantBox : null;
+    /* the [idle] proof wants the RENDERED box — transform applied — where
+       giantBox/uBox are the parking law's arithmetic (transform-free) boxes */
+    const pbox = (e) => {
+      if (!e) return null;
+      const r = e.getBoundingClientRect();
+      if (!r.width || !r.height) return null;
+      const a = this.st.toPlate(r.left, r.top);
+      const b = this.st.toPlate(r.right, r.bottom);
+      return [+a.x.toFixed(2), +a.y.toFixed(2),
+              +(b.x - a.x).toFixed(2), +(b.y - a.y).toFixed(2)];
+    };
     return {
+      /* MICRO-IDLE (the King law): the settled principals' live breath —
+         self-reported amplitudes plus the rendered (transform-applied) box
+         the lap samples 3 s apart */
+      idle: {
+        u: this._idleU ? { ...this._idleU, box: pbox(this._uLiveN) } : null,
+        giant: this._idleG ? { ...this._idleG, box: pbox(this._gLiveN) } : null,
+        crew: this._idleC || [],
+      },
       /* THE PAINTED STATE and the dark-swap law's own numbers */
       caveState: {
         name: S.swap ? S.swap.to : S.stateName,
