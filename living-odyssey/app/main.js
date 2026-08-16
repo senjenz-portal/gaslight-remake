@@ -20,6 +20,13 @@
  *   clock         Beat VI is the one stretch of the book that is not click-
  *                 paced: after the reader's throw the camera owns the frame and
  *                 five units arrive on the beat's own timeline (sec 6.6).
+ *   release       AMENDMENT 2026-08-16 — one unit (VI.7, the self-naming) is
+ *                 paced by the reader's LET-GO: press-and-hold draws the
+ *                 breath, releasing past the 0.6 s threshold fires the shout
+ *                 and the story advances ON the release frame.
+ *   rest          AMENDMENT 2026-08-16 — the two big holds (G3 bowl, G4
+ *                 embers) carry `rest: true`: a released hold keeps its
+ *                 progress and resumes on re-press. Rest is allowed.
  *   soft-fail     every gate self-satisfies after 30 s, and every click-paced
  *                 unit in beats II-VII advances itself (sec 2.6). No gate is a
  *                 wall. BEAT I IS EXCLUDED: it shipped without soft-fail and
@@ -42,14 +49,24 @@ import { Margin, Cameo, Leader } from './margin.js';
 import { SimClock, FIXED_DT } from './clock.js';
 import { AudioManager } from './audio.js';
 import { Stage, PLATE } from './stage.js';
+import { drawSigil } from './sigil.js';
 
 const TURN_IN = 0.55;      // cover fades up
 const TURN_HOLD = 0.18;    // the leaf swaps under the cover
 const TURN_OUT = 0.72;     // cover fades away on the new page
 const END_CARD_IN = 0.55;
-const HOLD_DECAY = 0.75;   // a released hold bleeds back at this fraction
+const HOLD_DECAY = 0.75;   // a released hold bleeds back at this fraction —
+                           // EXCEPT units marked `rest: true` (rest is allowed:
+                           // the two big holds keep their progress on release)
 const TARGET_RADIUS_PX = 48;   // screen-space slack on top of the plate radius
 const SOFT_FAIL = 30;      // sec 2.6 — no gate is a wall
+/* HESITATION MEMORY (AMENDMENT A2): at `defy` — the reader's SECOND click on
+   the Cyclops, the contract's own "the reader chooses the hubris" — the book
+   remembers how long the reader held the choice open: story seconds from the
+   gate arming (the unit entered, the ring up) to the resolving click. Under
+   this threshold the closing card reads him as eager; at or over it (and the
+   30 s soft-fail is over it by definition) as reluctant. */
+const HESIT_EAGER_S = 4;
 
 const errors = [];
 window.addEventListener('error', (e) => errors.push({ kind: 'error', msg: String(e.message) }));
@@ -86,6 +103,10 @@ const holdArc = holdEl.querySelector('.arc');
 const targetEl = document.getElementById('target');
 const targetRing = targetEl.querySelector('.ring');
 const endEl = document.getElementById('endcard');
+const dedEl = document.getElementById('dedicate');
+const dedInput = document.getElementById('dedname');
+const dedLine = document.getElementById('dedline');
+const sigilCanvas = document.getElementById('sigil');
 const wrapEl = document.getElementById('stagewrap');
 const ARC_LEN = 2 * Math.PI * 33;
 stage.dimMatrix = document.getElementById('dimm');
@@ -137,6 +158,8 @@ const S = {
   finished: false, advances: 0, nudges: 0, visited: new Set(),
   ready: false, renders: 0, hinted: true,
   latch: false, latched: 0, softFails: 0, clockHeld: false, stall: 0,
+  ded: { shown: false, skipped: false, name: '', hash: 0 },
+  hesit: null,   // AMENDMENT A2 — seconds the reader held the `defy` choice open
 };
 
 const unitErrors = validateUnits(UNITS);
@@ -271,6 +294,7 @@ function clockDue(u) {
 function canAdvance() {
   if (!S.unit || S.turn.active || S.end.active) return false;
   if (S.unit.verb === 'hold' && !S.hold.resolved) return false;
+  if (S.unit.verb === 'release' && !S.hold.resolved) return false;
   if (S.unit.verb === 'target' && !S.gate.resolved) return false;
   if (blockedBy(S.unit)) return false;
   const next = UNITS[S.i + 1];
@@ -385,7 +409,15 @@ function startEnding() {
   margin.hint(false);
   endEl.querySelector('.kick').textContent = END_CARD.kicker;
   endEl.querySelector('.ttl').textContent = END_CARD.title;
-  endEl.querySelector('.sub').textContent = END_CARD.sub;
+  /* HESITATION MEMORY (AMENDMENT A2): the sub gains one clause the reader
+     wrote with his own pause at `defy` — under 4 s he gave the name at once,
+     at or over it he held it as long as he could. A book that never passed
+     through the gate's own resolution (a silent harness replay) appends
+     nothing: the base sub is the contract's own line, untouched. */
+  const clause = S.hesit == null ? ''
+    : S.hesit < HESIT_EAGER_S ? END_CARD.subEager : END_CARD.subHeld;
+  endEl.querySelector('.sub').textContent = END_CARD.sub + clause;
+  dedInput.placeholder = END_CARD.ask;     // the authored ask (AMENDMENT A1)
   startTurn(END_LEAF, { sfx: false });     // the last unit already cued the page
 }
 
@@ -418,23 +450,77 @@ function stepEnding(dt) {
   E.k = S.turn.active ? S.turn.k : 0;
   E.card = ease.clamp01((E.t - TURN_IN) / END_CARD_IN);
   endEl.style.opacity = ease.inOut(E.card).toFixed(3);
+  // the card has SETTLED: the dedication's ask rises (sim time, not wall time)
+  if (E.card >= 1 && !S.ded.shown) {
+    S.ded.shown = true;
+    endEl.classList.add('settled');
+  }
 }
+
+/* ---- THE SEEDED DEDICATION (byteab's identity-as-seed) -------------------- *
+ * After the card settles an ask rises: END_CARD.ask ('Who read this?').
+ * Typing regenerates, LIVE PER KEYSTROKE, a laurel-wreath sigil that is a
+ * pure function of the name (app/sigil.js: FNV-1a -> mulberry32 -> every
+ * leaf, berry and grain of jitter — no Date.now, no Math.random, by law).
+ * Skippable: with nothing typed, a click anywhere else recedes the ask and
+ * the card rests. NOTHING is stored — the name lives in the input and dies
+ * with the page. The two strings are units.js's END_CARD.ask/.belonged
+ * (AMENDMENT A1 in CONTENT-odyssey.md). */
+function dedicate() {
+  const name = dedInput.value.trim();
+  S.ded.name = name;
+  if (!name) {
+    S.ded.hash = 0;
+    dedEl.classList.remove('named');
+    dedLine.textContent = '';
+    sigilCanvas.getContext('2d').clearRect(0, 0, sigilCanvas.width, sigilCanvas.height);
+    return;
+  }
+  S.ded.hash = drawSigil(sigilCanvas, name);
+  dedEl.classList.add('named');
+  dedLine.textContent = END_CARD.belonged + ' ' + name;
+}
+/** A harness jump off the end leaf puts the dedication back to rest. */
+function dedicationReset() {
+  S.ded.shown = false; S.ded.skipped = false;
+  endEl.classList.remove('settled');
+  dedEl.classList.remove('skipped');
+  dedInput.value = '';
+  dedicate();
+}
+dedInput.addEventListener('input', dedicate);
+document.addEventListener('pointerdown', (ev) => {
+  if (!S.ded.shown || S.ded.skipped) return;
+  if (dedEl.contains(ev.target)) return;
+  if (dedInput.value.trim()) return;              // a named reading stays up
+  S.ded.skipped = true;
+  dedEl.classList.add('skipped');
+  dedInput.blur();
+});
 
 const blankLeaf = () => S.page === END_PAGE;
 
-/* ---- the press-and-hold verb -------------------------------------------- */
+/* ---- the press-and-hold verb (and the RELEASE verb riding its machinery) - */
 function stepHold(dt) {
   const u = S.unit, H = S.hold;
-  if (!u || u.verb !== 'hold') {
+  if (!u || (u.verb !== 'hold' && u.verb !== 'release')) {
     if (H.k > 0) { H.k = Math.max(0, H.k - dt * 2); stage.setHold(H.k); audio.hold(H.k); }
     holdEl.classList.remove('on');
     return;
   }
   const per = 1 / Math.max(0.15, u.hold);
   if (H.pressing && !H.resolved) H.k = Math.min(1, H.k + dt * per);
-  else if (!H.resolved) H.k = Math.max(0, H.k - dt * per * HOLD_DECAY);
+  /* REST IS ALLOWED (`rest: true` — the two big holds): a released hold KEEPS
+     the progress it earned — no decay, no reset — and resumes on re-press.
+     Everything the k carries (the bowl's fill, the ember glow, the ring's
+     arc) persists with it, because they are all functions of this k.
+     A released RELEASE verb, by contrast, is a stray click letting its
+     drawn breath subside — that one decays. */
+  else if (!H.resolved && !u.rest) H.k = Math.max(0, H.k - dt * per * HOLD_DECAY);
 
-  if (!H.resolved && H.k >= 1) {
+  /* full k RESOLVES a hold; a RELEASE resolves on the pointerup instead —
+     k >= 1 there means only "the threshold is banked, let go when ready" */
+  if (u.verb === 'hold' && !H.resolved && H.k >= 1) {
     H.resolved = true;
     stage.setReveal(u.reveal || null, 1);
     audio.cue('reveal');
@@ -483,6 +569,11 @@ function hitsTarget(name, px, py) {
 
 function resolveGate(u, { soft = false } = {}) {
   S.gate.resolved = true;
+  /* HESITATION MEMORY (AMENDMENT A2): the defy gate armed when its unit was
+     entered (S.unitT is that unit's own story clock, cover time excluded), and
+     it resolves HERE — reader's click or the 30 s soft-fail alike. The number
+     persists on the story state; only the closing card ever reads it. */
+  if (u.key === 'defy') S.hesit = +S.unitT.toFixed(3);
   if (u.gateAct) stage.fire(u.gateAct);
   if (u.gateSfx) audio.cue(u.gateSfx);
   if (soft) S.softFails++;
@@ -508,6 +599,29 @@ function tryGate(px, py) {
   S.gate.misses++; S.nudges++; S.gate.missT = 0;
   margin.nudge();
   return false;
+}
+
+/* ---- THE RELEASE VERB (AMENDMENT 2026-08-16, ody-vi-07 'myname') ---------- *
+ * The press is the BREATH, the release is the BEAT. Press-and-hold draws
+ * breath (the set swells on the held k — sea.js's taunt cut); LETTING GO past
+ * the unit's threshold (`hold` seconds of k) fires the shout — gateAct snaps
+ * the pose, gateSfx rings the name — and the story advances ON the release
+ * frame, from pressUp itself, never from a later sim step. A press shorter
+ * than the threshold is a stray click: it still reads as a beat (the swell
+ * subsides in stepHold) and the page holds. Soft-fail auto-releases at 30 s
+ * (sec 2.6), like every other gate. */
+function resolveRelease(u, { soft = false } = {}) {
+  if (S.hold.resolved) return false;
+  S.hold.resolved = true;
+  S.hold.pressing = false;
+  S.hold.k = 0;
+  stage.setHold(0);                 // the breath lets go: the swell SNAPS back
+  audio.hold(0);
+  if (u.gateAct) stage.fire(u.gateAct);
+  if (u.gateSfx) audio.cue(u.gateSfx);
+  if (soft) S.softFails++;
+  advance();
+  return true;
 }
 
 /* ---- one fixed sim step -------------------------------------------------- */
@@ -569,6 +683,7 @@ function step(dt) {
     const limit = u.verb === 'target' ? SOFT_FAIL : Math.min(SOFT_FAIL, u.dwell || SOFT_FAIL);
     if (S.unitT >= limit) {
       if (u.verb === 'target' && !S.gate.resolved) resolveGate(u, { soft: true });
+      else if (u.verb === 'release' && !S.hold.resolved) resolveRelease(u, { soft: true });
       else if (u.verb !== 'clock' && u.verb !== 'auto') { S.softFails++; advance(); }
     }
   }
@@ -619,7 +734,7 @@ function pressDown(ev) {
   firstGesture();
   if (ev && ev.clientX !== undefined) { ptr.x = ev.clientX; ptr.y = ev.clientY; }
   if (S.turn.active || S.end.active) return;
-  if (S.unit && S.unit.verb === 'hold' && !S.hold.resolved) {
+  if (S.unit && (S.unit.verb === 'hold' || S.unit.verb === 'release') && !S.hold.resolved) {
     S.hold.pressing = true; S.hold.wasPress = true;
   } else {
     S.hold.wasPress = false;
@@ -631,7 +746,15 @@ function pressUp() {
   S.hold.pressing = false;
   S.hold.wasPress = false;
   if (S.end.active) return;
-  if (wasHoldPress) return;
+  if (wasHoldPress) {
+    /* the release verb RESOLVES on the pointerup — this frame, not the next
+       sim step — when the drawn breath crossed the threshold (k banked at 1).
+       Under it, nothing: the stray click's swell subsides and the page holds. */
+    if (S.unit && S.unit.verb === 'release' && !S.hold.resolved && S.hold.k >= 1) {
+      resolveRelease(S.unit);
+    }
+    return;
+  }
   if (S.unit && S.unit.verb === 'target' && !S.gate.resolved) { tryGate(ptr.x, ptr.y); return; }
   advance();
 }
@@ -640,6 +763,7 @@ document.addEventListener('pointerdown', pressDown);
 window.addEventListener('pointerup', pressUp);
 window.addEventListener('pointercancel', () => { S.hold.pressing = false; S.hold.wasPress = false; });
 window.addEventListener('keydown', (e) => {
+  if (e.target === dedInput) return;   // the dedication's keys are its own
   if (e.repeat) return;
   if (e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight') {
     e.preventDefault();
@@ -652,6 +776,7 @@ window.addEventListener('keydown', (e) => {
   }
 });
 window.addEventListener('keyup', (e) => {
+  if (e.target === dedInput) return;   // the dedication's keys are its own
   if (e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight') {
     e.preventDefault(); pressUp();
   }
@@ -724,6 +849,7 @@ harnessOnly.__gotoUnit = async (n) => {
   margin.clear();
   S.turn.active = false; S.end.active = false; S.finished = false;
   S.latch = false; S.clockHeld = false;
+  dedicationReset();
   endEl.style.opacity = '0'; coverEl.style.opacity = '0';
   wrapEl.style.transform = 'none';
   /* Only this leaf's own units are replayed: an act belonging to another SET
@@ -771,6 +897,13 @@ harnessOnly.__gateMiss = (dx = 190, dy = 120) => {
   return { advanced: S.i !== before, resolved: S.gate.resolved, misses: S.gate.misses - n };
 };
 
+/** Type a dedication the way the input event would deliver it. */
+harnessOnly.__dedicate = (text) => {
+  dedInput.value = String(text == null ? '' : text);
+  dedInput.dispatchEvent(new Event('input', { bubbles: true }));
+  return { ...S.ded, png: sigilCanvas.toDataURL('image/png') };
+};
+
 harnessOnly.__holdStart = () => { pressDown(); return S.hold.k; };
 harnessOnly.__holdEnd = () => { pressUp(); return S.hold.k; };
 
@@ -805,6 +938,9 @@ window.__state = () => ({
           ready: S.turn.ready, waited: +S.turn.waited.toFixed(3),
           swapped: S.turn.swapped },
   end: { active: S.end.active, k: +S.end.k.toFixed(3), card: +S.end.card.toFixed(3) },
+  hesit: S.hesit,   // AMENDMENT A2 — the defy hesitation, story seconds
+  ded: { shown: S.ded.shown, skipped: S.ded.skipped, name: S.ded.name,
+         hash: S.ded.hash, named: dedEl.classList.contains('named') },
   view: { w: +view.w.toFixed(1), h: +view.h.toFixed(1), portrait: view.portrait,
           fit: +stage.F.toFixed(4) },
   viewport: { w: window.innerWidth, h: window.innerHeight, dpr: window.devicePixelRatio || 1 },

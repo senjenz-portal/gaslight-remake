@@ -370,6 +370,7 @@ export class SeaSet {
       giantPose: 'stand',
       k: { hurl: 0, curse: 0, taunt: 0, veil: 0, dawn: 0 },   // the crossfades
       rowPhase: 0,               // the stroke clock, in cycles — advances ∝ effort
+      holdK: 0,                  // the RELEASE verb's drawn breath (myname)
     };
     this._wk = 1; this._wdx = 0; this._wdy = 0;     // the world transform, at rest
     this.rowerFrames = [0, 0, 0, 0, 0, 0];
@@ -486,7 +487,17 @@ export class SeaSet {
     return null;
   }
 
-  holdAnchor() { return null; }        // no hold verb plays on this leaf
+  /** The RELEASE verb's ring (ody-vi-07): it stands on the man drawing the
+   *  breath — Ulysses' chest at the stern rail, through the world transform. */
+  holdAnchor() {
+    const u = this.ulyAt();
+    return this.worldMap([u[0], u[1] - ULY_H * 0.55]);
+  }
+
+  /** The engine's continuous hold — on this leaf it is the DRAWN BREATH of
+   *  the release verb (AMENDMENT 2026-08-16, myname): the taunt cut swells
+   *  subtly on the held k (stepUlysses) and snaps back on the shout. */
+  setHold(k) { this.state.holdK = clamp01(k); }
 
   /* ---- the verbs the units fire ----------------------------------------- *
    * `settled` = a replayed jump: leave the world at the act's END — clocks
@@ -501,6 +512,7 @@ export class SeaSet {
         S.jeer0 = -1e9; S.curse0 = -1e9; S.dawn0 = -1e9;
         S.seg = null; S.segT0 = -1e9;
         S.resolutions = 0; S.myname = false;
+        S.holdK = 0;
         S.uly = { at: 'stern-ulysses', from: 'stern-ulysses',
                   to: 'stern-ulysses', t0: -1e9, dur: 0.7, pose: 'stand' };
         break;
@@ -537,6 +549,16 @@ export class SeaSet {
       case 'stern-rail':
         this.ulyTo('stern-rail', true);
         S.uly.pose = 'taunt';
+        break;
+      /* THE SHOUT (AMENDMENT 2026-08-16 — the release verb's resolution,
+         ody-vi-07): the drawn breath lets go. The pose SNAPS — the taunt
+         crossfade jumps to full instead of damping there — and the swell the
+         held k was carrying collapses with the k itself (main.js zeroes the
+         hold on resolve; a settled replay lands the same way). */
+      case 'shout':
+        S.uly.pose = 'taunt';
+        S.k.taunt = 1;
+        S.holdK = 0;
         break;
       /* THE CURSE re-zeroes the beat clock and holds the document frame: arms
          to the firmament, sky down a stop, bed to near-silence. Rock 2 rides
@@ -738,25 +760,54 @@ export class SeaSet {
     this.giant.stand.style.opacity = (stripLive ? 0 : standK).toFixed(3);
     this.giant.hurl.style.opacity = (stripLive ? 0 : S.k.hurl).toFixed(3);
     this.giant.curse.style.opacity = (stripLive ? 0 : S.k.curse).toFixed(3);
-    // a blinded giant listens with his whole body: breath only, on the pin
+    // a blinded giant listens with his whole body — breath on the pin, and
+    // (MICRO-IDLE, the King law ported) the settled STAND adds the slow bob
+    // and sway about the pinned feet; the hurl/curse action cuts keep the
+    // breath alone (they are mid-verb, not settled)
     const amb = this.st.reduced ? 0 : 1;
     const br = amb * Math.sin(2 * Math.PI * t / 5.3);
-    for (const e of Object.values(this.giant)) {
-      e.style.transform = `scaleY(${(1 + 0.006 * br).toFixed(5)})`;
+    const swayG = amb * 0.2 * Math.sin(2 * Math.PI * t / 13.0);
+    const syG = 1 + 0.006 * br;
+    this.giant.stand.style.transform =
+      `translateY(${(0.7 * br).toFixed(3)}px) rotate(${swayG.toFixed(3)}deg) ` +
+      `scaleY(${syG.toFixed(5)})`;
+    for (const e of [this.giant.hurl, this.giant.curse]) {
+      e.style.transform = `scaleY(${syG.toFixed(5)})`;
     }
+    this._idleG = !stripLive && standK > 0.5
+      ? { pose: S.giantPose, dy: +(0.7 * br).toFixed(3),
+          rot: +swayG.toFixed(3), sy: +syG.toFixed(5) }
+      : null;
   }
 
   stepUlysses(t, dt, amb) {
     const S = this.state;
     const at = this.ulyAt();
-    const sway = amb * 0.5 * Math.sin(2 * Math.PI * t / 7.3);
-    const mark = [at[0], at[1] + 0.4 * sway];
-    this.pinAt(this.uly.stand, ART.ulyStand, mark, ULY_H);
-    this.pinAt(this.uly.taunt, ART.ulyTaunt, mark, ULY_H, true);  // flipped: the
+    /* MICRO-IDLE (the King law, ported VERBATIM from room.js stepKing): the
+       old ±0.2 px mark-bob is retired for the full pattern — translateY,
+       the slow sway, the scaleY breath — all about pinAt's PIN, so the
+       planted foot never leaves its mark. */
+    const br = amb * Math.sin(2 * Math.PI * t / 4.6);
+    const bob = 0.7 * br;
+    const sway = amb * 0.30 * Math.sin(2 * Math.PI * t / 11.0);
+    const syI = 1 + 0.0035 * br;
+    this.pinAt(this.uly.stand, ART.ulyStand, at, ULY_H);
+    this.pinAt(this.uly.taunt, ART.ulyTaunt, at, ULY_H, true);    // flipped: the
     const taunt = S.uly.pose === 'taunt' ? 1 : 0;                 // arm at the cliff
     S.k.taunt = this.st.damp(S.k.taunt, taunt, 6.0, dt);
     this.uly.stand.style.opacity = (1 - S.k.taunt).toFixed(3);
     this.uly.taunt.style.opacity = S.k.taunt.toFixed(3);
+    const idle = `translateY(${bob.toFixed(3)}px) rotate(${sway.toFixed(3)}deg)`;
+    this.uly.stand.style.transform = `${idle} scaleY(${syI.toFixed(5)})`;
+    /* THE DRAWN BREATH (the release verb, myname): the taunt cut SWELLS
+       subtly on the held k — scaleY about the pinned foot, so the chest
+       rises and the planted foot never leaves its mark. pinAt just rewrote
+       the transform to the bare flip, so the swell (and the idle breath it
+       COMPOSES with, multiplicatively) lands after it. */
+    const swell = (1 + 0.045 * S.holdK) * syI;
+    this.uly.taunt.style.transform = `scaleX(-1) ${idle} scaleY(${swell.toFixed(4)})`;
+    this._idleU = { pose: S.uly.pose, dy: +bob.toFixed(3), rot: +sway.toFixed(3),
+                    sy: +syI.toFixed(5), swellK: +S.holdK.toFixed(3) };
   }
 
   /** THE OARS BITE (STRIPS.md #4): the strip's frame rides the stroke clock,
@@ -877,6 +928,14 @@ export class SeaSet {
       : (S.k.hurl > 0.5 ? this.giant.hurl : this.giant.stand);
     const ulyEl = S.k.taunt > 0.5 ? this.uly.taunt : this.uly.stand;
     return {
+      /* MICRO-IDLE (the King law): the settled principals' live breath —
+         self-reported amplitudes plus the rendered (transform-applied) box
+         the lap samples 3 s apart. NOTE the sea boxes ride the world
+         transform: the lap subtracts world dx/dy between its samples. */
+      idle: {
+        uly: this._idleU ? { ...this._idleU, box: pbox(ulyEl) } : null,
+        giant: this._idleG ? { ...this._idleG, box: pbox(this.giant.stand) } : null,
+      },
       state: d !== null ? 'sea-dawn' : 'sea',
       world: { k: +this._wk.toFixed(4), dx: +this._wdx.toFixed(2),
                dy: +this._wdy.toFixed(2), origin: SHIP.deckCentre },
@@ -920,7 +979,8 @@ export class SeaSet {
                   rock2: c !== null && c >= ROCK2.loose },
       ulysses: { mark: S.uly.at, pose: S.uly.pose,
                  at: this.ulyAt().map((v) => +v.toFixed(1)),
-                 box: pbox(ulyEl) },
+                 box: pbox(ulyEl),
+                 holdK: +S.holdK.toFixed(3) },   // the release verb's breath
       /* THE STRIP PROOF (the sherlock walk law): frame + the man's foot off
          the RENDERED box vs the mark THROUGH the world transform — the lap
          holds cycling, the bench stagger and |dx|,|dy| (± the bench bob) */

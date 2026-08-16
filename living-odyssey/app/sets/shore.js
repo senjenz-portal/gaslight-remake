@@ -205,14 +205,19 @@ const STRIDE_TELEPORT = 40;          // plate px in one step is a re-stage, not 
    the skate, and 1.5 m/s / 1.4 m/s is what a walk may spend. */
 const WALK_V = { ulysses: 1.5 * SCALE.pxPerM, crew: 1.4 * SCALE.pxPerM };
 
-/* place a cut by its measured pin. Returns the drawn box for the snapshot. */
-function pinSprite(node, art, at, hPx, flip, bob) {
+/* place a cut by its measured pin. Returns the drawn box for the snapshot.
+   MICRO-IDLE (the sherlock King law, room.js stepKing): a settled cut may
+   also carry `rot` (the slow sway) and `sy` (the breath's scaleY), both
+   about the PIN — the feet — so the idle cannot move a foot off its mark. */
+function pinSprite(node, art, at, hPx, flip, bob, rot, sy) {
   const k = hPx / art.px[1];
   const w = art.px[0] * k, h = art.px[1] * k;
   box(node, at[0] - art.pin[0] * k, at[1] - art.pin[1] * k, w, h);
   node.style.transformOrigin = `${(art.pin[0] * k).toFixed(2)}px ${(art.pin[1] * k).toFixed(2)}px`;
   node.style.transform =
-    (flip ? 'scaleX(-1) ' : '') + `translateY(${(bob || 0).toFixed(2)}px)`;
+    (flip ? 'scaleX(-1) ' : '') + `translateY(${(bob || 0).toFixed(2)}px)` +
+    (rot ? ` rotate(${rot.toFixed(3)}deg)` : '') +
+    (sy && sy !== 1 ? ` scaleY(${sy.toFixed(5)})` : '');
   return { w, h };
 }
 
@@ -730,9 +735,19 @@ export class ShoreSet {
     for (let i = 0; i < CREW_N; i++) this.trackStride(this.pose['c' + i], dt);
 
     const moving = U.walking;
-    const bobU = amb * 0.4 * Math.sin(2 * Math.PI * t / 4.6);
-    pinSprite(this.ulysses, ART.ulyssesStand, [U.x, U.y], SCALE.ulysses, U.flip, bobU);
+    /* MICRO-IDLE (the King law, ported VERBATIM from room.js stepKing):
+       translateY(0.7*br) rotate(sway) scaleY(1+0.0035*br) on the settled
+       stand; the walk strip owns him while he covers ground. */
+    const brU = amb * Math.sin(2 * Math.PI * t / 4.6);
+    const bobU = 0.7 * brU;
+    const swayU = amb * 0.30 * Math.sin(2 * Math.PI * t / 11.0);
+    const syU = 1 + 0.0035 * brU;
+    pinSprite(this.ulysses, ART.ulyssesStand, [U.x, U.y], SCALE.ulysses, U.flip,
+              bobU, moving ? 0 : swayU, moving ? 1 : syU);
     this.ulysses.style.opacity = (moving ? 0 : U.op).toFixed(3);
+    this._idleU = !moving && U.op > 0.5
+      ? { dy: +bobU.toFixed(3), rot: +swayU.toFixed(3), sy: +syU.toFixed(5) }
+      : null;
     if (moving) {
       U.frame = Math.floor(U.dist / PX_PER_FRAME.ulysses) % STRIP.ulysses.n;
       placeStrip(this.uStripN, STRIP.ulysses, [U.x, U.y], SCALE.ulysses,
@@ -743,12 +758,22 @@ export class ShoreSet {
     }
     this.uMoving = moving;
 
+    this._idleC = [];
     for (let i = 0; i < CREW_N; i++) {
       const P = this.pose['c' + i];
-      const bob = amb * 0.35 * Math.sin(2 * Math.PI * t / 5.1 + i * 1.3);
+      /* MICRO-IDLE, DESYNCED per actor index (i*1.3 on the bob, i*0.7 on
+         the sway) — a row of synchronized breathers reads mechanical */
+      const brC = amb * Math.sin(2 * Math.PI * t / 5.1 + i * 1.3);
+      const bob = 0.35 * brC;
+      const swayC = amb * 0.30 * Math.sin(2 * Math.PI * t / 11.0 + i * 0.7);
+      const syC = 1 + 0.0035 * brC;
       pinSprite(this.crew[i], i % 2 ? ART.crewB : ART.crewA,
-                [P.x, P.y], SCALE.crew, P.flip, bob);
+                [P.x, P.y], SCALE.crew, P.flip, bob, swayC, syC);
       this.crew[i].style.opacity = (P.walking ? 0 : P.op).toFixed(3);
+      if (P.op > 0.5 && !P.walking) {
+        this._idleC.push({ i, dy: +bob.toFixed(3), rot: +swayC.toFixed(3),
+                           sy: +syC.toFixed(5) });
+      }
       const runN = i < 3 ? this.runStripN[i] : null;
       if (P.walking) {
         /* variety law: per-man frame phase (+i), flip from his own travel.
@@ -816,7 +841,25 @@ export class ShoreSet {
        actually shows, landscape AND portrait (1060 px visible, WIRING §7) */
     const smokeL = this.boxOverlap(SMOKE.box, this.lensFrame(FOCUS.smoke, PLATE.w));
     const smokeP = this.boxOverlap(SMOKE.box, this.lensFrame(FOCUS.smoke, 1060));
+    /* the [idle] proof wants the RENDERED box — transform applied — where
+       drawnBox is the parking law's arithmetic (transform-free) box */
+    const pbox = (e) => {
+      if (!e) return null;
+      const r = e.getBoundingClientRect();
+      if (!r.width || !r.height) return null;
+      const a = this.st.toPlate(r.left, r.top);
+      const b = this.st.toPlate(r.right, r.bottom);
+      return [+a.x.toFixed(2), +a.y.toFixed(2),
+              +(b.x - a.x).toFixed(2), +(b.y - a.y).toFixed(2)];
+    };
     return {
+      /* MICRO-IDLE (the King law): the settled principals' live breath —
+         self-reported amplitudes plus the rendered (transform-applied) box
+         the lap samples 3 s apart */
+      idle: {
+        u: this._idleU ? { ...this._idleU, box: pbox(this.ulysses) } : null,
+        crew: this._idleC || [],
+      },
       /* the painted STATE, and the crossfade's own number */
       shoreState: { name: dayK > 0.5 ? 'shore-day' : 'shore', dayK: +dayK.toFixed(3) },
       staging: S.staging,

@@ -192,6 +192,27 @@
   #endcard .sub{font-variant:small-caps;letter-spacing:.22em;font-size:12.5px;
     color:rgba(226,208,170,.78);}
 
+  /* ---- THE SEEDED DEDICATION (closing card only) ---------------------- *
+   * The ask rises after the card settles. Nothing is stored: the name
+   * lives in the input and dies with the page. The sigil canvas is drawn
+   * by app/sigil.js — a pure function of the name (identity as seed). */
+  #dedicate{margin-top:30px;display:flex;flex-direction:column;align-items:center;
+    gap:12px;opacity:0;transform:translateY(12px);pointer-events:none;
+    transition:opacity .8s ease .4s,transform .8s ease .4s;}
+  #endcard.settled #dedicate{opacity:1;transform:none;pointer-events:auto;}
+  #endcard.settled #dedicate.skipped{opacity:0;transform:translateY(6px);
+    pointer-events:none;}
+  #sigil{width:84px;height:84px;display:none;}
+  #dedicate.named #sigil{display:block;}
+  #dedname{background:transparent;border:0;outline:none;text-align:center;
+    width:min(300px,70vw);padding:5px 4px;color:#f4ecd7;caret-color:#f4ecd7;
+    font:italic 20px/1.4 var(--serif);letter-spacing:.04em;
+    border-bottom:1px solid var(--gold-dim);border-radius:0;}
+  #dedname::placeholder{color:rgba(226,208,170,.5);font-style:normal;
+    font-variant:small-caps;letter-spacing:.2em;font-size:13.5px;}
+  #dedline{font-variant:small-caps;letter-spacing:.22em;font-size:12.5px;
+    color:rgba(226,208,170,.78);min-height:17px;}
+
   /* the ambient loop is the first thing to go when a reader asks for less
      motion; the story's own movement stays (stage.js does the same for the
      breath, the sway and the flicker) */
@@ -278,6 +299,14 @@
     <div class="ttl"></div>
     <div class="sub"></div>
     <div class="rule"></div>
+    <!-- THE SEEDED DEDICATION: ask + seeded sigil + the belonged line.
+         The ask string is authored on units.js END_CARD (AMENDMENT A1). -->
+    <div id="dedicate">
+      <canvas id="sigil" width="168" height="168" aria-hidden="true"></canvas>
+      <input id="dedname" type="text" maxlength="24" autocomplete="off"
+             autocapitalize="off" spellcheck="false" aria-label="Who read this?">
+      <div id="dedline"></div>
+    </div>
   </div>
 
   <script type="module" src="./app/main.js"></script>

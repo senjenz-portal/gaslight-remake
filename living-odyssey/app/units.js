@@ -29,6 +29,18 @@
  *      states are acts (cave-dawn / cave-shut / cave-embers / cave-predawn),
  *      exactly as sherlock units drove room-dim via acts.
  *
+ * AMENDMENTS (2026-08-16, verbs/cues are OUR authoring — Butler untouched;
+ * recorded in CONTENT-odyssey.md §Amendments):
+ *   release — ody-vi-07-myname is the book's one RELEASE verb: press-and-hold
+ *             draws the breath (>= 0.6 s), LETTING GO fires the shout and the
+ *             story advances on the release frame; soft-fail at 30 s.
+ *   rest    — the two big holds (lookhere 1.6 s, embers 3.0 s) carry
+ *             rest: true — a released hold KEEPS its progress (no decay, no
+ *             reset) and resumes on re-press; their cues say so.
+ *   memory  — the defy gate's hesitation (gate-armed -> resolving click) is
+ *             remembered by main.js and the closing card's sub gains ONE
+ *             clause by the 4 s threshold: END_CARD.subEager / .subHeld.
+ *
  * Schema: site-deploy/living/app/units.js (the sherlock original) — same
  * fields, same field order, same exports.
  */
@@ -335,9 +347,9 @@ export const UNITS = [
   { id: 'ody-iii-08-lookhere', key: 'lookhere',
     text: 'Look here, Cyclops… you have been eating a great deal of man’s flesh, so take this and drink some wine, that you may see what kind of liquor we had on board my ship…',
     speaker: 'ULYSSES', verb: 'hold',
-    cue: 'hold the bowl · fill it — and again — and again', hold: 1.6,
-    focus: 'bowl-close', page: 3, beat: 3, set: 'cave', clear: true,
-    sfx: 'pour', act: 'bowl-offer' },
+    cue: 'hold the bowl · fill it — and again — and again — rest is allowed',
+    hold: 1.6, rest: true, focus: 'bowl-close', page: 3, beat: 3, set: 'cave',
+    clear: true, sfx: 'pour', act: 'bowl-offer' },
 
   /* 3.9 — lands on pour-1 release; the flushed face leans down, the one eye glittering;
      "tell me your name" baits O.8's trap.
@@ -394,9 +406,9 @@ export const UNITS = [
   { id: 'ody-iv-01-embers', key: 'embers',
     text: '"Then I thrust the beam of wood far into the embers to heat it, and encouraged my men lest any of them should turn faint-hearted."',
     speaker: '', verb: 'hold',
-    cue: 'hold the stake in the embers · until it glows', hold: 3.0,
-    focus: 'ember-close', page: 3, beat: 4, set: 'cave', clear: true,
-    sfx: 'embers' },
+    cue: 'hold the stake in the embers · until it glows — rest is allowed',
+    hold: 3.0, rest: true, focus: 'ember-close', page: 3, beat: 4, set: 'cave',
+    clear: true, sfx: 'embers' },
 
   /* 4.2 — fires on gate completion and starts the blinding clock; the drawn point lights
      five faces from below; margin cleared for the twist.
@@ -599,8 +611,8 @@ export const UNITS = [
     text: 'Then, when I had got as far out as my voice would reach, I began to jeer at the Cyclops.',
     speaker: '', verb: 'target', target: 'cyclops', gateAct: 'jeer',
     gateSfx: 'shout', cue: 'click the Cyclops · jeer at him',
-    focus: 'gate-wide', page: 5, beat: 6, set: 'sea', clear: true,
-    bed: 'sea', act: 'establish' },
+    focus: 'gate-wide', page: 5, beat: 6, set: 'sea', clear: true, bed: 'sea',
+    act: 'establish' },
 
   /* 6.2 — fires on gate 1 — whip to the stern, arm flung at the cliff; the blinded head
      turns toward the sound.
@@ -645,12 +657,14 @@ export const UNITS = [
     focus: 'strait', page: 5, beat: 6, set: 'sea' },
 
   /* 6.7 — O.12 lands — he shakes off the gripping hand and steps onto the stern rail;
-     echo off the cliff.
+     the reader's own RELEASE fires the shout; echo off the cliff.
    */
   { id: 'ody-vi-07-myname', key: 'myname',
     text: 'Cyclops, if any one asks you who it was that put your eye out and spoiled your beauty, say it was the valiant warrior Ulysses, son of Laertes, who lives in Ithaca.',
-    speaker: 'ULYSSES', verb: 'auto', dwell: 6.0, focus: 'stern', page: 5,
-    beat: 6, set: 'sea', clear: true, act: 'stern-rail', fact: 'O.12' },
+    speaker: 'ULYSSES', verb: 'release', gateAct: 'shout', gateSfx: 'shout',
+    cue: 'press and hold · draw breath — release the name', hold: 0.6,
+    focus: 'stern', page: 5, beat: 6, set: 'sea', clear: true,
+    act: 'stern-rail', fact: 'O.12' },
 
   /* 6.8 — push past the ship to the cliff-top close; the groan and half-stagger open the
      unit (c2); the ruined eye toward the sea.
@@ -690,8 +704,8 @@ export const UNITS = [
    */
   { id: 'ody-vi-12-heard', key: 'heard',
     text: 'Thus did he pray, and Neptune heard his prayer.', speaker: '',
-    verb: 'clock', at: 1.2, wait: 'rock2', focus: 'strait', page: 5,
-    beat: 6, set: 'sea', sfx: 'rock-tear', fact: 'O.14b' },
+    verb: 'clock', at: 1.2, wait: 'rock2', focus: 'strait', page: 5, beat: 6,
+    set: 'sea', sfx: 'rock-tear', fact: 'O.14b' },
 
   /* 6.13 — return segment precedes the unit (c6+c7: beach layer, comrades, flock ashore);
      the great ram at a driftwood altar, smoke straight up — and NO sign; dusk
@@ -710,8 +724,8 @@ export const UNITS = [
   { id: 'ody-vi-14-sailedon', key: 'sailedon',
     text: 'When the child of morning rosy-fingered Dawn appeared, I bade my men on board and loose the hawsers… so we sailed on with sorrow in our hearts, but glad to have escaped death though we had lost our comrades.',
     speaker: '', verb: 'click', dwell: 8.0, endsBeat: true, endsBook: true,
-    focus: 'moonpath', page: 5, beat: 6, set: 'sea', clear: true,
-    sfx: 'oars', act: 'sea-dawn' },
+    focus: 'moonpath', page: 5, beat: 6, set: 'sea', clear: true, sfx: 'oars',
+    act: 'sea-dawn' },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -740,12 +754,24 @@ export const END_CARD = {
   kicker: 'END OF BOOK IX',
   title: 'The Cyclops',
   sub: 'told by Ulysses at the court of Alcinous',
+  /* AMENDMENT A1 — THE SEEDED DEDICATION (authored, non-Butler): the ask
+   * that rises on the settled card, and the line under the seeded sigil
+   * (app/sigil.js draws it; main.js appends the reader's name). */
+  ask: 'Who read this?',
+  belonged: 'This reading belonged to',
+  /* AMENDMENT A2 — HESITATION MEMORY (authored, non-Butler): at `defy`, the
+   * reader's second click on the Cyclops, main.js times the pause from the
+   * gate arming to the resolving click and the sub gains ONE clause by the
+   * 4 s threshold. The base sub above is untouched. */
+  subEager: ' — he gave the monster his name at once',
+  subHeld: ' — he held his name as long as he could',
 };
 
 /** Verb default affordance labels (a unit's own `cue` wins). */
 export const CUE_DEFAULT = {
   click:  'click to read on',
   hold:   'press and hold',
+  release: 'press and hold · release',
   auto:   '',
   target: 'click the highlighted thing',
   clock:  '',
@@ -783,7 +809,7 @@ export function validateUnits(units = UNITS) {
   const bad = [];
   const seen = new Set();
   const seenKeys = new Set();
-  const VERBS = new Set(['click', 'hold', 'auto', 'target', 'clock']);
+  const VERBS = new Set(['click', 'hold', 'release', 'auto', 'target', 'clock']);
   const ALL_TARGETS = new Set(Object.values(TARGETS_BY_SET).flat());
   const SETS = new Set(Object.keys(TARGETS_BY_SET));
   units.forEach((u, i) => {
@@ -802,6 +828,10 @@ export function validateUnits(units = UNITS) {
     if (!SETS.has(set)) bad.push(`${at}: unknown set '${set}'`);
     if (u.verb === 'auto' && !(u.dwell > 0)) bad.push(`${at}: auto needs dwell`);
     if (u.verb === 'hold' && !(u.hold > 0)) bad.push(`${at}: hold needs hold seconds`);
+    if (u.verb === 'release' && !(u.hold > 0)) {
+      bad.push(`${at}: release needs its hold threshold seconds`);
+    }
+    if (u.rest && u.verb !== 'hold') bad.push(`${at}: rest rides the hold verb only`);
     if (u.verb === 'clock' && !(u.at > 0)) bad.push(`${at}: clock needs its t+ offset`);
     if (u.verb === 'target' && !ALL_TARGETS.has(u.target)) {
       bad.push(`${at}: target verb needs target in {${[...ALL_TARGETS].join(',')}}`);
