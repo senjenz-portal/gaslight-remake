@@ -248,6 +248,45 @@ assertion that the carrier is on screen at the unit that needs it.** The
 contract's fact list is the assertion list. Anything less and a green lap
 means the code ran, not that the book is there.
 
+### 3.5 THE GRANTED HAND — agency given, then taken, as a named beat
+**When the story must overrule the reader, GRANT the act first, override it
+as a beat with a name, and remember it if it can be remembered.** The Nora
+lesson: watching her own granted act reversed on screen, she said "the sky
+changed its mind" — the story had a mind to change. Reverse it silently and
+the same reader says "the click didn't work."
+
+The three shipped shapes, in ascending order:
+* **Granted, kept** — the sherlock door gate: the reader's door-click IS
+  the go-decision and the page turns on it. Nothing overrides it. This is
+  the baseline, and most gates should stay here.
+* **Granted, then stayed** — the odyssey sword gate (O.5). The click DRAWS
+  the blade; it rises over the sleeping throat. Then `shiftstone` stays the
+  hand: the blade stops mid-air, the camera pans to the boulder, the steel
+  is sheathed — and the TEXT owns the reversal ("but I reflected that if I
+  did we should all certainly be lost"). The reader performs the fatal
+  instinct so the text can refuse it.
+* **Granted, then spent** — the odyssey defy click (O.12). The second click
+  on the Cyclops lands OVER the men's still-lit plea: the reader chooses
+  the hubris and the story spends it — the taunt, the prophecy, the curse.
+  And the closing card remembers the choosing: the hesitation-memory
+  amendment (`CONTENT-odyssey.md`, A2) records `hesitTime` from gate-arm to
+  resolving click, and the card's sub gains one clause by the 4 s line —
+  "he gave the monster his name at once" or "he held his name as long as
+  he could."
+
+The law, in three rules:
+1. **The reader's act must visibly LAND before it is overridden.** The
+   sword is drawn; the name is shouted. Never swallow an input — an act
+   the engine eats teaches the reader the controls are broken, not that
+   the story intervened.
+2. **The override is a NAMED story beat**, carried by text or staging —
+   never a silent revert. A hand lowered on camera is drama; a state
+   snapped back is a bug.
+3. **If the choice can be remembered later, remember it.** Memory is what
+   turns subversion from a trick into a theme: a card that knows how long
+   the reader held the name makes the taking-back mean something in
+   retrospect.
+
 ---
 
 ## 4. COST TABLE (measured, this chapter)
