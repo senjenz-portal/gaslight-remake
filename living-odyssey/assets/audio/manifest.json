@@ -3,253 +3,423 @@
   "assets": {
     "shore-night-bed": {
       "file": "shore-night-bed.mp3",
-      "sha256": "67ac3d909abc63250c225648cd2ba74079ec76ccf99ca58e09e8d0fde7d886e3",
+      "sha256": "79a5455fe01e5515101c5caae29dc16ecef5b16828ba1a0128f1637a311ea472",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/shore-night-bed_v1_scenario.mp3",
-      "duration_s": 25.0,
+      "duration_s": 23.0,
       "loop": true,
-      "rms_dbfs": -45.0,
-      "peak_dbfs": -29.4,
-      "suggested_volume": 1.0,
+      "rms_dbfs": -22.7,
+      "peak_dbfs": -7.0,
+      "suggested_volume": 0.3,
       "role": "bed",
       "generator": "scenario",
       "description": "Beat I/VI night shore: surf + camp embers.",
       "loop_points_s": [
         0.0,
-        25.0
-      ]
+        23.0
+      ],
+      "mastered": {
+        "gain_db": 22.79,
+        "lufs": -33.39,
+        "tp_dbtp": -4.6,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "shore-day-bed": {
       "file": "shore-day-bed.mp3",
-      "sha256": "11691b183e7ed4f6e73232e64ddfe3b8ecbf433cc7e19e63b1ba57e8b5899768",
+      "sha256": "dd77cf236cab8f0a99191e435b8adf402c1d4bb992a092927fa7df0c4744aeb7",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/shore-day-bed_v1_scenario.mp3",
-      "duration_s": 25.0,
+      "duration_s": 23.0,
       "loop": true,
-      "rms_dbfs": -41.0,
-      "peak_dbfs": -21.0,
+      "rms_dbfs": -40.4,
+      "peak_dbfs": -20.4,
       "suggested_volume": 1.0,
       "role": "bed",
       "generator": "scenario",
       "description": "Daytime shore: gulls + breeze over light surf.",
       "loop_points_s": [
         0.0,
-        25.0
-      ]
+        23.0
+      ],
+      "mastered": {
+        "gain_db": 1.44,
+        "lufs": -34.15,
+        "tp_dbtp": -17.95,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "cave-bed": {
       "file": "cave-bed.mp3",
-      "sha256": "1b2dc31f18901e0b6c7f383486e65b9497d15da3ccadc9fdce6fecf803dcc9cf",
+      "sha256": "02541b22d8bd657fb73d2110f52d1c03cc3eb797eab4765576ce6b2b579cc26e",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/cave-bed_v1_scenario.mp3",
-      "duration_s": 25.0,
+      "duration_s": 23.0,
       "loop": true,
-      "rms_dbfs": -36.8,
-      "peak_dbfs": -6.8,
-      "suggested_volume": 0.87,
+      "rms_dbfs": -36.7,
+      "peak_dbfs": -6.7,
+      "suggested_volume": 0.86,
       "role": "bed",
       "generator": "scenario",
       "description": "The cave: drips + flock murmur, no fire.",
       "loop_points_s": [
         0.0,
-        25.0
-      ]
+        23.0
+      ],
+      "mastered": {
+        "gain_db": 0.48,
+        "lufs": -32.88,
+        "tp_dbtp": -3.77,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "cave-fire-bed": {
       "file": "cave-fire-bed.mp3",
-      "sha256": "5e119586fa906c26b265c9e2a67bb0bcf01469665e1fc36a9bdc9b2f67f7c0db",
-      "raw_source": "assets/raw/ody-audio/20260815T071743Z/cave-fire-bed_v1_scenario.mp3",
-      "duration_s": 25.0,
+      "sha256": "5e7111346af1213a4be1ff05666dedb36674607746e8ba9a436810bab61adc2f",
+      "raw_source": "assets/raw/ody-audio/20260817T044139Z/cave-fire-bed_v1_scenario.mp3",
+      "duration_s": 23.0,
       "loop": true,
-      "rms_dbfs": -49.2,
-      "peak_dbfs": -14.9,
+      "rms_dbfs": -40.6,
+      "peak_dbfs": -2.7,
       "suggested_volume": 1.0,
       "role": "bed",
       "generator": "scenario",
       "description": "The cave with the fire lit: cave-bed + crackle.",
       "loop_points_s": [
         0.0,
-        25.0
-      ]
+        23.0
+      ],
+      "mastered": {
+        "gain_db": -1.22,
+        "lufs": -36.37,
+        "tp_dbtp": -1.74,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "sea-bed": {
       "file": "sea-bed.mp3",
-      "sha256": "63e759f5cc2a353b20a195b0fefbb3323480b1a97531437424f3227312835fa3",
+      "sha256": "799e6fc2cb18dd277d6ea83c3ef7eda62d28d4e4cc6fc6ed425b9a4893456ff8",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/sea-bed_v1_scenario.mp3",
-      "duration_s": 25.0,
+      "duration_s": 23.0,
       "loop": true,
-      "rms_dbfs": -31.7,
-      "peak_dbfs": -14.8,
-      "suggested_volume": 0.48,
+      "rms_dbfs": -30.8,
+      "peak_dbfs": -14.0,
+      "suggested_volume": 0.44,
       "role": "bed",
       "generator": "scenario",
       "description": "Open water: swell + oars (Beat I landfall, Beat VI).",
       "loop_points_s": [
         0.0,
-        25.0
-      ]
+        23.0
+      ],
+      "mastered": {
+        "gain_db": 1.26,
+        "lufs": -33.34,
+        "tp_dbtp": -13.42,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "boulder-boom": {
       "file": "boulder-boom.mp3",
-      "sha256": "7b02e0e2b5db6a0f02c72095147da54d287a5cef26824bdcf9d15c606869248a",
+      "sha256": "c22bb91e4707c65f5ffdc814945d4d4830c285e780725ff3942e888257c1b8c9",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/boulder-boom_v1_scenario.mp3",
-      "duration_s": 5.0,
+      "duration_s": 4.75,
       "loop": false,
-      "rms_dbfs": -29.1,
-      "peak_dbfs": -8.4,
-      "suggested_volume": 1.0,
+      "rms_dbfs": -26.3,
+      "peak_dbfs": -5.9,
+      "suggested_volume": 0.82,
       "role": "cue",
       "generator": "scenario",
-      "description": "Boulder-shut: grind -> boom -> settling dust. Reverse-play for the stone-drag open."
+      "description": "Boulder-shut: grind -> boom -> settling dust. Reverse-play for the stone-drag open.",
+      "mastered": {
+        "gain_db": 3.01,
+        "lufs": -22.51,
+        "tp_dbtp": -1.74,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "fire-roar": {
       "file": "fire-roar.mp3",
-      "sha256": "cd02c4fc03b27935bf7aef7ca1edf5c36e5d0491ecfef41df4cc91762be45b59",
+      "sha256": "d84151d8f166d842def079dbaa8d84ca3ac9429ae5c115a5035d2ada013e5865",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/fire-roar_v1_scenario.mp3",
-      "duration_s": 3.0,
+      "duration_s": 2.94,
       "loop": false,
-      "rms_dbfs": -7.3,
-      "peak_dbfs": 0.0,
-      "suggested_volume": 0.3,
+      "rms_dbfs": -22.1,
+      "peak_dbfs": -7.8,
+      "suggested_volume": 0.51,
       "role": "cue",
       "generator": "scenario",
-      "description": "The fire lit / flaring in the cave."
+      "description": "The fire lit / flaring in the cave.",
+      "mastered": {
+        "gain_db": -13.33,
+        "lufs": -18.45,
+        "tp_dbtp": -7.05,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "bleat-flock": {
       "file": "bleat-flock.mp3",
-      "sha256": "faa2a3c2eeca3b966aeaa66a031b9967148bc2b2d68a3d7551ff5bf5f198cedd",
+      "sha256": "68699f9034a180066cd33ad9bc44148b83413a1b0a736118621002934411c733",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/bleat-flock_v1_scenario.mp3",
       "duration_s": 4.0,
       "loop": false,
-      "rms_dbfs": -33.7,
-      "peak_dbfs": -11.9,
-      "suggested_volume": 1.0,
+      "rms_dbfs": -25.3,
+      "peak_dbfs": -3.5,
+      "suggested_volume": 0.73,
       "role": "cue",
       "generator": "scenario",
-      "description": "Bleat-chorus swell: flock driven in / dawn rush out."
+      "description": "Bleat-chorus swell: flock driven in / dawn rush out.",
+      "mastered": {
+        "gain_db": 8.9,
+        "lufs": -18.52,
+        "tp_dbtp": -2.52,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "wine-pour": {
       "file": "wine-pour.mp3",
-      "sha256": "c73cb8ac2fbb28c985314d73ce220f3371b9bad556c1cbec101a86d2bd758b24",
+      "sha256": "01cd21c8da79b023cc73d6ea5e6a3fea45be4d9ede0597e1c4bc080c153ee20c",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/wine-pour_v1_scenario.mp3",
-      "duration_s": 2.48,
+      "duration_s": 2.0,
       "loop": false,
-      "rms_dbfs": -21.5,
-      "peak_dbfs": -0.4,
-      "suggested_volume": 0.47,
+      "rms_dbfs": -22.0,
+      "peak_dbfs": -1.9,
+      "suggested_volume": 0.5,
       "role": "cue",
       "generator": "scenario",
-      "description": "The hold gate's pour (x3)."
+      "description": "The hold gate's pour (x3).",
+      "mastered": {
+        "gain_db": -0.95,
+        "lufs": -18.52,
+        "tp_dbtp": -1.82,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "bowl-drain": {
       "file": "bowl-drain.mp3",
-      "sha256": "98f7130086e57b978cf4f6b3a28b3e8f2e56f1989ea445cc003b808275e8639d",
+      "sha256": "2527d256f2c41bc7eb2973df38c43ca39909276d715804c3d8e355fd2a782cfd",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/bowl-drain_v1_scenario.mp3",
-      "duration_s": 3.0,
+      "duration_s": 2.43,
       "loop": false,
-      "rms_dbfs": -21.7,
-      "peak_dbfs": -3.8,
-      "suggested_volume": 0.48,
+      "rms_dbfs": -22.0,
+      "peak_dbfs": -5.1,
+      "suggested_volume": 0.5,
       "role": "cue",
       "generator": "scenario",
-      "description": "Each release drained without thought or heed."
+      "description": "Each release drained without thought or heed.",
+      "mastered": {
+        "gain_db": -0.83,
+        "lufs": -18.46,
+        "tp_dbtp": -5.09,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "ember-hiss": {
       "file": "ember-hiss.mp3",
-      "sha256": "324bd1146a05b96f989371610e5251c4776c08da622835bf93d2d8ff0bd6217a",
-      "raw_source": "assets/raw/ody-audio/20260815T071743Z/ember-hiss_v1_scenario.mp3",
-      "duration_s": 3.0,
+      "sha256": "13c7d5e6b32ee8174a463cfe78bc4d0a348eb04d4f08c56029d5a3d27bc1254f",
+      "raw_source": "assets/raw/ody-audio/20260817T044655Z/ember-hiss_v4_scenario.mp3",
+      "duration_s": 2.63,
       "loop": false,
-      "rms_dbfs": -43.4,
-      "peak_dbfs": -6.7,
+      "rms_dbfs": -42.8,
+      "peak_dbfs": -4.5,
       "suggested_volume": 1.0,
       "role": "cue",
       "generator": "scenario",
-      "description": "The stake heating in the coals (glow-hold gate)."
+      "description": "The stake heating in the coals (glow-hold gate).",
+      "mastered": {
+        "gain_db": 7.0,
+        "lufs": -34.62,
+        "tp_dbtp": -2.34,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "stake-sizzle": {
       "file": "stake-sizzle.mp3",
-      "sha256": "6905cbd2e4c3edb9c02ba9f7fb1a99e67e92e4fffbb695856199ee7123c98597",
-      "raw_source": "assets/raw/ody-audio/20260815T071743Z/stake-sizzle_v1_scenario.mp3",
+      "sha256": "d579cf00cadb15aefd363f481e1280d8a0a22ebf6ddef24394336ffa654eaa21",
+      "raw_source": "assets/raw/ody-audio/20260817T045303Z/stake-sizzle_v4_scenario.mp3",
       "duration_s": 3.0,
       "loop": false,
-      "rms_dbfs": -11.7,
-      "peak_dbfs": 0.0,
-      "suggested_volume": 0.3,
+      "rms_dbfs": -24.1,
+      "peak_dbfs": -7.1,
+      "suggested_volume": 0.64,
       "role": "cue",
       "generator": "scenario",
-      "description": "The blinding: quench-hiss cutting to the roar."
+      "description": "The blinding: quench-hiss cutting to the roar.",
+      "mastered": {
+        "gain_db": -6.27,
+        "lufs": -18.45,
+        "tp_dbtp": -7.05,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "giant-roar": {
       "file": "giant-roar.mp3",
-      "sha256": "4d374cdf5f36677ab31a459d31b30c7baa9251a577aae76df156b8c2eaed9521",
+      "sha256": "6e574ea9c46cf73ab6b91ff0cb338132d5134fb8afa0404fc438749e8d78de11",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/giant-roar_v1_scenario.mp3",
-      "duration_s": 4.0,
+      "duration_s": 3.02,
       "loop": false,
-      "rms_dbfs": -14.8,
-      "peak_dbfs": -0.4,
-      "suggested_volume": 0.3,
+      "rms_dbfs": -21.7,
+      "peak_dbfs": -7.4,
+      "suggested_volume": 0.48,
       "role": "cue",
       "generator": "scenario",
-      "description": "Polyphemus' pain, abstract \u2014 no words."
+      "description": "Polyphemus' pain, abstract \u2014 no words.",
+      "mastered": {
+        "gain_db": -7.48,
+        "lufs": -18.25,
+        "tp_dbtp": -7.38,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "giant-snore": {
       "file": "giant-snore.mp3",
-      "sha256": "1b31c1a37c14c25d60b84d3fce659152924fa159f4a31dea447f0e7eeaf27f3f",
+      "sha256": "5b7dc88c97edbc30f14ee526b0272fd2aff0a3a0eec96866b693efbf9f7ab748",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/giant-snore_v1_scenario.mp3",
-      "duration_s": 12.0,
+      "duration_s": 11.2,
       "loop": true,
-      "rms_dbfs": -14.6,
-      "peak_dbfs": -0.4,
-      "suggested_volume": 0.3,
+      "rms_dbfs": -34.9,
+      "peak_dbfs": -20.8,
+      "suggested_volume": 1.0,
       "role": "cue",
       "generator": "scenario",
       "description": "Snore-bed: loops under the sword gate and the stake.",
       "loop_points_s": [
         0.0,
-        12.0
-      ]
+        11.2
+      ],
+      "mastered": {
+        "gain_db": -19.75,
+        "lufs": -33.23,
+        "tp_dbtp": -20.77,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "rock-whoosh-splash": {
       "file": "rock-whoosh-splash.mp3",
-      "sha256": "2bf043aa0f9e64f2c18aa501fcafe1fb826f5256d4d5e4c3b7ac0d479eb10124",
+      "sha256": "91fecc5646210a2e50ac5e1cdec7563032e4be0d827aab0631cbbdd74fb40a26",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/rock-whoosh-splash_v1_scenario.mp3",
-      "duration_s": 5.0,
+      "duration_s": 4.21,
       "loop": false,
-      "rms_dbfs": -15.1,
-      "peak_dbfs": -0.0,
-      "suggested_volume": 0.3,
+      "rms_dbfs": -22.2,
+      "peak_dbfs": -7.7,
+      "suggested_volume": 0.51,
       "role": "cue",
       "generator": "scenario",
-      "description": "The hurled rock (both throws share this cue)."
+      "description": "The hurled rock (both throws share this cue).",
+      "mastered": {
+        "gain_db": -7.45,
+        "lufs": -18.47,
+        "tp_dbtp": -7.11,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "oar-stroke": {
       "file": "oar-stroke.mp3",
-      "sha256": "10e75025bfdbbfa17f38e83b397f983173165b7c5746c98db756aa2d39c6b14a",
+      "sha256": "8b0bf54336cc52cc3fc3755ed936e3293c5a979666a672e0e2c3cd7a0b2ecc0f",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/oar-stroke_v1_scenario.mp3",
-      "duration_s": 2.0,
+      "duration_s": 1.39,
       "loop": false,
-      "rms_dbfs": -23.7,
-      "peak_dbfs": -0.5,
-      "suggested_volume": 0.61,
+      "rms_dbfs": -26.0,
+      "peak_dbfs": -4.3,
+      "suggested_volume": 0.79,
       "role": "cue",
       "generator": "scenario",
-      "description": "One oar stroke: the backwater scramble, departure."
+      "description": "One oar stroke: the backwater scramble, departure.",
+      "mastered": {
+        "gain_db": -3.38,
+        "lufs": -18.44,
+        "tp_dbtp": -4.16,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     },
     "dawn-birds": {
       "file": "dawn-birds.mp3",
-      "sha256": "bcd33d6e8c67e5ef810debbcde09365816d4cbf8cba85bca885a8ae70cb25d41",
+      "sha256": "65026886dcba5b293841facf627b6cb5c6daddb6108d193beb5d418a2f63e71b",
       "raw_source": "assets/raw/ody-audio/20260815T071743Z/dawn-birds_v1_scenario.mp3",
-      "duration_s": 5.0,
+      "duration_s": 4.92,
       "loop": false,
-      "rms_dbfs": -41.6,
-      "peak_dbfs": -18.4,
+      "rms_dbfs": -28.5,
+      "peak_dbfs": -5.4,
       "suggested_volume": 1.0,
       "role": "cue",
       "generator": "scenario",
-      "description": "Rosy-fingered Dawn state changes."
+      "description": "Rosy-fingered Dawn state changes.",
+      "mastered": {
+        "gain_db": 13.47,
+        "lufs": -18.47,
+        "tp_dbtp": -1.91,
+        "targets": {
+          "bed_lufs": -33,
+          "cue_lufs": -18,
+          "tp_ceil_dbtp": -1.3
+        }
+      }
     }
   },
-  "updated_utc": "20260815T071743Z",
+  "updated_utc": "20260817T051500Z",
   "generator": "scenario",
   "model_id": "model_elevenlabs-sound-effects-v2",
-  "note": "Curated picks for site-deploy/living-odyssey/assets/audio/ (COPIES). Immutable raws + per-run manifests in assets/raw/ody-audio/<timestamp>/. Scenario API (model_elevenlabs-sound-effects-v2), mp3 44100 Hz 128 kbps. Beds carry the -bed suffix per sherlock's naming; giant-snore loops (used as the snore-bed).",
+  "note": "Curated picks for site-deploy/living-odyssey/assets/audio/ (COPIES). Immutable raws + per-run manifests in assets/raw/ody-audio/<timestamp>/. Scenario API (model_elevenlabs-sound-effects-v2), mp3 44100 Hz 128 kbps. Beds carry the -bed suffix per sherlock's naming; giant-snore loops (used as the snore-bed). REMASTER 2026-08-17: all lane files loudnorm-staged by pure gain (beds ~-33 LUFS, cues -18 LUFS, TP <= -1.3 dBTP, no limiting), cue dead-air tails killed, beds re-looped with an equal-power head blend (cave-bed 9.6 dB seam fixed), giant-roar DC high-passed, fire-roar 45 Hz high-passed; stake-sizzle / ember-hiss / cave-fire-bed regenerated for envelope (SFM 0.013/0.113/0.016 vs 0.475/0.167/0.305). Mastering: tools/ody stakes in audit-audio.md.",
   "failures": []
 }

@@ -49,7 +49,7 @@ const FILES = {
   grind: 'stake-sizzle.mp3', hiss: 'stake-sizzle.mp3',
   sword: 'fire-roar.mp3', fire: 'fire-roar.mp3',
   pour: 'wine-pour.mp3', drain: 'bowl-drain.mp3',
-  'rock-tear': 'rock-whoosh-splash.mp3',
+  'rock-tear': 'rock-whoosh-splash.mp3', splash: 'rock-whoosh-splash.mp3',
   // the lane's canonical sound names, for the SET modules
   'boulder-boom': 'boulder-boom.mp3', 'fire-roar': 'fire-roar.mp3',
   'bleat-flock': 'bleat-flock.mp3', 'wine-pour': 'wine-pour.mp3',
@@ -58,34 +58,47 @@ const FILES = {
   'giant-snore': 'giant-snore.mp3', 'rock-whoosh-splash': 'rock-whoosh-splash.mp3',
   'oar-stroke': 'oar-stroke.mp3', 'dawn-birds': 'dawn-birds.mp3',
 };
-// provisional mix, to be trimmed against assets/audio/manifest.json's
-// suggested_volume once the lane's curation lands
+/* THE MIX, trimmed against the 2026-08-17 remaster (audit-audio.md is the
+ * spec; assets/audio/manifest.json carries each file's mastered LUFS/TP).
+ * The lane's files are now normalized — beds ~-33 LUFS, cues -18 LUFS,
+ * every true peak <= -1.3 dBTP — so this table is pure DRAMATURGY:
+ * effective level = file LUFS + 20*log10(gain). Beds sit at ~-35.5
+ * effective (sherlock's hearth sits -35.7); story cues land -18..-29 with
+ * the climax (hiss/grind, rock-tear) at the top of the band; ember-hiss is
+ * a sparse-pop texture (true-peak-capped master, quiet by nature). Every
+ * gain <= 1.0, so no cue can clip the destination: file TP -1.3 is the
+ * output ceiling. */
 const GAIN = {
-  shore: 0.55, 'shore-day': 0.55, cave: 0.6, 'cave-fire': 0.6, sea: 0.65,
-  snore: 0.5,
+  shore: 0.79, 'shore-day': 0.85, cave: 0.75, 'cave-fire': 1.0, sea: 0.78,
+  snore: 0.77,
   click: 0.32, page: 1.0, reveal: 0.8,
-  keel: 0.7, slosh: 0.5, oars: 0.75, withies: 0.4,
-  goats: 0.6, bleats: 0.7, flock: 0.75, shoo: 0.65, wool: 0.35,
-  wind: 0.5, dawn: 0.6,
-  crash: 0.8, boulder: 0.9, boom: 0.85, fall: 0.9, clatter: 0.55, footfalls: 0.4,
-  seize: 0.75, groan: 0.6, shout: 0.7,
-  sob: 0.35, lots: 0.3, embers: 0.6, chop: 0.5, sputter: 0.7,
-  grind: 0.8, hiss: 0.9,
-  sword: 0.45, fire: 0.7,
-  pour: 0.9, drain: 0.85,
-  'rock-tear': 0.9,
-  'boulder-boom': 0.9, 'fire-roar': 0.7, 'bleat-flock': 0.7, 'wine-pour': 0.9,
-  'bowl-drain': 0.85, 'ember-hiss': 0.6, 'stake-sizzle': 0.9, 'giant-roar': 0.8,
-  'giant-snore': 0.5, 'rock-whoosh-splash': 0.9, 'oar-stroke': 0.7,
-  'dawn-birds': 0.6,
+  keel: 0.63, slosh: 0.5, oars: 0.71, withies: 0.35,
+  goats: 0.5, bleats: 0.63, flock: 0.71, shoo: 0.56, wool: 0.32,
+  wind: 0.45, dawn: 0.56,
+  crash: 0.9, boulder: 1.0, boom: 0.95, fall: 1.0, clatter: 0.6, footfalls: 0.45,
+  seize: 0.8, groan: 0.63, shout: 0.85,
+  sob: 0.71, lots: 0.63, embers: 1.0, chop: 0.8, sputter: 1.0,
+  grind: 0.85, hiss: 1.0,
+  sword: 0.7, fire: 0.85,
+  pour: 0.71, drain: 0.63,
+  'rock-tear': 1.0, splash: 1.0,
+  'boulder-boom': 1.0, 'fire-roar': 0.85, 'bleat-flock': 0.71, 'wine-pour': 0.71,
+  'bowl-drain': 0.63, 'ember-hiss': 1.0, 'stake-sizzle': 1.0, 'giant-roar': 0.8,
+  'giant-snore': 0.77, 'rock-whoosh-splash': 1.0, 'oar-stroke': 0.71,
+  'dawn-birds': 0.56,
 };
 const BEDS = new Set(['shore', 'shore-day', 'cave', 'cave-fire', 'sea', 'snore']);
+/* sidechain: every story cue ducks the bed bus this deep while it plays;
+ * engine chrome (the per-advance click, the page turn) must not pump the bed */
+const DUCK_DB = -7;
+const NO_DUCK = new Set(['click', 'page']);
 
 export class AudioManager {
   constructor(base = './assets/audio/') {
     this.base = base;
     this.buffers = {};
     this.log = [];
+    this.ducks = [];   // sidechain ledger: one entry per bed-duck a cue caused
     this.muted = false;
     this.bedId = null;
     this.bedNodes = {};
@@ -101,6 +114,11 @@ export class AudioManager {
         this.master = this.ctx.createGain();
         this.master.gain.value = 1;
         this.master.connect(this.ctx.destination);
+        /* the bed BUS: every bed voice plays through this one gain so a cue
+         * can duck the ambience without touching a bed's own crossfade */
+        this.bedBus = this.ctx.createGain();
+        this.bedBus.gain.value = 1;
+        this.bedBus.connect(this.master);
         this.ok = true;
       }
     } catch (e) { this.ok = false; this.err = String(e && e.message); }
@@ -180,7 +198,7 @@ export class AudioManager {
       src.loop = true;
       const g = this.ctx.createGain();
       g.gain.value = 0;
-      src.connect(g).connect(this.master);
+      src.connect(g).connect(this.bedBus);
       src.start();
       g.gain.setTargetAtTime(GAIN[id] || 0.6, this.ctx.currentTime, Math.max(0.05, fade / 3));
       this.bedNodes[id] = { src, gain: g };
@@ -194,12 +212,35 @@ export class AudioManager {
     try {
       const src = this.ctx.createBufferSource();
       src.buffer = this.buffers[id];
+      const v = (GAIN[id] || 0.8) * (opts.gain == null ? 1 : opts.gain);
       const g = this.ctx.createGain();
-      g.gain.value = (GAIN[id] || 0.8) * (opts.gain == null ? 1 : opts.gain);
+      const t0 = this.ctx.currentTime + delay;
+      const dur = src.buffer.duration;
+      /* declick envelope: an 8 ms attack ramp (kills the raw src.start()
+       * edge / any DC step) and a short release into the clip's own tail */
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(v, t0 + 0.008);
+      if (dur > 0.2) g.gain.setTargetAtTime(0, t0 + dur - 0.06, 0.03);
       src.connect(g).connect(this.master);
-      src.start(this.ctx.currentTime + delay);
+      src.start(t0);
+      this._duck(id, t0, dur);
       return true;
     } catch (_) { return false; }
+  }
+
+  /** Sidechain: any story cue ducks the bed bus by DUCK_DB while it plays,
+   * then the bus recovers. Engine chrome (click/page) does not pump the bed.
+   * The beds' own crossfades live on their per-voice gains, so ducking never
+   * fights a bed transition. */
+  _duck(id, t0, dur) {
+    if (NO_DUCK.has(id) || !this.bedBus) return;
+    this.ducks.push({ t: +this.t.toFixed(3), id, db: DUCK_DB });
+    const g = this.bedBus.gain;
+    const k = Math.pow(10, DUCK_DB / 20);
+    try {
+      g.setTargetAtTime(k, t0, 0.035);                       // fast dip
+      g.setTargetAtTime(1, t0 + Math.min(dur, 6), 0.35);     // slow recover
+    } catch (_) { /* noop */ }
   }
 
   /**
@@ -235,6 +276,7 @@ export class AudioManager {
       available: this.available, ok: this.ok, muted: this.muted,
       unlocked: !!this.unlocked, bed: this.bedId,
       decoded: (this.decoded || []).length, cues: this.log.length,
+      duckDb: DUCK_DB, ducks: this.ducks.length,
       log: this.log.slice(),
     };
   }

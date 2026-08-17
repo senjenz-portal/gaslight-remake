@@ -70,7 +70,7 @@ export function placeSprite(node, art, at, h, { frame = 0, flip = false, scale =
  *   at     [x, y] in plate px — where the FEET are
  *   hPx    drawn foot-baseline height in plate px
  */
-export function placeStrip(node, strip, at, hPx, frame, { flip = false } = {}) {
+export function placeStrip(node, strip, at, hPx, frame, { flip = false, bob = 0 } = {}) {
   const ws = hPx / strip.srcH;
   const cw = strip.cell[0] * ws, ch = strip.cell[1] * ws;
   const ax = strip.anchors[frame] * ws;
@@ -81,9 +81,75 @@ export function placeStrip(node, strip, at, hPx, frame, { flip = false } = {}) {
   node.style.backgroundSize = `${(cw * strip.n).toFixed(2)}px ${ch.toFixed(2)}px`;
   node.style.backgroundPosition = `${(-frame * cw).toFixed(2)}px 0px`;
   node.style.transformOrigin = `${ax.toFixed(2)}px ${hPx.toFixed(2)}px`;
-  node.style.transform = flip ? 'scaleX(-1)' : 'none';
+  /* LANE PHYSICS (explore-physics.md, Explorer D): step-synced bob rides the
+     strip box — translateY about the foot origin, so flip still cannot move
+     the feet by construction. The set declares the same bob in its strip
+     proof (the mark it hands the lap is bob-shifted), so the anchor law
+     measures the residual, not the intended breath. */
+  const tf = (bob ? `translateY(${bob.toFixed(2)}px)` : '') +
+             (flip ? (bob ? ' ' : '') + 'scaleX(-1)' : '');
+  node.style.transform = tf || 'none';
   return { w: cw, h: ch, ax };
 }
+
+/* ==== LANE PHYSICS (Explorer D, adopted) — gait off the strips' anchors ====
+ *
+ * The motion audit's finding (tools/ody/seamless/audit-motion.md): the book's
+ * translation was a constant-velocity glide (the caps clamp to exactly vmax;
+ * the authored eases have zero structure at cadence), the boxes carried no
+ * step-bob, and walks started/stopped in one frame. The gait data to fix all
+ * three is ALREADY in the registry: `anchors[frame]` is the measured
+ * foot-span centre per cell, and the KING law says the planted foot swaps
+ * once per half-cycle — the swap IS the plant (foot strike), and it reads as
+ * the largest |anchor delta| in each half of the cycle.                     */
+
+/** Read a strip's gait off its anchors: the two PLANT frames (largest anchor
+ *  jump in each half-cycle), a mean-1 speed-pulse table (dips at the plants,
+ *  rises through the swing) and a 0..1 bob table (0 = plant = body low,
+ *  1 = mid-swing = body high), both over continuous frame-phase [0, n). */
+export function gaitProfile(strip, { dip = 0.38, res = 8 } = {}) {
+  const n = strip.n, a = strip.anchors;
+  const d = [];
+  for (let i = 0; i < n; i++) d.push(Math.abs(a[i] - a[(i - 1 + n) % n]));
+  let p0 = 0;
+  for (let i = 1; i < n; i++) if (d[i] > d[p0]) p0 = i;
+  let p1 = -1;
+  for (let i = 0; i < n; i++) {
+    const dd = Math.min((i - p0 + n) % n, (p0 - i + n) % n);
+    if (dd >= 3 && (p1 < 0 || d[i] > d[p1])) p1 = i;
+  }
+  const plants = [p0, p1];
+  const N = n * res, pulse = new Float32Array(N), bob = new Float32Array(N);
+  let mean = 0;
+  for (let k = 0; k < N; k++) {
+    const phi = k / res;
+    let dm = n;
+    for (const p of plants) {
+      const dd = Math.abs(phi - p);
+      dm = Math.min(dm, dd, n - dd);
+    }
+    /* cosine-smoothed 0 at the plant -> 1 mid-swing over a quarter cycle */
+    const s = 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, dm / (n / 4)));
+    pulse[k] = (1 - dip) + (dip + 0.55 * dip) * s;  // dip at plant, rise past 1
+    bob[k] = s;
+    mean += pulse[k];
+  }
+  mean /= N;
+  for (let k = 0; k < N; k++) pulse[k] /= mean;     // average speed preserved
+  return { n, res, plants, pulse, bob };
+}
+
+/** table lookup at continuous frame-phase phi (wraps) */
+export const gaitAt = (G, table, phi) => {
+  const k = Math.floor((((phi % G.n) + G.n) % G.n) * G.res);
+  return table[Math.min(table.length - 1, Math.max(0, k))];
+};
+
+/** step-synced bob in px, +down: the body sinks amp/2 into each plant and
+ *  rises amp/2 through the swing — phase off the SAME gait clock (distance /
+ *  pxPerFrame) that drives the frames, so bob and cells cannot drift apart */
+export const gaitBobY = (G, phi, amp) =>
+  amp * (0.5 - gaitAt(G, G.bob, phi));
 
 /**
  * THE KING LAW, generalised off the registry (no hardcoded frame counts):
@@ -166,6 +232,70 @@ export function walkToward(P, tx, ty, lambda, vmax, dt) {
 }
 
 /**
+ * walkToward2 — walkToward with the physics the motion audit found missing
+ * (LANE PHYSICS, Explorer D adopted):
+ *   (a) per-step velocity pulse locked to the strip's plant frames
+ *       (phase = the actor's own gait clock, P.dist / pxPerFrame — the same
+ *        clock that picks the cell, so the dip lands ON the plant)
+ *   (b) ~250 ms ease-in from rest and a bounded ease-out into the mark
+ *       (replacing the damp's 0 -> vmax first frame and its 1.5 s sub-6 px/s
+ *        terminal stand-cut drift)
+ *   (c) a small arrival settle: overshoot along the travel and back — a body
+ *       does not stop dead from full stride (settlePx <= 0 turns it off)
+ * State lives on P._w2; `lambda` is kept in the signature for drop-in
+ * compatibility with walkToward but the tail is now the bounded ease-out.
+ * Mutates P.x / P.y.
+ */
+export function walkToward2(P, tx, ty, lambda, vmax, dt,
+                            { gait = null, pxPerFrame = 1, ease = 0.25,
+                              settlePx = null, settleT = 0.15 } = {}) {
+  /* the settle scales with the walk: peak overshoot speed = 0.35 x vmax
+     (a half-sine of amplitude A over T peaks at A*pi/T), so a 16 px/s
+     shore walker checks by ~0.27 px and an 86 px/s cave man by ~1.4 px —
+     never a lurch against the walk's own cruise */
+  if (settlePx == null) settlePx = 0.35 * vmax * settleT / Math.PI;
+  const W = P._w2 || (P._w2 = { run: 0, peakV: 0, settle: null });
+  if (W.settle) {                       // the settle plays itself out
+    const s = W.settle; s.t += dt;
+    const u = s.t / s.dur;
+    if (u >= 1) { P.x = s.at[0]; P.y = s.at[1]; W.settle = null; }
+    else {
+      const o = Math.sin(Math.PI * u) * s.amp;
+      P.x = s.at[0] + s.dir[0] * o; P.y = s.at[1] + s.dir[1] * o;
+    }
+    return;
+  }
+  const rx = tx - P.x, ry = ty - P.y;
+  const rem = Math.hypot(rx, ry);
+  if (rem < 1e-3) { W.run = 0; W.peakV = 0; return; }
+  W.run += dt;
+  const envIn = easeInOut(Math.min(1, W.run / ease));
+  const envOut = Math.max(0.15, easeInOut(clamp01(rem / (vmax * ease))));
+  const v0 = vmax * envIn * envOut;
+  /* CADENCE ATTENUATION: at high stride rates the gait cycle shortens
+     (cycleT = n*pxPerFrame / v); a full-depth pulse faster than ~0.9 s a
+     cycle reads as flicker and breaks the one-frame speed law (<= 25%),
+     so the pulse depth scales down with the cycle — a sprint smooths out,
+     a walk keeps its full step structure. */
+  let pulse = 1;
+  if (gait) {
+    const att = clamp01(gait.n * pxPerFrame / (Math.max(v0, 1) * 0.9));
+    pulse = 1 + (gaitAt(gait, gait.pulse, (P.dist || 0) / pxPerFrame) - 1) * att;
+  }
+  const v = v0 * pulse;
+  const step = Math.min(rem, v * dt);
+  P.x += (rx / rem) * step; P.y += (ry / rem) * step;
+  W.peakV = Math.max(W.peakV, step / Math.max(dt, 1e-6));
+  if (step >= rem - 1e-6) {             // arrived
+    if (W.peakV > vmax * 0.5 && settlePx > 0) {   // a real walk settles;
+      W.settle = { at: [tx, ty], dir: [rx / rem, ry / rem],  // a nudge parks
+                   amp: settlePx, t: 0, dur: settleT };
+    }
+    W.run = 0; W.peakV = 0;
+  }
+}
+
+/**
  * The strip PROOF (the sherlock verifier's law: "a wrong transform cannot
  * describe itself correctly") — the foot measured off the RENDERED box
  * (getBoundingClientRect -> toPlate) against the mark the paint was asked
@@ -195,6 +325,22 @@ export function floorY(points, x) {
     if (x <= b[0]) return a[1] + (x - a[0]) * (b[1] - a[1]) / (b[0] - a[0]);
   }
   return points[points.length - 1][1];
+}
+
+/**
+ * A GRADED ACTOR CUT (Explorer B adopted — tools/ody/seamless/explore-regrade
+ * .md, baked by tools/ody/seamless/bake_regrade.py into tools/ody/regrade
+ * .json): every actor cut a set uses ships a per-set variant colour-graded at
+ * BUILD time against the plate ring at the mark it mostly plays on, under
+ * assets/actor/graded/<set>/<cut>.png. A set loads THAT, and falls back to
+ * the raw cut if the variant is absent — the swap is src-only, so pins,
+ * alpha, boxes and every proof drawn off them are untouched by construction.
+ */
+export function gradedActor(st, setId, file, cls, parent) {
+  const e = st.img(file.replace(/^actor\//, 'actor/graded/' + setId + '/'),
+                   cls, parent);
+  e.addEventListener('error', () => { e.src = st.base + file; }, { once: true });
+  return e;
 }
 
 /** Build the emissive divs a set's life pass measured. Returns id -> node. */
