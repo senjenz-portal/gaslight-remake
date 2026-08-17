@@ -391,6 +391,10 @@ const SKATE_FAMS = ['shore-ulysses', 'shore-crew', 'crew-cave', 'giant', 'ram'];
  *               the first c4 tick, a recoil sample > 1.001, sy 1 at park */
 const BRIDGE_STEP_MAX = 1;
 const PLANT_DRIFT_MAX = 1.0;          // css px per held plant cell, total
+const STANCE_OPT_MAX = 3.0;           // css px of RENDERED foot-region optical
+                                      // drift across a whole plant dwell (the
+                                      // honest gate: screenshot NCC, not the
+                                      // anchor; the reviewer measured 12-21)
 const GIANT_CV_MIN = 0.25;
 const RAM_DEPART_MIN = 3;
 const SEIZE_STAND_TOL = 1.5;          // plate px of victim drift while visible
@@ -548,6 +552,13 @@ async function main() {
   note(`reading ${URL_}`);
   await page.evaluate(() => window.__mute(true));
   note(`booted in ${Date.now() - t0} ms (leaf 1 only — cave and sea are lazy)`);
+  /* [teleport] the gate's falsifiability switch: --break-tween disables the
+     setkit swapActor tween engine-side, and the gate below MUST then fail
+     on every converted handoff (the proof the law demands). */
+  if (args.includes('--break-tween')) {
+    await page.evaluate(() => { window.__teleBreak = true; });
+    note('[teleport] --break-tween: swapActor DISABLED — the gate must fail');
+  }
 
   const frames = {};                 // shot name -> decoded frame
   const bandOf = {};                 // shot name -> dead-band metric + context
@@ -663,6 +674,69 @@ async function main() {
     }
     if (shaOK === Object.keys(STRIPS).length) {
       note(`[strips] identity: ${shaOK}/${shaOK} served strip files match their build-gated registry sha`);
+    }
+  }
+
+  /* ---- [strip-luma] no exposure pumping across cells --------------------- *
+   * The law the collapse flash earned (2026-08-17, seamless/deflicker.py):
+   * Seedance pumps exposure inside a clip and the slicer inherits it — the
+   * shipped collapse strip stepped 89.6 -> 103.2 in figure luma between two
+   * ADJACENT cells, an owner-visible flash. For EVERY registered strip the
+   * adjacent-cell figure-masked (alpha>127) Rec.709 mean-luma delta must be
+   * <= 4.0 — the wrap pair counts for loops (closure is an adjacency), and a
+   * bridge's cells (endpoints NOT exempted) must also sit within 4.0 of the
+   * strip's own endpoint-to-endpoint ramp, the curve deflicker.py normalizes
+   * to without moving the gated endpoint poses. */
+  {
+    const LUMA_D = 4.0;
+    const cellLuma = (img, cw, i) => {
+      const { width: w, height: h, data } = img;
+      let sum = 0, m = 0;
+      for (let y = 0; y < h; y++) {
+        let p = (y * w + i * cw) * 4;
+        for (let x = 0; x < cw; x++, p += 4) {
+          if (data[p + 3] > 127) {
+            sum += 0.2126 * data[p] + 0.7152 * data[p + 1] + 0.0722 * data[p + 2];
+            m++;
+          }
+        }
+      }
+      return m ? sum / m : 0;
+    };
+    let lumaOK = 0, worstAll = 0, worstName = '';
+    for (const [name, s] of Object.entries(STRIPS)) {
+      const res = await page.request.get(new URL('./assets/' + s.file, URL_).toString());
+      if (!res.ok()) { bad(`[strip-luma] ${name}: ${s.file} did not load (${res.status()})`); continue; }
+      const img = decodePng(await res.body());
+      if (img.channels !== 4) { bad(`[strip-luma] ${name}: no alpha channel — the figure mask needs one`); continue; }
+      const cw = s.cell[0], n = s.n;
+      const L = Array.from({ length: n }, (_, i) => cellLuma(img, cw, i));
+      const bridge = s.kind === 'bridge';
+      let worst = 0, at = '';
+      for (let i = 0; i < (bridge ? n - 1 : n); i++) {   // loops include the wrap pair
+        const d = Math.abs(L[(i + 1) % n] - L[i]);
+        if (d > worst) { worst = d; at = `c${i}->c${(i + 1) % n}`; }
+      }
+      let rampWorst = 0, rampAt = '';
+      if (bridge) {
+        for (let i = 0; i < n; i++) {
+          const r = L[0] + (L[n - 1] - L[0]) * i / (n - 1);
+          const d = Math.abs(L[i] - r);
+          if (d > rampWorst) { rampWorst = d; rampAt = `c${i}`; }
+        }
+      }
+      if (worst > worstAll) { worstAll = worst; worstName = `${name} ${at}`; }
+      if (worst > LUMA_D) {
+        bad(`[strip-luma] ${name}: adjacent-cell figure luma delta ${worst.toFixed(2)} at ${at} ` +
+            `(law <= ${LUMA_D}) — Seedance exposure pumping, an on-screen flash; run seamless/deflicker.py`);
+      } else if (bridge && rampWorst > LUMA_D) {
+        bad(`[strip-luma] ${name}: bridge cell ${rampAt} sits ${rampWorst.toFixed(2)} off the strip's ` +
+            `own endpoint ramp (law <= ${LUMA_D})`);
+      } else lumaOK++;
+    }
+    if (lumaOK === Object.keys(STRIPS).length) {
+      note(`[strip-luma] ${lumaOK}/${lumaOK} strips hold adjacent-cell figure luma delta <= ${LUMA_D} ` +
+           `(worst ${worstAll.toFixed(2)} at ${worstName}; bridges also within ${LUMA_D} of their ramp)`);
     }
   }
 
@@ -1346,10 +1420,21 @@ async function main() {
    * anchor-law tally, so the two laws measure the same walks. */
   const skateEv = {};
   for (const k of SKATE_FAMS) skateEv[k] = { samples: 0, pairs: 0, worst: 0, worstAt: null };
-  /* [stance-lock] the giant strip's own PLANT cells (gaitProfile's pick,
-   * recomputed here off the registry so the lap re-derives, never trusts):
-   * the largest anchor jump in each half-cycle — cells 3 and 7 today. */
-  const GIANT_PLANTS = (() => {
+  /* [stance-lock] THE DWELL CELLS (stance lane, 2026-08-17): the strikes are
+   * the largest anchor jump in each half-cycle (gaitProfile's pick — cells
+   * 3 and 7 today, recomputed here off the registry so the lap re-derives,
+   * never trusts), and the shipped driver DWELLS one cell later (plant+1 =
+   * 4/8, weight settled on the fresh foot: mark and cell frozen together).
+   * THE OLD GATE'S DISCREPANCY, recorded honestly: it sampled ONLY the
+   * strike cells — exactly where the split-clock pulse pinned the mark by
+   * construction — and its `foot` is stripProof's anchor-origin, i.e. the
+   * pinned point itself, so 0.000 px over 189 pairs was a TAUTOLOGY while
+   * the reviewer measured 12-21 px of optical creep on the grounded cells
+   * around it. This tally now stands on the dwell cells (where the shipped
+   * driver claims stillness), and the [stance-optical] gate below tracks
+   * the RENDERED FOOT PIXELS across the dwell window — the eye's own
+   * measurement, not the anchor's. */
+  const GIANT_DWELLS = (() => {
     const a = STRIPS['polyphemus-walk'].anchors, n = a.length;
     const d = a.map((v, i) => Math.abs(v - a[(i - 1 + n) % n]));
     let p0 = 0;
@@ -1359,16 +1444,16 @@ async function main() {
       const dd = Math.min((i - p0 + n) % n, (p0 - i + n) % n);
       if (dd >= 3 && (p1 < 0 || d[i] > d[p1])) p1 = i;
     }
-    return new Set([p0, p1]);
+    return new Set([(p0 + 1) % n, (p1 + 1) % n]);
   })();
-  const lockEv = { holds: 0, worst: 0, worstAt: null, plants: [...GIANT_PLANTS] };
+  const lockEv = { holds: 0, worst: 0, worstAt: null, plants: [...GIANT_DWELLS] };
   /* [gait] LANE PHYSICS (explore-physics.md adopted): the SAME single-stepped
    * probe also records, at 30 fps (every 2nd fixed step), the plate MARKS of
    * the walks named per unit — the velocity series the gait law tallies
    * (CV, one-frame jumps, ease-in/out). One probe, three laws, one clock. */
   const gaitEv = {};
   const motionProbe = async (unitKey, nFrames = 90, ids = []) => {
-    const rows = await page.evaluate(({ n, ids }) => {
+    const rows = await page.evaluate(({ n, ids, teleSrc }) => {
       const pick = () => {
         const a = window.__refs.stage.active;
         const out = {};
@@ -1404,10 +1489,12 @@ async function main() {
           (S.rams || []).forEach((p, j) => p && w.push(['ram', 'r' + j, p]));
         }
         out.push({ css: sg.F * sg.cam3.k, w,
-                   marks: ids.length && i % 2 === 1 ? pick() : null });
+                   marks: ids.length && i % 2 === 1 ? pick() : null,
+                   tele: eval(teleSrc) });     // [teleport] the same tick's read
       }
       return out;
-    }, { n: nFrames, ids });
+    }, { n: nFrames, ids, teleSrc: TELE_READ_SRC });
+    teleRows(rows.map((r) => r.tele), unitKey);       // [teleport] one probe, four laws
     const held = {};
     const lockRun = {};                  // fam:id -> css drift across ONE plant hold
     for (const row of rows) {
@@ -1421,9 +1508,18 @@ async function main() {
           ev.pairs++;
           const slide = Math.abs(p.foot[0] - prev.x) * row.css;
           if (slide > ev.worst) { ev.worst = slide; ev.worstAt = unitKey; }
-          /* [stance-lock] a HELD PLANT cell accumulates its whole hold's
-             drift — the weight lane's law: the planted foot stands still */
-          if (fam === 'giant' && GIANT_PLANTS.has(p.frame)) {
+          /* [stance-lock] a DECLARED DWELL accumulates its whole hold's
+             drift — the stance law: the planted foot stands still. The
+             flag, not the cell, bounds the window: after the dwell the
+             ground clock legitimately spends the rest of the same cell
+             sweeping, and that ground is the anti-skate law's beat. The
+             cell is still cross-checked against the registry's own
+             plant+1 (a dwell off the settled plant cell is a wiring bug). */
+          if (fam === 'giant' && p.dwell) {
+            if (!GIANT_DWELLS.has(p.frame)) {
+              lockEv.offCell = `${unitKey}: dwell on cell ${p.frame} ` +
+                               `(want ${[...GIANT_DWELLS].join('/')})`;
+            }
             const rk = fam + ':' + id;
             lockRun[rk] = (lockRun[rk] || 0) + slide;
             lockEv.holds++;
@@ -1446,6 +1542,197 @@ async function main() {
   };
   const skateProbe = motionProbe;        // the old name, same probe
 
+  /* ---- [stance-optical] the honest foot probe (stance lane, 2026-08-17) -- *
+   * The reviewer tracked PIXELS; so does this. At each plant dwell of the
+   * return2 walk (the set declares `dwell` on its giant strip proof), grab
+   * a fixed reference patch of the rendered foot region from a clipped
+   * screenshot, then NCC-track it at 30 fps across the whole window. The
+   * drift reported is the best-match displacement of the ORIGINAL patch —
+   * rendered foot-region optical drift, not the anchor the paint was asked
+   * for. Runs on the deviceScaleFactor-2 page: shot px = 2 css px. */
+  const opticalEv = { windows: 0, worst: 0, drifts: [] };
+  const nccBestDx = (ref, img, half, search) => {
+    /* ref: {w,h,lum} patch; img: decodePng of the same clip box; returns
+       the best-match displacement (shot px) of the patch centre */
+    const lum = (d, w, x, y) => {
+      const i = (y * w + x) * 4;
+      return d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114;
+    };
+    const cx = Math.floor(img.width / 2), cy = Math.floor(img.height / 2);
+    let best = -2, bx = 0, by = 0;
+    for (let dy = -search; dy <= search; dy++) {
+      for (let dx = -search; dx <= search; dx++) {
+        let sp = 0, sq = 0, spq = 0, sp2 = 0, sq2 = 0, n = 0;
+        for (let y = -half; y <= half; y += 2) {
+          for (let x = -half; x <= half; x += 2) {
+            const p = ref.lum[((y + half) * (2 * half + 1)) + (x + half)];
+            const qx = cx + dx + x, qy = cy + dy + y;
+            if (qx < 0 || qy < 0 || qx >= img.width || qy >= img.height) continue;
+            const q = lum(img.data, img.width, qx, qy);
+            sp += p; sq += q; spq += p * q; sp2 += p * p; sq2 += q * q; n++;
+          }
+        }
+        if (!n) continue;
+        const cov = spq - sp * sq / n;
+        const vp = sp2 - sp * sp / n, vq = sq2 - sq * sq / n;
+        const c = cov / (Math.sqrt(Math.max(vp, 1e-6) * Math.max(vq, 1e-6)));
+        if (c > best) { best = c; bx = dx; by = dy; }
+      }
+    }
+    return { dx: bx, dy: by, c: best };
+  };
+  const opticalStanceProbe = async () => {
+    const HALF = 24, SEARCH = 14, BOXR = 44;       // shot px (= css/2 x 2)
+    for (let w = 0; w < 3 && opticalEv.windows < 3; w++) {
+      /* single-step to the next dwell's first frame (or the walk's end) */
+      const at = await page.evaluate(() => {
+        for (let i = 0; i < 460; i++) {
+          window.__advance(1 / 60);
+          const q = window.__state();
+          const g = q.stage.strips && q.stage.strips.giant;
+          if (!g) return null;                     // the walk is over
+          if (g.dwell) {
+            window.__renderNow();
+            const sg = window.__refs.stage;
+            const r = sg.active.giantStripN.getBoundingClientRect();
+            /* the foot in CSS px: the proof's plate-px foot mapped back
+               through the same affine toPlate describes (css = plate * F'
+               + off, off read off toPlate(0,0)) */
+            const F = sg.F * (sg.cam3 ? sg.cam3.k : 1);
+            const o = sg.toPlate(0, 0);
+            return { cssX: (g.foot[0] - o.x) * F, cssY: (g.foot[1] - o.y) * F,
+                     rect: [r.left, r.top, r.right, r.bottom] };
+          }
+        }
+        return { timeout: true };
+      });
+      if (!at || at.timeout) break;
+      /* keep the patch ON the drawn giant whatever the mapping's residual:
+         clamp into the strip node's own rect, biased to its baseline */
+      const cssX = Math.min(Math.max(at.cssX, at.rect[0] + 10), at.rect[2] - 10);
+      const cssY = Math.min(Math.max(at.cssY, at.rect[1] + 10), at.rect[3] - 4);
+      const clip = { x: Math.max(0, cssX - BOXR), y: Math.max(0, cssY - BOXR),
+                     width: BOXR * 2, height: BOXR * 2 };
+      const refPng = decodePng(await page.screenshot({ clip }));
+      const half = HALF, cx = Math.floor(refPng.width / 2),
+            cy = Math.floor(refPng.height / 2);
+      const lum = new Float32Array((2 * half + 1) * (2 * half + 1));
+      for (let y = -half; y <= half; y++) {
+        for (let x = -half; x <= half; x++) {
+          const i = ((cy + y) * refPng.width + (cx + x)) * 4;
+          lum[(y + half) * (2 * half + 1) + (x + half)] =
+            refPng.data[i] * 0.299 + refPng.data[i + 1] * 0.587 +
+            refPng.data[i + 2] * 0.114;
+        }
+      }
+      let worst = 0, frames = 0;
+      for (let i = 0; i < 40; i++) {
+        const on = await page.evaluate(() => {
+          window.__advance(1 / 60); window.__advance(1 / 60);
+          window.__renderNow();
+          const q = window.__state();
+          const g = q.stage.strips && q.stage.strips.giant;
+          return !!(g && g.dwell);
+        });
+        if (!on) break;
+        const img = decodePng(await page.screenshot({ clip }));
+        const m = nccBestDx({ lum }, img, half, SEARCH);
+        const d = Math.hypot(m.dx, m.dy) / 2;      // shot px -> css px
+        if (m.c > 0.5 && d > worst) worst = d;
+        frames++;
+      }
+      if (frames >= 3) {
+        opticalEv.windows++;
+        opticalEv.drifts.push(+worst.toFixed(3));
+        if (worst > opticalEv.worst) opticalEv.worst = worst;
+      }
+    }
+  };
+
+  /* ---- [throw] THE RELEASE + IMPACT LAW (throw lane, 2026-08-17) --------- *
+   * The external review's sea verdict: "at about 11.1 s it simply detaches
+   * while his pose remains fixed ... at 13.3-13.4 s the rock disappears at
+   * the waterline with no convincing splash, boat reaction, or impact
+   * accent." Four facts, each gated off a single-stepped run of the rock
+   * clock (rows = full 1/60-tick states):
+   *   (a) FOLLOW-THROUGH: the hurl spends itself at the release — follow
+   *       k/rot read on the wire, hurlK <= 0.5 and pose 'stand' by
+   *       loose + 0.45 s (the ~300 ms two-step ease, crossfade + un-twist);
+   *   (b) SYNC: the tick before the first splash tick still carries the
+   *       rock (arc end == rise start, zero dead ticks), and the first
+   *       splash tick already reads k >= 0.3 (the attack envelope);
+   *   (c) ACCENT: the first splash tick carries the +15% scale (>= 1.12),
+   *       spent by u 0.2 (back under 1.01);
+   *   (d) THE HULL ANSWERS: |world.rot| peaks 0.8..2.2 deg inside 0.7 s of
+   *       the land, first swing shoreward for rock 1 (+) and seaward for
+   *       rock 2 (-) — the backwash dx translates were verified shipped for
+   *       BOTH rocks (worldPose: +30 bump rock1, -24 bump rock2). */
+  const throwEv = {};
+  const throwLaw = (which, rows) => {
+    const R = rows.map((q) => ({
+      rock: q.stage.rockAt ? 1 : 0,
+      k: q.stage.splash ? q.stage.splash.k : 0,
+      u: q.stage.splash ? (q.stage.splash.u || 0) : 0,
+      acc: q.stage.splash ? (q.stage.splash.accent || 1) : 1,
+      rot: q.stage.world ? (q.stage.world.rot || 0) : 0,
+      fk: q.stage.giant && q.stage.giant.follow ? q.stage.giant.follow.k : 0,
+      frot: q.stage.giant && q.stage.giant.follow ? q.stage.giant.follow.rot : 0,
+      hurlK: q.stage.giant ? (q.stage.giant.hurlK || 0) : 0,
+      pose: q.stage.giant ? q.stage.giant.pose : '',
+    }));
+    const iLoose = R.findIndex((r) => r.rock);
+    const iLand = R.findIndex((r) => r.k > 0);
+    const ev = { which, iLoose, iLand };
+    throwEv[which] = ev;
+    if (iLoose < 0 || iLand < 0) {
+      bad(`[throw] ${which}: the probe never saw ` +
+          (iLoose < 0 ? 'the rock fly' : 'the splash rise') +
+          ' — a clock or probe hole');
+      return;
+    }
+    if (!(R[iLand - 1] && R[iLand - 1].rock)) {
+      bad(`[throw] ${which}: dead water between the arc's end and the splash — ` +
+          'the tick before the first splash tick carries no rock');
+    }
+    if (!(R[iLand].k >= 0.3)) {
+      bad(`[throw] ${which}: the splash's first tick reads k=${R[iLand].k} ` +
+          '(< 0.3 — no attack; the old sine-bump hole)');
+    }
+    if (!(R[iLand].acc >= 1.12)) {
+      bad(`[throw] ${which}: no impact accent on the first splash tick ` +
+          `(scale ${R[iLand].acc}, want >= 1.12)`);
+    }
+    if (R.some((r) => r.k > 0 && r.u > 0.2 && r.acc > 1.01)) {
+      bad(`[throw] ${which}: the +15% accent outlived its ticks (still > 1.01 past u 0.2)`);
+    }
+    if (!R.some((r) => r.fk > 0.3 && Math.abs(r.frot) > 0.4)) {
+      bad(`[throw] ${which}: no release follow-through on the wire ` +
+          '(follow k/rot never read past 0.3/0.4)');
+    }
+    const at45 = R[Math.min(R.length - 1, iLoose + 28)];
+    if (!(at45.hurlK <= 0.5 && at45.pose === 'stand')) {
+      bad(`[throw] ${which}: the hurl is still up 0.45 s after the release ` +
+          `(hurlK ${at45.hurlK}, pose '${at45.pose}') — the frozen statue`);
+    }
+    const win = R.slice(iLand, iLand + 44).map((r) => r.rot);
+    const peak = win.reduce((m, v) => (Math.abs(v) > Math.abs(m) ? v : m), 0);
+    if (!(Math.abs(peak) >= 0.8 && Math.abs(peak) <= 2.2)) {
+      bad(`[throw] ${which}: the hull does not answer the impact ` +
+          `(pitch peak ${peak.toFixed(2)} deg, want 0.8..2.2)`);
+    }
+    const first = win.find((v) => Math.abs(v) > 0.3) || 0;
+    if (first * (which === 'rock1' ? 1 : -1) <= 0) {
+      bad(`[throw] ${which}: the hull's first swing leans the wrong way ` +
+          `(${first.toFixed(2)} deg)`);
+    }
+    ev.peak = +peak.toFixed(2);
+    ev.firstK = R[iLand].k;
+    ev.acc = R[iLand].acc;
+    note(`[throw] ${which}: follow-through read (hurl down by loose+0.45 s), ` +
+         `splash first tick k ${R[iLand].k} @ accent ${R[iLand].acc}, hull ` +
+         `pitch peak ${peak.toFixed(2)} deg — arc end tick == splash rise tick`);
+  };
+
   /* ---- [bridge-step] the single-stepped BRIDGE probe (weight lane) ------- *
    * Advances the sim one fixed 1/60 step at a time through a bridge's whole
    * play and reads the live bridge proof + the seize victims' layer each
@@ -1453,34 +1740,39 @@ async function main() {
    * squash and the contact handoff are all read off this one clock. Every
    * sampled frame also feeds the play-once tally (on change), so the dense
    * evidence and the sparse polls gate the same play. */
-  const bridgeProbe = async (n) => page.evaluate((n) => {
-    const out = [];
-    for (let i = 0; i < n; i++) {
-      window.__advance(1 / 60);
-      const q = window.__state();
-      const sn = (q && q.stage) || {};
-      const S = sn.strips || {};
-      const a = window.__refs.stage.active;
-      const vict = [];
-      const st = (a && a.state) || {};
-      if (st.seizeBase != null && a.pose) {
-        for (const j of [st.seizeBase - 1, st.seizeBase - 2]) {
-          const P = a.pose['c' + j];
-          if (P) vict.push({ j, x: +P.x.toFixed(2), y: +P.y.toFixed(2),
-                             op: +(+P.op).toFixed(3) });
+  const bridgeProbe = async (n, teleKey = null) => {
+    const rows = await page.evaluate(({ n, teleSrc }) => {
+      const out = [];
+      for (let i = 0; i < n; i++) {
+        window.__advance(1 / 60);
+        const q = window.__state();
+        const sn = (q && q.stage) || {};
+        const S = sn.strips || {};
+        const a = window.__refs.stage.active;
+        const vict = [];
+        const st = (a && a.state) || {};
+        if (st.seizeBase != null && a.pose) {
+          for (const j of [st.seizeBase - 1, st.seizeBase - 2]) {
+            const P = a.pose['c' + j];
+            if (P) vict.push({ j, x: +P.x.toFixed(2), y: +P.y.toFixed(2),
+                               op: +(+P.op).toFixed(3) });
+          }
         }
+        out.push({
+          b: S.bridge ? { key: S.bridge.key, frame: S.bridge.frame,
+                          k: S.bridge.k, n: S.bridge.n,
+                          sy: S.bridge.sy == null ? 1 : S.bridge.sy,
+                          play: S.bridge.play || 1,
+                          dx: S.bridge.dx, dy: S.bridge.dy } : null,
+          vict,
+          tele: eval(teleSrc),               // [teleport] the same tick's read
+        });
       }
-      out.push({
-        b: S.bridge ? { key: S.bridge.key, frame: S.bridge.frame,
-                        k: S.bridge.k, n: S.bridge.n,
-                        sy: S.bridge.sy == null ? 1 : S.bridge.sy,
-                        play: S.bridge.play || 1,
-                        dx: S.bridge.dx, dy: S.bridge.dy } : null,
-        vict,
-      });
-    }
-    return out;
-  }, n);
+      return out;
+    }, { n, teleSrc: TELE_READ_SRC });
+    if (teleKey) teleRows(rows.map((r) => r.tele), teleKey);
+    return rows;
+  };
   /* the shared analysis: rate-gate every sampled play; return per-key rows */
   const bridgeStepEv = { worstStep: 0, worstAt: null, ticks: 0 };
   const bridgeRows = (rows, unitKey, tagOf) => {
@@ -1502,6 +1794,142 @@ async function main() {
       }
       last = b;
     }
+  };
+
+  /* ---- [teleport] THE TELEPORT LAW (external re-review, 2026-08-17) ------ *
+   * The remaining defect class: one-frame pose/position SUBSTITUTIONS at
+   * state handoffs (firstmeal's bridge-end -> clutch, clutch -> seat,
+   * seat -> sprawl; return2's walk -> seat arrival; collapse's keyed
+   * squash). The engine's answer is setkit swapActor (a 120 ms crossfade +
+   * 150-250 ms mark lerp, DECLARED to the snapshot) and the elastic impact
+   * curve; this gate is its law: sampled at the SIM TICK (1/60, the fixed
+   * step every probe already walks), for every visible actor art node in
+   * the active set's actor group,
+   *   (a) while the node and its strip cell both hold, its drawn-box centre
+   *       may move at most TELE_STEP_MAX css px a tick (css at the page's
+   *       own fit F — the reader's LENS magnification is not actor motion,
+   *       and zoomed slides are the anti-skate laws' beat);
+   *   (b) an art-node SWAP — one node out and an overlapping node in on the
+   *       SAME tick, paired by NEAREST centre (three crew starting their
+   *       strips on one tick must each pair with their own) — is legal only
+   *       if the substitution's own centre delta stays inside TELE_SWAP_MAX
+   *       (an endpoint-matched cut <-> strip handoff lands dc ~0.1-1 px;
+   *       the budget is wider than (a)'s because a strip cell's transparent
+   *       reach padding shifts the AABB centre a few px off the cut's while
+   *       the BODY holds its feet — the named defects measured 42-100 px)
+   *       or it rides an active tween or a cover/veil. A tweened handoff
+   *       never produces a same-tick pair (the crossfade overlaps by
+   *       construction), so what this clause catches is exactly the bare
+   *       pose substitution the re-review named. Strip cell advances (sig
+   *       changes) are frame-clamped upstream by the bridge rate gate and
+   *       are exempt from (a). A node at op <= TELE_DIM on either tick is
+   *       under its OWN fade cover — the fade-through reland (the book's
+   *       established re-stage device: op eases to ~0.06, the position
+   *       lands, op eases back) is a cover by construction, not a stride,
+   *       and cave.js's stride law already refuses it as one.
+   * Props (prop-* art), occluder layers and emissives are set dressing, not
+   * actors, and stand outside the law. Every unit's entry settle runs
+   * through teleProbe below, and the dense motion/bridge probes carry the
+   * same read, so the assertion is book-wide. --break-tween proves the gate
+   * can fail. */
+  const TELE_STEP_MAX = 3.5;             // css px per 1/60 tick, at fit F
+  const TELE_SWAP_MAX = 8;               // css px a matched swap may sit off
+  const TELE_DIM = 0.25;                 // op at/below which a fade is a cover
+  const teleEv = { ticks: 0, worst: 0, worstAt: null, viol: [],
+                   swaps: 0, matched: 0, covered: 0, tweens: 0,
+                   units: new Set() };
+  const TELE_READ_SRC = `(() => {
+    const sg = window.__refs.stage, S = window.__refs.S;
+    const a = sg.active, grp = a && a.actors;
+    const row = { css: +sg.F.toFixed(4), tween: !!(a && a.gSwap),
+                  cover: !!(S.turn && S.turn.active),
+                  veil: a && a.veilK ? +a.veilK : 0,
+                  set: sg.activeName, nodes: [] };
+    if (!grp) return row;
+    for (const nd of grp.children) {
+      const cs = getComputedStyle(nd);
+      if (+cs.opacity <= 0.05 || cs.display === 'none') continue;
+      const cls = nd.className || '';
+      if (/\\b(occ|emis|prop)\\b/.test(cls)) continue;
+      const bg = nd.style.backgroundImage || nd.src || '';
+      if (/prop-/.test(bg)) continue;
+      const r = nd.getBoundingClientRect();
+      if (r.width < 3 || r.height < 3) continue;
+      if (!nd.__tp) nd.__tp = (window.__tpSeq = (window.__tpSeq || 0) + 1) + ':' +
+                              ((bg.match(/([\\w-]+)\\.(png|jpg)/) || [])[1] || 'node');
+      const p = sg.toPlate(r.left, r.top), q = sg.toPlate(r.right, r.bottom);
+      row.nodes.push({ id: nd.__tp, sig: nd.style.backgroundPosition || '',
+                       op: +(+cs.opacity).toFixed(3),
+                       b: [+p.x.toFixed(2), +p.y.toFixed(2),
+                           +(q.x - p.x).toFixed(2), +(q.y - p.y).toFixed(2)] });
+    }
+    return row;
+  })()`;
+  const teleRows = (rows, unitKey) => {
+    let prev = null;
+    for (const row of rows) {
+      if (!row) { prev = null; continue; }
+      if (prev && prev.set === row.set) {
+        teleEv.ticks++;
+        teleEv.units.add(unitKey);
+        if (row.tween && !prev.tween) teleEv.tweens++;
+        const covered = row.tween || prev.tween || row.cover || row.veil > 0.1;
+        const pm = new Map(prev.nodes.map((x) => [x.id, x]));
+        const cm = new Map(row.nodes.map((x) => [x.id, x]));
+        const ins = row.nodes.filter((x) => !pm.has(x.id));
+        for (const o of prev.nodes) {
+          if (cm.has(o.id)) continue;                    // still up: no swap
+          const oc = [o.b[0] + o.b[2] / 2, o.b[1] + o.b[3] / 2];
+          let hit = null, hd = 1e9;                      // nearest-centre pair
+          for (const x of ins) {
+            const xc = [x.b[0] + x.b[2] / 2, x.b[1] + x.b[3] / 2];
+            const overlap = o.b[0] < x.b[0] + x.b[2] && x.b[0] < o.b[0] + o.b[2] &&
+                            o.b[1] < x.b[1] + x.b[3] && x.b[1] < o.b[1] + o.b[3];
+            const d = Math.hypot(xc[0] - oc[0], xc[1] - oc[1]);
+            if ((overlap || d < 90) && d < hd) { hd = d; hit = x; }
+          }
+          if (hit) {
+            teleEv.swaps++;
+            const dc = hd * row.css;
+            if (dc <= TELE_SWAP_MAX) teleEv.matched++;   // endpoint-matched swap
+            else if (covered || o.op <= TELE_DIM || hit.op <= TELE_DIM) {
+              teleEv.covered++;                          // tween/veil/own fade
+            } else {
+              teleEv.viol.push(`${unitKey}: BARE ART SWAP ${o.id} -> ${hit.id} ` +
+                               `(centre jumped ${dc.toFixed(1)} css px in one ` +
+                               'tick, no tween/cover)');
+            }
+          }
+        }
+        for (const x of row.nodes) {
+          const p = pm.get(x.id);
+          if (!p || p.sig !== x.sig || covered) continue;
+          if (x.op <= TELE_DIM || p.op <= TELE_DIM) continue;  // own fade cover
+          const d = Math.hypot((x.b[0] + x.b[2] / 2) - (p.b[0] + p.b[2] / 2),
+                               (x.b[1] + x.b[3] / 2) - (p.b[1] + p.b[3] / 2)) * row.css;
+          if (d > teleEv.worst) { teleEv.worst = d; teleEv.worstAt = `${unitKey} (${x.id})`; }
+          if (d > TELE_STEP_MAX) {
+            teleEv.viol.push(`${unitKey}: ${x.id} centre moved ${d.toFixed(1)} ` +
+                             `css px in one tick (law <= ${TELE_STEP_MAX})`);
+          }
+        }
+      }
+      prev = row;
+    }
+  };
+  /** advance `seconds` of sim in 1/60 ticks, feeding every tick's full
+   *  visible read to the teleport law (drop-in for a settle T(seconds)) */
+  const teleProbe = async (unitKey, seconds) => {
+    const n = Math.max(1, Math.round(seconds * 60));
+    const rows = await page.evaluate(({ n, teleSrc }) => {
+      const out = [];
+      for (let i = 0; i < n; i++) {
+        window.__advance(1 / 60);
+        out.push(eval(teleSrc));
+      }
+      return out;
+    }, { n, teleSrc: TELE_READ_SRC });
+    teleRows(rows, unitKey);
   };
 
   const marginHas = (q, text, tag) => {
@@ -1957,12 +2385,12 @@ async function main() {
         dawn1: [252, ['c0', 'c1']],              // the hunt dash-out, whole
         /* head2's probe runs AFTER its shot below: probing first ages the
            unit past the dwell law's 0.7 s cover budget */
-        /* the weight lane's stance-lock profile spends the same ground a
-           tenth slower (1.7 m/s + locked plants), so the walk probes run
-           ~1.2 s longer to still record every stop */
-        return2: [456, ['g']],                   // the giant's entrance
-        quiverlid: [444, ['g']],                 // flock-out
-        return3: [444, ['g']],                   // flock-in
+        /* the stance lane's PLANT DWELLS freeze the giant ~0.38 s per step
+           (3 dwells on the 365 px entrance), so the walk probes run long
+           enough to still record every stop */
+        return2: [500, ['g']],                   // the giant's entrance
+        quiverlid: [470, ['g']],                 // flock-out
+        return3: [470, ['g']],                   // flock-in
         /* dawn5's stream is recorded AT the G5 hit inside doTarget — the
            gate's advance is the escape's own t0 */
         freed: [220, ['gram']],                  // the trot clear
@@ -1970,12 +2398,39 @@ async function main() {
       if (ENTRY_PROBE[u.key]) {
         await motionProbe(u.key, ...ENTRY_PROBE[u.key]);
       }
+      /* [stance-optical] the honest foot gate needs the walk LIVE, and the
+         motion probe above has just spent it (500 ticks > the 7 s seg). The
+         entrance is a pure function of (seg t0, path), so RE-STAGE the seg
+         at the current stage clock — the same startSeg the unit fired, the
+         same bytes — and track the fresh walk's dwells optically. The giant
+         ends the re-staged walk at the same seat he had already reached, so
+         the unit's own frame downstream is unchanged; the unit stays click-
+         held throughout (segHold). */
+      if (u.key === 'return2') {
+        await page.evaluate(() => {
+          const a = window.__refs.stage.active;
+          a.startSeg('return', 7.0, a.state.t);
+        });
+        await opticalStanceProbe();
+        /* drain the re-staged walk so the unit's frame downstream is the
+           same seated giant every earlier lap sampled */
+        await page.evaluate(() => {
+          for (let i = 0; i < 620; i++) {
+            window.__advance(1 / 60);
+            const q = window.__state();
+            if (!(q.stage.strips && q.stage.strips.giant)) break;
+          }
+        });
+      }
 
       /* settle into the unit's frame. Heads are shot EARLY so the dwell
          number measures the COVER's theft, not this harness's pacing.
          (unitView carries no `head` flag — the key names them.) */
       const isHead = /^head\d$/.test(u.key || '');
-      await T(isHead || u.verb === 'auto' ? 0.15 : 0.85);
+      /* [teleport] the settle is tick-stepped through the teleport law's own
+         probe — same sim age as the old T(), but every unit's entry now
+         feeds the book-wide full read at the 1/60 tick */
+      await teleProbe(u.key, isHead || u.verb === 'auto' ? 0.15 : 0.85);
       const shotName = `b${u.beat}-${String(seq).padStart(2, '0')}-${u.key}`;
       await shot(shotName);
       /* [gait] the entry file: probed AFTER head2's own shot (the dwell law
@@ -2309,7 +2764,7 @@ async function main() {
                read the same parked landing cell all three meals */
             const nT = Math.max(60,
               Math.round((MEAL_SEG_T - 0.05 - (q0.unitT || 0)) * 60));
-            const rows = await bridgeProbe(nT);
+            const rows = await bridgeProbe(nT, u.key);
             bridgeRows(rows, u.key, () => u.key);
             const vic = {};                               // j -> {x0,y0,drift,...}
             let contactTick = null;
@@ -2390,6 +2845,13 @@ async function main() {
           if (g.pose !== 'clutch') {
             bad(`${u.key}: [O.6] mid-seg the giant is '${g.pose}', not the clutch`);
           }
+          /* [teleport] the MEAL CHAIN's remaining handoffs — bridge-end ->
+             static clutch (segK ~0.56), clutch -> seat (segK 0.9) and
+             seat -> sprawl + the tip-over slide (seg end) — single-stepped
+             so the gate reads every handoff at the tick level. firstmeal
+             only: the seize staging is identical x3 by O.6, and ii-10 alone
+             owns the sprawl chain. */
+          if (u.key === 'firstmeal') await teleProbe('firstmeal-chain', 4.4);
           break;
         }
         case 'sword':
@@ -2425,11 +2887,11 @@ async function main() {
              the IMPACT SQUASH (2-frame compression + recoil at c4, sy
              declared in the proof) read off the one clock. */
           {
-            const rows = await bridgeProbe(330);          // 5.5 s of the 6 s seg
+            const rows = await bridgeProbe(330, 'neck');  // 5.5 s of the 6 s seg
             bridgeRows(rows, 'neck', () => 'play1');
             const dwell = {};                             // frame -> ticks
             let impactTick = null, minSy = 1, minSyTick = null,
-                recoil = false, lastSy = 1;
+                recoil = false, lastSy = 1, prevSy = null, maxDsy = 0;
             rows.forEach((row, i) => {
               const b = row.b;
               if (!b || b.key !== 'collapse') return;
@@ -2437,6 +2899,10 @@ async function main() {
               if (impactTick === null && b.frame >= COLLAPSE_IMPACT_CELL) impactTick = i;
               if (b.sy < minSy) { minSy = b.sy; minSyTick = i; }
               if (b.sy > 1.001) recoil = true;
+              /* [teleport] the ELASTIC clause: sy is a curve, never a keyed
+                 substitution — adjacent ticks may differ by <= 0.02 */
+              if (prevSy != null) maxDsy = Math.max(maxDsy, Math.abs(b.sy - prevSy));
+              prevSy = b.sy;
               lastSy = b.sy;
             });
             const mean = (cells) => {
@@ -2470,10 +2936,16 @@ async function main() {
               }
               if (!recoil) fails.push('no recoil frame (no sy > 1.001 sample)');
               if (lastSy !== 1) fails.push(`sy parked at ${lastSy}, not 1`);
+              if (maxDsy > 0.02) {
+                fails.push(`sy KEYED ${maxDsy.toFixed(4)}/tick — the impact must ` +
+                           'ride the elastic curve (<= 0.02 a tick), never a ' +
+                           'raw substitution');
+              }
               if (fails.length) bad('neck: [collapse-squash] ' + fails.join('; '));
               else note(`[collapse-squash] neck: sy dipped to ${minSy} ` +
                         `${((minSyTick - impactTick) / 60).toFixed(2)} s after the c4 ` +
-                        'impact, one recoil sample, parked at 1');
+                        `impact, recoil ridden, parked at 1, max |dsy| ` +
+                        `${maxDsy.toFixed(4)}/tick (elastic, law <= 0.02)`);
             }
           }
           /* [bridges] the sparse tail, kept: whatever of the play remains
@@ -2948,6 +3420,58 @@ async function main() {
             const gs = qd.stage.giantStrip;
             if (i > 1 && !(gs && gs.mode === 'bridge')) break;
             await T(0.15);
+          }
+          /* [throw] the release + impact are SUB-TICK facts (the sync law is
+             literally "the tick before"): single-step the clock from here
+             (just past the windup for rock1; ahead of the tear for rock2)
+             until 0.75 s past the first splash tick, and feed every tick to
+             the strip/bridge tallies too — one probe, all laws. */
+          const thRows = await page.evaluate(() => {
+            const out = [];
+            let land = -1;
+            for (let i = 0; i < 700; i++) {
+              window.__advance(1 / 60);
+              const q = window.__state();
+              out.push(q);
+              const k = q.stage.splash ? q.stage.splash.k : 0;
+              if (land < 0 && k > 0) land = i;
+              if (land >= 0 && i >= land + 45) break;
+            }
+            return out;
+          });
+          for (const q of thRows) stripPoll(q);
+          throwLaw(which, thRows);
+          for (const q of thRows) {
+            const rk0 = q.stage[which] || {};
+            if (['tear', 'flight'].includes(rk0.phase)) sawFlight = true;
+            const sp0 = q.stage.splash || {};
+            if (sp0.of === which && sp0.k > sawSplash) sawSplash = sp0.k;
+          }
+          /* [O.14b] THE CARRIER'S OWN RISE WINDOW: the resynced throw lane
+             (arc end tick == splash rise tick) puts the whole rise INSIDE
+             the single-stepped probe above, so the slow polls below can
+             never catch a k above the tally's max and the one fixed shot
+             they gate on never fires. The carrier is therefore measured
+             across the clock's TAIL instead: while the splash is still
+             live, render + shoot at short strides and keep the MAX plume
+             count — the law itself is unchanged (SPLASH_PALE_MIN stands). */
+          if (sawSplash > 0.25) {
+            for (let i = 0; i < 10; i++) {
+              const q = await st();
+              if (!q.unit || q.unit.id !== u.id) break;
+              const sp = q.stage.splash || {};
+              if (!(sp.of === which && sp.k > 0.3)) break;
+              await shot(`b6-${which}-splash`);      // latest live frame wins
+              const r = await page.evaluate(() => {
+                const n = window.__refs.stage.active.splash;
+                const b = n.getBoundingClientRect();
+                return { x: b.x * 2, y: b.y * 2, w: b.width * 2, h: b.height * 2 };
+              });
+              const f = frames[`b6-${which}-splash`];
+              const R = rectI(r, await stageBox());
+              if (f && R) palePx = Math.max(palePx, paleCount(f, R, 78, 0.35));
+              await T(0.12);
+            }
           }
           for (let i = 0; i < 80; i++) {
             const q = await st();
@@ -4220,22 +4744,59 @@ async function main() {
     }
   }
 
-  /* ---- 9.62 THE STANCE-FOOT LOCK (weight lane) ---------------------------- *
-   * While a PLANT cell of the giant strip held across consecutive fixed
-   * steps, the rendered foot's screen x may drift <= 1.0 css px across the
-   * WHOLE hold — the stance-lock profile's ground truth: a plant is a
-   * plant. No held plant probed = the profile (or the probe) is gone. */
+  /* ---- 9.62 THE STANCE-FOOT LOCK (stance lane, re-grounded 2026-08-17) --- *
+   * While a DWELL cell (plant+1, the shipped driver's frozen stand) held
+   * across consecutive fixed steps, the rendered foot's screen x may drift
+   * <= 1.0 css px across the WHOLE hold. NOTE the discrepancy this gate
+   * carried before the stance lane: it sampled the STRIKE cells (3/7) —
+   * where the old split-clock pulse pinned the mark by construction — and
+   * measured stripProof's anchor-origin (the pinned point), so its 0.000
+   * over 189 pairs was a tautology while the eye saw 12-21 px of creep on
+   * the grounded cells around it. It now stands on the dwell cells the
+   * driver actually claims, and [stance-optical] below owns the pixels. */
   if (!lockEv.holds) {
-    bad('[stance-lock] no held plant cell was ever probed on the giant — ' +
-        'the stance-lock profile (or the walk probes) did not run');
+    bad('[stance-lock] no held dwell cell was ever probed on the giant — ' +
+        'the plant dwell (or the walk probes) did not run');
+  } else if (lockEv.offCell) {
+    bad(`[stance-lock] a dwell froze OFF the settled plant cell — ${lockEv.offCell}`);
   } else if (lockEv.worst > PLANT_DRIFT_MAX) {
     bad(`[stance-lock] the giant's planted foot drifted ${lockEv.worst.toFixed(2)} ` +
-        `css px across a held plant cell at ${lockEv.worstAt} ` +
-        `(law <= ${PLANT_DRIFT_MAX} — the plant cells ${lockEv.plants.join('/')} own the floor)`);
+        `css px across a held dwell cell at ${lockEv.worstAt} ` +
+        `(law <= ${PLANT_DRIFT_MAX} — the dwell cells ${lockEv.plants.join('/')} own the floor)`);
   } else {
-    note(`[stance-lock] giant: ${lockEv.holds} held-plant pairs (cells ` +
+    note(`[stance-lock] giant: ${lockEv.holds} held-dwell pairs (cells ` +
          `${lockEv.plants.join('/')}), worst whole-hold drift ` +
          `${lockEv.worst.toFixed(3)} css px (<= ${PLANT_DRIFT_MAX})`);
+  }
+
+  /* ---- 9.62b THE OPTICAL STANCE GATE (the honest one, 2026-08-17) -------- *
+   * The eye's own measurement: during return2's walk, a fixed reference
+   * patch of the RENDERED foot region (screenshot pixels, grabbed at each
+   * dwell's first frame) is NCC-tracked at 30 fps across the whole dwell
+   * window. Total optical drift per window <= STANCE_OPT_MAX css px, >= 2
+   * windows or the probe (or the dwell itself) is gone. This is the gate
+   * the old 0.000 could not be: it reads the pixels the reviewer read. */
+  if (opticalEv.windows < 2) {
+    bad(`[stance-optical] only ${opticalEv.windows} dwell window(s) optically ` +
+        'tracked on the return2 walk (want >= 2) — the dwell or the probe is gone');
+  } else if (opticalEv.worst > STANCE_OPT_MAX) {
+    bad(`[stance-optical] the rendered foot region drifted ${opticalEv.worst.toFixed(2)} ` +
+        `css px across a dwell window (law <= ${STANCE_OPT_MAX}; ` +
+        `windows: ${opticalEv.drifts.map((d) => d.toFixed(2)).join(', ')})`);
+  } else {
+    note(`[stance-optical] ${opticalEv.windows} dwell windows optically tracked, ` +
+         `worst rendered-foot drift ${opticalEv.worst.toFixed(2)} css px ` +
+         `(<= ${STANCE_OPT_MAX}; windows: ` +
+         `${opticalEv.drifts.map((d) => d.toFixed(2)).join(', ')})`);
+  }
+
+  /* ---- 9.62c THE THROW LAW, completeness ---------------------------------- *
+   * Both rock clocks must have been single-stepped through their release
+   * and impact (the per-fact verdicts fire inside throwLaw). */
+  for (const whichRock of ['rock1', 'rock2']) {
+    if (!throwEv[whichRock]) {
+      bad(`[throw] ${whichRock} was never single-stepped — the rock watch did not run`);
+    }
   }
 
   /* ---- 9.63 THE BRIDGE RATE GATE (weight lane) ---------------------------- *
@@ -4498,6 +5059,28 @@ async function main() {
     }
   }
 
+  /* ---- 9.8 [teleport] THE TELEPORT LAW, tallied book-wide ----------------- *
+   * Every unit's entry settle plus every dense motion/bridge probe fed the
+   * per-tick full read; here the law closes: zero bare art swaps, zero
+   * uncovered per-tick centre jumps over TELE_STEP_MAX, book-wide. */
+  {
+    if (!(teleEv.ticks >= 3000)) {
+      bad(`[teleport] the probe barely ran — ${teleEv.ticks} tick-pairs ` +
+          `across ${teleEv.units.size} units (the settle rewire did not land)`);
+    }
+    const tv = dedupe(teleEv.viol);
+    for (const v of tv.slice(0, 12)) bad(`[teleport] ${v}`);
+    if (tv.length > 12) bad(`[teleport] ...and ${tv.length - 12} more violations`);
+    if (!tv.length && teleEv.ticks >= 3000) {
+      note(`[teleport] ${teleEv.ticks} tick-pairs across ${teleEv.units.size} ` +
+           `units: zero bare art swaps (${teleEv.tweens} handoffs tween-ridden; ` +
+           `of ${teleEv.swaps} instant swaps ${teleEv.matched} endpoint-matched ` +
+           `within ${TELE_SWAP_MAX} css px and ${teleEv.covered} under covers), ` +
+           `worst uncovered per-tick centre move ${teleEv.worst.toFixed(2)} css px ` +
+           `(law <= ${TELE_STEP_MAX}) at ${teleEv.worstAt}`);
+    }
+  }
+
   /* ---- 10. the fact ledger, printed --------------------------------------- */
   for (const id of ['O.1', 'O.2', 'O.3', 'O.4', 'O.5', 'O.6', 'O.7', 'O.8a', 'O.8b',
                     'O.9', 'O.10', 'O.11', 'O.12', 'O.13a', 'O.13b', 'O.14a', 'O.14b']) {
@@ -4533,6 +5116,9 @@ async function main() {
     stanceLock: { holds: lockEv.holds, worst: +lockEv.worst.toFixed(3),
                   worstAt: lockEv.worstAt, plants: lockEv.plants,
                   max: PLANT_DRIFT_MAX },
+    stanceOptical: { windows: opticalEv.windows, drifts: opticalEv.drifts,
+                     worst: +opticalEv.worst.toFixed(3), max: STANCE_OPT_MAX },
+    throw: throwEv,
     bridgeStep: { ticks: bridgeStepEv.ticks, worst: bridgeStepEv.worstStep,
                   worstAt: bridgeStepEv.worstAt, max: BRIDGE_STEP_MAX },
     ramDepartures: ramDep,
@@ -4542,6 +5128,12 @@ async function main() {
       max: SKATE_MAX,
     }])),
     gait: gaitOut,
+    teleport: { ticks: teleEv.ticks, units: teleEv.units.size,
+                tweens: teleEv.tweens, swaps: teleEv.swaps,
+                matched: teleEv.matched, covered: teleEv.covered,
+                worst: +teleEv.worst.toFixed(3),
+                worstAt: teleEv.worstAt, max: TELE_STEP_MAX,
+                violations: dedupe(teleEv.viol) },
     feetViolations: dedupe(feetBad), parkingViolations: dedupe(parkBad),
     perspective: { samples: perspSamples, tol: PERSP_TOL,
                    violations: dedupe(perspBad) },
