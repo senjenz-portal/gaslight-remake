@@ -57,8 +57,9 @@
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp,
          emissives, breathe, placeStrip, stripProof,
-         bridgeFrame, loopFrame } from '../setkit.js';
+         bridgeFrame, loopFrame, gradedActor } from '../setkit.js';
 import { STRIPS } from '../strips.js';
+import { SHADOWS } from '../shadows.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SHIP = {
@@ -233,6 +234,23 @@ const DIM_MATRIX = [0.576, 0.715, 1.0];
 
 const bump = (k) => Math.sin(Math.PI * clamp01(k));
 
+/* ---- EXPLORER C: CONTACT SHADOWS (the chase.js rig-shadow law) ---------- *
+ * app/shadows.js is the registry (shadowgen.py, verbatim): the anchor lands
+ * on the actor's foot mark, scaled by the actor's own k = drawnH / cutH,
+ * opacity (0.42 + 0.30 * s) * actorOp — s the mark's depth share of this
+ * diorama's floor (the clifftop brow 210 to the near rower bench 466). The
+ * shadow nodes live INSIDE the world group, so the recede scales them with
+ * the deck they sit on. (The sea GUNWALE occluder was measured and REFUSED:
+ * every rower baseline sits 18-22 px upstage of it, overlap 0 px.) */
+const SHADOW = SHADOWS.sea.shadows;
+const SHADOW_BAND = [210, 466];
+const shadowS = (y) =>
+  clamp01((y - SHADOW_BAND[0]) / (SHADOW_BAND[1] - SHADOW_BAND[0]));
+/* the shadowed cuts' own source heights (tools/ody/actors.json verbatim) */
+const SHADOW_CUT_H = { 'polyphemus-stand': 1244, 'polyphemus-hurl': 1286,
+                       'polyphemus-curse': 1287, 'ulysses-stand': 682,
+                       'ulysses-taunt': 680, 'crew-row': 954 };
+
 export class SeaSet {
   static id = 'sea';
   static insets = {};                 // Beat VI raises none — the inset was Beat I's
@@ -244,6 +262,9 @@ export class SeaSet {
     this.FOCUS = FOCUS;
     this.dimMatrix = DIM_MATRIX;
     const img = (f, c, p) => st.img(f, c, p || root);
+    /* actor cuts load their BUILD-GRADED variant (regrade law, setkit) and
+       fall back to the raw cut; strips stay raw — the grade is per-cut */
+    const cut = (f, c, p) => gradedActor(st, 'sea', f, c, p || root);
 
     /* ---- THE WORLD GROUP: everything the recede moves ---------------- *
      * One div, transform-origin at the painted deck centre. The master, the
@@ -267,15 +288,30 @@ export class SeaSet {
     /* the measured lights breathe (moon + one fire: cave and crag share a clock) */
     this.emis = emissives(EMIS, this.world);
 
+    /* ---- THE CONTACT SHADOWS, before the actors, INSIDE the world ----- *
+     * (Explorer C, the chase.js law: a body over its own shadow; riding the
+     * world group, the recede scales a shadow with the deck it sits on.) */
+    this.shadowG = el('div', 'actors shadows', this.world);
+    const shN = (name) => {
+      const e = img('actor/shadow/sea/' + SHADOW[name].file, 'lyr', this.shadowG);
+      e.style.opacity = '0';
+      return e;
+    };
+    this.giantShN = { stand: shN('polyphemus-stand'), hurl: shN('polyphemus-hurl'),
+                      curse: shN('polyphemus-curse') };
+    this.uShN = { stand: shN('ulysses-stand'), taunt: shN('ulysses-taunt') };
+    this.rowerShN = ROWER_MARKS.map(() => shN('crew-row'));
+    this._shadows = [];
+
     /* ---- THE ACTORS (isolated; painter order is ascending mark y) ----- */
     this.actors = el('div', 'actors', this.world);
 
     // the blinded giant on the brow: three poses stacked, crossfaded like a
     // plate state — the mark never moves, only the picture over it
     this.giant = {
-      stand: img('actor/polyphemus-stand.png', 'lyr', this.actors),
-      hurl:  img('actor/polyphemus-hurl.png',  'lyr', this.actors),
-      curse: img('actor/polyphemus-curse.png', 'lyr', this.actors),
+      stand: cut('actor/polyphemus-stand.png', 'lyr', this.actors),
+      hurl:  cut('actor/polyphemus-hurl.png',  'lyr', this.actors),
+      curse: cut('actor/polyphemus-curse.png', 'lyr', this.actors),
     };
     this.pinAt(this.giant.stand, ART.giantStand, MARKS['clifftop-giant'], GIANT_H);
     this.pinAt(this.giant.hurl,  ART.giantHurl,  MARKS['clifftop-giant'], GIANT_ARMS_H);
@@ -294,8 +330,8 @@ export class SeaSet {
     // taunt cut is FLIPPED — mirrored about its own pin — so the flung arm
     // points at the cliff (the stage proof's own mount).
     this.uly = {
-      stand: img('actor/ulysses-stand.png', 'lyr', this.actors),
-      taunt: img('actor/ulysses-taunt.png', 'lyr', this.actors),
+      stand: cut('actor/ulysses-stand.png', 'lyr', this.actors),
+      taunt: cut('actor/ulysses-taunt.png', 'lyr', this.actors),
     };
     this.pinAt(this.uly.stand, ART.ulyStand, MARKS['stern-ulysses'], ULY_H);
     this.pinAt(this.uly.taunt, ART.ulyTaunt, MARKS['stern-ulysses'], ULY_H, true);
@@ -314,9 +350,9 @@ export class SeaSet {
 
     // the two rocks are ONE prop (their windows never overlap), and so is the
     // splash; both born at fire time zero-opacity and driven by the clocks
-    this.rock = img('actor/prop-rock.png', 'lyr', this.actors);
+    this.rock = cut('actor/prop-rock.png', 'lyr', this.actors);
     this.rock.style.opacity = '0';
-    this.splash = img('actor/prop-splash.png', 'lyr', this.actors);
+    this.splash = cut('actor/prop-splash.png', 'lyr', this.actors);
     this.splash.style.opacity = '0';
 
     /* ---- the blooms go OVER the actors (drawOrder law), screen-blended,
@@ -675,6 +711,53 @@ export class SeaSet {
     this.stepUlysses(t, dt, amb);
     this.stepRowers(t, dt, amb);
     this.stepRocks(t);
+    this.paintShadows();
+  }
+
+  /** THE SHADOW PASS (Explorer C — chase.js paintRigs, ported): anchor on
+   *  the foot mark, scale by the actor's k = drawnH / cutH, opacity
+   *  (0.42 + 0.30 * s) * the picture's own opacity — the giant's three
+   *  shadows crossfade exactly as his three cuts do. */
+  shadowPut(node, name, at, hPx, op, id) {
+    const rec = SHADOW[name];
+    const k = hPx / SHADOW_CUT_H[name];
+    box(node, at[0] - rec.anchor[0] * k, at[1] - rec.anchor[1] * k,
+        rec.size[0] * k, rec.size[1] * k);
+    const o = (0.42 + 0.30 * shadowS(at[1])) * op;
+    node.style.opacity = o.toFixed(3);
+    if (o > 0.005) {
+      this._shadows.push({ id, name, at: [+at[0].toFixed(1), +at[1].toFixed(1)],
+                           s: +shadowS(at[1]).toFixed(3), op: +o.toFixed(3),
+                           box: [+node.style.left.slice(0, -2), +node.style.top.slice(0, -2),
+                                 +node.style.width.slice(0, -2), +node.style.height.slice(0, -2)] });
+    }
+  }
+
+  paintShadows() {
+    const S = this.state;
+    this._shadows = [];
+    const M = MARKS['clifftop-giant'];
+    const stripLive = !!(this.giantBridge || this.curseLoop);
+    const gOps = {
+      stand: stripLive ? 0 : clamp01(1 - S.k.hurl - S.k.curse),
+      hurl: this.giantBridge ? 1 : (stripLive ? 0 : S.k.hurl),
+      curse: this.curseLoop ? 1 : (stripLive ? 0 : S.k.curse),
+    };
+    const gH = { stand: GIANT_H, hurl: GIANT_ARMS_H, curse: GIANT_ARMS_H };
+    for (const [pose, node] of Object.entries(this.giantShN)) {
+      if (!(gOps[pose] > 0.005)) { node.style.opacity = '0'; continue; }
+      this.shadowPut(node, 'polyphemus-' + pose, M, gH[pose], gOps[pose], 'giant');
+    }
+    const at = this.ulyAt();
+    const uOps = { stand: 1 - S.k.taunt, taunt: S.k.taunt };
+    for (const [pose, node] of Object.entries(this.uShN)) {
+      if (!(uOps[pose] > 0.005)) { node.style.opacity = '0'; continue; }
+      this.shadowPut(node, 'ulysses-' + pose, at, ULY_H, uOps[pose], 'ulysses');
+    }
+    for (const [i, node] of this.rowerShN.entries()) {
+      this.shadowPut(node, 'crew-row', MARKS[ROWER_MARKS[i]], ROWER_H, 1,
+                     ROWER_MARKS[i]);
+    }
   }
 
   /** how hard the six are pulling: story motion, not ambience */
@@ -990,6 +1073,15 @@ export class SeaSet {
                           this.worldMap(MARKS[r.mark]), false),
       })),
       rowPhase: +S.rowPhase.toFixed(4),
+      /* EXPLORER C's own proofs: the live shadows (ledger plate px — they
+         ride the world group, like every mark) and the under-the-actors
+         group order; the gunwale occluder was measured and refused. */
+      grounding: {
+        under: !!(this.shadowG.compareDocumentPosition(this.actors) &
+                  Node.DOCUMENT_POSITION_FOLLOWING),
+        shadows: this._shadows || [],
+        occ: [],
+      },
       rowEffort: +this.rowEffort(S.t).toFixed(3),
       marks: MARKS,
     };

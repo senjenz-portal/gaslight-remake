@@ -114,10 +114,11 @@ S = {
                             'lift to the mainland lobe; the one-eye half '
                             'stays VISUAL and lands in Beat II.'),
  'ody-i-05-dawn': dict(verb='click', focus='establishing', clear=True,
-                       act='shore-day', sfx='goats', seg='hunt', segDur=5.0,
-                       segHold=False,
+                       act='shore-day', bed='shore-day', sfx='goats',
+                       seg='hunt', segDur=5.0, segHold=False,
                        c='shore day state — goats scattering; the hunt is '
-                         'pantomime after the line (cut c-hunt).'),
+                         'pantomime after the line (cut c-hunt); the bed '
+                         'crosses to the daytime shore WITH the visual.'),
  'ody-i-06-smoke': dict(verb='click', focus='establishing', clear=True,
                         act='council-ulysses', sfx='bleats',
                         c='beach feast, all eyes to the strait — stubble-fire '
@@ -181,10 +182,11 @@ S = {
                              'waggons measure lands while the stone settles.'),
  'ody-ii-05-strangers': dict(verb='click', focus='eye-close', clear=True,
                              seg='milking', segDur=4.0, segHold=True,
-                             act='giant-seat', sfx='boom',
+                             act='giant-seat', bed='cave-fire', sfx='boom',
                              c='milking/curdling compresses on entry (K7/K8, '
-                               'the supper bowl planted); the fire flares, '
-                               'the head turns — FIRST close lens on the '
+                               'the supper bowl planted); the fire flares — '
+                               'the bed gains its crackle (cave-fire) — '
+                               'the head turns; FIRST close lens on the '
                                'single eye (O.1 visual).'),
  'ody-ii-06-plea': dict(verb='click', focus='twoshot', clear=True,
                         act='suppliant',
@@ -212,9 +214,12 @@ S = {
                          gateSfx='sword',
                          cue='click the sword · do what instinct asks',
                          focus='sword', clear=True, act='sword-ulysses',
+                         bed='snore',
                          c='GATE G2 — the glint at the hip; the reader '
                            'performs the fatal instinct so the text can '
-                           'refuse it (O.5 setup).'),
+                           'refuse it (O.5 setup); the promised snore-bed '
+                           '(K14) is UNDER the gate — the instinct is '
+                           'weighed against the sleeping breath.'),
  'ody-ii-12-shiftstone': dict(verb='click', focus='sword', fact='O.5',
                               c='the blade STOPS mid-air; the pan lands on '
                                 'the boulder filling the mouth; steel '
@@ -267,11 +272,13 @@ S = {
                              'pens visibly overfull; the anomaly pays off in '
                              'Beat V.'),
  'ody-iii-07-suppertwo': dict(verb='click', focus='meal-close', clear=True,
-                              act='cave-shut', seg='seize', segDur=6.0,
-                              segHold=True, sfx='seize', fact='O.6',
+                              act='cave-shut', bed='cave-fire', seg='seize',
+                              segDur=6.0, segHold=True, sfx='seize',
+                              fact='O.6',
                               c='boulder re-seated + milking repeated (c9); '
                                 'seg seize IDENTICAL a third time — men now '
-                                'six; the ivy bowl becomes the hot object.'),
+                                'six; the supper fire is lit (cave-fire bed) '
+                                'and the ivy bowl becomes the hot object.'),
  # AMENDMENT 2026-08-16 (rest is allowed): rest=True — a released hold KEEPS
  # its fill (no decay, no reset) and resumes on re-press; cue amended to say so.
  # Cues are OUR authoring; Butler's text is untouched.
@@ -304,10 +311,12 @@ S = {
                                 'the collapse.'),
  'ody-iii-13-neck': dict(verb='auto', dwell=6.5, focus='establishing',
                          clear=True, seg='collapse', segDur=6.0, segHold=True,
-                         act='cave-embers', sfx='fall',
+                         act='cave-embers', bed='snore', sfx='fall',
                          c='rides the collapse segment (~6 s); the sick-turn '
-                           'in shadow, sound-led; Beat IV\'s heading lands '
-                           'on this SAME leaf — NO page turn.'),
+                           'in shadow, sound-led — the wine takes him and '
+                           'the snore-bed comes up under the stake; Beat '
+                           'IV\'s heading lands on this SAME leaf — NO page '
+                           'turn.'),
 
  # ---- BEAT IV - THE STAKE - SET cave - leaf 3 (SHARED with Beat III) ------
  'ody-iv-00-head': dict(head=True, num='IV', text='The Stake', verb='auto',
@@ -339,9 +348,10 @@ S = {
                         c='steam plumes up the firelight shaft; horror '
                           'staged in shadow, not lingered.'),
  'ody-iv-05-hiss': dict(verb='clock', at=10.4, focus='drive-tight',
-                        sfx='hiss',
+                        bed='cave', sfx='hiss',
                         c='the HISS then the YELL — camera shake, roof-dust, '
-                          'the flocks surging in the pens.'),
+                          'the flocks surging in the pens; the snore-bed '
+                          'dies with the sleep it belonged to.'),
  'ody-iv-06-fright': dict(verb='clock', at=12.6, focus='mouth', clear=True,
                           sfx='clatter',
                           c='pluck-and-hurl pantomime inside the ellipsis '

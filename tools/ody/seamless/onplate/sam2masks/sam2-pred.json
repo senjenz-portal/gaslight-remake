@@ -1,0 +1,10 @@
+{
+ "id": "1pssyxmw1nrmt0d01qtvznee4c",
+ "metrics": {
+  "predict_time": 9.357096002,
+  "total_time": 27.199687083
+ },
+ "input_clicks": "[596,395],[596,425],[594,368],[550,400],[625,435],[596,340]",
+ "labels": "1,1,1,0,0,0",
+ "n_outputs": 97
+}

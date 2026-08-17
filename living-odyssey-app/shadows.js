@@ -1,0 +1,1371 @@
+/**
+ * shadows.js — THE CONTACT-SHADOW REGISTRY, generated VERBATIM from
+ * tools/ody/seamless/shadows/<lane>/shadowmap.json by
+ * tools/ody/seamless/ship_grounding.py — do not hand-edit; re-ship.
+ *
+ * The law is the sherlock chase set's rig-shadow law (chase.js
+ * paintRigs), ported per cut by shadowgen.py:
+ *   shape    the FEET'S own span (sw = footSpan * 1.55, aspect 0.42),
+ *            light-aware skew off the lane's dominant EMIS anchor,
+ *            baked into the PNG at peak alpha 0.62;
+ *   place    `anchor` is the point inside the PNG that lands on the
+ *            actor's PIN (the measured foot on the baseline), scaled
+ *            by the actor's own k = drawnH / cutH;
+ *   opacity  0.42 + 0.30 * s at runtime (chase.js verbatim; s is the
+ *            set's own depth share of the mark), times the actor's own
+ *            opacity — a shadow never outlives its actor.
+ * Files ship at assets/actor/shadow/<lane>/<file>.
+ */
+export const SHADOWS =
+{
+ "cave": {
+  "lane": "cave",
+  "law": {
+   "widthK": 1.55,
+   "aspect": 0.42,
+   "peakAlpha": 0.62
+  },
+  "shadows": {
+   "crew-a-stand": {
+    "file": "crew-a-stand-shadow.png",
+    "size": [
+     435,
+     130
+    ],
+    "anchor": [
+     215.9,
+     65.0
+    ],
+    "footSpanPx": 194,
+    "ellipse": [
+     301,
+     126
+    ],
+    "skew": 0.201,
+    "at": [
+     676,
+     524
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "crew-b-stand": {
+    "file": "crew-b-stand-shadow.png",
+    "size": [
+     469,
+     135
+    ],
+    "anchor": [
+     237.6,
+     67.5
+    ],
+    "footSpanPx": 202,
+    "ellipse": [
+     313,
+     131
+    ],
+    "skew": 0.275,
+    "at": [
+     702,
+     538
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "crew-carry": {
+    "file": "crew-carry-shadow.png",
+    "size": [
+     1441,
+     387
+    ],
+    "anchor": [
+     832.1,
+     193.5
+    ],
+    "footSpanPx": 588,
+    "ellipse": [
+     911,
+     383
+    ],
+    "skew": -0.361,
+    "at": [
+     570,
+     505
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "crew-plead": {
+    "file": "crew-plead-shadow.png",
+    "size": [
+     894,
+     245
+    ],
+    "anchor": [
+     206.5,
+     122.5
+    ],
+    "footSpanPx": 370,
+    "ellipse": [
+     574,
+     241
+    ],
+    "skew": 0.334,
+    "at": [
+     690,
+     495
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "crew-row": {
+    "file": "crew-row-shadow.png",
+    "size": [
+     279,
+     72
+    ],
+    "anchor": [
+     154.2,
+     36.0
+    ],
+    "footSpanPx": 105,
+    "ellipse": [
+     163,
+     68
+    ],
+    "skew": -0.542,
+    "at": [
+     450,
+     460
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "crew-slung": {
+    "file": "crew-slung-shadow.png",
+    "size": [
+     1539,
+     377
+    ],
+    "anchor": [
+     788.1,
+     188.5
+    ],
+    "footSpanPx": 572,
+    "ellipse": [
+     887,
+     373
+    ],
+    "skew": -0.542,
+    "at": [
+     450,
+     460
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-blinded-grope": {
+    "file": "polyphemus-blinded-grope-shadow.png",
+    "size": [
+     192,
+     51
+    ],
+    "anchor": [
+     97.6,
+     25.5
+    ],
+    "footSpanPx": 72,
+    "ellipse": [
+     112,
+     47
+    ],
+    "skew": -0.55,
+    "at": [
+     345,
+     420
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-clutch": {
+    "file": "polyphemus-clutch-shadow.png",
+    "size": [
+     1240,
+     305
+    ],
+    "anchor": [
+     860.2,
+     152.5
+    ],
+    "footSpanPx": 462,
+    "ellipse": [
+     716,
+     301
+    ],
+    "skew": 0.539,
+    "at": [
+     760,
+     452
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-curse": {
+    "file": "polyphemus-curse-shadow.png",
+    "size": [
+     1162,
+     285
+    ],
+    "anchor": [
+     752.3,
+     142.5
+    ],
+    "footSpanPx": 431,
+    "ellipse": [
+     668,
+     281
+    ],
+    "skew": -0.55,
+    "at": [
+     345,
+     420
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-drink": {
+    "file": "polyphemus-drink-shadow.png",
+    "size": [
+     1156,
+     285
+    ],
+    "anchor": [
+     758.6,
+     142.5
+    ],
+    "footSpanPx": 431,
+    "ellipse": [
+     668,
+     281
+    ],
+    "skew": 0.539,
+    "at": [
+     760,
+     452
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-hurl": {
+    "file": "polyphemus-hurl-shadow.png",
+    "size": [
+     1508,
+     368
+    ],
+    "anchor": [
+     398.5,
+     184.0
+    ],
+    "footSpanPx": 559,
+    "ellipse": [
+     866,
+     364
+    ],
+    "skew": -0.55,
+    "at": [
+     345,
+     420
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-seated": {
+    "file": "polyphemus-seated-shadow.png",
+    "size": [
+     644,
+     160
+    ],
+    "anchor": [
+     176.3,
+     80.0
+    ],
+    "footSpanPx": 240,
+    "ellipse": [
+     372,
+     156
+    ],
+    "skew": 0.539,
+    "at": [
+     760,
+     452
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-sprawl": {
+    "file": "polyphemus-sprawl-shadow.png",
+    "size": [
+     2392,
+     733
+    ],
+    "anchor": [
+     417.9,
+     366.5
+    ],
+    "footSpanPx": 1120,
+    "ellipse": [
+     1736,
+     729
+    ],
+    "skew": 0.117,
+    "at": [
+     664,
+     546
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-stand": {
+    "file": "polyphemus-stand-shadow.png",
+    "size": [
+     1154,
+     284
+    ],
+    "anchor": [
+     849.6,
+     142.0
+    ],
+    "footSpanPx": 430,
+    "ellipse": [
+     666,
+     280
+    ],
+    "skew": -0.543,
+    "at": [
+     500,
+     450
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-stroke": {
+    "file": "polyphemus-stroke-shadow.png",
+    "size": [
+     1284,
+     314
+    ],
+    "anchor": [
+     659.1,
+     157.0
+    ],
+    "footSpanPx": 476,
+    "ellipse": [
+     738,
+     310
+    ],
+    "skew": -0.55,
+    "at": [
+     345,
+     420
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "prop-bowl": {
+    "file": "prop-bowl-shadow.png",
+    "size": [
+     609,
+     152
+    ],
+    "anchor": [
+     304.5,
+     76.0
+    ],
+    "footSpanPx": 228,
+    "ellipse": [
+     353,
+     148
+    ],
+    "skew": 0.536,
+    "at": [
+     700,
+     441
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "prop-rock": {
+    "file": "prop-rock-shadow.png",
+    "size": [
+     311,
+     92
+    ],
+    "anchor": [
+     159.4,
+     46.0
+    ],
+    "footSpanPx": 135,
+    "ellipse": [
+     209,
+     88
+    ],
+    "skew": -0.254,
+    "at": [
+     600,
+     500
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "prop-splash": {
+    "file": "prop-splash-shadow.png",
+    "size": [
+     827,
+     237
+    ],
+    "anchor": [
+     411.9,
+     118.5
+    ],
+    "footSpanPx": 358,
+    "ellipse": [
+     555,
+     233
+    ],
+    "skew": -0.254,
+    "at": [
+     600,
+     500
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "prop-stake": {
+    "file": "prop-stake-shadow.png",
+    "size": [
+     750,
+     190
+    ],
+    "anchor": [
+     230.0,
+     95.0
+    ],
+    "footSpanPx": 285,
+    "ellipse": [
+     442,
+     186
+    ],
+    "skew": 0.496,
+    "at": [
+     790,
+     500
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "prop-stake-glowing": {
+    "file": "prop-stake-glowing-shadow.png",
+    "size": [
+     414,
+     115
+    ],
+    "anchor": [
+     217.9,
+     57.5
+    ],
+    "footSpanPx": 170,
+    "ellipse": [
+     264,
+     111
+    ],
+    "skew": 0.351,
+    "at": [
+     662,
+     456
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "prop-sword": {
+    "file": "prop-sword-shadow.png",
+    "size": [
+     390,
+     99
+    ],
+    "anchor": [
+     94.4,
+     49.5
+    ],
+    "footSpanPx": 146,
+    "ellipse": [
+     226,
+     95
+    ],
+    "skew": 0.545,
+    "at": [
+     768,
+     445
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "prop-wineskin": {
+    "file": "prop-wineskin-shadow.png",
+    "size": [
+     165,
+     46
+    ],
+    "anchor": [
+     108.8,
+     23.0
+    ],
+    "footSpanPx": 64,
+    "ellipse": [
+     99,
+     42
+    ],
+    "skew": 0.459,
+    "at": [
+     700,
+     468
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ram-great": {
+    "file": "ram-great-shadow.png",
+    "size": [
+     1457,
+     356
+    ],
+    "anchor": [
+     468.1,
+     178.0
+    ],
+    "footSpanPx": 540,
+    "ellipse": [
+     837,
+     352
+    ],
+    "skew": 0.55,
+    "at": [
+     838,
+     430
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ram-great-slung": {
+    "file": "ram-great-slung-shadow.png",
+    "size": [
+     1459,
+     356
+    ],
+    "anchor": [
+     468.2,
+     178.0
+    ],
+    "footSpanPx": 541,
+    "ellipse": [
+     839,
+     352
+    ],
+    "skew": 0.55,
+    "at": [
+     838,
+     430
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ram-pair-slung": {
+    "file": "ram-pair-slung-shadow.png",
+    "size": [
+     2474,
+     660
+    ],
+    "anchor": [
+     1202.9,
+     330.0
+    ],
+    "footSpanPx": 1008,
+    "ellipse": [
+     1562,
+     656
+    ],
+    "skew": -0.364,
+    "at": [
+     600,
+     470
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ram-walk": {
+    "file": "ram-walk-shadow.png",
+    "size": [
+     1187,
+     319
+    ],
+    "anchor": [
+     264.0,
+     159.5
+    ],
+    "footSpanPx": 483,
+    "ellipse": [
+     749,
+     315
+    ],
+    "skew": -0.364,
+    "at": [
+     600,
+     470
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-drive": {
+    "file": "ulysses-drive-shadow.png",
+    "size": [
+     1717,
+     546
+    ],
+    "anchor": [
+     851.5,
+     273.0
+    ],
+    "footSpanPx": 833,
+    "ellipse": [
+     1291,
+     542
+    ],
+    "skew": -0.063,
+    "at": [
+     624,
+     549
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-offer": {
+    "file": "ulysses-offer-shadow.png",
+    "size": [
+     167,
+     46
+    ],
+    "anchor": [
+     88.9,
+     23.0
+    ],
+    "footSpanPx": 65,
+    "ellipse": [
+     101,
+     42
+    ],
+    "skew": 0.459,
+    "at": [
+     700,
+     468
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-slung": {
+    "file": "ulysses-slung-shadow.png",
+    "size": [
+     202,
+     54
+    ],
+    "anchor": [
+     85.5,
+     27.0
+    ],
+    "footSpanPx": 76,
+    "ellipse": [
+     118,
+     50
+    ],
+    "skew": -0.525,
+    "at": [
+     500,
+     470
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-stand": {
+    "file": "ulysses-stand-shadow.png",
+    "size": [
+     150,
+     45
+    ],
+    "anchor": [
+     80.4,
+     22.5
+    ],
+    "footSpanPx": 63,
+    "ellipse": [
+     98,
+     41
+    ],
+    "skew": 0.334,
+    "at": [
+     690,
+     495
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-sword": {
+    "file": "ulysses-sword-shadow.png",
+    "size": [
+     522,
+     132
+    ],
+    "anchor": [
+     163.3,
+     66.0
+    ],
+    "footSpanPx": 196,
+    "ellipse": [
+     304,
+     128
+    ],
+    "skew": 0.531,
+    "at": [
+     768,
+     462
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-walk": {
+    "file": "ulysses-walk-shadow.png",
+    "size": [
+     203,
+     70
+    ],
+    "anchor": [
+     46.3,
+     35.0
+    ],
+    "footSpanPx": 101,
+    "ellipse": [
+     157,
+     66
+    ],
+    "skew": 0.021,
+    "at": [
+     640,
+     480
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      638.0,
+      427.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   }
+  }
+ },
+ "shore": {
+  "lane": "shore",
+  "law": {
+   "widthK": 1.55,
+   "aspect": 0.42,
+   "peakAlpha": 0.62
+  },
+  "shadows": {
+   "crew-a-stand": {
+    "file": "crew-a-stand-shadow.png",
+    "size": [
+     407,
+     130
+    ],
+    "anchor": [
+     201.9,
+     65.0
+    ],
+    "footSpanPx": 194,
+    "ellipse": [
+     301,
+     126
+    ],
+    "skew": 0.093,
+    "at": [
+     445,
+     507
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      438.0,
+      466.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "crew-b-stand": {
+    "file": "crew-b-stand-shadow.png",
+    "size": [
+     423,
+     135
+    ],
+    "anchor": [
+     214.6,
+     67.5
+    ],
+    "footSpanPx": 202,
+    "ellipse": [
+     313,
+     131
+    ],
+    "skew": 0.093,
+    "at": [
+     445,
+     507
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      438.0,
+      466.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "crew-carry": {
+    "file": "crew-carry-shadow.png",
+    "size": [
+     1567,
+     387
+    ],
+    "anchor": [
+     895.1,
+     193.5
+    ],
+    "footSpanPx": 588,
+    "ellipse": [
+     911,
+     383
+    ],
+    "skew": 0.526,
+    "at": [
+     560,
+     503
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      438.0,
+      466.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-offer": {
+    "file": "ulysses-offer-shadow.png",
+    "size": [
+     173,
+     46
+    ],
+    "anchor": [
+     91.9,
+     23.0
+    ],
+    "footSpanPx": 65,
+    "ellipse": [
+     101,
+     42
+    ],
+    "skew": 0.526,
+    "at": [
+     560,
+     503
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      438.0,
+      466.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-stand": {
+    "file": "ulysses-stand-shadow.png",
+    "size": [
+     166,
+     45
+    ],
+    "anchor": [
+     88.4,
+     22.5
+    ],
+    "footSpanPx": 63,
+    "ellipse": [
+     98,
+     41
+    ],
+    "skew": -0.528,
+    "at": [
+     390,
+     480
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      438.0,
+      466.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-walk": {
+    "file": "ulysses-walk-shadow.png",
+    "size": [
+     269,
+     70
+    ],
+    "anchor": [
+     79.3,
+     35.0
+    ],
+    "footSpanPx": 101,
+    "ellipse": [
+     157,
+     66
+    ],
+    "skew": 0.517,
+    "at": [
+     510,
+     492
+    ],
+    "light": {
+     "id": "fire",
+     "at": [
+      438.0,
+      466.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   }
+  }
+ },
+ "sea": {
+  "lane": "sea",
+  "law": {
+   "widthK": 1.55,
+   "aspect": 0.42,
+   "peakAlpha": 0.62
+  },
+  "shadows": {
+   "crew-row": {
+    "file": "crew-row-shadow.png",
+    "size": [
+     241,
+     72
+    ],
+    "anchor": [
+     135.2,
+     36.0
+    ],
+    "footSpanPx": 105,
+    "ellipse": [
+     163,
+     68
+    ],
+    "skew": 0.256,
+    "at": [
+     586,
+     455
+    ],
+    "light": {
+     "id": "moon",
+     "at": [
+      474.0,
+      242.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-curse": {
+    "file": "polyphemus-curse-shadow.png",
+    "size": [
+     1162,
+     285
+    ],
+    "anchor": [
+     752.3,
+     142.5
+    ],
+    "footSpanPx": 431,
+    "ellipse": [
+     668,
+     281
+    ],
+    "skew": 0.548,
+    "at": [
+     860,
+     210
+    ],
+    "light": {
+     "id": "moon",
+     "at": [
+      474.0,
+      242.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-hurl": {
+    "file": "polyphemus-hurl-shadow.png",
+    "size": [
+     1506,
+     368
+    ],
+    "anchor": [
+     397.5,
+     184.0
+    ],
+    "footSpanPx": 559,
+    "ellipse": [
+     866,
+     364
+    ],
+    "skew": 0.548,
+    "at": [
+     860,
+     210
+    ],
+    "light": {
+     "id": "moon",
+     "at": [
+      474.0,
+      242.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "polyphemus-stand": {
+    "file": "polyphemus-stand-shadow.png",
+    "size": [
+     1158,
+     284
+    ],
+    "anchor": [
+     851.6,
+     142.0
+    ],
+    "footSpanPx": 430,
+    "ellipse": [
+     666,
+     280
+    ],
+    "skew": 0.548,
+    "at": [
+     860,
+     210
+    ],
+    "light": {
+     "id": "moon",
+     "at": [
+      474.0,
+      242.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-stand": {
+    "file": "ulysses-stand-shadow.png",
+    "size": [
+     134,
+     45
+    ],
+    "anchor": [
+     72.4,
+     22.5
+    ],
+    "footSpanPx": 63,
+    "ellipse": [
+     98,
+     41
+    ],
+    "skew": 0.128,
+    "at": [
+     518,
+     426
+    ],
+    "light": {
+     "id": "moon",
+     "at": [
+      474.0,
+      242.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   },
+   "ulysses-taunt": {
+    "file": "ulysses-taunt-shadow.png",
+    "size": [
+     117,
+     40
+    ],
+    "anchor": [
+     60.8,
+     20.0
+    ],
+    "footSpanPx": 55,
+    "ellipse": [
+     85,
+     36
+    ],
+    "skew": 0.128,
+    "at": [
+     518,
+     426
+    ],
+    "light": {
+     "id": "moon",
+     "at": [
+      474.0,
+      242.0
+     ]
+    },
+    "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+    "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+   }
+  }
+ }
+};

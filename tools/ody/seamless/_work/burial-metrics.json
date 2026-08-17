@@ -1,0 +1,19 @@
+{
+ "T1 meal clutch (ii-10/iii-01/iii-07)": {
+  "polyphemus-clutch#0": 417,
+  "polyphemus-clutch#0~rows": "y413..448"
+ },
+ "T2 plea+scheme, RESTAGED +12px off the ring band (ii-06/iii-03)": {},
+ "T3 the laden entry file (ii-00/01)": {
+  "crew-carry#0": 33,
+  "crew-carry#0~rows": "y500..502",
+  "crew-carry#1": 289,
+  "crew-carry#1~rows": "y500..515"
+ },
+ "T4 shore camp (i-02/03)": {
+  "crew-b-stand#2": 1,
+  "crew-b-stand#2~rows": "y463..463",
+  "crew-a-stand#3": 5,
+  "crew-a-stand#3~rows": "y467..469"
+ }
+}

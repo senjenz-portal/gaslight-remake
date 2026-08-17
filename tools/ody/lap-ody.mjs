@@ -36,6 +36,7 @@
  */
 import { chromium } from 'playwright';
 import { createServer } from 'node:http';
+import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { decodePng, pixelDiff } from '../png.mjs';
@@ -82,6 +83,19 @@ const LEDGER = JSON.parse(fs.readFileSync(path.join(HERE, 'ledger.json'), 'utf8'
  * alpha, and the sha256 of the file as shipped. The lap asserts the served
  * bytes ARE the registry's (the identity gate). */
 const STRIPS = JSON.parse(fs.readFileSync(path.join(HERE, 'strips.json'), 'utf8'));
+/* tools/ody/regrade.json — the GRADED-CUT registry (Explorer B adopted,
+ * tools/ody/seamless/explore-regrade.md, baked by bake_regrade.py): one
+ * per-set colour-graded variant per actor cut, graded at BUILD time against
+ * the plate ring at the mark the cut mostly plays on. The lap asserts (a)
+ * the served graded AND source bytes are the bake's (sha256 — a re-grade
+ * against different sources is a registry about different files), (b) the
+ * mounted sets actually LOAD the graded variants, and (c) the temperature
+ * law at the six settle entries: actor-vs-plate-ring dE <= 9 (CIE Lab of
+ * the mean colours, the report's own thermometer — its four afters ran
+ * 4.9..9.1, mean 6.7, so 9 catches a regression without hugging the data). */
+const REGRADE = JSON.parse(fs.readFileSync(path.join(HERE, 'regrade.json'), 'utf8'));
+const REGRADE_DE_MAX = 9;
+const REGRADE_SETTLES = 6;
 
 function contentUnits() {
   const md = fs.readFileSync(path.join(ROOT, 'CONTENT-odyssey.md'), 'utf8');
@@ -153,9 +167,17 @@ const EYE_SPECK_FRAC = 0.15;       // a second cluster under this is jpeg speckl
 const INSET_UP_MIN = 0.9;
 const INSET_DARK_MIN = 0.10;       // fraction of the card's core, luma < 70
 const INSET_SD_MIN = 22;
-/* [O.3] the racks: pale cheese pixels inside the ledger's rack boxes, at the
- * racks-sweep lens. An empty rack (or a lens off the racks) fails. */
-const CHEESE_PX_MIN = 400;         // device px, dpr 2, across racks A..C
+/* [O.3] the racks: CHEESE pixels inside the ledger's rack boxes, at the
+ * racks-sweep lens. An empty rack (or a lens off the racks) fails.
+ * RECALIBRATED (round-7 placement lap): the plate's own wheels are GOLDEN —
+ * saturated orange-yellow — and the old desaturated-pale class counted 0/13/0
+ * plate px in racks A/B/C of cave-dawn.jpg's own bytes; what it had been
+ * counting was the old carry formation's pale timber loads standing IN the
+ * rack boxes (the audit-#8 wall the restage removed). The class is now the
+ * cheese's own: luma >= 110, hue 15..60, sat 0.2..0.9 — 6494 plate px across
+ * A..C measured off the shipped plate; the floor is half the worst rack's
+ * device-scaled share. */
+const CHEESE_PX_MIN = 3000;        // device px, dpr 2, across racks A..C
 /* [O.4] the mouth: the boulder is a PAINTED STATE SWAP (the lane shipped it
  * in both positions), so the aperture's own pixels must CHANGE hard between
  * open and shut — measured 29.4 open vs 64.7 shut on the shipped plates (the
@@ -200,7 +222,9 @@ const POUR_CUES_MIN = 3;           // entry pour + two pantomime refills
  * sprawl right of the fire, head toward it), and asserted at BOTH the auger
  * AND the bore CLOCK TICKS: the round-2 gate sampled once and missed the
  * auger-tick miss. */
-const EYE = [672, 512];            // cave.js's own drive anchor (E2 restage)
+const EYE = [676, 495];            // cave.js's own drive anchor — the honest-
+                                   // length sprawl's eye (round-7 placement
+                                   // audit #5: the same cut point at h 104)
 const TIP_TOL = 5;                 // px of pin error allowed
 const EYE_BOX = 20;                // "inside the eye box" half-size
 const DRIVE_TICKS = { auger: 4.2, bore: 7.4 };   // cave.js DRIVE, verbatim
@@ -222,10 +246,76 @@ const SPLASH_PALE_MIN = 200;       // device px of plume at rock 2's wash
  * is per-line vertical bands (the ledger's own band numbers + jitter slack);
  * sea is the ledger's marks verbatim (the whole world scales together). */
 const FEET_SLACK = 8;
-/* [parking] foot strictly inside a registered painted obstacle = violation;
- * the sprawl's own clearance law is the ledger's >= 10 px, read off the
- * snapshot the set re-measures every frame. */
-const SPRAWL_CLEAR_MIN = 10;
+/* [parking] foot strictly inside a registered painted obstacle = violation.
+ * ROUND-7 EXTENSION (placement audit, 2026-08-16): the obstacle census now
+ * carries the paint the audit caught actors standing ON — the cave BED and
+ * its logsRight pile (#1: the whole huddle stood inside the bed box), the
+ * fire ring + its NW rim spill (#2/#13), the second log bundle (#3), the
+ * tub and clay bowl boxes (#10), and on the shore the camp ring (#16), the
+ * day goat (day state only, #11), the stern curl's mass (#11) and ship-1's
+ * painted oar blades (#15). Walking feet are exempt (mid-stride is not a
+ * settle — the hearth-detour law owns the route); every box is the
+ * ledger's own. THE SPRAWL's law is AMENDED with its honest length (#5):
+ * SUPPORT + OCCLUSION — the set re-measures every frame that the baseline
+ * rests on open floor (no overlapped obstacle bottoms within 8 px of it)
+ * and reports ok/violations; the old blanket >= 10 px X-clearance is
+ * impossible for a 301 px body on this floor and was only ever a proxy
+ * for this law. */
+const SPRAWL_CLEAR_MIN = 10;       // kept for the report's clear{} numbers
+/* [perspective] THE PERSPECTIVE GATE (round-7 placement audit): at every
+ * settled sample, an actor's DRAWN height sits within 12% of the
+ * plate-implied scale at his own floor point. The implied px/m table is
+ * the audit's own: shore mainland lobe 19.5 (four pen sheep 18.1-21.0,
+ * apron sheep 19.0, fence rails 20.0, wall courses 20.0 — audit #4 table),
+ * shore beach 11.3 (the ledger's ship), cave 43 everywhere (the ledger's
+ * ewes; the projection is declared isometric — the front-pen ewe's 47.6
+ * downstage is the audit's logged borderline, not law). Set to fail the
+ * defects the gate exists for: the -40% mainland party (#4), the -32%
+ * sprawl (#5 — measured on the box LENGTH against the giant's own 7 m),
+ * the 1.8-2.3x rams (#9). The great ram is licensed anomalous by name
+ * (ledger 100-110 px spec); leaning/braced poses (the 66 px drive crouch)
+ * and mid-stride actors are not standing heights and are exempt. Sea is
+ * the audit's own "checks out" (rowers/U/giant honest to the hull) and
+ * rides its marks-verbatim law. */
+const PERSP_TOL = 0.12;
+const PERSP_SLACK = 1.5;           // px of bob/rot AABB + rounding slack
+const PERSP = {
+  shoreLobe: { pxPerM: 19.5, inZone: (x, y) => x >= 900 && y <= 380 },
+  shoreBeach: { pxPerM: 11.3 },
+  cave: { pxPerM: 43 },
+  realM: { ulysses: 1.75, crew: 1.70, giant: 7.0, ramStock: 0.58 },
+};
+/* [grounding] EXPLORER C (tools/ody/seamless/explore-grounding.md): every
+ * SETTLED principal stands on a CONTACT SHADOW — a node under the actor
+ * group (the chase.js law: the body over its own shadow) whose drawn box
+ * holds the foot mark and whose opacity is the chase depth law
+ *     (0.42 + 0.30 * s) * actorOp
+ * (s self-reported per shadow; a settled principal's op is >= 0.5, so the
+ * floor below is the law at half strength and the ceiling is the law's own
+ * maximum). The registries are the tool's: app/shadows.js must deep-equal
+ * the three shadowmap.json files and every served PNG must be the
+ * generator's own bytes — the strips identity pattern. The OCCLUDERS are
+ * the pews-front law: at its tableau each adopted cut paints ABOVE the
+ * actor it seats (DOM index inside the sorted group), at the origin/ground
+ * occluders.json wrote. The report REFUSED the pen rail and the sea
+ * gunwale by measurement — no gate may want them. */
+const SHADOW_FOOT_SLACK = 1.5;     // px of box slack around the foot mark
+const SHADOW_OP_CEIL = 0.421 + 0.301;         // the law's own maximum + ε
+const SEAM = path.join(HERE, 'seamless');
+const SHADOWMAPS = Object.fromEntries(['cave', 'shore', 'sea'].map((l) => [l,
+  JSON.parse(fs.readFileSync(path.join(SEAM, 'shadows', l, 'shadowmap.json'), 'utf8'))]));
+const OCC_JSON = JSON.parse(
+  fs.readFileSync(path.join(SEAM, 'occluders', 'occluders.json'), 'utf8'));
+/* the downstage restage (report T2): the ledger's plea/scheme marks sat ON
+ * the fire ring's painted stone band (y 467..503 inside x 527..733) — the
+ * grounding report's own failure #4, "RESTAGE, don't occlude". The set
+ * declares its drawn (swept) marks in grounding.swept; the law is that
+ * Ulysses SETTLES on them and that they are CLEAR of the band: past its
+ * local ground (y > 503) or outside the ring box altogether. (The report
+ * asked +12 px; the placement lane's own audit swept further — the gate
+ * holds the LAW, not the increment.) */
+const RING_BAND = { x: [527, 733], groundY: 503 };
+const SWEPT_TOL = 2;
 /* [idle] MICRO-IDLE (the sherlock King law, room.js stepKing, ported): a
  * SETTLED principal breathes — translateY(0.7*br for a man / 0.8 for the
  * giant), rotate(<= 0.3 deg), scaleY(1 +/- 0.0035; the sea giant 0.006; the
@@ -288,13 +378,40 @@ const OBSTACLES = (() => {
   const box2 = (b) => [b[0][0], b[0][1], b[1][0], b[1][1]];
   o.cave.push({ name: 'mainPen', box: box2(CAVE_OBJ.mainPen) });
   o.cave.push({ name: 'frontPen', box: box2(CAVE_OBJ.frontPen) });
-  o.cave.push({ name: 'woodpile', box: box2(CAVE_OBJ.firewood) });
+  /* THE WOODPILE IS OCCLUDED (Explorer C, the pews-front law): its crown
+     ships as a pixel-exact restore painter-sorted at ground y 550, so a
+     settled foot in the box UPSTAGE of that line is a man walking BEHIND
+     the pile — the grounding report's ADOPTED entry-file tableau (289 px of
+     measured foot/ankle burial, "reads as walking upstage of the pile,
+     exactly the painting's depth"). The obstacle is the band ON the pile's
+     own front: feet at or past its ground line. The head2 [occluder] gate
+     asserts the restore actually paints over those upstage feet. */
+  o.cave.push({ name: 'woodpile',
+                box: [CAVE_OBJ.firewood[0][0], 550,
+                      CAVE_OBJ.firewood[1][0], CAVE_OBJ.firewood[1][1]] });
   /* the two wall lamps, as thin columns (the chase-lamp pattern) */
   o.cave.push({ name: 'lampL', box: [238, 320, 258, 396] });
   o.cave.push({ name: 'lampR', box: [1250, 335, 1270, 411] });
   /* boulder-shut: the mouth aperture IS the stone while a shut-family state
      is up — a foot inside it is a man standing in the boulder */
   o.cave.push({ name: 'boulder-shut', box: box2(CAVE_OBJ.mouthAperture), whenShut: true });
+  /* ROUND-7 CENSUS (placement audit): the paint the audit caught feet ON —
+     every box the ledger's own. THE BED (#1) above all: the huddle stood
+     inside it for four units of Beat II/III. */
+  o.cave.push({ name: 'bed', box: box2(CAVE_OBJ.bed) });
+  o.cave.push({ name: 'logsRight', box: box2(CAVE_OBJ.logsRight) });
+  o.cave.push({ name: 'fireRing', box: box2(CAVE_OBJ.fireRing.outer) });
+  o.cave.push({ name: 'fireRimNW', box: box2(CAVE_OBJ.fireRing.rimNW) });
+  o.cave.push({ name: 'logBundle', box: box2(CAVE_OBJ.logBundle) });
+  o.cave.push({ name: 'milkTub', box: box2(CAVE_OBJ.milkTub) });
+  o.cave.push({ name: 'clayBowl', box: box2(CAVE_OBJ.clayBowl) });
+  /* …and the shore's (#11/#15/#16): the day goat stands only on the day
+     plate, so its box gates day frames alone */
+  const SHORE_OBJ = LEDGER.sets.shore.objects;
+  o.shore.push({ name: 'campfireRing', box: box2(SHORE_OBJ.campfireRing) });
+  o.shore.push({ name: 'dayGoat', box: box2(SHORE_OBJ.dayGoat), whenDay: true });
+  o.shore.push({ name: 'sternCurl', box: box2(SHORE_OBJ.sternCurlMass) });
+  o.shore.push({ name: 'ship1Oars', box: box2(SHORE_OBJ.ship1Oars) });
   o.sea.push({ name: 'clifftopBoulders',
                box: box2(LEDGER.sets.sea.objects.clifftopBoulders) });
   return o;
@@ -332,6 +449,29 @@ function lumaStats(f, r) {
 }
 /** pale, desaturated pixels (smoke, splash plume, cheese rounds share the
  *  signature; each caller sets its own luma floor) */
+/** the cheese wheels' own class (O.3 recalibration — see CHEESE_PX_MIN):
+ *  bright, warm-hued, saturated — the plate's golden rounds, not the wood */
+function goldenCount(f, r) {
+  let n = 0;
+  const x1 = Math.max(0, Math.round(r.x)), y1 = Math.max(0, Math.round(r.y));
+  const x2 = Math.min(f.width, Math.round(r.x + r.w));
+  const y2 = Math.min(f.height, Math.round(r.y + r.h));
+  for (let y = y1; y < y2; y++) for (let x = x1; x < x2; x++) {
+    const [R, G, B] = pxAt(f, x, y);
+    const mx = Math.max(R, G, B), mn = Math.min(R, G, B), d = mx - mn;
+    if (lum([R, G, B]) < 110) continue;
+    const s = mx ? d / mx : 0;
+    if (s < 0.2 || s > 0.9) continue;
+    let h = 0;
+    if (d > 0) {
+      h = mx === R ? (((G - B) / d) % 6 + 6) % 6
+        : mx === G ? (B - R) / d + 2 : (R - G) / d + 4;
+      h *= 60;
+    }
+    if (h >= 15 && h <= 60) n++;
+  }
+  return n;
+}
 function paleCount(f, r, lmin, satMax = 0.30) {
   let n = 0;
   const x1 = Math.max(0, Math.round(r.x)), y1 = Math.max(0, Math.round(r.y));
@@ -516,6 +656,198 @@ async function main() {
     }
   }
 
+  /* ---- [grounding] identity: the shadows and occluders ARE the tool's ---- *
+   * app/shadows.js must deep-equal the three shadowmap.json files (the
+   * strips pattern: the sets read anchors/sizes from the shipped module, so
+   * drift means every placement is a number about a different PNG), and
+   * every served shadow/occluder bitmap must byte-equal the generator's own
+   * output (shadowgen.py / cutocc.py are deterministic — same inputs, same
+   * bytes). */
+  {
+    const res = await page.request.get(new URL('./app/shadows.js', URL_).toString());
+    if (!res.ok()) {
+      bad(`[grounding] app/shadows.js (the shipped shadow registry) did not load (${res.status()})`);
+    } else {
+      const m = /export const SHADOWS =\n([\s\S]*?);\s*$/.exec(await res.text());
+      let shipped = null;
+      try { shipped = m && JSON.parse(m[1]); } catch (_) { /* bad below */ }
+      if (!shipped) {
+        bad('[grounding] app/shadows.js does not carry a parseable SHADOWS registry');
+      } else if (JSON.stringify(shipped) !== JSON.stringify(SHADOWMAPS)) {
+        bad('[grounding] the SHIPPED shadow registry has drifted off the three ' +
+            'tools/ody/seamless/shadows/*/shadowmap.json files');
+      } else {
+        note('[grounding] the shipped shadow registry deep-equals the generator\'s ' +
+             `own shadowmap.json x3 (${Object.entries(SHADOWMAPS)
+               .map(([l, m2]) => `${l} ${Object.keys(m2.shadows).length}`).join(', ')} cuts)`);
+      }
+    }
+    let bytesOK = 0, bytesN = 0;
+    for (const [lane, m2] of Object.entries(SHADOWMAPS)) {
+      for (const rec of Object.values(m2.shadows)) {
+        bytesN++;
+        const r = await page.request.get(
+          new URL(`./assets/actor/shadow/${lane}/${rec.file}`, URL_).toString());
+        if (!r.ok()) { bad(`[grounding] shadow ${lane}/${rec.file} did not load (${r.status()})`); continue; }
+        const want = fs.readFileSync(path.join(SEAM, 'shadows', lane, rec.file));
+        if (!want.equals(await r.body())) {
+          bad(`[grounding] shadow ${lane}/${rec.file} is NOT the generator's bytes`);
+        } else bytesOK++;
+      }
+    }
+    for (const [f, meta] of Object.entries(OCC_JSON)) {
+      bytesN++;
+      const lane = f.startsWith('firepit') ? 'shore' : 'cave';
+      const r = await page.request.get(
+        new URL(`./assets/set/${lane}/${f}`, URL_).toString());
+      if (!r.ok()) { bad(`[grounding] occluder ${lane}/${f} did not load (${r.status()})`); continue; }
+      const want = fs.readFileSync(path.join(SEAM, 'occluders', f));
+      if (!want.equals(await r.body())) {
+        bad(`[grounding] occluder ${lane}/${f} is NOT cutocc.py's bytes ` +
+            `(origin ${meta.origin}, ground ${meta.ground})`);
+      } else bytesOK++;
+    }
+    if (bytesOK === bytesN) {
+      note(`[grounding] identity: ${bytesOK}/${bytesN} served shadow/occluder ` +
+           'bitmaps byte-equal the tool\'s own output');
+    }
+  }
+
+  /* ---- [regrade] identity + the six-settle temperature law --------------- *
+   * (Explorer B adopted — see the REGRADE header above.) Identity first: the
+   * served graded bytes must be the bake's, AND the served raw sources must
+   * be the bytes the bake graded — either drift makes every number in the
+   * registry a number about different files. Then the law itself, measured
+   * off the served bytes in the page (canvas decode, the same pixels the
+   * reader is shown): at each of the SIX settle entries, the graded cut's
+   * mean colour vs the plate ring at its mark (annulus 0.45h..1.10h,
+   * 5..95% luminance-trimmed in Reinhard lαβ — regrade.py's own sampler,
+   * ported verbatim) must sit within REGRADE_DE_MAX CIE-Lab dE. */
+  {
+    const entries = Object.entries(REGRADE.entries || {});
+    if (!entries.length) bad('[regrade] tools/ody/regrade.json carries no entries');
+    let idOK = 0;
+    for (const [key, e] of entries) {
+      const pair = [['graded', e.graded, e.gradedSha256],
+                    ['source', e.source, e.sourceSha256]];
+      let ok = true;
+      for (const [kind, rel, want] of pair) {
+        const res = await page.request.get(new URL('./' + rel, URL_).toString());
+        if (!res.ok()) { bad(`[regrade] ${key}: ${rel} did not load (${res.status()})`); ok = false; continue; }
+        const sha = createHash('sha256').update(await res.body()).digest('hex');
+        if (sha !== want) {
+          bad(`[regrade] ${key}: the served ${kind} (${rel}) is NOT the bake's ` +
+              `(sha ${sha.slice(0, 12)}… != registry ${String(want).slice(0, 12)}…)`);
+          ok = false;
+        }
+      }
+      if (ok) idOK++;
+    }
+    if (idOK === entries.length) {
+      note(`[regrade] identity: ${idOK}/${entries.length} graded variants match the ` +
+           `bake registry, sources unmoved`);
+    }
+    const settles = (REGRADE.gate && REGRADE.gate.settles) || [];
+    if (settles.length !== REGRADE_SETTLES) {
+      bad(`[regrade] the registry names ${settles.length} settle entries — the law ` +
+          `is ${REGRADE_SETTLES} representative settles`);
+    }
+    for (const key of settles) {
+      const e = REGRADE.entries[key];
+      if (!e) { bad(`[regrade] settle '${key}' has no registry entry`); continue; }
+      const m = await page.evaluate(async ({ plate, graded, mark, hPx }) => {
+        const load = (u) => new Promise((ok, err) => {
+          const im = new Image();
+          im.onload = () => ok(im);
+          im.onerror = () => err(new Error('did not load: ' + u));
+          im.src = u;
+        });
+        const pix = (im) => {
+          const c = document.createElement('canvas');
+          c.width = im.naturalWidth; c.height = im.naturalHeight;
+          const g = c.getContext('2d', { willReadFrequently: true });
+          g.drawImage(im, 0, 0);
+          return { d: g.getImageData(0, 0, c.width, c.height).data,
+                   w: c.width, h: c.height };
+        };
+        const P = pix(await load(plate)), G = pix(await load(graded));
+        const lin = (v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+        /* Reinhard lαβ luminance (the trim's ruler), regrade.py verbatim */
+        const rl = (R, Gr, B) => {
+          const r = lin(R), g = lin(Gr), b = lin(B);
+          const L = Math.max(1e-6, 0.3811 * r + 0.5783 * g + 0.0402 * b);
+          const M = Math.max(1e-6, 0.1967 * r + 0.7244 * g + 0.0782 * b);
+          const S = Math.max(1e-6, 0.0241 * r + 0.1288 * g + 0.8444 * b);
+          return (Math.log10(L) + Math.log10(M) + Math.log10(S)) / Math.sqrt(3);
+        };
+        /* the plate ring: annulus at the mark, trimmed 5..95% by rl */
+        const rIn = Math.max(10, 0.45 * hPx), rOut = Math.max(26, 1.10 * hPx);
+        const ring = [];
+        const y0 = Math.max(0, Math.floor(mark[1] - rOut)),
+              y1 = Math.min(P.h - 1, Math.ceil(mark[1] + rOut));
+        const x0 = Math.max(0, Math.floor(mark[0] - rOut)),
+              x1 = Math.min(P.w - 1, Math.ceil(mark[0] + rOut));
+        for (let y = y0; y <= y1; y++) {
+          for (let x = x0; x <= x1; x++) {
+            const d2 = (x - mark[0]) ** 2 + (y - mark[1]) ** 2;
+            if (d2 < rIn * rIn || d2 > rOut * rOut) continue;
+            const i = (y * P.w + x) * 4;
+            ring.push([P.d[i], P.d[i + 1], P.d[i + 2], rl(P.d[i], P.d[i + 1], P.d[i + 2])]);
+          }
+        }
+        const ls = ring.map((p) => p[3]).sort((a, b) => a - b);
+        const pct = (q) => {           // numpy linear-interpolated percentile
+          const t = (ls.length - 1) * q, f = Math.floor(t);
+          return ls[f] + (ls[Math.min(f + 1, ls.length - 1)] - ls[f]) * (t - f);
+        };
+        const lo = pct(0.05), hi = pct(0.95);
+        let rs = [0, 0, 0], rn = 0;
+        for (const p of ring) if (p[3] >= lo && p[3] <= hi) {
+          rs[0] += p[0]; rs[1] += p[1]; rs[2] += p[2]; rn++;
+        }
+        /* the graded cut: mean colour over solid (alpha > 0.5) pixels */
+        let cs = [0, 0, 0], cn = 0;
+        for (let i = 0; i < G.d.length; i += 4) {
+          if (G.d[i + 3] <= 127) continue;
+          cs[0] += G.d[i]; cs[1] += G.d[i + 1]; cs[2] += G.d[i + 2]; cn++;
+        }
+        const lab = ([R, Gr, B]) => {   // CIE Lab (D65) of a mean sRGB colour
+          const r = lin(R), g = lin(Gr), b = lin(B);
+          const X = 0.4124564 * r + 0.3575761 * g + 0.1804375 * b;
+          const Y = 0.2126729 * r + 0.7151522 * g + 0.0721750 * b;
+          const Z = 0.0193339 * r + 0.1191920 * g + 0.9503041 * b;
+          const wp = [0.95047, 1.0, 1.08883];
+          const f = (t) => t > (6 / 29) ** 3 ? Math.cbrt(t) : t / (3 * (6 / 29) ** 2) + 4 / 29;
+          const [fx, fy, fz] = [X / wp[0], Y / wp[1], Z / wp[2]].map(f);
+          return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
+        };
+        const rm = rs.map((v) => v / Math.max(1, rn)),
+              cm = cs.map((v) => v / Math.max(1, cn));
+        const la = lab(rm), lb = lab(cm);
+        return { de: +Math.hypot(la[0] - lb[0], la[1] - lb[1], la[2] - lb[2]).toFixed(2),
+                 ringN: rn, cutN: cn,
+                 ring: rm.map((v) => +v.toFixed(1)), cut: cm.map((v) => +v.toFixed(1)) };
+      }, { plate: new URL('./' + e.plate, URL_).toString(),
+           graded: new URL('./' + e.graded, URL_).toString(),
+           mark: e.mark, hPx: e.hPx }).catch((err) => {
+        bad(`[regrade] ${key} settle could not be measured: ${err.message}`); return null;
+      });
+      if (!m) continue;
+      if (!(m.ringN > 500 && m.cutN > 100)) {
+        bad(`[regrade] ${e.settle} (${key}): too few pixels to judge ` +
+            `(ring ${m.ringN}, cut ${m.cutN})`);
+      } else if (m.de > REGRADE_DE_MAX) {
+        bad(`[regrade] ${e.settle} (${key}): actor-vs-ring dE ${m.de} breaks the ` +
+            `law (<= ${REGRADE_DE_MAX}; bake said ${e.deltaE.after}, raw was ` +
+            `${e.deltaE.before})`);
+      } else {
+        note(`[regrade] ${e.settle} (${key}): dE ${m.de} <= ${REGRADE_DE_MAX} ` +
+             `(bake ${e.deltaE.after}, raw ${e.deltaE.before}; ring n=${m.ringN} ` +
+             `on ${e.state})`);
+      }
+    }
+  }
+
   /* ---- the evidence the read collects ----------------------------------- */
   const seen = [];
   const beatsSeen = {};
@@ -526,6 +858,9 @@ async function main() {
   const feetBad = [];
   const parkBad = [];
   let feetSamples = 0, parkSamples = 0;
+  const shadowBad = [];
+  const occBad = [];
+  let shadowSamples = 0;
   /* THE INSET LAW (CONTENT §2/§6): the chapter mints exactly ONE inset, it
      rises on `misgave`, and "the completing click drops the plate". A plate
      that is still up on any later unit owns a frame it was never granted —
@@ -601,6 +936,108 @@ async function main() {
     }
   };
 
+  /* ---- [shadow] every settled principal stands on a contact shadow ------- *
+   * Sampled on the same settled frames as [feet]: the set's grounding block
+   * must hold, for each settled foot, a live shadow whose drawn box holds
+   * the foot mark, at the chase depth-opacity law, painted in a group UNDER
+   * the actors. */
+  const shadowCheck = (u, sn, list) => {
+    const g = sn.grounding;
+    if (!g) {
+      shadowBad.push(`${u.key}: the ${sn.set} snapshot carries no grounding block`);
+      return;
+    }
+    if (g.under !== true) {
+      shadowBad.push(`${u.key}: the shadow group is NOT painted under the actor group`);
+    }
+    for (const f of list) {
+      shadowSamples++;
+      /* a pose CROSSFADE splits one principal over two shadow nodes on one
+         mark (the sea stand/taunt swap, the giant's three poses) — the
+         principal's shadow is their SUM, judged on the strongest node's box */
+      const parts = (g.shadows || []).filter((s2) => s2.id === f.id && s2.op > 0.01);
+      if (!parts.length) {
+        shadowBad.push(`${u.key}: settled ${f.id} has NO live contact shadow ` +
+                       `underfoot (foot ${f.x.toFixed(0)},${f.y.toFixed(0)})`);
+        continue;
+      }
+      const sh = parts.reduce((a, b2) => (b2.op > a.op ? b2 : a));
+      const op = Math.min(1, parts.reduce((n, p) => n + p.op, 0));
+      if (!(op > 0.05)) {
+        shadowBad.push(`${u.key}: settled ${f.id}'s contact shadow is dark (op ${op})`);
+        continue;
+      }
+      const b = sh.box || [0, 0, 0, 0];
+      if (!(f.x >= b[0] - SHADOW_FOOT_SLACK && f.x <= b[0] + b[2] + SHADOW_FOOT_SLACK &&
+            f.y >= b[1] - SHADOW_FOOT_SLACK && f.y <= b[1] + b[3] + SHADOW_FOOT_SLACK)) {
+        shadowBad.push(`${u.key}: ${f.id}'s shadow box [${b.join(',')}] does not ` +
+                       `hold its foot (${f.x.toFixed(0)},${f.y.toFixed(0)})`);
+      }
+      const law = 0.42 + 0.30 * sh.s;
+      if (!(op >= law * 0.5 - 0.01 && op <= SHADOW_OP_CEIL)) {
+        shadowBad.push(`${u.key}: ${f.id}'s shadow opacity ${+op.toFixed(3)} is off the ` +
+                       `chase law (0.42 + 0.30*${sh.s} = ${law.toFixed(3)} x actorOp)`);
+      }
+    }
+  };
+
+  /* ---- [perspective] drawn height vs the plate-implied scale ------------ *
+   * (round-7 placement audit — the PERSP table's provenance block.) Runs on
+   * the same settled samples as [feet]/[parking]; boxes are the sets'
+   * transform-free drawn boxes, so the check is |drawnH - implied*realM|
+   * <= 12% + slack. Exempt by nature: mid-stride actors, braced/leaning
+   * poses (the drive crouch), seated giants, the licensed great ram. */
+  const perspBad = [];
+  let perspSamples = 0;
+  const perspJudge = (u, who, drawn, want) => {
+    perspSamples++;
+    if (Math.abs(drawn - want) > PERSP_TOL * want + PERSP_SLACK) {
+      perspBad.push(`${u.key}: ${who} draws ${drawn.toFixed(1)} px against the ` +
+                    `plate-implied ${want.toFixed(1)} px at his floor point ` +
+                    `(${((drawn / want - 1) * 100).toFixed(0)}%; law ±${PERSP_TOL * 100}%)`);
+    }
+  };
+  const perspCave = (u, sn) => {
+    const k = PERSP.cave.pxPerM;
+    const U = sn.cast && sn.cast.ulysses;
+    if (U && U.op > 0.5 && U.box &&
+        ['stand', 'offer', 'sword'].includes(U.kind)) {
+      perspJudge(u, 'ulysses', U.box[3], PERSP.realM.ulysses * k);
+    }
+    ((sn.cast && sn.cast.crew) || []).forEach((c, i) => {
+      if (c.op > 0.5 && !c.walking && c.box) {
+        perspJudge(u, 'crew' + i, c.box[3], PERSP.realM.crew * k);
+      }
+    });
+    /* the sprawled giant: the LENGTH is the standing law lying down (#5) */
+    if (sn.sprawl && sn.sprawl.box) {
+      perspJudge(u, 'giant (sprawl length)', sn.sprawl.box[2],
+                 PERSP.realM.giant * k);
+    }
+    /* the ram stream's stock law (#9): the lashed pairs at their settles
+       (the walkers only exist mid-stream; the great ram is licensed) */
+    ((sn.flock && sn.flock.pairs) || []).forEach((p, i) => {
+      if (p.op > 0.5 && p.box) {
+        perspJudge(u, 'ram-pair' + i, p.box[3], PERSP.realM.ramStock * k);
+      }
+    });
+  };
+  const perspShore = (u, sn, all) => {
+    const U = sn.cast && sn.cast.ulysses;
+    const kAt = (x, y) => (PERSP.shoreLobe.inZone(x, y)
+      ? PERSP.shoreLobe.pxPerM : PERSP.shoreBeach.pxPerM);
+    if (U && U.op > 0.5 && !U.moving && U.box) {
+      perspJudge(u, 'ulysses', U.box[3],
+                 PERSP.realM.ulysses * kAt(U.mark[0], U.mark[1]));
+    }
+    ((sn.cast && sn.cast.crew) || []).forEach((c, i) => {
+      if (c.op > 0.5 && !c.moving && c.box) {
+        perspJudge(u, 'crew' + i, c.box[3],
+                   PERSP.realM.crew * kAt(c.mark[0], c.mark[1]));
+      }
+    });
+  };
+
   /* ---- [feet]+[parking], sampled at every settled unit ------------------ */
   const footLaw = async (u, q) => {
     const sn = q.stage || {};
@@ -614,15 +1051,26 @@ async function main() {
       const U = sn.cast.ulysses;
       if (U && U.op > 0.5 && U.kind !== 'walk') feet.push({ who: 'ulysses', x: U.mark[0], y: U.mark[1] });
       (sn.cast.crew || []).forEach((c, i) => {
-        if (c.op > 0.5) feet.push({ who: 'crew' + i, x: c.mark[0], y: c.mark[1] });
+        if (c.op > 0.5) {
+          feet.push({ who: 'crew' + i, x: c.mark[0], y: c.mark[1],
+                      walking: !!c.walking });
+        }
       });
       const G = sn.giant;
       if (G && G.pose && !['away', 'sprawl'].includes(G.pose)) {
-        feet.push({ who: 'giant:' + G.pose, x: G.mark[0], y: G.mark[1], tol: 14 });
+        feet.push({ who: 'giant:' + G.pose, x: G.mark[0], y: G.mark[1], tol: 14,
+                    walking: !!G.walking });
       }
       if (sn.flock && sn.flock.ram && sn.flock.ram.on && sn.flock.ram.at) {
-        feet.push({ who: 'great-ram', x: sn.flock.ram.at[0], y: sn.flock.ram.at[1], tol: 12 });
+        feet.push({ who: 'great-ram', x: sn.flock.ram.at[0], y: sn.flock.ram.at[1],
+                    tol: 12, walking: !!sn.flock.ram.moving });
       }
+      /* the lashed trios (audit #10): their feet are settles too */
+      ((sn.flock && sn.flock.pairs) || []).forEach((p, i) => {
+        if (p.op > 0.5 && p.at) {
+          feet.push({ who: 'ram-pair' + i, x: p.at[0], y: p.at[1], tol: 10 });
+        }
+      });
       for (const f of feet) {
         const down = polyY(FL.cave.downstageEdge.polyline, f.x);
         const upOK = f.x >= 450 && f.x <= 1020;
@@ -633,10 +1081,13 @@ async function main() {
                        `the cave floor region [${up === null ? '—' : up.toFixed(0)}..${down.toFixed(0)}]`);
         }
       }
-      /* THE PARKING LAW, cave: no settled foot inside a registered obstacle */
+      /* THE PARKING LAW, cave: no settled foot inside a registered obstacle
+         (a WALKING foot is mid-stride, not a settle — the detour law owns
+         its route and the next settled sample owns its landing) */
       parkSamples++;
       const shut = sn.caveState && ['shut', 'embers', 'predawn'].includes(sn.caveState.name);
       for (const f of feet) {
+        if (f.walking) continue;
         for (const o of OBSTACLES.cave) {
           if (o.whenShut && !shut) continue;
           if (inBox([f.x, f.y], o.box)) {
@@ -645,14 +1096,31 @@ async function main() {
           }
         }
       }
-      /* the sprawl's own clearance is the ledger's law, re-measured live */
+      /* the sprawl's own law — SUPPORT + OCCLUSION (audit #5), re-measured
+         live by the set: the baseline on open floor, every named violation
+         a defect */
       if (sn.sprawl && sn.sprawl.box) {
-        sprawlLedger.push({ unit: u.key, ...sn.sprawl.clear, ok: sn.sprawl.ok });
+        sprawlLedger.push({ unit: u.key, ...sn.sprawl.clear,
+                            support: sn.sprawl.support, ok: sn.sprawl.ok });
         if (sn.sprawl.ok !== true) {
-          bad(`${u.key}: [parking] the sprawl violates the pen clearances — ` +
-              `${JSON.stringify(sn.sprawl.clear)} (law >= ${SPRAWL_CLEAR_MIN})`);
+          bad(`${u.key}: [parking] the sprawl's baseline is NOT on open floor — ` +
+              `support ${JSON.stringify(sn.sprawl.support)} (the amended law: ` +
+              `every overlapped obstacle bottoms out >= 8 px upstage of the ` +
+              `baseline; clear ${JSON.stringify(sn.sprawl.clear)})`);
         }
       }
+      /* [perspective] the drawn heights vs the plate's own scale (audit) */
+      perspCave(u, sn);
+      /* [shadow] the same settled feet, plus the sprawl (its ground contact
+         IS the body — the report's own reading of that cut) */
+      const shList = feet.map((f) => ({
+        id: f.who.startsWith('giant:') ? 'giant'
+          : f.who.startsWith('ram-pair') ? 'pair' + f.who.slice(8)
+          : f.who, x: f.x, y: f.y }));
+      if (sn.giant && sn.giant.pose === 'sprawl' && sn.giant.mark) {
+        shList.push({ id: 'giant', x: sn.giant.mark[0], y: sn.giant.mark[1] });
+      }
+      shadowCheck(u, sn, shList);
     }
     if (sn.set === 'shore' && sn.cast) {
       const lines = [
@@ -664,7 +1132,10 @@ async function main() {
       const U = sn.cast.ulysses;
       if (U && U.op > 0.5 && !U.moving) all.push({ who: 'ulysses', x: U.mark[0], y: U.mark[1] });
       (sn.cast.crew || []).forEach((c, i) => {
-        if (c.op > 0.5) all.push({ who: 'crew' + i, x: c.mark[0], y: c.mark[1] });
+        if (c.op > 0.5) {
+          all.push({ who: 'crew' + i, x: c.mark[0], y: c.mark[1],
+                     walking: !!c.moving });
+        }
       });
       for (const f of all) {
         let ok = false, nearest = null;
@@ -679,6 +1150,25 @@ async function main() {
                        `${nearest.toFixed(1)} px off every shore floor line (bands+${FEET_SLACK})`);
         }
       }
+      /* THE PARKING LAW, shore (round-7 extension — audit #11/#15/#16): no
+         settled foot inside the camp ring, the day goat (day frames only),
+         the stern curl's mass or ship-1's painted oar blades */
+      parkSamples++;
+      const day = sn.shoreState && sn.shoreState.name === 'shore-day';
+      for (const f of all) {
+        if (f.walking) continue;
+        for (const o of OBSTACLES.shore) {
+          if (o.whenDay && !day) continue;
+          if (inBox([f.x, f.y], o.box)) {
+            parkBad.push(`${u.key}: ${f.who} SETTLES inside ${o.name} ` +
+                         `(foot ${f.x.toFixed(0)},${f.y.toFixed(0)} in [${o.box.join(',')}])`);
+          }
+        }
+      }
+      /* [perspective] the far lobe's own scale (audit #4) */
+      perspShore(u, sn, all);
+      /* [shadow] at 19-20 px actors the shadow IS the grounding (report T4) */
+      shadowCheck(u, sn, all.map((f) => ({ id: f.who, x: f.x, y: f.y })));
     }
     if (sn.set === 'sea') {
       /* the world scales as one; the LAW is the ledger's marks verbatim */
@@ -707,6 +1197,19 @@ async function main() {
                        `'${sn.ulysses.mark}' ${want}`);
         }
       }
+      /* [shadow] the brow, the stern and the six benches — ledger plate px,
+         exactly the space the sea set's shadow boxes are written in */
+      const seaList = [];
+      if (sn.giant && sn.giant.mark) {
+        seaList.push({ id: 'giant', x: sn.giant.mark[0], y: sn.giant.mark[1] });
+      }
+      if (sn.ulysses && sn.ulysses.at) {
+        seaList.push({ id: 'ulysses', x: sn.ulysses.at[0], y: sn.ulysses.at[1] });
+      }
+      (sn.rowers || []).forEach((r) => {
+        seaList.push({ id: r.mark, x: r.at[0], y: r.at[1] });
+      });
+      shadowCheck(u, sn, seaList);
     }
   };
 
@@ -806,8 +1309,30 @@ async function main() {
    * anchor-law tally, so the two laws measure the same walks. */
   const skateEv = {};
   for (const k of SKATE_FAMS) skateEv[k] = { samples: 0, pairs: 0, worst: 0, worstAt: null };
-  const skateProbe = async (unitKey, nFrames = 90) => {
-    const rows = await page.evaluate((n) => {
+  /* [gait] LANE PHYSICS (explore-physics.md adopted): the SAME single-stepped
+   * probe also records, at 30 fps (every 2nd fixed step), the plate MARKS of
+   * the walks named per unit — the velocity series the gait law tallies
+   * (CV, one-frame jumps, ease-in/out). One probe, three laws, one clock. */
+  const gaitEv = {};
+  const motionProbe = async (unitKey, nFrames = 90, ids = []) => {
+    const rows = await page.evaluate(({ n, ids }) => {
+      const pick = () => {
+        const a = window.__refs.stage.active;
+        const out = {};
+        for (const id of ids) {
+          let p = null;
+          try {
+            if (id === 'u') { const P = a.pose && a.pose.u; p = P && [P.x, P.y]; }
+            else if (id === 'g') { const G = a.state && a.state.giant; p = G && [G.x, G.y]; }
+            else if (id === 'gram') { const r = a.state && a.state.ramAt; p = r && [r[0], r[1]]; }
+            else if (/^ram\d/.test(id)) { const g = a.ramGait && a.ramGait[+id.slice(3)]; p = g && g.at && [g.at[0], g.at[1]]; }
+            else if (/^pair\d/.test(id)) { const g = a.pairGait && a.pairGait[+id.slice(4)]; p = g && g.at && [g.at[0], g.at[1]]; }
+            else if (/^c\d+$/.test(id)) { const P = a.pose && a.pose[id]; p = P && [P.x, P.y]; }
+          } catch (e) { p = null; }
+          out[id] = p ? [+p[0].toFixed(3), +p[1].toFixed(3)] : null;
+        }
+        return out;
+      };
       const out = [];
       for (let i = 0; i < n; i++) {
         window.__advance(1 / 60);
@@ -819,22 +1344,24 @@ async function main() {
         if (sn.set === 'shore') {
           if (S.ulysses) w.push(['shore-ulysses', 'u', S.ulysses]);
           (S.crew || []).forEach((p, j) => p && w.push(['shore-crew', 'c' + j, p]));
+          (S.run || []).forEach((p, j) => p && w.push(['run', 'r' + j, p]));
         } else if (sn.set === 'cave') {
           if (S.giant) w.push(['giant', 'g', S.giant]);
           (S.crew || []).forEach((p, j) => p && w.push(['crew-cave', 'c' + j, p]));
           (S.rams || []).forEach((p, j) => p && w.push(['ram', 'r' + j, p]));
         }
-        out.push({ css: sg.F * sg.cam3.k, w });
+        out.push({ css: sg.F * sg.cam3.k, w,
+                   marks: ids.length && i % 2 === 1 ? pick() : null });
       }
       return out;
-    }, nFrames);
+    }, { n: nFrames, ids });
     const held = {};
     for (const row of rows) {
       for (const [fam, id, p] of row.w) {
+        sSample(fam, p, unitKey);        // [strips] cycle + anchor tallies
         const ev = skateEv[fam];
-        if (!ev) continue;
+        if (!ev) continue;               // 'run' rides the strips law alone
         ev.samples++;
-        sSample(fam, p, unitKey);
         const prev = held[fam + ':' + id];
         if (prev && p.frame === prev.frame) {   // the anchor held: same planted foot
           ev.pairs++;
@@ -843,8 +1370,15 @@ async function main() {
         }
         held[fam + ':' + id] = { frame: p.frame, x: p.foot[0] };
       }
+      if (row.marks) {
+        for (const [id, at] of Object.entries(row.marks)) {
+          const key = unitKey + ':' + id;
+          (gaitEv[key] = gaitEv[key] || { pts: [] }).pts.push(at);
+        }
+      }
     }
   };
+  const skateProbe = motionProbe;        // the old name, same probe
 
   const marginHas = (q, text, tag) => {
     if (!norm(q.unit.blocks).includes(norm(text))) {
@@ -1041,6 +1575,11 @@ async function main() {
       await shot('b2-gate-sword-drawn');
     }
     if (u.key === 'greatram') {
+      /* [gait] the G5 hit IS dawn5's entry — the escape's own t0. Record THE
+         STREAM from this very click (14.3 s: a walker, both trio-pairs, THE
+         GREAT RAM, each rest to rest); the slung checks then read the same
+         end state they always read. */
+      await motionProbe('dawn5', 948, ['ram0', 'pair0', 'pair1', 'gram']);
       await T(2.2);
       const q = await st();
       const ram = q.stage.flock && q.stage.flock.ram;
@@ -1180,6 +1719,27 @@ async function main() {
         }
       }
 
+      /* [gait] the walks that START at a unit's own entry are recorded from
+         the entry itself — the settle T below (0.85 s) would eat their
+         ease-in and the gate would read a probe hole where the walk is
+         honest. The probe advances the sim, so everything after it simply
+         samples a later beat of the same unit. */
+      const ENTRY_PROBE = {
+        bard: [156, ['u']],                      // the wade's first 2.6 s
+        dawn1: [252, ['c0', 'c1']],              // the hunt dash-out, whole
+        /* head2's probe runs AFTER its shot below: probing first ages the
+           unit past the dwell law's 0.7 s cover budget */
+        return2: [408, ['g']],                   // the giant's entrance
+        quiverlid: [372, ['g']],                 // flock-out
+        return3: [372, ['g']],                   // flock-in
+        /* dawn5's stream is recorded AT the G5 hit inside doTarget — the
+           gate's advance is the escape's own t0 */
+        freed: [220, ['gram']],                  // the trot clear
+      };
+      if (ENTRY_PROBE[u.key]) {
+        await motionProbe(u.key, ...ENTRY_PROBE[u.key]);
+      }
+
       /* settle into the unit's frame. Heads are shot EARLY so the dwell
          number measures the COVER's theft, not this harness's pacing.
          (unitView carries no `head` flag — the key names them.) */
@@ -1187,6 +1747,10 @@ async function main() {
       await T(isHead || u.verb === 'auto' ? 0.15 : 0.85);
       const shotName = `b${u.beat}-${String(seq).padStart(2, '0')}-${u.key}`;
       await shot(shotName);
+      /* [gait] the entry file: probed AFTER head2's own shot (the dwell law
+         budgets 0.7 s of cover-age at the first visible frame), long enough
+         to hold the file's stop whichever sim length the turn spent */
+      if (u.key === 'head2') await motionProbe('head2', 288, ['c11']);
 
       const q0 = await st();
       await footLaw(u, q0);
@@ -1206,6 +1770,21 @@ async function main() {
 
       /* ---- the per-fact gates, at the unit that carries each ------------ */
       switch (u.key) {
+        case 'head2': {
+          /* O.4's OPEN baseline, shot after the ENTRY probe above (which
+             recorded the entry file and fed the strips/anti-skate tallies);
+             the mouth stays open and dawn-lit until the ii-04 shut, so the
+             luma reads the same whichever beat of the unit it samples */
+          await page.evaluate(() => window.__renderNow());
+          await shot('b2-O4-mouth-open');
+          const f4 = frames['b2-O4-mouth-open'];
+          const m4 = CAVE_OBJ.mouthAperture;
+          const dev4 = await plateBox([m4[0][0], m4[0][1], m4[1][0] - m4[0][0],
+                                       m4[1][1] - m4[0][1]]);
+          const R4 = rectI(dev4, await stageBox());
+          mouthOpenLuma = f4 && R4 ? lumaStats(f4, R4).mean : null;
+          break;
+        }
         case 'troy': {
           /* [anti-skate]/[strips] THE WADE WALK: this lap's own pacing cuts
              the landfall seg at iamulysses (fire-ulysses re-states the camp),
@@ -1222,6 +1801,27 @@ async function main() {
           if (!(c.on && c.id === 'ulysses' && /Ithaca/i.test(c.caption || ''))) {
             bad(`iamulysses: the ULYSSES cameo is not raised with the Ithaca caption ` +
                 `(O.12's plant): ${JSON.stringify(c)}`);
+          }
+          /* [gait] the wade->damp handover (walkToward2 now owns him): 3 s
+             mid-walk — the pulse CV under the cap, no glide */
+          await motionProbe('iamulysses', 180, ['u']);
+          /* [occluder] the camp tableau: the firepit's near stones + logs
+             (ground 507) paint LAST in the shore actor group — every camp
+             settle stands upstage of them (report burial 1-5 px; the shadow
+             does the heavy grounding at this scale) */
+          const gr = q0.stage.grounding || {};
+          const o = (gr.occ || []).find((x) => x.id === 'firepit');
+          if (!o || !(o.dom >= 0)) {
+            occBad.push('iamulysses: the firepit occluder is not in the actor group');
+          } else if (o.dom !== o.groupN - 1) {
+            occBad.push(`iamulysses: the firepit occluder is not painted LAST ` +
+                        `(dom ${o.dom} of ${o.groupN})`);
+          } else if (!(o.op > 0.9)) {
+            occBad.push(`iamulysses: the firepit occluder is not at the night ` +
+                        `plate's share (op ${o.op} on the night master)`);
+          } else {
+            note(`[occluder] iamulysses: firepit painted last (dom ${o.dom}/${o.groupN - 1}) ` +
+                 `at the night share (op ${o.op})`);
           }
           break;
         }
@@ -1271,7 +1871,10 @@ async function main() {
              [anti-skate] the re-stage is single-stepped first: Ulysses' 120 px
              crossing and the three camp men's short walks, planted feet held
              frame by frame. */
-          if (u.key === 'smoke') await skateProbe('smoke', 96);
+          /* [gait] the council crossing end-to-end: Ulysses' 120 px
+             walkToward2 (CV + ease-out + settle) and the hunters' walk home
+             re-targeted onto the council arc — 10.5 s, stops included */
+          if (u.key === 'smoke') await motionProbe('smoke', 630, ['u', 'c0']);
           for (let i = 0; i < 8; i++) {
             const q = await st();
             if (!q.unit || q.unit.key !== u.key) break;
@@ -1310,17 +1913,17 @@ async function main() {
             const R = rectI(dev, win);
             if (R) {
               inLens++;
-              if (f) cheese += paleCount(f, R, 90, 0.35);
+              if (f) cheese += goldenCount(f, R);
             }
           }
           if (inLens < 3) {
             bad(`beg: [O.3] only ${inLens}/3 rack boxes are inside the racks-sweep lens`);
           }
           if (!(cheese >= CHEESE_PX_MIN)) {
-            bad(`beg: [O.3] the racks do not read as LOADED — ${cheese} pale px across ` +
+            bad(`beg: [O.3] the racks do not read as LOADED — ${cheese} golden px across ` +
                 `racks A..C (floor ${CHEESE_PX_MIN})`);
           }
-          facts['O.3'] = `racks in lens ${inLens}/3, ${cheese} cheese px`;
+          facts['O.3'] = `racks in lens ${inLens}/3, ${cheese} golden cheese px (the wheels' own class)`;
           break;
         }
         case 'present': break;                // O.3b is the verbatim law's line
@@ -1373,6 +1976,92 @@ async function main() {
           }
           if (!(q.stage.giant && ['seat', 'clutch'].includes(q.stage.giant.pose))) {
             bad(`strangers: the giant is not seated under the eye lens (pose=${q.stage.giant && q.stage.giant.pose})`);
+          }
+          /* [occluder] the giant-seat tableau: the fire ring's lip (ground
+             503) and the milk tub (546) both paint ABOVE the giant seated
+             at y 452 — DOM index inside the sorted actor group (pews-front
+             law; the report measured 417 px of leg burial behind the lip) */
+          const gr = q.stage.grounding || {};
+          const dom = gr.dom || {};
+          for (const id of ['firering', 'tub']) {
+            const o = (gr.occ || []).find((x) => x.id === id);
+            if (!o || !(o.dom >= 0)) {
+              occBad.push(`strangers: the ${id} occluder is not in the actor group`);
+            } else if (!(dom.giant >= 0)) {
+              occBad.push('strangers: no live giant node to order the occluders against');
+            } else if (!(o.dom > dom.giant)) {
+              occBad.push(`strangers: the ${id} occluder paints UNDER the seated giant ` +
+                          `(occ dom ${o.dom} <= giant dom ${dom.giant}; ground ${o.ground} ` +
+                          `vs baseline ${q.stage.giant.mark[1]})`);
+            } else {
+              note(`[occluder] strangers: ${id} above the seated giant ` +
+                   `(dom ${o.dom} > ${dom.giant}, ground ${o.ground} vs y ${q.stage.giant.mark[1]})`);
+            }
+          }
+          break;
+        }
+        case 'head2': {
+          /* [occluder] the laden crossing: the woodpile's crown (ground 550)
+             paints ABOVE every entry-file man (feet ~y 473..520 — the report
+             measured 289 px of foot/ankle burial). Sampled once the entry
+             seg has the file on the floor. */
+          await T(3.2);
+          const q = await st();
+          const gr = q.stage.grounding || {};
+          const o = (gr.occ || []).find((x) => x.id === 'woodpile');
+          const crewDom = ((gr.dom || {}).crew || []).filter((d, i) => {
+            const c = q.stage.cast && q.stage.cast.crew[i];
+            return d >= 0 && c && c.op > 0.5 && c.mark[1] < 550;
+          });
+          if (!o || !(o.dom >= 0)) {
+            occBad.push('head2: the woodpile occluder is not in the actor group');
+          } else if (!crewDom.length) {
+            occBad.push('head2: no settled crewman upstage of the woodpile to order against');
+          } else if (!crewDom.every((d) => o.dom > d)) {
+            occBad.push(`head2: the woodpile occluder paints UNDER an upstage crewman ` +
+                        `(occ dom ${o.dom} vs crew doms ${JSON.stringify(crewDom)})`);
+          } else {
+            note(`[occluder] head2: woodpile above all ${crewDom.length} upstage crew ` +
+                 `(dom ${o.dom}, ground 550)`);
+          }
+          break;
+        }
+        case 'plea': case 'scheme': {
+          /* [restage] report T2 / failure #4 ("RESTAGE, don't occlude"):
+             Ulysses settles ON the set's declared swept mark, and that mark
+             is CLEAR of the fire ring's painted stone band — past its local
+             ground or outside the ring box; his shadow seats him (the
+             [shadow] law samples this same unit). */
+          const sw0 = (q0.stage.grounding || {}).swept;
+          const want = sw0 && (u.key === 'plea' ? sw0.suppliant : sw0.scheme);
+          if (!want) {
+            occBad.push(`${u.key}: [restage] the set declares no swept mark`);
+            break;
+          }
+          let qr = q0, dd = 1e9;
+          for (let i = 0; i < 14; i++) {
+            const U2 = qr.stage.cast && qr.stage.cast.ulysses;
+            dd = U2 ? Math.hypot(U2.mark[0] - want[0], U2.mark[1] - want[1]) : 1e9;
+            if (dd <= SWEPT_TOL) break;
+            await T(0.5);
+            qr = await st();
+            if (!qr.unit || qr.unit.key !== u.key) break;
+          }
+          if (!(dd <= SWEPT_TOL)) {
+            const U2 = qr.stage.cast && qr.stage.cast.ulysses;
+            occBad.push(`${u.key}: [restage] ulysses settled at ` +
+                        `${U2 && U2.mark} — not the swept mark ${want} (±${SWEPT_TOL})`);
+          }
+          const inBand = want[0] >= RING_BAND.x[0] && want[0] <= RING_BAND.x[1] &&
+                         want[1] <= RING_BAND.groundY;
+          if (inBand) {
+            occBad.push(`${u.key}: [restage] the swept mark ${want} still sits ON ` +
+                        `the ring's stone band (x ${RING_BAND.x}, ground y ` +
+                        `${RING_BAND.groundY}) — the T2 torso clip the restage exists for`);
+          }
+          if (dd <= SWEPT_TOL && !inBand) {
+            note(`[restage] ${u.key}: ulysses settles on the swept mark ${want}, ` +
+                 `clear of the ring band`);
           }
           break;
         }
@@ -1607,7 +2296,9 @@ async function main() {
           /* [strips] the dawn stream (v-05): the escape's walkers ride the
              ram strip — sample the trot while the flock crosses the floor.
              [anti-skate] single-step the stream first, planted hooves held. */
-          await skateProbe('dawn5', 90);
+          /* [gait] THE STREAM was recorded whole by the ENTRY probe (14.3 s
+             at the unit's own entry — walkers, both trio-pairs, THE GREAT
+             RAM); here only the poll loop remains */
           for (let i = 0; i < 8; i++) {
             const q = await st();
             if (!q.unit || q.unit.key !== 'dawn5') break;
@@ -1629,7 +2320,8 @@ async function main() {
         case 'lastofall': {
           /* [O.11] the great ram HALTED in the mouth, the man under him, the
              palm over him */
-          await T(1.8);                        // the pin ease is 1.2 s
+          await T(2.4);                        // the pin WALK is ~61 px at the
+                                               // burdened 51.6 px/s + both eases
           await page.evaluate(() => window.__renderNow());
           const q = await st();
           const ram = q.stage.flock && q.stage.flock.ram;
@@ -1773,26 +2465,6 @@ async function main() {
       if (qb.unit && qb.unit.id === u.id && qb.blocked) {
         /* head2 doubles as O.4's OPEN baseline: sample the lit aperture while
            the entry seg holds the frame on the dawn state */
-        if (u.key === 'head2') {
-          await T(2.2);                         // the dawn swap lands
-          await page.evaluate(() => window.__renderNow());
-          await shot('b2-O4-mouth-open');
-          const f = frames['b2-O4-mouth-open'];
-          const m = CAVE_OBJ.mouthAperture;
-          const dev = await plateBox([m[0][0], m[0][1], m[1][0] - m[0][0], m[1][1] - m[0][1]]);
-          const R = rectI(dev, await stageBox());
-          mouthOpenLuma = f && R ? lumaStats(f, R).mean : null;
-          /* [strips] the entry file (K1): the twelve walk in on the crew
-             strip while the entry seg still runs — sample the stride.
-             [anti-skate] single-step the file first, planted feet held. */
-          await skateProbe('head2', 90);
-          for (let i = 0; i < 6; i++) {
-            const q2 = await st();
-            if (!q2.unit || q2.unit.key !== 'head2') break;
-            stripPoll(q2);
-            await T(0.3);
-          }
-        }
         if (u.key === 'rock1' || u.key === 'heard') {
           /* [O.14b]/rock clocks: watch the rock fly and the splash land */
           const which = u.key === 'rock1' ? 'rock1' : 'rock2';
@@ -1853,7 +2525,9 @@ async function main() {
            entrance and both flock crossings) are sampled as they play out;
            [anti-skate] each is single-stepped first, mid-walk, planted feet
            held frame by frame */
-        if (STRIP_SEG_KEYS.has(u.key)) await skateProbe(u.key, 90);
+        /* the giant's three strip walks were recorded whole by the ENTRY
+           probes; the milking unit keeps its short skate probe */
+        if (u.key === 'strangers') await skateProbe(u.key, 90);
         await waitRelease(u, STRIP_SEG_KEYS.has(u.key) ? stripPoll : undefined);
         continue;
       }
@@ -1932,7 +2606,10 @@ async function main() {
       if (u.key === 'council') {
         /* [G1] the crossing owns the frame: prove it on the unit it lands in.
            [strips] the DASH ABOARD (crew-run, cut c-board) sprints under the
-           crossing's first leg — sampled here for the cycle + anchor laws. */
+           crossing's first leg — sampled here for the cycle + anchor laws.
+           [gait] the dash is walkToward2 at RUN_V now: 3.6 s recorded from
+           push-off — ease-on/off where the audit measured one frame each. */
+        await motionProbe('council', 216, ['c0', 'c1', 'c2']);
         let done = false;
         for (let i = 0; i < 50; i++) {
           const q = await st();
@@ -2032,7 +2709,158 @@ async function main() {
     .filter((r) => /\.(png|jpe?g)(\?|$)/i.test(r.name)).length);
   note(`bitmaps fetched across the read: ${readFetches}, every one under a cover or at boot`);
 
+  /* ---- [regrade] the sets LOAD the graded variants ------------------------ *
+   * The wiring half of the law: after the whole read every actor-cut <img>
+   * on the page must point under assets/actor/graded/<set>/ — a raw top-
+   * level actor src means a set was never switched (or its fallback fired,
+   * which with the identity gate green means a wiring defect, not a missing
+   * file). Shadow/occluder art lives in actor/ SUBDIRS and is other lanes'. */
+  {
+    const raw = await page.evaluate(() => [...document.querySelectorAll('img')]
+      .map((el) => el.getAttribute('src') || '')
+      .filter((s) => /assets\/actor\/[^/]+\.png$/.test(s)));
+    const graded = await page.evaluate(() => [...document.querySelectorAll('img')]
+      .filter((el) => /assets\/actor\/graded\//.test(el.getAttribute('src') || '')).length);
+    if (raw.length) {
+      bad(`[regrade] ${raw.length} actor cut(s) still load RAW after the read: ` +
+          [...new Set(raw.map((s) => s.split('/').pop()))].join(', '));
+    } else {
+      note(`[regrade] wiring: ${graded} mounted actor <img> nodes all load ` +
+           `graded variants, zero raw`);
+    }
+  }
+
   const audio = await page.evaluate(() => window.__audio());
+
+  /* ---- 3.9 THE AUDIO LAWS (audit-audio.md is the spec) -------------------- *
+   * (a) WIRING + the audible-sample assertion: every unit-declared sfx /
+   *     gateSfx / bed id — plus the set-fired ids the audit named as wiring
+   *     holes (splash: sea.js's two rock impacts; drain: O.7's three heedless
+   *     drains) — must have actually FIRED into the snapshot's log over the
+   *     read, AND every declared id must map to a decoded buffer with audible
+   *     samples: a missing FILES key or a silent decode still logs, so the
+   *     log alone is not proof of sound.
+   * (b) SIDECHAIN: the bed bus must dip >= 6 dB under a story cue (probed
+   *     live against bedBus.gain), and the ducks ledger must show the read
+   *     exercised it throughout.
+   * (c) THE SERVED FILES: tools/ody/audio_gate.py re-measures every shipped
+   *     mp3 by the audit's own method — no file over -1 dBTP, none
+   *     noise-like (SFM > 0.30), beds inside the -33 LUFS band, loop wraps
+   *     seam-free, cue tails free of dead air. */
+  {
+    const law = await page.evaluate(() => {
+      const a = window.__refs.audio, UNITS = window.__refs.UNITS;
+      const decCue = new Set(), decBed = new Set();
+      for (const u of UNITS) {
+        if (u.sfx) decCue.add(u.sfx);
+        if (u.gateSfx) decCue.add(u.gateSfx);
+        if (u.bed) decBed.add(u.bed);
+      }
+      for (const id of ['splash', 'drain']) decCue.add(id);
+      const fired = new Set(a.log.filter((l) => l.kind === 'cue').map((l) => l.id));
+      const played = new Set(a.log.filter((l) => l.kind === 'bed').map((l) => l.id));
+      const missCue = [...decCue].filter((id) => !fired.has(id)).sort();
+      const missBed = [...decBed].filter((id) => !played.has(id)).sort();
+      const unmapped = [], inaudible = [];
+      for (const id of [...new Set([...decCue, ...decBed])].sort()) {
+        const b = a.buffers[id];
+        if (!b) { unmapped.push(id); continue; }
+        let p = 0;
+        for (let c = 0; c < b.numberOfChannels; c++) {
+          const d = b.getChannelData(c);
+          for (let i = 0; i < d.length; i += 89) p = Math.max(p, Math.abs(d[i]));
+        }
+        if (p < 0.02) inaudible.push(`${id}@${p.toFixed(4)}`);
+      }
+      return { missCue, missBed, unmapped, inaudible,
+               nCue: decCue.size, nBed: decBed.size, ducks: a.ducks.length };
+    });
+    if (law.missCue.length) {
+      bad(`[audio] declared cue ids NEVER FIRED over the read: ${law.missCue.join(', ')}`);
+    }
+    if (law.missBed.length) {
+      bad(`[audio] declared beds NEVER PLAYED over the read: ${law.missBed.join(', ')}`);
+    }
+    if (law.unmapped.length) {
+      bad(`[audio] ids that decode to SILENCE (no FILES mapping / no buffer): ` +
+          law.unmapped.join(', '));
+    }
+    if (law.inaudible.length) {
+      bad(`[audio] ids whose decoded buffers are inaudible (peak < 0.02): ` +
+          law.inaudible.join(', '));
+    }
+    if (!law.missCue.length && !law.missBed.length && !law.unmapped.length &&
+        !law.inaudible.length) {
+      note(`[audio] wiring: all ${law.nCue} declared cue ids + ${law.nBed} beds ` +
+           `fired over the read, every one decoding to audible samples`);
+    }
+    if (!(law.ducks >= 30)) {
+      bad(`[audio] the sidechain ledger shows only ${law.ducks} bed ducks over ` +
+          `the whole read (floor 30) — cues are not ducking the bed`);
+    }
+    const duck = await page.evaluate(() => new Promise((res) => {
+      const a = window.__refs.audio;
+      if (!a.ok || !a.bedBus) return res({ err: 'webaudio/bed bus unavailable' });
+      const go = () => setTimeout(() => {
+        const bus = a.bedBus.gain, before = bus.value;
+        a.cue('boulder');
+        setTimeout(() => res({
+          before: +before.toFixed(4), during: +bus.value.toFixed(4),
+          db: +(20 * Math.log10(Math.max(1e-6, bus.value))).toFixed(2),
+          state: a.ctx.state,
+        }), 260);
+      }, 400);
+      if (a.ctx.state !== 'running') a.ctx.resume().then(go, go); else go();
+    }));
+    if (duck.err) bad('[audio] duck probe: ' + duck.err);
+    else if (!(duck.db <= -6)) {
+      bad(`[audio] bed duck depth ${duck.db} dB under a live cue (law: dip >= 6 dB; ` +
+          `bus ${duck.before} -> ${duck.during}, ctx ${duck.state})`);
+    } else {
+      note(`[audio] sidechain: bed bus dipped ${(-duck.db).toFixed(1)} dB under a ` +
+           `live cue (law >= 6), ${law.ducks} ducks over the read`);
+    }
+    let served = null;
+    try {
+      served = JSON.parse(execFileSync('python3',
+        [path.join(HERE, 'audio_gate.py'), path.join(SITE, 'assets', 'audio')],
+        { encoding: 'utf8', timeout: 180000 }));
+    } catch (e) {
+      bad('[audio] audio_gate.py failed: ' + String(e && e.message).slice(0, 200));
+    }
+    if (served) {
+      const rows = Object.entries(served);
+      const overTp = rows.filter(([, v]) => v.tp_dbtp > -1.0);
+      const noisy = rows.filter(([, v]) => v.sfm != null && v.sfm > 0.30);
+      const bedOff = rows.filter(([, v]) => (v.role === 'bed' || v.loop) &&
+        (v.lufs < -37.5 || v.lufs > -31));
+      const seamBad = rows.filter(([, v]) => v.loop &&
+        (v.edge_jump_db > 6 || v.wrap_step_fs > 0.02));
+      const tails = rows.filter(([, v]) => v.role === 'cue' && !v.loop &&
+        v.tail_dead_s > 0.4);
+      for (const [f, v] of overTp) bad(`[audio] ${f} served at ${v.tp_dbtp} dBTP (law <= -1.0)`);
+      for (const [f, v] of noisy) bad(`[audio] ${f} is noise-like: SFM ${v.sfm} (law <= 0.30)`);
+      for (const [f, v] of bedOff) {
+        bad(`[audio] bed ${f} at ${v.lufs} LUFS leaves the -33 band (law -37.5..-31)`);
+      }
+      for (const [f, v] of seamBad) {
+        bad(`[audio] loop ${f} wrap is not seam-free (edge jump ${v.edge_jump_db} dB ` +
+            `/ boundary step ${v.wrap_step_fs} FS)`);
+      }
+      for (const [f, v] of tails) {
+        bad(`[audio] cue ${f} still carries ${v.tail_dead_s} s of dead-air tail (law <= 0.4)`);
+      }
+      if (!overTp.length && !noisy.length && !bedOff.length && !seamBad.length &&
+          !tails.length) {
+        const worstTp = Math.max(...rows.map(([, v]) => v.tp_dbtp));
+        const worstSfm = Math.max(...rows.map(([, v]) => v.sfm || 0));
+        note(`[audio] served files: ${rows.length} mp3s — worst TP ` +
+             `${worstTp.toFixed(1)} dBTP (<= -1), worst SFM ${worstSfm.toFixed(3)} ` +
+             `(<= 0.3), beds in the -33 LUFS band, loops seam-free, cue tails clean`);
+      }
+    }
+  }
+
   const gaps = fin.stage.gaps || [];
   const appErrors = fin.errors || [];
   if (appErrors.length) bad('app errors: ' + JSON.stringify(appErrors).slice(0, 500));
@@ -2555,12 +3383,42 @@ async function main() {
   }
   for (const m of dedupe(parkBad)) bad('[parking] ' + m);
   if (!parkBad.length) {
-    note(`[parking] no settled foot inside a registered obstacle across ${parkSamples} ` +
-         `sampled frames; the sprawl's clearances held >= ${SPRAWL_CLEAR_MIN} px across ` +
+    note(`[parking] no settled foot inside a registered obstacle (round-7 census: ` +
+         `${OBSTACLES.cave.length} cave + ${OBSTACLES.shore.length} shore boxes — ` +
+         `the bed, the hearth + rim spill, both wood piles, tub/bowl, the camp ` +
+         `ring, the day goat, the curl, the oars) across ${parkSamples} sampled ` +
+         `frames; the sprawl's SUPPORT law (baseline on open floor) held across ` +
          `${sprawlLedger.length} sprawl frames`);
   }
   if (!parkSamples && !insetStuck.length) {
     bad('[parking] no settled frame was ever sampled — the parking law did not run');
+  }
+  /* ---- [perspective], tallied (round-7 placement audit) ------------------- */
+  for (const m of dedupe(perspBad)) bad('[perspective] ' + m);
+  if (!perspBad.length) {
+    note(`[perspective] every settled drawn height within ${PERSP_TOL * 100}% of ` +
+         `the plate-implied scale at its own floor point (lobe 19.5 px/m, beach ` +
+         `11.3, cave 43 — the audit's table) across ${perspSamples} samples, the ` +
+         `sprawl's length and the ram stock included`);
+  }
+  if (!perspSamples && !insetStuck.length) {
+    bad('[perspective] no settled height was ever sampled — the gate did not run');
+  }
+  /* ---- [shadow]+[occluder], tallied (Explorer C) -------------------------- */
+  for (const m of dedupe(shadowBad)) bad('[shadow] ' + m);
+  if (!shadowBad.length) {
+    note(`[shadow] every settled principal stood on a live contact shadow — under ` +
+         `the actor group, box on the foot, the chase opacity law — across ` +
+         `${shadowSamples} principal samples`);
+  }
+  if (!shadowSamples && !insetStuck.length) {
+    bad('[shadow] no settled principal was ever sampled — the shadow law did not run');
+  }
+  for (const m of dedupe(occBad)) bad('[occluder] ' + m);
+  if (!occBad.length) {
+    note('[occluder] the pews-front law held at every tableau: firering + tub above ' +
+         'the seated giant, woodpile above the entry file, firepit last on the shore; ' +
+         'plea/scheme settle on their swept marks, clear of the ring band');
   }
 
   /* ---- 9.5 THE STRIPS, tallied: cycled + feet anchored (sha was gate 0) --- *
@@ -2632,6 +3490,145 @@ async function main() {
     } else {
       note(`[anti-skate] ${fam}: ${ev.samples} mid-motion samples, ${ev.pairs} held-anchor ` +
            `pairs, worst planted-foot slide ${ev.worst.toFixed(3)} css px/frame (<= ${SKATE_MAX})`);
+    }
+  }
+
+  /* ---- 9.65 THE GAIT LAW (LANE PHYSICS, explore-physics.md adopted) ------- *
+   * Per adopted walk, the 30 fps mark-velocity series the motion probes
+   * recorded, held to the audit's own numbers (audit-motion.md):
+   *   CV        std/mean over the mid 70% of the move >= 0.15 — the per-step
+   *             pulse EXISTS (a clamped glide reads ~0%, a bare ease ~8-21%
+   *             with zero structure; the strips' own plant tables read ~24%)
+   *   jump      no single-frame speed change > 25% of the mid mean — the
+   *             alongPath vertex pops (+47% walkers / +120% great ram) and
+   *             the one-frame onsets/offsets are all this one number
+   *   ease-in   mean speed over the first 200 ms of the move < 60% of cruise
+   *   ease-out  mean speed over the last 200 ms before the stop < 60%
+   * A walk whose onset/stop the probe never recorded is a lap hole where the
+   * law expects one (in/out per walk below), not a pass. */
+  const GAIT_CV_MIN = 0.15;
+  const GAIT_JUMP_MAX = 0.25;
+  const GAIT_EASE_WIN = 0.2;             // s
+  const GAIT_EASE_MAX = 0.6;             // of cruise (the mid-70% mean)
+  const GAIT_DT = 1 / 30;
+  const GAIT_LAW = [
+    /* unit        actor   in     out    what */
+    ['bard', 'u', true, false, 'the wade (i-01 landfall, pulse-warped seg walk)'],
+    ['iamulysses', 'u', false, false, 'the wade->camp damp handover (walkToward2 mid-walk)'],
+    ['dawn1', 'c0', true, true, 'the hunt dash-out (eased+pulsed seg walk)'],
+    ['dawn1', 'c1', true, true, 'the hunt dash-out, second hunter'],
+    ['smoke', 'u', false, true, 'the council crossing (walkToward2, settle included)'],
+    ['smoke', 'c0', false, true, 'a hunter walked home onto the council arc (walkToward2)'],
+    ['council', 'c0', true, true, 'the dash aboard (walkToward2 at RUN_V, crew-run gait)'],
+    /* head2's onset plays under the page turn's own cover (sim clock) — no
+       reader ever sees it, so the lap reads the file mid-stride to its stop */
+    ['head2', 'c11', false, true, 'the cave entry file, deepest man (pulse-warped seg walk)'],
+    ['return2', 'g', true, true, 'THE GIANT\'s entrance (velocity-integrated gait)'],
+    /* quiverlid is reached through iii-01's own clock, which spends the
+       walk's 0.45 s ease-in before this lap's probe can land; the identical
+       mechanism's onset is gated at return2 AND return3 */
+    ['quiverlid', 'g', false, true, 'the giant, flock-out'],
+    ['return3', 'g', true, true, 'the giant, flock-in'],
+    ['dawn5', 'ram0', true, true, 'a stream walker (arc-length + pulse — no vertex pops)'],
+    ['dawn5', 'pair0', true, true, 'trio-pair 0: the slung cut WALKS (burdened gait)'],
+    ['dawn5', 'pair1', true, true, 'trio-pair 1: the slung cut WALKS (burdened gait)'],
+    ['dawn5', 'gram', true, true, 'THE GREAT RAM\'s escape (burdened gait walk)'],
+    ['freed', 'gram', true, true, 'the ram trots clear (v-11, walked not slid)'],
+  ];
+  const gaitStats = (pts) => {
+    const v = [];
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i];
+      if (!a || !b) { v.push(null); continue; }
+      const d = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      v.push(d > 40 ? null : d / GAIT_DT);    // a teleport is not a step
+    }
+    let run = null, best = null;              // longest contiguous live run
+    for (let i = 0; i <= v.length; i++) {
+      if (i < v.length && v[i] !== null) { if (run === null) run = i; }
+      else if (run !== null) {
+        if (!best || i - run > best[1] - best[0]) best = [run, i];
+        run = null;
+      }
+    }
+    if (!best) return null;
+    const seg = v.slice(best[0], best[1]);
+    const peak = Math.max(...seg);
+    if (!(peak > 2)) return null;             // never moved
+    const thr = Math.max(2, 0.05 * peak);
+    let i0 = seg.findIndex((x) => x > thr);
+    let i1 = seg.length - 1;
+    while (i1 > i0 && seg[i1] <= thr) i1--;
+    if (i0 < 0 || i1 - i0 < 6) return null;   // too short to judge
+    const span = seg.slice(i0, i1 + 1);
+    const m0 = Math.floor(span.length * 0.15), m1 = Math.ceil(span.length * 0.85);
+    const mid = span.slice(m0, m1);
+    const mean = mid.reduce((a, b) => a + b, 0) / mid.length;
+    const sd = Math.sqrt(mid.reduce((a, b) => a + (b - mean) ** 2, 0) / mid.length);
+    let jump = 0;                       // largest one-frame |dv|, px/s
+    for (let i = 1; i < mid.length; i++) {
+      jump = Math.max(jump, Math.abs(mid[i] - mid[i - 1]));
+    }
+    const win = Math.max(1, Math.round(GAIT_EASE_WIN / GAIT_DT));
+    const avg = (a) => a.reduce((x, y) => x + y, 0) / a.length;
+    let jAt = 0;
+    for (let i = 1; i < mid.length; i++) {
+      if (Math.abs(mid[i] - mid[i - 1]) === jump) { jAt = i; break; }
+    }
+    const r1 = (a) => a.map((x) => +x.toFixed(1));
+    return {
+      n: span.length, peak: +peak.toFixed(1), cruise: +mean.toFixed(1),
+      cv: +(sd / mean).toFixed(3), jump: +(jump / mean).toFixed(3),
+      jumpAbs: +jump.toFixed(1),
+      easeIn: +(avg(span.slice(0, win)) / mean).toFixed(3),
+      easeOut: +(avg(span.slice(-win)) / mean).toFixed(3),
+      stopped: i1 < seg.length - 1,           // the move fell back under thr
+      /* evidence: the span's head/tail and the worst jump's neighbourhood */
+      vHead: r1(span.slice(0, 10)), vTail: r1(span.slice(-10)),
+      vJump: r1(mid.slice(Math.max(0, jAt - 4), jAt + 4)),
+    };
+  };
+  const gaitOut = {};
+  for (const [unit, id, expIn, expOut, what] of GAIT_LAW) {
+    const ev = gaitEv[unit + ':' + id];
+    const gs = ev ? gaitStats(ev.pts) : null;
+    gaitOut[unit + ':' + id] = gs;
+    if (!gs) {
+      bad(`[gait] ${unit}:${id} (${what}) was never recorded mid-walk — ` +
+          `the motion probe (or the walk itself) did not run`);
+      continue;
+    }
+    const fails = [];
+    if (!(gs.cv >= GAIT_CV_MIN)) {
+      fails.push(`CV ${(gs.cv * 100).toFixed(1)}% < ${GAIT_CV_MIN * 100}% — no step pulse`);
+    }
+    /* the % law with an absolute floor: a |dv| at or under STRIDE_MIN_SPEED
+       (6 plate px/s — the book's own "below this is standing"), or under
+       18% of the walk's own PEAK, cannot read as a lurch however small a
+       short walk's mid-window mean gets (the audit's real pops were 47-160%
+       of cruise AND 35-85 px/s — far above both floors) */
+    if (!(gs.jump <= GAIT_JUMP_MAX || gs.jumpAbs <= Math.max(6, 0.18 * gs.peak))) {
+      fails.push(`one-frame speed change ${(gs.jump * 100).toFixed(0)}% > 25% ` +
+                 `(${gs.jumpAbs} px/s, peak ${gs.peak})`);
+    }
+    if (expIn) {
+      if (!(gs.easeIn < GAIT_EASE_MAX)) {
+        fails.push(`no ease-in: first 200 ms ran at ${(gs.easeIn * 100).toFixed(0)}% ` +
+                   `of cruise (or the probe missed the onset)`);
+      }
+    }
+    if (expOut) {
+      if (!gs.stopped) fails.push('the stop was never recorded (probe hole)');
+      else if (!(gs.easeOut < GAIT_EASE_MAX)) {
+        fails.push(`no ease-out: last 200 ms ran at ${(gs.easeOut * 100).toFixed(0)}% of cruise`);
+      }
+    }
+    if (fails.length) bad(`[gait] ${unit}:${id} (${what}): ${fails.join('; ')}`);
+    else {
+      note(`[gait] ${unit}:${id}: CV ${(gs.cv * 100).toFixed(1)}%, worst dv ` +
+           `${(gs.jump * 100).toFixed(0)}%, ease in/out ${(gs.easeIn * 100).toFixed(0)}%/` +
+           `${(gs.easeOut * 100).toFixed(0)}% of cruise ${gs.cruise} px/s over ` +
+           `${gs.n} frames (${what})`);
     }
   }
 
@@ -2742,7 +3739,12 @@ async function main() {
       worst: +skateEv[k].worst.toFixed(3), worstAt: skateEv[k].worstAt,
       max: SKATE_MAX,
     }])),
+    gait: gaitOut,
     feetViolations: dedupe(feetBad), parkingViolations: dedupe(parkBad),
+    perspective: { samples: perspSamples, tol: PERSP_TOL,
+                   violations: dedupe(perspBad) },
+    shadowSamples, shadowViolations: dedupe(shadowBad),
+    occluderViolations: dedupe(occBad),
     eye, inset: skinCard, gaps,
     audio: { bed: audio.bedId, cues: audio.log.length },
     failures: fail,

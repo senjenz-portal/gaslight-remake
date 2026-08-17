@@ -1,0 +1,10 @@
+{
+ "id": "cefcasg819rmt0d01qvth9t444",
+ "metrics": {
+  "predict_time": 8.62635091,
+  "total_time": 8.87771832
+ },
+ "input_clicks": "[596,400]",
+ "labels": "1",
+ "n_outputs": 97
+}

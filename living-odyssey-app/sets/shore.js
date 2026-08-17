@@ -57,8 +57,10 @@
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
          emissives, placeStrip, stripProof, stripPxPerFrame,
-         walkToward } from '../setkit.js';
+         walkToward2, gaitProfile, gaitAt, gaitBobY,
+         gradedActor } from '../setkit.js';
 import { STRIPS } from '../strips.js';
+import { SHADOWS } from '../shadows.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SCALE = { pxPerM: 11.3, ulysses: 20, crew: 19 };
@@ -69,15 +71,33 @@ const FLOORS = {
   mainlandYard: [[940, 300], [1010, 318], [1090, 330]],          // band 10
 };
 
-/* the marks, ledger names verbatim — each serves the units it names */
+/* the marks, ledger names verbatim — each serves the units it names.
+   ROUND-7 PLACEMENT AUDIT (#11): council-ulysses moved off the stern curl's
+   black mass (the old (510,492) stood ~6 px from its base, dark tunic on
+   near-black hull) and the crew arc out of the day plate's 5 m painted goat
+   (395..450 x 465..530 — c0 stood INSIDE its body box). */
 const MARKS = {
   'fire-ulysses':   [390, 480],    // left of the fire ring, facing it (i-02/03)
-  'council-ulysses': [510, 492],   // open sand, back to the strait (i-06/07)
-  'council-crew':   [445, 507],    // the crew arc CENTROID facing Ulysses
+  'council-ulysses': [563, 499],   // open sand right of the curl (>= 10 px of
+                                   // every painted mass), back to the strait
+  'council-crew':   [472, 507],    // the crew arc CENTROID facing Ulysses
   'twelve-at-ship': [560, 503],    // lined on the sand along ship-2's hull (i-10)
   'entry-mainland': [1008, 268],   // the grass apron between the laurels (i-08+)
   'climb-path':     [940, 325],    // below the yard wall, behind the plate (i-12)
 };
+
+/* THE FAR LOBE DRAWS AT ITS OWN SCALE (round-7 placement audit #4): the
+   mainland apron/yard measures ~19.5 px/m off its own painted stock (four
+   pen sheep 18.1-21.0 px/m, the apron sheep 19.0, fence rails 20.0, wall
+   courses 20.0 — the audit's table) against the beach's ship-derived 11.3.
+   The ledger's old ruling ("the ship wins") was honest at the ship and 40%
+   wrong beside the pen sheep — the party stood eye-to-eye with the stock.
+   An actor standing in the lobe now mounts at the lobe's own numbers; the
+   ledger carries both scales. */
+const LOBE = { x: 900, y: 380, pxPerM: 19.5, ulysses: 34, crew: 33 };
+const inLobe = (x, y) => x >= LOBE.x && y <= LOBE.y;
+const uH = (x, y) => (inLobe(x, y) ? LOBE.ulysses : SCALE.ulysses);
+const cH = (x, y) => (inLobe(x, y) ? LOBE.crew : SCALE.crew);
 
 /* ship-2, the beached crossing galley — the G1 gate's painted object */
 const SHIP2 = { sternCurl: [516, 432], prowCurl: [686, 428], hullCentre: [600, 455] };
@@ -205,6 +225,50 @@ const STRIDE_TELEPORT = 40;          // plate px in one step is a re-stage, not 
    the skate, and 1.5 m/s / 1.4 m/s is what a walk may spend. */
 const WALK_V = { ulysses: 1.5 * SCALE.pxPerM, crew: 1.4 * SCALE.pxPerM };
 
+/* LANE PHYSICS (Explorer D adopted — tools/ody/seamless/explore-physics.md):
+ * the gait read off each strip's OWN anchors (the plant frames are the
+ * anchor swap, the KING law's contacts), a mean-1 speed pulse that dips ON
+ * the plant, and a step-synced bob at ~3% of body height (audit-motion.md:
+ * measured box bob was 0.02-0.5% against a 3-4% real-walk band). */
+const GAIT = { u: gaitProfile(STRIP.ulysses),
+               crew: gaitProfile(STRIP.crew),
+               run: gaitProfile(STRIP.run) };
+const BOB_AMP = { u: 0.03 * SCALE.ulysses, crew: 0.03 * SCALE.crew,
+                  run: 0.03 * RUN_H };
+/* CADENCE ATTENUATION (shared law with setkit walkToward2): pulse depth
+   scales with the gait cycle's own seconds — this plate's small strides
+   (17/16 px a cycle) cycle FAST at speed, and a full-depth pulse above
+   ~1.1 cycles/s reads as flicker (the one-frame speed law's > 25% pops) */
+const gaitAtt = (gait, ppf, v) =>
+  clamp01(gait.n * ppf / (Math.max(v, 1) * 0.9));
+
+/* ---- EXPLORER C: CONTACT SHADOWS (the chase.js rig-shadow law) ---------- *
+ * app/shadows.js is the registry (shadowgen.py, verbatim): anchor lands on
+ * the actor's foot mark, scale by the actor's own k = drawnH / cutH,
+ * opacity (0.42 + 0.30 * s) * actorOp — s the mark's depth share of this
+ * plate's floors (the mainland apron's 252 to the beach line's 511). At
+ * 19-20 px actors the shadow IS the grounding (the report's T4: occlusion
+ * is a measured no-op at shore scale; the shadow still visibly seats). */
+const SHADOW = SHADOWS.shore.shadows;
+const SHADOW_BAND = [252, 511];
+const shadowS = (y) =>
+  clamp01((y - SHADOW_BAND[0]) / (SHADOW_BAND[1] - SHADOW_BAND[0]));
+
+/* ---- EXPLORER C: THE FIREPIT OCCLUDER (the pews-front law) -------------- *
+ * The camp ring's near stones + the two downstage logs, a pixel-exact
+ * restore of the NIGHT master (cutocc.py firepit-front, occluders.json
+ * verbatim), drawn LAST in the actor group: every camp settle stands
+ * upstage of its ground (y 507), so the feet tuck behind the near stones.
+ * Its opacity is the night plate's own share (1 - the day crossfade) — the
+ * day fire is dead coals and the day tableaux never touch the ring. */
+const OCC_FIREPIT = { file: 'set/shore/firepit-front.png',
+                      origin: [347, 459], size: [125, 52], ground: 507 };
+/* the shadowed cuts' own source heights (tools/ody/actors.json, verbatim) —
+   the scale law is k = drawnH / cutH and the walk shadow's cut is not in
+   this set's ART table (the walk is a strip here) */
+const SHADOW_CUT_H = { 'ulysses-stand': 682, 'ulysses-walk': 664,
+                       'crew-a-stand': 620, 'crew-b-stand': 635 };
+
 /* place a cut by its measured pin. Returns the drawn box for the snapshot.
    MICRO-IDLE (the sherlock King law, room.js stepKing): a settled cut may
    also carry `rot` (the slow sway) and `sy` (the breath's scaleY), both
@@ -240,35 +304,46 @@ const beachY = (x) => floorY(FLOORS.beach, x);
 function stagings() {
   const S = {};
   S.empty = { u: null, crew: [] };
+  /* camp (round-7 audit #16): the three men now face the hero-scale ring
+     from its LEFT — the old (456..492) arc stood them against the painted
+     ring's own stones (registered as campfireRing now). The ring stays the
+     ledger's declared hero-scale light source. */
   S.camp = {
     u: { at: MARKS['fire-ulysses'], flip: false },          // fire at 438, on his right
-    crew: [{ at: [456, 492], flip: true }, { at: [474, 497], flip: true },
-           { at: [492, 502], flip: true }],
+    crew: [{ at: [350, 471], flip: false }, { at: [366, 474], flip: false },
+           { at: [382, 478], flip: false }],
   };
+  /* council (round-7 audit #11): the arc stands in the open-sand pocket
+     between the day goat (x <= 450) and the stern curl (x >= 495), every
+     foot >= 10 px (half a body) from both; Ulysses right of the curl. */
   S.council = {
     u: { at: MARKS['council-ulysses'], flip: true },        // faces the arc on his left
-    crew: [{ at: [426, 501], flip: false }, { at: [445, 507], flip: false },
-           { at: [464, 511], flip: false }],
+    crew: [{ at: [460, 504], flip: false }, { at: [472, 507], flip: false },
+           { at: [484, 509], flip: false }],
   };
   S.mainland = {
     u: { at: MARKS['entry-mainland'], flip: false },
     crew: [{ at: [988, 264], flip: false }, { at: [1024, 271], flip: false },
            { at: [972, 258], flip: false }],
   };
+  /* the twelve (round-7 audit #15): the old right flank (x 574..639) stood
+     across ship-1's painted oar blades AND rode beachY's flat clamp past
+     the polyline's end — the line is two staggered ranks along the hull
+     now, everything short of the oars (x <= 566) and off the camp ring. */
   const twelve = [];
-  for (let i = 0; i < 6; i++) {                              // left flank of six
-    const x = 486 + i * 13;
-    twelve.push({ at: [x, beachY(x) + (i % 2 ? 2 : -1)], flip: false });
+  for (let i = 0; i < 6; i++) {                              // rank 1 of six
+    const x = 484 + i * 13;
+    twelve.push({ at: [x, beachY(x) - 2], flip: false });
   }
-  for (let i = 0; i < 6; i++) {                              // right flank of six
-    const x = 574 + i * 13;
-    twelve.push({ at: [x, beachY(x) + (i % 2 ? 2 : -1)], flip: true });
+  for (let i = 0; i < 6; i++) {                              // rank 2 of six
+    const x = 490 + i * 12;
+    twelve.push({ at: [x, beachY(x) + 7], flip: false });
   }
   S.twelve = { u: { at: MARKS['twelve-at-ship'], flip: false }, crew: twelve };
   const climb = [];
-  for (let i = 0; i < CREW_N; i++) {                         // the file, below the wall
-    climb.push({ at: [952 + i * 6.5, 328 + i * 1.9], flip: false });
-  }
+  for (let i = 0; i < CREW_N; i++) {                         // the file, below the
+    climb.push({ at: [946 + i * 11, 326 + i * 1.6], flip: false });   // wall — 11 px
+  }                                    // spacing: 33 px lobe-scale men (audit #4)
   S.climb = { u: { at: MARKS['climb-path'], flip: false }, crew: climb };
   return S;
 }
@@ -277,8 +352,13 @@ const STAGE = stagings();
 /* the landfall pantomime's wade-in points (i-01): out of the shallows where
    the fog band breathes, walking up the apron into the camp staging */
 const WADE = { u: [598, 504], crew: [[620, 506], [585, 502], [640, 508]] };
-/* the hunt dash (i-05): two men out along the apron after the painted goats */
-const HUNT = [[600, beachY(600) - 1], [632, beachY(632) + 1]];
+/* the hunt dash (i-05): two men out along the sand after the painted goats.
+   ROUND 7 (placement audit #15's zone): the old far spots (600,503)/(632,506)
+   parked the hunters ON ship-1's painted oar blades (574..639 x 488..512) —
+   the dash now ends on the waterline sand BELOW the blades (y > 512, still
+   inside the beach band), keeping the long home leg the smoke-unit gait
+   law measures. */
+const HUNT = [[600, 516], [632, 518]];
 
 export class ShoreSet {
   static id = 'shore';
@@ -331,9 +411,28 @@ export class ShoreSet {
     this.scrim.style.background = '#04060c';
     this.scrim.style.opacity = '0';
 
+    /* ---- THE CONTACT SHADOWS, in their own group BEFORE the actors ---- *
+     * (Explorer C, the chase.js law: a body is drawn over its own shadow;
+     * a separate group means no z decision can lift a shadow above one.) */
+    this.shadowG = el('div', 'actors shadows', root);
+    const shN = (name) => {
+      const e = img('actor/shadow/shore/' + SHADOW[name].file, 'lyr', this.shadowG);
+      e.style.opacity = '0';
+      return e;
+    };
+    this.uShN = { stand: shN('ulysses-stand'), walk: shN('ulysses-walk') };
+    this.crewShN = [];
+    for (let i = 0; i < CREW_N; i++) {
+      this.crewShN.push(shN(i % 2 ? 'crew-b-stand' : 'crew-a-stand'));
+    }
+    this._shadows = [];
+
     /* ---- THE ACTORS (isolated, so the dim matrix is theirs alone) ---- */
     this.actors = el('div', 'actors', root);
-    this.ulysses = img(ART.ulyssesStand.file, 'lyr', this.actors);
+    /* actor cuts load their BUILD-GRADED variant (regrade law, setkit) and
+       fall back to the raw cut; strips stay raw — the grade is per-cut */
+    const cut = (f, c, p) => gradedActor(st, 'shore', f, c, p || root);
+    this.ulysses = cut(ART.ulyssesStand.file, 'lyr', this.actors);
     /* the WALK STRIP replaces the old single walk-pose cut: decoded at boot
        via st.bitmap (room.js: the first walk frame never flashes white) */
     this.uStripN = el('div', 'lyr walk', this.actors);
@@ -342,7 +441,7 @@ export class ShoreSet {
     this.crew = [];
     this.crewStripN = [];
     for (let i = 0; i < CREW_N; i++) {
-      const node = img(i % 2 ? ART.crewB.file : ART.crewA.file, 'lyr', this.actors);
+      const node = cut(i % 2 ? ART.crewB.file : ART.crewA.file, 'lyr', this.actors);
       node.style.opacity = '0';
       this.crew.push(node);
       const w = el('div', 'lyr walk', this.actors);
@@ -360,8 +459,15 @@ export class ShoreSet {
     }
     /* the skin rides Ulysses' shoulder from i-10 on — drawn after him so the
        strap sits over the shoulder it hangs from. ~0.62 m of goatskin = 7 px. */
-    this.skinNode = img(ART.skin.file, 'lyr', this.actors);
+    this.skinNode = cut(ART.skin.file, 'lyr', this.actors);
     this.skinNode.style.opacity = '0';
+
+    /* ---- THE FIREPIT OCCLUDER, drawn LAST in the group (pews-front law):
+     * every camp settle stands upstage of its ground (y 507), so the near
+     * stones and the two logs restore OVER the settled feet. */
+    this.occFirepit = img(OCC_FIREPIT.file, 'lyr occ', this.actors);
+    box(this.occFirepit, OCC_FIREPIT.origin[0], OCC_FIREPIT.origin[1],
+        OCC_FIREPIT.size[0], OCC_FIREPIT.size[1]);
 
     /* ---- the fire bloom (screen), over the actors per drawOrder ------ */
     this.bloom = img(LAYER.bloom.file, 'lyr');
@@ -464,7 +570,7 @@ export class ShoreSet {
     if (who !== 'ULYSSES') return null;
     const P = this.pose.u;
     if (P.op < 0.5) return null;
-    return [P.x, P.y - SCALE.ulysses * 0.92];
+    return [P.x, P.y - uH(P.x, P.y) * 0.92];   // the lobe scale (audit #4)
   }
 
   holdAnchor() { return null; }        // no hold verb rides this SET
@@ -585,6 +691,10 @@ export class ShoreSet {
       (1 - 0.55 * dim);
     this.bloom.style.opacity = this.bloomOp.toFixed(3);
 
+    /* the firepit occluder is the NIGHT plate's own share: the day master
+       fades over the night one, and the restore fades with its source */
+    this.occFirepit.style.opacity = (1 - easeInOut(dayK)).toFixed(3);
+
     this.stepTroupe(t, dt, amb);
   }
 
@@ -625,10 +735,16 @@ export class ShoreSet {
       for (let i = 0; i < 3; i++) {
         const key = 'c' + i, P = this.pose[key], to = BOARD[i];
         const dx = to[0] - P.x, dy = to[1] - P.y;
-        const dd = Math.hypot(dx, dy), step = RUN_V * dt;
+        const dd = Math.hypot(dx, dy);
         if (dd > 1.5 && P.op > 0.05) {
-          const u = Math.min(1, step / dd);
-          P.x += dx * u; P.y += dy * u;
+          /* LANE PHYSICS: the dash was `step = RUN_V*dt` verbatim — dead-flat
+             42.9 px/s, on in one frame, off in one frame (audit-motion.md
+             #4). walkToward2 gives it the ease-on/ease-off and the run
+             strip's own per-step pulse; no settle — the boarding fade takes
+             the arrival. */
+          walkToward2(P, to[0], to[1], 3.2, RUN_V, dt,
+                      { gait: GAIT.run, pxPerFrame: PX_PER_FRAME.run,
+                        ease: 0.35, settlePx: 0 });
           P.running = true;
           P.op = 1;
           P.flip = dx < 0;
@@ -650,25 +766,68 @@ export class ShoreSet {
       segK = clamp01((t - seg.t0) / seg.dur);
       if (segK >= 1) { S.seg = null; }
       else if (seg.name === 'landfall') {
+        /* LANE PHYSICS: the 8 s wade was one mathematically smooth glide
+           (CV 19.6-19.9%, zero structure at cadence — audit-motion.md #1).
+           The eased lerp is PULSE-WARPED at each walker's own strip cadence:
+           the ease keeps the schedule (lambda-3 correction), the granted
+           step dips on the plant and rises through the swing. */
         const e = easeInOut(segK), op = clamp01(segK / 0.18);
-        const put = (key, from, to) => {
+        const put = (key, from, to, phase) => {
           const P = this.pose[key];
-          P.x = lerp(from[0], to[0], e); P.y = lerp(from[1], to[1], e);
+          const D = Math.hypot(to[0] - from[0], to[1] - from[1]);
+          if (P._wgT !== seg.t0) { P._wgT = seg.t0; P._wgs = 0; P._wgAsk = 0; }
+          const gait = key === 'u' ? GAIT.u : GAIT.crew;
+          const ppf = key === 'u' ? PX_PER_FRAME.ulysses : PX_PER_FRAME.crew;
+          const sAsk = e * D;
+          const vAsk = Math.max(0, sAsk - P._wgAsk) / Math.max(dt, 1e-6);
+          const att = gaitAtt(gait, ppf, vAsk);
+          const pulse = 1 + (gaitAt(gait, gait.pulse,
+                                    (P.dist || 0) / ppf + phase) - 1) * att;
+          P._wgs += Math.max(0, sAsk - P._wgAsk) * pulse +
+                    (sAsk - P._wgs) * Math.min(1, 2 * dt);
+          P._wgs = Math.min(D, Math.max(0, P._wgs));
+          P._wgAsk = sAsk;
+          const kw = D > 0 ? P._wgs / D : e;
+          P.x = lerp(from[0], to[0], kw); P.y = lerp(from[1], to[1], kw);
           P.op = op; P.flip = want[key].flip;
         };
-        put('u', WADE.u, want.u.at);
-        for (let i = 0; i < 3; i++) put('c' + i, WADE.crew[i], want['c' + i].at);
+        put('u', WADE.u, want.u.at, 0);
+        for (let i = 0; i < 3; i++) put('c' + i, WADE.crew[i], want['c' + i].at, i);
         for (let i = 3; i < CREW_N; i++) this.pose['c' + i].op = 0;
         this.paintTroupe(t, dt, amb);
         return;
       } else if (seg.name === 'hunt') {
         /* two men dash out after the goats; everyone else holds the camp.
            The seg ends with them at the far apron and the damp walks them
-           home — the hunters come back to the fire with the meat. */
-        const e = easeOut(segK);
+           home — the hunters come back to the fire with the meat.
+           LANE PHYSICS: easeOut had derivative 3 at k=0 — the hunters went
+           0 -> 7.5-8.2 m/s in ONE frame (audit-motion.md #2). The dash-out
+           now rises through a real ease-in (easeInOut over the front 70% of
+           the seg — still a sprint, still arriving early to stand), and the
+           step is pulse-warped at the crew strip's cadence. */
+        const e = easeInOut(clamp01(segK / 0.7));
         for (const [i, far] of HUNT.entries()) {
-          const key = 'c' + i, P = this.pose[key], from = want[key].at;
-          P.x = lerp(from[0], far[0], e); P.y = lerp(from[1], far[1], e);
+          const key = 'c' + i, P = this.pose[key];
+          /* the dash leaves from where the man actually STANDS — lerping
+             from the staging mark teleported a not-quite-settled hunter
+             onto it in one frame (a mid-walk snap the jump law reads) */
+          if (P._wgT !== seg.t0) {
+            P._wgT = seg.t0; P._wgs = 0; P._wgAsk = 0;
+            P._hFrom = [P.x, P.y];
+          }
+          const from = P._hFrom;
+          const D = Math.hypot(far[0] - from[0], far[1] - from[1]);
+          const sAsk = e * D;
+          const vAsk = Math.max(0, sAsk - P._wgAsk) / Math.max(dt, 1e-6);
+          const att = gaitAtt(GAIT.crew, PX_PER_FRAME.crew, vAsk);
+          const pulse = 1 + (gaitAt(GAIT.crew, GAIT.crew.pulse,
+                                    (P.dist || 0) / PX_PER_FRAME.crew + i) - 1) * att;
+          P._wgs += Math.max(0, sAsk - P._wgAsk) * pulse +
+                    (sAsk - P._wgs) * Math.min(1, 2 * dt);
+          P._wgs = Math.min(D, Math.max(0, P._wgs));
+          P._wgAsk = sAsk;
+          const kw = D > 0 ? P._wgs / D : e;
+          P.x = lerp(from[0], far[0], kw); P.y = lerp(from[1], far[1], kw);
           P.op = 1; P.flip = false;      // facing the run, up the apron
           want[key].vis = -1;            // seg owns them this frame
         }
@@ -687,20 +846,32 @@ export class ShoreSet {
       if (S.snap) {
         if (W.vis) { P.x = W.at[0]; P.y = W.at[1]; P.flip = W.flip; }
         P.op = W.vis;
+        P.away = false;
         continue;
       }
       if (!W.vis) { P.op = damp(P.op, 0, 5.0, dt); continue; }
-      let far = Math.hypot(P.x - W.at[0], P.y - W.at[1]) > 250;
+      const rem = Math.hypot(P.x - W.at[0], P.y - W.at[1]);
+      /* `away` = short of the staging mark (round-7 parking law: mid-walk is
+         not a settle, and the stride flag flickers at the gait's plant dips) */
+      P.away = rem > 3;
+      let far = rem > 250;
       if (P.op < 0.06) {                             // off stage: land ON the mark
         P.x = W.at[0]; P.y = W.at[1]; P.flip = W.flip; far = false;
+        P.away = false;
       }
       if (far) {
         P.op = damp(P.op, 0, 5.0, dt);               // fade out where he was…
       } else {
-        /* …or WALK the last stretch: the damp shapes the tail, the cap keeps
-           the ground speed a walking speed (see WALK_V — the skate law) */
-        walkToward(P, W.at[0], W.at[1], 1.8,
-                   key === 'u' ? WALK_V.ulysses : WALK_V.crew, dt);
+        /* …or WALK the last stretch — LANE PHYSICS: walkToward2 (eased
+           on/off, per-step pulse at the actor's own strip cadence, a small
+           arrival settle in place of the old 2-4 px / 1.5 s sub-6 px/s
+           stand-cut terminal drift). The cap (WALK_V) is still the
+           anti-skate law's own bound. */
+        walkToward2(P, W.at[0], W.at[1], 1.8,
+                    key === 'u' ? WALK_V.ulysses : WALK_V.crew, dt,
+                    key === 'u'
+                      ? { gait: GAIT.u, pxPerFrame: PX_PER_FRAME.ulysses }
+                      : { gait: GAIT.crew, pxPerFrame: PX_PER_FRAME.crew });
         P.op = damp(P.op, 1, 4.0, dt);
         P.flip = W.flip;
       }
@@ -742,7 +913,10 @@ export class ShoreSet {
     const bobU = 0.7 * brU;
     const swayU = amb * 0.30 * Math.sin(2 * Math.PI * t / 11.0);
     const syU = 1 + 0.0035 * brU;
-    pinSprite(this.ulysses, ART.ulyssesStand, [U.x, U.y], SCALE.ulysses, U.flip,
+    /* THE LOBE SCALE (audit #4): a man standing past x 900 above y 380 is
+       on the mainland's own 19.5 px/m floor — he draws at 34/33 px there */
+    const hU = uH(U.x, U.y);
+    pinSprite(this.ulysses, ART.ulyssesStand, [U.x, U.y], hU, U.flip,
               bobU, moving ? 0 : swayU, moving ? 1 : syU);
     this.ulysses.style.opacity = (moving ? 0 : U.op).toFixed(3);
     this._idleU = !moving && U.op > 0.5
@@ -750,10 +924,14 @@ export class ShoreSet {
       : null;
     if (moving) {
       U.frame = Math.floor(U.dist / PX_PER_FRAME.ulysses) % STRIP.ulysses.n;
-      placeStrip(this.uStripN, STRIP.ulysses, [U.x, U.y], SCALE.ulysses,
-                 U.frame, { flip: U.face < 0 });
+      /* LANE PHYSICS: step-synced bob, the same gait clock as the frame —
+         declared in the proof (U.gbob), so the anchor law holds */
+      U.gbob = gaitBobY(GAIT.u, U.dist / PX_PER_FRAME.ulysses, BOB_AMP.u);
+      placeStrip(this.uStripN, STRIP.ulysses, [U.x, U.y], hU,
+                 U.frame, { flip: U.face < 0, bob: U.gbob });
       this.uStripN.style.opacity = U.op.toFixed(3);
     } else {
+      U.gbob = 0;
       this.uStripN.style.opacity = '0';
     }
     this.uMoving = moving;
@@ -767,8 +945,9 @@ export class ShoreSet {
       const bob = 0.35 * brC;
       const swayC = amb * 0.30 * Math.sin(2 * Math.PI * t / 11.0 + i * 0.7);
       const syC = 1 + 0.0035 * brC;
+      const hC = cH(P.x, P.y);         // the lobe scale (audit #4)
       pinSprite(this.crew[i], i % 2 ? ART.crewB : ART.crewA,
-                [P.x, P.y], SCALE.crew, P.flip, bob, swayC, syC);
+                [P.x, P.y], hC, P.flip, bob, swayC, syC);
       this.crew[i].style.opacity = (P.walking ? 0 : P.op).toFixed(3);
       if (P.op > 0.5 && !P.walking) {
         this._idleC.push({ i, dy: +bob.toFixed(3), rot: +swayC.toFixed(3),
@@ -781,13 +960,19 @@ export class ShoreSet {
            px-per-frame; a walking man keeps the walk strip — never both. */
         const run = !!(P.running && runN);
         const strip = run ? STRIP.run : STRIP.crew;
-        P.frame = (Math.floor(P.dist / (run ? PX_PER_FRAME.run : PX_PER_FRAME.crew)) + i)
-                  % strip.n;
+        const ppf = run ? PX_PER_FRAME.run : PX_PER_FRAME.crew;
+        P.frame = (Math.floor(P.dist / ppf) + i) % strip.n;
+        /* LANE PHYSICS: step-synced bob on the walking box, same clock (+i
+           phase) as the frame; declared in the proof (P.gbob) */
+        P.gbob = gaitBobY(run ? GAIT.run : GAIT.crew, P.dist / ppf + i,
+                          run ? BOB_AMP.run : BOB_AMP.crew);
         placeStrip(run ? runN : this.crewStripN[i], strip, [P.x, P.y],
-                   run ? RUN_H : SCALE.crew, P.frame, { flip: P.face < 0 });
+                   run ? RUN_H : hC, P.frame,
+                   { flip: P.face < 0, bob: P.gbob });
         (run ? runN : this.crewStripN[i]).style.opacity = P.op.toFixed(3);
         (run ? this.crewStripN[i] : runN || { style: {} }).style.opacity = '0';
       } else {
+        P.gbob = 0;
         this.crewStripN[i].style.opacity = '0';
         if (runN) runN.style.opacity = '0';
       }
@@ -796,14 +981,53 @@ export class ShoreSet {
     /* the skin on his shoulder: hangs off his own pose, so it cannot drift
        off the man carrying it (the mask-on-the-face law) */
     if (S.skin && U.op > 0.05) {
-      const dx = U.flip ? -4 : 4;
+      const f = hU / SCALE.ulysses;    // the skin scales with its carrier
+      const dx = (U.flip ? -4 : 4) * f;
       this.skinBox = pinSprite(this.skinNode, ART.skin,
-                               [U.x + dx, U.y - SCALE.ulysses * 0.42],
-                               0.62 * SCALE.pxPerM, U.flip, bobU);
+                               [U.x + dx, U.y - hU * 0.42],
+                               0.62 * SCALE.pxPerM * f, U.flip, bobU);
       this.skinNode.style.opacity = U.op.toFixed(3);
     } else {
       this.skinNode.style.opacity = '0';
       this.skinBox = null;
+    }
+
+    this.paintShadows();
+  }
+
+  /** THE SHADOW PASS (Explorer C — chase.js paintRigs, ported): the anchor
+   *  lands on the actor's own foot mark, scaled by k = drawnH / cutH,
+   *  opacity (0.42 + 0.30 * s) * actorOp; the stand shadow serves the walk
+   *  strip too (the feet are the same feet), Ulysses' walk cut has its own. */
+  shadowPut(node, name, at, hPx, op, id) {
+    const rec = SHADOW[name];
+    const k = hPx / SHADOW_CUT_H[name];
+    box(node, at[0] - rec.anchor[0] * k, at[1] - rec.anchor[1] * k,
+        rec.size[0] * k, rec.size[1] * k);
+    const o = (0.42 + 0.30 * shadowS(at[1])) * op;
+    node.style.opacity = o.toFixed(3);
+    if (o > 0.005) {
+      this._shadows.push({ id, name, at: [+at[0].toFixed(1), +at[1].toFixed(1)],
+                           s: +shadowS(at[1]).toFixed(3), op: +o.toFixed(3),
+                           box: this.drawnBox(node) });
+    }
+  }
+
+  paintShadows() {
+    const U = this.pose.u;
+    this._shadows = [];
+    const uKind = this.uMoving ? 'walk' : 'stand';
+    for (const [kind, node] of Object.entries(this.uShN)) {
+      if (kind !== uKind || !(U.op > 0.005)) { node.style.opacity = '0'; continue; }
+      this.shadowPut(node, 'ulysses-' + kind, [U.x, U.y], uH(U.x, U.y),
+                     U.op, 'ulysses');
+    }
+    for (let i = 0; i < CREW_N; i++) {
+      const P = this.pose['c' + i];
+      if (P.op > 0.005) {
+        this.shadowPut(this.crewShN[i], i % 2 ? 'crew-b-stand' : 'crew-a-stand',
+                       [P.x, P.y], cH(P.x, P.y), P.op, 'crew' + i);
+      } else this.crewShN[i].style.opacity = '0';
     }
   }
 
@@ -890,13 +1114,18 @@ export class ShoreSet {
          plate px, read back off the elements */
       cast: {
         ulysses: { mark: [+this.pose.u.x.toFixed(1), +this.pose.u.y.toFixed(1)],
-                   op: +this.pose.u.op.toFixed(3), moving: !!this.uMoving,
+                   op: +this.pose.u.op.toFixed(3),
+                   moving: !!(this.uMoving || this.pose.u.away),
                    box: this.drawnBox(this.uMoving ? this.uStripN : this.ulysses) },
         skin: { shouldered: S.skin,
                 box: this.skinBox ? this.drawnBox(this.skinNode) : null },
         crew: this.crew.map((node, i) => ({
           mark: [+this.pose['c' + i].x.toFixed(1), +this.pose['c' + i].y.toFixed(1)],
           op: +this.pose['c' + i].op.toFixed(3),
+          moving: !!(this.pose['c' + i].walking || this.pose['c' + i].away),
+                                                 // mid-stride OR short of the
+                                                 // mark: the parking +
+                                                 // perspective laws want settles
           box: this.drawnBox(node),
         })),
         onStage: 1 * (this.pose.u.op > 0.5) +
@@ -906,22 +1135,28 @@ export class ShoreSet {
          and the foot measured off the RENDERED box vs the pose's own mark —
          the lap holds cycling (>= 2 frames) and |dx|,|dy| against these */
       strips: {
+        /* LANE PHYSICS: the mark handed to each proof is shifted by the
+           declared step-bob (translateY on the walking box), so the anchor
+           law measures the transform's residual — the rowers' documented
+           bench-bob precedent. */
         ulysses: this.pose.u.walking
           ? stripProof(this.st, this.uStripN, STRIP.ulysses, this.pose.u.frame,
-                       [this.pose.u.x, this.pose.u.y], this.pose.u.face < 0)
+                       [this.pose.u.x, this.pose.u.y + (this.pose.u.gbob || 0)],
+                       this.pose.u.face < 0)
           : null,
         crew: this.crew.map((_, i) => {
           const P = this.pose['c' + i];
           return P.walking && !P.running
             ? stripProof(this.st, this.crewStripN[i], STRIP.crew, P.frame,
-                         [P.x, P.y], P.face < 0)
+                         [P.x, P.y + (P.gbob || 0)], P.face < 0)
             : null;
         }),
         /* the dash aboard: the run strip's own proof, per sprinting man */
         run: this.runStripN.map((n, i) => {
           const P = this.pose['c' + i];
           return P.running && P.walking
-            ? stripProof(this.st, n, STRIP.run, P.frame, [P.x, P.y], P.face < 0)
+            ? stripProof(this.st, n, STRIP.run, P.frame,
+                         [P.x, P.y + (P.gbob || 0)], P.face < 0)
             : null;
         }),
       },
@@ -930,6 +1165,19 @@ export class ShoreSet {
       inset: { wineskin: +((this.st.state.plate || {}).wineskin || 0).toFixed(3) },
       dim: { scrim: +(+this.scrim.style.opacity || 0).toFixed(3),
              matrix: DIM_MATRIX.slice(), painted: false },
+      /* EXPLORER C's own proofs: the live shadows, the under-the-actors
+         group order, and the firepit occluder's last-in-group paint order */
+      grounding: {
+        under: !!(this.shadowG.compareDocumentPosition(this.actors) &
+                  Node.DOCUMENT_POSITION_FOLLOWING),
+        shadows: this._shadows || [],
+        occ: [{ id: 'firepit', ground: OCC_FIREPIT.ground,
+                at: OCC_FIREPIT.origin.slice(),
+                op: +(+this.occFirepit.style.opacity || 0).toFixed(3),
+                dom: Array.prototype.indexOf.call(this.actors.children,
+                                                  this.occFirepit),
+                groupN: this.actors.children.length }],
+      },
     };
   }
 }

@@ -25,9 +25,14 @@
     "arithmetic": "sternpost curl (516,432) -> prow curl (686,428): sqrt(170^2+4^2)=170 px; 170/15 = 11.3 px/m",
     "crossCheck": "ship-1 mast foot (508,392) -> head (505,287) = 105 px = 9.3 m at 11.3 px/m \u2014 right for a 15 m hull",
     "actorHeightPx": {
-     "ulysses_1.75m": 20
+     "ulysses_1.75m": 20,
+     "crew_1.70m": 19,
+     "ulysses_mainland": 34,
+     "crew_mainland": 33
     },
-    "deviations": "campfire ring 70 px = 6.2 m at set scale (painted hero-scale light source, not a stand-to object); mainland pen sheep ~19 px = 1.7 m (far-lobe dressing). RULING: the ship wins \u2014 actors board it, line along it, click it."
+    "mainlandPxPerM": 19.5,
+    "mainlandArithmetic": "round-7 placement audit #4: four pen sheep 19\u201322 px long (18.1\u201321.0 px/m), apron sheep 19.0, pen fence rails 20.0, yard wall courses 20.0 \u2014 local mean 19.5 px/m; the lobe is x >= 900, y <= 380",
+    "deviations": "campfire ring 70 px = 6.2 m at set scale (painted hero-scale light source, not a stand-to object \u2014 the camp party faces it from the open sand at 350..390, campfireRing registered as an obstacle). RULING (amended, round-7 placement audit #4): the ship rules the BEACH; the mainland lobe draws at its own measured 19.5 px/m \u2014 actors standing past x 900 above y 380 mount at 34/33 px, within 12% of the lobe's painted stock."
    },
    "floors": {
     "beach": {
@@ -103,25 +108,25 @@
     },
     "council-ulysses": {
      "at": [
-      510,
-      492
+      563,
+      499
      ],
      "serves": [
       "ody-i-06",
       "ody-i-07"
      ],
-     "note": "open sand, faces the crew arc, back to the strait"
+     "note": "open sand right of the stern curl (>= 10 px of every painted mass — the old (510,492) merged with the curl's black base, round-7 placement audit #11), back to the strait, faces the crew arc"
     },
     "council-crew": {
      "at": [
-      445,
+      472,
       507
      ],
      "serves": [
       "ody-i-06",
       "ody-i-07"
      ],
-     "note": "crew arc centroid facing Ulysses"
+     "note": "crew arc centroid facing Ulysses — the arc (460,504)(472,507)(484,509) stands in the sand pocket between the day goat (x<=450) and the curl (x>=495), audit #11"
     },
     "twelve-at-ship": {
      "at": [
@@ -131,7 +136,7 @@
      "serves": [
       "ody-i-10"
      ],
-     "note": "the twelve lined on the sand along ship-2's hull; 20 px men fit ~8 abreast on the 170 px hull"
+     "note": "the twelve lined on the sand along ship-2's hull — two staggered ranks x 484..566, SHORT of ship-1's painted oar blades (574..639, registered ship1Oars) and off beachY's flat clamp past x 610 (round-7 placement audit #15)"
     },
     "entry-mainland": {
      "at": [
@@ -230,7 +235,48 @@
       60
      ]
     ],
-    "boulderNote": "none on shore; the smoke of the lawless race is the far-lobe carrier of O.1a"
+    "boulderNote": "none on shore; the smoke of the lawless race is the far-lobe carrier of O.1a",
+    "campfireRing": [
+     [
+      403,
+      431
+     ],
+     [
+      473,
+      501
+     ]
+    ],
+    "dayGoat": [
+     [
+      395,
+      465
+     ],
+     [
+      450,
+      530
+     ]
+    ],
+    "sternCurlMass": [
+     [
+      495,
+      430
+     ],
+     [
+      545,
+      488
+     ]
+    ],
+    "ship1Oars": [
+     [
+      574,
+      488
+     ],
+     [
+      639,
+      512
+     ]
+    ],
+    "obstacleNote": "round-7 placement audit: the parking law's shore census — the hero-scale camp ring (its stones are paint, not a stand-to object), the day plate's 5 m goat (day state only), the stern curl's black mass above the sand, and ship-1's painted oar blades where they meet the sand"
    },
    "lenses": [
     {
@@ -411,10 +457,15 @@
     "crossCheck": "wicker pen fence ~36 px = 0.84 m (true sheep-fence height); mouth aperture 160 px tall = 3.7 m \u2014 seats a ~7 m giant (300 px standing, ~165 px seated) filling the doorway, exactly Beat V's tableau",
     "actorHeightPx": {
      "ulysses_1.75m": 75,
+     "crew_1.70m": 73,
      "polyphemus_7m_standing": 300,
+     "polyphemus_sprawl_supine": "h 104 -> 301 px head-to-feet \u2014 the standing law lying down (round-7 placement audit #5; the old h 70 drew him one-third short)",
      "polyphemus_seated": 165,
      "stake_6ft": 77,
-     "greatRam_authored": "100-110 px long \u2014 must hide a slung 75 px Ulysses (O.11); the painted 45 px ewes stay normal so the anomaly reads"
+     "ramWalk_stock": 24,
+     "ramPairSlung_stock": 25,
+     "ramStockNote": "walkers and lashed pairs draw AT the painted ewes' 20-25 px stock height (round-7 placement audit #9 \u2014 the old 45/57 read as another species beside the pens)",
+     "greatRam_authored": "100-110 px long \u2014 must hide a slung 75 px Ulysses (O.11); the painted ewes and the stock-scale walkers stay normal so the anomaly reads"
     },
     "deviations": "club visible run 205 px = 4.8 m (butt hidden behind the bed; Butler's twenty-oar-mast simile is performed by the wide lens, no metric fact rides it); bed 208 px = 4.8 m (the giant sleeps on the FLOOR among the sheep \u2014 the bed is dressing)"
    },
@@ -505,8 +556,8 @@
     },
     "huddle-far": {
      "at": [
-      1160,
-      465
+      933,
+      541
      ],
      "serves": [
       "ody-ii-03",
@@ -514,17 +565,17 @@
       "ody-ii-13",
       "ody-iii-03"
      ],
-     "note": "far dark right of the bed, under lampR"
+     "note": "the dark floor DOWNSTAGE of the front pen, right of centre — the old (1160,465) stood the whole huddle INSIDE the painted bed box [1025,330..1240,500], front row on logsRight (round-7 placement audit #1); formation rows y 529..553, x 890..974, clear of the pen's bottom rail, the tub and the bowl"
     },
     "suppliant": {
      "at": [
       690,
-      495
+      512
      ],
      "serves": [
       "ody-ii-06"
      ],
-     "note": "arms wide, firelight between him and the seated bulk"
+     "note": "arms wide, firelight between him and the seated bulk — off the unregistered log bundle's top (the old (690,495) stood both sandals on it, round-7 placement audit #3) and off the ring's stone band"
     },
     "giant-seat": {
      "at": [
@@ -554,8 +605,8 @@
     },
     "sprawl-head": {
      "at": [
-      795,
-      450
+      664,
+      546
      ],
      "serves": [
       "ody-ii-10",
@@ -563,61 +614,61 @@
       "ody-iii-13",
       "ody-iv-*"
      ],
-     "note": "sprawl axis head; feet at (975,470) \u2014 full length among the sheep"
+     "note": "the HEAD PIN of the honest-length sprawl (round-7 placement audit #5): h 104 -> box [636.6,443.4,301.2,104], feet at (938,547) \u2014 7 m at the drawn law, -9.5% off the local ewe yardstick. SUPPORT + OCCLUSION law: the baseline rests on open floor; the box overlaps only dressing whose bottom sits >= 8 px upstage (the pen corner, the hearth's near stones, the tub, the bowl \u2014 a body in front of paint). The eye (drive target) is the cut's own point at this scale: (676,495)"
     },
     "sword-ulysses": {
      "at": [
-      768,
-      462
+      680,
+      554
      ],
      "serves": [
       "ody-ii-11",
       "ody-ii-12"
      ],
-     "note": "at the sleeping throat; G2 rides this mark"
+     "note": "at the sleeping THROAT \u2014 18 px from the sprawl's head pin (664,546); the old (768,462) left him 134 px away over the belly once the sprawl was restaged (round-7 placement audit #7). G2 rides this mark"
     },
     "scheme": {
      "at": [
-      640,
-      480
+      800,
+      530
      ],
      "serves": [
       "ody-iii-03"
      ],
-     "note": "Ulysses alone among the pens, push-in pivot"
+     "note": "Ulysses truly ALONE AMONG THE PENS \u2014 downstage of the dung flecks between the two pens; the old (640,480) sat on the hearth rim's front face (round-7 placement audit #2)"
     },
     "lots-circle": {
      "at": [
-      600,
-      505
+      713,
+      527
      ],
      "serves": [
       "ody-iii-05"
      ],
-     "note": "open floor left-front of the fire; overhead lens"
+     "note": "the drawn circle's own centre, right-front of the fire (the round-2 sweep's circle, respaced round 7 \u2014 no neighbour gap under 14 px); the old (600,505) sat inside the woodpile box it also declares"
     },
     "stake-hide": {
      "at": [
-      790,
-      500
+      782,
+      496
      ],
      "serves": [
       "ody-iii-05",
       "ody-iv-01"
      ],
-     "note": "under the dung-litter flecks painted at (770..800,485..495)"
+     "note": "the beam's landed BUTT under the dung-litter flecks painted at (770..800,485..495); the slide lies flat (rot 23 \u2014 the art's own diagonal), never a floating spar at the circle's head line (audit #12)"
     },
     "bowl-offer": {
      "at": [
       700,
-      468
+      514
      ],
      "serves": [
       "ody-iii-08",
       "ody-iii-10",
       "ody-iii-11"
      ],
-     "note": "the walk-to-the-fire stand; G3 holdAnchor rides the raised bowl at chest (700,441)"
+     "note": "the walk-to-the-fire stand, DOWNSTAGE of the rim (the old (700,468) stood inside the fireRing box, audit #6); G3 holdAnchor rides the offer cut's OWN painted bowl at (730,464) \u2014 the separate prop bowl is retired (it doubled the bowl)"
     },
     "ram-stand": {
      "at": [
@@ -645,7 +696,7 @@
     "doorway-seat": {
      "at": [
       345,
-      420
+      470
      ],
      "serves": [
       "ody-iv-12",
@@ -653,7 +704,7 @@
       "ody-v-05",
       "ody-v-06"
      ],
-     "note": "the blind giant seated filling the mouth, hands spread"
+     "note": "the blind giant seated filling the mouth, hands spread — baseline ON the threshold floor slope (downstage line runs y~482 at x 345; the old (345,420) hung him at the aperture lip with no support, round-7 placement audit #14)"
     }
    },
    "objects": {
@@ -738,6 +789,17 @@
        500
       ]
      ],
+     "rimNW": [
+      [
+       485,
+       425
+      ],
+      [
+       527,
+       485
+      ]
+     ],
+     "rimNote": "the rim's painted stones spill past the box's NW corner (round-7 placement audit #13 — (492,441)/(522,459) stood ON the paint outside the declared box)",
      "pitCentre": [
       630,
       460
@@ -761,6 +823,17 @@
       555
      ]
     ],
+    "logBundle": [
+     [
+      645,
+      462
+     ],
+     [
+      745,
+      497
+     ]
+    ],
+    "logBundleNote": "the SECOND wood pile right-front of the hearth — unregistered until round 7 (placement audit #3: the suppliant stood on its top log; the parking sweeps had only ever seen the firewood pile)",
     "mainPen": [
      [
       775,
@@ -806,17 +879,30 @@
      ]
     ],
     "milkTub": [
-     890,
-     495
+     [
+      865,
+      470
+     ],
+     [
+      915,
+      520
+     ]
     ],
     "wheyTub": [
      740,
      366
     ],
     "clayBowl": [
-     832,
-     520
+     [
+      805,
+      505
+     ],
+     [
+      860,
+      535
+     ]
     ],
+    "tubBowlNote": "tub and clay bowl are BOXES from round 7 on (the milking mark's own note always carried the spans; audit #10 caught trio 1 lashed across the tub's face)",
     "creamBowl": [
      800,
      408
@@ -1177,10 +1263,10 @@
      "verb": "target",
      "target": "sword",
      "targetPlate": [
-      768,
-      445
+      680,
+      537
      ],
-     "anchoredOn": "ACTOR PROP \u2014 the sword at Ulysses' hip: mark (768,462) + hip offset 17 px; anchor rides the mounted actor, this is its staged rest",
+     "anchoredOn": "ACTOR PROP \u2014 the sword at Ulysses' hip: mark (680,554) + hip offset 17 px; anchor rides the mounted actor, this is its staged rest at the sleeping throat (round-7 placement audit #7)",
      "gateAct": "swordDraw",
      "note": "targetLive only while the ulysses actor is mounted at sword-ulysses"
     },
@@ -1190,10 +1276,10 @@
      "verb": "hold",
      "holds": 3,
      "holdAnchor": [
-      700,
-      441
+      730,
+      464
      ],
-     "anchoredOn": "the raised ivy bowl at chest height on the bowl-offer mark (700,468)",
+     "anchoredOn": "the offer cut's OWN painted raised bowl \u2014 cut px (345,218) at h 75 on the bowl-offer mark (700,514); the separate prop bowl is retired (round-7 placement audit #6: two bowls in frame)",
      "note": "fills proportional to hold, THREE pours; ody-iii-09 fires on pour-1 release, ody-iii-10 on pour-3"
     },
     {

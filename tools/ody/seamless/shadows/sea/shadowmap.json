@@ -1,0 +1,190 @@
+{
+ "lane": "sea",
+ "law": {
+  "widthK": 1.55,
+  "aspect": 0.42,
+  "peakAlpha": 0.62
+ },
+ "shadows": {
+  "crew-row": {
+   "file": "crew-row-shadow.png",
+   "size": [
+    241,
+    72
+   ],
+   "anchor": [
+    135.2,
+    36.0
+   ],
+   "footSpanPx": 105,
+   "ellipse": [
+    163,
+    68
+   ],
+   "skew": 0.256,
+   "at": [
+    586,
+    455
+   ],
+   "light": {
+    "id": "moon",
+    "at": [
+     474.0,
+     242.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  },
+  "polyphemus-curse": {
+   "file": "polyphemus-curse-shadow.png",
+   "size": [
+    1162,
+    285
+   ],
+   "anchor": [
+    752.3,
+    142.5
+   ],
+   "footSpanPx": 431,
+   "ellipse": [
+    668,
+    281
+   ],
+   "skew": 0.548,
+   "at": [
+    860,
+    210
+   ],
+   "light": {
+    "id": "moon",
+    "at": [
+     474.0,
+     242.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  },
+  "polyphemus-hurl": {
+   "file": "polyphemus-hurl-shadow.png",
+   "size": [
+    1506,
+    368
+   ],
+   "anchor": [
+    397.5,
+    184.0
+   ],
+   "footSpanPx": 559,
+   "ellipse": [
+    866,
+    364
+   ],
+   "skew": 0.548,
+   "at": [
+    860,
+    210
+   ],
+   "light": {
+    "id": "moon",
+    "at": [
+     474.0,
+     242.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  },
+  "polyphemus-stand": {
+   "file": "polyphemus-stand-shadow.png",
+   "size": [
+    1158,
+    284
+   ],
+   "anchor": [
+    851.6,
+    142.0
+   ],
+   "footSpanPx": 430,
+   "ellipse": [
+    666,
+    280
+   ],
+   "skew": 0.548,
+   "at": [
+    860,
+    210
+   ],
+   "light": {
+    "id": "moon",
+    "at": [
+     474.0,
+     242.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  },
+  "ulysses-stand": {
+   "file": "ulysses-stand-shadow.png",
+   "size": [
+    134,
+    45
+   ],
+   "anchor": [
+    72.4,
+    22.5
+   ],
+   "footSpanPx": 63,
+   "ellipse": [
+    98,
+    41
+   ],
+   "skew": 0.128,
+   "at": [
+    518,
+    426
+   ],
+   "light": {
+    "id": "moon",
+    "at": [
+     474.0,
+     242.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  },
+  "ulysses-taunt": {
+   "file": "ulysses-taunt-shadow.png",
+   "size": [
+    117,
+    40
+   ],
+   "anchor": [
+    60.8,
+    20.0
+   ],
+   "footSpanPx": 55,
+   "ellipse": [
+    85,
+    36
+   ],
+   "skew": 0.128,
+   "at": [
+    518,
+    426
+   ],
+   "light": {
+    "id": "moon",
+    "at": [
+     474.0,
+     242.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  }
+ }
+}

@@ -90,13 +90,13 @@ export const UNITS = [
     clear: true, fact: 'O.1' },
 
   /* 1.5 — shore day state — goats scattering; the hunt is pantomime after the line (cut
-     c-hunt).
+     c-hunt); the bed crosses to the daytime shore WITH the visual.
    */
   { id: 'ody-i-05-dawn', key: 'dawn1',
     text: 'When the child of morning, rosy-fingered Dawn appeared, we admired the island and wandered all over it, while the nymphs Jove’s daughters roused the wild goats that we might get some meat for our dinner.',
     speaker: '', verb: 'click', seg: 'hunt', segDur: 5.0, segHold: false,
     focus: 'establishing', page: 1, beat: 1, set: 'shore', clear: true,
-    sfx: 'goats', act: 'shore-day' },
+    sfx: 'goats', bed: 'shore-day', act: 'shore-day' },
 
   /* 1.6 — beach feast, all eyes to the strait — stubble-fire smoke plainly seen (O.1
      reinforcement); sun-down time-lapse; the crew gathers to the council marks.
@@ -198,13 +198,14 @@ export const UNITS = [
     clear: true, sfx: 'boulder', act: 'cave-shut', fact: 'O.4' },
 
   /* 2.5 — milking/curdling compresses on entry (K7/K8, the supper bowl planted); the
-     fire flares, the head turns — FIRST close lens on the single eye (O.1 visual).
+     fire flares — the bed gains its crackle (cave-fire) — the head turns; FIRST
+     close lens on the single eye (O.1 visual).
    */
   { id: 'ody-ii-05-strangers', key: 'strangers',
     text: 'Strangers, who are you? Where do sail from? Are you traders, or do you sail the sea as rovers, with your hands against every man, and every man’s hand against you?',
     speaker: 'POLYPHEMUS', verb: 'click', seg: 'milking', segDur: 4.0,
     segHold: true, focus: 'eye-close', page: 2, beat: 2, set: 'cave',
-    clear: true, sfx: 'boom', act: 'giant-seat' },
+    clear: true, sfx: 'boom', bed: 'cave-fire', act: 'giant-seat' },
 
   /* 2.6 — arms wide, firelight between the small figure and the seated bulk; no cue.
    */
@@ -246,13 +247,14 @@ export const UNITS = [
     sfx: 'seize', act: 'cave-embers', fact: 'O.6' },
 
   /* 2.11 — GATE G2 — the glint at the hip; the reader performs the fatal instinct so the
-     text can refuse it (O.5 setup).
+     text can refuse it (O.5 setup); the promised snore-bed (K14) is UNDER the gate
+     — the instinct is weighed against the sleeping breath.
    */
   { id: 'ody-ii-11-sword', key: 'sword',
     text: 'I was at first inclined to seize my sword, draw it, and drive it into his vitals…',
     speaker: '', verb: 'target', target: 'sword', gateAct: 'swordDraw',
     gateSfx: 'sword', cue: 'click the sword · do what instinct asks',
-    focus: 'sword', page: 2, beat: 2, set: 'cave', clear: true,
+    focus: 'sword', page: 2, beat: 2, set: 'cave', clear: true, bed: 'snore',
     act: 'sword-ulysses' },
 
   /* 2.12 — the blade STOPS mid-air; the pan lands on the boulder filling the mouth; steel
@@ -332,13 +334,14 @@ export const UNITS = [
     sfx: 'flock' },
 
   /* 3.7 — boulder re-seated + milking repeated (c9); seg seize IDENTICAL a third time —
-     men now six; the ivy bowl becomes the hot object.
+     men now six; the supper fire is lit (cave-fire bed) and the ivy bowl becomes
+     the hot object.
    */
   { id: 'ody-iii-07-suppertwo', key: 'suppertwo',
     text: '…he gripped up two more of my men, and made his supper off them. So I went up to him with an ivy-wood bowl of black wine in my hands:',
     speaker: '', verb: 'click', seg: 'seize', segDur: 6.0, segHold: true,
     focus: 'meal-close', page: 3, beat: 3, set: 'cave', clear: true,
-    sfx: 'seize', act: 'cave-shut', fact: 'O.6' },
+    sfx: 'seize', bed: 'cave-fire', act: 'cave-shut', fact: 'O.6' },
 
   /* 3.8 — GATE G3 — the bowl fills with the hold (pour 1; the set pantomimes pours 2-3
      under the two autos that follow, ledger holds:3); his drain-and-thrust-back IS
@@ -382,14 +385,15 @@ export const UNITS = [
     speaker: 'POLYPHEMUS', verb: 'click', focus: 'twoshot', page: 3, beat: 3,
     set: 'cave', fact: 'O.8b' },
 
-  /* 3.13 — rides the collapse segment (~6 s); the sick-turn in shadow, sound-led; Beat
-     IV's heading lands on this SAME leaf — NO page turn.
+  /* 3.13 — rides the collapse segment (~6 s); the sick-turn in shadow, sound-led — the
+     wine takes him and the snore-bed comes up under the stake; Beat IV's heading
+     lands on this SAME leaf — NO page turn.
    */
   { id: 'ody-iii-13-neck', key: 'neck',
     text: 'His great neck hung heavily backwards and a deep sleep took hold upon him.',
     speaker: '', verb: 'auto', dwell: 6.5, seg: 'collapse', segDur: 6.0,
     segHold: true, focus: 'establishing', page: 3, beat: 3, set: 'cave',
-    clear: true, sfx: 'fall', act: 'cave-embers' },
+    clear: true, sfx: 'fall', bed: 'snore', act: 'cave-embers' },
 
   /* ================= BEAT IV · THE STAKE — SET cave · leaf 3 (no turn in; turns out 3→4) ================= */
 
@@ -434,12 +438,12 @@ export const UNITS = [
     beat: 4, set: 'cave', sfx: 'sputter' },
 
   /* 4.5 — the HISS then the YELL — camera shake, roof-dust, the flocks surging in the
-     pens.
+     pens; the snore-bed dies with the sleep it belonged to.
    */
   { id: 'ody-iv-05-hiss', key: 'hiss',
     text: '"As a blacksmith plunges an axe or hatchet into cold water to temper it—for it is this that gives strength to the iron—and it makes a great hiss as he does so, even thus did the Cyclops’ eye hiss round the beam of olive wood, and his hideous yells made the cave ring again."',
     speaker: '', verb: 'clock', at: 10.4, focus: 'drive-tight', page: 3,
-    beat: 4, set: 'cave', sfx: 'hiss' },
+    beat: 4, set: 'cave', sfx: 'hiss', bed: 'cave' },
 
   /* 4.6 — pluck-and-hurl pantomime inside the ellipsis (cut #7); lamplight gathers
      through the boulder seams; click pacing resumes next unit.

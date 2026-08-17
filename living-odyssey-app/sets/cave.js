@@ -28,36 +28,35 @@
  * the stake 77 (6 ft), the great ram 100-110 px long — the painted 45 px
  * ewes stay normal so O.11's anomaly reads.
  *
- * THE SPRAWL MARK IS NUDGED, TWICE (owner's proof review item a; owner's
- * round-2 eye review E2 — the parking-law spirit both times). The ledger's
- * sprawl-head (795,450) stands the sprawled cut's box (~203x70 plate px at
- * its honest length) across BOTH painted pens. Round 1 swept it left-down
- * clear of everything — and buried the bulk behind the stake-five row,
- * where it read as grey stone and the drive line read as pointing at the
- * fire (E2). The round-2 restage keeps the ACCEPTED stage proof's
- * composition — the sprawl on the clear floor right of the fire, head
- * toward it, Ulysses' drive line INTO the eye — at the nearest spot the
- * parking law admits:
- *     head pin (664, 546)  ->  box [645.5, 476.9, 202.7, 70.0]
- *     mainPen  [775,290..1050,425]  clear by 51.9 px (y)
- *     frontPen [860,425..1090,525]  clear by 11.8 px (x)
- *     firewood [495,495..620,555]   clear by 25.5 px (x)
- *     embers anchor (662,456)       clear by 20.9 px (y) — G4's stake tip
- *                                   keeps its own air
- * What the box still overlaps is UPSTAGE of his baseline (the hearth's near
- * stones, the painted clay bowl at 832,520) — correct occlusion, a body in
- * front of dressing, which is the painting's own depth logic and not the
- * broken-fence read the review filed. The clearances are re-measured in the
- * snapshot every frame, off the drawn box; `sprawl.ok` now demands ALL
- * THREE (pens AND woodpile) >= 10, not the pens alone.
+ * THE SPRAWL IS HONEST-LENGTH NOW (round-7 placement audit #5, 2026-08-16).
+ * The round-2 restage kept the accepted composition (head toward the fire,
+ * drive line INTO the eye) but drew the body 202.7 px long against his own
+ * standing law of 300 px (43 px/m x 7 m) — one third short, 0.98x a hearth
+ * a 7 m body should overshoot 1.46x. The head pin stays (664,546); the cut
+ * now draws h 104 -> box [636.6, 443.4, 301.2, 104] — 301 px, -0.06% off
+ * the drawn law and -9.5% off the local downstage yardstick (front-pen ewe
+ * 47.6 px/m), inside the 12% perspective law. A 301 px body cannot keep the
+ * old 10 px X-clearance from every pen on this floor, so the parking law is
+ * AMENDED to what it always meant: SUPPORT + OCCLUSION — the BASELINE (the
+ * support line, the box bottom at y~547) must lie on open floor (no
+ * registered obstacle's box reaches within 8 px of it where they share x),
+ * and whatever the box overlaps ABOVE that line (the front pen's corner,
+ * the hearth's near stones, the tub, the clay bowl) is a body drawn in
+ * front of dressing — the painting's own depth logic, previously argued as
+ * the hearth exception, now stated as the law. `sprawl.ok` measures it in
+ * the snapshot every frame off the drawn box. The eye — the drive's target
+ * — is the same cut point (170.5, 225.9 in cut px) at the new scale:
+ * (676, 495).
  *
- * TWO MORE PARKING SWEEPS (lap round 2, same spirit): the LOTS CIRCLE arcs
- * right-front of the fire — the ledger's own lots-circle mark sits inside
- * the woodpile box it also declares (FORM.lots, U_AT.lots) — and the GROPE
- * walk rises at the sprawl's foot end and takes the back wall instead of
- * the downstage diagonal through the woodpile (PATH.giantGrope). Every
- * settled foot and every point of the grope polyline is >= 10 px clear of
- * every registered obstacle; the marks stay ledger-verbatim for the record.
+ * TWO MORE PARKING SWEEPS (lap round 2) + THE ROUND-7 RE-SWEEP: the LOTS
+ * CIRCLE arcs right-front of the fire (FORM.lots — respaced round 7 so no
+ * neighbour gap is under 14 px against the 27 px bodies, audit #12), and
+ * the GROPE walk rises at the sprawl's foot end and takes the back wall
+ * (PATH.giantGrope). Round 7 also swept the HUDDLE off the painted bed
+ * (audit #1 — the old huddle-far (1160,465) sat INSIDE the bed box), the
+ * scheme/suppliant/bowl/sword marks off the hearth rim, the log bundle and
+ * the sprawl's belly (audits #2/#3/#6/#7), and gave every damped walk the
+ * HEARTH DETOUR (parkedGoal) so no stride crosses the fire ring (#2/#8).
  *
  * THE THREE HOLD/CLOCK MACHINES this set runs (ledger G3/G4 + §6.6 pattern):
  *   G3 the bowl    iii-08 `hold`: the ivy bowl FILLS in proportion to the
@@ -95,8 +94,10 @@
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
          emissives, placeStrip, stripProof, stripPxPerFrame, pathLen,
-         alongPathArc, walkToward, bridgeFrame, loopFrame } from '../setkit.js';
+         alongPathArc, walkToward2, gaitProfile, gaitAt, gaitBobY,
+         bridgeFrame, loopFrame, gradedActor } from '../setkit.js';
 import { STRIPS } from '../strips.js';
+import { SHADOWS } from '../shadows.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SCALE = { pxPerM: 43, ulysses: 75, crew: 73, giantStand: 300,
@@ -110,45 +111,73 @@ const FLOORS = {
 };
 const downY = (x) => floorY(FLOORS.downstage, x);
 
-/* the marks, ledger names verbatim — each serves the units it names */
+/* the marks, ledger names verbatim — each serves the units it names.
+   ROUND-7 PLACEMENT AUDIT (2026-08-16): the marks below ARE the ledger's
+   (updated in sync — the ledger is law, no more "kept for the record"
+   doubles): huddle-far off the painted bed (#1), scheme off the hearth and
+   truly among the pens (#2), suppliant off the log bundle (#3), sword at
+   the sleeping THROAT of the honest-length sprawl (#7), lots-circle at the
+   drawn circle's own centre (#12), stake-hide at the beam's landed butt
+   under the flecks, bowl-offer off the rim (#6), doorway-seat down on the
+   threshold floor (#14). */
 const MARKS = {
   entry:          [360, 450],    // lit threshold inside the mouth (ii-00, K1)
   'cheese-rack':  [640, 405],    // O.3 tableau centre, laden men (ii-01)
-  'huddle-far':   [1160, 465],   // far dark right of the bed, under lampR
-  suppliant:      [690, 495],    // arms wide in the firelight (ii-06)
+  'huddle-far':   [933, 541],    // the dark floor downstage of the front pen,
+                                 // clear of the bed + logsRight (audit #1)
+  suppliant:      [690, 512],    // arms wide in the firelight, off the log
+                                 // bundle's top (audit #3) and the ring band
   'giant-seat':   [760, 452],    // the working seat by the fire — ALL 3 meals
   milking:        [852, 470],    // the tub + clay bowl cluster (K7/K8, c1, c9)
-  'sprawl-head':  [795, 450],    // THE LEDGER'S mark — kept for the record;
-                                 // the drawn mark is SPRAWL.at (see header)
-  'sword-ulysses': [768, 462],   // at the sleeping throat; G2 rides this
-  scheme:         [640, 480],    // alone among the pens (iii-03)
-  'lots-circle':  [600, 505],    // THE LEDGER'S mark, kept for the record — it
-                                 // sits inside the woodpile box it also declares;
-                                 // the drawn circle is FORM.lots, swept to the
-                                 // fire's other side (parking law, lap round 2)
-  'stake-hide':   [790, 500],    // under the painted dung flecks
-  'bowl-offer':   [700, 468],    // the walk-to-the-fire stand; G3's mark
+  'sprawl-head':  [664, 546],    // the head pin of the honest-length sprawl
+                                 // (audit #5) — SPRAWL.at rides this
+  'sword-ulysses': [680, 554],   // at the sleeping THROAT — 18 px from the
+                                 // head pin (audit #7); G2 rides this
+  scheme:         [800, 530],    // alone among the pens — downstage of the
+                                 // dung flecks, clear of the hearth (audit #2)
+  'lots-circle':  [713, 527],    // the drawn circle's centre, right-front of
+                                 // the fire (FORM.lots; audit #12)
+  'stake-hide':   [782, 496],    // the beam's butt under the painted dung
+                                 // flecks (770..800, 485..495)
+  'bowl-offer':   [700, 514],    // the walk-to-the-fire stand, downstage of
+                                 // the rim (audit #6); G3's mark
   'ram-stand':    [838, 430],    // apart at the front pen's left rail (G5)
   'ram-at-mouth': [395, 438],    // halted under the palm in the doorway
-  'doorway-seat': [345, 420],    // the blind giant filling the mouth
+  'doorway-seat': [345, 470],    // seated ON the threshold floor slope, the
+                                 // bulk filling the mouth (audit #14)
 };
 
-/* the painted objects the parking law is stated against (ledger objects) */
+/* the painted objects the parking law is stated against (ledger objects).
+   ROUND 7 registers the paint the audit caught unregistered: the second log
+   bundle right-front of the hearth (#3), the rim's NW stone spill (#13),
+   the bed's logsRight pile (#1), and the tub/bowl as BOXES (#10). */
 const OBJ = {
   mainPen:  [775, 290, 1050, 425],
   frontPen: [860, 425, 1090, 525],
   fireRing: [527, 418, 733, 500],
+  fireRimNW: [485, 425, 527, 485],   // the rim paint past the box's NW corner
   firewood: [495, 495, 620, 555],
+  logBundle: [645, 462, 745, 497],   // the unregistered pile (audit #3)
   mouth:    [290, 250, 405, 415],
   boulderOpen: [455, 330], boulderShut: [355, 325],
   club: { tip: [1097, 200], visibleButt: [1042, 398] },
   bed: [1025, 330, 1240, 500],
+  logsRight: [1105, 480, 1180, 520],
+  milkTub: [865, 470, 915, 520],
+  clayBowl: [805, 505, 860, 535],
 };
 
-/* THE NUDGED SPRAWL (header, watch-item a). `at` is the head pin; the eye —
-   the drive's target — sits at the head end, mid-bulk. */
-const SPRAWL = { at: [664, 546], h: 70, ledger: MARKS['sprawl-head'] };
-const EYE = [672, 512];
+/* THE HONEST-LENGTH SPRAWL (header; audit #5). `at` is the head pin; h 104
+   draws the cut 301.2 px long — the giant's own 7 m at 43 px/m. The eye —
+   the drive's target — is the cut's own point (170.5, 225.9) at this scale. */
+const SPRAWL = { at: [664, 546], h: 104, ledger: MARKS['sprawl-head'] };
+const EYE = [676, 495];
+
+/* THE ROUND-7 SWEEP SUPERSEDES THE +12 px SWEEP (grounding report T2): the
+   ledger marks THEMSELVES moved off the ring band / the log bundle, so the
+   drawn marks and the ledger marks are one number again. SWEPT is kept as
+   the [restage] gate's read surface — identical to MARKS now. */
+const SWEPT = { suppliant: MARKS.suppliant, scheme: MARKS.scheme };
 
 /* ---- layers-cave.json, transcribed ----------------------------------- */
 const EMIS = [
@@ -223,13 +252,15 @@ const FOCUS = {
 /* ---- the gates (ledger §gates, cave) ---------------------------------- */
 const GATES = {
   /* G2: the sword is an ACTOR PROP — the anchor rides the mounted Ulysses at
-     his staged rest, mark (768,462) + 17 px of hip: the ledger's (768,445). */
+     his staged rest, mark (680,554) + 17 px of hip: the ledger's (680,537). */
   sword: { hipLift: 17, r: 38 },
   /* G5: the great-ram ACTOR's body centre at ram-stand — (838,430) - 15. */
   'ram-great': { bodyLift: 15, r: 60 },
 };
-/* G3/G4, the two hold anchors, ledger verbatim */
-const HOLD_AT = { bowl: [700, 441], embers: [662, 456] };
+/* G3/G4, the two hold anchors, ledger verbatim. THE BOWL ANCHOR IS THE
+   OFFER CUT'S OWN PAINTED BOWL (audit #6 — the separate prop doubled it):
+   cut px (345, 218) at h 75 -> mark (700,514) + (30.5, -50.4). */
+const HOLD_AT = { bowl: [730, 464], embers: [662, 456] };
 
 /* ---- the sword pan (O.5) and the pours (O.7) -------------------------- */
 const SWORD = { rise: 0.5, hang: 1.5, sheathe: 2.4, panFrom: 0.9, panTo: 7.5 };
@@ -290,10 +321,62 @@ const GLOW_TIP = { file: ART.stakeGlow.file, px: ART.stakeGlow.px,
 /* per-pose drawn heights at 43 px/m: the giant's law is the ledger's own
    (300 standing, 165 seated fills the 160 px mouth); the in-between poses
    are read off their cuts' own stances against those two anchors */
-const GIANT_H = { stand: 300, seat: 165, clutch: 190, drink: 175, sprawl: 70,
+const GIANT_H = { stand: 300, seat: 165, clutch: 190, drink: 175, sprawl: 104,
                   grope: 210, doorway: 165, stroke: 190 };
-const RAM_H = { walk: 45, great: 83, greatSlung: 84, pair: 57 };
+/* RAM SCALE (audit #9): the painted ewes are the stock law (20-25 px tall,
+   ledger yardstick) — the walkers and the lashed pairs draw AT stock height
+   now (24 / 25 px vs the old 45 / 57, which read as another species beside
+   the pens). Only the GREAT ram is licensed anomalous (ledger: 100-110 px
+   long — he must hide a slung 75 px Ulysses, O.11). */
+const RAM_H = { walk: 24, great: 83, greatSlung: 84, pair: 25 };
 const PROP_H = { bowl: 16, sword: 12, stakeW: 84 };
+
+/* ---- EXPLORER C: CONTACT SHADOWS (the chase.js rig-shadow law) ---------- *
+ * The registry is app/shadows.js, generated VERBATIM from the grounding
+ * lane's shadowmap.json (tools/ody/seamless/shadowgen.py): per cut, the PNG
+ * carries the FEET'S own span as a light-skewed floor ellipse at peak alpha
+ * 0.62; the set places its `anchor` ON the actor's foot mark, scaled by the
+ * actor's own k = drawnH / cutH, and applies the chase depth-opacity law
+ *     opacity = (0.42 + 0.30 * s) * actorOp        (chase.js paintRigs)
+ * with s the mark's own depth share of this floor's y range (the ledger's
+ * upstage rack line 330 to the downstage edge's deepest 565). */
+const SHADOW = SHADOWS.cave.shadows;
+const SHADOW_BAND = [330, 565];
+const shadowS = (y) =>
+  clamp01((y - SHADOW_BAND[0]) / (SHADOW_BAND[1] - SHADOW_BAND[0]));
+/* which shadow serves which live picture: the giant's poses by name (the
+   doorway draws the grope cut and takes its shadow), the bridges/loops by
+   the pose the strip is performing at its mark */
+const GIANT_SHADOW = {
+  stand: 'polyphemus-stand', seat: 'polyphemus-seated',
+  clutch: 'polyphemus-clutch', drink: 'polyphemus-drink',
+  sprawl: 'polyphemus-sprawl', grope: 'polyphemus-blinded-grope',
+  stroke: 'polyphemus-stroke',
+};
+const BRIDGE_SHADOW = { seize: 'clutch', drink: 'drink', collapse: 'sprawl',
+                        milk: 'seat', stroke: 'stroke', grope: 'grope' };
+
+/* ---- EXPLORER C: FLOOR-PROP OCCLUDERS (the church pews-front law) ------- *
+ * Pixel-exact restores of the plate's OWN props (cutocc.py; occluders.json
+ * origins/grounds verbatim), cut PER PAINTED STATE — the room-dim law: the
+ * same stones are painted five times. Each occluder is ONE wrapper in the
+ * actor group, painter-sorted by its GROUND line like any baseline, whose
+ * five state layers mirror the plate stack's order and opacities every
+ * frame — so the wrapper's composite IS the plate stack's own composite
+ * restricted to the cut, and a swap can never show a stale state's stones.
+ * Adopted per the grounding report (explore-grounding.md §2/§4): the fire
+ * ring's lip seats the giant's three-meal clutch (417 px of measured
+ * burial), the woodpile's crown seats every mid-floor crossing (289 px),
+ * the milk tub seats the milking giant; the frontPen RAILS and the sea
+ * GUNWALE were measured there and REFUSED (0 px / rail-gap alpha). */
+const OCC = [
+  { id: 'firering', base: 'set/cave/firering-front-', origin: [523, 409],
+    size: [214, 98], ground: 503 },
+  { id: 'woodpile', base: 'set/cave/woodpile-front-', origin: [483, 497],
+    size: [140, 57], ground: 550 },
+  { id: 'tub', base: 'set/cave/tub-front-', origin: [845, 455],
+    size: [94, 95], ground: 546 },
+];
 
 const CREW_N = 12;                    // twelve enter; the meals do the counting
 
@@ -348,10 +431,16 @@ const SEIZE_WIN = [0.02, 0.42];
  * the head-back), then the static drink cut holds the drain out */
 const DRINK_BRIDGE = 0.9;
 /* the collapse bridge spends k 0..0.85 of the 6 s seg; the landing frame's
- * lying body centres 7.9 drawn px right of its measured anchor, so the end
- * mark below parks that centre on the sprawl cut's own (746.9, 546.9) */
-const COLLAPSE_END = [739, 547];
+ * lying body centres 7.9 drawn px (at hPx 196) right of its measured anchor,
+ * so the end mark below parks that centre on the honest sprawl's own
+ * (787.2, 547.4) — the offset scales with the ramp to 11.7. THE HPX RAMP
+ * (audit #5): the bridge opens at its measured drink-continuity 196 and
+ * eases to 291.2 (196 x 104/70) across the fall, so the landing frame draws
+ * the same length the honest static sprawl then holds — he goes down AND
+ * stretches out full length in the one motion. */
+const COLLAPSE_END = [775, 547];
 const COLLAPSE_WIN = 0.85;
+const COLLAPSE_HPX_END = 291.2;
 /* the stride is MEASURED off the pose the frame actually moved (seg and
    damp alike); a teleport (fade-through reland, a settled snap) is not a
    stride, and a SEIZED man is dragged, not walking */
@@ -367,6 +456,68 @@ const STRIDE_TELEPORT = 40;           // plate px in one step is a re-stage
    a short seg cannot make him sprint; the seg simply hands him the floor a
    beat longer. */
 const WALK_V = { man: 2.0 * SCALE.pxPerM, giant: 1.8 * SCALE.pxPerM };
+
+/* LANE PHYSICS (Explorer D adopted — tools/ody/seamless/explore-physics.md):
+ * the gait read off each strip's OWN anchors (the plant frames are the anchor
+ * swap, the KING law's contacts: polyphemus-walk plants at cells 3/7,
+ * crew-walk at 1/4 — read, not transcribed), a mean-1 speed pulse that dips
+ * ON the plant and rises through the swing, and a step-synced bob. Bob
+ * amplitudes ~2.4-3% of body height (the audit's real-walk band is 3-4%;
+ * the burdened sliders carry a shade less). */
+/* the giant's dip is SHALLOWER (0.28 vs the default 0.38): his pulse peak
+   rides vmax x 1.19 instead of x 1.32, which keeps the planted foot's css
+   glide under the lap's anti-skate budget (2.5 css px per 1/60 step) at the
+   flock crossings' zoom while the CV still reads ~17% (law >= 15%) */
+const GAIT = { giant: gaitProfile(STRIPS['polyphemus-walk'], { dip: 0.28 }),
+               crew:  gaitProfile(STRIPS['crew-walk']),
+               ram:   gaitProfile(STRIPS['ram-walk']) };
+/* CADENCE ATTENUATION (shared law with setkit walkToward2): pulse depth
+   scales with the gait cycle's own seconds — full below ~1.1 cycles/s,
+   fading toward flat at sprint rates, where a full-depth pulse at 30 fps
+   reads as flicker and breaks the one-frame speed law */
+const gaitAtt = (gait, ppf, v) =>
+  clamp01(gait.n * ppf / (Math.max(v, 1) * 0.9));
+const BOB_AMP = { giant: 0.024 * SCALE.giantStand, crew: 0.03 * SCALE.crew,
+                  ram: 0.03 * RAM_H.walk, pair: 0.025 * RAM_H.pair,
+                  gram: 0.024 * RAM_H.great };
+/* THE RAM-STREAM SLIDERS (audit-motion.md #1, the chapter's worst offender):
+ * the lashed trio-pairs and the great ram are single measured CUTS (the men
+ * slung beneath are baked into the art — the registry ships no slung strip,
+ * and compositing static men over ram-walk cells would scissor the lashings),
+ * so they cannot ride placeStrip. Instead they WALK: arc-length integration
+ * at a burdened vmax (1.2 m/s — they carry men), the ram strip's own pulse
+ * table for per-step speed structure, and the cell cadence applied to the
+ * static cut as a bob + sway gait about the pin (body low at the plant, high
+ * mid-swing, weight rocking once per cycle). Zero-leg-motion is the art's
+ * fact; the burdened plod at stride cadence is what reads honest over it. */
+const SLUNG_V = 1.2 * SCALE.pxPerM;    // 51.6 px/s — a burdened animal's walk
+const TROT_V = 1.4 * SCALE.pxPerM;     // 60.2 px/s — v-11's own verb: he
+                                       // TROTS clear once the mouth is his
+const SLUNG_SWAY = 0.55;               // deg, once per gait cycle, about the pin
+/* the slung walks' own integrator: ease-in from rest, ease-out as the path
+   runs out, per-step pulse on the ram strip's plant table — phase is the
+   SAME clock (arc s / pxPerFrame) that a strip walk would use */
+function glideStep(g, len, vmax, dt, phase) {
+  g.run += dt;
+  /* a burdened animal gathers itself: 0.5 s to cruise, and the last
+     ~0.35 s of path eases toward a 0.15 floor. The step pulse FADES WITH
+     the ease-out (short checking steps into the stop) so the decel knee
+     never compounds a pulse peak with the envelope's own fall. */
+  const envIn = easeInOut(Math.min(1, g.run / 0.5));
+  const envOut = Math.max(0.15, easeInOut(clamp01((len - g.s) / (vmax * 0.35))));
+  const v0 = vmax * envIn * envOut;
+  const att = gaitAtt(GAIT.ram, STRIP.ram.pxPerFrame, v0) * envOut;
+  const pulse = 1 + (gaitAt(GAIT.ram, GAIT.ram.pulse,
+                            g.s / STRIP.ram.pxPerFrame + (phase || 0)) - 1) * att;
+  g.s = Math.min(len, g.s + v0 * pulse * dt);
+  return g.s;
+}
+/* the slider's gait clock -> bob + sway for its static cut */
+function slungGait(s, phase, bobAmp) {
+  const phi = s / STRIP.ram.pxPerFrame + (phase || 0);
+  return { bob: gaitBobY(GAIT.ram, phi, bobAmp),
+           rot: SLUNG_SWAY * Math.sin(2 * Math.PI * phi / GAIT.ram.n) };
+}
 
 /* place a cut by its measured pin. Returns the drawn box for the snapshot.
    MICRO-IDLE (the sherlock King law, room.js stepKing): a settled cut may
@@ -385,68 +536,132 @@ function pinCut(node, art, at, hPx, { flip = false, bob = 0, rot = 0, sy = 1 } =
   return { w, h };
 }
 
-/* walk a polyline path by eased fraction k; returns [x, y] */
-function alongPath(pts, k) {
-  const n = pts.length - 1;
-  const f = clamp01(k) * n;
-  const i = Math.min(n - 1, Math.floor(f));
-  const u = f - i;
-  return [lerp(pts[i][0], pts[i + 1][0], u), lerp(pts[i][1], pts[i + 1][1], u)];
+/* alongPath (per-SEGMENT fractions) is RETIRED (LANE PHYSICS): equal param
+   time across unequal polyline legs made every vertex an instantaneous speed
+   step — ram0 popped +47% in one frame at the flockOut seg2->seg3 vertex.
+   Every path walk below is arc-length parameterised (setkit alongPathArc). */
+
+/* THE HEARTH DETOUR (round-7 placement audit #2/#8): walkToward is a
+   straight damp, and a straight leg from the far dark to any fire-side mark
+   STRODE THROUGH the painted hearth (b3-31 caught Ulysses on the embers,
+   b2-15 five carry men on the rim). Every damped walk now asks for a legal
+   goal first: while the straight leg to the true goal crosses the fire
+   ring's box, the walk is handed the cheapest inflated corner it can reach
+   in the clear — re-chosen every frame, so greedy corner routing walks the
+   man AROUND the convex box and hands the true goal back the moment the
+   way is open. Segs and settled snaps bypass it (a pantomime writes
+   positions; a snap is a re-stage, not a walk). The waypoints stay between
+   the ledger's two floor polylines. */
+/* the detour region is the UNION bounding box of the ring and its NW rim
+   spill (audit #13) — a route that clears the pit but strides the painted
+   corner stones solved nothing */
+const HEARTH = [485, 418, 733, 500];
+const HEARTH_WAY = [[473, 406], [745, 406], [473, 512], [745, 512]];
+function segCrossesBox(x1, y1, x2, y2, b) {
+  let t0 = 0, t1 = 1;
+  const dx = x2 - x1, dy = y2 - y1;
+  const clip = (p, q) => {
+    if (p === 0) return q >= 0;
+    const r = q / p;
+    if (p < 0) { if (r > t1) return false; if (r > t0) t0 = r; }
+    else { if (r < t0) return false; if (r < t1) t1 = r; }
+    return true;
+  };
+  return clip(-dx, x1 - b[0]) && clip(dx, b[2] - x1) &&
+         clip(-dy, y1 - b[1]) && clip(dy, b[3] - y1) && t1 > t0;
+}
+function parkedGoal(px, py, gx, gy) {
+  if (!segCrossesBox(px, py, gx, gy, HEARTH)) return [gx, gy];
+  let best = null, cost = Infinity;
+  for (const [wx, wy] of HEARTH_WAY) {
+    /* never re-choose the corner underfoot (a zero first leg made the
+       occupied corner the argmin forever — the round-7 lap caught six men
+       parked on it), and price a corner whose ONWARD leg still crosses at
+       a second hop's worth so the router prefers the corner that opens
+       the way */
+    const leg1 = Math.hypot(px - wx, py - wy);
+    if (leg1 < 4) continue;
+    if (segCrossesBox(px, py, wx, wy, HEARTH)) continue;
+    let c = leg1 + Math.hypot(wx - gx, wy - gy);
+    if (segCrossesBox(wx, wy, gx, gy, HEARTH)) c += 240;
+    if (c < cost) { cost = c; best = [wx, wy]; }
+  }
+  return best || [gx, gy];
 }
 
 /* ---- THE STAGINGS: the crew formations, authored on the floors -------- *
- * Every foot below sits between the two ledger polylines and clears the
- * fire ring's box (527..418..733..500), the woodpile (495..495..620..555)
- * and the two pens by the parking law's >= 10 px — the same sweep the
- * sprawl mark got. The huddle is the ledger's huddle-far arc; the racks line
- * stops at rack C because rack D's feet stand inside mainPen's box. */
+ * ROUND-7 RE-SWEEP (placement audit): every foot below sits between the two
+ * ledger polylines, OUTSIDE every registered obstacle box (the pens, the
+ * hearth + its NW rim spill, both wood piles, the BED and its log pile, the
+ * tub and the clay bowl), and no two neighbours stand closer than ~13 px
+ * centre-to-centre (the crowding law — 27 px bodies at <12 px gaps read as
+ * one interpenetrating mass, audit #12). */
 const FORM = (() => {
   const F = {};
   F.off = [];
+  /* THE ENTRY FILE IS SWEPT (LANE PHYSICS lap, the parking law): the old
+     single file x 418..627 marched its back half INTO the woodpile box
+     [495,495..620,555] — never sampled settled before, because no lap held
+     ii-00 to the file's stop; the fire ring (x >= 527) and the floor band
+     leave NO legal ground at x 517..630, so the twelve now stand as TWO
+     files of six west of the hearth, every foot's x <= 481 (>= 10 px clear
+     of the woodpile's 495 rail), 15 px along each file, between the two
+     ledger polylines. */
   F.entry = [];
   for (let i = 0; i < CREW_N; i++) {
-    const x = 418 + i * 19;
-    F.entry.push([x, downY(x) - 32 + ((i % 3) - 1) * 4]);
+    const row = i % 2, j = (i - row) / 2;         // two files of six
+    const x = 398 + j * 15 + row * 8;
+    F.entry.push([x, downY(x) - (row ? 46 : 24)]);
   }
-  F.racks = [];
-  for (let i = 0; i < CREW_N; i++) {
-    const x = 542 + i * 20;                       // 542..762, short of mainPen
-    F.racks.push([x, 414 - (x - 542) * 0.05]);
-  }
-  F.huddle = [];
-  for (let i = 0; i < CREW_N; i++) {
-    F.huddle.push([1136 + (i % 4) * 17 + (i >> 2) * 3,
-                   446 + (i >> 2) * 13 + (i % 2) * 2]);
-  }
-  /* THE LOTS CIRCLE IS SWEPT (lap round 2, the parking law): the ledger's
-     lots-circle mark (600,505) stands inside its own woodpile box
-     [495,495..620,555], so the drawn circle arcs on the FIRE'S OTHER SIDE —
-     right-front of the pit, every foot >= 10 px clear of the woodpile's
-     x 620 rail, the fire ring's y 500 rail (or its x 733 rail), and the two
-     pens, still inside the lots-overhead lens (k 3.0 at 600,490 frames
-     x 365..835). The hidden stake (748,498) now lies at the circle's edge. */
-  F.lots = [[676, 524], [699, 518], [722, 517], [743, 522],
-            [750, 531], [727, 537], [702, 538], [680, 532]];
-  /* the four at the stake (round-2 eye review E2/E3): carry/drive cuts
-     SCATTERED along the beam behind Ulysses — the shaft's own axis extended
-     up-left past the butt (589,524) — never a standing row downstage of the
-     sprawl. Every foot keeps x < 527 (clear of the fire ring's box) and
-     y < 495 or x < 495 (clear of the woodpile), and stands between the
-     ledger's two floor polylines. */
-  F.stakefive = [[522, 459], [492, 441], [472, 481], [500, 491]];
-  F.freed = [[444, 452], [468, 459], [492, 465], [516, 470],
-             [452, 473], [500, 477]];
+  /* THE RACKS FILE IS RE-LAID (audit #8): the old 20 px single-file spacing
+     drew 94 px-wide carry cuts four deep into each other — a solid wall
+     ACROSS the racks' own cheese shelves (O.3's carrier). Now: a left party
+     of four heading seaward before the mouth, and a working cluster of
+     eight before racks B and C — every foot above the hearth's top rail,
+     clear of the rim's NW spill, no neighbour gap under 13 px, and rack A's
+     painted shelves left open to the lens (bodies clear of x 535..625, so
+     the racks READ as loaded). */
+  F.racks = [[446, 412], [470, 409], [458, 420], [482, 417],
+             [654, 410], [678, 408], [702, 406], [726, 404], [750, 402],
+             [666, 415], [690, 413], [714, 411]];
+  /* THE HUDDLE IS OFF THE BED (audit #1 — the old arc stood all twelve men
+     INSIDE the painted bed box [1025,330..1240,500], front row on the
+     logsRight pile): the far dark is now the open floor downstage of the
+     front pen — y >= 529 clears the pen's bottom rail, x >= 890 clears the
+     clay bowl, the bed stays 30+ px upstage-right. Rows 12 px apart,
+     columns 24, nearest neighbours >= 12.8 px. */
+  F.huddle = [[892, 529], [916, 530], [940, 531], [964, 532],
+              [902, 540], [926, 541], [950, 542], [974, 543],
+              [890, 552], [914, 553], [938, 552], [962, 550]];
+  /* THE LOTS CIRCLE (lap round 2, respaced round 7 — audit #12): the drawn
+     circle arcs right-front of the pit around the ledger's own lots-circle
+     mark (713,527); every foot clears the woodpile's x 620 rail, the fire
+     ring's rails, the log bundle's y 497 rail, and NO neighbour gap is
+     under 14 px (the old 8.9/9.8/11.4 px gaps interpenetrated the 27 px
+     bodies). Still inside the lots-overhead lens (x 365..835). */
+  F.lots = [[671, 524], [694, 517], [719, 515], [741, 520],
+            [752, 530], [731, 538], [706, 540], [683, 533]];
+  /* the four at the stake (round-2 eye review E2/E3, re-swept round 7 —
+     audit #13: (522,459)/(492,441) stood ON the rim's painted NW stone
+     spill, now registered as fireRimNW [485,425..527,485]): carry/drive
+     cuts scattered along the beam's axis behind Ulysses, every foot clear
+     of the ring box AND the rim spill AND the woodpile. */
+  F.stakefive = [[480, 466], [462, 448], [452, 486], [482, 499]];
+  /* freed (v-11), re-swept clear of the fireRimNW spill the old spots
+     (492,465)/(516,470)/(500,477) stood inside */
+  F.freed = [[430, 455], [452, 462], [420, 472], [444, 478],
+             [468, 470], [462, 486]];
   return F;
 })();
 /* Ulysses' own mark per formation (the crew arrays never include him) */
 const U_AT = {
-  entry: [655, 514], racks: [600, 432], huddle: [1120, 478],
-  suppliant: MARKS.suppliant, sword: MARKS['sword-ulysses'],
-  scheme: MARKS.scheme, lots: [711, 542], bowl: MARKS['bowl-offer'],
+  entry: [655, 514], racks: [470, 428], huddle: [876, 547],
+  suppliant: SWEPT.suppliant, sword: MARKS['sword-ulysses'],
+  scheme: SWEPT.scheme, lots: [715, 551], bowl: MARKS['bowl-offer'],
   /* stakefive: at the sprawled head's shoulder, baseline 549 — 3 px NEARER
      than the sprawl's 546, so the painter's order keeps him and his drive
      cut IN FRONT of the head he is working on (E2) */
-  stakefive: [624, 549], work: [1006, 538], freed: [432, 449],
+  stakefive: [624, 549], work: [1006, 538], freed: [418, 443],
   /* `under`: the men are beneath the fleeces but ULYSSES STAYS — his own
      gate (G5) is still to be clicked; he waits by the great ram's rail */
   under: [790, 468],
@@ -475,11 +690,21 @@ const PATH = {
   flockOut:  [[872, 512], [760, 524], [660, 536], [520, 488], [415, 442]],
   ramEscape: [[838, 430], [730, 500], [650, 532], [455, 448]],  // G5's ram, last
 };
+/* the stream's arc lengths, read once (the sliders' walks spend these), and
+   the v-11 trot-clear leg: mouth -> the grass, 72 px = 1.7 m */
+const FLOCK_LEN = pathLen(PATH.flockOut);
+const ESC_LEN = pathLen(PATH.ramEscape);
+const TROT_PATH = [MARKS['ram-at-mouth'], [466, 452]];
+const TROT_LEN = pathLen(TROT_PATH);
 const FLOCK_N = 5;                    // walkers; the pens' painted ewes stay
 /* NO PARKED RAMS: round-2 eye review E1 — ram ACTORS belong to Beat V only.
    iii-06's overfull pens are recorded in the snapshot (S.parked), never
-   staged; the walkers mount for the dawn escape and nothing earlier. */
-const TRIOS = [[930, 538], [1010, 534]];      // v-02: lashed on the open floor
+   staged; the walkers mount for the dawn escape and nothing earlier.
+   THE TRIOS ARE OFF THE TUB AND THE PEN CORNER (audit #10): the old
+   (930,538)/(1010,534) pair boxes covered the milk tub's face and stood
+   across the front pen's painted corner rails — the lash spots now sit on
+   the open floor downstage of the pen, clear of the tub/bowl boxes. */
+const TRIOS = [[968, 543], [1022, 537]];      // v-02: lashed on the open floor
 
 export class CaveSet {
   static id = 'cave';
@@ -494,6 +719,9 @@ export class CaveSet {
     this.FOCUS = FOCUS;
     this.dimMatrix = DIM_MATRIX;
     const img = (f, c, p) => st.img(f, c, p || root);
+    /* actor cuts load their BUILD-GRADED variant (regrade law, setkit) and
+       fall back to the raw cut; strips stay raw — the grade is per-cut */
+    const cut = (f, c, p) => gradedActor(st, 'cave', f, c, p || root);
 
     /* ---- the five painted states --------------------------------------- *
      * The open master sits at the bottom at opacity 1 — the floor of every
@@ -527,13 +755,44 @@ export class CaveSet {
      * every frame by baseline y (the church F5 law): the giant crosses the
      * whole depth range of this room — mouth threshold to the bed — and a
      * written-down order would be wrong for half his marks. */
+    /* ---- THE CONTACT SHADOWS, in their own group BEFORE the actors ----- *
+     * (Explorer C, the chase.js law: a body is drawn over its own shadow.)
+     * A separate group means no depth sort can ever lift a shadow above an
+     * actor — the shadow pass paints first, always. */
+    this.shadowG = el('div', 'actors shadows', root);
+    const shN = (name) => {
+      const e = img('actor/shadow/cave/' + SHADOW[name].file, 'lyr', this.shadowG);
+      e.style.opacity = '0';
+      return e;
+    };
+    this.giantShN = {};
+    for (const pose of Object.keys(GIANT_SHADOW)) {
+      this.giantShN[pose] = shN(GIANT_SHADOW[pose]);
+    }
+    this.uShN = {};
+    for (const kind of ['stand', 'walk', 'offer', 'sword', 'drive']) {
+      this.uShN[kind] = shN('ulysses-' + kind);
+    }
+    this.crewShN = [];
+    this.carryShN = [];
+    for (let i = 0; i < CREW_N; i++) {
+      this.crewShN.push(shN(i % 2 ? 'crew-b-stand' : 'crew-a-stand'));
+      this.carryShN.push(shN('crew-carry'));
+    }
+    this.ramShN = {
+      great: shN('ram-great'), slung: shN('ram-great-slung'),
+      pairs: [shN('ram-pair-slung'), shN('ram-pair-slung')],
+      walk: [],
+    };
+    for (let i = 0; i < FLOCK_N; i++) this.ramShN.walk.push(shN('ram-walk'));
+
     this.actors = el('div', 'actors', root);
     this.giantN = {};
     for (const [pose, art] of [['stand', ART.giantStand], ['seat', ART.giantSeated],
         ['clutch', ART.giantClutch], ['drink', ART.giantDrink],
         ['sprawl', ART.giantSprawl], ['grope', ART.giantGrope],
         ['stroke', ART.giantStroke]]) {
-      const n = img(art.file, 'lyr', this.actors);
+      const n = cut(art.file, 'lyr', this.actors);
       n.style.opacity = '0';
       this.giantN[pose] = n;
     }
@@ -559,14 +818,14 @@ export class CaveSet {
     for (const [pose, art] of [['stand', ART.ulyssesStand], ['walk', ART.ulyssesWalk],
         ['offer', ART.ulyssesOffer], ['sword', ART.ulyssesSword],
         ['drive', ART.ulyssesDrive]]) {
-      const n = img(art.file, 'lyr', this.actors);
+      const n = cut(art.file, 'lyr', this.actors);
       n.style.opacity = '0';
       this.uN[pose] = n;
     }
     this.crew = [];
     this.crewStripN = [];
     for (let i = 0; i < CREW_N; i++) {
-      const n = img(i % 2 ? ART.crewB.file : ART.crewA.file, 'lyr', this.actors);
+      const n = cut(i % 2 ? ART.crewB.file : ART.crewA.file, 'lyr', this.actors);
       n.style.opacity = '0';
       this.crew.push(n);
       const w = el('div', 'lyr walk', this.actors);
@@ -576,7 +835,7 @@ export class CaveSet {
     }
     this.carry = [];
     for (let i = 0; i < CREW_N; i++) {
-      const n = img(ART.crewCarry.file, 'lyr', this.actors);
+      const n = cut(ART.crewCarry.file, 'lyr', this.actors);
       n.style.opacity = '0';
       this.carry.push(n);
     }
@@ -592,23 +851,23 @@ export class CaveSet {
     }
     this.pairs = [];
     for (let i = 0; i < 2; i++) {
-      const n = img(ART.ramPairSlung.file, 'lyr', this.actors);
+      const n = cut(ART.ramPairSlung.file, 'lyr', this.actors);
       n.style.opacity = '0';
       this.pairs.push(n);
     }
-    this.ramGreatN = img(ART.ramGreat.file, 'lyr', this.actors);
-    this.ramSlungN = img(ART.ramGreatSlung.file, 'lyr', this.actors);
+    this.ramGreatN = cut(ART.ramGreat.file, 'lyr', this.actors);
+    this.ramSlungN = cut(ART.ramGreatSlung.file, 'lyr', this.actors);
     this.ramGreatN.style.opacity = '0';
     this.ramSlungN.style.opacity = '0';
 
     /* the props ride inside the group so the depth sort owns them too */
-    this.bowlN = img(ART.bowl.file, 'lyr prop', this.actors);
+    this.bowlN = cut(ART.bowl.file, 'lyr prop', this.actors);
     this.bowlFill = el('div', 'emis', this.actors);       // the wine, ∝ hold
     this.bowlFill.style.background =
       'radial-gradient(ellipse at 50% 45%,rgba(122,20,34,.95) 0%,rgba(122,20,34,.55) 60%,rgba(122,20,34,0) 100%)';
-    this.swordN = img(ART.sword.file, 'lyr prop', this.actors);
-    this.stakeN = img(ART.stake.file, 'lyr prop', this.actors);
-    this.stakeGlowN = img(ART.stakeGlow.file, 'lyr prop', this.actors);
+    this.swordN = cut(ART.sword.file, 'lyr prop', this.actors);
+    this.stakeN = cut(ART.stake.file, 'lyr prop', this.actors);
+    this.stakeGlowN = cut(ART.stakeGlow.file, 'lyr prop', this.actors);
     for (const n of [this.bowlN, this.bowlFill, this.swordN, this.stakeN,
                      this.stakeGlowN]) n.style.opacity = '0';
     /* the sword's breathing glint at the G2 anchor, in the low-fire state */
@@ -616,6 +875,25 @@ export class CaveSet {
     this.swordGlint.style.background =
       'radial-gradient(circle at 50% 50%,rgba(220,232,255,.7) 0%,rgba(220,232,255,0) 70%)';
     this.swordGlint.style.opacity = '0';
+
+    /* ---- THE FLOOR-PROP OCCLUDERS (Explorer C, the pews-front law) ------ *
+     * One wrapper per cut, inside the actor group so the depth sort owns it
+     * at its GROUND line; inside each wrapper the five state layers mirror
+     * the plate stack (stepOccluders). */
+    this.occN = OCC.map((o) => {
+      const wrap = el('div', 'lyr occ', this.actors);
+      box(wrap, o.origin[0], o.origin[1], o.size[0], o.size[1]);
+      const layers = {};
+      for (const name of ['master', 'dawn', 'shut', 'embers', 'predawn']) {
+        const e = img(o.base + (name === 'dawn' ? 'dawn' : name) + '.png',
+                      'lyr', wrap);
+        box(e, 0, 0, o.size[0], o.size[1]);
+        e.style.opacity = name === 'master' ? '1' : '0';
+        layers[name] = e;
+      }
+      return { ...o, wrap, layers };
+    });
+    this._occOrder = '';
 
     /* ---- the measured light, over the actors (layer-lane drawOrder) ---- */
     this.bloom = img(LAYER.bloom.file, 'lyr');
@@ -699,10 +977,19 @@ export class CaveSet {
     /* the dawn stream's gait clocks (one per walker) + the twist/walk flags */
     this.ramGait = [];
     for (let i = 0; i < FLOCK_N; i++) {
-      this.ramGait.push({ dist: 0, lx: null, ly: null, at: null, frame: 0 });
+      this.ramGait.push({ dist: 0, lx: null, ly: null, at: null, frame: 0,
+                          wT: null, sW: 0, ask: 0, bob: 0 });
     }
+    /* LANE PHYSICS: the sliders' burdened walk states (glideStep) — the two
+       lashed trios, the great ram's escape leg and his v-11 trot clear */
+    this.pairGait = [{ t0: null, s: 0, run: 0, at: null },
+                     { t0: null, s: 0, run: 0, at: null }];
+    this.gramEsc = { t0: null, s: 0, run: 0 };
+    this.gramTrot = { t0: null, s: 0, run: 0 };
     this.giantWalking = false;
     this.twisting = false;
+    this._pairAt = [null, null];             // the trios' marks, for the shadows
+    this._shadows = [];                      // the shadow pass's own ledger
   }
 
   /* ---- the camera ------------------------------------------------------ */
@@ -808,7 +1095,9 @@ export class CaveSet {
     if (G.pose === 'away') return null;
     const head = {
       stand: [0, -290], seat: [8, -158], clutch: [-4, -178], drink: [0, -168],
-      sprawl: [8, -52], grope: [0, -195], doorway: [0, -150], stroke: [-6, -178],
+      /* sprawl: the head end at the honest length (audit #5) — the eye's own
+         cut point at h 104 sits (12, -51) off the head pin */
+      sprawl: [12, -51], grope: [0, -195], doorway: [0, -150], stroke: [-6, -178],
     }[G.pose] || [0, -160];
     return [G.x + head[0], G.y + head[1]];
   }
@@ -912,8 +1201,8 @@ export class CaveSet {
       case 'giant-seat':                // ii-05: seated, working, the eye close
         this.giantPose('seat', MARKS['giant-seat'], settled);
         break;
-      case 'suppliant':                 // ii-06: arms wide in the firelight
-        this.uTo(MARKS.suppliant, 'stand', settled);
+      case 'suppliant':                 // ii-06: arms wide in the firelight —
+        this.uTo(SWEPT.suppliant, 'stand', settled);   // swept off the ring band
         break;
       case 'sword-ulysses':             // ii-11: the glint at the hip — G2 arms
         this.uTo(MARKS['sword-ulysses'], 'sword', settled);
@@ -928,8 +1217,8 @@ export class CaveSet {
            the routine already done */
         if (!settled) S.milkUntil = t + 4.0;
         break;
-      case 'scheme':                    // iii-03: alone among the pens
-        this.uTo(MARKS.scheme, 'stand', settled);
+      case 'scheme':                    // iii-03: alone among the pens —
+        this.uTo(SWEPT.scheme, 'stand', settled);      // swept off the ring band
         break;
       case 'stake-hide':                // iii-05: under the dung; then the lots
         S.hide = settled ? t - 9 : t;
@@ -1005,7 +1294,7 @@ export class CaveSet {
     const G = this.state.giant;
     G.walk = null; G.next = null;
     G.pose = pose;
-    if (at) { G.x = at[0]; G.y = at[1]; }
+    if (at) { G.x = at[0]; G.y = at[1]; G.settle = null; }
     if (!snap && !this.st.reduced) {
       /* short slides are walked by the step's damp; long ones were all given
          explicit paths (giantWalk) — a 7 m giant does not glide */
@@ -1025,8 +1314,9 @@ export class CaveSet {
        shuffle on its own eased clock, not a stride: no cap, no strip) */
     const grope = path === PATH.giantGrope;
     G.walk = { path, t0: this.state.t, dur, endPose,
-               s: 0, len: pathLen(path),
+               s: 0, run: 0, len: pathLen(path),
                vmax: grope ? Infinity : WALK_V.giant };
+    G.settle = null;                    // LANE PHYSICS: a new walk cancels it
     G.x = path[0][0]; G.y = path[0][1];
     G.pose = grope ? 'grope' : 'stand';
   }
@@ -1177,8 +1467,10 @@ export class CaveSet {
     /* ---- the troupe, the giant, the flock -------------------------------- */
     this.stepGiant(t, dt, amb);
     this.stepTroupe(t, dt, amb);
-    this.stepFlock(t, amb);
+    this.stepFlock(t, dt, amb);
     this.sortActors();
+    this.stepOccluders();
+    this.paintShadows();
 
     /* the veil goes over EVERYTHING — the dark the shut swaps hide in */
     this.veil.style.opacity = this.veilK.toFixed(3);
@@ -1230,8 +1522,12 @@ export class CaveSet {
       return;
     }
     const at = HOLD_AT.bowl;
-    pinCut(this.bowlN, ART.bowl, [at[0], at[1] + 6], PROP_H.bowl);
-    this.bowlN.style.opacity = this.pose.u.op.toFixed(3);
+    /* ONE BOWL (audit #6): the ulysses-offer cut PAINTS its own raised bowl
+       (measured off the cut's pixels: (345,218) at h 75 = the anchor), so
+       the separate prop cut is retired from this staging — drawing both put
+       two bowls in frame through the whole pour sequence. The FILL alone
+       rides the painted bowl at the hold anchor. */
+    this.bowlN.style.opacity = '0';
     /* THE FILL, a pure piecewise function of the bowl's clock: pour 1 is the
        reader's own hold; each drain window empties it; each refill (the two
        pantomime pours, on the autos that follow) raises it again — three
@@ -1254,11 +1550,18 @@ export class CaveSet {
     this.bowlFill.style.opacity = (0.9 * clamp01(fill) * this.pose.u.op).toFixed(3);
     this.bowlFillK = clamp01(fill);
     /* the two pantomime pours are HEARD where they are staged (live only —
-       a settled pour clock lands past both thresholds before any step) */
+       a settled pour clock lands past both thresholds before any step);
+       and every drain window opens with ITS sound — "three times did he
+       drain it without thought or heed" is three audible drains (O.7) */
     if (S.pour > -1e8) {
       for (const r of POURS.refills) {
         if (S.pourPrev >= 0 && S.pourPrev < r && d >= r && d < r + 2) {
           this.st.cue('pour');
+        }
+      }
+      for (const [a] of POURS.drains) {
+        if (S.pourPrev >= 0 && S.pourPrev < a && d >= a && d < a + 2) {
+          this.st.cue('drain');
         }
       }
       S.pourPrev = d;
@@ -1335,10 +1638,16 @@ export class CaveSet {
     const plain = this.stakeN, glow = this.stakeGlowN;
     let pOp = 0, gOp = 0;
     if (S.hide > -1e8 && t - S.hide < 2.2 && S.heatArmed < -1e8) {
-      /* the slide: in from the lots circle, under the painted dung flecks */
+      /* the slide: in from the lots circle, under the painted dung flecks.
+         ROT 23 LAYS THE BEAM FLAT (audit #12): the art's own diagonal rises
+         22.8 deg butt-to-tip, so at rot 4 the sliding spar drew 41 px TALL —
+         a beam floating at the circle's head line. Rotated flat about the
+         butt pin it lies ON the floor as it is dragged under the litter,
+         landing butt-first on the ledger's stake-hide mark. */
       const k = easeInOut(clamp01((t - S.hide) / 2.2));
-      pinCut(plain, ART.stake, [lerp(676, 748, k), lerp(516, 498, k)],
-             PROP_H.stakeW * (592 / 1217), { rot: 4 });
+      const HB = MARKS['stake-hide'];
+      pinCut(plain, ART.stake, [lerp(671, HB[0], k), lerp(524, HB[1], k)],
+             PROP_H.stakeW * (592 / 1217), { rot: 23 });
       pOp = 1 - clamp01((k - 0.75) / 0.25);       // it goes UNDER the litter
     } else if (S.heatArmed > -1e8 && (drive === null || drive < DRIVE.fright)) {
       /* heating: TIP pinned on the measured coals; driving: TIP pinned on
@@ -1387,14 +1696,55 @@ export class CaveSet {
        own frame source (distance drives the frame, not time). The walk ends
        when the PATH is spent, not the clock: a capped walk hands back a beat
        late instead of popping to the end. */
+    /* LANE PHYSICS: the arrival settle plays out over ~5 frames (a small
+       overshoot along the travel and back) before the parked pose goes
+       still — a 7 m giant does not stop dead from full stride */
+    if (G.settle) {
+      const s = G.settle; s.t += dt;
+      const u = s.t / s.dur;
+      if (u >= 1) { G.x = s.at[0]; G.y = s.at[1]; G.settle = null; }
+      else {
+        const o = Math.sin(Math.PI * u);
+        G.x = s.at[0] + s.dx * o; G.y = s.at[1] + s.dy * o;
+      }
+    }
     if (G.walk) {
       const W = G.walk;
       const k = clamp01((t - W.t0) / W.dur);
-      W.s = Math.min(easeInOut(k) * W.len, W.s + W.vmax * dt);
+      if (!isFinite(W.vmax)) {
+        /* the grope shuffle / tip-over keep their authored eased clocks */
+        W.s = easeInOut(k) * W.len;
+      } else {
+        /* LANE PHYSICS (Explorer D): velocity-integrated gait in place of
+           the clamped ease — 450 ms ease-in from rest (a 7 m body gathers
+           itself over a beat, and the gait law's own onset window reads it),
+           per-step pulse locked to the strip's own plant frames (phase =
+           the SAME gait clock that picks the cell, so the dip lands ON the
+           plant by construction), ~220 ms ease-out as the path runs out.
+           Mean pulse is 1: the feet still keep the King law's ground per
+           stride, and the cap still bounds the cruise — a short seg cannot
+           make him sprint. */
+        W.run = (W.run || 0) + dt;
+        const envIn = easeInOut(Math.min(1, W.run / 0.45));
+        const envOut = Math.max(0.3,
+          easeInOut(clamp01((W.len - W.s) / (W.vmax * 0.18))));
+        const pulse = gaitAt(GAIT.giant, GAIT.giant.pulse,
+                             W.s / STRIP.giant.pxPerFrame);
+        W.s = Math.min(W.len, W.s + W.vmax * envIn * envOut * pulse * dt);
+      }
       const p = alongPathArc(W.path, W.s);
       G.x = p[0]; G.y = p[1];
-      if (k >= 1 && W.s >= W.len - 1e-6) {
+      const done = isFinite(W.vmax) ? W.s >= W.len - 1e-6
+                                    : (k >= 1 && W.s >= W.len - 1e-6);
+      if (done) {
         const end = W.endPose;
+        /* the 2-frame settle: ~2.5 px past the mark along the travel, back */
+        if (isFinite(W.vmax)) {
+          const pts = W.path, a = pts[pts.length - 2], b = pts[pts.length - 1];
+          const dl = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+          G.settle = { at: [b[0], b[1]], dx: (b[0] - a[0]) / dl * 2.5,
+                       dy: (b[1] - a[1]) / dl * 2.5, t: 0, dur: 0.18 };
+        }
         G.walk = null;
         if (end === 'away') G.pose = 'away';
         else this.giantPose(end, null, true);
@@ -1442,7 +1792,12 @@ export class CaveSet {
         G.y = lerp(M[1], COLLAPSE_END[1], e);
         this.giantBridge = { key: 'collapse', k: +clamp01(bk).toFixed(4),
                              frame: bridgeFrame(GSTRIP.collapse, bk),
-                             at: [G.x, G.y], hPx: GSTRIP.collapse.hPx, flip: false };
+                             at: [G.x, G.y],
+                             /* the hPx ramp (audit #5): drink-continuity 196
+                                at the top, the honest sprawl's 291.2 at the
+                                landing — he stretches out as he goes down */
+                             hPx: lerp(GSTRIP.collapse.hPx, COLLAPSE_HPX_END, e),
+                             flip: false };
       } else {
         G.pose = 'sprawl'; G.x = SPRAWL.at[0]; G.y = SPRAWL.at[1];
       }
@@ -1518,12 +1873,19 @@ export class CaveSet {
       const W = G.walk;
       G.frame = Math.floor(W.s / STRIP.giant.pxPerFrame) % STRIP.giant.n;
       G.flip = W.path[W.path.length - 1][0] < W.path[0][0];
+      /* LANE PHYSICS: step-synced bob off the same gait clock as the frame —
+         the body sinks into each plant and rises through the swing. The
+         proof below declares the same bob, so the anchor law holds. */
+      this._gBob = gaitBobY(GAIT.giant, W.s / STRIP.giant.pxPerFrame,
+                            BOB_AMP.giant);
       const b = placeStrip(this.giantStripN, STRIP.giant, [G.x, G.y],
-                           GIANT_H.stand, G.frame, { flip: G.flip });
+                           GIANT_H.stand, G.frame,
+                           { flip: G.flip, bob: this._gBob });
       this.giantStripN.style.opacity = '1';
       this.giantBox = [G.x - (G.flip ? b.w - b.ax : b.ax), G.y - GIANT_H.stand,
                        b.w, b.h].map((v) => +v.toFixed(1));
     } else {
+      this._gBob = 0;
       this.giantStripN.style.opacity = '0';
     }
 
@@ -1640,20 +2002,45 @@ export class CaveSet {
     /* the segs write positions DIRECTLY while they run */
     if (seg && segK < 1) {
       if (seg.name === 'entry') {
-        /* the men slip in from the threshold, Ulysses at their head (K1) */
+        /* the men slip in from the threshold, Ulysses at their head (K1).
+           LANE PHYSICS: the eased arcs are PULSE-WARPED — the authored ease
+           keeps the schedule, the granted step breathes at the crew strip's
+           own cadence (dips at the plant frames, rises through the swing).
+           Mean pulse is 1 and a lambda-3 correction keeps the accumulated
+           lead/lag within a couple of px, so each file still arrives on the
+           ease's own beat. */
         const from = MARKS.entry;
+        const warp = (P, ease, from2, to, phase) => {
+          const D = Math.hypot(to[0] - from2[0], to[1] - from2[1]);
+          if (P._egT !== seg.t0) { P._egT = seg.t0; P._egs = 0; P._egAsk = 0; }
+          const sAsk = ease * D;
+          /* the gait clock: the strip's own (P.dist, trackStride) where a
+             strip rides the man; the warped arc itself for Ulysses, whose
+             entry has no strip node. Pulse depth rides the cadence law
+             (gaitAtt) off the ask's own speed. */
+          const clk = P.dist != null ? P.dist : (P._egs || 0);
+          const vAsk = Math.max(0, sAsk - P._egAsk) / Math.max(dt, 1e-6);
+          const att = gaitAtt(GAIT.crew, STRIP.crew.pxPerFrame, vAsk);
+          const pulse = 1 + (gaitAt(GAIT.crew, GAIT.crew.pulse,
+                                    clk / STRIP.crew.pxPerFrame + phase) - 1) * att;
+          P._egs += Math.max(0, sAsk - P._egAsk) * pulse +
+                    (sAsk - P._egs) * Math.min(1, 2 * dt);
+          P._egs = Math.min(D, Math.max(0, P._egs));
+          P._egAsk = sAsk;
+          const kw = D > 0 ? P._egs / D : ease;
+          P.x = lerp(from2[0], to[0], kw);
+          P.y = lerp(from2[1], to[1], kw);
+        };
         for (let i = 0; i < CREW_N; i++) {
           const ki = easeInOut(clamp01(segK * 1.5 - i * 0.035));
           const P = this.pose['c' + i], W = want['c' + i];
           if (!W.vis) continue;
-          P.x = lerp(from[0] + 8, W.at[0], ki);
-          P.y = lerp(from[1], W.at[1], ki);
+          warp(P, ki, [from[0] + 8, from[1]], W.at, i);
           P.op = clamp01(segK * 6 - i * 0.1);
           W.vis = -1;
         }
         const ku = easeInOut(clamp01(segK * 1.5));
-        this.pose.u.x = lerp(from[0], want.u.at[0], ku);
-        this.pose.u.y = lerp(from[1], want.u.at[1], ku);
+        warp(this.pose.u, ku, from, want.u.at, 0);
         this.pose.u.op = clamp01(segK * 6);
         want.u.vis = -1;
       } else if (seg.name === 'seize') {
@@ -1712,16 +2099,29 @@ export class CaveSet {
       if (S.snap) {
         if (W.vis) { P.x = W.at[0]; P.y = W.at[1]; }
         P.op = W.vis;
+        P.away = false;
         continue;
       }
       if (!W.vis) { P.op = damp(P.op, 0, 5.0, dt); continue; }
-      const far = Math.hypot(P.x - W.at[0], P.y - W.at[1]) > 250;
-      if (P.op < 0.06) { P.x = W.at[0]; P.y = W.at[1]; }
+      const rem = Math.hypot(P.x - W.at[0], P.y - W.at[1]);
+      /* `away` = not yet ON the formation's mark: the parking/perspective
+         laws sample SETTLED feet, and the stride flag alone flickers at the
+         gait pulse's plant dips (round-7 lap: mid-walk men read "settled"
+         inside boxes their route crosses) */
+      P.away = rem > 3;
+      const far = rem > 250;
+      if (P.op < 0.06) { P.x = W.at[0]; P.y = W.at[1]; P.away = false; }
       if (far && P.op >= 0.06) P.op = damp(P.op, 0, 5.0, dt);
       else {
-        /* the damp shapes the tail; the cap keeps the ground speed a
-           WALKING speed (WALK_V.man — the anti-skate law's own bound) */
-        walkToward(P, W.at[0], W.at[1], 2.2, WALK_V.man, dt);
+        /* LANE PHYSICS: walkToward2 — eased on/off, per-step pulse at the
+           crew strip's own cadence, and a small arrival settle in place of
+           the damp's terminal stand-cut drift. The cap (WALK_V.man) is
+           still the anti-skate law's own bound. THE HEARTH DETOUR (audit
+           #2/#8) hands the walk a legal goal — around the ring, never
+           through it. */
+        const g = parkedGoal(P.x, P.y, W.at[0], W.at[1]);
+        walkToward2(P, g[0], g[1], 2.2, WALK_V.man, dt,
+                    { gait: GAIT.crew, pxPerFrame: STRIP.crew.pxPerFrame });
         P.op = damp(P.op, W.vis, 4.0, dt);
       }
     }
@@ -1760,12 +2160,17 @@ export class CaveSet {
       this.crew[i].style.opacity = (carry || striding ? 0 : P.op).toFixed(3);
       this.carry[i].style.opacity = (carry ? P.op : 0).toFixed(3);
       if (striding) {
-        /* variety law: per-man frame phase (+i), flip from his own travel */
+        /* variety law: per-man frame phase (+i), flip from his own travel.
+           LANE PHYSICS: step-synced bob, same gait clock (+i phase) as the
+           frame — declared in the proof (P.gbob), so the anchor law holds. */
         P.frame = (Math.floor(P.dist / STRIP.crew.pxPerFrame) + i) % STRIP.crew.n;
+        P.gbob = gaitBobY(GAIT.crew, P.dist / STRIP.crew.pxPerFrame + i,
+                          BOB_AMP.crew);
         placeStrip(this.crewStripN[i], STRIP.crew, [P.x, P.y], SCALE.crew,
-                   P.frame, { flip: P.face < 0 });
+                   P.frame, { flip: P.face < 0, bob: P.gbob });
         this.crewStripN[i].style.opacity = P.op.toFixed(3);
       } else {
+        P.gbob = 0;
         this.crewStripN[i].style.opacity = '0';
       }
       P.carry = carry;
@@ -1852,7 +2257,7 @@ export class CaveSet {
   }
 
   /* ---- the flock and the rams (O.11) -------------------------------------- */
-  stepFlock(t, amb) {
+  stepFlock(t, dt, amb) {
     const S = this.state;
     const fl = S.flock;
     const k = fl ? clamp01((t - fl.t0) / fl.dur) : null;
@@ -1865,86 +2270,147 @@ export class CaveSet {
     /* THE TROT (STRIPS.md #5): the dawn stream's walkers ride the ram strip,
        frame from each walker's own travelled distance (+i phase from the
        existing stagger, so the herd is never in lockstep). The 1.7 s bob is
-       REMOVED while the strip runs — gait and bob together is double motion.
-       The strip is AUTHORED LEFT, the stream's own way: no flip. */
+       REMOVED while the strip runs — the STEP-SYNCED bob below rides the
+       gait clock instead. The strip is AUTHORED LEFT, the stream's own way:
+       no flip. LANE PHYSICS: the eased ask now spends ARC LENGTH
+       (alongPathArc — alongPath's per-segment fractions made every polyline
+       vertex a +47% one-frame speed pop, audit-motion.md #9) and is
+       PULSE-WARPED at the strip's own plant cadence, lambda-3 corrected so
+       the schedule keeps the ease's own beat. */
     for (const [i, node] of this.rams.entries()) {
       let at = null;
       const gait = this.ramGait[i];
       if (fl && k < 1 && fl.mode === 'escape') {
         const ki = clamp01((k - i * 0.07) / 0.6);
         if (ki > 0 && ki < 1) {
-          at = alongPath(PATH.flockOut, easeInOut(ki));
+          if (gait.wT !== fl.t0) { gait.wT = fl.t0; gait.sW = 0; gait.ask = 0; }
+          const sAsk = easeInOut(ki) * FLOCK_LEN;
+          const vAsk = Math.max(0, sAsk - gait.ask) / Math.max(dt, 1e-6);
+          const att = gaitAtt(GAIT.ram, STRIP.ram.pxPerFrame, vAsk);
+          const pulse = 1 + (gaitAt(GAIT.ram, GAIT.ram.pulse,
+                                    gait.dist / STRIP.ram.pxPerFrame + i) - 1) * att;
+          gait.sW += Math.max(0, sAsk - gait.ask) * pulse +
+                     (sAsk - gait.sW) * Math.min(1, 2 * dt);
+          gait.sW = Math.min(FLOCK_LEN, Math.max(0, gait.sW));
+          gait.ask = sAsk;
+          at = alongPathArc(PATH.flockOut, gait.sW);
           at[1] += (i % 3 - 1) * 6;
         }
       }
       if (!at) {
         node.style.opacity = '0';
-        gait.dist = 0; gait.lx = null; gait.at = null;
+        gait.dist = 0; gait.lx = null; gait.at = null; gait.wT = null;
         continue;
       }
       const dd = gait.lx === null ? 0 : Math.hypot(at[0] - gait.lx, at[1] - gait.ly);
       gait.dist = dd < STRIDE_TELEPORT ? gait.dist + dd : 0;
       gait.lx = at[0]; gait.ly = at[1]; gait.at = at.slice();
       gait.frame = (Math.floor(gait.dist / STRIP.ram.pxPerFrame) + i) % STRIP.ram.n;
-      placeStrip(node, STRIP.ram, at, RAM_H.walk, gait.frame);
+      /* step-synced bob, the same gait clock (+i) as the frame; declared in
+         the strip proof so the anchor law measures the residual */
+      gait.bob = gaitBobY(GAIT.ram, gait.dist / STRIP.ram.pxPerFrame + i,
+                          BOB_AMP.ram);
+      placeStrip(node, STRIP.ram, at, RAM_H.walk, gait.frame,
+                 { bob: gait.bob });
       node.style.opacity = '1';
     }
 
-    /* the lashed trios: they appear at the lash, follow at the escape */
+    /* THE LASHED TRIOS (LANE PHYSICS — audit-motion.md worst offender #1):
+       they appear at the lash and WALK at the escape — the burdened glide
+       integrator (glideStep: SLUNG_V cap, ease both ends, the ram strip's
+       own pulse) on the arc-length path, with the cell cadence applied to
+       the static cut as bob + sway about the pin. They start on the walkers'
+       heels and arrive before the seg spends itself. */
     for (const [i, node] of this.pairs.entries()) {
-      let at = null, op = 0;
+      let at = null, op = 0, bob = 0, rot = 0;
       const seg = S.seg;
+      const G2 = this.pairGait[i];
       if (seg && seg.name === 'lash-trios') {
         const sk = clamp01((t - seg.t0) / seg.dur);
         at = TRIOS[i];
         op = clamp01((sk - 0.25 - i * 0.25) / 0.3);
       } else if (fl && fl.mode === 'escape') {
-        const ki = clamp01((k - 0.32 - i * 0.12) / 0.5);
-        if (ki > 0 && ki < 1) {
-          at = alongPath(PATH.flockOut, easeInOut(ki));
-          op = ki < 0.92 ? 1 : 1 - (ki - 0.92) / 0.08;
+        if (k >= 0.24 + i * 0.06) {
+          if (G2.t0 !== fl.t0) {
+            G2.t0 = fl.t0; G2.run = 0;
+            G2.s = k > 0.95 ? FLOCK_LEN : 0;    // a settled jump lands parked
+          }
+          glideStep(G2, FLOCK_LEN, SLUNG_V, dt, i * 3);
+          at = alongPathArc(PATH.flockOut, G2.s);
+          const g = slungGait(G2.s, i * 3, BOB_AMP.pair);
+          bob = g.bob; rot = g.rot;
+          const fout = G2.s / FLOCK_LEN;
+          op = Math.min(clamp01(G2.run / 0.4),
+                        fout < 0.92 ? 1 : clamp01((1 - fout) / 0.08));
         }
       } else if (S.form === 'under' && S.giant.blinded && !fl) {
         at = TRIOS[i]; op = 1;                     // lashed, waiting for dawn
       }
-      if (!at) { node.style.opacity = '0'; continue; }
+      if (!at) {
+        node.style.opacity = '0'; G2.at = null; this._pairAt[i] = null;
+        continue;
+      }
       pinCut(node, ART.ramPairSlung, at, RAM_H.pair,
-             { flip: !!(fl && fl.mode === 'escape') });
+             { flip: !!(fl && fl.mode === 'escape'), bob, rot });
       node.style.opacity = op.toFixed(3);
+      G2.at = at.slice();                    // the gait probe reads the mark
+      this._pairAt[i] = at.slice();          // the shadow pass reads the mark
     }
 
     /* THE GREAT RAM: staged at the rail (G5), slung under the reader's
        click, last of all across the floor, halted under the palm, and out.
        Position by PRIORITY, never by feedback from its own last frame:
        clear-of-the-cave > the free-men exit > pinned at the mouth > the
-       escape path > the rail. */
+       escape path > the rail. LANE PHYSICS: every leg he covers is the same
+       burdened gait walk the trios get (glideStep + bob/sway at the ram
+       strip's cadence) — 9.9 m of zero-leg glide was the audit's single
+       worst number. While he STANDS the old 2.1 s hover breath returns. */
     const great = this.ramGreatN, slung = this.ramSlungN;
-    let gAt = null, slungK = 0;
+    let gAt = null, slungK = 0, gMoving = false, gPhi = 0;
     if (S.ramOn) {
       slungK = S.sling > -1e8 ? clamp01((t - S.sling) / 1.4) : 0;
       const seg = S.seg;
       if (S.ramHome) {
         gAt = S.ramHome.slice();
       } else if (seg && seg.name === 'free-men') {
+        /* v-11: he trots clear — walked now, not slid */
         const sk = clamp01((t - seg.t0) / seg.dur);
-        if (sk < 0.4) {
-          const e = easeInOut(sk / 0.4);
-          gAt = [lerp(MARKS['ram-at-mouth'][0], 466, e),
-                 lerp(MARKS['ram-at-mouth'][1], 452, e)];
-        } else {
-          gAt = [466, 452];
+        const G2 = this.gramTrot;
+        if (G2.t0 !== seg.t0) {
+          G2.t0 = seg.t0; G2.run = 0;
+          G2.s = sk > 0.9 ? TROT_LEN : 0;         // a settled jump lands home
+        }
+        glideStep(G2, TROT_LEN, TROT_V, dt, 0);
+        gAt = alongPathArc(TROT_PATH, G2.s);
+        gMoving = G2.s < TROT_LEN - 1e-3; gPhi = G2.s;
+        if (!gMoving) {
           S.ramHome = [466, 452];        // he trots clear, and STAYS clear
           S.sling = -1e9;                // …with the man off him
           slungK = 0;
         }
       } else if (S.ramPinned) {
-        const e = easeInOut(clamp01((t - S.ramPinned.t0) / 1.2));
-        gAt = [lerp(S.ramPinned.from[0], MARKS['ram-at-mouth'][0], e),
-               lerp(S.ramPinned.from[1], MARKS['ram-at-mouth'][1], e)];
+        const RP = S.ramPinned;
+        if (!RP.g) {
+          const len = Math.hypot(MARKS['ram-at-mouth'][0] - RP.from[0],
+                                 MARKS['ram-at-mouth'][1] - RP.from[1]);
+          RP.g = { s: t - RP.t0 > 1.1 ? len : 0, run: 0, len };
+        }
+        glideStep(RP.g, RP.g.len, SLUNG_V, dt, 0);
+        gAt = alongPathArc([RP.from, MARKS['ram-at-mouth']], RP.g.s);
+        gMoving = RP.g.s < RP.g.len - 1e-3; gPhi = RP.g.s;
       } else if (fl && fl.mode === 'escape') {
-        const ki = clamp01((k - 0.55) / 0.4);
-        gAt = ki <= 0 ? MARKS['ram-stand'].slice()
-                      : alongPath(PATH.ramEscape, easeInOut(ki));
+        if (k >= 0.38) {
+          const G2 = this.gramEsc;
+          if (G2.t0 !== fl.t0) {
+            G2.t0 = fl.t0; G2.run = 0;
+            G2.s = k > 0.95 ? ESC_LEN : 0;        // a settled jump lands parked
+          }
+          glideStep(G2, ESC_LEN, SLUNG_V, dt, 0);
+          gAt = alongPathArc(PATH.ramEscape, G2.s);
+          gMoving = G2.s < ESC_LEN - 1e-3; gPhi = G2.s;
+        } else {
+          gAt = MARKS['ram-stand'].slice();
+        }
       } else {
         gAt = MARKS['ram-stand'].slice();
       }
@@ -1953,9 +2419,14 @@ export class CaveSet {
       great.style.opacity = '0'; slung.style.opacity = '0';
       this.ramBox = null;
     } else {
-      const bob = amb * 0.4 * Math.sin(2 * Math.PI * t / 2.1);
-      const b1 = pinCut(great, ART.ramGreat, gAt, RAM_H.great, { bob });
-      pinCut(slung, ART.ramGreatSlung, gAt, RAM_H.greatSlung, { bob });
+      let bob = amb * 0.4 * Math.sin(2 * Math.PI * t / 2.1), rot = 0;
+      if (gMoving) {
+        const g = slungGait(gPhi, 0, BOB_AMP.gram);
+        bob = g.bob; rot = g.rot;
+      }
+      this._gramMoving = gMoving;      // mid-glide is not a settle (parking)
+      const b1 = pinCut(great, ART.ramGreat, gAt, RAM_H.great, { bob, rot });
+      pinCut(slung, ART.ramGreatSlung, gAt, RAM_H.greatSlung, { bob, rot });
       great.style.opacity = (1 - easeInOut(slungK)).toFixed(3);
       slung.style.opacity = easeInOut(slungK).toFixed(3);
       this.ramBox = [gAt[0] - ART.ramGreat.pin[0] * RAM_H.great / ART.ramGreat.px[1],
@@ -1993,6 +2464,11 @@ export class CaveSet {
     entries.push({ y: S.ramAt ? S.ramAt[1] : -1e9,
                    nodes: [this.ramGreatN, this.ramSlungN] });
     entries.push({ y: this.stakeY(), nodes: [this.stakeN, this.stakeGlowN] });
+    /* THE OCCLUDERS sort at their GROUND lines (the pews-front law): a
+       settled actor upstage of an occluder's ground runs behind its stones,
+       a nearer actor is painted over them — the same baseline arithmetic
+       as every figure. */
+    for (const o of this.occN) entries.push({ y: o.ground, nodes: [o.wrap] });
     const want = [];
     for (const e of entries.sort((a, b) => a.y - b.y)) want.push(...e.nodes);
     const kids = this.actors.children;
@@ -2004,11 +2480,142 @@ export class CaveSet {
 
   stakeY() {
     /* the stake sorts by its own moment: in the coals it lies over the
-       hearth; at the drive it lies over the sprawled head (nearer) */
+       hearth; at the drive it lies over the sprawled head (nearer). While
+       it HEATS it sorts just past the fire ring occluder's ground (503):
+       the shaft enters the pit OVER the near lip — the report's own law
+       ("an occluder is only safe against actors clearly upstage of the
+       LOCAL ground", explore-grounding.md §3), and the shaft's butt end is
+       not clearly upstage of the front crown's base. */
     const d = this.ruseT();
     if (d !== null && d < DRIVE.fright) return SPRAWL.at[1] + 12;
     if (d !== null) return 549;
-    return HOLD_AT.embers[1] + 4;
+    return 504;
+  }
+
+  /** THE OCCLUDER MIRROR (the room-dim law's own composite): each wrapper's
+   *  five state layers copy the plate stack's ORDER and OPACITIES, so the
+   *  wrapper always shows exactly the pixels the plates are showing inside
+   *  the cut — through every crossfade and dark dip. */
+  stepOccluders() {
+    const order = [];
+    for (const child of this.plateWrap.children) {
+      for (const [name, node] of Object.entries(this.plates)) {
+        if (node === child) { order.push(name); break; }
+      }
+    }
+    const sig = order.join(',');
+    for (const o of this.occN) {
+      if (sig !== this._occOrder) {
+        for (const name of order) o.wrap.appendChild(o.layers[name]);
+      }
+      for (const name of order) {
+        o.layers[name].style.opacity = this.plates[name].style.opacity;
+      }
+    }
+    this._occOrder = sig;
+  }
+
+  /** THE SHADOW PASS (Explorer C — chase.js paintRigs, ported): one shadow
+   *  per live picture, placed by the registry anchor on the actor's own
+   *  foot mark, scaled by the actor's k = drawnH / cutH, opacity
+   *  (0.42 + 0.30 * s) * actorOp. Runs after every position is written;
+   *  paints into the group BEFORE the actors, so it can never cover one. */
+  shadowPut(node, name, at, k, op) {
+    const S = SHADOW[name];
+    box(node, at[0] - S.anchor[0] * k, at[1] - S.anchor[1] * k,
+        S.size[0] * k, S.size[1] * k);
+    const o = (0.42 + 0.30 * shadowS(at[1])) * op;
+    node.style.opacity = o.toFixed(3);
+    if (o > 0.005) {
+      this._shadows.push({ id: this._shadowId, name, at: [+at[0].toFixed(1),
+        +at[1].toFixed(1)], s: +shadowS(at[1]).toFixed(3), op: +o.toFixed(3),
+        box: this.drawnBox(node) });
+    }
+  }
+
+  paintShadows() {
+    const S = this.state, G = S.giant, U = this.pose.u;
+    this._shadows = [];
+    /* the giant: the pose cut's shadow; the walk strip stands on the stand
+       shadow, a bridge/loop on the pose the strip is performing */
+    const BL = this.giantBridge || this.giantLoop;
+    const gKey = G.pose === 'away' ? null
+      : this.giantWalking ? 'stand'
+      : BL ? BRIDGE_SHADOW[BL.key]
+      : (G.pose === 'doorway' ? 'grope' : G.pose);
+    const gAt = BL && !this.giantWalking ? BL.at : [G.x, G.y];
+    /* the drawn height is the LIVE picture's (the doorway draws the grope
+       cut at the seated 165, not the grope walk's 210) */
+    const gHpx = this.giantWalking ? GIANT_H.stand
+      : BL ? GIANT_H[gKey] : GIANT_H[G.pose];
+    const GART = { stand: ART.giantStand, seat: ART.giantSeated,
+                   clutch: ART.giantClutch, drink: ART.giantDrink,
+                   sprawl: ART.giantSprawl, grope: ART.giantGrope,
+                   stroke: ART.giantStroke };
+    for (const [pose, node] of Object.entries(this.giantShN)) {
+      if (pose !== gKey) { node.style.opacity = '0'; continue; }
+      this._shadowId = 'giant';
+      this.shadowPut(node, GIANT_SHADOW[pose], gAt,
+                     gHpx / GART[pose].px[1], 1);
+    }
+    /* ulysses: the kind's own shadow (the twist strip is the drive stance) */
+    const uKind = this.twisting ? 'drive' : U.kind;
+    const UART = { stand: ART.ulyssesStand, walk: ART.ulyssesWalk,
+                   offer: ART.ulyssesOffer, sword: ART.ulyssesSword,
+                   drive: ART.ulyssesDrive };
+    for (const [kind, node] of Object.entries(this.uShN)) {
+      if (kind !== uKind || !(U.op > 0.005)) { node.style.opacity = '0'; continue; }
+      const h = kind === 'drive' ? 66 : SCALE.ulysses;
+      this._shadowId = 'ulysses';
+      this.shadowPut(node, 'ulysses-' + kind, [U.x, U.y],
+                     h / UART[kind].px[1], U.op);
+    }
+    /* the crew: the stand shadow serves the stand cut AND the walk strip
+       (the feet are the same feet); a carried load takes the carry shadow */
+    for (let i = 0; i < CREW_N; i++) {
+      const P = this.pose['c' + i];
+      const carry = P.carry;
+      this._shadowId = 'crew' + i;
+      if (P.op > 0.005 && !carry) {
+        this.shadowPut(this.crewShN[i], i % 2 ? 'crew-b-stand' : 'crew-a-stand',
+                       [P.x, P.y], SCALE.crew / (i % 2 ? ART.crewB : ART.crewA).px[1],
+                       P.op);
+      } else this.crewShN[i].style.opacity = '0';
+      if (P.op > 0.005 && carry) {
+        this.shadowPut(this.carryShN[i], 'crew-carry', [P.x, P.y],
+                       SCALE.crew * 0.96 / ART.crewCarry.px[1], P.op);
+      } else this.carryShN[i].style.opacity = '0';
+    }
+    /* the great ram (and his slung double), the lashed trios, the walkers */
+    const gOp = +this.ramGreatN.style.opacity || 0;
+    const sOp = +this.ramSlungN.style.opacity || 0;
+    this._shadowId = 'great-ram';
+    if (S.ramAt && gOp > 0.005) {
+      this.shadowPut(this.ramShN.great, 'ram-great', S.ramAt,
+                     RAM_H.great / ART.ramGreat.px[1], gOp);
+    } else this.ramShN.great.style.opacity = '0';
+    if (S.ramAt && sOp > 0.005) {
+      this.shadowPut(this.ramShN.slung, 'ram-great-slung', S.ramAt,
+                     RAM_H.greatSlung / ART.ramGreatSlung.px[1], sOp);
+    } else this.ramShN.slung.style.opacity = '0';
+    for (const [i, node] of this.ramShN.pairs.entries()) {
+      const at = this._pairAt && this._pairAt[i];
+      const op = +this.pairs[i].style.opacity || 0;
+      this._shadowId = 'pair' + i;
+      if (at && op > 0.005) {
+        this.shadowPut(node, 'ram-pair-slung', at,
+                       RAM_H.pair / ART.ramPairSlung.px[1], op);
+      } else node.style.opacity = '0';
+    }
+    for (const [i, node] of this.ramShN.walk.entries()) {
+      const g = this.ramGait[i];
+      const op = +this.rams[i].style.opacity || 0;
+      this._shadowId = 'ram' + i;
+      if (g.at && op > 0.005) {
+        this.shadowPut(node, 'ram-walk', g.at,
+                       RAM_H.walk / ART.ramWalk.px[1], op);
+      } else node.style.opacity = '0';
+    }
   }
 
   /* ---- harness --------------------------------------------------------------- */
@@ -2108,25 +2715,40 @@ export class CaveSet {
          clearances re-measured every frame against the ledger's pen boxes
          (>= 10 px is the law; negative is the review's own defect) */
       giant: { pose: S.giant.pose, blinded: S.giant.blinded,
+               walking: !!S.giant.walk,   // mid-walk is not a settle (the
+                                          // parking law samples landings)
                mark: [+S.giant.x.toFixed(1), +S.giant.y.toFixed(1)],
                box: this.giantBox || null },
-      sprawl: {
-        mark: SPRAWL.at.slice(), ledgerMark: SPRAWL.ledger.slice(),
-        eye: EYE.slice(),               // the drive's target — O.9's own law
-        box: sprawlBox,
-        clear: sprawlBox ? {
-          mainPen: this.clearance(sprawlBox, OBJ.mainPen),
-          frontPen: this.clearance(sprawlBox, OBJ.frontPen),
-          firewood: this.clearance(sprawlBox, OBJ.firewood),
-        } : null,
-        /* the round-2 restage (E2) re-checked the clearances and put the
-           WOODPILE under the same >= 10 law as the pens */
-        ok: sprawlBox
-          ? this.clearance(sprawlBox, OBJ.mainPen) >= 10 &&
-            this.clearance(sprawlBox, OBJ.frontPen) >= 10 &&
-            this.clearance(sprawlBox, OBJ.firewood) >= 10
-          : null,
-      },
+      sprawl: (() => {
+        /* THE AMENDED SPRAWL PARKING LAW (round-7 placement audit #5 —
+           SUPPORT + OCCLUSION, see header): the honest-length body may
+           OVERLAP dressing it lies in front of, but its BASELINE (the
+           support line, the box bottom) must rest on open floor — every
+           obstacle box that shares x with the body must bottom out >= 8 px
+           UPSTAGE of the baseline. Violations are named. */
+        const b = sprawlBox;
+        const baseline = b ? b[1] + b[3] : null;
+        const OBS = { mainPen: OBJ.mainPen, frontPen: OBJ.frontPen,
+                      firewood: OBJ.firewood, bed: OBJ.bed,
+                      logsRight: OBJ.logsRight, logBundle: OBJ.logBundle,
+                      milkTub: OBJ.milkTub, clayBowl: OBJ.clayBowl };
+        const violations = b ? Object.entries(OBS)
+          .filter(([, r]) => b[0] < r[2] && b[0] + b[2] > r[0] &&
+                             r[3] > baseline - 8)
+          .map(([name]) => name) : null;
+        return {
+          mark: SPRAWL.at.slice(), ledgerMark: SPRAWL.ledger.slice(),
+          eye: EYE.slice(),             // the drive's target — O.9's own law
+          box: sprawlBox,
+          clear: sprawlBox ? {
+            mainPen: this.clearance(sprawlBox, OBJ.mainPen),
+            frontPen: this.clearance(sprawlBox, OBJ.frontPen),
+            firewood: this.clearance(sprawlBox, OBJ.firewood),
+          } : null,
+          support: b ? { baseline: +baseline.toFixed(1), violations } : null,
+          ok: b ? violations.length === 0 : null,
+        };
+      })(),
       /* THE TROUPE: the headcount law and per-actor drawn boxes */
       cast: {
         formation: S.form, meals: S.meals, crewN,
@@ -2136,6 +2758,11 @@ export class CaveSet {
         crew: this.crew.map((node, i) => ({
           mark: [+this.pose['c' + i].x.toFixed(1), +this.pose['c' + i].y.toFixed(1)],
           op: +this.pose['c' + i].op.toFixed(3),
+          walking: !!(this.pose['c' + i].walking || this.pose['c' + i].away),
+                                                   // mid-stride OR short of the
+                                                   // mark: the parking +
+                                                   // perspective laws sample
+                                                   // SETTLED feet only
           box: this.drawnBox(this.pose['c' + i].carry ? this.carry[i] : node),
         })),
         onStage: (this.pose.u.op > 0.5 ? 1 : 0) +
@@ -2146,22 +2773,36 @@ export class CaveSet {
         k: S.flock ? +clamp01((S.t - S.flock.t0) / S.flock.dur).toFixed(3) : null,
         parked: S.parked,
         ram: { on: S.ramOn, at: S.ramAt ? S.ramAt.map((v) => +v.toFixed(1)) : null,
+               moving: !!this._gramMoving,
                slung: S.sling > -1e8, box: this.ramBox },
+        /* the lashed trios' drawn boxes — the [perspective]/[parking] gates
+           measure the pair cuts at stock scale (audit #9/#10) */
+        pairs: this.pairs.map((n, i) => ({
+          op: +(+n.style.opacity || 0).toFixed(3),
+          at: this._pairAt[i] ? this._pairAt[i].map((v) => +v.toFixed(1)) : null,
+          box: this.drawnBox(n),
+        })),
       },
       /* THE STRIP PROOF (the sherlock walk law): per live strip, the frame
          and the foot measured off the RENDERED box vs the mark the paint was
          asked for — the lap holds cycling (>= 2 distinct frames, the 'walk
-         strip never cycled' gate) and |dx|,|dy| against these */
+         strip never cycled' gate) and |dx|,|dy| against these. LANE PHYSICS:
+         a walking box also carries the declared step-bob (translateY about
+         the foot origin), so the mark handed to the proof is bob-shifted —
+         the anchor law measures the transform's RESIDUAL, exactly the
+         rowers' documented bench-bob precedent. */
       strips: {
         giant: this.giantWalking
           ? stripProof(this.st, this.giantStripN, STRIP.giant,
-                       S.giant.frame || 0, [S.giant.x, S.giant.y], !!S.giant.flip)
+                       S.giant.frame || 0,
+                       [S.giant.x, S.giant.y + (this._gBob || 0)],
+                       !!S.giant.flip)
           : null,
         crew: this.crew.map((_, i) => {
           const P = this.pose['c' + i];
           return P.striding
             ? stripProof(this.st, this.crewStripN[i], STRIP.crew, P.frame,
-                         [P.x, P.y], P.face < 0)
+                         [P.x, P.y + (P.gbob || 0)], P.face < 0)
             : null;
         }),
         twist: this.twisting
@@ -2171,7 +2812,8 @@ export class CaveSet {
         rams: this.rams.map((n, i) => {
           const g = this.ramGait[i];
           return g.at && +n.style.opacity > 0
-            ? stripProof(this.st, n, STRIP.ram, g.frame, g.at, false)
+            ? stripProof(this.st, n, STRIP.ram, g.frame,
+                         [g.at[0], g.at[1] + (g.bob || 0)], false)
             : null;
         }),
         /* THE BRIDGES (play-once) and LOOPS (verb-clock), same proof style:
@@ -2204,9 +2846,42 @@ export class CaveSet {
                       S.meals === 1,
       dim: { scrim: +(+this.scrim.style.opacity || 0).toFixed(3),
              matrix: DIM_MATRIX.slice(), painted: false },
+      /* EXPLORER C's own proofs: the live shadows (per settled principal:
+         the mark, the depth share, the applied opacity, the drawn box), the
+         under-the-actors group order, the occluders' paint order (DOM
+         indices inside the sorted actor group) and the swept marks. */
+      grounding: this.groundingSnap(),
+    };
+  }
+
+  groundingSnap() {
+    const idx = (n) => (n ? Array.prototype.indexOf.call(this.actors.children, n) : -1);
+    const liveOf = (nodes) => nodes.find((n) => (+n.style.opacity || 0) > 0.05) || null;
+    const gLive = liveOf([...Object.values(this.giantN), this.giantStripN,
+                          ...Object.values(this.gMotionN)]);
+    const uLive = liveOf([...Object.values(this.uN), this.twistN]);
+    return {
+      under: !!(this.shadowG.compareDocumentPosition(this.actors) &
+                Node.DOCUMENT_POSITION_FOLLOWING),
+      shadows: this._shadows || [],
+      occ: this.occN.map((o) => ({ id: o.id, ground: o.ground,
+        at: o.origin.slice(), dom: idx(o.wrap),
+        op: +(o.layers[this.state.swap ? this.state.swap.to
+                                       : this.state.stateName].style.opacity || 0) })),
+      dom: {
+        giant: idx(gLive), ulysses: idx(uLive),
+        crew: this.crew.map((n, i) => {
+          const P = this.pose['c' + i];
+          if (!(P.op > 0.05)) return -1;
+          return idx(P.striding ? this.crewStripN[i] : P.carry ? this.carry[i] : n);
+        }),
+      },
+      swept: { suppliant: SWEPT.suppliant.slice(), scheme: SWEPT.scheme.slice(),
+               ledger: { suppliant: MARKS.suppliant.slice(),
+                         scheme: MARKS.scheme.slice() } },
     };
   }
 }
 
 export { FOCUS, MARKS, OBJ, SPRAWL, EYE, EMIS, LIGHT, DIM_MATRIX, SCALE,
-         GATES, HOLD_AT, POURS, DRIVE, SEAMS, FORM, PATH, FLOORS };
+         GATES, HOLD_AT, POURS, DRIVE, SEAMS, FORM, PATH, FLOORS, SWEPT, OCC };

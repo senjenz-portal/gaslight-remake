@@ -1,0 +1,114 @@
+{
+ "firering-front-master.png": {
+  "origin": [
+   523,
+   409
+  ],
+  "ground": 503
+ },
+ "firering-front-dawn.png": {
+  "origin": [
+   523,
+   409
+  ],
+  "ground": 503
+ },
+ "firering-front-shut.png": {
+  "origin": [
+   523,
+   409
+  ],
+  "ground": 503
+ },
+ "firering-front-embers.png": {
+  "origin": [
+   523,
+   409
+  ],
+  "ground": 503
+ },
+ "firering-front-predawn.png": {
+  "origin": [
+   523,
+   409
+  ],
+  "ground": 503
+ },
+ "woodpile-front-master.png": {
+  "origin": [
+   483,
+   497
+  ],
+  "ground": 550
+ },
+ "woodpile-front-dawn.png": {
+  "origin": [
+   483,
+   497
+  ],
+  "ground": 550
+ },
+ "woodpile-front-shut.png": {
+  "origin": [
+   483,
+   497
+  ],
+  "ground": 550
+ },
+ "woodpile-front-embers.png": {
+  "origin": [
+   483,
+   497
+  ],
+  "ground": 550
+ },
+ "woodpile-front-predawn.png": {
+  "origin": [
+   483,
+   497
+  ],
+  "ground": 550
+ },
+ "tub-front-master.png": {
+  "origin": [
+   845,
+   455
+  ],
+  "ground": 546
+ },
+ "tub-front-dawn.png": {
+  "origin": [
+   845,
+   455
+  ],
+  "ground": 546
+ },
+ "tub-front-shut.png": {
+  "origin": [
+   845,
+   455
+  ],
+  "ground": 546
+ },
+ "tub-front-embers.png": {
+  "origin": [
+   845,
+   455
+  ],
+  "ground": 546
+ },
+ "tub-front-predawn.png": {
+  "origin": [
+   845,
+   455
+  ],
+  "ground": 546
+ },
+ "firepit-front.png": {
+  "origin": [
+   347,
+   459
+  ],
+  "ground": 507
+ }
+}

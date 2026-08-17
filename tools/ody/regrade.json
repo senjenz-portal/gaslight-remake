@@ -1,0 +1,1656 @@
+{
+ "lane": "ody-regrade (Explorer B adopted; tools/ody/seamless/explore-regrade.md)",
+ "tool": "tools/ody/seamless/regrade.py via bake_regrade.py",
+ "law": "one graded variant per set x cut, graded against the state the cut mostly plays in (unit majority; cave shut/embers ties per the report's ring data); sets load graded, fall back to the raw cut; the lap holds the shas AND dE <= 9 at the six settle entries",
+ "gate": {
+  "deltaEMax": 9,
+  "settles": [
+   "cave/ulysses-stand",
+   "cave/ulysses-offer",
+   "cave/polyphemus-seated",
+   "cave/ram-great",
+   "shore/crew-b-stand",
+   "sea/polyphemus-hurl"
+  ]
+ },
+ "entries": {
+  "cave/ulysses-stand": {
+   "set": "cave",
+   "cut": "ulysses-stand",
+   "source": "assets/actor/ulysses-stand.png",
+   "sourceSha256": "840694f7cbc64ea6f39e84221f9275c09529e940c8d6daa9db4831699a827a55",
+   "graded": "assets/actor/graded/cave/ulysses-stand.png",
+   "gradedSha256": "4ab726d81ca0ebce44c8063ace5380d2e10037590a0a6aec1a408a08606778f2",
+   "plate": "assets/set/cave/cave-shut.jpg",
+   "state": "shut",
+   "mark": [
+    690,
+    495
+   ],
+   "hPx": 75,
+   "flip": false,
+   "light": [
+    638,
+    427
+   ],
+   "reach": 238,
+   "why": "stand plays shut ii-04..09 + iii-07 (7) vs embers ii-10 (1); mark = suppliant (ii-06)",
+   "settle": "ody-ii-06-plea",
+   "ring": {
+    "r_in": 33.8,
+    "r_out": 82.5,
+    "n": 16048,
+    "rgb_mean": [
+     166.5,
+     124.6,
+     105.4
+    ],
+    "cct": 3662
+   },
+   "deltaE": {
+    "before": 22.5,
+    "after": 4.2
+   },
+   "cct": {
+    "ring": 3662,
+    "before": 2574,
+    "after": 3459,
+    "dBefore": 1088,
+    "dAfter": 203
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 43729
+   },
+   "rim": true
+  },
+  "cave/ulysses-walk": {
+   "set": "cave",
+   "cut": "ulysses-walk",
+   "source": "assets/actor/ulysses-walk.png",
+   "sourceSha256": "a32e1a537fc20ce20f8b80dd9af7b1ff41285311942ff47d0fff3e5221ab160a",
+   "graded": "assets/actor/graded/cave/ulysses-walk.png",
+   "gradedSha256": "3be4ffc9c5351e6157facaf017b5af31fc3ba759479583cf0f4df42eca0c0f1f",
+   "plate": "assets/set/cave/cave-shut.jpg",
+   "state": "shut",
+   "mark": [
+    640,
+    480
+   ],
+   "hPx": 75,
+   "flip": false,
+   "light": [
+    638,
+    427
+   ],
+   "reach": 238,
+   "why": "transitional cut; rides the stand's majority state, mid-floor mark = scheme",
+   "settle": null,
+   "ring": {
+    "r_in": 33.8,
+    "r_out": 82.5,
+    "n": 16043,
+    "rgb_mean": [
+     183.1,
+     136.8,
+     103.1
+    ],
+    "cct": 3438
+   },
+   "deltaE": {
+    "before": 30.3,
+    "after": 9.8
+   },
+   "cct": {
+    "ring": 3438,
+    "before": 2993,
+    "after": 3480,
+    "dBefore": 446,
+    "dAfter": 41
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 39946
+   },
+   "rim": true
+  },
+  "cave/ulysses-offer": {
+   "set": "cave",
+   "cut": "ulysses-offer",
+   "source": "assets/actor/ulysses-offer.png",
+   "sourceSha256": "7c0c15bbfd234622b0d6f2eae0d1663af1ed345ace832e0f35247cc27a9f111b",
+   "graded": "assets/actor/graded/cave/ulysses-offer.png",
+   "gradedSha256": "5c81db33ef6e2b2e45b5d45d9f606a609b6f96e65afafb2b89f3c209bb2a3e9d",
+   "plate": "assets/set/cave/cave-shut.jpg",
+   "state": "shut",
+   "mark": [
+    700,
+    468
+   ],
+   "hPx": 75,
+   "flip": false,
+   "light": [
+    638,
+    427
+   ],
+   "reach": 238,
+   "why": "G3's pose, shut iii-08..12 only; mark = bowl-offer (the report's cave bowl-offer settle)",
+   "settle": "ody-iii-08-lookhere",
+   "ring": {
+    "r_in": 33.8,
+    "r_out": 82.5,
+    "n": 16041,
+    "rgb_mean": [
+     173.7,
+     125.4,
+     98.2
+    ],
+    "cct": 3328
+   },
+   "deltaE": {
+    "before": 23.3,
+    "after": 5.9
+   },
+   "cct": {
+    "ring": 3328,
+    "before": 3389,
+    "after": 3465,
+    "dBefore": 61,
+    "dAfter": 137
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 39180
+   },
+   "rim": true
+  },
+  "cave/ulysses-sword": {
+   "set": "cave",
+   "cut": "ulysses-sword",
+   "source": "assets/actor/ulysses-sword.png",
+   "sourceSha256": "ee3f393c3474d0c2379bd964566b94a328d479eb706f704da5ad23185e10041d",
+   "graded": "assets/actor/graded/cave/ulysses-sword.png",
+   "gradedSha256": "ed64a606958ea2d75069d1644997b1cb35c6bc1cded096bbd12b6c73b0aabec6",
+   "plate": "assets/set/cave/cave-embers.jpg",
+   "state": "embers",
+   "mark": [
+    768,
+    462
+   ],
+   "hPx": 75,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "sword pose plays embers ii-11..13 (3) vs shut 0; mark = sword-ulysses",
+   "settle": null,
+   "ring": {
+    "r_in": 33.8,
+    "r_out": 82.5,
+    "n": 16040,
+    "rgb_mean": [
+     101.2,
+     71.7,
+     71.6
+    ],
+    "cct": 3893
+   },
+   "deltaE": {
+    "before": 7.0,
+    "after": 4.9
+   },
+   "cct": {
+    "ring": 3893,
+    "before": 3225,
+    "after": 3430,
+    "dBefore": 667,
+    "dAfter": 462
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 42581
+   },
+   "rim": true
+  },
+  "cave/ulysses-drive": {
+   "set": "cave",
+   "cut": "ulysses-drive",
+   "source": "assets/actor/ulysses-drive.png",
+   "sourceSha256": "31dcdfd8ce07eb34febd00bb237a983ffe09d17ca2f40f8b631aaad5722e6b72",
+   "graded": "assets/actor/graded/cave/ulysses-drive.png",
+   "gradedSha256": "89deb054f86a6a4ac0e64dd7ac14495fd4ded9d6d1bb57ecd57e356bd0282ed1",
+   "plate": "assets/set/cave/cave-embers.jpg",
+   "state": "embers",
+   "mark": [
+    624,
+    549
+   ],
+   "hPx": 66,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "the blinding tableau, embers iv-01..06; mark = U_AT.stakefive, h the set's own drive 66 (residual dE is the near-black floor ring vs the crimson accent \u2014 ungated, like the report's sea stern)",
+   "settle": null,
+   "ring": {
+    "r_in": 29.7,
+    "r_out": 72.6,
+    "n": 12421,
+    "rgb_mean": [
+     50.3,
+     49.8,
+     71.6
+    ],
+    "cct": 16130
+   },
+   "deltaE": {
+    "before": 24.8,
+    "after": 13.6
+   },
+   "cct": {
+    "ring": 16130,
+    "before": 3281,
+    "after": 5193,
+    "dBefore": 12849,
+    "dAfter": 10937
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 65442
+   },
+   "rim": true
+  },
+  "cave/crew-a-stand": {
+   "set": "cave",
+   "cut": "crew-a-stand",
+   "source": "assets/actor/crew-a-stand.png",
+   "sourceSha256": "994b57688d3ca7606ea48b8c35ee2df0be4c964c56de4d7166bd8913798b86ca",
+   "graded": "assets/actor/graded/cave/crew-a-stand.png",
+   "gradedSha256": "7f2fdb943b2e87c8fa39a73e479c803152203f8399cfc7853c0ac10f005a014c",
+   "plate": "assets/set/cave/cave-embers.jpg",
+   "state": "embers",
+   "mark": [
+    522,
+    459
+   ],
+   "hPx": 73,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "crew embers units (huddle ii-10..13 + stake-five iv-01..10, ~15) vs shut 12; mark = FORM.stakefive[0]",
+   "settle": null,
+   "ring": {
+    "r_in": 32.9,
+    "r_out": 80.3,
+    "n": 15196,
+    "rgb_mean": [
+     72.2,
+     55.0,
+     59.4
+    ],
+    "cct": 4887
+   },
+   "deltaE": {
+    "before": 50.7,
+    "after": 22.3
+   },
+   "cct": {
+    "ring": 4887,
+    "before": 2845,
+    "after": 3005,
+    "dBefore": 2042,
+    "dAfter": 1883
+   },
+   "accent": {
+    "hueDeg": 35.0,
+    "px": 74338
+   },
+   "rim": true
+  },
+  "cave/crew-b-stand": {
+   "set": "cave",
+   "cut": "crew-b-stand",
+   "source": "assets/actor/crew-b-stand.png",
+   "sourceSha256": "ced45bd57de01e6fffa48cef6674ad64ed04fbc3f77d67884b38cb596f34c2b2",
+   "graded": "assets/actor/graded/cave/crew-b-stand.png",
+   "gradedSha256": "40bf3cabf952697a3596d4e5da1890a20b7337d9b599de2e861b20e3a0efd13f",
+   "plate": "assets/set/cave/cave-embers.jpg",
+   "state": "embers",
+   "mark": [
+    492,
+    441
+   ],
+   "hPx": 73,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "as crew-a; mark = FORM.stakefive[1]",
+   "settle": null,
+   "ring": {
+    "r_in": 32.9,
+    "r_out": 80.3,
+    "n": 15196,
+    "rgb_mean": [
+     64.5,
+     49.5,
+     54.3
+    ],
+    "cct": 5084
+   },
+   "deltaE": {
+    "before": 31.1,
+    "after": 8.5
+   },
+   "cct": {
+    "ring": 5084,
+    "before": 4626,
+    "after": 4061,
+    "dBefore": 458,
+    "dAfter": 1023
+   },
+   "accent": {
+    "hueDeg": 15.0,
+    "px": 32594
+   },
+   "rim": true
+  },
+  "cave/crew-carry": {
+   "set": "cave",
+   "cut": "crew-carry",
+   "source": "assets/actor/crew-carry.png",
+   "sourceSha256": "d1af03577d6af912561e260cf49c7f2fbaf8690618cdb148e3b52fb9a89a0567",
+   "graded": "assets/actor/graded/cave/crew-carry.png",
+   "gradedSha256": "3956ef6ca3fa675c99d1c154121540465e3f882ba23638e049e1b810ceaae603",
+   "plate": "assets/set/cave/cave-embers.jpg",
+   "state": "embers",
+   "mark": [
+    472,
+    481
+   ],
+   "hPx": 70,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "carry plays racks (dawn ii-01) and the stake beam (embers iv-01..10) \u2014 embers majority; mark = FORM.stakefive[2], h = crew 73 x 0.96",
+   "settle": null,
+   "ring": {
+    "r_in": 31.5,
+    "r_out": 77.0,
+    "n": 13932,
+    "rgb_mean": [
+     61.4,
+     53.5,
+     63.7
+    ],
+    "cct": 7148
+   },
+   "deltaE": {
+    "before": 38.4,
+    "after": 17.6
+   },
+   "cct": {
+    "ring": 7148,
+    "before": 3437,
+    "after": 3799,
+    "dBefore": 3711,
+    "dAfter": 3349
+   },
+   "accent": {
+    "hueDeg": 35.0,
+    "px": 155188
+   },
+   "rim": true
+  },
+  "cave/polyphemus-stand": {
+   "set": "cave",
+   "cut": "polyphemus-stand",
+   "source": "assets/actor/polyphemus-stand.png",
+   "sourceSha256": "084f3a63037112a89eb50d3866e1d2389f8e44e6a7054744f3c8cda7466b9f68",
+   "graded": "assets/actor/graded/cave/polyphemus-stand.png",
+   "gradedSha256": "abe4c10b2c366b691140d48fbcc750005a934fd82bd3d15ea829a9cc4dced0f6",
+   "plate": "assets/set/cave/cave-shut.jpg",
+   "state": "shut",
+   "mark": [
+    760,
+    452
+   ],
+   "hPx": 300,
+   "flip": false,
+   "light": [
+    638,
+    427
+   ],
+   "reach": 238,
+   "why": "the standing bulk holds giant-seat through ii-04 (shut) between the walk-in and the seat; embers 0",
+   "settle": null,
+   "ring": {
+    "r_in": 135.0,
+    "r_out": 330.0,
+    "n": 255117,
+    "rgb_mean": [
+     61.6,
+     38.8,
+     36.4
+    ],
+    "cct": 3301
+   },
+   "deltaE": {
+    "before": 27.2,
+    "after": 7.9
+   },
+   "cct": {
+    "ring": 3301,
+    "before": 4251,
+    "after": 4324,
+    "dBefore": 950,
+    "dAfter": 1023
+   },
+   "accent": {
+    "hueDeg": 55.0,
+    "px": 266775
+   },
+   "rim": true
+  },
+  "cave/polyphemus-seated": {
+   "set": "cave",
+   "cut": "polyphemus-seated",
+   "source": "assets/actor/polyphemus-seated.png",
+   "sourceSha256": "c7f6d4f3ec55720e4f6c7094e43e454c9d8fb0d80eeea6a25d0ab40c581d3c05",
+   "graded": "assets/actor/graded/cave/polyphemus-seated.png",
+   "gradedSha256": "55530609b287853deae1d02ee1f491211e17f9631b967877f1eb50bb0e7fb508",
+   "plate": "assets/set/cave/cave-shut.jpg",
+   "state": "shut",
+   "mark": [
+    760,
+    452
+   ],
+   "hPx": 165,
+   "flip": false,
+   "light": [
+    638,
+    427
+   ],
+   "reach": 238,
+   "why": "the working seat, shut ii-05..09 + iii-07..12 (12) vs embers 0 (the report's cave meal settle)",
+   "settle": "ody-ii-05-strangers",
+   "ring": {
+    "r_in": 74.2,
+    "r_out": 181.5,
+    "n": 77577,
+    "rgb_mean": [
+     108.8,
+     70.9,
+     58.2
+    ],
+    "cct": 3018
+   },
+   "deltaE": {
+    "before": 14.7,
+    "after": 6.7
+   },
+   "cct": {
+    "ring": 3018,
+    "before": 4209,
+    "after": 3765,
+    "dBefore": 1192,
+    "dAfter": 748
+   },
+   "accent": {
+    "hueDeg": 55.0,
+    "px": 237627
+   },
+   "rim": true
+  },
+  "cave/polyphemus-clutch": {
+   "set": "cave",
+   "cut": "polyphemus-clutch",
+   "source": "assets/actor/polyphemus-clutch.png",
+   "sourceSha256": "0e0f45406b57a54b46465c5631e9b95c70f5dc2e41aabe44f776b84f5d504274",
+   "graded": "assets/actor/graded/cave/polyphemus-clutch.png",
+   "gradedSha256": "ee9368dbedda76217766e2e41ca4fa3d1817f9ab6d2c575234f55735d9664c32",
+   "plate": "assets/set/cave/cave-shut.jpg",
+   "state": "shut",
+   "mark": [
+    760,
+    452
+   ],
+   "hPx": 190,
+   "flip": false,
+   "light": [
+    638,
+    427
+   ],
+   "reach": 238,
+   "why": "the three meals split shut iii-07 / embers ii-10 1-1; the report graded the meal ring on cave-shut (the blaze), so the tie takes shut",
+   "settle": null,
+   "ring": {
+    "r_in": 85.5,
+    "r_out": 209.0,
+    "n": 102791,
+    "rgb_mean": [
+     95.3,
+     60.8,
+     51.1
+    ],
+    "cct": 2995
+   },
+   "deltaE": {
+    "before": 16.3,
+    "after": 7.2
+   },
+   "cct": {
+    "ring": 2995,
+    "before": 4228,
+    "after": 3892,
+    "dBefore": 1233,
+    "dAfter": 896
+   },
+   "accent": {
+    "hueDeg": 55.0,
+    "px": 254512
+   },
+   "rim": true
+  },
+  "cave/polyphemus-drink": {
+   "set": "cave",
+   "cut": "polyphemus-drink",
+   "source": "assets/actor/polyphemus-drink.png",
+   "sourceSha256": "c1df0b574db8b15d46590e4d772ed86c71d50d40d3fd656b57ef3b0e323a023f",
+   "graded": "assets/actor/graded/cave/polyphemus-drink.png",
+   "gradedSha256": "87de5fccbd29ac4452a04edb73833f7746bb0505c653b5d49aeb4ad23acee561",
+   "plate": "assets/set/cave/cave-shut.jpg",
+   "state": "shut",
+   "mark": [
+    760,
+    452
+   ],
+   "hPx": 175,
+   "flip": false,
+   "light": [
+    638,
+    427
+   ],
+   "reach": 238,
+   "why": "the three pours, shut iii-09..12 only",
+   "settle": null,
+   "ring": {
+    "r_in": 78.8,
+    "r_out": 192.5,
+    "n": 87257,
+    "rgb_mean": [
+     102.6,
+     66.2,
+     55.1
+    ],
+    "cct": 3007
+   },
+   "deltaE": {
+    "before": 15.5,
+    "after": 7.7
+   },
+   "cct": {
+    "ring": 3007,
+    "before": 4130,
+    "after": 3856,
+    "dBefore": 1123,
+    "dAfter": 849
+   },
+   "accent": {
+    "hueDeg": 55.0,
+    "px": 267457
+   },
+   "rim": true
+  },
+  "cave/polyphemus-sprawl": {
+   "set": "cave",
+   "cut": "polyphemus-sprawl",
+   "source": "assets/actor/polyphemus-sprawl.png",
+   "sourceSha256": "4fd46cef47e19f9e8764cd3d5539993eb86d763b39ed63f7e4703c87263d60e8",
+   "graded": "assets/actor/graded/cave/polyphemus-sprawl.png",
+   "gradedSha256": "e579b3956309186fbb4ca1ec66183dc3a73f1f0d863213daa73b406fd43d4fcb",
+   "plate": "assets/set/cave/cave-embers.jpg",
+   "state": "embers",
+   "mark": [
+    664,
+    546
+   ],
+   "hPx": 70,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "the sprawl is the embers tableau (ii-10..13 + iii-13..iv-10, ~16 units) vs shut 0; mark = the swept SPRAWL.at",
+   "settle": null,
+   "ring": {
+    "r_in": 31.5,
+    "r_out": 77.0,
+    "n": 13933,
+    "rgb_mean": [
+     56.6,
+     52.0,
+     71.6
+    ],
+    "cct": 11736
+   },
+   "deltaE": {
+    "before": 36.2,
+    "after": 10.2
+   },
+   "cct": {
+    "ring": 11736,
+    "before": 4199,
+    "after": 6094,
+    "dBefore": 7537,
+    "dAfter": 5642
+   },
+   "accent": {
+    "hueDeg": 55.0,
+    "px": 150780
+   },
+   "rim": true
+  },
+  "cave/polyphemus-blinded-grope": {
+   "set": "cave",
+   "cut": "polyphemus-blinded-grope",
+   "source": "assets/actor/polyphemus-blinded-grope.png",
+   "sourceSha256": "a99fa975ba0136691cfc261a43687a932a097f03d75464dd09ee7ed4e852845c",
+   "graded": "assets/actor/graded/cave/polyphemus-blinded-grope.png",
+   "gradedSha256": "7342ad65f3d637be7a66d7be42b390ddc4ff85ee92afb4327d5af5513cdc1360",
+   "plate": "assets/set/cave/cave-predawn.jpg",
+   "state": "predawn",
+   "mark": [
+    345,
+    420
+   ],
+   "hPx": 165,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "never plays shut/embers: doorway bulk predawn v-02..04 (3) vs master iv-11..12 (2); mark = doorway-seat at the doorway h 165",
+   "settle": null,
+   "ring": {
+    "r_in": 74.2,
+    "r_out": 181.5,
+    "n": 77612,
+    "rgb_mean": [
+     41.4,
+     41.7,
+     58.1
+    ],
+    "cct": 13678
+   },
+   "deltaE": {
+    "before": 37.8,
+    "after": 10.8
+   },
+   "cct": {
+    "ring": 13678,
+    "before": 4198,
+    "after": 6073,
+    "dBefore": 9481,
+    "dAfter": 7605
+   },
+   "accent": {
+    "hueDeg": 55.0,
+    "px": 102505
+   },
+   "rim": true
+  },
+  "cave/polyphemus-stroke": {
+   "set": "cave",
+   "cut": "polyphemus-stroke",
+   "source": "assets/actor/polyphemus-stroke.png",
+   "sourceSha256": "9cd32c45651fc02998a686408ae08d34c63257919f3a25483f6d8e4036668289",
+   "graded": "assets/actor/graded/cave/polyphemus-stroke.png",
+   "gradedSha256": "baa8b6210da02aadbb772b61d8263baf3e0b2c90d10c61c46f5e2623d9c733c9",
+   "plate": "assets/set/cave/cave-dawn.jpg",
+   "state": "dawn",
+   "mark": [
+    345,
+    420
+   ],
+   "hPx": 190,
+   "flip": false,
+   "light": [
+    337,
+    312
+   ],
+   "reach": 80,
+   "why": "never plays shut/embers: the stroke is the dawn escape (v-05..10); mark = doorway-seat",
+   "settle": null,
+   "ring": {
+    "r_in": 85.5,
+    "r_out": 209.0,
+    "n": 102798,
+    "rgb_mean": [
+     86.2,
+     64.2,
+     59.8
+    ],
+    "cct": 4044
+   },
+   "deltaE": {
+    "before": 21.0,
+    "after": 5.7
+   },
+   "cct": {
+    "ring": 4044,
+    "before": 4466,
+    "after": 5025,
+    "dBefore": 422,
+    "dAfter": 981
+   },
+   "accent": {
+    "hueDeg": 55.0,
+    "px": 228060
+   },
+   "rim": true
+  },
+  "cave/ram-great": {
+   "set": "cave",
+   "cut": "ram-great",
+   "source": "assets/actor/ram-great.png",
+   "sourceSha256": "29cfce7a566adb59f85871ccab77d0a113a0b872cfecb24b15fec1764f987588",
+   "graded": "assets/actor/graded/cave/ram-great.png",
+   "gradedSha256": "4c9171b0f52a5333caeba420a6c10f979f2d44de6f0aa19c4e15b3e1ee96de50",
+   "plate": "assets/set/cave/cave-predawn.jpg",
+   "state": "predawn",
+   "mark": [
+    838,
+    430
+   ],
+   "hPx": 83,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "the plain great ram plays v-04 (predawn) only \u2014 G5's click slings him before dawn; mark = ram-stand",
+   "settle": "ody-v-04-greatram",
+   "ring": {
+    "r_in": 37.4,
+    "r_out": 91.3,
+    "n": 19644,
+    "rgb_mean": [
+     71.4,
+     67.6,
+     74.1
+    ],
+    "cct": 6971
+   },
+   "deltaE": {
+    "before": 36.1,
+    "after": 6.2
+   },
+   "cct": {
+    "ring": 6971,
+    "before": 5081,
+    "after": 6045,
+    "dBefore": 1890,
+    "dAfter": 926
+   },
+   "accent": {
+    "hueDeg": 45.0,
+    "px": 61204
+   },
+   "rim": true
+  },
+  "cave/ram-great-slung": {
+   "set": "cave",
+   "cut": "ram-great-slung",
+   "source": "assets/actor/ram-great-slung.png",
+   "sourceSha256": "39dae0aa5a47af39334877d09c7f0fae691d712a55f25b3afe20eea1ee364158",
+   "graded": "assets/actor/graded/cave/ram-great-slung.png",
+   "gradedSha256": "f046d154a56addc62ba72d5ecd36f4ce5b3f2ddd4d355107733088b4c9fe68ed",
+   "plate": "assets/set/cave/cave-dawn.jpg",
+   "state": "dawn",
+   "mark": [
+    395,
+    438
+   ],
+   "hPx": 84,
+   "flip": false,
+   "light": [
+    337,
+    312
+   ],
+   "reach": 80,
+   "why": "the slung ram is the dawn escape (v-05..07, 3) vs predawn v-04 (1); mark = ram-at-mouth",
+   "settle": null,
+   "ring": {
+    "r_in": 37.8,
+    "r_out": 92.4,
+    "n": 20141,
+    "rgb_mean": [
+     149.1,
+     110.5,
+     84.2
+    ],
+    "cct": 3451
+   },
+   "deltaE": {
+    "before": 14.0,
+    "after": 7.9
+   },
+   "cct": {
+    "ring": 3451,
+    "before": 4757,
+    "after": 4164,
+    "dBefore": 1306,
+    "dAfter": 713
+   },
+   "accent": {
+    "hueDeg": 45.0,
+    "px": 95499
+   },
+   "rim": true
+  },
+  "cave/ram-pair-slung": {
+   "set": "cave",
+   "cut": "ram-pair-slung",
+   "source": "assets/actor/ram-pair-slung.png",
+   "sourceSha256": "c7e8334afcbf61f4a32fb15e1e3983d74575896a08aedddaa46996788175cd6e",
+   "graded": "assets/actor/graded/cave/ram-pair-slung.png",
+   "gradedSha256": "0c65f72c12894957449c1ee442555bf65e00e4584d6c5308062e5cab470ca92c",
+   "plate": "assets/set/cave/cave-dawn.jpg",
+   "state": "dawn",
+   "mark": [
+    660,
+    536
+   ],
+   "hPx": 57,
+   "flip": false,
+   "light": [
+    337,
+    312
+   ],
+   "reach": 80,
+   "why": "lashed pairs predawn v-03..04 (2) vs the dawn stream v-05..07 (3); mark = flockOut mid-path",
+   "settle": null,
+   "ring": {
+    "r_in": 25.7,
+    "r_out": 62.7,
+    "n": 9254,
+    "rgb_mean": [
+     103.8,
+     82.5,
+     84.7
+    ],
+    "cct": 4838
+   },
+   "deltaE": {
+    "before": 31.7,
+    "after": 5.2
+   },
+   "cct": {
+    "ring": 4838,
+    "before": 4760,
+    "after": 5740,
+    "dBefore": 78,
+    "dAfter": 903
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 78234
+   },
+   "rim": true
+  },
+  "cave/prop-bowl": {
+   "set": "cave",
+   "cut": "prop-bowl",
+   "source": "assets/actor/prop-bowl.png",
+   "sourceSha256": "2300fdc1c8a925a238d4d49596c264df7bd37df4b1e8954cc09bc7d22d56fa12",
+   "graded": "assets/actor/graded/cave/prop-bowl.png",
+   "gradedSha256": "36dec2798019ad12d5c5dd8419f4182292fec06b1700d50d40650cb1e0878ebe",
+   "plate": "assets/set/cave/cave-shut.jpg",
+   "state": "shut",
+   "mark": [
+    700,
+    441
+   ],
+   "hPx": 16,
+   "flip": false,
+   "light": [
+    638,
+    427
+   ],
+   "reach": 238,
+   "why": "G3's bowl, shut iii-08..12; mark = HOLD_AT.bowl",
+   "settle": null,
+   "ring": {
+    "r_in": 10.0,
+    "r_out": 26.0,
+    "n": 1634,
+    "rgb_mean": [
+     208.8,
+     147.9,
+     99.2
+    ],
+    "cct": 3044
+   },
+   "deltaE": {
+    "before": 24.1,
+    "after": 9.6
+   },
+   "cct": {
+    "ring": 3044,
+    "before": 4211,
+    "after": 3523,
+    "dBefore": 1167,
+    "dAfter": 479
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 145379
+   },
+   "rim": true
+  },
+  "cave/prop-sword": {
+   "set": "cave",
+   "cut": "prop-sword",
+   "source": "assets/actor/prop-sword.png",
+   "sourceSha256": "fa06903e09c3fe4342cc1d69a2d97547190e7ebc8c0827077d614343fa74bc3c",
+   "graded": "assets/actor/graded/cave/prop-sword.png",
+   "gradedSha256": "4fb6e8d8565686b7d1eff47745f440ac58440c5ae7c655f6ab2dc4c9971d60cf",
+   "plate": "assets/set/cave/cave-embers.jpg",
+   "state": "embers",
+   "mark": [
+    768,
+    445
+   ],
+   "hPx": 12,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "G2's glint lives in the low-fire state (ii-11..13); mark = the hip anchor (768,462)-17",
+   "settle": null,
+   "ring": {
+    "r_in": 10.0,
+    "r_out": 26.0,
+    "n": 1644,
+    "rgb_mean": [
+     115.9,
+     79.8,
+     73.8
+    ],
+    "cct": 3466
+   },
+   "deltaE": {
+    "before": 17.6,
+    "after": 8.0
+   },
+   "cct": {
+    "ring": 3466,
+    "before": 3949,
+    "after": 3713,
+    "dBefore": 483,
+    "dAfter": 247
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 53821
+   },
+   "rim": true
+  },
+  "cave/prop-stake": {
+   "set": "cave",
+   "cut": "prop-stake",
+   "source": "assets/actor/prop-stake.png",
+   "sourceSha256": "147fe744823fcb81dd17209acf9112820750fe5d1648fbeb7603713417d192ab",
+   "graded": "assets/actor/graded/cave/prop-stake.png",
+   "gradedSha256": "fbd30837c1b0358ed31903998245e23c8e3f01b24d4dc1dcbd106fa3ab0d7436",
+   "plate": "assets/set/cave/cave-predawn.jpg",
+   "state": "predawn",
+   "mark": [
+    790,
+    500
+   ],
+   "hPx": 41,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "the plain stake plays the make/hide (predawn iii-04..06, 3) vs embers iv-01 (1); mark = stake-hide, h = 84 x 592/1217",
+   "settle": null,
+   "ring": {
+    "r_in": 18.4,
+    "r_out": 45.1,
+    "n": 4781,
+    "rgb_mean": [
+     92.0,
+     98.8,
+     118.8
+    ],
+    "cct": 10371
+   },
+   "deltaE": {
+    "before": 23.3,
+    "after": 11.3
+   },
+   "cct": {
+    "ring": 10371,
+    "before": 5075,
+    "after": 6559,
+    "dBefore": 5296,
+    "dAfter": 3812
+   },
+   "accent": {
+    "hueDeg": 35.0,
+    "px": 63235
+   },
+   "rim": true
+  },
+  "cave/prop-stake-glowing": {
+   "set": "cave",
+   "cut": "prop-stake-glowing",
+   "source": "assets/actor/prop-stake-glowing.png",
+   "sourceSha256": "8e46564e521f96575b2ba8d0ed6ccf57b337f582d48957a511a4e83ae71d1450",
+   "graded": "assets/actor/graded/cave/prop-stake-glowing.png",
+   "gradedSha256": "98e79a2cb5efd9fc191550d4c17a288c042d6ab0ff69b4bd76452bf62f6ee983",
+   "plate": "assets/set/cave/cave-embers.jpg",
+   "state": "embers",
+   "mark": [
+    662,
+    456
+   ],
+   "hPx": 43,
+   "flip": false,
+   "light": [
+    662,
+    456
+   ],
+   "reach": 61,
+   "why": "the glow is the embers heat/drive (iv-02..06); mark = HOLD_AT.embers, h = 84 x 582/1143",
+   "settle": null,
+   "ring": {
+    "r_in": 19.4,
+    "r_out": 47.3,
+    "n": 5263,
+    "rgb_mean": [
+     91.8,
+     66.7,
+     71.2
+    ],
+    "cct": 4369
+   },
+   "deltaE": {
+    "before": 22.7,
+    "after": 9.4
+   },
+   "cct": {
+    "ring": 4369,
+    "before": 3872,
+    "after": 3722,
+    "dBefore": 497,
+    "dAfter": 646
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 81683
+   },
+   "rim": true
+  },
+  "shore/ulysses-stand": {
+   "set": "shore",
+   "cut": "ulysses-stand",
+   "source": "assets/actor/ulysses-stand.png",
+   "sourceSha256": "840694f7cbc64ea6f39e84221f9275c09529e940c8d6daa9db4831699a827a55",
+   "graded": "assets/actor/graded/shore/ulysses-stand.png",
+   "gradedSha256": "f078101929ab567bde24010e436b690daf1319ff570778d11bf19d666606ff87",
+   "plate": "assets/set/shore/shore-day.jpg",
+   "state": "day",
+   "mark": [
+    510,
+    492
+   ],
+   "hPx": 20,
+   "flip": true,
+   "light": null,
+   "reach": null,
+   "why": "stand plays day i-05..12 (8) vs night i-01..04 (4); mark = council-ulysses (the report's shore settle, now on the state it actually plays in)",
+   "settle": null,
+   "ring": {
+    "r_in": 10.0,
+    "r_out": 26.0,
+    "n": 1638,
+    "rgb_mean": [
+     155.3,
+     103.5,
+     80.3
+    ],
+    "cct": 2959
+   },
+   "deltaE": {
+    "before": 17.7,
+    "after": 9.2
+   },
+   "cct": {
+    "ring": 2959,
+    "before": 2574,
+    "after": 3580,
+    "dBefore": 385,
+    "dAfter": 622
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 43729
+   },
+   "rim": false
+  },
+  "shore/crew-a-stand": {
+   "set": "shore",
+   "cut": "crew-a-stand",
+   "source": "assets/actor/crew-a-stand.png",
+   "sourceSha256": "994b57688d3ca7606ea48b8c35ee2df0be4c964c56de4d7166bd8913798b86ca",
+   "graded": "assets/actor/graded/shore/crew-a-stand.png",
+   "gradedSha256": "1d60a8e3a2612934b5f7b05d1444f3a96afc2f34d22e96633e77b97e5c52ef2b",
+   "plate": "assets/set/shore/shore-day.jpg",
+   "state": "day",
+   "mark": [
+    426,
+    501
+   ],
+   "hPx": 19,
+   "flip": false,
+   "light": null,
+   "reach": null,
+   "why": "day majority as ulysses; mark = council crew arc [0]",
+   "settle": null,
+   "ring": {
+    "r_in": 10.0,
+    "r_out": 26.0,
+    "n": 1635,
+    "rgb_mean": [
+     134.5,
+     89.8,
+     70.5
+    ],
+    "cct": 3013
+   },
+   "deltaE": {
+    "before": 24.5,
+    "after": 9.7
+   },
+   "cct": {
+    "ring": 3013,
+    "before": 2845,
+    "after": 2868,
+    "dBefore": 168,
+    "dAfter": 145
+   },
+   "accent": {
+    "hueDeg": 35.0,
+    "px": 74338
+   },
+   "rim": false
+  },
+  "shore/crew-b-stand": {
+   "set": "shore",
+   "cut": "crew-b-stand",
+   "source": "assets/actor/crew-b-stand.png",
+   "sourceSha256": "ced45bd57de01e6fffa48cef6674ad64ed04fbc3f77d67884b38cb596f34c2b2",
+   "graded": "assets/actor/graded/shore/crew-b-stand.png",
+   "gradedSha256": "3468cc09161491c089f204c06e827413eb88b04b06a42e4b4d9cc79631a8765c",
+   "plate": "assets/set/shore/shore-day.jpg",
+   "state": "day",
+   "mark": [
+    445,
+    507
+   ],
+   "hPx": 19,
+   "flip": false,
+   "light": null,
+   "reach": null,
+   "why": "day majority; mark = council crew arc [1] (the ledger's council-crew centroid)",
+   "settle": "ody-i-06-council",
+   "ring": {
+    "r_in": 10.0,
+    "r_out": 26.0,
+    "n": 1634,
+    "rgb_mean": [
+     166.3,
+     108.8,
+     78.6
+    ],
+    "cct": 2803
+   },
+   "deltaE": {
+    "before": 21.7,
+    "after": 7.4
+   },
+   "cct": {
+    "ring": 2803,
+    "before": 4626,
+    "after": 3273,
+    "dBefore": 1824,
+    "dAfter": 471
+   },
+   "accent": {
+    "hueDeg": 15.0,
+    "px": 32594
+   },
+   "rim": false
+  },
+  "shore/prop-wineskin": {
+   "set": "shore",
+   "cut": "prop-wineskin",
+   "source": "assets/actor/prop-wineskin.png",
+   "sourceSha256": "c6a68fc0983169b056a277f02893b39515e11fb7784a6721f95de3f60c2594ba",
+   "graded": "assets/actor/graded/shore/prop-wineskin.png",
+   "gradedSha256": "d0d7d5ba9e2d182125437658000b15aa43607face5165a629899ccc828f2a0ba",
+   "plate": "assets/set/shore/shore-day.jpg",
+   "state": "day",
+   "mark": [
+    564,
+    495
+   ],
+   "hPx": 7,
+   "flip": false,
+   "light": null,
+   "reach": null,
+   "why": "shouldered i-10..12, all day; mark = the twelve-at-ship shoulder point (560+4, 503-20x0.42)",
+   "settle": null,
+   "ring": {
+    "r_in": 10.0,
+    "r_out": 26.0,
+    "n": 1648,
+    "rgb_mean": [
+     86.1,
+     65.4,
+     52.6
+    ],
+    "cct": 3800
+   },
+   "deltaE": {
+    "before": 4.5,
+    "after": 5.1
+   },
+   "cct": {
+    "ring": 3800,
+    "before": 3387,
+    "after": 3299,
+    "dBefore": 414,
+    "dAfter": 501
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 55826
+   },
+   "rim": false
+  },
+  "sea/polyphemus-stand": {
+   "set": "sea",
+   "cut": "polyphemus-stand",
+   "source": "assets/actor/polyphemus-stand.png",
+   "sourceSha256": "084f3a63037112a89eb50d3866e1d2389f8e44e6a7054744f3c8cda7466b9f68",
+   "graded": "assets/actor/graded/sea/polyphemus-stand.png",
+   "gradedSha256": "1b2af3f315b2d6e64512faf65d94f2f941f47e644edeaa4a1b123910f3f81cc3",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "master",
+   "mark": [
+    860,
+    210
+   ],
+   "hPx": 89,
+   "flip": false,
+   "light": [
+    820,
+    339
+   ],
+   "reach": 90,
+   "why": "clifftop-giant, the ledger's mark; rim off the crag glow",
+   "settle": null,
+   "ring": {
+    "r_in": 40.1,
+    "r_out": 97.9,
+    "n": 22547,
+    "rgb_mean": [
+     74.9,
+     66.7,
+     69.2
+    ],
+    "cct": 5883
+   },
+   "deltaE": {
+    "before": 21.1,
+    "after": 9.2
+   },
+   "cct": {
+    "ring": 5883,
+    "before": 4251,
+    "after": 4635,
+    "dBefore": 1632,
+    "dAfter": 1248
+   },
+   "accent": {
+    "hueDeg": 55.0,
+    "px": 266775
+   },
+   "rim": true
+  },
+  "sea/polyphemus-hurl": {
+   "set": "sea",
+   "cut": "polyphemus-hurl",
+   "source": "assets/actor/polyphemus-hurl.png",
+   "sourceSha256": "df0cd140641a49daaafe19cdd69d98b8a85f738484823843b6ab60a2247c8a4c",
+   "graded": "assets/actor/graded/sea/polyphemus-hurl.png",
+   "gradedSha256": "f58aa809286e5b28d6bf663377edd05d28e271a14b1667d325e07acb0cdb6741",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "master",
+   "mark": [
+    860,
+    210
+   ],
+   "hPx": 105,
+   "flip": false,
+   "light": [
+    820,
+    339
+   ],
+   "reach": 90,
+   "why": "the hurl at the clifftop, arms h 105",
+   "settle": "ody-vi-03-jeer",
+   "ring": {
+    "r_in": 47.2,
+    "r_out": 115.5,
+    "n": 31436,
+    "rgb_mean": [
+     70.1,
+     63.1,
+     67.1
+    ],
+    "cct": 6182
+   },
+   "deltaE": {
+    "before": 22.2,
+    "after": 7.7
+   },
+   "cct": {
+    "ring": 6182,
+    "before": 4577,
+    "after": 5112,
+    "dBefore": 1605,
+    "dAfter": 1070
+   },
+   "accent": {
+    "hueDeg": 55.0,
+    "px": 188210
+   },
+   "rim": true
+  },
+  "sea/polyphemus-curse": {
+   "set": "sea",
+   "cut": "polyphemus-curse",
+   "source": "assets/actor/polyphemus-curse.png",
+   "sourceSha256": "bd824c7284cacccd0542b864c79cd27e710c60fe2794995d7df13a340740ac60",
+   "graded": "assets/actor/graded/sea/polyphemus-curse.png",
+   "gradedSha256": "791c2822a0c89f6bb85e7715168dfa07990bf8cdad44c5f70ec64dcb4afcd54e",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "master",
+   "mark": [
+    860,
+    210
+   ],
+   "hPx": 105,
+   "flip": false,
+   "light": [
+    820,
+    339
+   ],
+   "reach": 90,
+   "why": "the curse at the clifftop, arms h 105",
+   "settle": null,
+   "ring": {
+    "r_in": 47.2,
+    "r_out": 115.5,
+    "n": 31436,
+    "rgb_mean": [
+     70.1,
+     63.1,
+     67.1
+    ],
+    "cct": 6182
+   },
+   "deltaE": {
+    "before": 24.5,
+    "after": 10.2
+   },
+   "cct": {
+    "ring": 6182,
+    "before": 4161,
+    "after": 4630,
+    "dBefore": 2021,
+    "dAfter": 1552
+   },
+   "accent": {
+    "hueDeg": 55.0,
+    "px": 266351
+   },
+   "rim": true
+  },
+  "sea/ulysses-stand": {
+   "set": "sea",
+   "cut": "ulysses-stand",
+   "source": "assets/actor/ulysses-stand.png",
+   "sourceSha256": "840694f7cbc64ea6f39e84221f9275c09529e940c8d6daa9db4831699a827a55",
+   "graded": "assets/actor/graded/sea/ulysses-stand.png",
+   "gradedSha256": "6d823720b58c624f24af501c04b7c4ddcf80bce5d3271856b79363b1701b9897",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "master",
+   "mark": [
+    518,
+    426
+   ],
+   "hPx": 22,
+   "flip": true,
+   "light": [
+    818,
+    457
+   ],
+   "reach": 60,
+   "why": "the stern mark, flipped at the cliff; rim off the lit cave",
+   "settle": null,
+   "ring": {
+    "r_in": 10.0,
+    "r_out": 26.0,
+    "n": 1634,
+    "rgb_mean": [
+     59.9,
+     48.6,
+     51.0
+    ],
+    "cct": 5264
+   },
+   "deltaE": {
+    "before": 25.9,
+    "after": 9.6
+   },
+   "cct": {
+    "ring": 5264,
+    "before": 2574,
+    "after": 3533,
+    "dBefore": 2690,
+    "dAfter": 1731
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 43729
+   },
+   "rim": true
+  },
+  "sea/ulysses-taunt": {
+   "set": "sea",
+   "cut": "ulysses-taunt",
+   "source": "assets/actor/ulysses-taunt.png",
+   "sourceSha256": "28b2d64945d851fdde16da22d3c2829a9b4909aec41e8604d33a3938e940544c",
+   "graded": "assets/actor/graded/sea/ulysses-taunt.png",
+   "gradedSha256": "74f6014f55598a961c2917c2b6ee09783069176e605ae0a9cac3c61704bb2f96",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "master",
+   "mark": [
+    518,
+    426
+   ],
+   "hPx": 22,
+   "flip": true,
+   "light": [
+    818,
+    457
+   ],
+   "reach": 60,
+   "why": "the taunt at the stern (the report's sea stern settle; the residual is the protected cloak accent, by design)",
+   "settle": null,
+   "ring": {
+    "r_in": 10.0,
+    "r_out": 26.0,
+    "n": 1634,
+    "rgb_mean": [
+     59.9,
+     48.6,
+     51.0
+    ],
+    "cct": 5264
+   },
+   "deltaE": {
+    "before": 22.6,
+    "after": 9.1
+   },
+   "cct": {
+    "ring": 5264,
+    "before": 2631,
+    "after": 3444,
+    "dBefore": 2633,
+    "dAfter": 1820
+   },
+   "accent": {
+    "hueDeg": 345.0,
+    "px": 52457
+   },
+   "rim": true
+  },
+  "sea/prop-rock": {
+   "set": "sea",
+   "cut": "prop-rock",
+   "source": "assets/actor/prop-rock.png",
+   "sourceSha256": "3f65d838a994c058ebda8820e9c69911796fc10bbd2a36c785e57a50d9bf7ae2",
+   "graded": "assets/actor/graded/sea/prop-rock.png",
+   "gradedSha256": "96ac7a116b6ce9a7c6e8d65d3cfbd1671bf57362b733970f75a722aa201dd6a9",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "master",
+   "mark": [
+    455,
+    540
+   ],
+   "hPx": 48,
+   "flip": false,
+   "light": [
+    818,
+    457
+   ],
+   "reach": 60,
+   "why": "rock 2's near-miss water (SPLASH2), the flight's landing ring",
+   "settle": null,
+   "ring": {
+    "r_in": 21.6,
+    "r_out": 52.8,
+    "n": 6543,
+    "rgb_mean": [
+     17.3,
+     23.6,
+     41.3
+    ],
+    "cct": 25000
+   },
+   "deltaE": {
+    "before": 35.9,
+    "after": 5.3
+   },
+   "cct": {
+    "ring": 25000,
+    "before": 5063,
+    "after": 18095,
+    "dBefore": 19937,
+    "dAfter": 6905
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 52373
+   },
+   "rim": true
+  },
+  "sea/prop-splash": {
+   "set": "sea",
+   "cut": "prop-splash",
+   "source": "assets/actor/prop-splash.png",
+   "sourceSha256": "c954b2eb8813c3fc98ad60fe873e27738638a2a1e6543735c9753f45d637e278",
+   "graded": "assets/actor/graded/sea/prop-splash.png",
+   "gradedSha256": "20c8bc11fc2735ea7e7b74f64b79c09f0967798321b7979f52970a22f475205c",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "master",
+   "mark": [
+    455,
+    540
+   ],
+   "hPx": 76,
+   "flip": false,
+   "light": [
+    818,
+    457
+   ],
+   "reach": 60,
+   "why": "the plume at SPLASH2, h = SPLASH_H 76",
+   "settle": null,
+   "ring": {
+    "r_in": 34.2,
+    "r_out": 83.6,
+    "n": 16580,
+    "rgb_mean": [
+     17.7,
+     24.4,
+     43.1
+    ],
+    "cct": 25000
+   },
+   "deltaE": {
+    "before": 71.2,
+    "after": 6.4
+   },
+   "cct": {
+    "ring": 25000,
+    "before": 7242,
+    "after": 25000,
+    "dBefore": 17758,
+    "dAfter": 0
+   },
+   "accent": {
+    "hueDeg": 205.0,
+    "px": 25839
+   },
+   "rim": true
+  }
+ }
+}

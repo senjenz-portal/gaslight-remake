@@ -1,0 +1,31 @@
+{
+ "filename": "onplate-bowloffer.mp4",
+ "sha256": "0379f8523612d1a613435294f19a7e66a512eaae8d81cf5c0e4b878741dd15a9",
+ "bytes": 872894,
+ "generator": "scenario-img2video",
+ "modelId": "model_bytedance-seedance-2-0",
+ "prompt": "Static locked-off camera, no camera motion whatsoever. The small man standing at the edge of the campfire shifts his weight subtly from foot to foot and breathes; warm firelight flickers gently across him and the cave. Everything else in the scene stays perfectly still. Subtle idle animation, seamless loop.",
+ "params": {
+  "prompt": "Static locked-off camera, no camera motion whatsoever. The small man standing at the edge of the campfire shifts his weight subtly from foot to foot and breathes; warm firelight flickers gently across him and the cave. Everything else in the scene stays perfectly still. Subtle idle animation, seamless loop.",
+  "image": "asset_aJnuube3LKccFMDXrDaFPAEn",
+  "duration": 4,
+  "resolution": "720p",
+  "aspectRatio": "adaptive",
+  "generateAudio": false,
+  "lastFrameImage": "asset_aJnuube3LKccFMDXrDaFPAEn"
+ },
+ "jobId": "job_Xy43PMMFeb8J3zSww2Awmx3P",
+ "assetId": "asset_ZR2RTu1XeQEApbXu2EvY7U4C",
+ "sourceImage": "/Users/samz/Documents/gaslight-remake/tools/ody/seamless/onplate/seed-composite.png",
+ "sourceSha256": "fb910e0d53ec427b2ca2f041c5fd7b89de4b73d64a862b501cd5a0237df60d6a",
+ "sourceAssetId": "asset_aJnuube3LKccFMDXrDaFPAEn",
+ "sourceLastImage": null,
+ "sourceLastSha256": null,
+ "sourceLastAssetId": "asset_aJnuube3LKccFMDXrDaFPAEn",
+ "assetMeta": {
+  "mimeType": "video/mp4",
+  "type": null,
+  "width": null,
+  "height": null
+ }
+}

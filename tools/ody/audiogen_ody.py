@@ -83,12 +83,13 @@ SOUNDS = {
     },
     "cave-fire-bed": {
         "role": "bed",
-        "text": ("deep stone cave interior at night, a wood fire crackling "
-                 "steadily in the foreground, slow echoing water drips, "
-                 "faint sheep flock shuffling and soft distant bleats, "
-                 "reverberant stone air, no voices, no music, seamless "
-                 "ambient loop"),
-        "durationSeconds": 25, "promptInfluence": 0.45, "loop": True,
+        "text": ("deep stone cave interior at night, a small wood fire "
+                 "burning close by with discrete crackles and individual "
+                 "ember pops, each pop distinct against a soft flame "
+                 "flutter, slow echoing water drips, faint sheep flock "
+                 "shuffling far in the dark, reverberant stone air, no "
+                 "steady hiss, no voices, no music, seamless ambient loop"),
+        "durationSeconds": 25, "promptInfluence": 0.55, "loop": True,
         "description": "The cave with the fire lit: cave-bed + crackle.",
     },
     "sea-bed": {
@@ -145,18 +146,24 @@ SOUNDS = {
     },
     "ember-hiss": {
         "role": "cue",
-        "text": ("green wood pressed into hot embers, soft sap hiss and "
-                 "fine crackle, faint ember pops, close on a fire pit, no "
-                 "other sounds"),
-        "durationSeconds": 3, "promptInfluence": 0.6, "loop": False,
+        "text": ("a bed of hot embers in a quiet fire pit, individual sharp "
+                 "ember pops and woody ticking snaps, distinct crackles one "
+                 "at a time with near-silence between them, each pop a "
+                 "clean little burst with its own onset and decay, no wind, "
+                 "no hiss, no rumble, no other sounds"),
+        "durationSeconds": 3, "promptInfluence": 0.75, "loop": False,
         "description": "The stake heating in the coals (glow-hold gate).",
     },
     "stake-sizzle": {
         "role": "cue",
-        "text": ("a red-hot wooden point plunged with a violent hissing "
-                 "sizzle, like a blacksmith quenching glowing iron, a loud "
-                 "steam burst then sputtering fade, no other sounds"),
-        "durationSeconds": 3, "promptInfluence": 0.65, "loop": False,
+        "text": ("a red-hot iron plunged once into a small bucket of "
+                 "water: a violent wet boiling gurgle, deep bubbles "
+                 "churning and bursting, a sharp spitting onset then the "
+                 "boil bubbling itself out to a few last blips and ticks, "
+                 "a real quench with a clear onset and a long wet decay, "
+                 "tasteful and restrained, close perspective, no steady "
+                 "hiss, no white noise, no other sounds"),
+        "durationSeconds": 3, "promptInfluence": 0.75, "loop": False,
         "description": "The blinding: quench-hiss cutting to the roar.",
     },
     "giant-roar": {

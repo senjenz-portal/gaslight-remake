@@ -1,0 +1,190 @@
+{
+ "lane": "shore",
+ "law": {
+  "widthK": 1.55,
+  "aspect": 0.42,
+  "peakAlpha": 0.62
+ },
+ "shadows": {
+  "crew-a-stand": {
+   "file": "crew-a-stand-shadow.png",
+   "size": [
+    407,
+    130
+   ],
+   "anchor": [
+    201.9,
+    65.0
+   ],
+   "footSpanPx": 194,
+   "ellipse": [
+    301,
+    126
+   ],
+   "skew": 0.093,
+   "at": [
+    445,
+    507
+   ],
+   "light": {
+    "id": "fire",
+    "at": [
+     438.0,
+     466.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  },
+  "crew-b-stand": {
+   "file": "crew-b-stand-shadow.png",
+   "size": [
+    423,
+    135
+   ],
+   "anchor": [
+    214.6,
+    67.5
+   ],
+   "footSpanPx": 202,
+   "ellipse": [
+    313,
+    131
+   ],
+   "skew": 0.093,
+   "at": [
+    445,
+    507
+   ],
+   "light": {
+    "id": "fire",
+    "at": [
+     438.0,
+     466.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  },
+  "crew-carry": {
+   "file": "crew-carry-shadow.png",
+   "size": [
+    1567,
+    387
+   ],
+   "anchor": [
+    895.1,
+    193.5
+   ],
+   "footSpanPx": 588,
+   "ellipse": [
+    911,
+    383
+   ],
+   "skew": 0.526,
+   "at": [
+    560,
+    503
+   ],
+   "light": {
+    "id": "fire",
+    "at": [
+     438.0,
+     466.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  },
+  "ulysses-offer": {
+   "file": "ulysses-offer-shadow.png",
+   "size": [
+    173,
+    46
+   ],
+   "anchor": [
+    91.9,
+    23.0
+   ],
+   "footSpanPx": 65,
+   "ellipse": [
+    101,
+    42
+   ],
+   "skew": 0.526,
+   "at": [
+    560,
+    503
+   ],
+   "light": {
+    "id": "fire",
+    "at": [
+     438.0,
+     466.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  },
+  "ulysses-stand": {
+   "file": "ulysses-stand-shadow.png",
+   "size": [
+    166,
+    45
+   ],
+   "anchor": [
+    88.4,
+    22.5
+   ],
+   "footSpanPx": 63,
+   "ellipse": [
+    98,
+    41
+   ],
+   "skew": -0.528,
+   "at": [
+    390,
+    480
+   ],
+   "light": {
+    "id": "fire",
+    "at": [
+     438.0,
+     466.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  },
+  "ulysses-walk": {
+   "file": "ulysses-walk-shadow.png",
+   "size": [
+    269,
+    70
+   ],
+   "anchor": [
+    79.3,
+    35.0
+   ],
+   "footSpanPx": 101,
+   "ellipse": [
+    157,
+    66
+   ],
+   "skew": 0.517,
+   "at": [
+    510,
+    492
+   ],
+   "light": {
+    "id": "fire",
+    "at": [
+     438.0,
+     466.0
+    ]
+   },
+   "opacityLaw": "0.42 + 0.30 * s   (chase.js paintRigs, verbatim)",
+   "scaleLaw": "scale by the actor's own k = drawnH / cutH"
+  }
+ }
+}
