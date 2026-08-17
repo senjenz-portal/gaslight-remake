@@ -178,6 +178,37 @@ const ROCK2 = { tear: 3.0, loose: 4.6, land: 6.8,
                 wash: [6.8, 11.4], done: 12.2 };
 const DAWN_GLIDE = 8.0;       // sailedon's own dwell: the glide out under it
 
+/* THE RELEASE FOLLOW-THROUGH (throw lane, 2026-08-17 — the external review's
+ * catch: "it simply detaches while his pose remains fixed"). The hurl pose
+ * now ends AT the throw tick (`loose`, when the rock is born), not at
+ * land+0.8: the crossfade back to polyphemus-stand (damp 6.0 = ~300 ms to
+ * read) IS step one of the two-step ease, and step two is the ROTATION LAG —
+ * the stand cut arrives carrying FOLLOW_ROT deg of the throw's own lean
+ * (toward the ship, screen-left = negative) and un-twists about the pinned
+ * feet over FOLLOW_S. A pure function of the rock clocks, so a replayed lap
+ * lands the same frames. */
+const FOLLOW_S = 0.45;        // the un-twist's whole life; ~300 ms reads
+const FOLLOW_ROT = -2.0;      // deg about the pin, toward the thrown rock
+
+/* THE IMPACT ACCENT (same round): the splash's rise used to be the sine
+ * bump's own tail — k = sin(pi*u) over 2 s put 0.026 one tick after the
+ * land while the rock had already vanished: a 0.1-0.3 s hole where the sea
+ * swallowed the rock silently. The envelope now ATTACKS: full plume inside
+ * SPLASH_ATTACK of the 2 s window (easeOut, so one fixed tick past land
+ * already reads k=0.42), decays on the old sine tail, and the first
+ * ACCENT_S carry a +15% scale overshoot (the "first 3 ticks" accent). */
+const SPLASH_ATTACK = 0.05;   // of the 2 s splash window = 0.1 s to full
+const ACCENT_S = 0.05;        // 3 fixed 1/60 ticks of +15% scale
+
+/* THE HULL PITCH (the boat's reaction beat): the ship is painted into the
+ * master, so the hull pitches the only way a painted hull can — the WORLD
+ * rotates about the deck centre (the same argument as the recede's scale).
+ * Two damped swings over PITCH_S, peak PITCH deg, rock 2 harder (nearer)
+ * and opposite (astern). worldMap carries the rotation exactly, so the
+ * gate ring and every mapped anchor ride the lurch. */
+const PITCH = { rock1: 1.4, rock2: -1.8 };   // deg, first swing's sign
+const PITCH_S = 2.2;          // the rock dies out by land + 2.2 s
+
 /* THE WORLD'S FOUR STATIONS, as scale about the deck. 1.0 is "as far out as my
  * voice would reach". The wash looms the island to 1.07 (driven BACK — "drove
  * us back again to the mainland"), the oars pull out to 0.86 (twice as far,
@@ -493,7 +524,7 @@ export class SeaSet {
       rowPhase: 0,               // the stroke clock, in cycles — advances ∝ effort
       holdK: 0,                  // the RELEASE verb's drawn breath (myname)
     };
-    this._wk = 1; this._wdx = 0; this._wdy = 0;     // the world transform, at rest
+    this._wk = 1; this._wdx = 0; this._wdy = 0; this._wrot = 0;   // world at rest
     this._beach = null;                             // §3.4 tableau pose, per step
     this.rowerFrames = [0, 0, 0, 0, 0, 0];
     this.giantBridge = null;                        // the windup, mid-play
@@ -529,19 +560,29 @@ export class SeaSet {
    * distance: nearer is bigger, and the ship — the origin — holds station. */
   worldPose(t, amb) {
     const j = this.jeerT(), c = this.curseT(), d = this.dawnT();
-    let k = 1, dx = 0;
+    /* the hull pitch: two damped swings about the deck on each impact */
+    const pitch = (clock, R, A) => {
+      if (clock === null) return 0;
+      const u = clock - R.land;
+      if (u <= 0 || u >= PITCH_S) return 0;
+      return A * Math.sin(2 * Math.PI * u / 1.1) *
+             (1 - easeInOut(clamp01(u / PITCH_S)));
+    };
+    let k = 1, dx = 0, rot = 0;
     if (j !== null) {
       const back = easeOut(clamp01((j - ROCK1.land) / 1.1));
       const out = easeInOut(clamp01(
         (j - ROCK1.oars[0]) / (ROCK1.oars[1] - ROCK1.oars[0])));
       k += WORLD.back * back - WORLD.out * out;   // 1 -> 1.07 -> 0.86
       dx += 30 * bump((j - ROCK1.land) / 3.4);    // the shove shoreward
+      rot += pitch(j, ROCK1, PITCH.rock1);        // the hull answers rock 1
     }
     if (c !== null) {
       const on = easeInOut(clamp01(
         (c - ROCK2.wash[0]) / (ROCK2.wash[1] - ROCK2.wash[0])));
       k -= WORLD.onward * on;                     // -> 0.76, driven onward
       dx -= 24 * bump((c - ROCK2.land) / 3.0);    // the shove seaward
+      rot += pitch(c, ROCK2, PITCH.rock2);        // rock 2: nearer, opposite
     }
     if (this.state.segT0 > -1e8) {                // the return home, kept for good
       k -= WORLD.seg * easeInOut(clamp01((t - this.state.segT0) / this.state.segDur));
@@ -555,14 +596,18 @@ export class SeaSet {
     // story's washes and loses the bob
     const dy = amb * 1.5 * Math.sin(2 * Math.PI * t / 6.1);
     dx += amb * 1.0 * Math.sin(2 * Math.PI * t / 9.7);
-    return { k, dx, dy };
+    return { k, dx, dy, rot };
   }
 
-  /** ledger plate px -> where the world transform has put them */
+  /** ledger plate px -> where the world transform has put them (rotation
+   *  included exactly, so the gate ring rides the hull pitch too) */
   worldMap(p) {
     const o = SHIP.deckCentre;
-    return [o[0] + (p[0] - o[0]) * this._wk + this._wdx,
-            o[1] + (p[1] - o[1]) * this._wk + this._wdy];
+    const th = (this._wrot || 0) * Math.PI / 180;
+    const cs = Math.cos(th), sn = Math.sin(th);
+    const x = (p[0] - o[0]) * this._wk, y = (p[1] - o[1]) * this._wk;
+    return [o[0] + x * cs - y * sn + this._wdx,
+            o[1] + x * sn + y * cs + this._wdy];
   }
 
   /* ---- the camera ------------------------------------------------------ */
@@ -751,9 +796,10 @@ export class SeaSet {
 
     /* ---- the world moves ------------------------------------------------ */
     const W = this.worldPose(t, amb);
-    this._wk = W.k; this._wdx = W.dx; this._wdy = W.dy;
+    this._wk = W.k; this._wdx = W.dx; this._wdy = W.dy; this._wrot = W.rot;
     this.world.style.transform =
-      `translate(${W.dx.toFixed(2)}px,${W.dy.toFixed(2)}px) scale(${W.k.toFixed(4)})`;
+      `translate(${W.dx.toFixed(2)}px,${W.dy.toFixed(2)}px) ` +
+      `rotate(${W.rot.toFixed(3)}deg) scale(${W.k.toFixed(4)})`;
 
     /* ---- the light breathes, then the states take their share ----------- */
     breathe(this.emis, EMIS, t, amb);
@@ -926,15 +972,31 @@ export class SeaSet {
     return clamp01(1 - (c - ROCK2.wash[0]) / 2.0);
   }
 
-  /* ---- the giant: pose is a pure function of the two clocks ------------- */
+  /* ---- the giant: pose is a pure function of the two clocks ------------- *
+   * THE THROW TICK ENDS THE HURL (release follow-through): the pose held
+   * to land+0.8 was the review's frozen statue — the rock detached from a
+   * fixed hurl and flew alone. The hurl now spends itself AT `loose`; the
+   * ~300 ms crossfade back to stand + the rotation lag (stepGiant) are the
+   * follow-through the release owes. */
   giantPoseAt(c, j) {
     if (c !== null) {
-      if (c >= ROCK2.tear && c <= ROCK2.land + 0.8) return 'hurl';
+      if (c >= ROCK2.tear && c < ROCK2.loose) return 'hurl';
       if (c < ROCK2.tear) return 'curse';          // arms to the firmament
       return 'stand';
     }
-    if (j !== null && j >= ROCK1.tear && j <= ROCK1.land + 0.8) return 'hurl';
+    if (j !== null && j >= ROCK1.tear && j < ROCK1.loose) return 'hurl';
     return 'stand';
+  }
+
+  /** the follow-through's life: 1 at the throw tick, spent by loose+FOLLOW_S
+   *  (whichever rock clock threw last owns it — their windows never overlap) */
+  followK(c, j) {
+    const of = (clock, R) => {
+      if (clock === null) return 0;
+      const u = clock - R.loose;
+      return u >= 0 && u < FOLLOW_S ? 1 - easeInOut(u / FOLLOW_S) : 0;
+    };
+    return c !== null ? of(c, ROCK2) : of(j, ROCK1);
   }
 
   stepGiant(t, dt, c, j) {
@@ -999,13 +1061,20 @@ export class SeaSet {
     const br = amb * Math.sin(2 * Math.PI * t / 5.3);
     const swayG = amb * 0.2 * Math.sin(2 * Math.PI * t / 13.0);
     const syG = 1 + 0.006 * br;
+    /* THE ROTATION LAG (release follow-through, step two): the stand cut
+       fades in still carrying FOLLOW_ROT of the throw's lean and un-twists
+       about the pinned feet — mass arrives late, exactly the cave torso-lag
+       argument. NOT amb-gated: it is story motion, the release's own. */
+    const fK = this.followK(this.curseT(), this.jeerT());
+    const rotG = swayG + FOLLOW_ROT * fK;
     this.giant.stand.style.transform =
-      `translateY(${(0.7 * br).toFixed(3)}px) rotate(${swayG.toFixed(3)}deg) ` +
+      `translateY(${(0.7 * br).toFixed(3)}px) rotate(${rotG.toFixed(3)}deg) ` +
       `scaleY(${syG.toFixed(5)})`;
     for (const e of [this.giant.hurl, this.giant.curse]) {
       e.style.transform = `scaleY(${syG.toFixed(5)})`;
     }
-    this._idleG = !stripLive && standK > 0.5
+    this._followG = { k: +fK.toFixed(3), rot: +(FOLLOW_ROT * fK).toFixed(3) };
+    this._idleG = !stripLive && standK > 0.5 && fK === 0
       ? { pose: S.giantPose, dy: +(0.7 * br).toFixed(3),
           rot: +swayG.toFixed(3), sy: +syG.toFixed(5) }
       : null;
@@ -1072,13 +1141,21 @@ export class SeaSet {
    * the brow to the LEDGER'S OWN splash point — rock 1 ahead of the rudder at
    * (468,505), rock 2 astern at (455,540) — and the splash stands its 76 px
    * (6 m) plume on that same point. The wind-up itself is the hurl pose's;
-   * the rock is born at the release. */
+   * the rock is born at the release.
+   * THE LAND-TICK GUARD (throw law): the clocks are DIFFERENCES of two
+   * 1/60-grid floats, so the tick that should sit exactly ON `land` can
+   * read land + 2e-15 — the rock vanishes one tick early while the splash's
+   * raw k is still sub-visible, and the resynced arc-end==splash-rise law
+   * sees dead water at the boundary. A half-quantum epsilon keeps the rock
+   * through its own landing tick; the splash's first VISIBLE tick is the
+   * next one either way. */
   rockFlight() {
     const j = this.jeerT(), c = this.curseT();
-    if (c !== null && c >= ROCK2.loose && c <= ROCK2.land) {
+    const EPS = 1e-6;                        // << 1/60, >> the grid's float error
+    if (c !== null && c >= ROCK2.loose && c <= ROCK2.land + EPS) {
       return { R: ROCK2, clock: c, to: SPLASH2, grow: 52, id: 'rock2' };
     }
-    if (c === null && j !== null && j >= ROCK1.loose && j <= ROCK1.land) {
+    if (c === null && j !== null && j >= ROCK1.loose && j <= ROCK1.land + EPS) {
       return { R: ROCK1, clock: j, to: SPLASH1, grow: 48, id: 'rock1' };
     }
     return null;
@@ -1086,17 +1163,26 @@ export class SeaSet {
 
   splashLevel() {
     const j = this.jeerT(), c = this.curseT();
+    /* THE ATTACK ENVELOPE (impact accent lane): the arc's end tick IS the
+       rise's first tick — full plume inside SPLASH_ATTACK of the window
+       (one fixed tick past land already reads 0.42), sine tail after. The
+       old symmetric bump put 0.026 one tick after land: the reviewer's
+       "disappears at the waterline with no convincing splash". */
     const at = (clock, R) => {
       if (clock === null) return 0;
       const u = (clock - R.land) / 2.0;
-      if (u < 0 || u > 1) return 0;
-      return bump(u);
+      if (u <= 0 || u > 1) return 0;
+      return u < SPLASH_ATTACK
+        ? easeOut(u / SPLASH_ATTACK)
+        : Math.sin(Math.PI * (0.5 + 0.5 * (u - SPLASH_ATTACK) / (1 - SPLASH_ATTACK)));
     };
+    /* the accent's own clock: seconds past the land, for the +15% overshoot */
+    const uOf = (clock, R) => clock - R.land;
     const k2 = at(c, ROCK2);
-    if (k2 > 0) return { k: k2, to: SPLASH2, id: 'rock2' };
+    if (k2 > 0) return { k: k2, to: SPLASH2, id: 'rock2', u: uOf(c, ROCK2) };
     const k1 = c === null ? at(j, ROCK1) : 0;      // rock1's window is long past
-    if (k1 > 0) return { k: k1, to: SPLASH1, id: 'rock1' };
-    return { k: 0, to: SPLASH1, id: null };
+    if (k1 > 0) return { k: k1, to: SPLASH1, id: 'rock1', u: uOf(j, ROCK1) };
+    return { k: 0, to: SPLASH1, id: null, u: 0 };
   }
 
   stepRocks(t) {
@@ -1119,11 +1205,19 @@ export class SeaSet {
     const sp = this.splashLevel();
     if (sp.k > 0) {
       // the plume rises out of its own foot: pinned to the splash point,
-      // scaled up from the water along the pin the transform-origin sits on
+      // scaled up from the water along the pin the transform-origin sits on.
+      // THE IMPACT ACCENT: +15% scale through the first ACCENT_S (3 fixed
+      // ticks) — the hit lands BIG and settles, about the same pinned foot.
+      const acc = sp.u <= ACCENT_S
+        ? 1.15
+        : 1 + 0.15 * (1 - clamp01((sp.u - ACCENT_S) / 0.08));
+      sp.accent = +acc.toFixed(3);
       this.pinAt(this.splash, ART.splash, sp.to, SPLASH_H);
-      this.splash.style.transform = `scaleY(${easeOut(sp.k).toFixed(3)})`;
+      this.splash.style.transform =
+        `scaleX(${acc.toFixed(3)}) scaleY(${(easeOut(sp.k) * acc).toFixed(3)})`;
       this.splash.style.opacity = (0.95 * sp.k).toFixed(3);
     } else {
+      sp.accent = 1;
       this.splash.style.opacity = '0';
     }
     this._splash = sp;
@@ -1174,7 +1268,8 @@ export class SeaSet {
       },
       state: d !== null ? 'sea-dawn' : 'sea',
       world: { k: +this._wk.toFixed(4), dx: +this._wdx.toFixed(2),
-               dy: +this._wdy.toFixed(2), origin: SHIP.deckCentre },
+               dy: +this._wdy.toFixed(2), rot: +(this._wrot || 0).toFixed(3),
+               origin: SHIP.deckCentre },
       clock: { jeer: j === null ? null : +j.toFixed(2),
                curse: c === null ? null : +c.toFixed(2),
                ruse: this.ruseT() === null ? null : +this.ruseT().toFixed(2) },
@@ -1185,7 +1280,10 @@ export class SeaSet {
                splashAt: SPLASH2, done: this.waitDone('rock2') },
       rockAt: this._rockAt ? this._rockAt.map((v) => +v.toFixed(1)) : null,
       splash: { k: +(this._splash ? this._splash.k : 0).toFixed(3),
-                of: this._splash ? this._splash.id : null },
+                of: this._splash ? this._splash.id : null,
+                u: +(this._splash ? this._splash.u : 0).toFixed(3),
+                accent: +(this._splash && this._splash.accent
+                          ? this._splash.accent : 1).toFixed(3) },
       gate: { target: 'cyclops', at: this.targetPlate('cyclops').map((v) => +v.toFixed(1)),
               live: this.targetLive('cyclops'),
               resolutions: S.resolutions, myname: S.myname },
@@ -1221,7 +1319,11 @@ export class SeaSet {
       dawn: +S.k.dawn.toFixed(3),
       veil: +S.k.veil.toFixed(3),
       giant: { pose: S.giantPose, mark: MARKS['clifftop-giant'],
-               box: pbox(giantEl) },
+               box: pbox(giantEl),
+               /* the release follow-through, declared: k spends 1 -> 0 over
+                  FOLLOW_S past each loose; rot is the un-twisting lean */
+               follow: this._followG || { k: 0, rot: 0 },
+               hurlK: +S.k.hurl.toFixed(3) },
       /* the windup bridge / curse sway, same proof style as the rowers:
          frame + the foot off the RENDERED box vs the world-mapped mark;
          `done` flags say each rock's windup has parked on pose B */

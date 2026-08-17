@@ -97,7 +97,7 @@
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
          emissives, placeStrip, stripProof, stripPxPerFrame, pathLen,
          alongPathArc, walkToward2, gaitProfile, gaitLockProfile, gaitAt,
-         gaitBobY, bridgeFrame, bridgeWarp, loopFrame, gradedActor }
+         gaitBobY, bridgeFrame, bridgeWarp, loopFrame, gradedActor, swapActor }
   from '../setkit.js';
 import { STRIPS } from '../strips.js';
 import { SHADOWS } from '../shadows.js';
@@ -463,14 +463,33 @@ const COLLAPSE_HPX_END = 291.2;
  * weighted to read that way: a long fold (c0-c2, 48% of the play), the
  * fall ACCELERATING through c3 into the c4 IMPACT, then a decelerating
  * tumble-settle (c5-c9). The mark and the hPx stretch ride the SAME warped
- * phase, so the body travels when the art travels. At the first impact
- * tick the drawn strip takes a 2-frame 3.5% scaleY compression about the
- * feet and one recoil frame — declared to the proof like the bob. */
+ * phase, so the body travels when the art travels. THE ELASTIC IMPACT
+ * (teleport-law re-review, 2026-08-17): the impact squash is a CURVE the
+ * ticks ride THROUGH, never a keyed substitution — the old two keyed sy
+ * swaps (1 -> 0.965 in one tick at impact, 0.965 -> 1.006 -> 1 at the
+ * recoil) read as one-frame pose substitutions at 30 fps. Now sy eases
+ * 1 -> 0.965 across the impact head's first ~3 ticks, recoils through
+ * 1.006 and settles back to 1 on the same cosine curve, so no two adjacent
+ * ticks differ by more than ~0.018 of scaleY (the lap's [collapse-squash]
+ * continuity clause holds <= 0.02/tick) — declared to the proof like the
+ * bob, about the feet as ever. */
 const COLLAPSE_W = [0.17, 0.16, 0.15, 0.07, 0.06, 0.06, 0.07, 0.08, 0.09, 0.09];
 const COLLAPSE_WARP = bridgeWarp(COLLAPSE_W);
 const COLLAPSE_IMPACT = COLLAPSE_W[0] + COLLAPSE_W[1] + COLLAPSE_W[2] +
                         COLLAPSE_W[3];             // bk at c4's head — the landing
-const IMPACT_SQUASH = { sy: 0.965, hold: 0.067, recoil: 1.006, recoilT: 0.1 };
+const IMPACT_SQUASH = { sy: 0.965, in: 0.05,       // 1 -> 0.965 over ~3 ticks
+                        recoil: 1.006, recoilT: 0.117,   // through the rebound
+                        settleT: 0.2 };            // back to exactly 1
+/** sy at `s` seconds past the impact head — continuous, eased, parks at 1 */
+const impactSy = (s) => {
+  const Q = IMPACT_SQUASH;
+  if (!(s >= 0) || s >= Q.settleT) return 1;
+  if (s < Q.in) return lerp(1, Q.sy, easeInOut(s / Q.in));
+  if (s < Q.recoilT) {
+    return lerp(Q.sy, Q.recoil, easeInOut((s - Q.in) / (Q.recoilT - Q.in)));
+  }
+  return lerp(Q.recoil, 1, easeInOut((s - Q.recoilT) / (Q.settleT - Q.recoilT)));
+};
 /* the stride is MEASURED off the pose the frame actually moved (seg and
    damp alike); a teleport (fade-through reland, a settled snap) is not a
    stride, and a SEIZED man is dragged, not walking */
@@ -488,8 +507,19 @@ const STRIDE_TELEPORT = 40;           // plate px in one step is a re-stage
    2.38 css px a step, inside the 2.5 anti-skate budget; at the old 78 the
    surge read 2.79 and skated) — his strip walks are ARC-PARAMETERISED
    against this cap (stepGiant), so a short seg cannot make him sprint;
-   the seg simply hands him the floor a beat longer. */
-const WALK_V = { man: 2.0 * SCALE.pxPerM, giant: 1.45 * SCALE.pxPerM };
+   the seg simply hands him the floor a beat longer.
+   THE GIANT'S CAP IS HIS SWEEP SPEED (stance lane, 2026-08-17): with the
+   plant dwells freezing him DWELL.s per step, 2.4 m/s between dwells puts
+   the whole-walk mean at ~1.25 m/s — slower than the old 1.45 cruise, and
+   the step-through of a 7 m biped IS brisk while the support is long. */
+const WALK_V = { man: 2.0 * SCALE.pxPerM, giant: 2.4 * SCALE.pxPerM };
+/* THE FLOCK-OUT SWEEP (anti-skate, 2026-08-17): quiverlid's mouth lens
+   magnifies ~1.52 css/plate at the walk's fastest sweep, and the 2.4 m/s
+   cap reads 2.61 css px/frame there — over the 2.5 anti-skate law. That
+   crossing is STAGED a shade slower (2.2 m/s -> 2.40 css px/frame at the
+   same lens; the path is spent ~0.5 s later, well inside the held seg);
+   the law itself stands at 2.5. */
+const FLOCK_OUT_V = 2.2 * SCALE.pxPerM;
 
 /* LANE PHYSICS (Explorer D adopted — tools/ody/seamless/explore-physics.md):
  * the gait read off each strip's OWN anchors (the plant frames are the anchor
@@ -510,6 +540,21 @@ const WALK_V = { man: 2.0 * SCALE.pxPerM, giant: 1.45 * SCALE.pxPerM };
 const GAIT = { giant: gaitLockProfile(STRIPS['polyphemus-walk'], { ramp: 0.7 }),
                crew:  gaitProfile(STRIPS['crew-walk']),
                ram:   gaitProfile(STRIPS['ram-walk']) };
+/* THE PLANT DWELL (stance lane, 2026-08-17): the giant's walk no longer
+ * rides the lock profile's PULSE (the split clocks let every grounded cell
+ * around the plant skate at swing speed — the reviewer's 12-21 px creep);
+ * stepGiant freezes mark AND cell together for DWELL.s at each settled
+ * plant (plants are the anchors' strikes 3/7; the dwell stands one cell
+ * later, 4/8, weight fully on the fresh foot), eased over DWELL.ramp with
+ * a DWELL.floor approach so the landing cannot stall. The profile's
+ * plants/bob tables still serve; only its pulse is retired here. */
+/* tuned by simulation against the lap's own thresholds (2026-08-17):
+ * 365 px entrance -> 6.92 s, 3 dwells of 0.40 s, worst 30 fps dv 15.1 px/s
+ * (abs law 18.6), ease-in 0.50 / ease-out 0.47 (max 0.6), CV 0.75,
+ * peak-sweep skate 1.94 css px/step at the k=1.8 lens (law 2.5) */
+const DWELL = { s: 0.40, up: 0.40, dn: 0.25, floor: 0.16,
+                cells: gaitProfile(STRIPS['polyphemus-walk'])
+                  .plants.map((p) => (p + 1) % STRIPS['polyphemus-walk'].n) };
 /* the torso lag (weight lane): a shade of lean about the pinned feet, its
    phase the BOB table read 0.4 cells (~120 ms at cruise) behind the hip —
    mass arrives late. Declared to the proof; the foot cannot move (origin). */
@@ -1034,6 +1079,8 @@ export class CaveSet {
       milkUntil: -1e9,                       // the milking loop's window (act/seg)
     };
     this.giantBridge = null;                 // { key, frame, k, at, hPx, flip }
+    this._gGuard = {};                       // swapActor state (teleport law)
+    this.gSwap = null;                       // the active handoff tween | null
     this.giantLoop = null;                   // { key, frame, at, hPx, flip }
     this._bGate = null;                      // the bridge rate gate's memory
     this.uMark = null;                       // an act's own mark outranks the form
@@ -1382,7 +1429,7 @@ export class CaveSet {
     }
   }
 
-  giantWalk(path, dur, endPose, settled) {
+  giantWalk(path, dur, endPose, settled, vmax = WALK_V.giant) {
     const G = this.state.giant;
     if (settled || this.st.reduced) {
       const end = path[path.length - 1];
@@ -1391,12 +1438,14 @@ export class CaveSet {
     }
     /* s is the STRIP's gait clock (frame = s / pxPerFrame), zeroed at the
        path head so a walk always starts on frame 0; len/vmax are the honest
-       ground-speed law's (WALK_V.giant — the grope is a blind hand-over-hand
-       shuffle on its own eased clock, not a stride: no cap, no strip) */
+       ground-speed law's (WALK_V.giant, or the caller's slower stage — the
+       grope is a blind hand-over-hand shuffle on its own eased clock, not
+       a stride: no cap, no strip) */
     const grope = path === PATH.giantGrope;
     G.walk = { path, t0: this.state.t, dur, endPose,
                s: 0, run: 0, len: pathLen(path),
-               vmax: grope ? Infinity : WALK_V.giant };
+               dwell: 0, go: 0, sT: null,        // the plant dwell's state
+               vmax: grope ? Infinity : vmax };
     G.settle = null;                    // LANE PHYSICS: a new walk cancels it
     G.x = path[0][0]; G.y = path[0][1];
     G.pose = grope ? 'grope' : 'stand';
@@ -1429,7 +1478,7 @@ export class CaveSet {
       S.seizeBase = Math.max(0, CREW_N - 2 * S.meals);
     } else if (name === 'flock-out') {
       S.flock = { mode: 'out', t0, dur };
-      this.giantWalk(PATH.giantOut, dur * 0.72, 'away', settled);
+      this.giantWalk(PATH.giantOut, dur * 0.72, 'away', settled, FLOCK_OUT_V);
     } else if (name === 'flock-in') {
       S.flock = { mode: 'in', t0, dur };
       S.parked = true;                  // recorded for the snapshot; no ram
@@ -1812,26 +1861,71 @@ export class CaveSet {
         /* the grope shuffle / tip-over keep their authored eased clocks */
         W.s = easeInOut(k) * W.len;
       } else {
-        /* THE WEIGHT PROFILE (animation-weight lane; supersedes the
-           dip-pulse tune): TWO CLOCKS off one envelope. The PHASE clock
-           W.phi advances at the envelope's own rate (v / pxPerFrame cells
-           a second) and PICKS the cell; the GROUND speed is the envelope
-           times the stance-lock pulse read at that same phase — zero
-           through each plant cell, surging through the swing, mean 1 — so
-           while a plant cell holds the picture the mark stands STILL (the
-           plant IS a plant; the stance-lock gate holds it to <= 1.0 css px)
-           and position and phase re-meet every cycle. 450 ms ease-in from
-           rest (a 7 m body gathers itself over a beat), ~220 ms ease-out
-           as the path runs out, and the cap still bounds the cruise — a
-           short seg cannot make him sprint. */
+        /* THE PLANT DWELL (stance lane, 2026-08-17; supersedes the two-clock
+           stance-lock pulse). The external review's optical track proved the
+           old split-clock profile a tautology: the mark stood still ONLY
+           inside the 1.0-cell plant window while the phase clock kept the
+           cells turning, so every visually-grounded cell around the plant
+           skated at swing speed (12-21 px of foot creep at return2
+           2.80-3.23 / 3.57-3.97) — the gate measured the pinned anchor,
+           which the pulse froze by construction, and reported 0.000.
+           The honest lock is ONE clock again (the King law restored:
+           distance picks the cell, W.phi = s / pxPerFrame) with a TIMED
+           DWELL: when the ground clock lands on a settled plant cell's head
+           (plant+1 — weight fully on the fresh foot, the anchors' own
+           strikes are 3/7, so the dwells stand on 4/8), mark AND cell
+           freeze together for DWELL.s — zero ground speed, zero cell turn,
+           nothing for the eye's tracked foot to do but stand. The sweep
+           between dwells runs at the cap (WALK_V.giant is the SWEEP speed;
+           the mean over a cycle, dwells included, is ~1.2 m/s — slower
+           than the old 1.45 cruise), eased over DWELL.ramp both out of and
+           into each dwell so the 30 fps velocity series keeps the one-frame
+           speed law. All state lives in W: byte-identical laps. */
         W.run = (W.run || 0) + dt;
-        const envIn = easeInOut(Math.min(1, W.run / 0.45));
-        const envOut = Math.max(0.3,
-          easeInOut(clamp01((W.len - W.s) / (W.vmax * 0.18))));
-        const vEnv = W.vmax * envIn * envOut;
-        W.phi = (W.phi || 0) + (vEnv / STRIP.giant.pxPerFrame) * dt;
-        const pulse = gaitAt(GAIT.giant, GAIT.giant.pulse, W.phi);
-        W.s = Math.min(W.len, W.s + vEnv * pulse * dt);
+        const ppf = STRIP.giant.pxPerFrame;
+        if ((W.dwell || 0) > 0) {
+          W.dwell = Math.max(0, W.dwell - dt);   // the plant: really stand
+          W.go = 0;
+        } else {
+          W.go = (W.go || 0) + dt;
+          const envIn = easeInOut(Math.min(1, W.run / 0.85));
+          const envOut = Math.max(0.25,
+            easeInOut(clamp01((W.len - W.s) / (W.vmax * 0.35))));
+          const upK = easeInOut(Math.min(1, W.go / DWELL.up));
+          /* the ARMED TARGET: the next dwell head, chosen once and held
+             (re-choosing per tick let a head slip past on a float tolerance
+             and the speed snapped to full — the simulated 93 px/s pop) */
+          if (W.sT == null || W.sT <= W.s + 1e-6) {
+            const n = STRIP.giant.n;
+            const cphi = ((W.s / ppf) % n + n) % n;
+            let gap = n;
+            for (const c of DWELL.cells) {
+              const g = ((c - cphi) % n + n) % n;
+              if (g > 0.5 && g < gap) gap = g;   // half a cell clear of the
+            }                                    // head we may stand on
+            W.sT = W.s + gap * ppf;
+          }
+          /* sqrt braking: a LINEAR dnK is an exponential stall (~1.5 s per
+             approach, simulated); the sqrt profile brakes in finite time
+             with a gentle 30 fps-sampled dv, and the floor lands the last
+             few px so the step-down cannot creep forever */
+          const dnK = Math.max(DWELL.floor,
+            Math.min(1, Math.sqrt((W.sT - W.s) / (W.vmax * DWELL.dn))));
+          W.s = Math.min(W.len, W.s + W.vmax * envIn * envOut *
+                                       Math.min(upK, dnK) * dt);
+          if (W.sT <= W.s + 1e-6 && W.sT < W.len - 1) {
+            W.s = W.sT;                  // land EXACTLY on the dwell cell head
+            W.dwell = DWELL.s;
+          }
+        }
+        W.phi = W.s / ppf;               // one clock: distance picks the cell
+        /* THE DWELL'S OWN CELL (stance lane): the armed head is an integer
+           in phase space, but s = s0 + gap*ppf rebuilds it through floats
+           and can land a hair BELOW the head (13.999.. floors to cell 3 —
+           OFF the settled plant). While the dwell holds, the phase IS the
+           head: snap it, so the freeze stands on the plant cell (4/8) —
+           the walk-ends-on-the-mark handoff's rule at every arrival. */
+        if ((W.dwell || 0) > 0) W.phi = Math.round(W.phi);
       }
       const p = alongPathArc(W.path, W.s);
       G.x = p[0]; G.y = p[1];
@@ -1902,16 +1996,15 @@ export class CaveSet {
         /* the RETIME (weight lane): the warped phase u drives frame, mark
            and hPx alike — slow fold, accelerating fall, decelerating
            tumble-settle — so the body travels when the art travels; the
-           IMPACT (first c4 beat) takes the 2-frame squash + 1 recoil,
+           IMPACT (first c4 beat) rides the ELASTIC curve (impactSy: ease
+           into the squash, recoil, settle — continuous every tick),
            declared to the proof like the bob */
         const u = COLLAPSE_WARP(bk);
         const e = easeInOut(u);
         G.x = lerp(M[0], COLLAPSE_END[0], e);
         G.y = lerp(M[1], COLLAPSE_END[1], e);
         const st2 = (bk - COLLAPSE_IMPACT) * COLLAPSE_WIN * seg.dur;
-        const sy = st2 >= 0 && st2 < IMPACT_SQUASH.hold ? IMPACT_SQUASH.sy
-                 : st2 >= 0 && st2 < IMPACT_SQUASH.recoilT ? IMPACT_SQUASH.recoil
-                 : 1;
+        const sy = impactSy(st2);      // the elastic curve, never a keyed swap
         this.giantBridge = { key: 'collapse', k: +clamp01(bk).toFixed(4),
                              frame: this.bridgeGate('collapse', seg.t0,
                                bridgeFrame(GSTRIP.collapse, u)),
@@ -2006,7 +2099,11 @@ export class CaveSet {
          lean about the pinned feet, the bob table read TORSO_LAG.phi cells
          behind — mass arrives late. The proof below declares both, so the
          anchor law measures residuals only. */
-      this._gBob = gaitBobY(GAIT.giant, W.phi || 0, BOB_AMP.giant);
+      /* + a half-px time-based breath so a plant DWELL never reads static
+         (the Sol lesson: resolve the gates or dwells read as freeze-frames);
+         it rides the declared bob, so the anchor law sees residuals only */
+      this._gBob = gaitBobY(GAIT.giant, W.phi || 0, BOB_AMP.giant) +
+                   amb * 0.5 * Math.sin(2 * Math.PI * t / 4.4);
       this._gRot = (G.flip ? -1 : 1) * TORSO_LAG.deg *
         (2 * gaitAt(GAIT.giant, GAIT.giant.bob,
                     (W.phi || 0) - TORSO_LAG.phi) - 1);
@@ -2085,6 +2182,24 @@ export class CaveSet {
                        G.y - (art.pin[1] * h / art.px[1]), b.w, b.h]
         .map((v) => +v.toFixed(1));
     }
+
+    /* THE TELEPORT LAW (setkit swapActor): the giant's one live art node,
+       tracked across ticks — every handoff between pictures (walk strip ->
+       seat cut at the return arrivals, bridge end -> static clutch, clutch
+       -> seat and seat -> sprawl in the meal chain, cut -> loop strip)
+       crossfades ~120 ms while the outgoing picture slides to the incoming
+       picture's drawn centre over ~180 ms, instead of substituting in one
+       frame. The incoming node keeps its honest paint (every proof intact);
+       the tween is DECLARED to the snapshot so the lap's [teleport] gate
+       can tell a tween from a teleport. The walk already ENDS ON the seat
+       mark (PATH.giantIn's last point IS MARKS['giant-seat']), so the
+       arrival settle plays where the walk stops and the crossfade carries
+       only the art's own box change. */
+    const liveN = walking ? this.giantStripN
+                : BL && G.pose !== 'away' ? this.gMotionN[BL.key]
+                : G.pose !== 'away' ? this.giantN[nodeKey] : null;
+    this.gSwap = swapActor(this._gGuard, liveN, t, [G.x, G.y],
+                           { snap: this.st.reduced });
   }
 
   /* ---- the troupe: formations, segs, damped motion (the shore law) ------- */
@@ -2859,7 +2974,9 @@ export class CaveSet {
                walking: !!S.giant.walk,   // mid-walk is not a settle (the
                                           // parking law samples landings)
                mark: [+S.giant.x.toFixed(1), +S.giant.y.toFixed(1)],
-               box: this.giantBox || null },
+               box: this.giantBox || null,
+               /* the teleport law's declaration: the active handoff tween */
+               tween: this.gSwap ? this.gSwap.k : null },
       sprawl: (() => {
         /* THE AMENDED SPRAWL PARKING LAW (round-7 placement audit #5 —
            SUPPORT + OCCLUSION, see header): the honest-length body may
@@ -2933,12 +3050,17 @@ export class CaveSet {
          the anchor law measures the transform's RESIDUAL, exactly the
          rowers' documented bench-bob precedent. */
       strips: {
-        giant: this.giantWalking
-          ? stripProof(this.st, this.giantStripN, STRIP.giant,
-                       S.giant.frame || 0,
-                       [S.giant.x, S.giant.y + (this._gBob || 0)],
-                       !!S.giant.flip, { rot: this._gRot || 0 })
-          : null,
+        giant: (() => {
+          if (!this.giantWalking) return null;
+          const gp = stripProof(this.st, this.giantStripN, STRIP.giant,
+                                S.giant.frame || 0,
+                                [S.giant.x, S.giant.y + (this._gBob || 0)],
+                                !!S.giant.flip, { rot: this._gRot || 0 });
+          /* the plant dwell, DECLARED: the honest optical stance gate
+             tracks the rendered foot pixels across exactly this window */
+          return gp ? { ...gp, dwell: S.giant.walk && S.giant.walk.dwell > 0
+                                        ? 1 : 0 } : null;
+        })(),
         crew: this.crew.map((_, i) => {
           const P = this.pose['c' + i];
           return P.striding

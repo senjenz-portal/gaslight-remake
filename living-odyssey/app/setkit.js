@@ -394,6 +394,79 @@ export function stripProof(st, node, strip, frame, at, flip, dec = {}) {
            dx: +(fx - at[0]).toFixed(2), dy: +(fy - at[1]).toFixed(2) };
 }
 
+/* ==== THE TELEPORT LAW (external re-review, 2026-08-17) ====================
+ *
+ * The defect class left after the weight lane: ONE-FRAME POSE/POSITION
+ * SUBSTITUTIONS AT STATE HANDOFFS — a mounted set swapping an actor's ART
+ * node (walk strip -> seated cut, bridge end -> static clutch, seat ->
+ * sprawl) in a single tick with no cover up. However well the FOOT marks
+ * line up, the two pictures' drawn boxes differ, so the body's visible
+ * centre teleports (the giant's walk->seat arrival moved ~66 px in one
+ * 30 fps frame). The law: such a handoff must TWEEN — a ~120 ms opacity
+ * crossfade (two nodes briefly, the one legal exception to the swap law)
+ * while the OUTGOING picture slides by the MARK's own delta over ~180 ms
+ * (inside the 150-250 ms band: mass carries the eye through the cut). The
+ * mark, not the drawn box: both pictures are pinned by their FEET on the
+ * endpoint-gated mark, so the mark delta is the true position handoff —
+ * a strip cell's reach padding would make the AABB centre lie. Frame
+ * advances INSIDE one strip are already frame-clamped (bridgeGate) and
+ * swaps under a cover/wash are already hidden; neither comes here.
+ *
+ * `swapActor(guard, node, t, at, opts)` is the whole engine. `guard` is
+ * one actor's persistent state ({} to start); call it EVERY paint, AFTER
+ * the caller has painted `node` — the tick's one live art node, opacity 1
+ * — at foot mark `at` (plate px) and darkened its siblings. On a node
+ * change it starts a tween; while one runs it drives both nodes'
+ * opacities and the outgoing slide, all a pure function of t (fixed-step
+ * laps stay byte-equal — no layout reads, no wall clock). The INCOMING
+ * node is never transformed — every proof drawn off the live node (anchor
+ * law, idle law) measures the honest paint. Returns the active tween
+ * ({ k }) or null; the caller DECLARES it to its snapshot so the lap's
+ * [teleport] gate can tell a tween from a teleport.
+ *
+ *   at       [x, y] plate px — the live node's foot mark this tick
+ *   snap     reduced motion: adopt the node with no tween
+ *   fade     s of opacity crossfade (120 ms)
+ *   slide    s of the outgoing mark lerp (150-250 ms band)
+ *
+ * window.__teleBreak (harness only) disables the tween — the [teleport]
+ * gate's own falsifiability switch: break it and the gate must fail.
+ */
+export function swapActor(guard, node, t, at, { snap = false,
+                                                fade = 0.12, slide = 0.18 } = {}) {
+  const g = guard;
+  const broken = typeof window !== 'undefined' && window.__teleBreak;
+  if (snap || broken) { endSwapTween(g); g.node = node; g.at = at; return null; }
+  if (node && g.node && node !== g.node) {
+    endSwapTween(g);                 // a swap mid-tween adopts the older cut
+    g.tween = { out: g.node, t0: t, base: g.node.style.transform || 'none',
+                v: at && g.at ? [at[0] - g.at[0], at[1] - g.at[1]] : [0, 0],
+                fade, slide };
+  }
+  g.node = node;
+  g.at = at ? [at[0], at[1]] : null;
+  const w = g.tween;
+  if (!w) return null;
+  if (!node || t - w.t0 >= Math.max(w.fade, w.slide)) {
+    endSwapTween(g);
+    return null;
+  }
+  const kf = easeInOut(clamp01((t - w.t0) / w.fade));
+  const ks = easeInOut(clamp01((t - w.t0) / w.slide));
+  w.out.style.opacity = (1 - kf).toFixed(3);
+  node.style.opacity = kf.toFixed(3);
+  const tf = `translate(${(w.v[0] * ks).toFixed(2)}px, ${(w.v[1] * ks).toFixed(2)}px)`;
+  w.out.style.transform = w.base === 'none' ? tf : tf + ' ' + w.base;
+  return { k: +clamp01((t - w.t0) / Math.max(w.fade, w.slide)).toFixed(4) };
+}
+
+function endSwapTween(g) {
+  if (!g.tween) return;
+  g.tween.out.style.opacity = '0';
+  g.tween.out.style.transform = g.tween.base;
+  g.tween = null;
+}
+
 /** A polyline floor: y where a foot at plate-x lands. Sets carry their own. */
 export function floorY(points, x) {
   if (x <= points[0][0]) return points[0][1];
