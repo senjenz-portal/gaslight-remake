@@ -1651,6 +1651,291 @@
     "px": 25839
    },
    "rim": true
+  },
+  "sea/prop-altar": {
+   "set": "sea",
+   "cut": "prop-altar",
+   "source": "assets/actor/prop-altar.png",
+   "sourceSha256": "eb9a8036dc2fa21b9b5bcd3f276dd74047982ddf53f9bcca559ebb5b69fc8fcb",
+   "graded": "assets/actor/graded/sea/prop-altar.png",
+   "gradedSha256": "a27be05884ac39931d0a9f2498bdf9b8a3b60ebe98c64ada936ea4988b9fb945",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "beach",
+   "mark": [
+    330,
+    668
+   ],
+   "hPx": 26,
+   "flip": false,
+   "light": null,
+   "reach": null,
+   "why": "the driftwood altar (u13) \u2014 itself the fire's stand, no rim",
+   "settle": null,
+   "ring": {
+    "r_in": 11.7,
+    "r_out": 28.6,
+    "n": 1918,
+    "rgb_mean": [
+     133.0,
+     151.1,
+     162.5
+    ],
+    "cct": 8595
+   },
+   "deltaE": {
+    "before": 27.8,
+    "after": 11.9
+   },
+   "cct": {
+    "ring": 8595,
+    "before": 5117,
+    "after": 6070,
+    "dBefore": 3479,
+    "dAfter": 2525
+   },
+   "accent": {
+    "hueDeg": 25.0,
+    "px": 83659
+   },
+   "rim": false
+  },
+  "sea/ram-great": {
+   "set": "sea",
+   "cut": "ram-great",
+   "source": "assets/actor/ram-great.png",
+   "sourceSha256": "29cfce7a566adb59f85871ccab77d0a113a0b872cfecb24b15fec1764f987588",
+   "graded": "assets/actor/graded/sea/ram-great.png",
+   "gradedSha256": "ee3bbd025012f4e56ecf4c3ab32ed308aa2b96d07eeed9128383e61805e6d429",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "beach",
+   "mark": [
+    392,
+    700
+   ],
+   "hPx": 34,
+   "flip": false,
+   "light": [
+    330,
+    646
+   ],
+   "reach": 60,
+   "why": "the great ram AT the altar (u13); rim off the thigh-fire",
+   "settle": null,
+   "ring": {
+    "r_in": 15.3,
+    "r_out": 37.4,
+    "n": 3282,
+    "rgb_mean": [
+     101.5,
+     115.4,
+     128.0
+    ],
+    "cct": 9111
+   },
+   "deltaE": {
+    "before": 25.7,
+    "after": 5.1
+   },
+   "cct": {
+    "ring": 9111,
+    "before": 5081,
+    "after": 7607,
+    "dBefore": 4030,
+    "dAfter": 1504
+   },
+   "accent": {
+    "hueDeg": 45.0,
+    "px": 61204
+   },
+   "rim": true
+  },
+  "sea/ram-walk": {
+   "set": "sea",
+   "cut": "ram-walk",
+   "source": "assets/actor/ram-walk.png",
+   "sourceSha256": "a6f726045cad6362d6a41416ce8e3f85b89ae5f4522599659697051912d853a5",
+   "graded": "assets/actor/graded/sea/ram-walk.png",
+   "gradedSha256": "771732605edef74cf8d660f901ce413932f324c165b4c74020b0f794460228b4",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "beach",
+   "mark": [
+    505,
+    720
+   ],
+   "hPx": 24,
+   "flip": false,
+   "light": null,
+   "reach": null,
+   "why": "the flock ashore (c7), three instances off one cut",
+   "settle": null,
+   "ring": {
+    "r_in": 10.8,
+    "r_out": 26.4,
+    "n": 1639,
+    "rgb_mean": [
+     126.2,
+     141.4,
+     152.4
+    ],
+    "cct": 8487
+   },
+   "deltaE": {
+    "before": 17.7,
+    "after": 4.0
+   },
+   "cct": {
+    "ring": 8487,
+    "before": 5395,
+    "after": 7517,
+    "dBefore": 3092,
+    "dAfter": 970
+   },
+   "accent": {
+    "hueDeg": 35.0,
+    "px": 1618
+   },
+   "rim": false
+  },
+  "sea/crew-a-stand": {
+   "set": "sea",
+   "cut": "crew-a-stand",
+   "source": "assets/actor/crew-a-stand.png",
+   "sourceSha256": "994b57688d3ca7606ea48b8c35ee2df0be4c964c56de4d7166bd8913798b86ca",
+   "graded": "assets/actor/graded/sea/crew-a-stand.png",
+   "gradedSha256": "9e9feee03804d9672a84a67afaaa17862a6e99ece3d42045e8fe8d681eb46711",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "beach",
+   "mark": [
+    225,
+    690
+   ],
+   "hPx": 32,
+   "flip": false,
+   "light": null,
+   "reach": null,
+   "why": "comrades ashore (c6), doubled along the sand",
+   "settle": null,
+   "ring": {
+    "r_in": 14.4,
+    "r_out": 35.2,
+    "n": 2941,
+    "rgb_mean": [
+     120.5,
+     134.9,
+     143.6
+    ],
+    "cct": 8256
+   },
+   "deltaE": {
+    "before": 47.3,
+    "after": 41.8
+   },
+   "cct": {
+    "ring": 8256,
+    "before": 2845,
+    "after": 3151,
+    "dBefore": 5410,
+    "dAfter": 5105
+   },
+   "accent": {
+    "hueDeg": 35.0,
+    "px": 74338
+   },
+   "rim": false
+  },
+  "sea/crew-b-stand": {
+   "set": "sea",
+   "cut": "crew-b-stand",
+   "source": "assets/actor/crew-b-stand.png",
+   "sourceSha256": "ced45bd57de01e6fffa48cef6674ad64ed04fbc3f77d67884b38cb596f34c2b2",
+   "graded": "assets/actor/graded/sea/crew-b-stand.png",
+   "gradedSha256": "6bfc7a363ba7c6223d7a3c6c5679d3121a711a5c4edc5b6e63747137a40e6652",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "beach",
+   "mark": [
+    472,
+    655
+   ],
+   "hPx": 32,
+   "flip": false,
+   "light": null,
+   "reach": null,
+   "why": "comrades ashore (c6)",
+   "settle": null,
+   "ring": {
+    "r_in": 14.4,
+    "r_out": 35.2,
+    "n": 2913,
+    "rgb_mean": [
+     139.4,
+     157.7,
+     167.9
+    ],
+    "cct": 8392
+   },
+   "deltaE": {
+    "before": 22.9,
+    "after": 13.9
+   },
+   "cct": {
+    "ring": 8392,
+    "before": 4626,
+    "after": 5649,
+    "dBefore": 3766,
+    "dAfter": 2743
+   },
+   "accent": {
+    "hueDeg": 15.0,
+    "px": 32594
+   },
+   "rim": false
+  },
+  "sea/crew-plead": {
+   "set": "sea",
+   "cut": "crew-plead",
+   "source": "assets/actor/crew-plead.png",
+   "sourceSha256": "5613d4cc8fdd46601f8913b4645d6b84dfcf70b13cf2d554372311773e1b7671",
+   "graded": "assets/actor/graded/sea/crew-plead.png",
+   "gradedSha256": "98502d715618a99088f39067098345d8de656cbecdc09e9167a5b21cc2d9a7ed",
+   "plate": "assets/set/sea/sea.jpg",
+   "state": "beach",
+   "mark": [
+    521,
+    684
+   ],
+   "hPx": 32,
+   "flip": false,
+   "light": null,
+   "reach": null,
+   "why": "the lifted-arms lament (c6), doubled",
+   "settle": null,
+   "ring": {
+    "r_in": 14.4,
+    "r_out": 35.2,
+    "n": 2915,
+    "rgb_mean": [
+     128.1,
+     141.4,
+     149.6
+    ],
+    "cct": 8045
+   },
+   "deltaE": {
+    "before": 22.1,
+    "after": 15.4
+   },
+   "cct": {
+    "ring": 8045,
+    "before": 4190,
+    "after": 5074,
+    "dBefore": 3854,
+    "dAfter": 2971
+   },
+   "accent": {
+    "hueDeg": 15.0,
+    "px": 89193
+   },
+   "rim": false
   }
  }
 }

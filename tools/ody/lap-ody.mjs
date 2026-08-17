@@ -208,6 +208,18 @@ const REST_CARRIER_TOL = 0.05;     // the fill/glow the k carries, same law
 /* [release] the RELEASE verb (myname, AMENDMENT 2026-08-16): press >= this
  * threshold arms the shout; the advance must land ON the release frame. */
 const RELEASE_THRESHOLD = 0.6;     // units.js ody-vi-07-myname hold, verbatim
+/* [sacrifice] §3.4 — THE RETURN TABLEAU (2026-08-17): the units' declared
+ * staging objects must have DRAWN BODIES at the return units, and the altar
+ * must show in PIXELS. sea.js B_CAST stages 5 comrades and 3 flock rams;
+ * floors sit under the staging so a dropped body fails before the count
+ * hugs the data. Gap: the rendered ram/altar boxes stand together within
+ * this many plate px on both axes (staged 26 px apart at rest). Warm floor:
+ * the authored flame gradient covers ~40k device px at the homeward lens;
+ * its warm-hue core is counted with goldenCount (the O.3 class). */
+const SAC_CREW_MIN = 5;
+const SAC_FLOCK_MIN = 3;
+const SAC_GAP_MAX = 40;
+const SAC_WARM_MIN = 120;
 /* [memory] HESITATION MEMORY (defy, AMENDMENT A2): main.js times the pause
  * from the defy gate arming to its resolving click and the closing card's
  * sub gains ONE clause by the 4 s threshold — under it the eager clause,
@@ -362,6 +374,30 @@ const STRIP_ROWER_DY_MAX = 3.2;
 const SKATE_MAX = 2.5;                // css px per fixed 1/60 s step
 const SKATE_MIN_SAMPLES = 4;          // mid-motion samples per walk family
 const SKATE_FAMS = ['shore-ulysses', 'shore-crew', 'crew-cave', 'giant', 'ram'];
+
+/* ---- THE ANIMATION-WEIGHT LANE's own numbers (2026-08-17) --------------- *
+ * bridge-step   no bridge may advance more than 1 cell per fixed 1/60 step
+ *               (the seize teleport: a pose swap in one 30 fps frame)
+ * stance-lock   while a PLANT cell of the giant strip holds across steps,
+ *               the rendered foot's screen x drifts <= 1.0 css px in total
+ *               (the stance-lock profile: ground speed zero through plants)
+ * giant-CV      the giant's mark-velocity std/mean >= 0.25 at return2 and
+ *               return3 (heavy cadence — plant, surge, plant)
+ * ram-stream    >= 3 distinct departure beats among the dawn walkers
+ * seize-handoff the victims STAND (<= 1.5 px drift while visible) and cut
+ *               out within 0.5 s of the bridge's CONTACT cell (c3)
+ * collapse      fold cells (c0-c2) dwell >= 1.8x the fall cells (c4-c7);
+ *               impact squash: min sy in [0.955, 0.985] within 0.25 s of
+ *               the first c4 tick, a recoil sample > 1.001, sy 1 at park */
+const BRIDGE_STEP_MAX = 1;
+const PLANT_DRIFT_MAX = 1.0;          // css px per held plant cell, total
+const GIANT_CV_MIN = 0.25;
+const RAM_DEPART_MIN = 3;
+const SEIZE_STAND_TOL = 1.5;          // plate px of victim drift while visible
+const SEIZE_HANDOFF_S = 0.5;          // s from contact cell to victims dark
+const COLLAPSE_FOLD_RATIO = 1.8;      // fold dwell / fall dwell, per-cell mean
+const SEIZE_CONTACT_CELL = 3;
+const COLLAPSE_IMPACT_CELL = 4;
 
 /* ---- the ledger's floors + obstacles, transcribed once ---------------- */
 const FL = {
@@ -874,6 +910,7 @@ async function main() {
   let latchProof = null;
   const restProof = {};              // [rest] per big hold: k across the 2 s rest
   let releaseProof = null;           // [release] myname's held/released evidence
+  let bowlReleaseProof = null;       // [A7] lookhere: banked-full/poured-on-release
   let mouthOpenLuma = null;
   let seaStandBox = null;
   let lastId = null, page_ = 1, leafImgs = await imgCount();
@@ -1309,6 +1346,22 @@ async function main() {
    * anchor-law tally, so the two laws measure the same walks. */
   const skateEv = {};
   for (const k of SKATE_FAMS) skateEv[k] = { samples: 0, pairs: 0, worst: 0, worstAt: null };
+  /* [stance-lock] the giant strip's own PLANT cells (gaitProfile's pick,
+   * recomputed here off the registry so the lap re-derives, never trusts):
+   * the largest anchor jump in each half-cycle — cells 3 and 7 today. */
+  const GIANT_PLANTS = (() => {
+    const a = STRIPS['polyphemus-walk'].anchors, n = a.length;
+    const d = a.map((v, i) => Math.abs(v - a[(i - 1 + n) % n]));
+    let p0 = 0;
+    for (let i = 1; i < n; i++) if (d[i] > d[p0]) p0 = i;
+    let p1 = -1;
+    for (let i = 0; i < n; i++) {
+      const dd = Math.min((i - p0 + n) % n, (p0 - i + n) % n);
+      if (dd >= 3 && (p1 < 0 || d[i] > d[p1])) p1 = i;
+    }
+    return new Set([p0, p1]);
+  })();
+  const lockEv = { holds: 0, worst: 0, worstAt: null, plants: [...GIANT_PLANTS] };
   /* [gait] LANE PHYSICS (explore-physics.md adopted): the SAME single-stepped
    * probe also records, at 30 fps (every 2nd fixed step), the plate MARKS of
    * the walks named per unit — the velocity series the gait law tallies
@@ -1356,6 +1409,7 @@ async function main() {
       return out;
     }, { n: nFrames, ids });
     const held = {};
+    const lockRun = {};                  // fam:id -> css drift across ONE plant hold
     for (const row of rows) {
       for (const [fam, id, p] of row.w) {
         sSample(fam, p, unitKey);        // [strips] cycle + anchor tallies
@@ -1367,6 +1421,18 @@ async function main() {
           ev.pairs++;
           const slide = Math.abs(p.foot[0] - prev.x) * row.css;
           if (slide > ev.worst) { ev.worst = slide; ev.worstAt = unitKey; }
+          /* [stance-lock] a HELD PLANT cell accumulates its whole hold's
+             drift — the weight lane's law: the planted foot stands still */
+          if (fam === 'giant' && GIANT_PLANTS.has(p.frame)) {
+            const rk = fam + ':' + id;
+            lockRun[rk] = (lockRun[rk] || 0) + slide;
+            lockEv.holds++;
+            if (lockRun[rk] > lockEv.worst) {
+              lockEv.worst = lockRun[rk]; lockEv.worstAt = unitKey;
+            }
+          }
+        } else if (fam === 'giant') {
+          lockRun[fam + ':' + id] = 0;   // a new cell opens a new hold
         }
         held[fam + ':' + id] = { frame: p.frame, x: p.foot[0] };
       }
@@ -1379,6 +1445,64 @@ async function main() {
     }
   };
   const skateProbe = motionProbe;        // the old name, same probe
+
+  /* ---- [bridge-step] the single-stepped BRIDGE probe (weight lane) ------- *
+   * Advances the sim one fixed 1/60 step at a time through a bridge's whole
+   * play and reads the live bridge proof + the seize victims' layer each
+   * step — the rate gate (max 1 cell a step), the retime dwells, the impact
+   * squash and the contact handoff are all read off this one clock. Every
+   * sampled frame also feeds the play-once tally (on change), so the dense
+   * evidence and the sparse polls gate the same play. */
+  const bridgeProbe = async (n) => page.evaluate((n) => {
+    const out = [];
+    for (let i = 0; i < n; i++) {
+      window.__advance(1 / 60);
+      const q = window.__state();
+      const sn = (q && q.stage) || {};
+      const S = sn.strips || {};
+      const a = window.__refs.stage.active;
+      const vict = [];
+      const st = (a && a.state) || {};
+      if (st.seizeBase != null && a.pose) {
+        for (const j of [st.seizeBase - 1, st.seizeBase - 2]) {
+          const P = a.pose['c' + j];
+          if (P) vict.push({ j, x: +P.x.toFixed(2), y: +P.y.toFixed(2),
+                             op: +(+P.op).toFixed(3) });
+        }
+      }
+      out.push({
+        b: S.bridge ? { key: S.bridge.key, frame: S.bridge.frame,
+                        k: S.bridge.k, n: S.bridge.n,
+                        sy: S.bridge.sy == null ? 1 : S.bridge.sy,
+                        play: S.bridge.play || 1,
+                        dx: S.bridge.dx, dy: S.bridge.dy } : null,
+        vict,
+      });
+    }
+    return out;
+  }, n);
+  /* the shared analysis: rate-gate every sampled play; return per-key rows */
+  const bridgeStepEv = { worstStep: 0, worstAt: null, ticks: 0 };
+  const bridgeRows = (rows, unitKey, tagOf) => {
+    let last = null;
+    for (const row of rows) {
+      const b = row.b;
+      if (!b) { last = null; continue; }
+      bridgeStepEv.ticks++;
+      if (last && last.key === b.key && last.play === b.play) {
+        const step = b.frame - last.frame;
+        if (step > bridgeStepEv.worstStep) {
+          bridgeStepEv.worstStep = step;
+          bridgeStepEv.worstAt = `${unitKey} (${b.key} f${last.frame}->f${b.frame})`;
+        }
+      }
+      if (!last || last.key !== b.key || last.play !== b.play ||
+          last.frame !== b.frame) {
+        bSample(b.key, tagOf(b), b, unitKey);      // the play-once tally, dense
+      }
+      last = b;
+    }
+  };
 
   const marginHas = (q, text, tag) => {
     if (!norm(q.unit.blocks).includes(norm(text))) {
@@ -1579,7 +1703,8 @@ async function main() {
          STREAM from this very click (14.3 s: a walker, both trio-pairs, THE
          GREAT RAM, each rest to rest); the slung checks then read the same
          end state they always read. */
-      await motionProbe('dawn5', 948, ['ram0', 'pair0', 'pair1', 'gram']);
+      await motionProbe('dawn5', 948, ['ram0', 'ram1', 'ram2', 'ram3', 'ram4',
+                                       'pair0', 'pair1', 'gram']);
       await T(2.2);
       const q = await st();
       const ram = q.stage.flock && q.stage.flock.ram;
@@ -1673,6 +1798,109 @@ async function main() {
     await shot('b6-release-myname-shouted');
   };
 
+  /* ---- G3 as a RELEASE (AMENDMENT A7): the pour fires on the LET-GO ------- *
+   * The contract's O.7 carrier is "each RELEASE drained" — the shipped hold
+   * poured while still pressed. The law now: the fill RIDES the hold (the
+   * watermark law, unchanged), an under-threshold let-go BANKS it (A4's rest,
+   * unchanged), a full press BANKS AND WAITS — pours.n must be 0 while the
+   * finger is down, even at k 1 — and the release itself, with NO sim step
+   * after __holdEnd, must show the story advanced AND pour 1's clock armed
+   * on that same frame. */
+  const doBowlRelease = async (u) => {
+    const before = (await st()).i;
+    /* the rest (A4): press to ~50%, let go 2 s — k and fill both persist */
+    await page.evaluate(() => window.__holdStart());
+    await T(0.8);                            // ~k 0.5 of the 1.6 s threshold
+    const peek = await st();
+    const peekFill = await page.evaluate(() =>
+      +window.__refs.stage.active.bowlFillK.toFixed(3));
+    await page.evaluate(() => window.__holdEnd());
+    await T(2.0);                            // the rest itself
+    const letGo = await st();
+    const goFill = await page.evaluate(() =>
+      +window.__refs.stage.active.bowlFillK.toFixed(3));
+    if (letGo.hold.resolved || letGo.i !== before) {
+      bad(`lookhere: [O.7] an under-threshold let-go resolved/advanced ` +
+          `(resolved=${letGo.hold.resolved}, i ${before} -> ${letGo.i})`);
+    }
+    if (!(peek.hold.k > 0.3 && peek.hold.k < 0.7)) {
+      bad(`lookhere: [rest] the probe missed the ~50% window (k=${peek.hold.k})`);
+    }
+    if (letGo.hold.k < peek.hold.k - REST_K_TOL) {
+      bad(`lookhere: [rest] the banked k DROPPED across a 2 s rest — ` +
+          `${peek.hold.k} -> ${letGo.hold.k} (rest is allowed, tol ${REST_K_TOL})`);
+    }
+    if (goFill < peekFill - REST_CARRIER_TOL) {
+      bad(`lookhere: [rest][O.7] the bowl's fill drained across the rest — ` +
+          `${peekFill} -> ${goFill} (tol ${REST_CARRIER_TOL})`);
+    }
+    if ((letGo.stage.pours || {}).n > 0) {
+      bad(`lookhere: [O.7] an under-threshold let-go POURED ` +
+          `(${JSON.stringify(letGo.stage.pours)})`);
+    }
+    restProof[u.key] = { kAtRelease: peek.hold.k, kAfter2s: letGo.hold.k,
+                         carrierAtRelease: peekFill, carrierAfter2s: goFill };
+    gates.push({ beat: u.beat, gate: 'bowl-rest', missed: true,
+                 resolved: letGo.hold.resolved });
+    /* resume from the rested k: the fill must TRACK k (the watermark law) —
+       and NOTHING may pour while pressed, even once k banks at 1 */
+    await page.evaluate(() => window.__holdStart());
+    await T(0.35);
+    const m1 = await st();
+    const f1 = await page.evaluate(() =>
+      +window.__refs.stage.active.bowlFillK.toFixed(3));
+    await shot(`b${u.beat}-hold-${u.key}-mid`);
+    await T(0.75);                           // past the threshold: k banks at 1
+    const held = await st();
+    const fHeld = await page.evaluate(() =>
+      +window.__refs.stage.active.bowlFillK.toFixed(3));
+    if (!(m1.hold.k > 0.15 && m1.hold.k < 0.98)) {
+      bad(`lookhere: [O.7] mid-hold sample missed the window (k=${m1.hold.k})`);
+    }
+    if (!(Math.abs(f1 - m1.hold.k) <= HOLD_TRACK_TOL)) {
+      bad(`lookhere: [O.7] the fill does not ride the hold — k=${m1.hold.k} but ` +
+          `fill=${f1} (tol ${HOLD_TRACK_TOL}; the watermark law)`);
+    }
+    if (!(held.hold.pressing && held.hold.k >= 1)) {
+      bad(`lookhere: [release] a full press did not bank k at 1 (k=${held.hold.k})`);
+    }
+    if (held.i !== before || held.hold.resolved || held.turn.active) {
+      bad(`lookhere: [release] the story moved WHILE HELD (i ${before} -> ${held.i})`);
+    }
+    if ((held.stage.pours || {}).n > 0) {
+      bad(`lookhere: [O.7][A7] THE POUR FIRED WHILE PRESSED — the contract pours ` +
+          `on the release (${JSON.stringify(held.stage.pours)})`);
+    }
+    if (!(fHeld >= 0.95)) {
+      bad(`lookhere: [O.7] the banked bowl is not full at k 1 (fill ${fHeld})`);
+    }
+    /* the release: advance AND pour 1, both ON the release frame — the state
+       is read with NO sim step after __holdEnd */
+    await page.evaluate(() => window.__holdEnd());
+    const after = await st();
+    const moved = after.i !== before || after.turn.active || after.end.active;
+    if (!moved) bad('lookhere: [release][A7] the let-go did not advance ON the release frame');
+    if (!((after.stage.pours || {}).n >= 1)) {
+      bad(`lookhere: [O.7][A7] pour 1's clock is not armed on the release frame ` +
+          `(${JSON.stringify(after.stage.pours)})`);
+    }
+    gates.push({ beat: u.beat, gate: 'bowl-release', missed: 'n/a',
+                 resolved: moved, advanced: moved });
+    facts['O.7-hold'] = `bowl fill rode the hold (k ${m1.hold.k} -> fill ${f1}), ` +
+      `banked full with NO pour while pressed, pour 1 armed on the release frame ` +
+      `(${before} -> ${after.i})`;
+    bowlReleaseProof = { from: before, to: after.i, heldK: held.hold.k,
+                         fillHeld: fHeld, pouredWhilePressed: (held.stage.pours || {}).n > 0,
+                         pourOnRelease: (after.stage.pours || {}).n >= 1 };
+    /* [bridges] pour 1's drink bridge plays on the fresh pour clock — sampled
+       here (the story is already on besokind) while the drain is young */
+    for (let i = 0; i < 7; i++) {
+      stripPoll(await st());
+      await T(0.2);
+    }
+    await shot(`b${u.beat}-hold-${u.key}-resolved`);
+  };
+
   /* ======================= 1. THE READ ================================== */
   let guard = 0;
   let seq = 0;
@@ -1729,9 +1957,12 @@ async function main() {
         dawn1: [252, ['c0', 'c1']],              // the hunt dash-out, whole
         /* head2's probe runs AFTER its shot below: probing first ages the
            unit past the dwell law's 0.7 s cover budget */
-        return2: [408, ['g']],                   // the giant's entrance
-        quiverlid: [372, ['g']],                 // flock-out
-        return3: [372, ['g']],                   // flock-in
+        /* the weight lane's stance-lock profile spends the same ground a
+           tenth slower (1.7 m/s + locked plants), so the walk probes run
+           ~1.2 s longer to still record every stop */
+        return2: [456, ['g']],                   // the giant's entrance
+        quiverlid: [444, ['g']],                 // flock-out
+        return3: [444, ['g']],                   // flock-in
         /* dawn5's stream is recorded AT the G5 hit inside doTarget — the
            gate's advance is the escape's own t0 */
         freed: [220, ['gram']],                  // the trot clear
@@ -2066,11 +2297,77 @@ async function main() {
           break;
         }
         case 'firstmeal': case 'morningmeal': case 'suppertwo': {
+          /* [bridge-step]+[seize-handoff] (weight lane, firstmeal only —
+             the staging is identical x3 by O.6): the seize single-stepped
+             tick by tick. The rate gate reads every frame advance; the
+             handoff law reads the victims' layer — they STAND on their
+             huddle spots (no racing translation) and cut out within
+             SEIZE_HANDOFF_S of the bridge's CONTACT cell. */
+          if (u.key === 'firstmeal') {
+            /* sized to land JUST SHORT of the O.6 instant (segK 0.5 = 3.0 s)
+               whatever the entry overhead was — the meal sample below must
+               read the same parked landing cell all three meals */
+            const nT = Math.max(60,
+              Math.round((MEAL_SEG_T - 0.05 - (q0.unitT || 0)) * 60));
+            const rows = await bridgeProbe(nT);
+            bridgeRows(rows, u.key, () => u.key);
+            const vic = {};                               // j -> {x0,y0,drift,...}
+            let contactTick = null;
+            rows.forEach((row, i) => {
+              if (contactTick === null && row.b && row.b.key === 'seize' &&
+                  row.b.frame >= SEIZE_CONTACT_CELL) contactTick = i;
+              for (const v of row.vict) {
+                const V = vic[v.j] = vic[v.j] || { x0: v.x, y0: v.y, drift: 0,
+                                                   lastVisible: -1, dark: null };
+                if (v.op > 0.5) {
+                  V.drift = Math.max(V.drift,
+                    Math.hypot(v.x - V.x0, v.y - V.y0));
+                  V.lastVisible = i;
+                }
+                if (v.op <= 0.05 && V.dark === null && V.lastVisible >= 0) V.dark = i;
+              }
+            });
+            const vids = Object.keys(vic);
+            if (contactTick === null) {
+              bad('firstmeal: [seize-handoff] the bridge never reached its ' +
+                  `contact cell (c${SEIZE_CONTACT_CELL}) inside the probe`);
+            } else if (vids.length < 2) {
+              bad(`firstmeal: [seize-handoff] only ${vids.length} victims were on ` +
+                  'the layer — seizeBase did not name two men');
+            } else {
+              for (const j of vids) {
+                const V = vic[j];
+                if (V.drift > SEIZE_STAND_TOL) {
+                  bad(`firstmeal: [seize-handoff] victim c${j} TRANSLATED ` +
+                      `${V.drift.toFixed(1)} px while visible (law <= ${SEIZE_STAND_TOL} ` +
+                      '— the layer must not race the strip)');
+                }
+                if (V.dark === null || V.dark - contactTick > SEIZE_HANDOFF_S * 60) {
+                  bad(`firstmeal: [seize-handoff] victim c${j} was not handed off at ` +
+                      `CONTACT — dark at tick ${V.dark} vs contact ${contactTick} ` +
+                      `(law <= ${SEIZE_HANDOFF_S * 60} ticks after)`);
+                }
+              }
+              const w = vids.map((j) => vic[j]);
+              if (w.every((V) => V.drift <= SEIZE_STAND_TOL &&
+                                 V.dark !== null &&
+                                 V.dark - contactTick <= SEIZE_HANDOFF_S * 60)) {
+                note(`[seize-handoff] firstmeal: both victims stood their huddle ` +
+                     `marks (drift ${w.map((V) => V.drift.toFixed(1)).join('/')} px) ` +
+                     `and cut out ${w.map((V) => ((V.dark - contactTick) / 60).toFixed(2))
+                       .join('/')} s after the contact cell`);
+              }
+            }
+          }
           /* [bridges] THE SEIZE, walked to mid-clutch in 0.15 s steps so the
              play-once law has dense frames: the bridge (seat -> clutch) rides
-             segK 0.02..0.42 and must be monotone, land on its last cell, and
-             hand the frame to the static clutch the O.6 gate then measures. */
-          let qm = q0;
+             segK 0.02..0.45 (+ the parked landing) and must be monotone, land
+             on its last cell, and hand the frame to the static clutch the O.6
+             gate then measures. */
+          /* firstmeal aged past q0 inside the probe — a stale q0 here fed
+             the play-once tally a PRE-PROBE frame after the landing (the
+             [2..9, 2] backward read); the loop always starts fresh */
+          let qm = u.key === 'firstmeal' ? await st() : q0;
           for (let i = 0; i < 40; i++) {
             if (!qm.unit || qm.unit.key !== u.key || (qm.unitT || 0) >= MEAL_SEG_T) break;
             stripPoll(qm);
@@ -2122,10 +2419,65 @@ async function main() {
           break;
         }
         case 'neck': {
-          /* [bridges] THE COLLAPSE, densely from the top of its own seg: the
-             drink -> sprawl bridge rides segK 0..0.85 of the 6 s neck, so
-             the play-once law gets the whole chain, frame 0 up (the unit is
-             blocked by its segHold, which never samples on its own) */
+          /* [bridge-step]+[collapse-retime] (weight lane): the whole ~5.1 s
+             drink -> sprawl play single-stepped — the rate gate on every
+             advance, the RETIME dwells (slow fold >= 1.8x the fall), and
+             the IMPACT SQUASH (2-frame compression + recoil at c4, sy
+             declared in the proof) read off the one clock. */
+          {
+            const rows = await bridgeProbe(330);          // 5.5 s of the 6 s seg
+            bridgeRows(rows, 'neck', () => 'play1');
+            const dwell = {};                             // frame -> ticks
+            let impactTick = null, minSy = 1, minSyTick = null,
+                recoil = false, lastSy = 1;
+            rows.forEach((row, i) => {
+              const b = row.b;
+              if (!b || b.key !== 'collapse') return;
+              dwell[b.frame] = (dwell[b.frame] || 0) + 1;
+              if (impactTick === null && b.frame >= COLLAPSE_IMPACT_CELL) impactTick = i;
+              if (b.sy < minSy) { minSy = b.sy; minSyTick = i; }
+              if (b.sy > 1.001) recoil = true;
+              lastSy = b.sy;
+            });
+            const mean = (cells) => {
+              const seen = cells.filter((c) => dwell[c]);
+              return seen.length
+                ? seen.reduce((s, c) => s + dwell[c], 0) / seen.length : 0;
+            };
+            const fold = mean([0, 1, 2]), fall = mean([4, 5, 6, 7]);
+            if (!fold || !fall) {
+              bad(`neck: [collapse-retime] the probe never held the fold or the fall ` +
+                  `(dwells ${JSON.stringify(dwell)})`);
+            } else if (!(fold >= COLLAPSE_FOLD_RATIO * fall)) {
+              bad(`neck: [collapse-retime] the fall is not retimed — fold cells dwell ` +
+                  `${fold.toFixed(1)} ticks vs fall ${fall.toFixed(1)} ` +
+                  `(law: fold >= ${COLLAPSE_FOLD_RATIO}x fall — slow fold, accelerating drop)`);
+            } else {
+              note(`[collapse-retime] neck: fold ${fold.toFixed(1)} ticks/cell vs ` +
+                   `fall ${fall.toFixed(1)} — ${(fold / fall).toFixed(2)}x ` +
+                   `(law >= ${COLLAPSE_FOLD_RATIO}x)`);
+            }
+            if (impactTick === null) {
+              bad('neck: [collapse-squash] the impact cell was never reached in the probe');
+            } else {
+              const fails = [];
+              if (!(minSy <= 0.985 && minSy >= 0.955)) {
+                fails.push(`min sy ${minSy} outside the 3-4% squash band [0.955, 0.985]`);
+              }
+              if (minSyTick === null || Math.abs(minSyTick - impactTick) > 15) {
+                fails.push(`the squash landed ${minSyTick === null ? 'never'
+                  : ((minSyTick - impactTick) / 60).toFixed(2) + ' s'} from impact (law <= 0.25 s)`);
+              }
+              if (!recoil) fails.push('no recoil frame (no sy > 1.001 sample)');
+              if (lastSy !== 1) fails.push(`sy parked at ${lastSy}, not 1`);
+              if (fails.length) bad('neck: [collapse-squash] ' + fails.join('; '));
+              else note(`[collapse-squash] neck: sy dipped to ${minSy} ` +
+                        `${((minSyTick - impactTick) / 60).toFixed(2)} s after the c4 ` +
+                        'impact, one recoil sample, parked at 1');
+            }
+          }
+          /* [bridges] the sparse tail, kept: whatever of the play remains
+             feeds the play-once law the way every drain does */
           for (let i = 0; i < 36; i++) {
             const q = await st();
             if (!q.unit || q.unit.key !== 'neck') break;
@@ -2457,6 +2809,121 @@ async function main() {
           }
           break;
         }
+        case 'ram': {
+          /* [sacrifice] §3.4 — THE RETURN TABLEAU (CONTENT-odyssey.md c6/c7
+             + u13's own staging column). The fact list is the assertion
+             list: the beach layer RISES with the return seg, the comrades
+             stand ashore, the flock is shared out, the great ram stands AT
+             the driftwood altar with the thigh-fire's straight smoke — and
+             every declared object has a DRAWN body (box off the rendered
+             element), because a declared object with no pixels is exactly
+             the silent gap §3.4 forbids. */
+          let q = await st();
+          const rise0 = (q.stage.beach || {}).rise || 0;
+          for (let i = 0; i < 30; i++) {           // the seg plays out (~8 s)
+            q = await st();
+            if (!q.unit || q.unit.id !== u.id) break;
+            if ((q.stage.beach || {}).seg >= 0.98) break;
+            await T(0.35);
+          }
+          const B = q.stage.beach || {};
+          if (!(B.on && B.rise >= 0.95)) {
+            bad(`ram: [sacrifice] the island-beach layer never rose ` +
+                `(rise ${rise0} -> ${B.rise})`);
+          }
+          const drawn = (b, name) => {
+            if (!b || !(b.op >= 0.9) || !b.box || !(b.box[2] > 8 && b.box[3] > 8)) {
+              bad(`ram: [sacrifice] §3.4 — '${name}' is declared at the return ` +
+                  `units but has no drawn body (${JSON.stringify(b)})`);
+              return false;
+            }
+            return true;
+          };
+          const okAltar = drawn(B.altar, 'driftwood altar');
+          const okRam = drawn(B.ram, 'the great ram');
+          drawn(B.uly, 'Ulysses ashore (the sacrificer)');
+          const crewUp = (B.crew || []).filter((c) => c.op >= 0.9 && c.box &&
+                                               c.box[2] > 8 && c.box[3] > 8);
+          if (!(crewUp.length >= SAC_CREW_MIN)) {
+            bad(`ram: [sacrifice] ${crewUp.length} comrades ashore with drawn ` +
+                `bodies (floor ${SAC_CREW_MIN})`);
+          }
+          const flockUp = (B.flock || []).filter((f) => f.op >= 0.9 && f.box);
+          if (!(flockUp.length >= SAC_FLOCK_MIN)) {
+            bad(`ram: [sacrifice] the flock never came ashore ` +
+                `(${flockUp.length} drawn, floor ${SAC_FLOCK_MIN})`);
+          }
+          if (okAltar && okRam) {
+            /* RAM-AT-ALTAR: the two rendered boxes stand together on the sand */
+            const gx = Math.max(0, Math.max(B.ram.box[0] - (B.altar.box[0] + B.altar.box[2]),
+                                            B.altar.box[0] - (B.ram.box[0] + B.ram.box[2])));
+            const gy = Math.max(0, Math.max(B.ram.box[1] - (B.altar.box[1] + B.altar.box[3]),
+                                            B.altar.box[1] - (B.ram.box[1] + B.ram.box[3])));
+            if (!(gx <= SAC_GAP_MAX && gy <= SAC_GAP_MAX)) {
+              bad(`ram: [sacrifice] the great ram is not AT the altar — box gap ` +
+                  `${gx.toFixed(0)}/${gy.toFixed(0)} plate px (max ${SAC_GAP_MAX})`);
+            }
+          }
+          if (!(B.fire >= 0.5 && B.smoke >= 0.5)) {
+            bad(`ram: [sacrifice] the thigh-fire never burned ` +
+                `(fire ${B.fire}, smoke ${B.smoke})`);
+          }
+          if (!(B.dusk >= 0.25)) {
+            bad(`ram: [sacrifice] c8's dusk time-dip never began on the seg's ` +
+                `tail (dusk ${B.dusk})`);
+          }
+          /* the two-Norton law: the man at the altar may not also stand at
+             the stern — the world-group Ulysses hands off to the shore */
+          const sternOp = await page.evaluate(() => {
+            const a = window.__refs.stage.active;
+            return Math.max(+a.uly.stand.style.opacity, +a.uly.taunt.style.opacity);
+          });
+          if (!(sternOp <= 0.1)) {
+            bad(`ram: [sacrifice] Ulysses stands at the altar AND the stern ` +
+                `(stern cut opacity ${sternOp}) — the two-Norton defect`);
+          }
+          /* ALTAR PIXELS: the thigh-fire's warm class, counted in the
+             altar's own screenshot rect (goldenCount = the O.3 warm-hue
+             class; the flame gradient over night sand is unambiguous) */
+          await page.evaluate(() => window.__renderNow());
+          await shot('b6-O-sacrifice-tableau');
+          if (okAltar && frames['b6-O-sacrifice-tableau']) {
+            const rect = await plateBox([B.altar.box[0] - 8, B.altar.box[1] - 42,
+                                         B.altar.box[2] + 16, B.altar.box[3] + 46]);
+            const R = rectI(rect, await stageBox());
+            const warm = R ? goldenCount(frames['b6-O-sacrifice-tableau'], R) : 0;
+            if (!(warm >= SAC_WARM_MIN)) {
+              bad(`ram: [sacrifice] ${warm} warm altar-fire px on screen ` +
+                  `(floor ${SAC_WARM_MIN}) — the altar does not SHOW`);
+            } else {
+              facts['S3.4'] = `beach risen, ${crewUp.length} comrades + ` +
+                `${flockUp.length} flock ashore, the great ram at the altar ` +
+                `(gap ok), ${warm} altar-fire px, dusk ${B.dusk}`;
+            }
+          }
+          break;
+        }
+        case 'sailedon': {
+          /* [sacrifice] c9: dawn — the men board (crew ashore fade), the
+             fire falls to embers, the tableau's fixtures stay. */
+          await T(2.8);
+          const q = await st();
+          const B = q.stage.beach || {};
+          const crewUp = (B.crew || []).filter((c) => c.op > 0.25).length;
+          if (!(B.board >= 0.9 && crewUp === 0)) {
+            bad(`sailedon: [sacrifice] the men never boarded at dawn ` +
+                `(board ${B.board}, ${crewUp} crew still ashore)`);
+          }
+          if (!(B.on && B.altar && B.altar.op >= 0.9 && B.ram && B.ram.op >= 0.9)) {
+            bad(`sailedon: [sacrifice] the altar/ram tableau vanished with the dawn`);
+          }
+          if (!(B.fire <= 0.55)) {
+            bad(`sailedon: [sacrifice] the thigh-fire still blazes at dawn ` +
+                `(fire ${B.fire}; c8's embers law)`);
+          }
+          await shot('b6-O-sacrifice-dawn');
+          break;
+        }
         default: break;
       }
 
@@ -2595,7 +3062,8 @@ async function main() {
     } else if (u.verb === 'release') {
       if (gatesDone.has(u.id)) { await T(0.5); continue; }
       gatesDone.add(u.id);
-      await doRelease(u);
+      if (u.key === 'lookhere') await doBowlRelease(u);   // A7: G3 pours on let-go
+      else await doRelease(u);
     } else if (u.verb === 'target') {
       /* one dispatch per gate: a gate that failed to advance has already been
          charged, and re-missing it forever would double-book the ledger — the
@@ -2633,6 +3101,22 @@ async function main() {
         await latchProbe(u);
         await waitRelease(u);
       } else if (q.unit && q.unit.id === u.id) {
+        /* [A6] the opening heading is click-paced now, and this read gives
+           it the SHIPPED 3.4 s of looking before the click — a reader reads
+           the title — so every later ambient/pulse phase in the lap stays
+           comparable to the shipped timeline (the dash-aboard gait law is
+           phase-marginal: see the 2026-08-17 attribution runs). The 0.35 s
+           after the click is the OLD auto-poll's remainder: the shipped
+           walker resumed at t 3.75, and bard's entry probe must start on
+           the same tick or every later phase shifts. The heading's own
+           laws — no self-advance, click advances, 30 s soft-fail — are
+           proven in 6d [ux-first]. */
+        if (u.key === 'head1') {
+          if (q.unitT < 3.4) await T(3.4 - q.unitT);
+          await click();
+          await T(0.35);
+          continue;
+        }
         await click();
       }
     }
@@ -2685,7 +3169,7 @@ async function main() {
   }
   if (gates.length !== 10) {
     bad(`gates exercised: ${gates.length}, expected 10 (5 targets + 2 hold rests ` +
-        `+ 2 holds + 1 release)`);
+        `+ 1 hold + 2 releases — A7 made the bowl a release)`);
   }
   /* [rest] + [release]: the two amendments' own gates, tallied by name */
   for (const k of ['lookhere', 'embers']) {
@@ -2700,6 +3184,14 @@ async function main() {
     note(`[release] myname: stray click held the page, 1 s hold banked k ${releaseProof.heldK} ` +
          `(swell ${releaseProof.swell}) with no advance, the shout rang and the story ` +
          `moved ${releaseProof.from} -> ${releaseProof.to} ON the release frame`);
+  }
+  if (!bowlReleaseProof) {
+    bad('[release][A7] the lookhere bowl release was never exercised — the gate did not run');
+  } else {
+    note(`[release][A7] lookhere: fill banked at ${bowlReleaseProof.fillHeld} with k ` +
+         `${bowlReleaseProof.heldK} held and NO pour while pressed; the let-go advanced ` +
+         `${bowlReleaseProof.from} -> ${bowlReleaseProof.to} and armed pour 1 on the ` +
+         `release frame`);
   }
   if (turns.length !== 4) {
     bad(`page turns during the read: ${turns.length}, expected 4 (III->IV shares leaf 3; ` +
@@ -2867,6 +3359,15 @@ async function main() {
   if (consoleErrors.length) bad('console errors: ' + consoleErrors.slice(0, 6).join(' | '));
   else note('zero console errors');
   if (gaps.length) note('ART GAPS the engine reported: ' + gaps.join(', '));
+  /* [sacrifice] §3.4: stage.gaps may no longer stay SILENT about the return
+     tableau — any of its art failing to decode/raise is a lap failure, not
+     a note. (The tableau's crew/ram cuts are shared with other sets, and a
+     gap in any of them is a gap in a declared staging object.) */
+  const sacGaps = gaps.filter((g) =>
+    /sea-beach|prop-altar|crew-a-stand|crew-b-stand|crew-plead|ram-great\.|ram-walk/.test(g));
+  if (sacGaps.length) {
+    bad('[sacrifice] §3.4 — declared staging art reported as GAP: ' + sacGaps.join(', '));
+  }
 
   /* ---- 4. [O.6] the three meals, diffed --------------------------------- */
   if (meals.length !== 3) {
@@ -3183,7 +3684,8 @@ async function main() {
     }
   }
 
-  /* ---- 6. soft-fail: no gate is a wall (Beat I excluded by design) ------- */
+  /* ---- 6. soft-fail: no gate is a wall (Beat I's SPOKEN units excluded by
+   * design; its heading soft-fails since A6 — see 6d [ux-first]) ----------- */
   await page.evaluate(async () => await window.__gotoUnit('sword'));
   const beforeSoft = (await st()).i;
   await T(31);
@@ -3192,6 +3694,82 @@ async function main() {
     bad('the sword gate did not soft-fail after 30 s');
   } else {
     note(`soft-fail: the sword gate satisfied itself after 30 s (softFails=${afterSoft.softFails})`);
+  }
+
+  /* ---- 6a. soft-fail must RESOLVE the held verbs (the deadlock gate) ------ *
+   * The review's HOLD SOFT-FAIL DEADLOCK: at the dwell limit the generic
+   * soft-fail branch called advance(), advance() refuses an unresolved hold,
+   * and a reader who never pressed was walled forever on lookhere/embers
+   * while softFails counted up every sim step. The law now (main.js
+   * resolveHold/resolveRelease): PURE DWELL — no press, no click, no input of
+   * any kind — must RESOLVE the held verb exactly once (the embers' k goes to
+   * 1 THROUGH the carrier so the blinding clock latches the way a real press
+   * latches it; the bowl — a release since A7 — soft-releases through
+   * resolveRelease, whose bowl-pour gateAct arms pour 1) and then advance.
+   * Both big verbs and myname are walked; 'exactly once' is the softFails
+   * delta. */
+  {
+    const dwellPast = async (key) => {
+      await page.evaluate(async (k) => await window.__gotoUnit(k), key);
+      const b = await st();
+      await T(31);                       // pure dwell: no input of any kind
+      const a = await st();
+      return { b, a, moved: a.i > b.i || a.turn.active || a.end.active,
+               charged: a.softFails - b.softFails };
+    };
+    // the bowl hold (G3 lookhere): resolve, advance, pour 1 latched at full
+    let r = await dwellPast('lookhere');
+    if (!r.moved) {
+      bad(`[soft-hold] lookhere never advanced on pure dwell (i ${r.b.i} -> ${r.a.i}, ` +
+          `softFails ${r.b.softFails} -> ${r.a.softFails}) — the hold deadlock`);
+    } else if (r.charged !== 1) {
+      bad(`[soft-hold] lookhere advanced but charged ${r.charged} soft-fails ` +
+          `(law: exactly one — the resolution fires once)`);
+    } else if (!((r.a.stage.pours || {}).n >= 1)) {
+      bad(`[soft-hold] lookhere's soft resolution never reached the carrier — ` +
+          `pour 1 did not latch (${JSON.stringify(r.a.stage.pours)})`);
+    } else {
+      note(`[soft-hold] lookhere: 30 s of pure dwell resolved the bowl hold once, ` +
+           `advanced ${r.b.i} -> ${r.a.i}, pour 1 latched (pours.n=${r.a.stage.pours.n})`);
+    }
+    // the ember hold (G4 embers): resolve, advance, the blinding clock fired —
+    // without it auger's verb:'clock' unit never arrives and the wall has
+    // only moved one unit down the page
+    r = await dwellPast('embers');
+    if (!r.moved) {
+      bad(`[soft-hold] embers never advanced on pure dwell (i ${r.b.i} -> ${r.a.i}, ` +
+          `softFails ${r.b.softFails} -> ${r.a.softFails}) — the hold deadlock`);
+    } else if (r.charged !== 1) {
+      bad(`[soft-hold] embers advanced but charged ${r.charged} soft-fails ` +
+          `(law: exactly one)`);
+    } else if (!(r.a.stage.drive !== null && r.a.stage.drive !== undefined &&
+                 r.a.stage.drive)) {
+      bad(`[soft-hold] embers' soft resolution never fired the blinding clock ` +
+          `(drive=${JSON.stringify(r.a.stage.drive)}) — auger can never arrive`);
+    } else {
+      note(`[soft-hold] embers: 30 s of pure dwell resolved the ember hold once, ` +
+           `advanced ${r.b.i} -> ${r.a.i}, the blinding clock fired (drive=${r.a.stage.drive})`);
+    }
+    // the release verb (myname): the un-let-go breath soft-releases at 30 s —
+    // shout rung, pose snapped, the story moved
+    const shoutsB4 = ((await page.evaluate(() => window.__audio())).log || [])
+      .filter((l) => l.kind === 'cue' && l.id === 'shout').length;
+    r = await dwellPast('myname');
+    const shoutsAft = ((await page.evaluate(() => window.__audio())).log || [])
+      .filter((l) => l.kind === 'cue' && l.id === 'shout').length;
+    if (!r.moved) {
+      bad(`[soft-release] myname never advanced on pure dwell (i ${r.b.i} -> ${r.a.i}, ` +
+          `softFails ${r.b.softFails} -> ${r.a.softFails})`);
+    } else if (r.charged !== 1) {
+      bad(`[soft-release] myname advanced but charged ${r.charged} soft-fails ` +
+          `(law: exactly one)`);
+    } else if (!(shoutsAft > shoutsB4)) {
+      bad(`[soft-release] myname soft-released without the shout ringing ` +
+          `(${shoutsB4} -> ${shoutsAft} 'shout' cues)`);
+    } else {
+      note(`[soft-release] myname: 30 s of pure dwell released the breath once, ` +
+           `the shout rang, advanced ${r.b.i} -> ${r.a.i}`);
+    }
   }
 
   /* ---- 6b. [memory] the RELUCTANT half: a forced >= 4 s hesitation -------- *
@@ -3331,6 +3909,155 @@ async function main() {
           { dy: IDLE_DY.man, sy: IDLE_SY.man, drift: IDLE_SEA_DRIFT });
     judge('sea giant clifftop (fatherson)', pick(se, (i) => i.giant),
           { dy: IDLE_DY.giant, sy: IDLE_SY.seaGiant, drift: IDLE_SEA_DRIFT });
+  }
+
+  /* ---- 6d. [ux] the honesty gates (external review, 2026-08-17) ---------- *
+   * Four laws about the reader's own hand:
+   *   [ux-live]  a target ring neither shows nor accepts hits (incl. the
+   *              48 px screen-slack fallback) before the SET reports the
+   *              target LIVE — proven at the sword unit, whose target is a
+   *              walk away when the unit enters.
+   *   [ux-first] the opening heading (A6) waits for the click its own hint
+   *              asks for: no self-advance at 3.4 s, click advances,
+   *              30 s soft-fail carries a reader who never clicks.
+   *   [ux-tap]   two taps 0.1 s apart spend ONE unit (the 250 ms debounce),
+   *              and a tap 0.4 s later still lands.
+   *   [ux-swipe] a pointerup > 24 px from its pointerdown is a drag/scroll,
+   *              not a tap — no advance; a clean tap after it still lands.
+   * (The A7 pour-on-release law is exercised in the read itself:
+   * doBowlRelease.) */
+  {
+    /* [ux-live] pre-live: ring dark, anchor click refused.
+       THE PRE-LIVE WINDOW ONLY EXISTS ON THE READER'S OWN PATH: a harness
+       jump replays the leaf settled and the first step SNAPS every actor to
+       his mark (state.snap), so a goto('sword') always lands live. The gate
+       therefore enters the sword unit the way a reader does — land on
+       firstmeal, wait out its seize seg, CLICK — and catches Ulysses still
+       walking to sword-ulysses. */
+    await page.evaluate(async () => await window.__gotoUnit('firstmeal'));
+    await T(6.3);                        // the seize seg (segHold 6.0) plays out
+    await click();                       // the reader's advance INTO the gate
+    await T(0.4);                        // past the tap debounce; walk ~1.5 s
+    await page.evaluate(() => window.__renderNow());   // stepTarget judges NOW
+    const pre = await st();
+    if (!(pre.unit && pre.unit.key === 'sword')) {
+      bad(`[ux-live] the walk-in did not land on the sword unit (at ${pre.unit && pre.unit.key})`);
+    }
+    const ringPre = await page.evaluate(() => ({
+      on: document.getElementById('target').classList.contains('on'),
+      op: +getComputedStyle(document.getElementById('target')).opacity,
+    }));
+    const preHit = await page.evaluate(() => window.__gateClick());
+    const preQ = await st();
+    if (pre.gate.live === true) {
+      bad('[ux-live] the sword target reports LIVE at unit entry — the pre-live ' +
+          'window is gone and this gate proves nothing (did the staging change?)');
+    }
+    if (ringPre.on || ringPre.op > 0.01) {
+      bad(`[ux-live] the ring is up before the set reports the target live ` +
+          `(on=${ringPre.on}, opacity=${ringPre.op})`);
+    }
+    if (preHit.ok || preQ.i !== pre.i || preQ.gate.resolved) {
+      bad(`[ux-live] a click ON THE ANCHOR advanced a not-live gate ` +
+          `(ok=${preHit.ok}, i ${pre.i} -> ${preQ.i}, resolved=${preQ.gate.resolved}) ` +
+          `— the 48 px fallback is answering for a target that is not there`);
+    }
+    /* …then it arms: ring lit, the same click lands */
+    let armed = preQ;
+    for (let i = 0; i < 12 && armed.gate.live !== true; i++) {
+      await T(0.4); armed = await st();
+    }
+    await page.evaluate(() => window.__renderNow());
+    const ringOn = await page.evaluate(() => ({
+      on: document.getElementById('target').classList.contains('on'),
+      op: +getComputedStyle(document.getElementById('target')).opacity,
+    }));
+    const hitArmed = await page.evaluate(() => window.__gateClick());
+    if (!(armed.gate.live === true && ringOn.on && hitArmed.ok)) {
+      bad(`[ux-live] the armed gate did not light and land (live=${armed.gate.live}, ` +
+          `ring on=${ringOn.on}/op=${ringOn.op}, hit ok=${hitArmed.ok})`);
+    } else {
+      note(`[ux-live] sword: ring dark + anchor click refused pre-live; ring lit ` +
+           `(op ${ringOn.op}) + click landed once the set reported the target live`);
+    }
+
+    /* [ux-first] the opening heading waits (A6) */
+    await page.evaluate(async () => await window.__gotoUnit(0));
+    const h0 = await st();
+    await T(5.0);                        // over the old 3.4 s auto dwell
+    const h1 = await st();
+    if (h1.i !== h0.i) {
+      bad(`[ux-first] the opening heading advanced ITSELF inside 5 s ` +
+          `(i ${h0.i} -> ${h1.i}) — A6 says it waits for the reader's click`);
+    }
+    await T(26);                         // …to past the 30 s soft-fail line
+    const h2 = await st();
+    if (!(h2.i === h0.i + 1 && h2.softFails > h0.softFails)) {
+      bad(`[ux-first] the 30 s soft-fail did not carry the heading ` +
+          `(i ${h1.i} -> ${h2.i}, softFails ${h0.softFails} -> ${h2.softFails})`);
+    }
+    await page.evaluate(async () => await window.__gotoUnit(0));
+    await T(1.0);
+    await click();
+    const h3 = await st();
+    if (h3.i !== 1) {
+      bad(`[ux-first] a click did not advance the heading (i -> ${h3.i})`);
+    }
+    if (h1.i === h0.i && h2.i === h0.i + 1 && h3.i === 1) {
+      note('[ux-first] the opening heading waited 5 s, soft-failed at 30 s, ' +
+           'and advanced on the click its hint asks for');
+    }
+
+    /* [ux-tap] two taps 0.1 s apart spend ONE unit */
+    await page.evaluate(async () => await window.__gotoUnit('troy'));
+    await T(1.0);
+    const t0q = await st();
+    await click();
+    await T(0.1);
+    await click();                       // the double-tap's second half
+    const t1q = await st();
+    if (t1q.i !== t0q.i + 1) {
+      bad(`[ux-tap] two taps 0.1 s apart advanced ${t1q.i - t0q.i} units (law: ONE ` +
+          `— the 250 ms debounce)`);
+    }
+    await T(0.4);
+    await click();                       // …and a real second tap still lands
+    const t2q = await st();
+    if (t2q.i !== t0q.i + 2) {
+      bad(`[ux-tap] a tap 0.4 s after the last advance was eaten (i ${t1q.i} -> ${t2q.i})`);
+    }
+    if (t1q.i === t0q.i + 1 && t2q.i === t0q.i + 2) {
+      note('[ux-tap] a double-tap (0.1 s apart) spent ONE unit; a 0.4 s tap landed');
+    }
+
+    /* [ux-swipe] a travelled pointerup is a scroll attempt, not a tap */
+    await page.evaluate(async () => await window.__gotoUnit('troy'));
+    await T(1.0);
+    const s0q = await st();
+    await page.evaluate(() => {
+      document.dispatchEvent(new PointerEvent('pointerdown',
+        { clientX: 500, clientY: 300, bubbles: true }));
+      window.dispatchEvent(new PointerEvent('pointerup',
+        { clientX: 540, clientY: 300, bubbles: true }));
+    });
+    const s1q = await st();
+    if (s1q.i !== s0q.i) {
+      bad(`[ux-swipe] a 40 px swipe ADVANCED the page (i ${s0q.i} -> ${s1q.i})`);
+    }
+    await T(0.4);
+    await page.evaluate(() => {
+      document.dispatchEvent(new PointerEvent('pointerdown',
+        { clientX: 500, clientY: 300, bubbles: true }));
+      window.dispatchEvent(new PointerEvent('pointerup',
+        { clientX: 502, clientY: 301, bubbles: true }));
+    });
+    const s2q = await st();
+    if (s2q.i !== s0q.i + 1) {
+      bad(`[ux-swipe] a clean tap after the swipe did not land (i ${s1q.i} -> ${s2q.i})`);
+    }
+    if (s1q.i === s0q.i && s2q.i === s0q.i + 1) {
+      note('[ux-swipe] a 40 px drag was refused; a 2 px tap landed');
+    }
   }
 
   /* ---- 7. portrait: the same dead-band law, the cropped frame ------------ */
@@ -3493,6 +4220,67 @@ async function main() {
     }
   }
 
+  /* ---- 9.62 THE STANCE-FOOT LOCK (weight lane) ---------------------------- *
+   * While a PLANT cell of the giant strip held across consecutive fixed
+   * steps, the rendered foot's screen x may drift <= 1.0 css px across the
+   * WHOLE hold — the stance-lock profile's ground truth: a plant is a
+   * plant. No held plant probed = the profile (or the probe) is gone. */
+  if (!lockEv.holds) {
+    bad('[stance-lock] no held plant cell was ever probed on the giant — ' +
+        'the stance-lock profile (or the walk probes) did not run');
+  } else if (lockEv.worst > PLANT_DRIFT_MAX) {
+    bad(`[stance-lock] the giant's planted foot drifted ${lockEv.worst.toFixed(2)} ` +
+        `css px across a held plant cell at ${lockEv.worstAt} ` +
+        `(law <= ${PLANT_DRIFT_MAX} — the plant cells ${lockEv.plants.join('/')} own the floor)`);
+  } else {
+    note(`[stance-lock] giant: ${lockEv.holds} held-plant pairs (cells ` +
+         `${lockEv.plants.join('/')}), worst whole-hold drift ` +
+         `${lockEv.worst.toFixed(3)} css px (<= ${PLANT_DRIFT_MAX})`);
+  }
+
+  /* ---- 9.63 THE BRIDGE RATE GATE (weight lane) ---------------------------- *
+   * Across every single-stepped bridge tick (the seize and the collapse,
+   * their plays walked whole), no frame advanced more than ONE cell per
+   * fixed step — the one-frame pose teleport is structurally gone. */
+  if (!bridgeStepEv.ticks) {
+    bad('[bridge-step] no bridge was ever single-stepped — the probes did not run');
+  } else if (bridgeStepEv.worstStep > BRIDGE_STEP_MAX) {
+    bad(`[bridge-step] a bridge advanced ${bridgeStepEv.worstStep} cells in one ` +
+        `fixed step at ${bridgeStepEv.worstAt} (law <= ${BRIDGE_STEP_MAX} — ` +
+        'the rate gate is off)');
+  } else {
+    note(`[bridge-step] ${bridgeStepEv.ticks} single-stepped bridge ticks, ` +
+         `max advance ${bridgeStepEv.worstStep} cell/step (<= ${BRIDGE_STEP_MAX})`);
+  }
+
+  /* ---- 9.64 THE RAM-STREAM DEPARTURES (weight lane) ------------------------ *
+   * The dawn walkers' first live sample each, off the dawn5 probe's marks:
+   * >= 3 distinct departure beats (>= 0.1 s apart) or the stream is a
+   * conveyor again. */
+  const ramDep = [];
+  {
+    for (let i = 0; i < 5; i++) {
+      const ev = gaitEv['dawn5:ram' + i];
+      const at = ev ? ev.pts.findIndex((p) => p) : -1;
+      if (at >= 0) ramDep.push({ ram: i, sample: at });
+    }
+    const beats = ramDep.map((d) => d.sample).sort((a, b) => a - b);
+    let distinct = beats.length ? 1 : 0;
+    for (let i = 1; i < beats.length; i++) {
+      if (beats[i] - beats[i - 1] >= 3) distinct++;   // 3 samples = 0.1 s apart
+    }
+    if (ramDep.length < 5) {
+      bad(`[ram-stream] only ${ramDep.length}/5 dawn walkers were ever seen ` +
+          'departing — the stream (or its probe) did not run whole');
+    } else if (distinct < RAM_DEPART_MIN) {
+      bad(`[ram-stream] the stream leaves as a conveyor — ${distinct} distinct ` +
+          `departure beats (law >= ${RAM_DEPART_MIN}; samples ${beats.join(', ')})`);
+    } else {
+      note(`[ram-stream] ${distinct} distinct departure beats across 5 walkers ` +
+           `(30 fps samples ${beats.join(', ')} — law >= ${RAM_DEPART_MIN})`);
+    }
+  }
+
   /* ---- 9.65 THE GAIT LAW (LANE PHYSICS, explore-physics.md adopted) ------- *
    * Per adopted walk, the 30 fps mark-velocity series the motion probes
    * recorded, held to the audit's own numbers (audit-motion.md):
@@ -3599,8 +4387,15 @@ async function main() {
       continue;
     }
     const fails = [];
-    if (!(gs.cv >= GAIT_CV_MIN)) {
-      fails.push(`CV ${(gs.cv * 100).toFixed(1)}% < ${GAIT_CV_MIN * 100}% — no step pulse`);
+    /* [giant-weight] the weight lane's own depth at the giant's gated walks:
+       the stance-lock profile must read as heavy cadence (plant, surge,
+       plant), not as a shade on a glide — std/mean >= 0.25 there */
+    const cvMin = id === 'g' && (unit === 'return2' || unit === 'return3')
+      ? GIANT_CV_MIN : GAIT_CV_MIN;
+    if (!(gs.cv >= cvMin)) {
+      fails.push(`CV ${(gs.cv * 100).toFixed(1)}% < ${cvMin * 100}% — ` +
+                 (cvMin === GIANT_CV_MIN ? 'no weight in the cadence (the giant-weight law)'
+                                         : 'no step pulse'));
     }
     /* the % law with an absolute floor: a |dv| at or under STRIDE_MIN_SPEED
        (6 plate px/s — the book's own "below this is standing"), or under
@@ -3720,7 +4515,7 @@ async function main() {
     ms: Date.now() - t0,
     units: { total: units.length, entered: seen.length, order: seen },
     beats: beats.map((b) => ({ ...b, entered: beatsSeen[b.n] || 0 })),
-    gates, turns, latchProof, restProof, releaseProof,
+    gates, turns, latchProof, restProof, releaseProof, bowlReleaseProof,
     heads, meals: meals.map(({ frame, ...m }) => m),
     facts, cameoLog, sprawl: sprawlLedger, insetStuck,
     deadBands: bandRows.slice(0, 14), limit: LANDSCAPE_MAX,
@@ -3734,6 +4529,13 @@ async function main() {
       frames: e.frames, worst: +e.worst.toFixed(2), at: e.at,
     }])),
     drinkPlays: drinkPlaysSeen, hurlDone: hurlDoneSeen,
+    /* the weight lane's own evidence */
+    stanceLock: { holds: lockEv.holds, worst: +lockEv.worst.toFixed(3),
+                  worstAt: lockEv.worstAt, plants: lockEv.plants,
+                  max: PLANT_DRIFT_MAX },
+    bridgeStep: { ticks: bridgeStepEv.ticks, worst: bridgeStepEv.worstStep,
+                  worstAt: bridgeStepEv.worstAt, max: BRIDGE_STEP_MAX },
+    ramDepartures: ramDep,
     skate: Object.fromEntries(SKATE_FAMS.map((k) => [k, {
       samples: skateEv[k].samples, pairs: skateEv[k].pairs,
       worst: +skateEv[k].worst.toFixed(3), worstAt: skateEv[k].worstAt,

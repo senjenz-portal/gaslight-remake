@@ -394,5 +394,17 @@
    208,
    658
   ]
+ },
+ "prop-altar": {
+  "file": "assets/actor/prop-altar.png",
+  "px": [
+   690,
+   544
+  ],
+  "baseline": 532,
+  "pin": [
+   335,
+   532
+  ]
  }
 }

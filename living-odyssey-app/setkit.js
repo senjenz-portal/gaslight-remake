@@ -70,7 +70,8 @@ export function placeSprite(node, art, at, h, { frame = 0, flip = false, scale =
  *   at     [x, y] in plate px — where the FEET are
  *   hPx    drawn foot-baseline height in plate px
  */
-export function placeStrip(node, strip, at, hPx, frame, { flip = false, bob = 0 } = {}) {
+export function placeStrip(node, strip, at, hPx, frame,
+                           { flip = false, bob = 0, rot = 0, sy = 1 } = {}) {
   const ws = hPx / strip.srcH;
   const cw = strip.cell[0] * ws, ch = strip.cell[1] * ws;
   const ax = strip.anchors[frame] * ws;
@@ -85,10 +86,15 @@ export function placeStrip(node, strip, at, hPx, frame, { flip = false, bob = 0 
      strip box — translateY about the foot origin, so flip still cannot move
      the feet by construction. The set declares the same bob in its strip
      proof (the mark it hands the lap is bob-shifted), so the anchor law
-     measures the residual, not the intended breath. */
+     measures the residual, not the intended breath. THE WEIGHT LANE adds
+     `rot` (torso lag, a degree or so of lean about the foot origin) and
+     `sy` (impact squash) — both turn/scale about the SAME origin, so like
+     flip they cannot move the foot by construction, and both are DECLARED
+     to stripProof, which unwinds them from the rendered AABB exactly. */
   const tf = (bob ? `translateY(${bob.toFixed(2)}px)` : '') +
-             (flip ? (bob ? ' ' : '') + 'scaleX(-1)' : '');
-  node.style.transform = tf || 'none';
+             (rot ? ` rotate(${rot.toFixed(3)}deg)` : '') +
+             (flip || sy !== 1 ? ` scale(${flip ? -1 : 1}, ${sy.toFixed(5)})` : '');
+  node.style.transform = tf.trim() || 'none';
   return { w: cw, h: ch, ax };
 }
 
@@ -139,6 +145,38 @@ export function gaitProfile(strip, { dip = 0.38, res = 8 } = {}) {
   return { n, res, plants, pulse, bob };
 }
 
+/**
+ * THE STANCE-LOCK PROFILE (the weight lane, gaitProfile's heavier sibling):
+ * a speed table that is ZERO through each PLANT CELL — the whole cell the
+ * registry's anchors call a foot strike — with LINEAR ramps of `ramp` cells
+ * either side and a flat swing between, normalised to mean 1. Driven by a
+ * phase clock (cells advance with time), the mark then stands STILL while a
+ * plant cell holds the picture — the planted foot cannot skate because the
+ * ground does not move under it — and the stride's ground is banked into
+ * the swing cells. Linear ramps on purpose: a cosine knee's peak slope is
+ * pi/2 of the mean and breaks the one-frame speed law at 30 fps sampling.
+ * Mean 1 keeps the phase clock and the ground clock in step every cycle.
+ */
+export function gaitLockProfile(strip, { ramp = 0.7, res = 8 } = {}) {
+  const base = gaitProfile(strip, { res });        // plants + bob, unchanged
+  const { n, plants } = base;
+  const N = n * res, pulse = new Float32Array(N);
+  let mean = 0;
+  for (let k = 0; k < N; k++) {
+    const phi = k / res;
+    let d = n;                     // distance OUTSIDE the nearest plant cell
+    for (const p of plants) {
+      const rel = (((phi - p) % n) + n) % n;       // 0..n past the cell head
+      d = Math.min(d, rel < 1 ? 0 : Math.min(rel - 1, n - rel));
+    }
+    pulse[k] = Math.min(1, d / ramp);
+    mean += pulse[k];
+  }
+  mean /= N;
+  for (let k = 0; k < N; k++) pulse[k] /= mean;
+  return { ...base, pulse, lock: 1, ramp };
+}
+
 /** table lookup at continuous frame-phase phi (wraps) */
 export const gaitAt = (G, table, phi) => {
   const k = Math.floor((((phi % G.n) + G.n) % G.n) * G.res);
@@ -185,6 +223,26 @@ export function stripPxPerFrame(strip, stridePx) {
  */
 export const bridgeFrame = (strip, k) =>
   Math.min(strip.n - 1, Math.floor(clamp01(k) * strip.n));
+
+/**
+ * A BRIDGE RETIME (the weight lane): a bridge's ten cells are rarely ten
+ * equal beats — the seedance chains compress anticipation into one cell
+ * seam and spread the settle across three — so a bridge may declare per-cell
+ * WEIGHTS and drive bridgeFrame through this warp: k in [0,1] spends
+ * weights[i] of itself inside cell i and returns the continuous warped
+ * phase u in [0,1] (monotone by construction — a warp cannot ping-pong).
+ */
+export function bridgeWarp(weights) {
+  const cum = [0];
+  for (const w of weights) cum.push(cum[cum.length - 1] + w);
+  const total = cum[cum.length - 1], n = weights.length;
+  return (k) => {
+    const t = clamp01(k) * total;
+    let i = 0;
+    while (i < n - 1 && t > cum[i + 1]) i++;
+    return (i + (weights[i] > 0 ? clamp01((t - cum[i]) / weights[i]) : 1)) / n;
+  };
+}
 
 /** LOOP MODE, for kind:'loop' strips: the verb's own clock over the loop's
  *  period — a pure function of t, so a replayed lap lands on the same cell. */
@@ -305,13 +363,32 @@ export function walkToward2(P, tx, ty, lambda, vmax, dt,
  * foot may move only at the walk's own honest ground speed.
  * Returns { frame, anchor, foot, dx, dy } or null while the node is dark.
  */
-export function stripProof(st, node, strip, frame, at, flip) {
+export function stripProof(st, node, strip, frame, at, flip, dec = {}) {
   const r = node.getBoundingClientRect();
   if (!r.width || !r.height) return null;
   const a = st.toPlate(r.left, r.top), b = st.toPlate(r.right, r.bottom);
-  const axk = strip.anchors[frame] / strip.cell[0];
-  const fx = a.x + (b.x - a.x) * (flip ? 1 - axk : axk);
-  const fy = a.y + (b.y - a.y) * (strip.srcH / strip.cell[1]);
+  /* the foot origin's fraction of the drawn AABB under the transform the
+     set DECLARED (flip / torso-lag rot / squash sy, all about the foot
+     origin — placeStrip's own order). At rot 0 / sy 1 this is byte-for-byte
+     the old anchors fraction; under them it is EXACT, so the proof still
+     measures the transform's residual, never its declared intent. */
+  const rot = dec.rot || 0, sy = dec.sy == null ? 1 : dec.sy;
+  const ax = strip.anchors[frame], ay = strip.srcH;
+  const th = rot * Math.PI / 180, c = Math.cos(th), s = Math.sin(th);
+  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  for (const [cx, cy] of [[0, 0], [strip.cell[0], 0],
+                          [0, strip.cell[1]], [strip.cell[0], strip.cell[1]]]) {
+    let x = cx - ax;
+    const y = (cy - ay) * sy;
+    if (flip) x = -x;
+    const xr = x * c - y * s, yr = x * s + y * c;
+    if (xr < x0) x0 = xr;
+    if (xr > x1) x1 = xr;
+    if (yr < y0) y0 = yr;
+    if (yr > y1) y1 = yr;
+  }
+  const fx = a.x + (b.x - a.x) * (-x0 / (x1 - x0));
+  const fy = a.y + (b.y - a.y) * (-y0 / (y1 - y0));
   return { frame, anchor: strip.anchors[frame],
            foot: [+fx.toFixed(2), +fy.toFixed(2)],
            dx: +(fx - at[0]).toFixed(2), dy: +(fy - at[1]).toFixed(2) };

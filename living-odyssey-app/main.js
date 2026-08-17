@@ -20,17 +20,32 @@
  *   clock         Beat VI is the one stretch of the book that is not click-
  *                 paced: after the reader's throw the camera owns the frame and
  *                 five units arrive on the beat's own timeline (sec 6.6).
- *   release       AMENDMENT 2026-08-16 — one unit (VI.7, the self-naming) is
- *                 paced by the reader's LET-GO: press-and-hold draws the
- *                 breath, releasing past the 0.6 s threshold fires the shout
- *                 and the story advances ON the release frame.
+ *   release       AMENDMENT 2026-08-16 — the self-naming (VI.7) is paced by
+ *                 the reader's LET-GO: press-and-hold draws the breath,
+ *                 releasing past the 0.6 s threshold fires the shout and the
+ *                 story advances ON the release frame. AMENDMENT A7
+ *                 (2026-08-17): the first wine pour (III.8) is the book's
+ *                 second release — the fill BANKS on the hold (rest kept),
+ *                 the POUR fires on the pointerup, per the contract's own
+ *                 "each release drained" (CONTENT-odyssey.md O.7).
  *   rest          AMENDMENT 2026-08-16 — the two big holds (G3 bowl, G4
  *                 embers) carry `rest: true`: a released hold keeps its
- *                 progress and resumes on re-press. Rest is allowed.
+ *                 progress and resumes on re-press. Rest is allowed. (G3 is
+ *                 a release verb now; its rest law is unchanged — an
+ *                 under-threshold let-go banks the fill.)
  *   soft-fail     every gate self-satisfies after 30 s, and every click-paced
  *                 unit in beats II-VII advances itself (sec 2.6). No gate is a
  *                 wall. BEAT I IS EXCLUDED: it shipped without soft-fail and
- *                 stays byte-identical.
+ *                 stays byte-identical — EXCEPT its heading (AMENDMENT A6,
+ *                 2026-08-17): the opening head unit is ours, it WAITS for
+ *                 the reader's first click instead of pacing itself, and the
+ *                 30 s soft-fail is what carries a reader who never clicks.
+ *   ux honesty    2026-08-17 (external review): target rings neither show
+ *                 nor accept hits before the SET reports the target live
+ *                 (incl. the 48 px screen-slack fallback); a tap within
+ *                 250 ms of the last advance is a double-tap slip and is
+ *                 ignored; a pointerup that travelled > 24 px is a
+ *                 drag/scroll, not a tap.
  *
  * LAW: nothing here reads a wall clock except `frame()`. Everything animated
  * is a pure function of STORY TIME — the sim clock minus the seconds the book
@@ -59,7 +74,18 @@ const HOLD_DECAY = 0.75;   // a released hold bleeds back at this fraction —
                            // EXCEPT units marked `rest: true` (rest is allowed:
                            // the two big holds keep their progress on release)
 const TARGET_RADIUS_PX = 48;   // screen-space slack on top of the plate radius
+                               // — honoured ONLY while the SET reports the
+                               // target LIVE (ux honesty, 2026-08-17): the
+                               // slack forgives a near miss, it must never
+                               // resolve a gate whose target is not armed yet
 const SOFT_FAIL = 30;      // sec 2.6 — no gate is a wall
+/* UX HONESTY (2026-08-17, external review): a second tap inside this window
+   is the same tap twice (a double-tap slip would spend TWO units), and a
+   pointerup that travelled further than this is a drag or a scroll attempt,
+   not a read-on. Both are ignored; both are measured on the sim clock, so
+   the laps stay deterministic. */
+const TAP_DEBOUNCE_S = 0.25;
+const DRAG_REJECT_PX = 24;
 /* HESITATION MEMORY (AMENDMENT A2): at `defy` — the reader's SECOND click on
    the Cyclops, the contract's own "the reader chooses the hubris" — the book
    remembers how long the reader held the choice open: story seconds from the
@@ -158,6 +184,7 @@ const S = {
   finished: false, advances: 0, nudges: 0, visited: new Set(),
   ready: false, renders: 0, hinted: true,
   latch: false, latched: 0, softFails: 0, clockHeld: false, stall: 0,
+  lastAdv: -1e9,   // sim time of the last advance — the tap debounce reads it
   ded: { shown: false, skipped: false, name: '', hash: 0 },
   hesit: null,   // AMENDMENT A2 — seconds the reader held the `defy` choice open
 };
@@ -315,6 +342,7 @@ function advance() {
     return false;
   }
   const next = S.i + 1;
+  S.lastAdv = clock.t;   // the tap-debounce anchor (ux honesty, 2026-08-17)
   audio.cue('click');
   if (next >= UNITS.length || S.unit.endsBook) { startEnding(); return false; }
   S.advances++;
@@ -514,18 +542,14 @@ function stepHold(dt) {
      the progress it earned — no decay, no reset — and resumes on re-press.
      Everything the k carries (the bowl's fill, the ember glow, the ring's
      arc) persists with it, because they are all functions of this k.
-     A released RELEASE verb, by contrast, is a stray click letting its
-     drawn breath subside — that one decays. */
+     A released RELEASE verb without `rest` (myname) is a stray click
+     letting its drawn breath subside — that one decays; the bowl's release
+     carries `rest: true` and BANKS its fill between presses (A7). */
   else if (!H.resolved && !u.rest) H.k = Math.max(0, H.k - dt * per * HOLD_DECAY);
 
   /* full k RESOLVES a hold; a RELEASE resolves on the pointerup instead —
      k >= 1 there means only "the threshold is banked, let go when ready" */
-  if (u.verb === 'hold' && !H.resolved && H.k >= 1) {
-    H.resolved = true;
-    stage.setReveal(u.reveal || null, 1);
-    audio.cue('reveal');
-    margin.cue(CUE_DEFAULT.click);
-  }
+  if (u.verb === 'hold' && !H.resolved && H.k >= 1) resolveHold(u);
   const shown = H.resolved ? 1 : H.k;
   stage.setHold(shown);
   // "the watermark plate resolves IN PROPORTION to the reader's hold" — so the
@@ -548,6 +572,16 @@ function stepTarget(t, dt) {
     targetEl.classList.remove('on', 'miss');
     return;
   }
+  /* THE RING ARMS WITH THE SET (ux honesty, 2026-08-17): a gate unit can
+     enter before its target exists on stage — the sword's mark is a walk
+     away when the unit arrives — and the shipped ring stood lit over the
+     walk, promising a click the set would refuse. The SET owns liveness
+     (targetLive), so the ring is dark until the set says the target is
+     there to be clicked. */
+  if (!stage.targetLive(u.target)) {
+    targetEl.classList.remove('on', 'miss');
+    return;
+  }
   const a = stage.targetPlate(u.target);
   const p = stage.toScreen(a[0], a[1]);
   targetEl.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px)`;
@@ -561,6 +595,12 @@ function stepTarget(t, dt) {
 }
 
 function hitsTarget(name, px, py) {
+  /* NOT LIVE = NOT HITTABLE (ux honesty, 2026-08-17). The sets already
+     refuse targetHit on a dead target, but the 48 px screen-slack fallback
+     below did not ask — so a click on the anchor point resolved the sword
+     gate while Ulysses was still walking to it. The liveness check guards
+     BOTH paths now. */
+  if (!stage.targetLive(name)) return false;
   if (stage.targetHit(name, px, py)) return true;
   const a = stage.targetPlate(name);
   const p = stage.toScreen(a[0], a[1]);
@@ -569,6 +609,8 @@ function hitsTarget(name, px, py) {
 
 function resolveGate(u, { soft = false } = {}) {
   S.gate.resolved = true;
+  S.lastAdv = clock.t;   // a resolution IS an advance for the tap debounce —
+                         // the clock-held path below never reaches advance()
   /* HESITATION MEMORY (AMENDMENT A2): the defy gate armed when its unit was
      entered (S.unitT is that unit's own story clock, cover time excluded), and
      it resolves HERE — reader's click or the 30 s soft-fail alike. The number
@@ -610,6 +652,38 @@ function tryGate(px, py) {
  * than the threshold is a stray click: it still reads as a beat (the swell
  * subsides in stepHold) and the page holds. Soft-fail auto-releases at 30 s
  * (sec 2.6), like every other gate. */
+/** THE HOLD VERB'S RESOLUTION, one path for both ways it can happen.
+ *  The reader's press drives k to 1 in stepHold — that is the natural way —
+ *  and the 30 s soft-fail (sec 2.6) is the other. The soft way was the
+ *  DEADLOCK the review caught: the generic soft-fail branch called advance()
+ *  every step, and advance() refuses a hold that has not resolved, so a
+ *  reader who never pressed was walled forever on `lookhere`/`embers` while
+ *  softFails counted up each sim step. No gate is a wall: the soft-fail
+ *  RESOLVES the hold — fills k to 1 THROUGH stage.setHold (the carrier
+ *  reaches full, so the embers' blinding clock latches exactly as a real
+ *  press latches it — without that, `auger`'s verb:'clock' unit never
+ *  arrives and the wall just moves one unit down; since A7 the bowl is a
+ *  RELEASE verb and its soft path is resolveRelease -> the bowl-pour act),
+ *  fires the whole resolution path (reveal, cue, gateAct/gateSfx if the unit
+ *  carries them), exactly once — the resolved flag is the guard — and then
+ *  advances. */
+function resolveHold(u, { soft = false } = {}) {
+  if (S.hold.resolved) return false;
+  S.hold.resolved = true;
+  if (soft) {
+    S.hold.pressing = false;
+    S.hold.k = 1;
+    stage.setHold(1);            // the carrier reaches full: pour-1 / the drive
+  }
+  stage.setReveal(u.reveal || null, 1);
+  audio.cue('reveal');
+  margin.cue(CUE_DEFAULT.click);
+  if (u.gateAct) stage.fire(u.gateAct);
+  if (u.gateSfx) audio.cue(u.gateSfx);
+  if (soft) { S.softFails++; advance(); }
+  return true;
+}
+
 function resolveRelease(u, { soft = false } = {}) {
   if (S.hold.resolved) return false;
   S.hold.resolved = true;
@@ -678,12 +752,22 @@ function step(dt) {
   if (S.latch && quiet && canAdvance()) { S.latch = false; advance(); }
 
   /* SOFT-FAIL (sec 2.6): no gate is a wall, and no line is either. Beat I is
-     excluded — it shipped without this and stays byte-identical. */
-  if (quiet && u && (u.beat || 1) >= 2) {
+     excluded — it shipped without this and stays byte-identical — EXCEPT its
+     heading (AMENDMENT A6): headings are ours, the opening head now WAITS
+     for the reader's first click, and this clause is what carries a reader
+     who never gives one. `u.head` marks the five head units; only Beat I's
+     gains anything here (beats 2+ were already covered). */
+  if (quiet && u && ((u.beat || 1) >= 2 || u.head)) {
     const limit = u.verb === 'target' ? SOFT_FAIL : Math.min(SOFT_FAIL, u.dwell || SOFT_FAIL);
     if (S.unitT >= limit) {
       if (u.verb === 'target' && !S.gate.resolved) resolveGate(u, { soft: true });
       else if (u.verb === 'release' && !S.hold.resolved) resolveRelease(u, { soft: true });
+      /* the HOLD verb resolves the same soft way the release does — through
+         its own resolution path, never through the generic advance() below,
+         which refuses an unresolved hold and would loop forever (the
+         lookhere/embers deadlock). Both resolvers guard on hold.resolved, so
+         the soft resolution fires exactly once. */
+      else if (u.verb === 'hold' && !S.hold.resolved) resolveHold(u, { soft: true });
       else if (u.verb !== 'clock' && u.verb !== 'auto') { S.softFails++; advance(); }
     }
   }
@@ -728,11 +812,16 @@ function firstGesture() {
   if (S.unit && S.unit.bed) audio.bed(S.unit.bed);
 }
 
-const ptr = { x: 0, y: 0 };
+const ptr = { x: 0, y: 0, dnX: null, dnY: null };
 
 function pressDown(ev) {
   firstGesture();
-  if (ev && ev.clientX !== undefined) { ptr.x = ev.clientX; ptr.y = ev.clientY; }
+  if (ev && ev.clientX !== undefined) {
+    ptr.x = ev.clientX; ptr.y = ev.clientY;
+    ptr.dnX = ev.clientX; ptr.dnY = ev.clientY;   // the swipe rejection's anchor
+  } else {
+    ptr.dnX = null; ptr.dnY = null;               // keyboard/harness: no travel
+  }
   if (S.turn.active || S.end.active) return;
   if (S.unit && (S.unit.verb === 'hold' || S.unit.verb === 'release') && !S.hold.resolved) {
     S.hold.pressing = true; S.hold.wasPress = true;
@@ -741,7 +830,7 @@ function pressDown(ev) {
   }
 }
 
-function pressUp() {
+function pressUp(ev) {
   const wasHoldPress = S.hold.wasPress;
   S.hold.pressing = false;
   S.hold.wasPress = false;
@@ -749,12 +838,25 @@ function pressUp() {
   if (wasHoldPress) {
     /* the release verb RESOLVES on the pointerup — this frame, not the next
        sim step — when the drawn breath crossed the threshold (k banked at 1).
-       Under it, nothing: the stray click's swell subsides and the page holds. */
+       Under it, nothing: the stray click's swell subsides and the page holds
+       (and on a `rest: true` release — the bowl — the banked k persists). */
     if (S.unit && S.unit.verb === 'release' && !S.hold.resolved && S.hold.k >= 1) {
       resolveRelease(S.unit);
     }
     return;
   }
+  /* SWIPE REJECTION (ux honesty, 2026-08-17): a pointerup that travelled
+     more than DRAG_REJECT_PX from its own pointerdown is a drag or a scroll
+     attempt, not a tap — it neither advances nor counts a gate miss.
+     Keyboard and harness paths carry no travel and are exempt. */
+  if (ev && ev.clientX !== undefined && ptr.dnX !== null &&
+      Math.hypot(ev.clientX - ptr.dnX, ev.clientY - ptr.dnY) > DRAG_REJECT_PX) {
+    return;
+  }
+  /* TAP DEBOUNCE (ux honesty, 2026-08-17): a tap within TAP_DEBOUNCE_S of
+     the last advance is the same tap arriving twice — a double-tap must
+     spend ONE unit, and the sim clock (not the wall) is what measures it. */
+  if (clock.t - S.lastAdv < TAP_DEBOUNCE_S) return;
   if (S.unit && S.unit.verb === 'target' && !S.gate.resolved) { tryGate(ptr.x, ptr.y); return; }
   advance();
 }

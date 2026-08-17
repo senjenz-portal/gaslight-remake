@@ -204,6 +204,38 @@ BAKE = [
     dict(set="sea", cut="prop-splash", plate="set/sea/sea.jpg",
          state="master", mark=(455, 540), h=76, flip=False, **CAVE_SEA,
          why="the plume at SPLASH2, h = SPLASH_H 76"),
+
+    # -------- sea: THE RETURN TABLEAU (§3.4, 2026-08-17) -------------------
+    # These cuts stand on the island-beach band (set/sea/sea-beach.png), so
+    # their rings are sampled off the master WITH the band composited at its
+    # layer box (beach=True below) — grading a beach body against the navy
+    # underside the band covers would be grading against pixels the reader
+    # never sees. Foreground band scale 19 px/m (sea.js BEACH.pxPerM); the
+    # altar-side bodies take their rim off the authored thigh-fire's anchor.
+    dict(set="sea", cut="prop-altar", plate="set/sea/sea.jpg", beach=True,
+         state="beach", mark=(330, 668), h=26, flip=False, light=None,
+         reach=None,
+         why="the driftwood altar (u13) — itself the fire's stand, no rim"),
+    dict(set="sea", cut="ram-great", plate="set/sea/sea.jpg", beach=True,
+         state="beach", mark=(392, 700), h=34, flip=False,
+         light=(330, 646), reach=60,
+         why="the great ram AT the altar (u13); rim off the thigh-fire"),
+    dict(set="sea", cut="ram-walk", plate="set/sea/sea.jpg", beach=True,
+         state="beach", mark=(505, 720), h=24, flip=False, light=None,
+         reach=None,
+         why="the flock ashore (c7), three instances off one cut"),
+    dict(set="sea", cut="crew-a-stand", plate="set/sea/sea.jpg", beach=True,
+         state="beach", mark=(225, 690), h=32, flip=False, light=None,
+         reach=None,
+         why="comrades ashore (c6), doubled along the sand"),
+    dict(set="sea", cut="crew-b-stand", plate="set/sea/sea.jpg", beach=True,
+         state="beach", mark=(472, 655), h=32, flip=False, light=None,
+         reach=None,
+         why="comrades ashore (c6)"),
+    dict(set="sea", cut="crew-plead", plate="set/sea/sea.jpg", beach=True,
+         state="beach", mark=(521, 684), h=32, flip=False, light=None,
+         reach=None,
+         why="the lifted-arms lament (c6), doubled"),
 ]
 
 # tools/ody/actors.json pins (grade_cut's signature wants them; the grade
@@ -224,10 +256,18 @@ def main():
     plates = {}
     for row in BAKE:
         plate_path = os.path.join(ASSETS, row["plate"])
-        if row["plate"] not in plates:
-            plates[row["plate"]] = np.asarray(
-                Image.open(plate_path).convert("RGB"))
-        plate = plates[row["plate"]]
+        # beach=True: the ring is sampled off the master WITH the return
+        # band composited at its layer box (sea.js BEACH.box y0=460) — the
+        # pixels a beach body actually stands against.
+        plate_key = row["plate"] + ("+beach" if row.get("beach") else "")
+        if plate_key not in plates:
+            im = Image.open(plate_path).convert("RGB")
+            if row.get("beach"):
+                band = Image.open(os.path.join(
+                    ASSETS, "set/sea/sea-beach.png")).convert("RGBA")
+                im.paste(band, (0, 460), band)
+            plates[plate_key] = np.asarray(im)
+        plate = plates[plate_key]
 
         src_rel = "actor/" + row["cut"] + ".png"
         src_path = os.path.join(ASSETS, src_rel)

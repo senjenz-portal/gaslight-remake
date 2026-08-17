@@ -59,10 +59,12 @@
  * HEARTH DETOUR (parkedGoal) so no stride crosses the fire ring (#2/#8).
  *
  * THE THREE HOLD/CLOCK MACHINES this set runs (ledger G3/G4 + §6.6 pattern):
- *   G3 the bowl    iii-08 `hold`: the ivy bowl FILLS in proportion to the
- *                  hold (holdAnchor rides the raised bowl at 700,441). The
- *                  full bowl is pour 1; pours 2 and 3 are pantomimed on the
- *                  bowl's own clock under the two autos that follow
+ *   G3 the bowl    iii-08 `release` (A7, was `hold`): the ivy bowl FILLS in
+ *                  proportion to the hold (holdAnchor rides the raised bowl
+ *                  at 700,441) and BANKS on a let-go (rest is allowed). The
+ *                  reader's RELEASE past the threshold fires the 'bowl-pour'
+ *                  gateAct — THAT is pour 1; pours 2 and 3 are pantomimed on
+ *                  the bowl's own clock under the two autos that follow
  *                  (ledger holds:3 — three fills, three heedless drains).
  *   G4 the embers  iv-01 `hold`: the stake tip glows IN PROPORTION to the
  *                  hold (watermark law), anchored on the measured embers
@@ -94,8 +96,9 @@
  */
 import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
          emissives, placeStrip, stripProof, stripPxPerFrame, pathLen,
-         alongPathArc, walkToward2, gaitProfile, gaitAt, gaitBobY,
-         bridgeFrame, loopFrame, gradedActor } from '../setkit.js';
+         alongPathArc, walkToward2, gaitProfile, gaitLockProfile, gaitAt,
+         gaitBobY, bridgeFrame, bridgeWarp, loopFrame, gradedActor }
+  from '../setkit.js';
 import { STRIPS } from '../strips.js';
 import { SHADOWS } from '../shadows.js';
 
@@ -423,10 +426,23 @@ const GSTRIP = {
   stroke:   { ...STRIPS['giant-stroke'],     hPx: 193, period: 1.8 },
   grope:    { ...STRIPS['giant-grope-sway'], hPx: 168, period: 2.2 },
 };
-/* the seize bridge's window inside the 6 s meal seg: play over k 0.02..0.42
- * (the same beat the old static pop landed clutch), so the O.6 sample at
- * segK 0.5 is already the static clutch, identical all three meals */
-const SEIZE_WIN = [0.02, 0.42];
+/* the seize bridge's window inside the 6 s meal seg: play over k 0.02..0.45
+ * (the same beat the old static pop landed clutch); past the window's end
+ * the bridge PARKS on its landing cell for SEIZE_PARK of the window before
+ * the static clutch takes the frame, so the swap is a held frame, not a
+ * flicker — the O.6 sample at segK 0.5 reads the parked landing cell,
+ * identical all three meals (the endpoint gate proved it against the cut).
+ * THE RETIME (animation-weight lane): the ten cells are weighted — the
+ * reach closes slowly onto the CONTACT cell (c3, where the hands close on
+ * the victims where they stand), the lift ACCELERATES away with the pair,
+ * and the landing cell holds a beat. The strip's own c2->c3 seam carries
+ * the compressed anticipation, so the contact beat is the retime's pivot. */
+const SEIZE_WIN = [0.02, 0.45];
+const SEIZE_PARK = 0.25;              // of the window, parked on the landing cell
+const SEIZE_W = [0.09, 0.10, 0.13, 0.18, 0.13, 0.10, 0.08, 0.06, 0.05, 0.08];
+const SEIZE_WARP = bridgeWarp(SEIZE_W);
+const SEIZE_CONTACT = SEIZE_W[0] + SEIZE_W[1] + SEIZE_W[2];   // bk at c3 = the beat
+                                      // the victims are HANDED OFF to the strip art
 /* the drink bridge's own window: the first 0.9 s of each drain (the reach and
  * the head-back), then the static drink cut holds the drain out */
 const DRINK_BRIDGE = 0.9;
@@ -441,6 +457,20 @@ const DRINK_BRIDGE = 0.9;
 const COLLAPSE_END = [775, 547];
 const COLLAPSE_WIN = 0.85;
 const COLLAPSE_HPX_END = 291.2;
+/* THE COLLAPSE RETIME (animation-weight lane): the chain's own seconds are
+ * nothing like uniform — srcs 1/13/25 are the slow FOLD, src 48 the drop,
+ * 71..75 the landing tumble, 96/97 the stillness — so the cells are
+ * weighted to read that way: a long fold (c0-c2, 48% of the play), the
+ * fall ACCELERATING through c3 into the c4 IMPACT, then a decelerating
+ * tumble-settle (c5-c9). The mark and the hPx stretch ride the SAME warped
+ * phase, so the body travels when the art travels. At the first impact
+ * tick the drawn strip takes a 2-frame 3.5% scaleY compression about the
+ * feet and one recoil frame — declared to the proof like the bob. */
+const COLLAPSE_W = [0.17, 0.16, 0.15, 0.07, 0.06, 0.06, 0.07, 0.08, 0.09, 0.09];
+const COLLAPSE_WARP = bridgeWarp(COLLAPSE_W);
+const COLLAPSE_IMPACT = COLLAPSE_W[0] + COLLAPSE_W[1] + COLLAPSE_W[2] +
+                        COLLAPSE_W[3];             // bk at c4's head — the landing
+const IMPACT_SQUASH = { sy: 0.965, hold: 0.067, recoil: 1.006, recoilT: 0.1 };
 /* the stride is MEASURED off the pose the frame actually moved (seg and
    damp alike); a teleport (fade-through reland, a settled snap) is not a
    stride, and a SEIZED man is dragged, not walking */
@@ -451,11 +481,15 @@ const STRIDE_TELEPORT = 40;           // plate px in one step is a re-stage
    the moving mark), so ground speed IS the skate and it is bounded like one:
    a man walks 2.0 m/s at most (86 px/s here — the damp's 2.2 x 250 px
    opening step is a 12.8 m/s sprint no feet perform), and the giant's
-   2.6 m stride at his unhurried shepherd's cadence spends 1.8 m/s (78 px/s)
-   — his strip walks are ARC-PARAMETERISED against this cap (stepGiant), so
-   a short seg cannot make him sprint; the seg simply hands him the floor a
-   beat longer. */
-const WALK_V = { man: 2.0 * SCALE.pxPerM, giant: 1.8 * SCALE.pxPerM };
+   2.6 m stride at his unhurried shepherd's cadence spends 1.45 m/s
+   (62 px/s — the weight lane's number: with the stance-lock profile the
+   whole stride's ground rides the SWING cells at 1.52x the cruise, and
+   62 x 1.52 at the flock crossings' measured 1.51 css/plate zoom is
+   2.38 css px a step, inside the 2.5 anti-skate budget; at the old 78 the
+   surge read 2.79 and skated) — his strip walks are ARC-PARAMETERISED
+   against this cap (stepGiant), so a short seg cannot make him sprint;
+   the seg simply hands him the floor a beat longer. */
+const WALK_V = { man: 2.0 * SCALE.pxPerM, giant: 1.45 * SCALE.pxPerM };
 
 /* LANE PHYSICS (Explorer D adopted — tools/ody/seamless/explore-physics.md):
  * the gait read off each strip's OWN anchors (the plant frames are the anchor
@@ -464,20 +498,32 @@ const WALK_V = { man: 2.0 * SCALE.pxPerM, giant: 1.8 * SCALE.pxPerM };
  * ON the plant and rises through the swing, and a step-synced bob. Bob
  * amplitudes ~2.4-3% of body height (the audit's real-walk band is 3-4%;
  * the burdened sliders carry a shade less). */
-/* the giant's dip is SHALLOWER (0.28 vs the default 0.38): his pulse peak
-   rides vmax x 1.19 instead of x 1.32, which keeps the planted foot's css
-   glide under the lap's anti-skate budget (2.5 css px per 1/60 step) at the
-   flock crossings' zoom while the CV still reads ~17% (law >= 15%) */
-const GAIT = { giant: gaitProfile(STRIPS['polyphemus-walk'], { dip: 0.28 }),
+/* THE GIANT'S WEIGHT (animation-weight lane; supersedes the dip-0.28 tune):
+   his profile is the STANCE-LOCK table (gaitLockProfile) — ground speed
+   ZERO through each plant cell (3 and 7, the anchors' own strikes), linear
+   0.7-cell ramps, a 1.51x swing surge, mean 1. Driven by stepGiant's twin
+   clocks the planted foot now stands STILL through the plant (the lap's
+   stance-lock gate, <= 1.0 css px drift) and the mark's velocity CV reads
+   ~0.6 (the giant-weight gate wants >= 0.25) while the swing surge at the
+   1.7 m/s cruise stays inside the 2.5 css px anti-skate budget at the
+   flock crossings' zoom. */
+const GAIT = { giant: gaitLockProfile(STRIPS['polyphemus-walk'], { ramp: 0.7 }),
                crew:  gaitProfile(STRIPS['crew-walk']),
                ram:   gaitProfile(STRIPS['ram-walk']) };
+/* the torso lag (weight lane): a shade of lean about the pinned feet, its
+   phase the BOB table read 0.4 cells (~120 ms at cruise) behind the hip —
+   mass arrives late. Declared to the proof; the foot cannot move (origin). */
+const TORSO_LAG = { deg: 1.3, phi: 0.4 };
 /* CADENCE ATTENUATION (shared law with setkit walkToward2): pulse depth
    scales with the gait cycle's own seconds — full below ~1.1 cycles/s,
    fading toward flat at sprint rates, where a full-depth pulse at 30 fps
    reads as flicker and breaks the one-frame speed law */
 const gaitAtt = (gait, ppf, v) =>
   clamp01(gait.n * ppf / (Math.max(v, 1) * 0.9));
-const BOB_AMP = { giant: 0.024 * SCALE.giantStand, crew: 0.03 * SCALE.crew,
+/* the giant's bob is HEAVIER than the stock 2.4% (weight lane: pelvis
+   compression scaled for mass — 3.2% of his 300 px stand, ±4.8 px, sunk
+   INTO each locked plant because bob and pulse share the phase clock) */
+const BOB_AMP = { giant: 0.032 * SCALE.giantStand, crew: 0.03 * SCALE.crew,
                   ram: 0.03 * RAM_H.walk, pair: 0.025 * RAM_H.pair,
                   gram: 0.024 * RAM_H.great };
 /* THE RAM-STREAM SLIDERS (audit-motion.md #1, the chapter's worst offender):
@@ -493,7 +539,21 @@ const BOB_AMP = { giant: 0.024 * SCALE.giantStand, crew: 0.03 * SCALE.crew,
 const SLUNG_V = 1.2 * SCALE.pxPerM;    // 51.6 px/s — a burdened animal's walk
 const TROT_V = 1.4 * SCALE.pxPerM;     // 60.2 px/s — v-11's own verb: he
                                        // TROTS clear once the mouth is his
-const SLUNG_SWAY = 0.55;               // deg, once per gait cycle, about the pin
+const SLUNG_SWAY = 0.8;                // deg, once per gait cycle, about the pin
+/* THE BURDEN (weight lane): a ram with a man lashed under him walks SHORTER
+   (stride x0.82 — the cadence clock ticks faster over the same ground),
+   CARRIES LOW (a constant 1.3 px sink under the step bob), and his load
+   SWINGS LATE — the sway phase reads 150 ms behind the gait clock, the
+   pendulum answering the step instead of riding it. */
+const BURDEN = { stride: 0.82, sink: 1.3, lag: 0.15 };
+/* THE DEPARTURE JITTER (weight lane): the dawn stream's walkers used to
+   leave on an even 0.07 lattice with one shared window — a conveyor. Start
+   beats and window speeds are now index-seeded per ram (deterministic,
+   byte-identical laps) — the ram-stream gate wants >= 3 distinct departure
+   beats; these five give five (0 / 1.2 / 1.8 / 3.2 / 3.7 s of the 14 s
+   escape), all landed before the seg spends itself. */
+const RAM_DEP = [0, 0.088, 0.128, 0.225, 0.264];   // of fl.dur
+const RAM_WIN = [0.60, 0.55, 0.63, 0.56, 0.60];    // eased window, per ram
 /* the slung walks' own integrator: ease-in from rest, ease-out as the path
    runs out, per-step pulse on the ram strip's plant table — phase is the
    SAME clock (arc s / pxPerFrame) that a strip walk would use */
@@ -512,11 +572,16 @@ function glideStep(g, len, vmax, dt, phase) {
   g.s = Math.min(len, g.s + v0 * pulse * dt);
   return g.s;
 }
-/* the slider's gait clock -> bob + sway for its static cut */
-function slungGait(s, phase, bobAmp) {
-  const phi = s / STRIP.ram.pxPerFrame + (phase || 0);
-  return { bob: gaitBobY(GAIT.ram, phi, bobAmp),
-           rot: SLUNG_SWAY * Math.sin(2 * Math.PI * phi / GAIT.ram.n) };
+/* the slider's gait clock -> bob + sway for its static cut. THE BURDEN
+   (weight lane): the clock ticks at the shortened stride, the carriage
+   rides `sink` px low, and the sway — the slung man's pendulum — lags the
+   step by BURDEN.lag seconds at the leg's own cruise. */
+function slungGait(s, phase, bobAmp, v = SLUNG_V) {
+  const ppf = STRIP.ram.pxPerFrame * BURDEN.stride;
+  const phi = s / ppf + (phase || 0);
+  const lagPhi = phi - BURDEN.lag * (v / ppf);
+  return { bob: gaitBobY(GAIT.ram, phi, bobAmp) + BURDEN.sink,
+           rot: SLUNG_SWAY * Math.sin(2 * Math.PI * lagPhi / GAIT.ram.n) };
 }
 
 /* place a cut by its measured pin. Returns the drawn box for the snapshot.
@@ -676,8 +741,12 @@ const WORK_CREW = [[968, 545], [938, 549]];
 
 /* ---- the giant's walk paths (all swept clear of the fire ring) -------- */
 const PATH = {
-  giantIn:   [[398, 436], [600, 412], [760, 452]],       // ii-03, under the load
-  giantOut:  [[760, 452], [640, 412], [398, 436]],       // iii-02, with the flock
+  /* the entry/exit legs ride 10 px LOWER than the first sweep (412 -> 422,
+     the weight lane's unhide): at 412 the striding feet crossed the ring's
+     far-crown band edge-on and read as part of the stones (return2 clip
+     3.10-4.10); at 422 a band of dark floor separates foot from crown. */
+  giantIn:   [[398, 436], [600, 422], [760, 452]],       // ii-03, under the load
+  giantOut:  [[760, 452], [640, 422], [398, 436]],       // iii-02, with the flock
   /* iv-11, ALONG THE WALL — literally (lap round 2, the parking law): the
      old downstage diagonal crossed the woodpile box; he now rises at the
      sprawl's FOOT end (the bulk's own footprint), rounds the fire's right
@@ -947,7 +1016,9 @@ export class CaveSet {
                walk: null },                 // { path, t0, dur, endPose }
       /* the machines */
       holdMode: null, holdK: 0,              // 'bowl' | 'embers' | null
-      pour: -1e9, pourPrev: -1,              // G3's clock (pour-1 fill instant)
+      pour: -1e9, pourPrev: -1,              // G3's clock — armed by the reader's
+                                             // RELEASE (the 'bowl-pour' gateAct,
+                                             // A7), never by the press itself
       heatArmed: -1e9,                       // G4 tableau armed (first anchor poll)
       drive: -1e9,                           // THE BLINDING CLOCK's zero
       frightDone: false, seamsSnuffed: false,
@@ -964,6 +1035,7 @@ export class CaveSet {
     };
     this.giantBridge = null;                 // { key, frame, k, at, hPx, flip }
     this.giantLoop = null;                   // { key, frame, at, hPx, flip }
+    this._bGate = null;                      // the bridge rate gate's memory
     this.uMark = null;                       // an act's own mark outranks the form
     /* presentation pose per human: where the cut IS (damped), distinct from
        where the formation wants it — the shore troupe law. The stride fields
@@ -1116,12 +1188,13 @@ export class CaveSet {
    *  ember tableau's ARMING SIGNAL: iv-01 carries no act, so the first call
    *  that arrives in embers mode is Beat IV announcing itself to the set —
    *  the stake comes out of the dung and the five gather to the fire. Full
-   *  heat fires the drive itself; a full bowl is pour 1. */
+   *  heat fires the drive itself; a full bowl only BANKS (AMENDMENT A7:
+   *  pour 1 is the reader's RELEASE — the 'bowl-pour' gateAct below — so
+   *  the drain can never begin under a still-pressed finger). */
   setHold(k) {
     const S = this.state;
     S.holdK = clamp01(k);
     if (S.holdMode === 'embers' && S.heatArmed < -1e8) S.heatArmed = S.t;
-    if (S.holdMode === 'bowl' && S.holdK >= 1 && S.pour < -1e8) S.pour = S.t;
     if (S.holdMode === 'embers' && S.holdK >= 1 && S.drive < -1e8) S.drive = S.t;
   }
 
@@ -1229,6 +1302,14 @@ export class CaveSet {
         S.pour = settled ? t - POURS.total : -1e9;  // settled: pours are history
         S.pourPrev = -1;
         this.uTo(MARKS['bowl-offer'], 'offer', settled);
+        break;
+      case 'bowl-pour':                 // iii-08's gateAct — the reader's LET-GO
+        /* THE POUR IS THE RELEASE (AMENDMENT A7): the fill banked on the
+           hold, and this act — fired from pressUp itself, or by the 30 s
+           soft-fail — is what starts the bowl's clock. A settled replay has
+           already dated the pours as history at bowl-offer above, so the
+           guard keeps that truth; live, the release instant is pour 1. */
+        if (S.pour < -1e8) S.pour = settled ? t - POURS.total : t;
         break;
 
       /* ---- Beat V (each of these RESTATES the beat — the jump correction) */
@@ -1682,6 +1763,22 @@ export class CaveSet {
     this.stakeGlowOp = gOp;                   // the glowing cut alone (E2)
   }
 
+  /** THE BRIDGE RATE GATE (weight lane): a bridge may advance at most ONE
+   *  cell per fixed 1/60 step, whatever its clock does — a reader's advance
+   *  that yanks an act's k can hurry the pose home a cell a tick, never
+   *  teleport it. Keyed per performance (`tag` = the seg's own t0 / the
+   *  drain index), so a fresh play starts on its clock's own first cell and
+   *  the clamp only ever holds a jump DOWN to +1. Fixed-step state: the
+   *  same tick count always plays the same frames — laps stay byte-equal. */
+  bridgeGate(key, tag, frame) {
+    const g = this._bGate || (this._bGate = { id: null, frame: -1 });
+    const id = key + ':' + tag;
+    const last = g.id === id ? g.frame : -1;
+    const f = Math.min(frame, last + 1);
+    g.id = id; g.frame = f;
+    return f;
+  }
+
   /* ---- the giant ----------------------------------------------------------- */
   stepGiant(t, dt, amb) {
     const S = this.state, G = S.giant;
@@ -1715,22 +1812,26 @@ export class CaveSet {
         /* the grope shuffle / tip-over keep their authored eased clocks */
         W.s = easeInOut(k) * W.len;
       } else {
-        /* LANE PHYSICS (Explorer D): velocity-integrated gait in place of
-           the clamped ease — 450 ms ease-in from rest (a 7 m body gathers
-           itself over a beat, and the gait law's own onset window reads it),
-           per-step pulse locked to the strip's own plant frames (phase =
-           the SAME gait clock that picks the cell, so the dip lands ON the
-           plant by construction), ~220 ms ease-out as the path runs out.
-           Mean pulse is 1: the feet still keep the King law's ground per
-           stride, and the cap still bounds the cruise — a short seg cannot
-           make him sprint. */
+        /* THE WEIGHT PROFILE (animation-weight lane; supersedes the
+           dip-pulse tune): TWO CLOCKS off one envelope. The PHASE clock
+           W.phi advances at the envelope's own rate (v / pxPerFrame cells
+           a second) and PICKS the cell; the GROUND speed is the envelope
+           times the stance-lock pulse read at that same phase — zero
+           through each plant cell, surging through the swing, mean 1 — so
+           while a plant cell holds the picture the mark stands STILL (the
+           plant IS a plant; the stance-lock gate holds it to <= 1.0 css px)
+           and position and phase re-meet every cycle. 450 ms ease-in from
+           rest (a 7 m body gathers itself over a beat), ~220 ms ease-out
+           as the path runs out, and the cap still bounds the cruise — a
+           short seg cannot make him sprint. */
         W.run = (W.run || 0) + dt;
         const envIn = easeInOut(Math.min(1, W.run / 0.45));
         const envOut = Math.max(0.3,
           easeInOut(clamp01((W.len - W.s) / (W.vmax * 0.18))));
-        const pulse = gaitAt(GAIT.giant, GAIT.giant.pulse,
-                             W.s / STRIP.giant.pxPerFrame);
-        W.s = Math.min(W.len, W.s + W.vmax * envIn * envOut * pulse * dt);
+        const vEnv = W.vmax * envIn * envOut;
+        W.phi = (W.phi || 0) + (vEnv / STRIP.giant.pxPerFrame) * dt;
+        const pulse = gaitAt(GAIT.giant, GAIT.giant.pulse, W.phi);
+        W.s = Math.min(W.len, W.s + vEnv * pulse * dt);
       }
       const p = alongPathArc(W.path, W.s);
       G.x = p[0]; G.y = p[1];
@@ -1738,12 +1839,14 @@ export class CaveSet {
                                     : (k >= 1 && W.s >= W.len - 1e-6);
       if (done) {
         const end = W.endPose;
-        /* the 2-frame settle: ~2.5 px past the mark along the travel, back */
+        /* the EXPLICIT PLANTED SETTLE (weight lane, was 2.5 px / 0.18 s):
+           3.5 px past the mark along the travel and back over 0.28 s — a
+           giant's mass does not stop dead from full stride */
         if (isFinite(W.vmax)) {
           const pts = W.path, a = pts[pts.length - 2], b = pts[pts.length - 1];
           const dl = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
-          G.settle = { at: [b[0], b[1]], dx: (b[0] - a[0]) / dl * 2.5,
-                       dy: (b[1] - a[1]) / dl * 2.5, t: 0, dur: 0.18 };
+          G.settle = { at: [b[0], b[1]], dx: (b[0] - a[0]) / dl * 3.5,
+                       dy: (b[1] - a[1]) / dl * 3.5, t: 0, dur: 0.28 };
         }
         G.walk = null;
         if (end === 'away') G.pose = 'away';
@@ -1766,11 +1869,20 @@ export class CaveSet {
       G.x = M[0] + 58 * lunge;
       G.y = M[1] + 8 * lunge;
       G.pose = k < 0.06 || k > 0.9 ? 'seat' : 'clutch';
+      /* the RETIMED play (weight lane): bk warped through the cell weights,
+         then rate-gated to one cell per fixed step; past the window's end
+         the LANDING CELL PARKS for SEIZE_PARK of the window (the swap to
+         the static clutch is a held frame), with the 2-frame overshoot ->
+         settle riding the parked mark (the lift checks 2 px high and sits) */
       const bk = (k - SEIZE_WIN[0]) / (SEIZE_WIN[1] - SEIZE_WIN[0]);
-      if (bk >= 0 && bk < 1 && k <= 0.9) {
-        this.giantBridge = { key: 'seize', k: +bk.toFixed(4),
-                             frame: bridgeFrame(GSTRIP.seize, bk),
-                             at: [G.x, G.y], hPx: GSTRIP.seize.hPx, flip: false };
+      if (bk >= 0 && bk < 1 + SEIZE_PARK && k <= 0.9) {
+        const ot = (k - SEIZE_WIN[1]) * seg.dur;       // s past the landing
+        const over = ot >= 0 && ot < 0.067 ? -2 : ot < 0.1 ? -1 : 0;
+        this.giantBridge = { key: 'seize', k: +clamp01(bk).toFixed(4),
+                             frame: this.bridgeGate('seize', seg.t0,
+                               bridgeFrame(GSTRIP.seize, SEIZE_WARP(bk))),
+                             at: [G.x, G.y + over],
+                             hPx: GSTRIP.seize.hPx, flip: false };
       }
       if (!S.seizeLatched && k >= 0.4) { S.seizeLatched = true; S.meals++; }
     }
@@ -1787,12 +1899,23 @@ export class CaveSet {
       const bk = k / COLLAPSE_WIN;
       if (bk < 1) {
         G.pose = k < 0.5 ? 'drink' : 'sprawl';
-        const e = easeInOut(bk);
+        /* the RETIME (weight lane): the warped phase u drives frame, mark
+           and hPx alike — slow fold, accelerating fall, decelerating
+           tumble-settle — so the body travels when the art travels; the
+           IMPACT (first c4 beat) takes the 2-frame squash + 1 recoil,
+           declared to the proof like the bob */
+        const u = COLLAPSE_WARP(bk);
+        const e = easeInOut(u);
         G.x = lerp(M[0], COLLAPSE_END[0], e);
         G.y = lerp(M[1], COLLAPSE_END[1], e);
+        const st2 = (bk - COLLAPSE_IMPACT) * COLLAPSE_WIN * seg.dur;
+        const sy = st2 >= 0 && st2 < IMPACT_SQUASH.hold ? IMPACT_SQUASH.sy
+                 : st2 >= 0 && st2 < IMPACT_SQUASH.recoilT ? IMPACT_SQUASH.recoil
+                 : 1;
         this.giantBridge = { key: 'collapse', k: +clamp01(bk).toFixed(4),
-                             frame: bridgeFrame(GSTRIP.collapse, bk),
-                             at: [G.x, G.y],
+                             frame: this.bridgeGate('collapse', seg.t0,
+                               bridgeFrame(GSTRIP.collapse, u)),
+                             at: [G.x, G.y], sy,
                              /* the hPx ramp (audit #5): drink-continuity 196
                                 at the top, the honest sprawl's 291.2 at the
                                 landing — he stretches out as he goes down */
@@ -1828,7 +1951,9 @@ export class CaveSet {
         const bk = (d - a) / DRINK_BRIDGE;
         if (bk < 1) {
           this.giantBridge = { key: 'drink', k: +clamp01(bk).toFixed(4),
-                               frame: bridgeFrame(GSTRIP.drink, bk), play: j + 1,
+                               frame: this.bridgeGate('drink', j + 1,
+                                 bridgeFrame(GSTRIP.drink, bk)),
+                               play: j + 1,
                                at: [G.x, G.y], hPx: GSTRIP.drink.hPx, flip: false };
         }
       }
@@ -1871,21 +1996,29 @@ export class CaveSet {
     this.giantWalking = walking;
     if (walking) {
       const W = G.walk;
-      G.frame = Math.floor(W.s / STRIP.giant.pxPerFrame) % STRIP.giant.n;
+      /* the PHASE clock picks the cell (weight lane: frame = the stance-
+         lock's own beat; the ground stands still while a plant cell holds) */
+      G.frame = Math.floor(W.phi || 0) % STRIP.giant.n;
       G.flip = W.path[W.path.length - 1][0] < W.path[0][0];
       /* LANE PHYSICS: step-synced bob off the same gait clock as the frame —
-         the body sinks into each plant and rises through the swing. The
-         proof below declares the same bob, so the anchor law holds. */
-      this._gBob = gaitBobY(GAIT.giant, W.s / STRIP.giant.pxPerFrame,
-                            BOB_AMP.giant);
+         the body sinks into each plant and rises through the swing (the
+         heavier giant amp = the pelvis compression). TORSO LAG: a shade of
+         lean about the pinned feet, the bob table read TORSO_LAG.phi cells
+         behind — mass arrives late. The proof below declares both, so the
+         anchor law measures residuals only. */
+      this._gBob = gaitBobY(GAIT.giant, W.phi || 0, BOB_AMP.giant);
+      this._gRot = (G.flip ? -1 : 1) * TORSO_LAG.deg *
+        (2 * gaitAt(GAIT.giant, GAIT.giant.bob,
+                    (W.phi || 0) - TORSO_LAG.phi) - 1);
       const b = placeStrip(this.giantStripN, STRIP.giant, [G.x, G.y],
                            GIANT_H.stand, G.frame,
-                           { flip: G.flip, bob: this._gBob });
+                           { flip: G.flip, bob: this._gBob, rot: this._gRot });
       this.giantStripN.style.opacity = '1';
       this.giantBox = [G.x - (G.flip ? b.w - b.ax : b.ax), G.y - GIANT_H.stand,
                        b.w, b.h].map((v) => +v.toFixed(1));
     } else {
       this._gBob = 0;
+      this._gRot = 0;
       this.giantStripN.style.opacity = '0';
     }
 
@@ -1897,7 +2030,7 @@ export class CaveSet {
     for (const [key, node] of Object.entries(this.gMotionN)) {
       if (BL && BL.key === key && G.pose !== 'away') {
         const b = placeStrip(node, GSTRIP[key], BL.at, BL.hPx, BL.frame,
-                             { flip: BL.flip });
+                             { flip: BL.flip, sy: BL.sy || 1 });
         node.style.opacity = '1';
         this.giantBox = [BL.at[0] - (BL.flip ? b.w - b.ax : b.ax),
                          BL.at[1] - BL.hPx, b.w, b.h].map((v) => +v.toFixed(1));
@@ -2046,16 +2179,20 @@ export class CaveSet {
       } else if (seg.name === 'seize') {
         /* the two taken: the highest-numbered men alive when the clutch
            began (seizeBase, fixed at startSeg so the mid-seg decrement
-           cannot shift them), from their huddle spots into the shadow of
-           the clutch — the identical curve, all three meals */
+           cannot shift them). THE HANDOFF LAW (weight lane): they STAND on
+           their huddle spots — the old glide toward the clutch raced the
+           strip and had them teleporting into it — and are handed off to
+           the strip art AT THE CONTACT BEAT (the seize bridge's own c3,
+           where the hands close ON their layer position), a 0.18 s cut
+           into the closing fist. The identical staging, all three meals. */
+        const kc = SEIZE_WIN[0] + SEIZE_CONTACT * (SEIZE_WIN[1] - SEIZE_WIN[0]);
         for (const i of [S.seizeBase - 1, S.seizeBase - 2]) {
           if (i < 0 || i >= CREW_N) continue;
           const P = this.pose['c' + i];
           const from = FORM.huddle[i];
-          const k2 = easeInOut(clamp01((segK - 0.12) / 0.3));
-          P.x = lerp(from[0], 824, k2);
-          P.y = lerp(from[1], 468, k2);
-          P.op = 1 - clamp01((segK - 0.3) / 0.16);   // into the shadow
+          P.x = from[0];
+          P.y = from[1];
+          P.op = 1 - clamp01((segK - kc) / 0.03);    // into the closing hands
           want['c' + i] = { at: from, vis: -1 };
         }
       } else if (seg.name === 'stake-make') {
@@ -2281,7 +2418,11 @@ export class CaveSet {
       let at = null;
       const gait = this.ramGait[i];
       if (fl && k < 1 && fl.mode === 'escape') {
-        const ki = clamp01((k - i * 0.07) / 0.6);
+        /* DEPARTURE JITTER (weight lane): index-seeded start beats and
+           window speeds in place of the even 0.07 lattice — the stream
+           leaves in its own broken order, never as a conveyor */
+        const ki = clamp01((k - RAM_DEP[i % RAM_DEP.length]) /
+                           RAM_WIN[i % RAM_WIN.length]);
         if (ki > 0 && ki < 1) {
           if (gait.wT !== fl.t0) { gait.wT = fl.t0; gait.sW = 0; gait.ask = 0; }
           const sAsk = easeInOut(ki) * FLOCK_LEN;
@@ -2796,7 +2937,7 @@ export class CaveSet {
           ? stripProof(this.st, this.giantStripN, STRIP.giant,
                        S.giant.frame || 0,
                        [S.giant.x, S.giant.y + (this._gBob || 0)],
-                       !!S.giant.flip)
+                       !!S.giant.flip, { rot: this._gRot || 0 })
           : null,
         crew: this.crew.map((_, i) => {
           const P = this.pose['c' + i];
@@ -2823,9 +2964,11 @@ export class CaveSet {
         bridge: this.giantBridge ? {
           key: this.giantBridge.key, k: this.giantBridge.k,
           play: this.giantBridge.play || 1, n: GSTRIP[this.giantBridge.key].n,
+          sy: this.giantBridge.sy || 1,          // the impact squash, declared
           ...stripProof(this.st, this.gMotionN[this.giantBridge.key],
                         GSTRIP[this.giantBridge.key], this.giantBridge.frame,
-                        this.giantBridge.at, this.giantBridge.flip),
+                        this.giantBridge.at, this.giantBridge.flip,
+                        { sy: this.giantBridge.sy || 1 }),
         } : null,
         loop: this.giantLoop ? {
           key: this.giantLoop.key, n: GSTRIP[this.giantLoop.key].n,

@@ -86,14 +86,29 @@ def rows():
 #   A4 (2026-08-16) REST IS ALLOWED — ody-iii-08-lookhere and ody-iv-01-embers
 #      gain rest=True (a released hold keeps its progress) and their cues
 #      append ' — rest is allowed'. Butler untouched in both.
+#   A6 (2026-08-17) FIRST CONTACT IS THE READER'S — ody-i-00-head: verb
+#      auto/dwell 3.4 -> click. The opening heading waits for the click its
+#      own hint asks for; the 30 s soft-fail (extended to head units in
+#      main.js) carries a reader who never clicks. Heads are ours.
+#   A7 (2026-08-17) THE POUR IS THE RELEASE — ody-iii-08-lookhere: verb
+#      hold -> release + gateAct 'bowl-pour' + amended cue. The fill banks
+#      on the hold (rest kept), the pour fires on the pointerup — the
+#      contract's "each release drained" made mechanical. Butler untouched.
 S = {
  # ---- BEAT I - THE TALE BEGUN - SET shore - leaf 1 ------------------------
- 'ody-i-00-head': dict(head=True, num='I', text='The Tale Begun', verb='auto',
-                       dwell=3.4, focus='establishing', clear=True,
+ # AMENDMENT A6 2026-08-17 (first contact is the reader's): verb auto/dwell
+ # 3.4 -> click. The shipped heading advanced ITSELF at 3.4 s while the first
+ # hint said 'click anywhere to read on' — the book's first exchange
+ # contradicted its own cue. Headings are ours; the opening head now WAITS
+ # for the click it asks for, and main.js extends the 30 s soft-fail to head
+ # units so a reader who never clicks is still carried.
+ 'ody-i-00-head': dict(head=True, num='I', text='The Tale Begun', verb='click',
+                       focus='establishing', clear=True,
                        bed='shore', act='establish',
                        c='night-shore establishing, night-mist state; the '
-                         'heading chains into the voiceover — the court is '
-                         'heard, never seen.'),
+                         'heading WAITS for the reader\'s first click (A6 — '
+                         'the hint asks for it), then chains into the '
+                         'voiceover — the court is heard, never seen.'),
  'ody-i-01-bard': dict(verb='click', focus='establishing', clear=True,
                        drop=True, seg='landfall', segDur=8.0, segHold=False,
                        sfx='keel',
@@ -281,17 +296,25 @@ S = {
                                 'and the ivy bowl becomes the hot object.'),
  # AMENDMENT 2026-08-16 (rest is allowed): rest=True — a released hold KEEPS
  # its fill (no decay, no reset) and resumes on re-press; cue amended to say so.
- # Cues are OUR authoring; Butler's text is untouched.
- 'ody-iii-08-lookhere': dict(verb='hold', hold=1.6, rest=True,
-                             cue='hold the bowl · fill it — and again — and again'
+ # AMENDMENT A7 2026-08-17 (the pour is the release): verb hold -> release.
+ # The contract's own carrier line (O.7) is "each RELEASE drained in
+ # pantomime", and the shipped hold poured WHILE PRESSED (setHold armed the
+ # pour clock the instant k hit 1). Now the fill BANKS on the hold (rest
+ # kept), and the LET-GO past the 1.6 s threshold fires gateAct 'bowl-pour'
+ # from pressUp itself — pour 1 starts ON the release frame, like myname's
+ # shout. Cues are OUR authoring; Butler's text is untouched.
+ 'ody-iii-08-lookhere': dict(verb='release', hold=1.6, rest=True,
+                             gateAct='bowl-pour',
+                             cue='hold the bowl · fill it — let go to pour'
                                  ' — rest is allowed',
                              focus='bowl-close', clear=True, act='bowl-offer',
                              sfx='pour',
-                             c='GATE G3 — the bowl fills with the hold '
-                               '(pour 1; the set pantomimes pours 2-3 under '
-                               'the two autos that follow, ledger holds:3); '
-                               'his drain-and-thrust-back IS the begging '
-                               '(c10).'),
+                             c='GATE G3 — the bowl FILLS with the hold and '
+                               'POURS on the release (A7: gateAct bowl-pour '
+                               'fires on the let-go; the set pantomimes '
+                               'pours 2-3 under the two autos that follow, '
+                               'ledger holds:3); his drain-and-thrust-back '
+                               'IS the begging (c10).'),
  'ody-iii-09-besokind': dict(verb='auto', dwell=9.0, focus='face-flush',
                              c='lands on pour-1 release; the flushed face '
                                'leans down, the one eye glittering; "tell me '
@@ -602,7 +625,9 @@ PROLOGUE = """\
  * NAMES ARE THE LEDGER'S (tools/ody/ledger.json):
  *   focus   — ledger LENS names verbatim, per set.
  *   target  — ledger gate targets verbatim (ship / sword / ram-great /
- *             cyclops). Hold gates (G3 bowl, G4 embers) are `hold` verbs.
+ *             cyclops). G4 (embers) is the book's `hold` verb; G3 (bowl)
+ *             is a `release` since A7 — it banks on the hold, pours on
+ *             the let-go.
  *   act     — ledger mark names (fire-ulysses, giant-seat, doorway-seat…),
  *             master/state names (shore-day, cave-dawn, cave-shut,
  *             cave-embers, cave-predawn, sea-dawn), object names
@@ -619,17 +644,23 @@ PROLOGUE = """\
  *      states are acts (cave-dawn / cave-shut / cave-embers / cave-predawn),
  *      exactly as sherlock units drove room-dim via acts.
  *
- * AMENDMENTS (2026-08-16, verbs/cues are OUR authoring — Butler untouched;
+ * AMENDMENTS (verbs/cues are OUR authoring — Butler untouched;
  * recorded in CONTENT-odyssey.md §Amendments):
- *   release — ody-vi-07-myname is the book's one RELEASE verb: press-and-hold
- *             draws the breath (>= 0.6 s), LETTING GO fires the shout and the
- *             story advances on the release frame; soft-fail at 30 s.
+ *   release — ody-vi-07-myname (2026-08-16): press-and-hold draws the breath
+ *             (>= 0.6 s), LETTING GO fires the shout and the story advances
+ *             on the release frame; soft-fail at 30 s. A7 (2026-08-17) makes
+ *             ody-iii-08-lookhere the second release: the fill BANKS on the
+ *             hold (rest kept) and gateAct 'bowl-pour' fires pour 1 on the
+ *             let-go — the contract's "each release drained".
  *   rest    — the two big holds (lookhere 1.6 s, embers 3.0 s) carry
  *             rest: true — a released hold KEEPS its progress (no decay, no
  *             reset) and resumes on re-press; their cues say so.
  *   memory  — the defy gate's hesitation (gate-armed -> resolving click) is
  *             remembered by main.js and the closing card's sub gains ONE
  *             clause by the 4 s threshold: END_CARD.subEager / .subHeld.
+ *   first   — A6 (2026-08-17): ody-i-00-head is click-paced now, not a 3.4 s
+ *             auto — the heading waits for the click its own hint asks for;
+ *             main.js extends the 30 s soft-fail to head units.
  *
  * Schema: site-deploy/living/app/units.js (the sherlock original) — same
  * fields, same field order, same exports.
@@ -744,7 +775,9 @@ export function validateUnits(units = UNITS) {
     if (u.verb === 'release' && !(u.hold > 0)) {
       bad.push(`${at}: release needs its hold threshold seconds`);
     }
-    if (u.rest && u.verb !== 'hold') bad.push(`${at}: rest rides the hold verb only`);
+    if (u.rest && u.verb !== 'hold' && u.verb !== 'release') {
+      bad.push(`${at}: rest rides the hold/release verbs only`);   // A7: G3 rests
+    }
     if (u.verb === 'clock' && !(u.at > 0)) bad.push(`${at}: clock needs its t+ offset`);
     if (u.verb === 'target' && !ALL_TARGETS.has(u.target)) {
       bad.push(`${at}: target verb needs target in {${[...ALL_TARGETS].join(',')}}`);

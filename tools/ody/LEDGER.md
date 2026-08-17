@@ -253,7 +253,20 @@ all light anchors measured in `layers-*.json`; engine skeleton copied
 5. **THE STAKE — 9 units** (G4 rides it; O.9)
 
 then: ivy bowl (6) · lamplight seams (5) · cameo art (4) · wineskin+inset (3)
-· rocks (2) · island-beach layer + sea dawn (2) · dressing props (2+2).
+· rocks (2) · sea dawn state (1 — still the authored stand-in) · dressing
+props (2+2).
+
+**CLOSED 2026-08-17 — the island-beach return layer (§3.4, the sacrifice):**
+`set/sea/sea-beach.png` (nbpro edit of the sea master, band y460..768,
+72-row feather; raw + manifest in `assets/raw/ody-return/`) rises on seg
+`return-beach`; `actor/prop-altar.png` (the second and last generation,
+smoothness-flood key) stands the driftwood altar at (330,668). Tableau
+staged in `app/sets/sea.js` B_CAST at 19 px/m foreground scale — 5 comrades,
+3 flock rams, the great ram at the altar, Ulysses ashore (stern handoff),
+authored thigh-fire + straight smoke, c8 dusk on the seg tail, c9 boarding
+at dawn. Graded variants baked (`bake_regrade.py`, state `beach` — ring off
+the master WITH the band composited). Carrier gates: `lap-ody.mjs`
+[sacrifice] at `ram`/`sailedon` + the §3.4 stage.gaps assertion.
 
 Fact carriers at risk while GAPs stand: O.1 (cameo art), O.2 (inset), O.5
 (sword), O.7 (bowl), O.9 (stake), O.11 (ram), O.12/O.14 (clifftop giant — G6

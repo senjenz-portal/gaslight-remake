@@ -115,7 +115,7 @@
       "ody-i-06",
       "ody-i-07"
      ],
-     "note": "open sand right of the stern curl (>= 10 px of every painted mass — the old (510,492) merged with the curl's black base, round-7 placement audit #11), back to the strait, faces the crew arc"
+     "note": "open sand right of the stern curl (>= 10 px of every painted mass \u2014 the old (510,492) merged with the curl's black base, round-7 placement audit #11), back to the strait, faces the crew arc"
     },
     "council-crew": {
      "at": [
@@ -126,7 +126,7 @@
       "ody-i-06",
       "ody-i-07"
      ],
-     "note": "crew arc centroid facing Ulysses — the arc (460,504)(472,507)(484,509) stands in the sand pocket between the day goat (x<=450) and the curl (x>=495), audit #11"
+     "note": "crew arc centroid facing Ulysses \u2014 the arc (460,504)(472,507)(484,509) stands in the sand pocket between the day goat (x<=450) and the curl (x>=495), audit #11"
     },
     "twelve-at-ship": {
      "at": [
@@ -136,7 +136,7 @@
      "serves": [
       "ody-i-10"
      ],
-     "note": "the twelve lined on the sand along ship-2's hull — two staggered ranks x 484..566, SHORT of ship-1's painted oar blades (574..639, registered ship1Oars) and off beachY's flat clamp past x 610 (round-7 placement audit #15)"
+     "note": "the twelve lined on the sand along ship-2's hull \u2014 two staggered ranks x 484..566, SHORT of ship-1's painted oar blades (574..639, registered ship1Oars) and off beachY's flat clamp past x 610 (round-7 placement audit #15)"
     },
     "entry-mainland": {
      "at": [
@@ -276,7 +276,7 @@
       512
      ]
     ],
-    "obstacleNote": "round-7 placement audit: the parking law's shore census — the hero-scale camp ring (its stones are paint, not a stand-to object), the day plate's 5 m goat (day state only), the stern curl's black mass above the sand, and ship-1's painted oar blades where they meet the sand"
+    "obstacleNote": "round-7 placement audit: the parking law's shore census \u2014 the hero-scale camp ring (its stones are paint, not a stand-to object), the day plate's 5 m goat (day state only), the stern curl's black mass above the sand, and ship-1's painted oar blades where they meet the sand"
    },
    "lenses": [
     {
@@ -565,7 +565,7 @@
       "ody-ii-13",
       "ody-iii-03"
      ],
-     "note": "the dark floor DOWNSTAGE of the front pen, right of centre — the old (1160,465) stood the whole huddle INSIDE the painted bed box [1025,330..1240,500], front row on logsRight (round-7 placement audit #1); formation rows y 529..553, x 890..974, clear of the pen's bottom rail, the tub and the bowl"
+     "note": "the dark floor DOWNSTAGE of the front pen, right of centre \u2014 the old (1160,465) stood the whole huddle INSIDE the painted bed box [1025,330..1240,500], front row on logsRight (round-7 placement audit #1); formation rows y 529..553, x 890..974, clear of the pen's bottom rail, the tub and the bowl"
     },
     "suppliant": {
      "at": [
@@ -575,7 +575,7 @@
      "serves": [
       "ody-ii-06"
      ],
-     "note": "arms wide, firelight between him and the seated bulk — off the unregistered log bundle's top (the old (690,495) stood both sandals on it, round-7 placement audit #3) and off the ring's stone band"
+     "note": "arms wide, firelight between him and the seated bulk \u2014 off the unregistered log bundle's top (the old (690,495) stood both sandals on it, round-7 placement audit #3) and off the ring's stone band"
     },
     "giant-seat": {
      "at": [
@@ -704,7 +704,7 @@
       "ody-v-05",
       "ody-v-06"
      ],
-     "note": "the blind giant seated filling the mouth, hands spread — baseline ON the threshold floor slope (downstage line runs y~482 at x 345; the old (345,420) hung him at the aperture lip with no support, round-7 placement audit #14)"
+     "note": "the blind giant seated filling the mouth, hands spread \u2014 baseline ON the threshold floor slope (downstage line runs y~482 at x 345; the old (345,420) hung him at the aperture lip with no support, round-7 placement audit #14)"
     }
    },
    "objects": {
@@ -799,7 +799,7 @@
        485
       ]
      ],
-     "rimNote": "the rim's painted stones spill past the box's NW corner (round-7 placement audit #13 — (492,441)/(522,459) stood ON the paint outside the declared box)",
+     "rimNote": "the rim's painted stones spill past the box's NW corner (round-7 placement audit #13 \u2014 (492,441)/(522,459) stood ON the paint outside the declared box)",
      "pitCentre": [
       630,
       460
@@ -833,7 +833,7 @@
       497
      ]
     ],
-    "logBundleNote": "the SECOND wood pile right-front of the hearth — unregistered until round 7 (placement audit #3: the suppliant stood on its top log; the parking sweeps had only ever seen the firewood pile)",
+    "logBundleNote": "the SECOND wood pile right-front of the hearth \u2014 unregistered until round 7 (placement audit #3: the suppliant stood on its top log; the parking sweeps had only ever seen the firewood pile)",
     "mainPen": [
      [
       775,
@@ -1403,7 +1403,7 @@
      "serves": [
       "ody-vi-07"
      ],
-     "note": "steps ONTO the rail for the self-naming (O.12) — a SNAP, not a walk: ody-vi-07 is an auto whose first frame must already stand the taunt pin (actors.json ulysses-taunt 43,674) on this mark"
+     "note": "steps ONTO the rail for the self-naming (O.12) \u2014 a SNAP, not a walk: ody-vi-07 is an auto whose first frame must already stand the taunt pin (actors.json ulysses-taunt 43,674) on this mark"
     },
     "rower-1n": {
      "at": [
@@ -1607,7 +1607,7 @@
       "ody-vi-06",
       "ody-vi-12"
      ],
-     "note": "F2 recompose (round 3): the two-plane frame tightened to the painted strait for the units after the first wash (world 0.86) — stern, rowers, splash water (455,540) and the whole cursing giant in one window; the k=1 wide read 28% dead band here against the 22% law",
+     "note": "F2 recompose (round 3): the two-plane frame tightened to the painted strait for the units after the first wash (world 0.86) \u2014 stern, rowers, splash water (455,540) and the whole cursing giant in one window; the k=1 wide read 28% dead band here against the 22% law",
      "landscapeMargin": 138.0,
      "portraitMargin": 138.0,
      "ok": true
@@ -1622,7 +1622,7 @@
      "serves": [
       "ody-vi-13"
      ],
-     "note": "F2 recompose (round 3): the row home — ship centred, cave fire falling astern; composed inside the painting at world ~0.76 (the k=1 wide read 32% dead band)",
+     "note": "F2 recompose (round 3): the row home \u2014 ship centred, cave fire falling astern; composed inside the painting at world ~0.76 (the k=1 wide read 32% dead band)",
      "landscapeMargin": 232.3,
      "portraitMargin": 232.3,
      "ok": true
@@ -1637,7 +1637,7 @@
      "serves": [
       "ody-vi-14"
      ],
-     "note": "F2 recompose (round 3): sailedon and the closing turn — follows the ship toward the painted moonpath and moon (475,356 / 474,242), not open water; composed for world ~0.69 under the end cover (the k=1 wide read 36% dead band on both frames)",
+     "note": "F2 recompose (round 3): sailedon and the closing turn \u2014 follows the ship toward the painted moonpath and moon (475,356 / 474,242), not open water; composed for world ~0.69 under the end cover (the k=1 wide read 36% dead band on both frames)",
      "landscapeMargin": 220.0,
      "portraitMargin": 220.0,
      "ok": true
@@ -1774,9 +1774,9 @@
    "sets": [
     "sea"
    ],
-   "status": "GAP",
+   "status": "PART (beach layer + tableau SHIPPED 2026-08-17; sea dawn state still the authored stand-in)",
    "lane": "ody-layers",
-   "test": "beach layer rises for cuts c6-c8 (comrades, flock ashore, ram at the driftwood altar, thigh-fire smoke straight up, NO sign); dawn state for sailedon \u2014 sea ships only ONE master today",
+   "test": "beach layer rises for cuts c6-c8 (comrades ashore, flock shared, the great ram at the driftwood altar, thigh-fire smoke straight up, NO sign) \u2014 SHIPPED: set/sea/sea-beach.png + actor/prop-altar.png (2 nbpro generations, assets/raw/ody-return/manifest.json), tableau staged in sea.js (B_CAST, 19 px/m), carrier-gated in lap-ody.mjs [sacrifice]; dawn state for sailedon remains the authored stand-in (lights out + horizon glow)",
    "unitsServed": 2
   },
   {
@@ -1873,7 +1873,8 @@
     "sea": [
      "fog",
      "bloom-moon",
-     "bloom-cave"
+     "bloom-cave",
+     "beach (return band, 2026-08-17)"
     ]
    },
    "measured": "all emissives/blooms/fogs in tools/ody/layers-{shore,cave,sea}.json; engine skeleton copied (WIRING.md); slice + gate-state scripts in tools/ody/"
@@ -1918,10 +1919,6 @@
     ],
     [
      "ROCKS 1+2",
-     2
-    ],
-    [
-     "ISLAND-BEACH layer + sea dawn",
      2
     ],
     [

@@ -348,5 +348,20 @@
    "bytes": 73686,
    "sha256": "9d48d13f89fe2f9c7985ff74b8030d2bc0b1dd8d56202a48af752bd134217ca4"
   }
+ },
+ "beach": {
+  "file": "set/sea/sea-beach.png",
+  "sha256": "5bb08f926ef9573363342c8584473929c6203938b4d22dd558154c183cd90dcd",
+  "box": [
+   0,
+   460,
+   1408,
+   308
+  ],
+  "feather": "rows 0..72 alpha ramp (plate y 460..532), band opaque below",
+  "raw": "assets/raw/ody-return/sea-beach-cand1.png (nbpro edit of the sea master; manifest in that dir)",
+  "pxPerM": 19,
+  "note": "\u00a73.4 THE RETURN TABLEAU (2026-08-17): the island-beach band the return seg rises; foreground of the page, outside the world group. Sand marks + drawn heights live in app/sets/sea.js B_CAST; altar fire is authored light at (330,646).",
+  "added": "2026-08-17"
  }
 }
