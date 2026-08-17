@@ -287,6 +287,53 @@ The law, in three rules:
    the reader held the name makes the taking-back mean something in
    retrospect.
 
+
+### 3.6 THE SEAMLESS LAWS — a cutout must LIVE in the plate, not sit on it
+Shipped by the odyssey seamless round (2026-08-16) after the owner's eye
+caught what sampled-still review structurally cannot: characters "drifting
+and floating", placements off, audio reading as noise. Four instruments
+measured it (tools/ody/seamless/audit-*.md), four explorations raced fixes,
+five lanes shipped. The laws, each with its gate and its tool:
+
+* **GAIT** (`setkit.js gaitProfile/walkToward2`): translation is never
+  constant-velocity. The strip's own per-frame foot anchors reveal its two
+  PLANT frames; speed dips 38% at each plant and rises past cruise
+  mid-swing (cosine-smoothed, mean-normalized so distance stays honest),
+  with 250 ms ease-in/out, a 2-frame arrival settle, step-synced bob, and
+  CADENCE ATTENUATION (pulse depth fades above ~1.1 cycles/s — full-depth
+  pulses at sprint cadence alias into one-frame pops). Paths are
+  arc-length parameterized: no vertex speed pops. GATE: per walk,
+  velocity std/mean >= 0.15; no single-frame speed change > 25%; the
+  anti-skate law still holds. Slung/burdened cuts get the gait bob even
+  when their art cannot cycle — nothing crosses the stage rigidly.
+* **REGRADE** (`tools/ody/seamless/regrade.py` + `bake_regrade.py`): every
+  actor cut is baked per SET to the plate's own light — ring-sample the
+  palette at the cut's mark, ramped Reinhard transfer (100% feet -> 60%
+  head), accent hue preserved, warm rim toward the set's light anchor.
+  Measured: dE 22-36 raw -> 4-8 graded; two-thirds of "pasted" is colour.
+  GATE: actor-vs-plate-ring dE <= 9 at representative settles; every
+  mounted node serves the graded variant.
+* **GROUNDING** (`tools/ody/seamless/shadowgen.py`): every principal casts
+  a contact shadow (footprint-sized, light-direction-skewed off the EMIS
+  anchors, opacity 0.42+0.30*s — the sherlock rig law generalized), and
+  floor props that should occlude feet are cut as pixel-exact restores
+  drawn above the actors (the pews-front law). GATE: a settled principal
+  without a shadow node fails; occluder paint order asserted.
+* **PERSPECTIVE** (placement audit -> gate): at every settle the drawn
+  height must be within 12% of the plate's own implied px/m at that floor
+  point, measured off in-plate yardsticks — a mark that violates the
+  painting's own depth is a wrong mark, not a style choice.
+* **AUDIO MASTERING**: beds sit in one loudness band (~-33 LUFS), cues at
+  -18, true peak <= -1 dBTP, spectral flatness <= 0.3 (a file that fails
+  SFM is noise, not sound - regenerate with envelope-demanding prompts),
+  beds duck >= 6 dB under cues, loops crossfade their seam. GATE: every
+  declared sfx FIRES audibly at its unit; served files re-measured.
+
+The meta-law this round earned: **instruments must cover what the review
+eye cannot reach** — continuous motion needs velocity profiles, sound
+needs spectral gates; a sampled still passes both while the reader
+watches a ghost glide through a silent room.
+
 ---
 
 ## 4. COST TABLE (measured, this chapter)
@@ -356,7 +403,12 @@ staging objects) was a second afternoon.
 
 Carries over unchanged: every tool in `tools/`, the grammar
 (`units.js` + `main.js` + `stage.js`), the lap harness, the raw-first
-manifest discipline, the four gate verbs, the leaf/turn model.
+manifest discipline, the gate verbs (now five: click/hold/target/clock +
+`release`), the leaf/turn model — and the seamless kit (§3.6): gaitProfile/
+walkToward2 in setkit, regrade + shadow bakes at build time, the
+perspective and audio gates, the strip/bridge motion lanes
+(tools/ody/STRIPS.md, strip_slice_gate.py, vidgen loop + pose-bridge)
+and the agent surface (AGENT-API.md).
 
 New per book: the frozen source text, the contract (`CONTENT*.md`) including
 its object ledger and fact list, the plates, the actors, and the stage-6
