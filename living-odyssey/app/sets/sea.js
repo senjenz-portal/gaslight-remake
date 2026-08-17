@@ -47,9 +47,13 @@
  *   - sea dawn state: NO dawn master ships. `sea-dawn` is performed as the
  *     night lights going out, the fog thinning, and one authored warm horizon
  *     glow — a stand-in, stated in the snapshot as state 'sea-dawn'.
- *   - island-beach return layer: NOT shipped, so seg `return-beach` performs
- *     only what exists — the glide on, the cave fire left astern, the oars.
- *     The driftwood altar and the flock ashore have no pixels to stand on.
+ *   - island-beach return layer: SHIPPED 2026-08-17 (§3.4 — the sacrifice
+ *     must SHOW). sea-beach.png rises on seg `return-beach` (c6), the
+ *     comrades await on the sand, the flock streams ashore (c7), the great
+ *     ram stands at the driftwood altar with the thigh-fire's straight
+ *     smoke (u13), the dusk time-dip falls (c8) and the men board at dawn
+ *     (c9). See THE RETURN TABLEAU below; the snapshot's `beach` block is
+ *     the lap's §3.4 carrier evidence.
  *
  * Every mark, lens, splash point and emissive below is tools/ody/ledger.json /
  * layers-sea.json VERBATIM; actor pins are tools/ody/actors.json verbatim;
@@ -117,7 +121,51 @@ const ART = {
   giantCurse: { px: [719, 1287], pin: [440, 1281] },
   rock:       { px: [776, 568],  pin: [225, 562] },
   splash:     { px: [510, 1127], pin: [253, 1121] },
+  /* the return tableau's cuts (tools/ody/actors.json verbatim; altar is the
+     2026-08-17 nbpro generation, keyed + registered the same way) */
+  crewA:      { px: [266, 620],  pin: [132, 614] },
+  crewB:      { px: [276, 635],  pin: [140, 629] },
+  crewPlead:  { px: [570, 931],  pin: [208, 925] },
+  ramGreat:   { px: [867, 687],  pin: [376, 681] },
+  ramWalk:    { px: [815, 663],  pin: [343, 657] },
+  altar:      { px: [690, 544],  pin: [335, 532] },
 };
+
+/* ---- THE RETURN TABLEAU (§3.4 — the sacrifice must SHOW) ----------------- *
+ * CONTENT-odyssey.md Beat VI tail: c6 the island beach layer RISES and the
+ * comrades await on the sand with lifted arms; c7 the flock streams ashore
+ * and is divided; u13 the GREAT RAM at a DRIFTWOOD ALTAR, thigh-fire smoke
+ * straight up, NO sign; c8 the dusk time-dip; c9/u14 the dawn departure.
+ * The band is set/sea/sea-beach.png — the sea master's own bottom rows,
+ * regenerated with the beach painted in (nbpro edit, assets/raw/ody-return)
+ * and feathered over the plate — and it lives OUTSIDE the world group: the
+ * beach is the island the return lands on, the page's own foreground, so
+ * the recede cannot scale the shore out from under the bodies standing on
+ * it. Bodies ashore are the shipped cuts at measured sand marks; the
+ * FOREGROUND scale is its own (the band is nearer than the painted ship):
+ * 19 px/m, documented in the ledger with the layer. The thigh-fire and its
+ * straight smoke are authored light — the dawn-glow precedent. */
+const BEACH = { file: 'set/sea/sea-beach.png', box: [0, 460, 1408, 308],
+                pxPerM: 19 };
+const B_FIRE_AT = [330, 646];        // the flame stands on the altar's top bed
+/* [id, ART key, sand mark, drawn h, flip] — painter order = ascending mark y */
+const B_CAST = [
+  ['crew-await',   'crewPlead', [180, 648], 32, true ],
+  ['crew-b',       'crewB',     [472, 655], 32, false],
+  ['uly-ashore',   'ulyStand',  [281, 662], 33, false],
+  ['altar',        'altar',     [330, 668], 26, false],
+  ['crew-plead-2', 'crewPlead', [521, 684], 32, false],
+  ['crew-a',       'crewA',     [225, 690], 32, true ],
+  ['ram-return',   'ramGreat',  [392, 700], 34, false],
+  ['crew-a2',      'crewA',     [598, 700], 32, false],
+  ['flock-2',      'ramWalk',   [560, 700], 24, true ],
+  ['flock-3',      'ramWalk',   [455, 712], 24, false],
+  ['flock-1',      'ramWalk',   [505, 720], 24, false],
+];
+const B_FILES = { crewA: 'actor/crew-a-stand.png', crewB: 'actor/crew-b-stand.png',
+                  crewPlead: 'actor/crew-plead.png', ramGreat: 'actor/ram-great.png',
+                  ramWalk: 'actor/ram-walk.png', altar: 'actor/prop-altar.png',
+                  ulyStand: 'actor/ulysses-stand.png' };
 
 /* ---- THE TWO ROCK CLOCKS, in seconds on their own ruseT zero ---------- *
  * ROCK1 zero = the jeer gate. The unit itself arrives at 7.0 (units.js `at`),
@@ -156,7 +204,11 @@ const FOCUS = {
                  window (x 233..937, y 138..522 at rest), so the second gate
                  still holds pleaders and target together, and rock 2's
                  splash point (455,540) stays in frame through the wash;
-       homeward  the row home — ship centred, the cave fire falling astern;
+       homeward  the row home AND the return tableau (§3.4): recomposed
+                 2026-08-17 for the shipped beach — the window holds the
+                 grounded ship (mast top ~377 at the seg's world k), the
+                 cave fire falling astern, and the whole tableau band —
+                 comrades, flock, the great ram at the driftwood altar;
        moonpath  sailedon/the end: follows the ship toward the painted
                  moonpath and moon (475,356 / 474,242), not the open water —
                  it is the frame the closing cover rises over, composed for
@@ -178,7 +230,7 @@ const FOCUS = {
   clifftop:     [870, 195, 2.80],
   curse:        [870, 180, 2.20],
   strait:       [585, 330, 2.00],
-  homeward:     [575, 380, 2.60],
+  homeward:     [450, 570, 1.90],
   moonpath:     [590, 340, 3.20],
 };
 
@@ -364,6 +416,39 @@ export class SeaSet {
     box(this.bloomMoon, ...LAYER.bloomMoon.box);
     this.bloomMoon.style.mixBlendMode = 'screen';
 
+    /* ---- THE RETURN TABLEAU (§3.4): the island beach, OUTSIDE the world -- *
+     * One group, one rise: the band and every body ashore ride beachG's
+     * opacity (c6 "the island beach layer rises"), and each body carries its
+     * own k on top for its own beat of the staging (comrades await, flock
+     * streams, the ram is led to the altar, the men board at dawn). */
+    this.beachG = el('div', 'lyr beach', root);
+    box(this.beachG, 0, 0, PLATE.w, PLATE.h);
+    this.beachG.style.opacity = '0';
+    this.beachBand = img(BEACH.file, 'lyr', this.beachG);
+    box(this.beachBand, ...BEACH.box);
+    this.beach = {};
+    for (const [id, art, at, h, flip] of B_CAST) {
+      const n = cut(B_FILES[art], 'lyr', this.beachG);
+      this.pinAt(n, ART[art], at, h, flip);
+      n.style.opacity = '0';
+      this.beach[id] = { el: n, id, at, h };
+    }
+    /* the thigh-fire: authored flame glow + the STRAIGHT smoke column (the
+       contract's own image — "smoke rising straight, and NO sign") — the
+       dawn-glow precedent: light the plate does not carry is authored */
+    this.altarGlow = el('div', 'emis', this.beachG);
+    box(this.altarGlow, B_FIRE_AT[0] - 46, B_FIRE_AT[1] - 40, 92, 76);
+    this.altarGlow.style.background =
+      'radial-gradient(ellipse at 50% 58%,rgba(255,192,98,.85) 0%,' +
+      'rgba(255,150,60,.35) 38%,rgba(255,120,40,0) 72%)';
+    this.altarGlow.style.opacity = '0';
+    this.altarSmoke = el('div', 'lyr', this.beachG);
+    box(this.altarSmoke, B_FIRE_AT[0] - 5, B_FIRE_AT[1] - 96, 10, 92);
+    this.altarSmoke.style.background =
+      'linear-gradient(to top,rgba(212,216,226,.44) 0%,' +
+      'rgba(212,216,226,.22) 55%,rgba(212,216,226,0) 100%)';
+    this.altarSmoke.style.opacity = '0';
+
     /* ---- the sky, which is the page's --------------------------------- *
      * The curse veil: "sky darkened a stop" for the document-weight frame.
      * The dawn glow: the missing dawn master's stated stand-in — one warm
@@ -409,9 +494,11 @@ export class SeaSet {
       holdK: 0,                  // the RELEASE verb's drawn breath (myname)
     };
     this._wk = 1; this._wdx = 0; this._wdy = 0;     // the world transform, at rest
+    this._beach = null;                             // §3.4 tableau pose, per step
     this.rowerFrames = [0, 0, 0, 0, 0, 0];
     this.giantBridge = null;                        // the windup, mid-play
     this.curseLoop = null;                          // the sway, live
+    this._bGate = null;                             // the bridge rate gate's memory
   }
 
   /* ---- the two clocks -------------------------------------------------- */
@@ -671,7 +758,12 @@ export class SeaSet {
     /* ---- the light breathes, then the states take their share ----------- */
     breathe(this.emis, EMIS, t, amb);
     const nightK = 1 - dawnK;
-    const veilWant = this.curseVeilWant(c);
+    /* c8's dusk time-dip rides the veil the curse already owns: a stop of
+       darkness between the tableau settling and the dawn (a fast reader
+       barely meets it; the slow reader gets the livelong day's end) */
+    const B = this.beachPose(t);
+    this._beach = B;
+    const veilWant = Math.max(this.curseVeilWant(c), B.duskK);
     S.k.veil = this.st.damp(S.k.veil, veilWant, 4.0, dt);
     S.k.dawn = dawnK;
     // one fire feeds cave and crag; the moon takes the veil; dawn takes it all
@@ -711,7 +803,52 @@ export class SeaSet {
     this.stepUlysses(t, dt, amb);
     this.stepRowers(t, dt, amb);
     this.stepRocks(t);
+    this.stepBeach(t, amb, B);
     this.paintShadows();
+  }
+
+  /* ---- THE RETURN TABLEAU: every k a pure function of segT0 / dawn0 ----- */
+  beachPose(t) {
+    const S = this.state;
+    const seg = S.segT0 > -1e8 ? clamp01((t - S.segT0) / S.segDur) : 0;
+    const d = this.dawnT();
+    const dawnK = d !== null ? easeInOut(clamp01(d / DAWN_GLIDE)) : 0;
+    const rise = easeInOut(clamp01(seg / 0.4));            // c6: the layer rises
+    const boardK = d !== null ? easeInOut(clamp01(d / 2.5)) : 0;   // c9: aboard
+    const crewK = easeInOut(clamp01((seg - 0.18) / 0.32)) * (1 - boardK);
+    const flockK = easeInOut(clamp01((seg - 0.45) / 0.35));  // c7: flock ashore
+    const altarK = easeInOut(clamp01((seg - 0.5) / 0.32));   // the driftwood pyre
+    const ramK = easeInOut(clamp01((seg - 0.62) / 0.33));    // the great ram led up
+    const ulyK = easeInOut(clamp01((seg - 0.58) / 0.3)) * (1 - boardK);
+    const fireK = ramK * (d === null ? 1                          // embers at dawn,
+      : (1 - 0.8 * easeInOut(clamp01(d / 2.0))));                 // on the fire's own
+                                                                  // short clock
+    const smokeK = ramK * (d === null ? 1 : Math.max(0, 1 - d / 1.6));
+    /* c8's dusk rides the SEG'S TAIL (the engine's own shape: u13 is a click
+       unit whose 8 s dwell is also its soft-fail, so there is no "between
+       u13 and u14" to spend — the rock2-punctuation precedent): the light
+       starts falling 1.5 s before the seg ends and the dawn releases it. */
+    const duskK = S.segT0 > -1e8 && d === null
+      ? easeInOut(clamp01((t - S.segT0 - (S.segDur - 1.5)) / 2.5)) : 0;
+    return { seg, rise, crewK, flockK, altarK, ramK, ulyK, boardK,
+             fireK, smokeK, duskK, dawnK };
+  }
+
+  stepBeach(t, amb, B) {
+    this.beachG.style.opacity = B.rise.toFixed(3);
+    const opOf = (id) =>
+      id === 'altar' ? B.altarK
+      : id === 'ram-return' ? B.ramK
+      : id === 'uly-ashore' ? B.ulyK
+      : id.startsWith('flock') ? B.flockK
+      : B.crewK;
+    for (const [id] of B_CAST) {
+      this.beach[id].el.style.opacity = opOf(id).toFixed(3);
+    }
+    // the thigh-fire breathes on the cave fire's own clock (amb-gated flicker)
+    const flick = 0.78 + 0.22 * (0.5 + 0.5 * Math.sin(2 * Math.PI * t / 3.2) * amb);
+    this.altarGlow.style.opacity = (B.fireK * flick).toFixed(3);
+    this.altarSmoke.style.opacity = (B.smokeK * 0.9).toFixed(3);
   }
 
   /** THE SHADOW PASS (Explorer C — chase.js paintRigs, ported): anchor on
@@ -749,7 +886,8 @@ export class SeaSet {
       this.shadowPut(node, 'polyphemus-' + pose, M, gH[pose], gOps[pose], 'giant');
     }
     const at = this.ulyAt();
-    const uOps = { stand: 1 - S.k.taunt, taunt: S.k.taunt };
+    const uAsh = 1 - (this._beach ? this._beach.ulyK : 0);   // ashore = no stern shadow
+    const uOps = { stand: (1 - S.k.taunt) * uAsh, taunt: S.k.taunt * uAsh };
     for (const [pose, node] of Object.entries(this.uShN)) {
       if (!(uOps[pose] > 0.005)) { node.style.opacity = '0'; continue; }
       this.shadowPut(node, 'ulysses-' + pose, at, ULY_H, uOps[pose], 'ulysses');
@@ -823,7 +961,17 @@ export class SeaSet {
     }
     if (this.giantBridge) {
       this.giantBridge.k = +clamp01(this.giantBridge.k).toFixed(4);
-      this.giantBridge.frame = bridgeFrame(STRIP_HURL, this.giantBridge.k);
+      /* THE BRIDGE RATE GATE (weight lane, cave.js's own law): one cell per
+         fixed step whatever the rock clock does — a jump can hurry the
+         windup home a cell a tick, never teleport it. Fixed-step state:
+         byte-equal laps. */
+      const want = bridgeFrame(STRIP_HURL, this.giantBridge.k);
+      const bg = this._bGate || (this._bGate = { id: null, frame: -1 });
+      const id = 'hurl:' + this.giantBridge.play;
+      const last = bg.id === id ? bg.frame : -1;
+      this.giantBridge.frame = Math.min(want, last + 1);
+      bg.id = id;
+      bg.frame = this.giantBridge.frame;
     }
     this.curseLoop = !this.giantBridge && S.giantPose === 'curse'
       ? { frame: loopFrame(STRIP_CURSE, t, STRIP_CURSE.period) } : null;
@@ -878,8 +1026,13 @@ export class SeaSet {
     this.pinAt(this.uly.taunt, ART.ulyTaunt, at, ULY_H, true);    // flipped: the
     const taunt = S.uly.pose === 'taunt' ? 1 : 0;                 // arm at the cliff
     S.k.taunt = this.st.damp(S.k.taunt, taunt, 6.0, dt);
-    this.uly.stand.style.opacity = (1 - S.k.taunt).toFixed(3);
-    this.uly.taunt.style.opacity = S.k.taunt.toFixed(3);
+    /* §3.4: while the sacrifice is staged, ULYSSES IS ASHORE — the man at the
+       altar and the man at the stern may never be up together (the two-Norton
+       lesson). The beach instance's k is the same pure function, so the
+       handoff replays identically. */
+    const ashore = this._beach ? this._beach.ulyK : 0;
+    this.uly.stand.style.opacity = ((1 - S.k.taunt) * (1 - ashore)).toFixed(3);
+    this.uly.taunt.style.opacity = (S.k.taunt * (1 - ashore)).toFixed(3);
     const idle = `translateY(${bob.toFixed(3)}px) rotate(${sway.toFixed(3)}deg)`;
     this.uly.stand.style.transform = `${idle} scaleY(${syI.toFixed(5)})`;
     /* THE DRAWN BREATH (the release verb, myname): the taunt cut SWELLS
@@ -1041,6 +1194,30 @@ export class SeaSet {
         ? { name: 'return-beach',
             k: +clamp01((S.t - S.segT0) / S.segDur).toFixed(3) }
         : null,
+      /* §3.4 THE RETURN TABLEAU — the declared staging objects and their
+         DRAWN bodies, boxes off the rendered elements (the parking-law
+         pattern). The lap's sacrifice carrier reads THIS block: a declared
+         object with no box or no opacity is a silent gap, and silent gaps
+         are what §3.4 exists to forbid. */
+      beach: (() => {
+        const B = this._beach;
+        if (!B) return { on: false };
+        const body = (id) => {
+          const b = this.beach[id];
+          return { id, at: b.at, h: b.h, op: +(+b.el.style.opacity).toFixed(3),
+                   box: pbox(b.el) };
+        };
+        return {
+          on: B.rise > 0.05, rise: +B.rise.toFixed(3), seg: +B.seg.toFixed(3),
+          pxPerM: BEACH.pxPerM, band: { box: BEACH.box, op: +this.beachG.style.opacity },
+          fire: +B.fireK.toFixed(3), smoke: +B.smokeK.toFixed(3),
+          dusk: +B.duskK.toFixed(3), board: +B.boardK.toFixed(3),
+          fireAt: B_FIRE_AT,
+          altar: body('altar'), ram: body('ram-return'), uly: body('uly-ashore'),
+          crew: B_CAST.filter((c) => c[0].startsWith('crew')).map((c) => body(c[0])),
+          flock: B_CAST.filter((c) => c[0].startsWith('flock')).map((c) => body(c[0])),
+        };
+      })(),
       dawn: +S.k.dawn.toFixed(3),
       veil: +S.k.veil.toFixed(3),
       giant: { pose: S.giantPose, mark: MARKS['clifftop-giant'],

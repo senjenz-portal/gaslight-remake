@@ -12,7 +12,9 @@
  * NAMES ARE THE LEDGER'S (tools/ody/ledger.json):
  *   focus   — ledger LENS names verbatim, per set.
  *   target  — ledger gate targets verbatim (ship / sword / ram-great /
- *             cyclops). Hold gates (G3 bowl, G4 embers) are `hold` verbs.
+ *             cyclops). G4 (embers) is the book's `hold` verb; G3 (bowl)
+ *             is a `release` since A7 — it banks on the hold, pours on
+ *             the let-go.
  *   act     — ledger mark names (fire-ulysses, giant-seat, doorway-seat…),
  *             master/state names (shore-day, cave-dawn, cave-shut,
  *             cave-embers, cave-predawn, sea-dawn), object names
@@ -29,17 +31,23 @@
  *      states are acts (cave-dawn / cave-shut / cave-embers / cave-predawn),
  *      exactly as sherlock units drove room-dim via acts.
  *
- * AMENDMENTS (2026-08-16, verbs/cues are OUR authoring — Butler untouched;
+ * AMENDMENTS (verbs/cues are OUR authoring — Butler untouched;
  * recorded in CONTENT-odyssey.md §Amendments):
- *   release — ody-vi-07-myname is the book's one RELEASE verb: press-and-hold
- *             draws the breath (>= 0.6 s), LETTING GO fires the shout and the
- *             story advances on the release frame; soft-fail at 30 s.
+ *   release — ody-vi-07-myname (2026-08-16): press-and-hold draws the breath
+ *             (>= 0.6 s), LETTING GO fires the shout and the story advances
+ *             on the release frame; soft-fail at 30 s. A7 (2026-08-17) makes
+ *             ody-iii-08-lookhere the second release: the fill BANKS on the
+ *             hold (rest kept) and gateAct 'bowl-pour' fires pour 1 on the
+ *             let-go — the contract's "each release drained".
  *   rest    — the two big holds (lookhere 1.6 s, embers 3.0 s) carry
  *             rest: true — a released hold KEEPS its progress (no decay, no
  *             reset) and resumes on re-press; their cues say so.
  *   memory  — the defy gate's hesitation (gate-armed -> resolving click) is
  *             remembered by main.js and the closing card's sub gains ONE
  *             clause by the 4 s threshold: END_CARD.subEager / .subHeld.
+ *   first   — A6 (2026-08-17): ody-i-00-head is click-paced now, not a 3.4 s
+ *             auto — the heading waits for the click its own hint asks for;
+ *             main.js extends the 30 s soft-fail to head units.
  *
  * Schema: site-deploy/living/app/units.js (the sherlock original) — same
  * fields, same field order, same exports.
@@ -48,13 +56,14 @@
 export const UNITS = [
   /* ================= BEAT I · THE TALE BEGUN — SET shore · leaf 1 ================= */
 
-  /* 1.0 — night-shore establishing, night-mist state; the heading chains into the
-     voiceover — the court is heard, never seen.
+  /* 1.0 — night-shore establishing, night-mist state; the heading WAITS for the reader's
+     first click (A6 — the hint asks for it), then chains into the voiceover — the
+     court is heard, never seen.
    */
   { id: 'ody-i-00-head', key: 'head1', head: true, num: 'I',
-    text: 'The Tale Begun', speaker: '', verb: 'auto', dwell: 3.4,
-    focus: 'establishing', page: 1, beat: 1, set: 'shore', clear: true,
-    bed: 'shore', act: 'establish' },
+    text: 'The Tale Begun', speaker: '', verb: 'click', focus: 'establishing',
+    page: 1, beat: 1, set: 'shore', clear: true, bed: 'shore',
+    act: 'establish' },
 
   /* 1.1 — voiceover over the dark landfall — fog layer, ship silhouettes ghosting in
      (cut c-night performs beneath).
@@ -343,14 +352,15 @@ export const UNITS = [
     focus: 'meal-close', page: 3, beat: 3, set: 'cave', clear: true,
     sfx: 'seize', bed: 'cave-fire', act: 'cave-shut', fact: 'O.6' },
 
-  /* 3.8 — GATE G3 — the bowl fills with the hold (pour 1; the set pantomimes pours 2-3
-     under the two autos that follow, ledger holds:3); his drain-and-thrust-back IS
-     the begging (c10).
+  /* 3.8 — GATE G3 — the bowl FILLS with the hold and POURS on the release (A7: gateAct
+     bowl-pour fires on the let-go; the set pantomimes pours 2-3 under the two
+     autos that follow, ledger holds:3); his drain-and-thrust-back IS the begging
+     (c10).
    */
   { id: 'ody-iii-08-lookhere', key: 'lookhere',
     text: 'Look here, Cyclops… you have been eating a great deal of man’s flesh, so take this and drink some wine, that you may see what kind of liquor we had on board my ship…',
-    speaker: 'ULYSSES', verb: 'hold',
-    cue: 'hold the bowl · fill it — and again — and again — rest is allowed',
+    speaker: 'ULYSSES', verb: 'release', gateAct: 'bowl-pour',
+    cue: 'hold the bowl · fill it — let go to pour — rest is allowed',
     hold: 1.6, rest: true, focus: 'bowl-close', page: 3, beat: 3, set: 'cave',
     clear: true, sfx: 'pour', act: 'bowl-offer' },
 
@@ -835,7 +845,9 @@ export function validateUnits(units = UNITS) {
     if (u.verb === 'release' && !(u.hold > 0)) {
       bad.push(`${at}: release needs its hold threshold seconds`);
     }
-    if (u.rest && u.verb !== 'hold') bad.push(`${at}: rest rides the hold verb only`);
+    if (u.rest && u.verb !== 'hold' && u.verb !== 'release') {
+      bad.push(`${at}: rest rides the hold/release verbs only`);   // A7: G3 rests
+    }
     if (u.verb === 'clock' && !(u.at > 0)) bad.push(`${at}: clock needs its t+ offset`);
     if (u.verb === 'target' && !ALL_TARGETS.has(u.target)) {
       bad.push(`${at}: target verb needs target in {${[...ALL_TARGETS].join(',')}}`);
