@@ -199,6 +199,32 @@ const ease = {
 
 const setOf = (u) => (u && u.set) || 'shore';
 
+/* ---- THE HEROCLIP LAW ----------------------------------------------------
+ * Four hero moments raise a LIVING CLOSE-UP: a muted video inset (the
+ * wineskin-inset pattern, printed with motion) seeded from the staged tableau
+ * itself, so lighting and register are baked. The law is the inset law's:
+ * the clip rises ON ITS UNIT (through this table, on the same entry that
+ * fires the unit's act — dawn5's row IS the G5 resolution, because resolving
+ * `greatram` advances into dawn5 on the resolution's own frame) and the
+ * completing click lowers it (entering any unit this table does not grant
+ * takes every clip down). `after` delays the RAISE, never the world (the
+ * wineskin's own plateAt pattern):
+ *   firstmeal 3.6  — the card lands on the STATIC CLUTCH, after O.6's own
+ *                    mid-seg instant (3.0 s) has been measured under open sky
+ *   auger     1.2  — after the unit's settled frame; carried across the bore
+ *                    tick (one twist, two clock units) and down on hiss
+ *   rock1     3.6  — the unit enters on ROCK1.tear (jeer+7.0); +3.6 is the
+ *                    land tick (10.8), the card rises WITH the plume
+ * The world beneath stays deterministic: stage.clip drives want/at on the sim
+ * clock, and the video is a card the sim asserts, not a fact the sim reads. */
+const HEROCLIPS = {
+  firstmeal: { id: 'clip-seize', after: 3.6 },
+  auger:     { id: 'clip-twist', after: 1.2 },
+  bore:      { id: 'clip-twist', after: 0 },
+  dawn5:     { id: 'clip-underbelly', after: 0 },
+  rock1:     { id: 'clip-splash', after: 3.6 },
+};
+
 /* ---- entering a unit ---------------------------------------------------- */
 function enterUnit(n, { silent = false } = {}) {
   const idx = Math.max(0, Math.min(UNITS.length - 1, n | 0));
@@ -229,6 +255,12 @@ function enterUnit(n, { silent = false } = {}) {
   refreshFocus(true);
 
   if (u.act) stage.fire(u.act, silent);
+  /* the heroclip law (table above): granted units raise their clip AFTER the
+     unit's own act has staged the world under it (cave-dawn's plate(null,0)
+     must not swallow the card it shares an entry with); everyone else lowers */
+  const hc = HEROCLIPS[u.key];
+  if (hc) stage.clip(hc.id, 1, hc.after || 0);
+  else stage.clip(null, 0);
   /* A REPLAYED GATE HAS ALREADY BEEN ANSWERED. `silent` means this unit is
      being replayed to rebuild the world on the way to a later one, and the
      reader's own verb is not coming: so its gateAct has to be fired here or the

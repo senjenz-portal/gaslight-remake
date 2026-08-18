@@ -75,7 +75,10 @@ export const UNITS = [
     drop: true, sfx: 'keel' },
 
   /* 1.2 — cameo card, first appearance — the caption plants Beat VI's O.12 echo (cut
-     c-firstly); landfall pantomime tail.
+     c-firstly); the CARD is this unit's close (the staging column stages the cameo
+     + the landfall tail, and the man is still WADING IN — an in-scene close here
+     framed empty sand and broke the anti-skate law at k 11.6); landfall pantomime
+     tail.
    */
   { id: 'ody-i-02-iamulysses', key: 'iamulysses',
     text: 'I am Ulysses son of Laertes, renowned among mankind for all manner of subtlety, so that my fame ascends to heaven. I live in Ithaca…',
@@ -108,21 +111,24 @@ export const UNITS = [
     sfx: 'goats', bed: 'shore-day', act: 'shore-day' },
 
   /* 1.6 — beach feast, all eyes to the strait — stubble-fire smoke plainly seen (O.1
-     reinforcement); sun-down time-lapse; the crew gathers to the council marks.
+     reinforcement); sun-down time-lapse; the crew gathers to the council marks
+     (the ledger's own council lens — the wide budget is spent on bard + dawn, the
+     close-up law).
    */
   { id: 'ody-i-06-smoke', key: 'smoke',
     text: 'While we were feasting we kept turning our eyes towards the land of the Cyclopes, which was hard by, and saw the smoke of their stubble fires. We could almost fancy we heard their voices and the bleating of their sheep and goats, but when the sun went down and it came on dark, we camped down upon the beach, and next morning I called a council.',
-    speaker: '', verb: 'click', focus: 'establishing', page: 1, beat: 1,
+    speaker: '', verb: 'click', focus: 'council', page: 1, beat: 1,
     set: 'shore', clear: true, sfx: 'bleats', act: 'council-ulysses' },
 
-  /* 1.7 — GATE G1 — the beached ship (ship-2 hull centre per the ledger); gateAct
-     crossing performs the embarkation and the strait (cut c-board).
+  /* 1.7 — GATE G1 — the beached ship (ship-2 hull centre per the ledger); the speech is
+     a two-shot CLOSE over the huddle, the hull dot kept in frame (the close-up
+     law); gateAct crossing performs the embarkation and the strait (cut c-board).
    */
   { id: 'ody-i-07-council', key: 'council',
     text: '"Stay here, my brave fellows… all the rest of you, while I go with my ship and exploit these people myself: I want to see if they are uncivilised savages, or a hospitable and humane race."',
     speaker: 'ULYSSES', verb: 'target', target: 'ship', gateAct: 'crossing',
     gateSfx: 'oars', cue: 'click the ship · cross to the mainland',
-    focus: 'council', page: 1, beat: 1, set: 'shore', clear: true },
+    focus: 'council-close', page: 1, beat: 1, set: 'shore', clear: true },
 
   /* 1.8 — mainland approach — slow push onto the laurel mouth (lens cavemouth-push-from
      animates to -to).
@@ -395,14 +401,15 @@ export const UNITS = [
     speaker: 'POLYPHEMUS', verb: 'click', focus: 'twoshot', page: 3, beat: 3,
     set: 'cave', fact: 'O.8b' },
 
-  /* 3.13 — rides the collapse segment (~6 s); the sick-turn in shadow, sound-led — the
+  /* 3.13 — rides the collapse segment (~6 s) on its OWN composed lens (the close-up law:
+     the wide budget is club + return); the sick-turn in shadow, sound-led — the
      wine takes him and the snore-bed comes up under the stake; Beat IV's heading
      lands on this SAME leaf — NO page turn.
    */
   { id: 'ody-iii-13-neck', key: 'neck',
     text: 'His great neck hung heavily backwards and a deep sleep took hold upon him.',
     speaker: '', verb: 'auto', dwell: 6.5, seg: 'collapse', segDur: 6.0,
-    segHold: true, focus: 'establishing', page: 3, beat: 3, set: 'cave',
+    segHold: true, focus: 'collapse', page: 3, beat: 3, set: 'cave',
     clear: true, sfx: 'fall', bed: 'snore', act: 'cave-embers' },
 
   /* ================= BEAT IV · THE STAKE — SET cave · leaf 3 (no turn in; turns out 3→4) ================= */
@@ -471,12 +478,14 @@ export const UNITS = [
     set: 'cave', clear: true, cameo: 'a-cyclops',
     cap: 'A Cyclops · the Neighbours' },
 
-  /* 4.8 — the pun lands — a held beat of silence outside.
+  /* 4.8 — the pun lands — the shout is HIS, so the lens leaves the seams for the
+     groaning bulk against his own fire-glow (the close-up law; the mouth lens had
+     cropped the shouter); a held beat of silence outside.
    */
   { id: 'ody-iv-08-nomankilling', key: 'nomankilling',
     text: '"Noman is killing me by fraud; no man is killing me by force."',
-    speaker: 'POLYPHEMUS', verb: 'click', focus: 'mouth', page: 3, beat: 4,
-    set: 'cave', fact: 'O.10a' },
+    speaker: 'POLYPHEMUS', verb: 'click', focus: 'sprawl-groan', page: 3,
+    beat: 4, set: 'cave', fact: 'O.10a' },
 
   /* 4.9 — O.13a PLANTED — "pray to your father Neptune", said plainly through the stone.
    */
@@ -518,20 +527,22 @@ export const UNITS = [
     beat: 5, set: 'cave', clear: true, bed: 'cave', act: 'cave-predawn' },
 
   /* 5.1 — slow pull from the blocked mouth to Ulysses' face; the seated giant stays in
-     frame — the problem IS the doorway.
+     frame — the problem IS the doorway (own composed lens, the close-up law: the
+     wide read Ulysses at 9.8%).
    */
   { id: 'ody-v-01-puzzling', key: 'puzzling',
     text: 'As for myself I kept on puzzling to think how I could best save my own life and those of my companions; I schemed and schemed, as one who knows that his life depends upon it, for the danger was very great.',
-    speaker: '', verb: 'click', focus: 'establishing', page: 4, beat: 5,
+    speaker: '', verb: 'click', focus: 'puzzling', page: 4, beat: 5,
     set: 'cave', clear: true },
 
   /* 5.2 — withies from the sleeping-litter; ram-trios lashed noiselessly UNDER the
-     giant's breathing.
+     giant's breathing; the lens is ON the working hands (the close-up law —
+     meal-close aimed at the hearth, not the trios).
    */
   { id: 'ody-v-02-withies', key: 'withies',
     text: 'In the end I deemed that this plan would be the best; the male sheep were well grown, and carried a heavy black fleece, so I bound them noiselessly in threes together, with some of the withies on which the wicked monster used to sleep.',
     speaker: '', verb: 'click', seg: 'lash-trios', segDur: 5.0, segHold: false,
-    focus: 'meal-close', page: 4, beat: 5, set: 'cave', clear: true,
+    focus: 'lash-close', page: 4, beat: 5, set: 'cave', clear: true,
     sfx: 'withies' },
 
   /* 5.3 — first man slides under the middle ram; the flanks close over him; five more
@@ -539,7 +550,7 @@ export const UNITS = [
    */
   { id: 'ody-v-03-threetoaman', key: 'threetoaman',
     text: 'There was to be a man under the middle sheep, and the two on either side were to cover him, so that there were three sheep to each man.',
-    speaker: '', verb: 'click', focus: 'meal-close', page: 4, beat: 5,
+    speaker: '', verb: 'click', focus: 'lash-close', page: 4, beat: 5,
     set: 'cave' },
 
   /* 5.4 — GATE G5 — the great ram apart at the rail; the click IS the sling-under, the
@@ -652,32 +663,36 @@ export const UNITS = [
     speaker: '', verb: 'click', focus: 'ship-deck', page: 5, beat: 6,
     set: 'sea', clear: true },
 
-  /* 6.5 — the plea — it stays LIT while gate 2 waits; the next click on the Cyclops is a
-     click OVER these words (O.12 mechanism).
+  /* 6.5 — the plea — the rowers' faces UP at Ulysses, one gripping his arm (the close-up
+     law: at ship-deck they were a 4% speck); it stays LIT while gate 2 waits; the
+     next click on the Cyclops is a click OVER these words (O.12 mechanism).
    */
   { id: 'ody-vi-05-menbeg', key: 'menbeg',
     text: 'Do not… be mad enough to provoke this savage creature further; he has thrown one rock at us already which drove us back again to the mainland, and we made sure it had been the death of us; if he had then heard any further sound of voices he would have pounded our heads and our ship’s timbers into a jelly with the rugged rocks he would have heaved at us, for he can throw them a long way.',
-    speaker: 'THE MEN', verb: 'click', focus: 'ship-deck', page: 5, beat: 6,
+    speaker: 'THE MEN', verb: 'click', focus: 'menbeg-close', page: 5, beat: 6,
     set: 'sea', cameo: 'the-men', cap: 'The Men · six at the oars' },
 
   /* 6.6 — GATE G6, second resolution — NO clear: the men's plea still stands in the
-     margin; the strait lens keeps pleaders and target in one frame, composed
-     inside the painting at the doubled distance (F2).
+     margin; defy-strait keeps pleaders and target in one frame BOTH orientations
+     with the giant at the two-shot floor (split off `strait`, which rock 2's
+     splash pins — the close-up law), composed inside the painting at the doubled
+     distance (F2).
    */
   { id: 'ody-vi-06-defy', key: 'defy',
     text: 'But I would not listen to them, and shouted out to him in my rage',
     speaker: '', verb: 'target', target: 'cyclops', gateAct: 'defy',
     gateSfx: 'shout', cue: 'click the Cyclops · name yourself',
-    focus: 'strait', page: 5, beat: 6, set: 'sea' },
+    focus: 'defy-strait', page: 5, beat: 6, set: 'sea' },
 
-  /* 6.7 — O.12 lands — he shakes off the gripping hand and steps onto the stern rail;
-     the reader's own RELEASE fires the shout; echo off the cliff.
+  /* 6.7 — O.12 lands — he shakes off the gripping hand and steps onto the stern rail; a
+     TRUE close on the man at the rail (the close-up law — the story's peak at 30%,
+     not 7%); the reader's own RELEASE fires the shout; echo off the cliff.
    */
   { id: 'ody-vi-07-myname', key: 'myname',
     text: 'Cyclops, if any one asks you who it was that put your eye out and spoiled your beauty, say it was the valiant warrior Ulysses, son of Laertes, who lives in Ithaca.',
     speaker: 'ULYSSES', verb: 'release', gateAct: 'shout', gateSfx: 'shout',
     cue: 'press and hold · draw breath — release the name', hold: 0.6,
-    focus: 'stern', page: 5, beat: 6, set: 'sea', clear: true,
+    focus: 'stern-rail', page: 5, beat: 6, set: 'sea', clear: true,
     act: 'stern-rail', fact: 'O.12' },
 
   /* 6.8 — push past the ship to the cliff-top close; the groan and half-stagger open the
@@ -696,13 +711,14 @@ export const UNITS = [
     speaker: 'POLYPHEMUS', verb: 'click', focus: 'clifftop', page: 5, beat: 6,
     set: 'sea', fact: 'O.13b' },
 
-  /* 6.10 — flat and cold over dead-calm water; stern foreground, cliff figure small and
-     dark behind.
+  /* 6.10 — flat and cold over dead-calm water; the contract's own two-shot on its own
+     lens (the close-up law: `stern` is a solo close now) — stern foreground, cliff
+     figure small and dark behind at the two-shot floor.
    */
   { id: 'ody-vi-10-hades', key: 'hades',
     text: 'I wish I could be as sure of killing you outright and sending you down to the house of Hades, as I am that it will take more than Neptune to cure that eye of yours.',
-    speaker: 'ULYSSES', verb: 'click', focus: 'stern', page: 5, beat: 6,
-    set: 'sea', clear: true, act: 'stern-ulysses' },
+    speaker: 'ULYSSES', verb: 'click', focus: 'hades-twoshot', page: 5,
+    beat: 6, set: 'sea', clear: true, act: 'stern-ulysses' },
 
   /* 6.11 — O.14a — both hands to the firmament (cut c3); document-weight frame, sky
      darkened a stop, bed to near-silence.

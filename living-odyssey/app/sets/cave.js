@@ -101,6 +101,7 @@ import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
   from '../setkit.js';
 import { STRIPS } from '../strips.js';
 import { SHADOWS } from '../shadows.js';
+import { HEROCLIP_FILES } from '../heroclips.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SCALE = { pxPerM: 43, ulysses: 75, crew: 73, giantStand: 300,
@@ -225,10 +226,19 @@ const SEAMS = [
   { at: [401, 330], r: 20, rise: 14.0, recede: 27.2 },
 ];
 
-/* ---- the lenses, ledger names + values VERBATIM ---------------------- */
+/* ---- the lenses, ledger names + values VERBATIM ----------------------- *
+ * THE CLOSE-UP LAW (owner round, 2026-08-17): character units render their
+ * principal >= 30% of panel height (two-shots >= 22%); only headings/
+ * arrivals/establishing go wide, max 2 wide per beat after its heading. At
+ * 43 px/m the floors bind near k 3.07 (75 px Ulysses) / 2.25 (two-shot) —
+ * the failing lenses below are raised/recentred, and four units left the
+ * wide they shared for lenses of their own (the split law: a shared lens
+ * may not fight two subjects). Dead band >= 0 both orientations. */
 const FOCUS = {
   establishing:        [704, 384, 1.0],
-  'racks-sweep':       [700, 300, 2.0],
+  'racks-sweep':       [700, 315, 2.4],  // CLOSE-UP LAW: was k 2.0 (crew 19%)
+                                          // — racks A..D stay in the sweep,
+                                          // the laden-men tableau now 22.8%
   'doorlight-hinge':   [480, 400, 2.2],
   mouth:               [345, 340, 2.4],
   'discovery-low':     [900, 430, 1.8],
@@ -236,20 +246,45 @@ const FOCUS = {
   twoshot:             [700, 400, 2.6],
   'meal-close':        [780, 430, 2.8],    // the clutch IN SHADOW, x3
   sword:               [740, 440, 3.2],    // pan START — lands on `mouth`
-  'scheme-push':       [640, 470, 3.0],
+  'scheme-push':       [770, 500, 3.2],  // CLOSE-UP LAW: was [640,470,3.0] —
+                                          // recentred ON the swept scheme mark
+                                          // (800,530); Ulysses 29.3% -> 31.3%
   'club-wide':         [880, 360, 1.6],    // mast-scale delivered visually
   'lots-overhead':     [600, 490, 3.0],
   'bowl-close':        [690, 440, 3.4],    // G3's hold frame
   'face-flush':        [710, 380, 4.0],
   'ember-close':       [655, 450, 3.8],    // G4's hold frame
-  'drive-tight':       [644, 505, 3.4],  // RE-AIMED with the swept sprawl (E2):
+  'drive-tight':       [590, 490, 3.4],  // RE-AIMED with the swept sprawl (E2:
                                           // the ledger's (780,430) framed the
-                                          // pens, not the restaged tableau —
-                                          // k stays the ledger's own 3.4
+                                          // pens), then recentred for the
+                                          // CLOSE-UP LAW: the four bearing men
+                                          // (F.stakefive, x 452..482), the
+                                          // shaft and the eye (676,495) all
+                                          // survive the PORTRAIT crop too —
+                                          // (644,505) cut every crewman out
+                                          // of the portrait window; k stays
+                                          // the ledger's own 3.4
   'ram-close':         [838, 425, 3.2],    // G5
   'handpass-tight':    [370, 400, 3.6],    // O.11's core image
   'doorway-twoshot':   [370, 380, 3.0],
-  'freed-overshoulder': [430, 430, 2.0],
+  'freed-overshoulder': [430, 430, 2.35], // CLOSE-UP LAW: was k 2.0 (19.5%) —
+                                          // Ulysses at the cutting 22.9%, the
+                                          // small seated giant kept in frame
+  /* THE CLOSE-UP LAW's four new lenses (each split off a shared lens that
+     fought two subjects): */
+  collapse:            [770, 460, 2.2],  // iii-13 (was establishing): the whole
+                                          // fall — seat (760,452) to the sprawl
+                                          // box [636..938] — composed, not wide
+  'sprawl-groan':      [720, 480, 2.6],  // iv-08 (was mouth, which CROPPED the
+                                          // shouter): the groaning bulk against
+                                          // his own fire-glow, sprawl at 35.2%
+  puzzling:            [638, 450, 1.75], // v-01 (was establishing 9.8%): the
+                                          // blocked mouth + Ulysses by the pens
+                                          // in BOTH orientations; the seated
+                                          // giant is the two-shot's anchor
+  'lash-close':        [950, 505, 3.2],  // v-02/03 (was meal-close, aimed at
+                                          // the hearth): the trios (968/1022),
+                                          // the working hands — Ulysses 31.3%
 };
 
 /* ---- the gates (ledger §gates, cave) ---------------------------------- */
@@ -822,9 +857,20 @@ const TRIOS = [[968, 543], [1022, 537]];      // v-02: lashed on the open floor
 
 export class CaveSet {
   static id = 'cave';
-  /** No inset rises over the cave — the chapter's only inset is the shore's
-   *  wineskin (inset law §6). */
+  /** No IMAGE inset rises over the cave — the chapter's only image plate is
+   *  the shore's wineskin (inset law §6). */
   static insets = {};
+  /** The cave's three HERO CLIPS (heroclip law, main.js): living close-ups
+   *  seeded from this set's own staged tableaux (tools/ody/_heroseed.mjs),
+   *  generated and gated by tools/ody/heroclip_gate.py — identity, bg-drift,
+   *  luma (the deflicker law applied to video), loop closure. The registry of
+   *  record is tools/ody/heroclips.json; the lap asserts the served bytes ARE
+   *  the registry's. Raised/lowered by main.js's HEROCLIPS table, never here. */
+  static clips = {
+    'clip-seize':      HEROCLIP_FILES['clip-seize'],
+    'clip-twist':      HEROCLIP_FILES['clip-twist'],
+    'clip-underbelly': HEROCLIP_FILES['clip-underbelly'],
+  };
   static beds = ['cave'];
 
   constructor(root, st) {

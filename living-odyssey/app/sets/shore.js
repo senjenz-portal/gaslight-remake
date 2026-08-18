@@ -135,13 +135,32 @@ const LAYER = {
            driftPxPerSec: 2.6, per: 12.0, baseOpacity: 0.5 },
 };
 
-/* ---- the lenses, ledger names + values VERBATIM --------------------- */
+/* ---- the lenses, ledger names + values VERBATIM ----------------------- *
+ * THE CLOSE-UP LAW (owner round, 2026-08-17): a unit whose subject is a
+ * CHARACTER's act or speech renders its principal >= 30% of panel height
+ * (two-shots >= 22%); only headings/arrivals/establishing go wide, max 2
+ * wide per beat after its heading. On this 11.3 px/m plate a 20 px Ulysses
+ * needs k ~8.5-11.6 for those floors — the plate goes soft under the crisp
+ * cut (the sources are 600+ px), which reads as depth of field, and the
+ * dead band stays >= 0 both orientations (ledger margins recomputed). */
 const FOCUS = {
   establishing:          [704, 384, 1.0],    // the black strait wide; day reuses it
   smoke:                 [980, 205, 1.9],    // the O.1a carrier frame (i-04)
-  council:               [505, 470, 2.2],
+  council:               [505, 470, 2.2],    // i-06: the crew gathers (composed mid)
+  /* i-07's own close (COUNCIL SPLIT — the shared lens fought i-06's
+     gathering vs i-07's speech): Ulysses at (563,499) before the crew arc
+     (460..484), the ship's hull dot (600,455) alive in frame BOTH
+     orientations — 20 px x 8.6 / 768 = 22.4%, the two-shot floor. */
+  'council-close':       [545, 480, 8.6],
+  /* i-02 + i-03 (the close-up law's one shore exemption): i-02's staging
+     column stages the CAMEO CARD + the landfall tail — the card is the
+     close, and the man is still WADING IN from the shallows (a k 11.6
+     in-scene close framed empty sand and broke the anti-skate law: 2.76
+     css px/frame of magnified plant glide vs the 2.5 law). */
   'camp-fire':           [430, 468, 2.4],
-  'ship-mid':            [560, 470, 3.0],    // Ulysses shouldering the skin (i-10)
+  /* i-10 recomposed (was [560,470,3.0] = Ulysses at 7.8%): the twelve in
+     both flanks (484..566) + the shouldered skin, 22.4% two-shot floor. */
+  'ship-mid':            [545, 488, 8.6],
   'skin-close':          [560, 470, 4.5],    // the skin close IN-WORLD (i-11)
   'cavemouth-push-from': [850, 345, 1.6],    // push start (ledger; i-08 keyframe 1)
   'cavemouth-push-to':   [1008, 290, 2.6],   // push end on the laurel mouth
