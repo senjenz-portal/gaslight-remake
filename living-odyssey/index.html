@@ -41,7 +41,20 @@
   #stage{position:relative;overflow:hidden;border-radius:3px;
     box-shadow:0 26px 70px rgba(0,0,0,.72),0 0 0 1px rgba(205,171,99,.16),
                0 0 92px rgba(96,132,210,.06);
-    background:#05070f;touch-action:manipulation;}
+    background:#05070f;touch-action:manipulation;
+    /* [post] R3 (SYNTHESIS): the stage is ISOLATED and takes the book's ONE
+       stage-level grade (#gradef, feComponentTransfer) — every layer, actor,
+       inset and shot leaves through the same tone pass, so no layer can
+       disagree in tone. Values are the grain registry's (tools/ody/grain
+       .json); static, no wall clock. */
+    isolation:isolate;filter:url(#gradef);}
+  /* [post] R3: ONE SHARED GRAIN — the baked seeded tile (assets/fx/grain
+     .png, bake_grain.py) blended overlay over the whole composed stack.
+     512 px tile at 256 css px = one grain pixel per device pixel at dpr 2.
+     STATIC by law (byte-identical laps); opacity is the registry's. */
+  #stage .fxgrain{position:absolute;inset:0;pointer-events:none;
+    mix-blend-mode:overlay;opacity:.08;
+    background:url(./assets/fx/grain.png) repeat;background-size:256px 256px;}
   #stage .fit{position:absolute;left:0;top:0;width:1408px;height:768px;
     transform-origin:0 0;}
   #stage .cam{position:absolute;left:0;top:0;width:1408px;height:768px;
@@ -260,6 +273,16 @@
     <filter id="dimf" color-interpolation-filters="sRGB">
       <feColorMatrix id="dimm" type="matrix"
         values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"/>
+    </filter>
+    <!-- [post] R3: the ONE stage-level grade over the composed stack — a
+         whisper of gamma unification (tools/ody/grain.json 'grade'; the lap's
+         [grain] gate holds these attributes against the registry). -->
+    <filter id="gradef" color-interpolation-filters="sRGB">
+      <feComponentTransfer id="gradect">
+        <feFuncR type="gamma" amplitude="1" exponent="0.98" offset="0"/>
+        <feFuncG type="gamma" amplitude="1" exponent="0.98" offset="0"/>
+        <feFuncB type="gamma" amplitude="1" exponent="0.98" offset="0"/>
+      </feComponentTransfer>
     </filter>
   </svg>
 

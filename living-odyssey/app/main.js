@@ -63,7 +63,7 @@ import { UNITS, BEATS, beatOf, END_CARD, END_PAGE, PAGES, SET_OF_PAGE,
 import { Margin, Cameo, Leader } from './margin.js';
 import { SimClock, FIXED_DT } from './clock.js';
 import { AudioManager } from './audio.js';
-import { Stage, PLATE } from './stage.js';
+import { Stage, PLATE, SETS } from './stage.js';
 import { drawSigil } from './sigil.js';
 
 const TURN_IN = 0.55;      // cover fades up
@@ -189,7 +189,12 @@ const S = {
   hesit: null,   // AMENDMENT A2 — seconds the reader held the `defy` choice open
 };
 
-const unitErrors = validateUnits(UNITS);
+/* [shot] SHOTS_BY_SET: the set classes' own `static shots` registries — a
+   unit's shot must be a plate its SET declares, and any ring on a shot unit
+   must live in the shot's anchor tables (validateUnits refuses both). */
+const SHOTS_BY_SET = Object.fromEntries(
+  Object.entries(SETS).map(([n, C]) => [n, C.shots || {}]));
+const unitErrors = validateUnits(UNITS, SHOTS_BY_SET);
 if (unitErrors.length) errors.push({ kind: 'units', msg: unitErrors.join(' | ') });
 
 const ease = {
@@ -211,16 +216,15 @@ const setOf = (u) => (u && u.set) || 'shore';
  * wineskin's own plateAt pattern):
  *   firstmeal 3.6  — the card lands on the STATIC CLUTCH, after O.6's own
  *                    mid-seg instant (3.0 s) has been measured under open sky
- *   auger     1.2  — after the unit's settled frame; carried across the bore
- *                    tick (one twist, two clock units) and down on hiss
  *   rock1     3.6  — the unit enters on ROCK1.tear (jeer+7.0); +3.6 is the
  *                    land tick (10.8), the card rises WITH the plume
+ * [shot] auger/bore's clip-twist grants RETIRED 2026-08-17 (SHOTS.md §1.4):
+ * the full-frame shot-drive CLIP supersedes the inset — same staged seed,
+ * same raise tick (shotAt 1.2 on auger), the whole frame instead of a card.
  * The world beneath stays deterministic: stage.clip drives want/at on the sim
  * clock, and the video is a card the sim asserts, not a fact the sim reads. */
 const HEROCLIPS = {
   firstmeal: { id: 'clip-seize', after: 3.6 },
-  auger:     { id: 'clip-twist', after: 1.2 },
-  bore:      { id: 'clip-twist', after: 0 },
   dawn5:     { id: 'clip-underbelly', after: 0 },
   rock1:     { id: 'clip-splash', after: 3.6 },
 };
@@ -252,6 +256,12 @@ function enterUnit(n, { silent = false } = {}) {
   applyCameo(idx);
   wrapEl.style.opacity = '1';
 
+  /* [shot] THE ZOOM CAP becomes law per-unit as shots arrive: a unit whose
+     close is a native plate settles its world lens at k <= SHOT_KCAP, so the
+     crossfade off the shot lands on a composed frame; a unit still AWAITING
+     its shot keeps its close-up lens (and its [closeup] floor — the lap's
+     [shot] gate is the ratchet). */
+  stage.capLens = !!u.shot;
   refreshFocus(true);
 
   if (u.act) stage.fire(u.act, silent);
@@ -261,6 +271,12 @@ function enterUnit(n, { silent = false } = {}) {
   const hc = HEROCLIPS[u.key];
   if (hc) stage.clip(hc.id, 1, hc.after || 0);
   else stage.clip(null, 0);
+  /* [shot] the SHOT rail (SHOTS.md): a unit that declares one crossfades to
+     its full-frame native plate AFTER its own act has staged the world
+     beneath (the heroclip-ordering lesson); a shotless unit lowers the rail
+     in the same 250 ms. Raise state is a pure function of unit entry, so
+     silent replays and harness jumps need nothing extra. */
+  stage.shot(u.shot || null, u.shotAt || 0);
   /* A REPLAYED GATE HAS ALREADY BEEN ANSWERED. `silent` means this unit is
      being replayed to rebuild the world on the way to a later one, and the
      reader's own verb is not coming: so its gateAct has to be fired here or the
@@ -590,8 +606,8 @@ function stepHold(dt) {
   audio.hold(H.resolved ? 0 : H.k);
 
   // the ring stands ON the note in his hand, which is the thing being held up
-  const a = stage.holdAnchor();
-  const p = stage.toScreen(a[0], a[1]);
+  // ([shot] anchorScreen: through WHICHEVER space staged it — shot or world)
+  const p = stage.anchorScreen('hold');
   holdEl.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px)`;
   holdEl.classList.toggle('on', !H.resolved || H.k > 0);
   holdArc.setAttribute('stroke-dashoffset', String(ARC_LEN * (1 - shown)));
@@ -614,8 +630,7 @@ function stepTarget(t, dt) {
     targetEl.classList.remove('on', 'miss');
     return;
   }
-  const a = stage.targetPlate(u.target);
-  const p = stage.toScreen(a[0], a[1]);
+  const p = stage.anchorScreen('target', u.target);   // [shot] shot-or-world
   targetEl.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px)`;
   targetEl.classList.add('on');
   S.gate.missT += dt;
@@ -634,8 +649,7 @@ function hitsTarget(name, px, py) {
      BOTH paths now. */
   if (!stage.targetLive(name)) return false;
   if (stage.targetHit(name, px, py)) return true;
-  const a = stage.targetPlate(name);
-  const p = stage.toScreen(a[0], a[1]);
+  const p = stage.anchorScreen('target', name);       // [shot] shot-or-world
   return Math.hypot(p.x - px, p.y - py) <= TARGET_RADIUS_PX;
 }
 
@@ -818,10 +832,11 @@ function stepLeader() {
   if (!u || S.end.active || S.turn.active || !EMBODIED.has(who)) {
     leader.clear(); return;
   }
-  if (stage.state.dim > 0.12) { leader.clear(); return; }   // a plate owns the frame
-  const head = stage.headPlate(who);
-  if (!head) { leader.clear(); return; }
-  const p = stage.toScreen(head[0], head[1]);
+  /* a plate owns the frame — but a SHOT does not feed the dim: while a shot
+     covers the world the leader draws to the shot's own head table ([shot]) */
+  if (stage.state.dim > 0.12) { leader.clear(); return; }
+  if (!stage.headPlate(who)) { leader.clear(); return; }
+  const p = stage.anchorScreen('head', who);            // [shot] shot-or-world
   const r = stage.rect || stageEl.getBoundingClientRect();
   if (p.x < r.left || p.x > r.right || p.y < r.top || p.y > r.bottom) { leader.clear(); return; }
   const portrait = MQ_PORTRAIT.matches;
@@ -902,8 +917,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight') {
     e.preventDefault();
     if (S.unit && S.unit.verb === 'target' && !S.gate.resolved) {
-      const a = stage.targetPlate(S.unit.target);
-      const p = stage.toScreen(a[0], a[1]);
+      const p = stage.anchorScreen('target', S.unit.target);  // [shot]
       ptr.x = p.x; ptr.y = p.y;
     }
     pressDown();
@@ -956,6 +970,7 @@ const unitView = (u, i) => (!u ? null : {
   at: u.at === undefined ? null : u.at,
   endsBeat: !!u.endsBeat, endsBook: !!u.endsBook,
   cameo: u.cameo || null, cap: u.cap || null, act: u.act || null,
+  shot: u.shot || null, shotAt: u.shotAt === undefined ? null : u.shotAt,
   shown: margin.lastText, blocks: margin.text(),
 });
 
@@ -999,8 +1014,7 @@ harnessOnly.__click = () => { pressDown(); pressUp(); return window.__unit(); };
 harnessOnly.__gateClick = () => {
   const u = S.unit;
   if (!u || u.verb !== 'target') return { ok: false, why: 'not a gate' };
-  const a = stage.targetPlate(u.target);
-  const p = stage.toScreen(a[0], a[1]);
+  const p = stage.anchorScreen('target', u.target);    // [shot] shot-or-world
   ptr.x = p.x; ptr.y = p.y;
   const before = S.i;
   pressDown(); pressUp();
@@ -1023,8 +1037,7 @@ harnessOnly.__gateClick = () => {
 harnessOnly.__gateMiss = (dx = 190, dy = 120) => {
   const u = S.unit;
   if (!u || u.verb !== 'target') return { ok: false, why: 'not a gate' };
-  const a = stage.targetPlate(u.target);
-  const p = stage.toScreen(a[0], a[1]);
+  const p = stage.anchorScreen('target', u.target);    // [shot] shot-or-world
   ptr.x = p.x + dx; ptr.y = p.y + dy;
   const before = S.i, n = S.gate.misses;
   pressDown(); pressUp();
@@ -1082,7 +1095,7 @@ window.__state = () => ({
     const name = S.unit && S.unit.target;
     if (!name) return null;
     const a = stage.targetPlate(name);
-    const p = stage.toScreen(a[0], a[1]);
+    const p = stage.anchorScreen('target', name);      // [shot] shot-or-world
     return { name, plate: [Math.round(a[0]), Math.round(a[1])],
              x: +p.x.toFixed(1), y: +p.y.toFixed(1), live: stage.targetLive(name) };
   })(),

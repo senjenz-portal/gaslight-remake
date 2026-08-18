@@ -38,6 +38,20 @@ import { CaveSet } from './sets/cave.js';
 import { SeaSet } from './sets/sea.js';
 
 const SETS = { shore: ShoreSet, cave: CaveSet, sea: SeaSet };
+export { SETS };
+
+/* [shot] THE ZOOM CAP — the law that replaces the [closeup] floors: digital
+ * zoom is capped at k <= 2.5 anywhere no shot exists. A unit whose floor
+ * needs more DECLARES A SHOT (shot:'<name>') and the stage crossfades to a
+ * full-frame NATIVE plate instead of magnifying the painting. THE CAP
+ * BECOMES LAW PER-UNIT AS SHOTS ARRIVE: main.js arms `capLens` on the units
+ * that declare a shot; a unit still AWAITING its shot keeps its close-up
+ * lens (its [closeup] floor is still the law for it), and the lap's [shot]
+ * gate is the ratchet that refuses an above-cap lens anywhere else. */
+export const SHOT_KCAP = 2.5;
+/* [shot] the crossfade takes the CEILING of the teleport-law band (150-250
+ * ms): a full-frame handoff is the heaviest cut the stage makes. */
+export const SHOT_FADE = 0.25;
 
 export class Stage {
   constructor(root, base = './assets/') {
@@ -62,10 +76,39 @@ export class Stage {
     this.insetWrap = el('div', 'insets', root);
     this.insets = {};
 
+    /* [shot] THE SHOT RAIL: full-frame native plates, INSIDE #fit (they are
+       plate-space pictures and take the fit scale F) but OUTSIDE #cam (a shot
+       is its own composed frame — the camera push must not move it, and the
+       zoom cap does not apply to it: its k is identically 1). It sits over
+       the cam and under the insets: an inset plate may still rise over a
+       shot, because a risen inset owns the whole frame (the plate law). */
+    this.shotWrap = el('div', 'shotrail', this.fit);
+    this.shotWrap.style.cssText =
+      'position:absolute;left:0;top:0;width:1408px;height:768px;pointer-events:none;';
+    this.shots = {};
+    /* [shot] the zoom-cap arm — set per unit by main.js (true on shot units) */
+    this.capLens = false;
+
     this.cam3 = { x: 704, y: 384, k: 1, wx: 704, wy: 384, wk: 1 };
     this.state = { dim: 0, reveal: 0, hold: 0, t: 0, plate: {} };
     this.acts = [];
     this.damp = damp;
+
+    /* ---- [post] R3 (SYNTHESIS): ONE SHARED GRAIN over the composed stack.
+       A single BAKED tile (tools/ody/seamless/bake_grain.py, seeded numpy —
+       registry tools/ody/grain.json) blended `overlay` over plate + actors +
+       insets + shots, LAST child of the isolated #stage, under the one
+       stage-level feComponentTransfer grade (index.html #gradef). STATIC on
+       purpose: no wall clock, no jitter — two laps that step the same
+       numbers paint byte-identical frames. Styling lives in index.html
+       (#stage .fxgrain); here only the element and its preload: the tile is
+       a byte the very first frame reveals, so it joins the FIRST set's
+       decode set (the lazy-load law). */
+    this.grain = el('div', 'fxgrain', root);
+    const gimg = new Image();
+    gimg.decoding = 'sync';
+    gimg.src = this.base + 'fx/grain.png';
+    this._fxPending = [{ src: gimg.src, decode: () => gimg.decode() }];
     this.layout();
   }
 
@@ -124,8 +167,14 @@ export class Stage {
     for (const [id, file] of Object.entries(Cls.insets || {})) this.makeInset(id, file);
     // ... and so are its HERO CLIPS (video insets): poster AND mp4 decode with it
     for (const [id, spec] of Object.entries(Cls.clips || {})) this.makeClip(id, spec);
+    // [shot] ... and so are its SHOTS: a full-frame plate a unit may declare
+    // is a byte the story can reveal, so it decodes WITH its set (lazy-load law)
+    for (const [id, spec] of Object.entries(Cls.shots || {})) this.makeShot(id, spec);
     const pending = this.building;
     this.building = prev;
+    /* [post] the grain tile decodes with the FIRST set built — it is on the
+       very first composed frame, so it may not still be on the wire */
+    if (this._fxPending) { pending.push(...this._fxPending); this._fxPending = null; }
 
     const rec = { set, wrap, missing: [], ready: null };
     rec.ready = Promise.all(pending.map(async (im) => {
@@ -307,6 +356,111 @@ export class Stage {
     }
   }
 
+  /* ---- [shot] the SHOT rail ------------------------------------------ */
+  /**
+   * [shot] Register one SHOT — a full-frame NATIVE plate (1408x768, the
+   * plate space) a unit may declare with `shot:'<name>'`. Image or looping
+   * clip; a clip's first frame IS its poster (the heroclip law), and a
+   * reader who asked the OS for less motion gets the POSTER STILL — the
+   * close-up fact still lands, only the loop nobody asked for is gone.
+   *
+   * spec: { file, [clip, loop], targets: {name:[x,y]}, holds: {name:[x,y]},
+   *         heads: {who:[x,y]} } — anchors are SHOT-SPACE plate px: while
+   * the shot is up, the gate ring, the hold ring and the leader line stand
+   * where the SHOT paints their subject, not where the world beneath does.
+   */
+  makeShot(id, spec) {
+    if (this.shots[id]) return this.shots[id];
+    const card = el('div', 'shotcard', this.shotWrap);
+    card.style.cssText =
+      'position:absolute;left:0;top:0;width:1408px;height:768px;opacity:0;';
+    const im = this.img(spec.file, 'shotimg', card);
+    im.style.cssText = 'position:absolute;left:0;top:0;width:1408px;height:768px;';
+    let vid = null;
+    if (spec.clip) {
+      vid = document.createElement('video');
+      vid.className = 'shotimg';
+      vid.style.cssText = im.style.cssText;
+      vid.muted = true; vid.defaultMuted = true;
+      vid.loop = spec.loop !== false;             // a shot clip loops by default
+      vid.playsInline = true;
+      vid.setAttribute('playsinline', '');
+      vid.setAttribute('muted', '');
+      vid.setAttribute('aria-hidden', 'true');
+      vid.preload = 'auto';
+      vid.src = this.base + spec.clip;            // THE ONE LOAD (makeClip law)
+      if (this.reduced) vid.style.display = 'none';   // the poster carries the frame
+      card.appendChild(vid);
+      const reduced = this.reduced;
+      const ready = new Promise((ok, err) => {
+        if (reduced) { ok(); return; }
+        if (vid.readyState >= 3) { ok(); return; }
+        vid.addEventListener('canplaythrough', () => ok(), { once: true });
+        vid.addEventListener('error', () => err(new Error('video ' + spec.clip)), { once: true });
+      });
+      ready.catch(() => {});
+      this.building.push({ src: this.base + spec.clip, decode: () => ready });
+    }
+    const rec = { card, im, vid, k: 0, want: 0, at: -1e9, art: true,
+                  playing: false, file: spec.file,
+                  targets: spec.targets || {}, holds: spec.holds || {},
+                  heads: spec.heads || {} };
+    this.shots[id] = rec;
+    return rec;
+  }
+
+  /**
+   * [shot] Raise one SHOT (or take them all down) — plate()'s want/at law,
+   * scoped to the shot rail. The RAISE and the FALL are each a fixed 250 ms
+   * eased crossfade driven off the SIM clock (see step()), so a lap that
+   * steps the same numbers paints the same frames (determinism law) and the
+   * lap's [shot] gate can measure the band. The world beneath is untouched:
+   * a shot is a card the sim asserts, not a fact the sim reads — the set
+   * keeps stepping, its clocks keep counting, and the crossfade off the
+   * shot lands on a world that kept living (its lens capped at SHOT_KCAP).
+   */
+  shot(id, after = 0) {
+    for (const name of Object.keys(this.shots)) {
+      const it = this.shots[name];
+      const want = (name === id) ? 1 : 0;
+      if (want && !it.art) {
+        if (!this.gaps.includes('shot:' + name)) this.gaps.push('shot:' + name);
+        continue;
+      }
+      if (it.want !== want) it.at = want ? this.state.t + (after || 0) : this.state.t;
+      it.want = want;
+    }
+    if (id && !this.shots[id]) this.gaps.push('shot-unknown:' + id);
+  }
+
+  /** [shot] the shot that owns the frame right now (k past half), or null */
+  shotUp() {
+    let best = null;
+    for (const [id, it] of Object.entries(this.shots)) {
+      if (it.k >= 0.5 && (!best || it.k > this.shots[best].k)) best = id;
+    }
+    return best;
+  }
+
+  /** [shot] shot-space plate px -> viewport px. A shot is never camera-
+   *  pushed: k = 1 identically, only the fit scale and the portrait crop
+   *  translate apply (the same vis crop the world gets — shot plates are
+   *  authored with the subject inside the portrait-safe band). */
+  shotToScreen(px, py) {
+    const r = this.rect || this.root.getBoundingClientRect();
+    const V = this.vis || { w: PLATE.w, h: PLATE.h };
+    const X = (V.w - PLATE.w) / 2;               // centre crop, 0 in landscape
+    return { x: r.left + (px + X) * this.F, y: r.top + py * this.F };
+  }
+
+  /** [shot] viewport px -> shot-space plate px */
+  shotToPlate(sx, sy) {
+    const r = this.rect || this.root.getBoundingClientRect();
+    const V = this.vis || { w: PLATE.w, h: PLATE.h };
+    const X = (V.w - PLATE.w) / 2;
+    return { x: (sx - r.left) / this.F - X, y: (sy - r.top) / this.F };
+  }
+
   setHold(k) {
     this.state.hold = clamp01(k);
     if (this.active && this.active.setHold) this.active.setHold(k);
@@ -332,8 +486,15 @@ export class Stage {
        camera owns the frame (sec 8.3). */
     const over = this.active && this.active.camOverride && this.active.camOverride();
     const f = this.focusPlate(over || name);
-    this.cam3.wx = f[0]; this.cam3.wy = f[1]; this.cam3.wk = f[2];
-    if (snap) { this.cam3.x = f[0]; this.cam3.y = f[1]; this.cam3.k = f[2]; }
+    /* [shot] THE ZOOM CAP: on a unit whose close arrives as a SHOT — a native
+       plate — no lens digitally magnifies the painting past SHOT_KCAP; the
+       world beneath the shot settles at the capped lens so the fade off the
+       shot lands on a composed frame. main.js arms `capLens` per unit — the
+       cap becomes law per-unit as shots arrive (a unit still AWAITING its
+       shot keeps its close-up lens and its [closeup] floor). */
+    const k = this.capLens ? Math.min(f[2], SHOT_KCAP) : f[2];
+    this.cam3.wx = f[0]; this.cam3.wy = f[1]; this.cam3.wk = k;
+    if (snap) { this.cam3.x = f[0]; this.cam3.y = f[1]; this.cam3.k = k; }
   }
 
   applyCam() {
@@ -382,23 +543,64 @@ export class Stage {
   }
 
   /* ---- what the reader can point at ---------------------------------- */
+  /* [shot] ANCHORS FOLLOW THE FRAME THE READER SEES. While a shot owns the
+     frame, a target/hold/leader anchor the shot declares stands where the
+     SHOT paints its subject (shot-space plate px, mapped by shotToScreen);
+     anything the shot does not declare falls through to the world beneath.
+     main.js asks `anchorScreen`/`targetHit` and never needs to know which
+     space answered — the pair is the WHOLE main.js mapping delta. */
   targetPlate(name) {
+    const s = this.shotUp();
+    if (s && this.shots[s].targets[name]) return this.shots[s].targets[name];
     const p = this.active && this.active.targetPlate(name);
     return p || [704, 384];
   }
 
-  targetLive(name) { return !!(this.active && this.active.targetLive(name)); }
+  targetLive(name) {
+    const s = this.shotUp();
+    if (s && this.shots[s].targets[name]) return true;   // the shot stages it
+    return !!(this.active && this.active.targetLive(name));
+  }
 
   targetHit(name, sx, sy) {
+    const s = this.shotUp();
+    if (s && this.shots[s].targets[name]) {
+      const a = this.shots[s].targets[name];
+      const p = this.shotToPlate(sx, sy);
+      return Math.hypot(p.x - a[0], p.y - a[1]) <= 64;   // native-close subject
+    }
     if (!this.active) return false;
     return this.active.targetHit(name, this.toPlate(sx, sy));
   }
 
-  headPlate(who) { return this.active ? this.active.headPlate(who) : null; }
+  headPlate(who) {
+    const s = this.shotUp();
+    if (s && this.shots[s].heads[who]) return this.shots[s].heads[who];
+    return this.active ? this.active.headPlate(who) : null;
+  }
 
   holdAnchor() {
+    const s = this.shotUp();
+    if (s) {
+      const h = Object.values(this.shots[s].holds);
+      if (h.length) return h[0];
+    }
     const a = this.active && this.active.holdAnchor && this.active.holdAnchor();
     return a || [this.cam3.x, this.cam3.y];
+  }
+
+  /** [shot] anchor -> viewport px through WHICHEVER space staged it */
+  anchorScreen(kind, name) {
+    const s = this.shotUp();
+    const table = s && (kind === 'target' ? this.shots[s].targets
+                : kind === 'head' ? this.shots[s].heads : this.shots[s].holds);
+    if (table && (name ? table[name] : Object.values(table)[0])) {
+      const a = name ? table[name] : Object.values(table)[0];
+      return this.shotToScreen(a[0], a[1]);
+    }
+    const a = kind === 'target' ? this.targetPlate(name)
+      : kind === 'head' ? this.headPlate(name) : this.holdAnchor();
+    return a ? this.toScreen(a[0], a[1]) : null;
   }
 
   /* ---- the verbs ------------------------------------------------------ */
@@ -450,6 +652,17 @@ export class Stage {
     for (const name of Object.keys(this.insets)) {
       const it = this.insets[name];
       it.k = 0; it.want = 0; it.at = -1e9;
+      if (it.vid && it.playing) {
+        it.playing = false;
+        it.vid.pause();
+        try { it.vid.currentTime = 0; } catch (_) { /* poster on next raise */ }
+      }
+    }
+    /* [shot] shots fall with everything else */
+    for (const name of Object.keys(this.shots)) {
+      const it = this.shots[name];
+      it.k = 0; it.want = 0; it.at = -1e9;
+      it.card.style.opacity = '0';
       if (it.vid && it.playing) {
         it.playing = false;
         it.vid.pause();
@@ -537,6 +750,40 @@ export class Stage {
     this.state.dim = dim = clamp01(dim);
     this.applyDimMatrix();
 
+    /* ---- [shot] the shot rail: a FIXED 250 ms eased crossfade ---------- */
+    /* k ramps linearly on the SIM clock (dt/SHOT_FADE per step — a pure
+       function of the stepped time, byte-equal across laps) and the painted
+       opacity is easeInOut(k): the teleport-law shape at the band's ceiling.
+       Shots do NOT feed the dim — a shot COVERS the world, it does not put a
+       plate up over a dimmed one. The video half is the makeClip law: the
+       sim asserts the card, the wall clock merely advances its frames, and
+       the fall rewinds it so a re-raise starts from the poster. */
+    for (const id of Object.keys(this.shots)) {
+      const P = this.shots[id];
+      const want = (P.want && t >= P.at) ? 1 : 0;
+      P.k = clamp01(P.k + (want ? 1 : -1) * (dt / SHOT_FADE));
+      P.card.style.opacity = easeInOut(P.k).toFixed(3);
+      if (P.vid) {
+        if (want > 0 && !P.playing) {
+          P.playing = true;
+          if (!this.reduced) {
+            try { P.vid.currentTime = 0; } catch (_) { /* not yet seekable */ }
+            const pr = P.vid.play();
+            if (pr && pr.catch) pr.catch(() => {});
+          }
+        } else if (!want && P.playing && P.k <= 0) {
+          P.playing = false;
+          if (!this.reduced) {
+            P.vid.pause();
+            try { P.vid.currentTime = 0; } catch (_) { /* poster next raise */ }
+          }
+        }
+      }
+    }
+    /* [shot] the shot layer rides the same portrait crop the world gets */
+    const Vs = this.vis || { w: PLATE.w, h: PLATE.h };
+    this.shotWrap.style.transform = `translate(${((Vs.w - PLATE.w) / 2).toFixed(1)}px,0px)`;
+
     if (this.active) this.active.step(t, dt, { dim });
   }
 
@@ -546,10 +793,14 @@ export class Stage {
     /* every inset any built SET has registered, by its own id — no book names */
     const plate = { dim: +this.state.dim.toFixed(3) };
     for (const id of Object.keys(this.insets)) plate[id] = +(p[id] || 0).toFixed(3);
+    /* [shot] the lap's [shot] gate reads these: which shot, how far up */
+    const shot = { up: this.shotUp() };
+    for (const id of Object.keys(this.shots)) shot[id] = +this.shots[id].k.toFixed(3);
     return {
       set: this.activeName,
       mounted: Object.keys(this.sets),
       plate,
+      shot,
       cam: { x: +this.cam3.x.toFixed(1), y: +this.cam3.y.toFixed(1),
              k: +this.cam3.k.toFixed(3), wantK: +this.cam3.wk.toFixed(3) },
       acts: this.acts.slice(),

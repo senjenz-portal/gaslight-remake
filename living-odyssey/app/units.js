@@ -128,7 +128,8 @@ export const UNITS = [
     text: '"Stay here, my brave fellows… all the rest of you, while I go with my ship and exploit these people myself: I want to see if they are uncivilised savages, or a hospitable and humane race."',
     speaker: 'ULYSSES', verb: 'target', target: 'ship', gateAct: 'crossing',
     gateSfx: 'oars', cue: 'click the ship · cross to the mainland',
-    focus: 'council-close', page: 1, beat: 1, set: 'shore', clear: true },
+    focus: 'council-close', shot: 'shot-council', page: 1, beat: 1,
+    set: 'shore', clear: true },
 
   /* 1.8 — mainland approach — slow push onto the laurel mouth (lens cavemouth-push-from
      animates to -to).
@@ -150,8 +151,9 @@ export const UNITS = [
    */
   { id: 'ody-i-10-wineskin', key: 'wineskin',
     text: 'I told my men to draw the ship ashore, and stay where they were, all but the twelve best among them, who were to go along with myself. I also took a goatskin of sweet black wine which had been given me by Maron, son of Euanthes, who was priest of Apollo the patron god of Ismarus, and lived within the wooded precincts of the temple.',
-    speaker: '', verb: 'click', focus: 'ship-mid', page: 1, beat: 1,
-    set: 'shore', clear: true, sfx: 'slosh', act: 'twelve-at-ship' },
+    speaker: '', verb: 'click', focus: 'ship-mid', shot: 'shot-wineskin',
+    page: 1, beat: 1, set: 'shore', clear: true, sfx: 'slosh',
+    act: 'twelve-at-ship' },
 
   /* 1.11 — O.2 strength detail — the skin close IN-WORLD, not the inset yet.
    */
@@ -319,8 +321,8 @@ export const UNITS = [
    */
   { id: 'ody-iii-03-scheme', key: 'scheme',
     text: '…so I was left to scheme some way of taking my revenge and covering myself with glory.',
-    speaker: '', verb: 'click', focus: 'scheme-push', page: 3, beat: 3,
-    set: 'cave', clear: true, sfx: 'shoo', act: 'scheme' },
+    speaker: '', verb: 'click', focus: 'scheme-push', shot: 'shot-scheme',
+    page: 3, beat: 3, set: 'cave', clear: true, sfx: 'shoo', act: 'scheme' },
 
   /* 3.4 — the searching pan finds the club; mast-scale delivered VISUALLY — figures tiny
      beside it; cut/fine/point/char montage under the ellipses.
@@ -367,8 +369,8 @@ export const UNITS = [
     text: 'Look here, Cyclops… you have been eating a great deal of man’s flesh, so take this and drink some wine, that you may see what kind of liquor we had on board my ship…',
     speaker: 'ULYSSES', verb: 'release', gateAct: 'bowl-pour',
     cue: 'hold the bowl · fill it — let go to pour — rest is allowed',
-    hold: 1.6, rest: true, focus: 'bowl-close', page: 3, beat: 3, set: 'cave',
-    clear: true, sfx: 'pour', act: 'bowl-offer' },
+    hold: 1.6, rest: true, focus: 'bowl-close', shot: 'shot-bowl', page: 3,
+    beat: 3, set: 'cave', clear: true, sfx: 'pour', act: 'bowl-offer' },
 
   /* 3.9 — lands on pour-1 release; the flushed face leans down, the one eye glittering;
      "tell me your name" baits O.8's trap.
@@ -383,15 +385,17 @@ export const UNITS = [
    */
   { id: 'ody-iii-10-thrice', key: 'thrice',
     text: 'I then gave him some more; three times did I fill the bowl for him, and three times did he drain it without thought or heed; then, when I saw that the wine had got into his head, I said to him as plausibly as I could:',
-    speaker: '', verb: 'auto', dwell: 8.0, focus: 'bowl-close', page: 3,
-    beat: 3, set: 'cave', clear: true, fact: 'O.7' },
+    speaker: '', verb: 'auto', dwell: 8.0, focus: 'bowl-close',
+    shot: 'shot-bowl', page: 3, beat: 3, set: 'cave', clear: true, fact: 'O.7' },
 
-  /* 3.11 — the pun — half-bow at "plausibly"; near-silence under the line.
+  /* 3.11 — the pun — half-bow at "plausibly"; near-silence under the line. [shot] THE
+     FIRST PAINTED SHOT (SHOTS.md, owner pick A-noman-cand1): a native dialogue
+     close crossfades over the capped twoshot lens; the world steps beneath.
    */
   { id: 'ody-iii-11-noman', key: 'noman',
     text: 'Cyclops, you ask my name and I will tell it you; give me, therefore, the present you promised me; my name is Noman; this is what my father and mother and my friends have always called me.',
-    speaker: 'ULYSSES', verb: 'click', focus: 'twoshot', page: 3, beat: 3,
-    set: 'cave', clear: true, fact: 'O.8a' },
+    speaker: 'ULYSSES', verb: 'click', focus: 'twoshot', shot: 'shot-noman',
+    page: 3, beat: 3, set: 'cave', clear: true, fact: 'O.8a' },
 
   /* 3.12 — the price, adjacent to the pun; the empty bowl loose in his fingers; this
      click fires the collapse.
@@ -428,39 +432,41 @@ export const UNITS = [
     text: '"Then I thrust the beam of wood far into the embers to heat it, and encouraged my men lest any of them should turn faint-hearted."',
     speaker: '', verb: 'hold',
     cue: 'hold the stake in the embers · until it glows — rest is allowed',
-    hold: 3.0, rest: true, focus: 'ember-close', page: 3, beat: 4, set: 'cave',
-    clear: true, sfx: 'embers' },
+    hold: 3.0, rest: true, focus: 'ember-close', shot: 'shot-embers', page: 3,
+    beat: 4, set: 'cave', clear: true, sfx: 'embers' },
 
   /* 4.2 — fires on gate completion and starts the blinding clock; the drawn point lights
      five faces from below; margin cleared for the twist.
    */
   { id: 'ody-iv-02-glowing', key: 'glowing',
     text: '"When the wood, green though it was, was about to blaze, I drew it out of the fire glowing with heat, and my men gathered round me, for heaven had filled their hearts with courage."',
-    speaker: '', verb: 'auto', dwell: 3.6, focus: 'ember-close', page: 3,
-    beat: 4, set: 'cave', clear: true },
+    speaker: '', verb: 'auto', dwell: 3.6, focus: 'ember-close',
+    shot: 'shot-embers', page: 3, beat: 4, set: 'cave', clear: true },
 
   /* 4.3 — the drive itself is PANTOMIME (cut #6); the auger simile lands ON the twist —
      O.9.
    */
   { id: 'ody-iv-03-auger', key: 'auger',
     text: '"…I kept turning it round and round as though I were boring a hole in a ship’s plank with an auger, which two men with a wheel and strap can keep on turning as long as they choose."',
-    speaker: '', verb: 'clock', at: 4.2, focus: 'drive-tight', page: 3,
-    beat: 4, set: 'cave', clear: true, sfx: 'grind', fact: 'O.9' },
+    speaker: '', verb: 'clock', at: 4.2, focus: 'drive-tight',
+    shot: 'shot-drive', shotAt: 1.2, page: 3, beat: 4, set: 'cave',
+    clear: true, sfx: 'grind', fact: 'O.9' },
 
   /* 4.4 — steam plumes up the firelight shaft; horror staged in shadow, not lingered.
    */
   { id: 'ody-iv-04-bore', key: 'bore',
     text: '"Even thus did we bore the red hot beam into his eye, till the boiling blood bubbled all over it as we worked it round and round, so that the steam from the burning eyeball scalded his eyelids and eyebrows, and the roots of the eye sputtered in the fire."',
-    speaker: '', verb: 'clock', at: 7.4, focus: 'drive-tight', page: 3,
-    beat: 4, set: 'cave', sfx: 'sputter' },
+    speaker: '', verb: 'clock', at: 7.4, focus: 'drive-tight',
+    shot: 'shot-drive', page: 3, beat: 4, set: 'cave', sfx: 'sputter' },
 
   /* 4.5 — the HISS then the YELL — camera shake, roof-dust, the flocks surging in the
      pens; the snore-bed dies with the sleep it belonged to.
    */
   { id: 'ody-iv-05-hiss', key: 'hiss',
     text: '"As a blacksmith plunges an axe or hatchet into cold water to temper it—for it is this that gives strength to the iron—and it makes a great hiss as he does so, even thus did the Cyclops’ eye hiss round the beam of olive wood, and his hideous yells made the cave ring again."',
-    speaker: '', verb: 'clock', at: 10.4, focus: 'drive-tight', page: 3,
-    beat: 4, set: 'cave', sfx: 'hiss', bed: 'cave' },
+    speaker: '', verb: 'clock', at: 10.4, focus: 'drive-tight',
+    shot: 'shot-drive', page: 3, beat: 4, set: 'cave', sfx: 'hiss',
+    bed: 'cave' },
 
   /* 4.6 — pluck-and-hurl pantomime inside the ellipsis (cut #7); lamplight gathers
      through the boulder seams; click pacing resumes next unit.
@@ -560,8 +566,8 @@ export const UNITS = [
     text: 'As for myself there was a ram finer than any of the others…',
     speaker: '', verb: 'target', target: 'ram-great', gateAct: 'slingUnder',
     gateSfx: 'wool', cue: 'click the great ram · go last, beneath him',
-    focus: 'ram-close', page: 4, beat: 5, set: 'cave', clear: true,
-    act: 'ram-stand' },
+    focus: 'ram-close', shot: 'shot-ram', page: 4, beat: 5, set: 'cave',
+    clear: true, act: 'ram-stand' },
 
   /* 5.5 — dawn-shaft breaks past the seated giant; the flock streams toward the light;
      the ewes stay bleating.
@@ -644,8 +650,9 @@ export const UNITS = [
    */
   { id: 'ody-vi-02-taunt', key: 'taunt',
     text: 'Cyclops… you should have taken better measure of your man before eating up his comrades in your cave. You wretch, eat up your visitors in your own house? You might have known that your sin would find you out, and now Jove and the other gods have punished you.',
-    speaker: 'ULYSSES', verb: 'auto', dwell: 6.0, focus: 'stern', page: 5,
-    beat: 6, set: 'sea', clear: true, act: 'stern-ulysses' },
+    speaker: 'ULYSSES', verb: 'auto', dwell: 6.0, focus: 'stern',
+    shot: 'shot-taunt', page: 5, beat: 6, set: 'sea', clear: true,
+    act: 'stern-ulysses' },
 
   /* 6.3 — ROCK 1's clock (~12 s): tear, arc, splash ahead of the rudder, the wash drives
      the ship BACK, pole-push, oars bite; margin cleared for the arc; wait rock1
@@ -692,8 +699,8 @@ export const UNITS = [
     text: 'Cyclops, if any one asks you who it was that put your eye out and spoiled your beauty, say it was the valiant warrior Ulysses, son of Laertes, who lives in Ithaca.',
     speaker: 'ULYSSES', verb: 'release', gateAct: 'shout', gateSfx: 'shout',
     cue: 'press and hold · draw breath — release the name', hold: 0.6,
-    focus: 'stern-rail', page: 5, beat: 6, set: 'sea', clear: true,
-    act: 'stern-rail', fact: 'O.12' },
+    focus: 'stern-rail', shot: 'shot-myname', page: 5, beat: 6, set: 'sea',
+    clear: true, act: 'stern-rail', fact: 'O.12' },
 
   /* 6.8 — push past the ship to the cliff-top close; the groan and half-stagger open the
      unit (c2); the ruined eye toward the sea.
@@ -834,8 +841,14 @@ export const TARGETS_BY_SET = {
   sea:   ['cyclops'],
 };
 
-/** Cheap shape check — the harness asserts this returns []. */
-export function validateUnits(units = UNITS) {
+/** Cheap shape check — the harness asserts this returns [].
+ *  [shot] `shotsBySet` (set name -> the SET class's `static shots` registry)
+ *  is optional and main.js passes the real one: a `shot:` a unit declares
+ *  must be a plate its SET declares (the lazy-load law needs the bytes to
+ *  decode with the set), and a target/hold on a shot unit must be carried
+ *  by the shot's own anchor tables — a ring must never point into the
+ *  covered world. */
+export function validateUnits(units = UNITS, shotsBySet = null) {
   const bad = [];
   const seen = new Set();
   const seenKeys = new Set();
@@ -874,6 +887,22 @@ export function validateUnits(units = UNITS) {
       bad.push(`${at}: gate '${u.target}' is not a target of SET '${set}'`);
     }
     if (u.verb === 'target' && !u.cue) bad.push(`${at}: target gate needs an explicit cue`);
+    /* [shot] SHOTS_BY_SET: a shot is a byte of its SET */
+    if (u.shot && shotsBySet) {
+      const spec = (shotsBySet[set] || {})[u.shot];
+      if (!spec) {
+        bad.push(`${at}: shot '${u.shot}' is not declared by SET '${set}'`);
+      } else {
+        if (u.target && !(spec.targets && spec.targets[u.target])) {
+          bad.push(`${at}: target '${u.target}' is not in shot '${u.shot}'s anchor tables`);
+        }
+        if ((u.verb === 'hold' || u.verb === 'release') &&
+            !(spec.holds && Object.keys(spec.holds).length)) {
+          bad.push(`${at}: hold verb on shot '${u.shot}' with no hold anchor in the shot`);
+        }
+      }
+    }
+    if (u.shotAt !== undefined && !u.shot) bad.push(`${at}: shotAt without a shot`);
     if (u.cameo && !u.cap) bad.push(`${at}: cameo needs a caption`);
     if (i > 0 && u.page < units[i - 1].page) bad.push(`${at}: page went backwards`);
     if (i > 0 && u.page !== units[i - 1].page && (u.set || 'shore') === units[i - 1].set &&
