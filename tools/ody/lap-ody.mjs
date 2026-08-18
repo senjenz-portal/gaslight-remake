@@ -97,6 +97,51 @@ const STRIPS = JSON.parse(fs.readFileSync(path.join(HERE, 'strips.json'), 'utf8'
 const REGRADE = JSON.parse(fs.readFileSync(path.join(HERE, 'regrade.json'), 'utf8'));
 const REGRADE_DE_MAX = 9;
 const REGRADE_SETTLES = 6;
+/* [wrap] R2 (tools/ody/research/SYNTHESIS.md; baked by seamless/wrap.py via
+ * bake_regrade.py): light wrap + edge decontamination in the graded cuts.
+ * The law: at each settle entry the MOUNTED actor's rim peak-gradient (p95
+ * of |grad L| on the silhouette boundary of plate+cut composited at the
+ * mark, true scale) is <= WRAP_RIM_MAX x the plate's own edge register
+ * (p99.5 of |grad L| in a context window around the mount). The audit
+ * (seamless/audit-integration.md c) measured the shipped rims at ~1.8x avg;
+ * 1.3 is the synthesis's own gate, re-measured here IN PAGE off the served
+ * bytes — not the bake's numbers read back. */
+const WRAP_RIM_MAX = (REGRADE.gate && REGRADE.gate.rimRatioMax) || 1.3;
+/* [grain] R3 (SYNTHESIS): ONE SHARED GRAIN + ONE STAGE GRADE over the
+ * composed stack — tools/ody/grain.json, baked by seamless/bake_grain.py
+ * (seeded numpy tile; STATIC, no wall clock — the byte-identical-laps law).
+ * The lap holds: (a) the served tile's sha IS the bake's, (b) the wiring
+ * (.fxgrain last child of the isolated #stage, overlay at the registry's
+ * opacity; #gradef feComponentTransfer at the registry's exponent),
+ * (c) the pass PAINTS, proven by missing (hide it and the frame must
+ * change), (d) same-frame determinism (two screenshots of one sim frame
+ * byte-equal — a wall clock anywhere in the post stack fails this), and
+ * (e) the NOISE REGISTER at the audited settles: high-pass std of the
+ * actor's torso patch vs the plate at his feet within the band below —
+ * the audit measured the naked actors' interior register at 2-3x the
+ * plate's; the shared grain is the floor that compresses it. */
+const GRAIN = JSON.parse(fs.readFileSync(path.join(HERE, 'grain.json'), 'utf8'));
+const GRAIN_NOISE_MAX = 2.2;       // under the audit's own 2-3x defect band
+const GRAIN_NOISE_MIN = 1 / 2.2;   // and its inversion (vector-flat actor)
+const GRAIN_MISS_PCT_MIN = 1.0;    // % of stage px the post pass must move
+const FX_SETTLE_MIN = 3;           // uncovered settles the laws must sample
+/* [atmo] R5 (SYNTHESIS): THE ATMOSPHERE SANDWICH — tools/ody/atmo.json,
+ * baked by seamless/bake_atmo.py: each painted state's own extracted
+ * haze/bloom band composited OVER the actors (the audit-proven bloomFire
+ * device as law). The lap holds: (a) served band shas, (b) wiring — the
+ * bands mounted AFTER the .actors group, screen-blended, one per painted
+ * state, and (c) at each GATED settle (band luma over the actor's torso
+ * >= the registry's floor): the sampled actors SHOW the band's tint,
+ * proven by missing (band hidden vs shown). */
+const ATMO = JSON.parse(fs.readFileSync(path.join(HERE, 'atmo.json'), 'utf8'));
+const ATMO_TINT_MIN = 0.4;         // luma the hidden-vs-shown delta must carry
+const ATMO_SETTLE_MIN = 2;         // gated settles the tint law must sample
+/* unit key -> regrade registry key, off the registry's own settle ids */
+const SETTLE_UNIT = {};
+for (const k of (REGRADE.gate && REGRADE.gate.settles) || []) {
+  const e = REGRADE.entries[k];
+  if (e && e.settle) SETTLE_UNIT[e.settle.split('-').slice(3).join('-')] = k;
+}
 /* tools/ody/heroclips.json — the HERO CLIP registry: four living close-up
  * video insets, seeded from the staged tableaux (_heroseed.mjs), generated
  * (Seedance) and build-gated by heroclip_gate.py (identity ±20 on 6 frames,
@@ -113,6 +158,58 @@ for (const [id, c] of Object.entries(HEROREG.clips || {})) {
 }
 const HERO_UP_MIN = 0.85;           // raised, same floor as the wineskin's
 const HERO_DOWN_MAX = 0.1;          // lowered, same ceiling as the inset law's
+
+/* ---- [shot] THE SHOT LAW (SHOTS.md, prototype C promoted) --------------- *
+ * tools/ody/shots.json — the SHOT registry: full-frame NATIVE plates a unit
+ * may declare with `shot:'<name>'` (1408x768 in plate space, owner-picked
+ * from the seeded i2i lane, sha-recorded as shipped). The stage crossfades
+ * to the plate in a FIXED 250 ms on the SIM clock; the world keeps stepping
+ * beneath; anchors the shot declares live in SHOT space.
+ *
+ * THE ZOOM CAP: k <= SHOT_KCAP anywhere no shot exists — BUT the cap
+ * becomes law PER-UNIT AS SHOTS ARRIVE. A unit whose [closeup] floor still
+ * needs k > 2.5 and whose shot has NOT landed keeps its lens (its floor
+ * gate keeps running); it is enumerated in SHOT_PENDING below, and the gate
+ * is the RATCHET: (a) an above-cap lens on a unit that is neither
+ * shot-bearing nor pending FAILS, (b) a pending unit whose shot lands (or
+ * whose lens fell to the cap) FAILS until it is retired from the registry,
+ * (c) a shot-bearing unit must settle at wantK <= SHOT_KCAP — its floor
+ * gate retires (the native plate IS the close). */
+const SHOTREG = JSON.parse(fs.readFileSync(path.join(HERE, 'shots.json'), 'utf8'));
+const SHOT_OF = {};                 // unit key -> the shot granted to it
+for (const [id, s] of Object.entries(SHOTREG.shots || {})) {
+  for (const k of s.units || []) SHOT_OF[k] = id;
+}
+const SHOT_KCAP = 2.5;              // stage.js SHOT_KCAP, the law constant
+const SHOT_FADE = 0.25;             // stage.js SHOT_FADE — the band's width
+const SHOT_UP_MIN = 0.999;          // fully risen at settle (k ramps to 1)
+const SHOT_DOWN_MAX = 0.001;        // fully fallen on a shotless unit
+/* SHOT_PENDING — transcribed from SHOTS.md §2a (the 19 close-gated units
+ * whose floors need native plates; provenance shot_audit.mjs) plus the
+ * E-class above-cap lenses §1 leaves to the generation lane's recompose
+ * (skin-close 4.5, cavemouth-push-to 2.6, ship-deck 2.6, moonpath 3.2,
+ * homeward 2.6; shiftstone rides the sword lens until shot-sword lands).
+ * noman LEFT this table 2026-08-17 — the first landed shot. */
+const SHOT_PENDING = {
+  /* awaiting their plates (SHOTS.md §2a).
+   * SHOTGEN 2026-08-17 retired 10 lane-1 rows (council, lookhere, thrice,
+   * embers, glowing, auger, bore, hiss, taunt, myname — their shots LANDED,
+   * gates in tools/ody/shots.json) and 3 lane-2 rows (wineskin, scheme,
+   * greatram). Three lane-1 shots were REJECTED by the gate set at
+   * the 2-generation budget (sword: NCC 0.697/q01 0.581 vs the 0.71/0.60
+   * law; lash: identity -27/-38 vs +-20; clifftop: identity 23.4/20.3 +
+   * q11 0.597) — their rows STAY pending for a future lane, lenses live. */
+  sword: 'shot-sword',
+  withies: 'shot-lash', threetoaman: 'shot-lash',
+  prophecy: 'shot-clifftop', fatherson: 'shot-clifftop',
+  menbeg: 'shot-menbeg',
+  /* E-class above-cap lenses awaiting the lane's recompose-at-2.5 */
+  cave: 'recompose cavemouth-push-to', misgave: 'recompose cavemouth-push-to',
+  twentyone: 'recompose skin-close (or the optional object shot)',
+  shiftstone: 'rides the sword lens until shot-sword lands',
+  twiceasfar: 'recompose ship-deck', ram: 'recompose homeward',
+  sailedon: 'recompose moonpath',
+};
 
 function contentUnits() {
   const md = fs.readFileSync(path.join(ROOT, 'CONTENT-odyssey.md'), 'utf8');
@@ -934,7 +1031,7 @@ async function main() {
     for (const key of settles) {
       const e = REGRADE.entries[key];
       if (!e) { bad(`[regrade] settle '${key}' has no registry entry`); continue; }
-      const m = await page.evaluate(async ({ plate, graded, mark, hPx }) => {
+      const m = await page.evaluate(async ({ plate, graded, mark, hPx, pin, flip }) => {
         const load = (u) => new Promise((ok, err) => {
           const im = new Image();
           im.onload = () => ok(im);
@@ -1003,12 +1100,91 @@ async function main() {
         const rm = rs.map((v) => v / Math.max(1, rn)),
               cm = cs.map((v) => v / Math.max(1, cn));
         const la = lab(rm), lb = lab(cm);
+        /* ---- [wrap] the rim register, measured on the true-scale mount --- *
+         * seamless/wrap.py rim_ratio(), ported: composite the graded cut on
+         * the plate at the mark (placeSprite's own k = hPx / srcH), then
+         * p95 |grad L| ON the silhouette boundary vs p99.5 |grad L| of the
+         * BARE plate in a context window around the mount. */
+        const k = hPx / G.h;
+        const rw = Math.max(1, Math.round(G.w * k)),
+              rh = Math.max(1, Math.round(G.h * k));
+        const px = flip ? (G.w - pin[0]) * k : pin[0] * k;
+        const left = Math.round(mark[0] - px),
+              top = Math.round(mark[1] - pin[1] * k);
+        const comp = document.createElement('canvas');
+        comp.width = P.w; comp.height = P.h;
+        const cg = comp.getContext('2d', { willReadFrequently: true });
+        cg.drawImage(await load(plate), 0, 0);
+        const am = document.createElement('canvas');
+        am.width = P.w; am.height = P.h;
+        const ag = am.getContext('2d', { willReadFrequently: true });
+        const gi = await load(graded);
+        for (const g2 of [cg, ag]) {
+          g2.save();
+          if (flip) { g2.translate(left + rw, top); g2.scale(-1, 1); }
+          else g2.translate(left, top);
+          g2.drawImage(gi, 0, 0, rw, rh);
+          g2.restore();
+        }
+        const C = cg.getImageData(0, 0, P.w, P.h).data;
+        const A = ag.getImageData(0, 0, P.w, P.h).data;
+        const W = P.w, H = P.h;
+        const lumOf = (d) => {
+          const L = new Float32Array(W * H);
+          for (let i = 0, j = 0; j < L.length; i += 4, j++) {
+            L[j] = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
+          }
+          return L;
+        };
+        const gradOf = (L) => {
+          const g2 = new Float32Array(W * H);
+          for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+            const j = y * W + x;
+            const gx = x === 0 ? L[j + 1] - L[j]
+              : x === W - 1 ? L[j] - L[j - 1] : (L[j + 1] - L[j - 1]) / 2;
+            const gy = y === 0 ? L[j + W] - L[j]
+              : y === H - 1 ? L[j] - L[j - W] : (L[j + W] - L[j - W]) / 2;
+            g2[j] = Math.hypot(gx, gy);
+          }
+          return g2;
+        };
+        const gC = gradOf(lumOf(C)), gP = gradOf(lumOf(P.d));
+        const solid = new Uint8Array(W * H);
+        for (let j = 0; j < solid.length; j++) solid[j] = A[j * 4 + 3] >= 128 ? 1 : 0;
+        const rimVals = [];
+        for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+          const j = y * W + x;
+          if (!solid[j]) continue;
+          if (solid[j - 1] && solid[j + 1] && solid[j - W] && solid[j + W]) continue;
+          /* the boundary pixel and its 4-ring (the outward step) */
+          rimVals.push(gC[j], gC[j - 1], gC[j + 1], gC[j - W], gC[j + W]);
+        }
+        const pad = Math.max(24, Math.round(1.2 * hPx));
+        const wx0 = Math.max(0, left - pad), wy0 = Math.max(0, top - pad);
+        const wx1 = Math.min(W, left + rw + pad), wy1 = Math.min(H, top + rh + pad);
+        const pVals = [];
+        for (let y = wy0; y < wy1; y++) for (let x = wx0; x < wx1; x++) {
+          pVals.push(gP[y * W + x]);
+        }
+        const pctOf = (arr, q) => {
+          arr.sort((a, b) => a - b);
+          const t = (arr.length - 1) * q, f = Math.floor(t);
+          return arr[f] + (arr[Math.min(f + 1, arr.length - 1)] - arr[f]) * (t - f);
+        };
+        const rim = rimVals.length >= 24 ? pctOf(rimVals, 0.95) : null;
+        const pEdge = pVals.length ? pctOf(pVals, 0.995) : null;
         return { de: +Math.hypot(la[0] - lb[0], la[1] - lb[1], la[2] - lb[2]).toFixed(2),
                  ringN: rn, cutN: cn,
-                 ring: rm.map((v) => +v.toFixed(1)), cut: cm.map((v) => +v.toFixed(1)) };
+                 ring: rm.map((v) => +v.toFixed(1)), cut: cm.map((v) => +v.toFixed(1)),
+                 rim: rim == null ? null : +rim.toFixed(2),
+                 plateEdge: pEdge == null ? null : +pEdge.toFixed(2),
+                 rimRatio: rim != null && pEdge > 1e-6
+                   ? +(rim / pEdge).toFixed(3) : null,
+                 rimN: rimVals.length };
       }, { plate: new URL('./' + e.plate, URL_).toString(),
            graded: new URL('./' + e.graded, URL_).toString(),
-           mark: e.mark, hPx: e.hPx }).catch((err) => {
+           mark: e.mark, hPx: e.hPx, pin: e.pin || [0, 0],
+           flip: !!e.flip }).catch((err) => {
         bad(`[regrade] ${key} settle could not be measured: ${err.message}`); return null;
       });
       if (!m) continue;
@@ -1024,7 +1200,146 @@ async function main() {
              `(bake ${e.deltaE.after}, raw ${e.deltaE.before}; ring n=${m.ringN} ` +
              `on ${e.state})`);
       }
+      /* ---- [wrap] the rim-register law at the same settle ---------------- */
+      if (m.rimRatio == null) {
+        bad(`[wrap] ${e.settle} (${key}): rim register could not be measured ` +
+            `(boundary n=${m.rimN})`);
+      } else if (m.rimRatio > WRAP_RIM_MAX) {
+        bad(`[wrap] ${e.settle} (${key}): actor rim p95 gradient ${m.rim} is ` +
+            `${m.rimRatio}x the plate's own edge register ${m.plateEdge} — ` +
+            `breaks the law (<= ${WRAP_RIM_MAX}x; the audit measured the ` +
+            `unwrapped rims at ~1.8x)`);
+      } else {
+        note(`[wrap] ${e.settle} (${key}): rim ${m.rim} vs plate edge ` +
+             `${m.plateEdge} = ${m.rimRatio}x <= ${WRAP_RIM_MAX}x (bake said ` +
+             `${e.wrap && e.wrap.rimAfter && e.wrap.rimAfter.ratio}, ` +
+             `pre-wrap ${e.wrap && e.wrap.rimBefore && e.wrap.rimBefore.ratio})`);
+      }
     }
+    if (!(REGRADE.gate && REGRADE.gate.rimRatioMax)) {
+      bad('[wrap] tools/ody/regrade.json carries no rimRatioMax gate — the ' +
+          'wrap bake did not run');
+    }
+  }
+
+  /* ---- [grain] R3: identity + wiring + proven-by-missing + determinism --- */
+  {
+    const res = await page.request.get(new URL('./' + GRAIN.file, URL_).toString());
+    if (!res.ok()) {
+      bad(`[grain] ${GRAIN.file} did not load (${res.status()})`);
+    } else {
+      const sha = createHash('sha256').update(await res.body()).digest('hex');
+      if (sha !== GRAIN.sha256) {
+        bad(`[grain] the served tile is NOT the bake's (sha ${sha.slice(0, 12)}… ` +
+            `!= registry ${String(GRAIN.sha256).slice(0, 12)}…)`);
+      } else note('[grain] identity: the served grain tile is the bake registry\'s');
+    }
+    const w = await page.evaluate(() => {
+      const stage = document.getElementById('stage');
+      const g = stage.querySelector('.fxgrain');
+      const cs = g && getComputedStyle(g);
+      const ss = getComputedStyle(stage);
+      return {
+        present: !!g,
+        last: !!g && stage.lastElementChild === g,
+        blend: cs ? cs.mixBlendMode : null,
+        opacity: cs ? +cs.opacity : null,
+        bg: cs ? cs.backgroundImage : '',
+        isolation: ss.isolation,
+        filter: ss.filter,
+        exps: ['feFuncR', 'feFuncG', 'feFuncB'].map((t) => {
+          const n = document.querySelector('#gradef ' + t);
+          return n ? +n.getAttribute('exponent') : null;
+        }),
+      };
+    });
+    if (!w.present) bad('[grain] no .fxgrain layer in #stage');
+    else {
+      if (!w.last) bad('[grain] .fxgrain is not the LAST child of #stage — a layer above it escapes the shared grain');
+      if (w.blend !== GRAIN.css.blend) bad(`[grain] blend '${w.blend}' != registry '${GRAIN.css.blend}'`);
+      if (Math.abs((w.opacity || 0) - GRAIN.css.opacity) > 0.005) {
+        bad(`[grain] opacity ${w.opacity} != registry ${GRAIN.css.opacity}`);
+      }
+      if (!/fx\/grain\.png/.test(w.bg)) bad(`[grain] .fxgrain background is not the baked tile (${w.bg})`);
+      if (w.isolation !== 'isolate') bad(`[grain] #stage isolation '${w.isolation}' — the stack must be isolated`);
+      if (!/url\(/.test(w.filter)) bad(`[grain] #stage carries no stage-level grade filter (${w.filter})`);
+      if (!w.exps.every((x) => x === GRAIN.grade.exponent)) {
+        bad(`[grain] #gradef exponents ${w.exps} != registry ${GRAIN.grade.exponent}`);
+      }
+      if (!fail.some((m) => m.startsWith('[grain]'))) {
+        note(`[grain] wiring: .fxgrain last over the isolated stage, ` +
+             `${w.blend} @ ${w.opacity}; #gradef gamma ${GRAIN.grade.exponent} (all three channels)`);
+      }
+    }
+    const cssBox = await page.evaluate(() => {
+      const r = document.getElementById('stage').getBoundingClientRect();
+      return { x: r.x, y: r.y, width: r.width, height: r.height };
+    });
+    await page.evaluate(() => window.__renderNow());
+    const sA = await page.screenshot({ clip: cssBox });
+    const sA2 = await page.screenshot({ clip: cssBox });
+    const shaA = createHash('sha256').update(sA).digest('hex');
+    const shaA2 = createHash('sha256').update(sA2).digest('hex');
+    if (shaA !== shaA2) {
+      bad('[grain] same-frame determinism BROKEN: two screenshots of one sim ' +
+          'frame differ — something in the post stack rides a wall clock');
+    } else {
+      note('[grain] same-frame determinism: two screenshots of one sim frame ' +
+           'byte-equal (static tile, static grade — no wall clock)');
+    }
+    await page.evaluate(() => {
+      document.querySelector('#stage .fxgrain').style.display = 'none';
+      document.getElementById('stage').style.filter = 'none';
+      window.__renderNow();
+    });
+    const sB = await page.screenshot({ clip: cssBox });
+    await page.evaluate(() => {
+      document.querySelector('#stage .fxgrain').style.display = '';
+      document.getElementById('stage').style.filter = '';
+      window.__renderNow();
+    });
+    try {
+      const A = decodePng(sA), B = decodePng(sB);
+      let moved = 0, all = A.width * A.height;
+      const ch = A.channels;
+      for (let j = 0; j < all; j++) {
+        const i = j * ch;
+        if (Math.abs(A.data[i] - B.data[i]) >= 1 ||
+            Math.abs(A.data[i + 1] - B.data[i + 1]) >= 1 ||
+            Math.abs(A.data[i + 2] - B.data[i + 2]) >= 1) moved++;
+      }
+      const pct = 100 * moved / all;
+      if (pct < GRAIN_MISS_PCT_MIN) {
+        bad(`[grain] proven by missing FAILED: hiding grain+grade moved only ` +
+            `${pct.toFixed(2)}% of stage pixels (law >= ${GRAIN_MISS_PCT_MIN}%) — ` +
+            'the post pass is not painting');
+      } else {
+        note(`[grain] proven by missing: hiding grain+grade moved ` +
+             `${pct.toFixed(1)}% of stage pixels — the pass paints, and it is back up`);
+      }
+    } catch (e2) {
+      bad('[grain] missing-proof screenshots did not decode: ' + e2.message);
+    }
+  }
+
+  /* ---- [atmo] R5: the bands' identity (wiring + tint ride the walk) ------ */
+  {
+    let okN = 0, n = 0;
+    for (const [setId, S] of Object.entries(ATMO.sets || {})) {
+      for (const [state, st2] of Object.entries(S.states || {})) {
+        n++;
+        const res = await page.request.get(new URL('./' + st2.file, URL_).toString());
+        if (!res.ok()) { bad(`[atmo] ${setId}/${state}: ${st2.file} did not load (${res.status()})`); continue; }
+        const sha = createHash('sha256').update(await res.body()).digest('hex');
+        if (sha !== st2.sha256) {
+          bad(`[atmo] ${setId}/${state}: served band is NOT the bake's ` +
+              `(sha ${sha.slice(0, 12)}… != registry ${String(st2.sha256).slice(0, 12)}…)`);
+        } else okN++;
+      }
+    }
+    if (okN === n && n > 0) {
+      note(`[atmo] identity: ${okN}/${n} served atmosphere bands match the bake registry`);
+    } else if (!n) bad('[atmo] tools/ody/atmo.json carries no bands');
   }
 
   /* ---- the evidence the read collects ----------------------------------- */
@@ -1264,6 +1579,14 @@ async function main() {
   };
   const closeupLaw = (u, q) => {
     const sn = q.stage || {};
+    /* [shot] the per-class floor gate RETIRES at a shot unit — the native
+       plate IS the close (SHOTS.md). The sample is COUNTED, not exempted
+       (the shot battery below asserts the plate owns the frame), so the
+       tally stays honest. */
+    if (u.shot) {
+      if (CLOSEUP[u.key]) closeSamples++;
+      return;
+    }
     if (sn.plate && sn.plate.dim > 0.5) {
       /* the frame is the card's. When the card is the unit's OWN hero clip
          (bore rides the twist card raised on auger), the close-up law is met
@@ -1367,6 +1690,68 @@ async function main() {
     }
   };
 
+  /* ---- [shot] the SHOT LAW at every unit's settle ------------------------- *
+   * Shot-bearing unit: its plate up (k = 1, one shot at a time), the ZOOM
+   * CAP in force (wantK <= SHOT_KCAP), and its SHOT_PENDING row retired.
+   * Shotless unit: the rail fully down (residency, the clipStuck pattern),
+   * and the RATCHET on the lens: above the cap only if the unit is in
+   * SHOT_PENDING (awaiting its plate / the lane's recompose); at-or-under
+   * the cap only if it is NOT (a stale pending row is a lie in a registry). */
+  const shotBad = [];
+  const shotLedger = [];
+  let shotSamples = 0, shotUnitSamples = 0;
+  const shotLaw = (u, q) => {
+    const sn = q.stage || {};
+    if (!sn.shot) { shotBad.push(`${u.key}: snapshot carries no shot rail — stage.js delta missing`); return; }
+    shotSamples++;
+    const declared = u.shot || null;
+    const reg = SHOT_OF[u.key] || null;
+    if (declared !== reg) {
+      shotBad.push(`${u.key}: units.js declares shot '${declared}' but the registry ` +
+                   `grants '${reg}' — tools/ody/shots.json and the emitter drifted`);
+    }
+    const set = LEDGER.sets[u.set];
+    const lens = set && (set.lenses || []).find((l) => l.name === u.focus);
+    const lensK = lens ? lens.k : null;
+    if (declared) {
+      shotUnitSamples++;
+      if (sn.shot.up !== declared) {
+        shotBad.push(`${u.key}: shot '${declared}' is not the one up at settle ` +
+                     `(up = ${sn.shot.up}, k ${sn.shot[declared]})`);
+      }
+      if (!((sn.shot[declared] || 0) >= SHOT_UP_MIN)) {
+        shotBad.push(`${u.key}: shot '${declared}' k ${sn.shot[declared]} at settle ` +
+                     `— the 250 ms crossfade should have completed (floor ${SHOT_UP_MIN})`);
+      }
+      if (!(sn.cam.wantK <= SHOT_KCAP + 1e-6)) {
+        shotBad.push(`${u.key}: the ZOOM CAP is law on a shot unit — lens wants ` +
+                     `k ${sn.cam.wantK} > ${SHOT_KCAP} beneath shot '${declared}'`);
+      }
+      if (SHOT_PENDING[u.key]) {
+        shotBad.push(`${u.key}: its shot LANDED — retire it from SHOT_PENDING ` +
+                     `(the cap is now law for this unit)`);
+      }
+      shotLedger.push({ unit: u.key, shot: declared, k: sn.shot[declared],
+                        camWantK: sn.cam.wantK, lensK });
+    } else {
+      for (const [id, k] of Object.entries(sn.shot)) {
+        if (id !== 'up' && k > SHOT_DOWN_MAX) {
+          shotBad.push(`${u.key}: shot '${id}' still up (k ${k}) at a unit that ` +
+                       `declares none — the rail did not lower`);
+        }
+      }
+      if (lensK !== null && lensK > SHOT_KCAP + 1e-6 && !SHOT_PENDING[u.key]) {
+        shotBad.push(`${u.key}: lens '${u.focus}' k ${lensK} > the cap ${SHOT_KCAP} ` +
+                     `with NO shot and NO SHOT_PENDING row — the cap is law ` +
+                     `anywhere no shot exists`);
+      }
+      if (lensK !== null && lensK <= SHOT_KCAP + 1e-6 && SHOT_PENDING[u.key]) {
+        shotBad.push(`${u.key}: SHOT_PENDING row is STALE — lens '${u.focus}' ` +
+                     `k ${lensK} already respects the cap (retire the row)`);
+      }
+    }
+  };
+
   /* ---- [heroclip] raised + LIVING + sized, at the clip's own unit -------- */
   const heroCheck = async (unitKey, id) => {
     await page.evaluate(() => window.__renderNow());
@@ -1403,6 +1788,202 @@ async function main() {
     note(`[heroclip] ${id} at ${unitKey}: k ${s1.k}, currentTime ` +
          `${s1.t.toFixed(2)} -> ${s2.t.toFixed(2)}${s2.ended ? ' (played through)' : ''}, ` +
          `${s1.w}x${s1.h}`);
+  };
+
+  /* ---- [grain]+[atmo] at the audited settles (R3/R5, SYNTHESIS) ---------- *
+   * One probe at each regrade-settle unit: (a) [atmo] wiring on the ACTIVE
+   * set (bands mounted OVER .actors, screen, one per painted state);
+   * (b) [grain] the NOISE REGISTER — high-pass std of the actor's torso
+   * patch vs the plate at his feet, off the settle's own screenshot;
+   * (c) [atmo] the TINT law at gated settles — the actor sampled under the
+   * band shows the band's light, proven by missing (band hidden vs shown).
+   * A frame covered by a shot/card is skipped and said so; completeness is
+   * asserted after the walk (FX_SETTLE_MIN / ATMO_SETTLE_MIN). */
+  let fxNoiseN = 0, atmoTintN = 0;
+  const atmoWired = new Set();
+  const hpStd = (f, r) => {
+    if (!r) return null;
+    const x1 = Math.max(0, Math.round(r.x)), y1 = Math.max(0, Math.round(r.y));
+    const x2 = Math.min(f.width, Math.round(r.x + r.w));
+    const y2 = Math.min(f.height, Math.round(r.y + r.h));
+    const w = x2 - x1, h = y2 - y1;
+    if (w < 8 || h < 8) return null;
+    const L = new Float64Array(w * h);
+    let mean = 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const l = lum(pxAt(f, x1 + x, y1 + y));
+      L[y * w + x] = l; mean += l;
+    }
+    mean /= (w * h);
+    /* the NOISE FLOOR, not the edge budget: |high-pass| MEDIAN. An rms is
+       edge-dominated (a flat vector fill with hard facet lines rms-reads
+       "noisy" off its edges alone); the median of the absolute 3x3-mean
+       residual reads the texture the SHARED GRAIN actually unifies. */
+    const res2 = [];
+    for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+      let m3 = 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        m3 += L[(y + dy) * w + (x + dx)];
+      }
+      res2.push(Math.abs(L[y * w + x] - m3 / 9));
+    }
+    res2.sort((a, b) => a - b);
+    return { med: res2.length ? res2[res2.length >> 1] : 0,
+             n: res2.length, mean };
+  };
+  const meanRgb = (f, r) => {
+    const x1 = Math.max(0, Math.round(r.x)), y1 = Math.max(0, Math.round(r.y));
+    const x2 = Math.min(f.width, Math.round(r.x + r.w));
+    const y2 = Math.min(f.height, Math.round(r.y + r.h));
+    let R = 0, G = 0, B = 0, n = 0;
+    for (let y = y1; y < y2; y++) for (let x = x1; x < x2; x++) {
+      const p = pxAt(f, x, y);
+      R += p[0]; G += p[1]; B += p[2]; n++;
+    }
+    return n ? [R / n, G / n, B / n, n] : null;
+  };
+  const rawFrame = async () => {
+    await page.evaluate(() => window.__renderNow());
+    return decodePng(await page.screenshot());
+  };
+  const fxSettleLaw = async (u, q, shotName) => {
+    const key = SETTLE_UNIT[u.key];
+    if (!key) return;
+    const sn = q.stage || {};
+    const e = REGRADE.entries[key];
+    /* (a) [atmo] wiring on the active set, once per set */
+    const states = Object.keys(((ATMO.sets || {})[sn.set] || { states: {} }).states);
+    if (!atmoWired.has(sn.set)) {
+      atmoWired.add(sn.set);
+      const wir = await page.evaluate((setId) => {
+        const wrap = document.querySelector(`#stage .set[data-set="${setId}"]`);
+        const atmos = wrap ? Array.from(wrap.querySelectorAll('.atmo')) : [];
+        const actors = wrap && wrap.querySelector('.actors:not(.shadows)');
+        return {
+          n: atmos.length,
+          over: !!actors && atmos.every((a2) =>
+            actors.compareDocumentPosition(a2) & Node.DOCUMENT_POSITION_FOLLOWING),
+          screen: atmos.every((a2) => getComputedStyle(a2).mixBlendMode === 'screen'),
+        };
+      }, sn.set);
+      if (wir.n !== states.length || !wir.over || !wir.screen) {
+        bad(`[atmo] ${u.key}: ${sn.set} wiring wrong — ${wir.n}/${states.length} ` +
+            `bands, over-actors ${wir.over}, screen ${wir.screen}`);
+      } else {
+        note(`[atmo] ${u.key}: ${sn.set} mounts ${wir.n} band(s) OVER .actors, ` +
+             'screen-blended (the sandwich stands)');
+      }
+    }
+    const covered = (sn.shot && sn.shot.up) ||
+                    ((sn.plate && sn.plate.dim) || 0) > 0.1;
+    if (covered) {
+      note(`[grain]/[atmo] ${u.key}: frame covered (shot/card up) — sampled at the other settles`);
+      return;
+    }
+    /* the actor's torso and the plate ring at his feet, in SCREENSHOT px —
+       off the snapshot's OWN drawn box (the set has already world-mapped
+       it; re-deriving it from the registry mark was wrong on the sea) */
+    const drawn = (
+      sn.set === 'sea' ? sn.giant && sn.giant.box
+      : u.key === 'strangers' ? sn.giant && sn.giant.box
+      : u.key === 'greatram' ? sn.flock && sn.flock.ram && sn.flock.ram.box
+      : sn.cast && sn.cast.ulysses && sn.cast.ulysses.box);
+    if (!drawn) {
+      note(`[grain] ${u.key}: the settle principal has no drawn box`); return;
+    }
+    const [bx, by, bw, bh] = drawn;
+    const sBox = await stageBox();
+    const torso = rectI(await plateBox([bx + 0.15 * bw, by + 0.08 * bh,
+                                        0.7 * bw, 0.55 * bh]), sBox);
+    const f = frames[shotName];
+    if (!f || !torso) {
+      note(`[grain] ${u.key}: no measurable torso patch at this settle ` +
+           `(frame ${!!f}, drawn ${drawn.map((v) => v.toFixed(0))})`);
+      return;
+    }
+    /* the plate RING: under the feet where the lens holds it, else the
+       plate beside the body (the ring is the mark's surround, whichever
+       side of it the close lens kept in frame) — first candidate with
+       enough lit pixels wins, deterministically */
+    let floor = null, F2 = null;
+    for (const cand of [[bx - 0.3 * bw, by + 0.99 * bh, 1.6 * bw, 0.4 * bh],
+                        [bx - 0.55 * bw, by + 0.25 * bh, 0.45 * bw, 0.6 * bh],
+                        [bx + 1.1 * bw, by + 0.25 * bh, 0.45 * bw, 0.6 * bh]]) {
+      const r2 = rectI(await plateBox(cand), sBox);
+      const m2 = r2 && hpStd(f, r2);
+      if (m2 && m2.n >= 400 && m2.mean >= 12) { floor = r2; F2 = m2; break; }
+    }
+    /* (b) [grain] the noise register */
+    const A2 = hpStd(f, torso);
+    if (!A2 || A2.n < 400 || !F2) {
+      note(`[grain] ${u.key}: patches too small/dark to judge (torso n=${A2 && A2.n}, ` +
+           `ring ${!!F2})`);
+    } else if (F2.mean < 12) {
+      note(`[grain] ${u.key}: the floor patch is honestly dark (L ${F2.mean.toFixed(1)}) ` +
+           '— no register to compare');
+    } else {
+      /* the ratio stands on a ONE-LUMA perceptual floor: a plate ring of
+         flat night paint can run an hp-median of ~0.5 (the moonlit sea),
+         and a raw ratio against a sub-perceptual denominator calls a
+         1-luma difference a 3x register break. On the floor, a real break
+         (say 6 vs 2 — the audit's 2-3x band at real amplitude) still
+         reads 2.3x and still fails. */
+      const ratio = (A2.med + 1.0) / (F2.med + 1.0);
+      fxNoiseN++;
+      if (ratio > GRAIN_NOISE_MAX || ratio < GRAIN_NOISE_MIN) {
+        bad(`[grain] ${u.key}: noise register ${ratio.toFixed(2)}x (actor hp-med ` +
+            `${A2.med.toFixed(2)} vs plate ring ${F2.med.toFixed(2)}) outside ` +
+            `[${GRAIN_NOISE_MIN.toFixed(2)}..${GRAIN_NOISE_MAX}] — the audit's ` +
+            'paste band is 2-3x');
+      } else {
+        note(`[grain] ${u.key}: noise register ${ratio.toFixed(2)}x (actor ` +
+             `hp-med ${A2.med.toFixed(2)}, plate ring ${F2.med.toFixed(2)}) within the band`);
+      }
+    }
+    /* (c) [atmo] the tint law, at gated settles, proven by missing */
+    const gs = (ATMO.settles || []).find((s2) => s2.unit === u.key);
+    if (gs && gs.gated) {
+      const shown = meanRgb(f, torso);
+      await page.evaluate((setId) => {
+        document.querySelectorAll(`#stage .set[data-set="${setId}"] .atmo`)
+          .forEach((n2) => { n2.style.visibility = 'hidden'; });
+      }, sn.set);
+      const f2 = await rawFrame();
+      await page.evaluate((setId) => {
+        document.querySelectorAll(`#stage .set[data-set="${setId}"] .atmo`)
+          .forEach((n2) => { n2.style.visibility = ''; });
+        window.__renderNow();
+      }, sn.set);
+      const hid = meanRgb(f2, torso);
+      if (!shown || !hid) { note(`[atmo] ${u.key}: torso patch unmeasurable`); return; }
+      const d = [shown[0] - hid[0], shown[1] - hid[1], shown[2] - hid[2]];
+      const dl = 0.2126 * d[0] + 0.7152 * d[1] + 0.0722 * d[2];
+      /* THE TINT is judged as the SCREEN COMPOSITE lands it, not naively:
+         screen adds tint_c x (1 - base_c/255) per channel, so over ground
+         already near clip in R (an actor AT the blaze) a warm band's
+         measured delta is legitimately blue-heavy — the naive "warm band
+         must read warm" test fails exactly where the light is strongest.
+         The law: the measured delta must CORRELATE with the band's own
+         expected screen delta over the hidden base (cosine >= 0.6). */
+      const exp2 = gs.tint.map((tc, i) => (tc / 255) * (255 - hid[i]));
+      const dot = d[0] * exp2[0] + d[1] * exp2[1] + d[2] * exp2[2];
+      const cos = dot / (Math.hypot(...d) * Math.hypot(...exp2) || 1e-9);
+      atmoTintN++;
+      if (dl < ATMO_TINT_MIN) {
+        bad(`[atmo] ${u.key}: the actor under the band shows NO band light ` +
+            `(ΔL ${dl.toFixed(2)} < ${ATMO_TINT_MIN} hidden-vs-shown — ` +
+            'proven-by-missing failed)');
+      } else if (cos < 0.6) {
+        bad(`[atmo] ${u.key}: the sampled wash Δ[${d.map((v) => v.toFixed(1))}] does not ` +
+            `carry the band's tint (cos ${cos.toFixed(2)} < 0.6 vs expected ` +
+            `screen delta [${exp2.map((v) => v.toFixed(1))}] of tint ` +
+            `[${gs.tint.map((v) => v.toFixed(0))}])`);
+      } else {
+        note(`[atmo] ${u.key}: the actor shows the band's tint — ΔL ` +
+             `${dl.toFixed(2)}, tint cos ${cos.toFixed(2)} vs the band's expected ` +
+             'screen delta (band hidden vs shown)');
+      }
+    }
   };
 
   /* ---- [feet]+[parking], sampled at every settled unit ------------------ */
@@ -2711,9 +3292,24 @@ async function main() {
          to hold the file's stop whichever sim length the turn spent */
       if (u.key === 'head2') await motionProbe('head2', 288, ['c11']);
 
-      const q0 = await st();
+      let q0 = await st();
+      /* [shot] the settle sample must stand PAST the raise band — the fade
+         is 250 ms of SIM time after the unit's own shotAt (auger raises at
+         +1.2, the retired heroclip's tick), and the teleProbe above ages a
+         unit only 0.15/0.85 s. Walk onto the band (the auger walk-on
+         pattern); the k-at-settle floor below then measures the LAW (did
+         the fade complete), not this harness's pacing. */
+      if (u.shot) {
+        const need = (u.shotAt || 0) + SHOT_FADE + 0.05;
+        if ((q0.unitT || 0) < need) {
+          await T(need - (q0.unitT || 0));
+          q0 = await st();
+        }
+      }
       await footLaw(u, q0);
       closeupLaw(u, q0);
+      shotLaw(u, q0);
+      await fxSettleLaw(u, q0, shotName);
       if (q0.cameo) cameoLog.push({ unit: u.key, ...q0.cameo });
       /* the inset law: no plate may still be up on a unit it was not minted
          for (misgave is the chapter's one grant) */
@@ -2939,7 +3535,9 @@ async function main() {
         case 'strangers': {
           /* O.1's visual half, in-world: the first close lens on the eye */
           const q = await st();
-          if (!(q.stage.cam && Math.abs(q.stage.cam.wantK - 3.6) < 0.01)) {
+          /* [shot] eye-close re-valued 3.6 -> 2.5 (SHOTS.md §1: the survivor
+             value edit — the seated giant's eye still holds the C floor) */
+          if (!(q.stage.cam && Math.abs(q.stage.cam.wantK - 2.5) < 0.01)) {
             bad(`strangers: the eye-close lens is not asked for (wantK=${q.stage.cam && q.stage.cam.wantK})`);
           }
           if (!(q.stage.giant && ['seat', 'clutch'].includes(q.stage.giant.pose))) {
@@ -3264,6 +3862,39 @@ async function main() {
           if (!/Ulysses/.test(q.unit.blocks)) {
             bad('noman: [O.8] the pun carries no ULYSSES prefix in the margin');
           }
+          /* [shot] THE WORLD LIVES BENEATH: a shot is a card the sim asserts,
+             not a fact the sim reads — the mounted set's own clock advances
+             across the dwell while the plate owns the frame. */
+          {
+            const w0 = await page.evaluate(() => window.__refs.stage.active.state.t);
+            await T(0.5);
+            const w1 = await page.evaluate(() => window.__refs.stage.active.state.t);
+            if (!(w1 - w0 > 0.45)) {
+              bad(`noman: [shot] the world beneath the shot did NOT step — set ` +
+                  `clock ${w0.toFixed(3)} -> ${w1.toFixed(3)} across a 0.5 s dwell`);
+            } else {
+              note(`[shot] noman: the world stepped beneath the shot ` +
+                   `(${w0.toFixed(2)}s -> ${w1.toFixed(2)}s across the dwell)`);
+            }
+          }
+          /* [shot] ANCHORS IN SHOT SPACE: the leader head the reader sees is
+             the REGISTRY's shot-space anchor through shotToScreen — not the
+             covered world's. */
+          {
+            const want = (SHOTREG.shots['shot-noman'] || {}).heads || {};
+            for (const [who, at] of Object.entries(want)) {
+              const got = await page.evaluate(({ w, a }) => {
+                const s = window.__refs.stage;
+                const p = s.anchorScreen('head', w);
+                const q2 = s.shotToScreen(a[0], a[1]);
+                return p && { dx: Math.abs(p.x - q2.x), dy: Math.abs(p.y - q2.y) };
+              }, { w: who, a: at });
+              if (!got || got.dx > 0.5 || got.dy > 0.5) {
+                bad(`noman: [shot] the ${who} leader head is not the shot's own ` +
+                    `anchor through shotToScreen (${JSON.stringify(got)})`);
+              }
+            }
+          }
           break;
         }
         case 'nomanlast': {
@@ -3335,14 +3966,25 @@ async function main() {
               `${facts['O.9-auger']}; bore ${facts['O.9-bore']}`;
           }
           await shot(`b4-O9-tip-${u.key}-tick`);
-          /* [heroclip] the TWIST card — raised on auger at +1.2 (after the
-             settled frame the close-up law measured), CARRIED across the
-             bore tick (one twist, two clock units), down on hiss (clipStuck).
-             On auger the probe may stand before the raise tick; walk onto it. */
+          /* [shot] the DRIVE close — clip-twist's inset grants RETIRED
+             2026-08-17 (SHOTS.md §1.4): the full-frame shot-drive CLIP owns
+             this frame now, raised on auger at shotAt 1.2 (the same tick the
+             inset used), CARRIED across the bore tick, down at fright (the
+             generic settle law). On auger the probe may stand before the
+             raise tick; walk onto it, then the rail must be fully risen. */
           {
             const qh = await st();
             if (u.key === 'auger') await T(Math.max(0, 2.0 - (qh.unitT || 0)));
-            await heroCheck(u.key, 'clip-twist');
+            const qs = await st();
+            const kDrive = (qs.stage.shot && qs.stage.shot['shot-drive']) || 0;
+            if (!(kDrive >= SHOT_UP_MIN)) {
+              bad(`${u.key}: [shot] shot-drive is not risen at the ${u.key} ` +
+                  `tick (k ${kDrive}) — the clip shot superseded clip-twist ` +
+                  `(SHOTS.md §1.4) and must own this frame`);
+            } else {
+              note(`[shot] shot-drive owns the ${u.key} tick (k ${kDrive}) — ` +
+                   `the clip-twist inset's successor`);
+            }
           }
           break;
         }
@@ -3440,7 +4082,8 @@ async function main() {
           if (!(q.stage.giant && q.stage.giant.pose === 'stroke')) {
             bad(`feltbacks: [O.11] the hand-pass has no stroking giant (pose=${q.stage.giant && q.stage.giant.pose})`);
           }
-          if (!(Math.abs(q.stage.cam.wantK - 3.6) < 0.01)) {
+          /* [shot] handpass-tight re-valued 3.6 -> 2.5 (SHOTS.md §1) */
+          if (!(Math.abs(q.stage.cam.wantK - 2.5) < 0.01)) {
             bad(`feltbacks: [O.11] the handpass-tight lens is not asked for (wantK=${q.stage.cam.wantK})`);
           }
           break;
@@ -4008,6 +4651,17 @@ async function main() {
     note(`[memory] defy answered in ${fin.hesit}s -> the card reads ` +
          `'…his name at once' (the eager clause)`);
   }
+
+  /* ---- 2.9 [grain]/[atmo] completeness: the settles were SAMPLED --------- */
+  if (fxNoiseN < FX_SETTLE_MIN) {
+    bad(`[grain] the noise register was measurable at only ${fxNoiseN} settle(s) ` +
+        `— the law wants >= ${FX_SETTLE_MIN} uncovered settles`);
+  } else note(`[grain] noise register sampled at ${fxNoiseN} settles`);
+  const atmoGatedN = (ATMO.settles || []).filter((s2) => s2.gated).length;
+  if (atmoTintN < Math.min(ATMO_SETTLE_MIN, atmoGatedN)) {
+    bad(`[atmo] the tint law sampled only ${atmoTintN} of ${atmoGatedN} gated ` +
+        `settles (law >= ${Math.min(ATMO_SETTLE_MIN, atmoGatedN)})`);
+  } else note(`[atmo] tint law sampled at ${atmoTintN}/${atmoGatedN} gated settles`);
 
   /* ---- 3. the tally ------------------------------------------------------ */
   const missed = units.map((x) => x.key).filter((k) => !seen.includes(k));
@@ -4985,7 +5639,11 @@ async function main() {
     note('[heroclip] the clip-scoped inset law: every card down on every ungranted unit');
   }
   {
-    const heroWant = Object.keys(HEROREG.clips || {}).length;
+    /* [shot] a RETIRED clip (units: [] — clip-twist since shot-drive
+       superseded it, SHOTS.md §1.4) is not owed a raise: it can never be
+       granted, so the tally counts granted clips only. */
+    const heroWant = Object.values(HEROREG.clips || {})
+      .filter((c) => (c.units || []).length).length;
     const heroGot = Object.keys(heroEv).length;
     if (heroGot < heroWant) {
       bad(`[heroclip] only ${heroGot} of the registry's ${heroWant} clips were ` +
@@ -5479,6 +6137,139 @@ async function main() {
     }
   }
 
+  /* ---- 9.9 [shot] THE SHOT RAIL, tallied + dynamic ------------------------- *
+   * The settle half ran at every unit (shotLaw above). Here: (a) the served
+   * plate bytes ARE the registry's (sha256, the strips/heroclips identity
+   * law); (b) THE BAND — the raise and the fall are each the fixed 250 ms
+   * crossfade on the SIM clock, reached in SHOT_FADE/dt fixed steps ± 1,
+   * measured through the same __gotoUnit door every harness jump uses;
+   * (c) a reader who asked the OS for LESS MOTION still gets the shot — the
+   * plate rises for them too (a clip shot's poster carries the frame; a
+   * painted still IS its own poster). */
+  for (const m of dedupe(shotBad)) bad('[shot] ' + m);
+  if (shotSamples < units.length - 5) {
+    bad(`[shot] the settle law sampled only ${shotSamples} units — it did not run book-wide`);
+  }
+  const shotWantUnits = Object.values(SHOT_OF).length;
+  if (shotUnitSamples < shotWantUnits) {
+    bad(`[shot] only ${shotUnitSamples} of the registry's ${shotWantUnits} shot ` +
+        `units were sampled at settle`);
+  }
+  if (!shotBad.length) {
+    note(`[shot] the settle law held book-wide: ${shotUnitSamples} shot unit(s) ` +
+         `up at k 1 under the ${SHOT_KCAP} cap, the rail down everywhere else, ` +
+         `${Object.keys(SHOT_PENDING).length} units ledgered as awaiting their ` +
+         `plate/recompose (their [closeup] lenses keep their floors)`);
+  }
+  for (const [shotId, s] of Object.entries(SHOTREG.shots || {})) {
+    const res = await page.request.get(new URL(s.file, URL_).toString());
+    if (!res.ok()) { bad(`[shot] ${shotId} plate did not load (${res.status()})`); continue; }
+    const body = await res.body();
+    const sha = createHash('sha256').update(body).digest('hex');
+    if (sha !== s.sha256) {
+      bad(`[shot] ${shotId}: the served plate is NOT the registry's owner-picked ` +
+          `file (sha ${sha.slice(0, 12)}… != registry ${String(s.sha256).slice(0, 12)}…)`);
+    }
+    const dim = await getImg(s.file);
+    if (dim && !(dim.width === 1408 && dim.height === 768)) {
+      bad(`[shot] ${shotId}: plate decodes ${dim.width}x${dim.height}, the law is 1408x768`);
+    }
+  }
+  note(`[shot] served bytes: ${Object.keys(SHOTREG.shots || {}).length} plate(s) ` +
+       `sha-equal to tools/ody/shots.json, 1408x768`);
+  const shotBands = {};
+  if (SHOT_OF.noman) {
+    /* the RAISE band, from the unit's own entry (a fresh jump: reset -> leaf
+       replay -> entry, the same pure function of unit entry the read used).
+       ON ITS OWN PAGE: a late __gotoUnit on the read's page rewinds hero-clip
+       videos mid-buffer and the aborted range fetch trips the zero-console-
+       errors law with a requestfailed that is nobody's bug — the band probe
+       gets a fresh page (no clip has ever played there) and closes it. */
+    const bctx = await browser.newContext({ viewport: { width: 1440, height: 900 },
+                                            deviceScaleFactor: 2 });
+    const bpage = await bctx.newPage();
+    await bpage.goto(URL_, { waitUntil: 'load', timeout: 30000 });
+    await bpage.waitForFunction(() => window.__ready === true, { timeout: 30000 });
+    await bpage.evaluate(() => window.__mute(true));
+    await bpage.evaluate(() => window.__gotoUnit('noman'));
+    const bT = (dt) => bpage.evaluate((d) => window.__advance(d), dt);
+    const dtTick = 1 / 60;
+    const wantSteps = Math.round(SHOT_FADE / dtTick);           // 15
+    let upAt = null, wasMonotone = true, last = -1;
+    for (let i = 1; i <= wantSteps + 3; i++) {
+      await bT(dtTick);
+      const k = await bpage.evaluate(() => window.__state().stage.shot['shot-noman']);
+      if (k < last - 1e-9) wasMonotone = false;
+      last = k;
+      if (upAt === null && k >= SHOT_UP_MIN) upAt = i;
+    }
+    shotBands.raise = { steps: upAt, want: wantSteps, monotone: wasMonotone };
+    if (upAt === null || Math.abs(upAt - wantSteps) > 1 || !wasMonotone) {
+      bad(`[shot] noman raise band: k reached 1 in ${upAt} fixed steps ` +
+          `(law ${wantSteps} ± 1, monotone ${wasMonotone}) — the 250 ms sim-clock ` +
+          `crossfade drifted`);
+    }
+    /* the card painted at the top of the band is the registry's own file */
+    const src = await bpage.evaluate(() =>
+      window.__refs.stage.shots['shot-noman'].im.currentSrc);
+    if (!src.endsWith('set/cave/shot/noman.jpg')) {
+      bad(`[shot] the noman card paints '${src}', not the registry's path`);
+    }
+    /* the FALL band: the next shotless unit lowers the rail in the same 250 ms */
+    await bpage.evaluate(() => window.__click());               // -> nomanlast
+    let downAt = null;
+    for (let i = 1; i <= wantSteps + 3; i++) {
+      await bT(dtTick);
+      const k = await bpage.evaluate(() => window.__state().stage.shot['shot-noman']);
+      if (downAt === null && k <= SHOT_DOWN_MAX) downAt = i;
+    }
+    const qFall = await bpage.evaluate(() => window.__state());
+    await bctx.close();
+    shotBands.fall = { steps: downAt, want: wantSteps, next: qFall.unit.key };
+    if (qFall.unit.key !== 'nomanlast' || downAt === null ||
+        Math.abs(downAt - wantSteps) > 1) {
+      bad(`[shot] noman fall band: rail down in ${downAt} fixed steps at ` +
+          `'${qFall.unit.key}' (law ${wantSteps} ± 1 into the next shotless unit)`);
+    }
+    if (!shotBad.length && shotBands.raise.steps && shotBands.fall.steps) {
+      note(`[shot] the band: raise ${shotBands.raise.steps} steps, fall ` +
+           `${shotBands.fall.steps} steps at 1/60 (law ${wantSteps} ± 1 — the ` +
+           `250 ms sim-clock crossfade, monotone)`);
+    }
+    /* REDUCED MOTION: the shot still lands as a STILL (a clip's poster; a
+       painted plate is its own poster) — fresh context, OS-level flag */
+    const rctx = await browser.newContext({ viewport: { width: 1440, height: 900 },
+                                            deviceScaleFactor: 2,
+                                            reducedMotion: 'reduce' });
+    const rpage = await rctx.newPage();
+    await rpage.goto(URL_, { waitUntil: 'load', timeout: 30000 });
+    await rpage.waitForFunction(() => window.__ready === true, { timeout: 30000 });
+    await rpage.evaluate(() => window.__mute(true));
+    await rpage.evaluate(() => window.__gotoUnit('noman'));
+    await rpage.evaluate((d) => window.__advance(d), 1.0);
+    const rq = await rpage.evaluate(() => {
+      const s = window.__refs.stage;
+      const P = s.shots['shot-noman'];
+      return { reduced: s.reduced, k: P.k, up: s.shotUp(),
+               still: !!(P.im && P.im.complete && P.im.naturalWidth === 1408),
+               clipHidden: P.vid ? P.vid.style.display === 'none' : null,
+               playing: P.playing };
+    });
+    if (!rq.reduced) {
+      bad('[shot] the reduced-motion context did not read as reduced — the probe is void');
+    } else if (!(rq.up === 'shot-noman' && rq.k >= SHOT_UP_MIN && rq.still)) {
+      bad(`[shot] reduced motion: the shot STILL did not land ` +
+          `(up ${rq.up}, k ${rq.k}, still ${rq.still}) — the close-up fact is owed`);
+    } else if (rq.clipHidden === false || rq.playing) {
+      bad(`[shot] reduced motion: a clip is playing under the still trade ` +
+          `(hidden ${rq.clipHidden}, playing ${rq.playing})`);
+    } else {
+      note(`[shot] reduced motion: the noman still lands (k ${rq.k}) — the ` +
+           `heroclip trade, verbatim`);
+    }
+    await rctx.close();
+  }
+
   /* ---- 10. the fact ledger, printed --------------------------------------- */
   for (const id of ['O.1', 'O.2', 'O.3', 'O.4', 'O.5', 'O.6', 'O.7', 'O.8a', 'O.8b',
                     'O.9', 'O.10', 'O.11', 'O.12', 'O.13a', 'O.13b', 'O.14a', 'O.14b']) {
@@ -5502,6 +6293,9 @@ async function main() {
     deadBands: bandRows.slice(0, 14), limit: LANDSCAPE_MAX,
     feetSamples, parkSamples,
     closeups: closeLedger, closeupWides: wideLedger,
+    shots: { samples: shotSamples, shotUnits: shotLedger, bands: shotBands,
+             pending: Object.keys(SHOT_PENDING).length,
+             violations: dedupe(shotBad) },
     strips: Object.fromEntries(STRIP_LAW.map(([k]) => [k, {
       frames: [...stripEv[k].frames].sort(), n: stripEv[k].n,
       worst: +stripEv[k].worst.toFixed(2), worstAt: stripEv[k].worstAt,

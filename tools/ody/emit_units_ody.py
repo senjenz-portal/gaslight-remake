@@ -155,8 +155,11 @@ S = {
                           'time-lapse; the crew gathers to the council marks '
                           '(the ledger\'s own council lens — the wide budget '
                           'is spent on bard + dawn, the close-up law).'),
+ # [shot] SHOTGEN 2026-08-17: shot-council — the G1 speech as a NATIVE
+ # dialogue close (SHOTS.md §2a row 1); the shot's own targets.ship carries
+ # the hull ring in shot space; the world settles at the capped lens beneath.
  'ody-i-07-council': dict(verb='target', target='ship', gateAct='crossing',
-                          gateSfx='oars',
+                          gateSfx='oars', shot='shot-council',
                           cue='click the ship · cross to the mainland',
                           focus='council-close', clear=True,
                           c='GATE G1 — the beached ship (ship-2 hull centre '
@@ -172,8 +175,10 @@ S = {
                           c='the mouth holds EMPTY (he is away); on the crag '
                             'simile the lens tilts to the bare cliff-top — '
                             'Beat VI pre-echo.'),
+ # [shot] SHOTGEN lane 2, 2026-08-17: shot-wineskin (SHOTS.md §2a row 2).
  'ody-i-10-wineskin': dict(verb='click', focus='ship-mid', clear=True,
                            act='twelve-at-ship', sfx='slosh',
+                           shot='shot-wineskin',
                            c='the twelve chosen, the rest stay; Ulysses '
                              'shoulders the dark goatskin.'),
  'ody-i-11-twentyone': dict(verb='click', focus='skin-close',
@@ -282,8 +287,9 @@ S = {
                               c='stone-lift + flock-stream precede the text '
                                 '(c2); the simile lands AS the stone claps '
                                 'to and the light dies.'),
+ # [shot] SHOTGEN lane 2, 2026-08-17: shot-scheme (SHOTS.md §2a row 4).
  'ody-iii-03-scheme': dict(verb='click', focus='scheme-push', clear=True,
-                           act='scheme', sfx='shoo',
+                           act='scheme', sfx='shoo', shot='shot-scheme',
                            c='sealed dim; the muffled Shoo, shoo and fading '
                              'flock-bells through the stone (c3); push-in on '
                              'Ulysses alone among the pens.'),
@@ -321,8 +327,10 @@ S = {
  # kept), and the LET-GO past the 1.6 s threshold fires gateAct 'bowl-pour'
  # from pressUp itself — pour 1 starts ON the release frame, like myname's
  # shout. Cues are OUR authoring; Butler's text is untouched.
+ # [shot] SHOTGEN 2026-08-17: shot-bowl — G3's offer as a NATIVE object close
+ # (SHOTS.md §2a rows 5/6, shared with thrice); holds.bowl carries the ring.
  'ody-iii-08-lookhere': dict(verb='release', hold=1.6, rest=True,
-                             gateAct='bowl-pour',
+                             gateAct='bowl-pour', shot='shot-bowl',
                              cue='hold the bowl · fill it — let go to pour'
                                  ' — rest is allowed',
                              focus='bowl-close', clear=True, act='bowl-offer',
@@ -338,14 +346,17 @@ S = {
                                'leans down, the one eye glittering; "tell me '
                                'your name" baits O.8\'s trap.'),
  'ody-iii-10-thrice': dict(verb='auto', dwell=8.0, focus='bowl-close',
-                           clear=True, fact='O.7',
+                           clear=True, fact='O.7', shot='shot-bowl',
                            c='lands with pour-3 — O.7: three fills, three '
                              'heedless drains; the giant sways, the fire '
                              'sinks toward embers.'),
  'ody-iii-11-noman': dict(verb='click', focus='twoshot', clear=True,
-                          fact='O.8a',
+                          shot='shot-noman', fact='O.8a',
                           c='the pun — half-bow at "plausibly"; near-silence '
-                            'under the line.'),
+                            'under the line. [shot] THE FIRST PAINTED SHOT '
+                            '(SHOTS.md, owner pick A-noman-cand1): a native '
+                            'dialogue close crossfades over the capped '
+                            'twoshot lens; the world steps beneath.'),
  'ody-iii-12-nomanlast': dict(verb='click', focus='twoshot', fact='O.8b',
                               c='the price, adjacent to the pun; the empty '
                                 'bowl loose in his fingers; this click fires '
@@ -368,29 +379,37 @@ S = {
                           'sprawled by the pens.'),
  # AMENDMENT 2026-08-16 (rest is allowed): rest=True — the glow earned so far
  # PERSISTS through a release and resumes on re-press; cue amended to say so.
+ # [shot] SHOTGEN 2026-08-17: shot-embers — G4's hold as a NATIVE action
+ # close, a CLIP (ember pulse + breathing sleepers, deflicker-gated); the
+ # hold ring stands on holds.stake in shot space (SHOTS.md §2a rows 7/8).
  'ody-iv-01-embers': dict(verb='hold', hold=3.0, rest=True,
                           cue='hold the stake in the embers · until it glows'
-                              ' — rest is allowed',
+                              ' — rest is allowed', shot='shot-embers',
                           focus='ember-close', clear=True, sfx='embers',
                           c='GATE G4 — glow rides the hold (watermark law); '
                             'at full heat the drive fires itself; the '
                             'blinding clock (~14 s) zeroes on resolve.'),
  'ody-iv-02-glowing': dict(verb='auto', dwell=3.6, focus='ember-close',
-                           clear=True,
+                           clear=True, shot='shot-embers',
                            c='fires on gate completion and starts the '
                              'blinding clock; the drawn point lights five '
                              'faces from below; margin cleared for the '
                              'twist.'),
+ # [shot] SHOTGEN 2026-08-17: shot-drive — the drive as a NATIVE action
+ # close, a CLIP off the clip-twist inset's own staged seed (SHOTS.md §1.4:
+ # the full-frame shot SUPERSEDES the inset — its grants retired in main.js);
+ # shotAt 1.2 keeps the heroclip raise tick (after the settled frame).
  'ody-iv-03-auger': dict(verb='clock', at=4.2, focus='drive-tight',
+                         shot='shot-drive', shotAt=1.2,
                          clear=True, sfx='grind', fact='O.9',
                          c='the drive itself is PANTOMIME (cut #6); the '
                            'auger simile lands ON the twist — O.9.'),
  'ody-iv-04-bore': dict(verb='clock', at=7.4, focus='drive-tight',
-                        sfx='sputter',
+                        shot='shot-drive', sfx='sputter',
                         c='steam plumes up the firelight shaft; horror '
                           'staged in shadow, not lingered.'),
  'ody-iv-05-hiss': dict(verb='clock', at=10.4, focus='drive-tight',
-                        bed='cave', sfx='hiss',
+                        shot='shot-drive', bed='cave', sfx='hiss',
                         c='the HISS then the YELL — camera shake, roof-dust, '
                           'the flocks surging in the pens; the snore-bed '
                           'dies with the sleep it belonged to.'),
@@ -453,9 +472,12 @@ S = {
                               c='first man slides under the middle ram; the '
                                 'flanks close over him; five more trios '
                                 'stagger in, lens low at sheep height.'),
+ # [shot] SHOTGEN lane 2, 2026-08-17: shot-ram (SHOTS.md §2a row 14); the
+ # G5 ring rides the shot's own targets['ram-great'] in shot space.
  'ody-v-04-greatram': dict(verb='target', target='ram-great',
                            gateAct='slingUnder', gateSfx='wool',
                            cue='click the great ram · go last, beneath him',
+                           shot='shot-ram',
                            focus='ram-close', clear=True, act='ram-stand',
                            c='GATE G5 — the great ram apart at the rail; the '
                              'click IS the sling-under, the chapter\'s '
@@ -508,8 +530,11 @@ S = {
                         c='GATE G6, first resolution; the sea SET mounts '
                           'under heading VI · THE TAUNT — NO head unit, the '
                           'heading rides this unit; two-plane wide.'),
+ # [shot] SHOTGEN 2026-08-17: shot-taunt — the taunt as a NATIVE dialogue
+ # close (SHOTS.md §2a row 15; stern k 10.6 was the digital zoom working
+ # hardest); leader head from the shot's own heads table.
  'ody-vi-02-taunt': dict(verb='auto', dwell=6.0, focus='stern', clear=True,
-                         act='stern-ulysses',
+                         act='stern-ulysses', shot='shot-taunt',
                          c='fires on gate 1 — whip to the stern, arm flung '
                            'at the cliff; the blinded head turns toward the '
                            'sound.'),
@@ -550,7 +575,11 @@ S = {
  # already shout with) and the story advances ON the release frame. A shorter
  # press is a stray click: it reads as a beat and holds the page. Soft-fail
  # auto-releases at 30 s (sec 2.6). Verbs are OUR authoring; Butler untouched.
+ # [shot] SHOTGEN 2026-08-17: shot-myname — the name on the rail as a NATIVE
+ # dialogue close (SHOTS.md §2a row 17, k 12.3 retired); holds.breath
+ # carries the press ring in shot space.
  'ody-vi-07-myname': dict(verb='release', hold=0.6, gateAct='shout',
+                          shot='shot-myname',
                           gateSfx='shout', focus='stern-rail', clear=True,
                           cue='press and hold · draw breath — release the name',
                           act='stern-rail', fact='O.12',
@@ -621,8 +650,8 @@ BEAT_BANNER = {
 ORDER_KEYS = ['id', 'key', 'head', 'num', 'text', 'speaker', 'verb', 'target',
               'gateAct', 'gateSfx', 'cue', 'hold', 'rest', 'reveal', 'dwell', 'at',
               'wait', 'seg', 'segDur', 'segHold', 'endsBeat', 'endsBook',
-              'focus', 'page', 'beat', 'set', 'clear', 'drop', 'sfx', 'bed',
-              'act', 'cameo', 'cap', 'fact']
+              'focus', 'shot', 'shotAt', 'page', 'beat', 'set', 'clear',
+              'drop', 'sfx', 'bed', 'act', 'cameo', 'cap', 'fact']
 
 
 def js(v):
@@ -786,8 +815,14 @@ export const TARGETS_BY_SET = {
   sea:   ['cyclops'],
 };
 
-/** Cheap shape check — the harness asserts this returns []. */
-export function validateUnits(units = UNITS) {
+/** Cheap shape check — the harness asserts this returns [].
+ *  [shot] `shotsBySet` (set name -> the SET class's `static shots` registry)
+ *  is optional and main.js passes the real one: a `shot:` a unit declares
+ *  must be a plate its SET declares (the lazy-load law needs the bytes to
+ *  decode with the set), and a target/hold on a shot unit must be carried
+ *  by the shot's own anchor tables — a ring must never point into the
+ *  covered world. */
+export function validateUnits(units = UNITS, shotsBySet = null) {
   const bad = [];
   const seen = new Set();
   const seenKeys = new Set();
@@ -826,6 +861,22 @@ export function validateUnits(units = UNITS) {
       bad.push(`${at}: gate '${u.target}' is not a target of SET '${set}'`);
     }
     if (u.verb === 'target' && !u.cue) bad.push(`${at}: target gate needs an explicit cue`);
+    /* [shot] SHOTS_BY_SET: a shot is a byte of its SET */
+    if (u.shot && shotsBySet) {
+      const spec = (shotsBySet[set] || {})[u.shot];
+      if (!spec) {
+        bad.push(`${at}: shot '${u.shot}' is not declared by SET '${set}'`);
+      } else {
+        if (u.target && !(spec.targets && spec.targets[u.target])) {
+          bad.push(`${at}: target '${u.target}' is not in shot '${u.shot}'s anchor tables`);
+        }
+        if ((u.verb === 'hold' || u.verb === 'release') &&
+            !(spec.holds && Object.keys(spec.holds).length)) {
+          bad.push(`${at}: hold verb on shot '${u.shot}' with no hold anchor in the shot`);
+        }
+      }
+    }
+    if (u.shotAt !== undefined && !u.shot) bad.push(`${at}: shotAt without a shot`);
     if (u.cameo && !u.cap) bad.push(`${at}: cameo needs a caption`);
     if (i > 0 && u.page < units[i - 1].page) bad.push(`${at}: page went backwards`);
     if (i > 0 && u.page !== units[i - 1].page && (u.set || 'shore') === units[i - 1].set &&
@@ -901,7 +952,8 @@ def main():
             u['page'] = meta['page']
             u['beat'] = beat
             u['set'] = meta['set']
-            for k in ('clear', 'drop', 'sfx', 'bed', 'act', 'cameo', 'cap', 'fact'):
+            for k in ('shot', 'shotAt', 'clear', 'drop', 'sfx', 'bed', 'act',
+                      'cameo', 'cap', 'fact'):
                 if k in st:
                     u[k] = st.pop(k)
             if st:

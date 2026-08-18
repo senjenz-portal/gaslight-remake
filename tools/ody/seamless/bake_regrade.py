@@ -47,6 +47,8 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from regrade import grade_cut  # noqa: E402  (the adopted explorer, verbatim)
+from regrade import rgb_to_cielab, srgb_to_linear  # noqa: E402
+from wrap import wrap_cut, rim_ratio, WRAP_RIM_MAX  # noqa: E402  (R2 adopted)
 
 ROOT = "/Users/samz/Documents/gaslight-remake"
 ASSETS = os.path.join(ROOT, "site-deploy/living-odyssey/assets")
@@ -279,10 +281,30 @@ def main():
             flip=row["flip"], light_anchor=row["light"],
             light_reach=row["reach"])
 
+        # R2 (SYNTHESIS): light wrap + edge decontamination, baked into the
+        # same pass. Rim register measured before and after — the lap's
+        # [wrap] gate holds ratio <= WRAP_RIM_MAX at the settle entries.
+        rim_before = rim_ratio(plate, graded, row["mark"], row["h"],
+                               tuple(pin), row["flip"])
+        graded, wrep = wrap_cut(graded, plate, row["mark"], row["h"],
+                                tuple(pin), flip=row["flip"])
+        rim_after = rim_ratio(plate, graded, row["mark"], row["h"],
+                              tuple(pin), row["flip"])
+
         out_rel = "actor/graded/%s/%s.png" % (row["set"], row["cut"])
         out_path = os.path.join(ASSETS, out_rel)
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
         Image.fromarray(graded).save(out_path, optimize=True)
+
+        # the lap's own thermometer, re-read off the SHIPPED bytes (mean
+        # colour over alpha > 127 vs the ring mean) so the registry's
+        # deltaE.after is a number about the file as it ships post-wrap
+        solid = graded[..., 3] > 127
+        cut_mean = graded[..., :3][solid].astype(np.float64).mean(axis=0)
+        ring_mean = np.asarray(rep["ring"]["rgb_mean"], dtype=np.float64)
+        la = rgb_to_cielab(srgb_to_linear(cut_mean))
+        lb = rgb_to_cielab(srgb_to_linear(ring_mean))
+        rep["deltaE_after"] = round(float(np.linalg.norm(la - lb)), 1)
 
         key = "%s/%s" % (row["set"], row["cut"])
         entries[key] = {
@@ -293,6 +315,8 @@ def main():
             "gradedSha256": sha256_file(out_path),
             "plate": "assets/" + row["plate"], "state": row["state"],
             "mark": list(row["mark"]), "hPx": row["h"], "flip": row["flip"],
+            "pin": list(pin),
+            "wrap": {**wrep, "rimBefore": rim_before, "rimAfter": rim_after},
             "light": list(row["light"]) if row["light"] else None,
             "reach": row["reach"], "why": row["why"],
             "settle": row.get("settle"),
@@ -308,21 +332,24 @@ def main():
                        "px": rep["accent_px"]},
             "rim": rep["rim_applied"],
         }
-        print("%-28s %-8s dE %5.1f -> %4.1f   dCCT %5d -> %5d%s" % (
+        print("%-28s %-8s dE %5.1f -> %4.1f   rim %s -> %s%s" % (
             key, row["state"], rep["deltaE_before"], rep["deltaE_after"],
-            rep["cct_delta_before"], rep["cct_delta_after"],
+            rim_before and rim_before["ratio"], rim_after and rim_after["ratio"],
             "   [settle " + row["settle"] + "]" if row.get("settle") else ""))
 
     reg = {
         "lane": "ody-regrade (Explorer B adopted; "
-                "tools/ody/seamless/explore-regrade.md)",
-        "tool": "tools/ody/seamless/regrade.py via bake_regrade.py",
+                "tools/ody/seamless/explore-regrade.md) + R2 wrap "
+                "(tools/ody/research/SYNTHESIS.md; tools/ody/seamless/wrap.py)",
+        "tool": "tools/ody/seamless/regrade.py + wrap.py via bake_regrade.py",
         "law": "one graded variant per set x cut, graded against the state "
                "the cut mostly plays in (unit majority; cave shut/embers "
-               "ties per the report's ring data); sets load graded, fall "
-               "back to the raw cut; the lap holds the shas AND dE <= 9 at "
-               "the six settle entries",
-        "gate": {"deltaEMax": 9,
+               "ties per the report's ring data), then R2 light wrap + edge "
+               "decontamination (erode+feather, interior screen wrap, plate "
+               "skirt); sets load graded, fall back to the raw cut; the lap "
+               "holds the shas AND dE <= 9 AND the rim-register ratio <= "
+               "%.1f at the six settle entries" % WRAP_RIM_MAX,
+        "gate": {"deltaEMax": 9, "rimRatioMax": WRAP_RIM_MAX,
                  "settles": [k for k, e in entries.items() if e["settle"]]},
         "entries": entries,
     }

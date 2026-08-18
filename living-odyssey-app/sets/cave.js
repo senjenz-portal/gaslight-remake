@@ -102,6 +102,7 @@ import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
 import { STRIPS } from '../strips.js';
 import { SHADOWS } from '../shadows.js';
 import { HEROCLIP_FILES } from '../heroclips.js';
+import { SHOT_FILES } from '../shots.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SCALE = { pxPerM: 43, ulysses: 75, crew: 73, giantStand: 300,
@@ -242,17 +243,17 @@ const FOCUS = {
   'doorlight-hinge':   [480, 400, 2.2],
   mouth:               [345, 340, 2.4],
   'discovery-low':     [900, 430, 1.8],
-  'eye-close':         [745, 295, 3.6],    // O.1's visual half
-  twoshot:             [700, 400, 2.6],
-  'meal-close':        [780, 430, 2.8],    // the clutch IN SHADOW, x3
+  'eye-close':         [745, 295, 2.5],   // [shot] re-valued 3.6 -> KCAP    // O.1's visual half
+  twoshot:             [700, 400, 2.5],   // [shot] re-valued 2.6 -> KCAP
+  'meal-close':        [780, 430, 2.5],   // [shot] re-valued 2.8 -> KCAP    // the clutch IN SHADOW, x3
   sword:               [740, 440, 3.2],    // pan START — lands on `mouth`
   'scheme-push':       [770, 500, 3.2],  // CLOSE-UP LAW: was [640,470,3.0] —
                                           // recentred ON the swept scheme mark
                                           // (800,530); Ulysses 29.3% -> 31.3%
   'club-wide':         [880, 360, 1.6],    // mast-scale delivered visually
-  'lots-overhead':     [600, 490, 3.0],
+  'lots-overhead':     [600, 490, 2.5],   // [shot] re-valued 3.0 -> KCAP
   'bowl-close':        [690, 440, 3.4],    // G3's hold frame
-  'face-flush':        [710, 380, 4.0],
+  'face-flush':        [710, 380, 2.5],   // [shot] re-valued 4.0 -> KCAP
   'ember-close':       [655, 450, 3.8],    // G4's hold frame
   'drive-tight':       [590, 490, 3.4],  // RE-AIMED with the swept sprawl (E2:
                                           // the ledger's (780,430) framed the
@@ -265,8 +266,8 @@ const FOCUS = {
                                           // of the portrait window; k stays
                                           // the ledger's own 3.4
   'ram-close':         [838, 425, 3.2],    // G5
-  'handpass-tight':    [370, 400, 3.6],    // O.11's core image
-  'doorway-twoshot':   [370, 380, 3.0],
+  'handpass-tight':    [370, 400, 2.5],   // [shot] re-valued 3.6 -> KCAP    // O.11's core image
+  'doorway-twoshot':   [370, 380, 2.5],   // [shot] re-valued 3.0 -> KCAP
   'freed-overshoulder': [430, 430, 2.35], // CLOSE-UP LAW: was k 2.0 (19.5%) —
                                           // Ulysses at the cutting 22.9%, the
                                           // small seated giant kept in frame
@@ -275,7 +276,7 @@ const FOCUS = {
   collapse:            [770, 460, 2.2],  // iii-13 (was establishing): the whole
                                           // fall — seat (760,452) to the sprawl
                                           // box [636..938] — composed, not wide
-  'sprawl-groan':      [720, 480, 2.6],  // iv-08 (was mouth, which CROPPED the
+  'sprawl-groan':      [720, 480, 2.5],   // [shot] re-valued 2.6 -> KCAP  // iv-08 (was mouth, which CROPPED the
                                           // shouter): the groaning bulk against
                                           // his own fire-glow, sprawl at 35.2%
   puzzling:            [638, 450, 1.75], // v-01 (was establishing 9.8%): the
@@ -871,6 +872,50 @@ export class CaveSet {
     'clip-twist':      HEROCLIP_FILES['clip-twist'],
     'clip-underbelly': HEROCLIP_FILES['clip-underbelly'],
   };
+  /** [shot] the SHOT plates this set declares — a REGISTRY ONLY (SHOTS.md:
+   *  set bodies — fire/step/reset — untouched, so world determinism is
+   *  untouched). Paths from shots.js (the heroclips ONE PATH law); anchors
+   *  are SHOT-SPACE plate px, pinned on the shipped plate's own pixels.
+   *  shot-noman: iii-11's dialogue close (the pun) — no target/hold on the
+   *  unit; the leader heads are the two speakers as the PLATE paints them. */
+  static shots = {
+    'shot-noman': {
+      ...SHOT_FILES['shot-noman'],
+      heads: { ULYSSES: [722, 512], POLYPHEMUS: [934, 172] },
+    },
+    /* SHOTGEN lane (2026-08-17), anchors pinned on each shipped plate's own
+       pixels (shot space, 1408x768):
+       shot-bowl — G3's release close (lookhere/thrice): the hold ring stands
+       ON the wine bowl in his hands; leader heads for both speakers.
+       shot-embers — G4's hold close (embers/glowing), CLIP: ember glow +
+       breathing sleepers; the hold ring stands on the stake at the pit rim.
+       shot-drive — the drive close (auger/bore/hiss), CLIP: the twist loop
+       (supersedes the clip-twist inset — SHOTS.md §1.4); no target/hold. */
+    'shot-bowl': {
+      ...SHOT_FILES['shot-bowl'],
+      holds: { bowl: [818, 470] },
+      heads: { ULYSSES: [755, 405], POLYPHEMUS: [1050, 150] },
+    },
+    'shot-embers': {
+      ...SHOT_FILES['shot-embers'],
+      holds: { stake: [700, 420] },
+    },
+    'shot-drive': {
+      ...SHOT_FILES['shot-drive'],
+    },
+    /* [shot] lane 2 (even rows, same recipe — anchors from the registry):
+       shot-scheme — iii-03's dialogue close; shot-ram — G5's object close,
+       the gate ring stands ON the great ram as the plate paints him. */
+    'shot-scheme': {
+      ...SHOT_FILES['shot-scheme'],
+      heads: { ULYSSES: [820, 266], CREW: [1096, 329] },
+    },
+    'shot-ram': {
+      ...SHOT_FILES['shot-ram'],
+      targets: { 'ram-great': [742, 287] },
+      heads: { ULYSSES: [564, 321] },
+    },
+  };
   static beds = ['cave'];
 
   constructor(root, st) {
@@ -1063,6 +1108,20 @@ export class CaveSet {
     box(this.bloomFire, ...LAYER.bloomFire.box);
     this.bloomFire.style.mixBlendMode = 'screen';
     this.bloomFire.style.opacity = '0';
+    /* ---- [atmo] R5 (SYNTHESIS): the ATMOSPHERE SANDWICH, the bloomFire
+       device promoted to law — each painted state's own extracted haze/
+       bloom band (tools/ody/seamless/bake_atmo.py, registry tools/ody/
+       atmo.json, gain baked into the pixels) composited OVER the actors,
+       screen-blended, riding ITS OWN plate's crossfade weight. Scene air
+       on top of both plate and actors welds them into one depth stack. */
+    this.atmoN = {};
+    for (const name of ['master', 'dawn', 'shut', 'embers', 'predawn']) {
+      const e = img('set/cave/atmo/' + name + '.png', 'lyr atmo');
+      box(e, 0, 0, PLATE.w, PLATE.h);
+      e.style.mixBlendMode = 'screen';
+      e.style.opacity = name === 'master' ? '1' : '0';
+      this.atmoN[name] = e;
+    }
     this.emis = emissives(EMIS, root);
     /* the neighbours' lamplight seams (O.10) — light only, outside the stone */
     this.seamN = SEAMS.map((s) => {
@@ -1575,6 +1634,16 @@ export class CaveSet {
     }
     this.swapK = k;
     this.veilK = veil;
+    /* [atmo] the per-plate crossfade weights the atmosphere bands ride:
+       a band belongs to ITS painted light, so it carries exactly the
+       share of the frame its plate is painting (the occluder-mirror law,
+       reduced to weights — master's always-1 floor is NOT a weight). */
+    const wA = {};
+    if (S.swap) {
+      wA[S.swap.to] = easeInOut(k);
+      wA[S.swap.from] = 1 - easeInOut(k);
+    } else wA[S.stateName] = 1;
+    this.stateW = wA;
     /* the channel gains, crossfaded with the plates */
     const from = LIGHT[S.swap ? S.swap.from : S.stateName];
     const to = LIGHT[S.swap ? S.swap.to : S.stateName];
@@ -1623,6 +1692,12 @@ export class CaveSet {
         .toFixed(3);
     this.bloom.style.opacity =
       ((0.55 + 0.45 * g.mouth) * (1 - 0.55 * dim)).toFixed(3);
+    /* [atmo] R5: each state's extracted band, over the actors, riding its
+       own plate weight and the emissive dim discipline */
+    const wA = this.stateW || { master: 1 };
+    for (const [name, e] of Object.entries(this.atmoN)) {
+      e.style.opacity = ((wA[name] || 0) * (1 - 0.55 * dim)).toFixed(3);
+    }
     const F = LAYER.fog;
     const driftAmp = F.driftPxPerSec * F.per / (2 * Math.PI);
     this.fog.style.transform =

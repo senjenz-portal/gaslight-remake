@@ -1,0 +1,640 @@
+{
+ "shots": {
+  "shot-noman": {
+   "file": "assets/set/cave/shot/noman.jpg",
+   "sha256": "2d158d49ad4966108552ed476942ca2df9cc841bf90c341a394aea26f511127d",
+   "bytes": 336292,
+   "kind": "still",
+   "class": "dialogue",
+   "units": [
+    "noman"
+   ],
+   "size": "1408x768",
+   "source": "assets/raw/ody-shots/A-noman-cand1.png",
+   "sourceSha256": "629917dd9a631e8c35fd87d2fb122d37b29237fff32930a9ec2618b00bc48c46",
+   "lane": "nbpro i2i (gemini-3-pro-image), owner pick 2026-08-17 \u2014 assets/raw/ody-shots/manifest.json",
+   "encode": "cover-crop 1366x768 -> 1408x768 (scale 1408/1366 LANCZOS, centre crop 12px top+bottom), JPEG q93",
+   "heads": {
+    "ULYSSES": [
+     722,
+     512
+    ],
+    "POLYPHEMUS": [
+     934,
+     172
+    ]
+   }
+  },
+  "shot-wineskin": {
+   "file": "assets/set/shore/shot/wineskin.jpg",
+   "sha256": "0c2f2a05f7386aff0bf79e863e4b05895dfa8419b3ce3f11a1fa3ec5e21d7d4e",
+   "bytes": 216105,
+   "kind": "still",
+   "class": "object",
+   "units": [
+    "wineskin"
+   ],
+   "size": "1408x768",
+   "source": "assets/raw/ody-shots/L2-wineskin-cand1.png",
+   "sourceSha256": "626019e4ec4028ce0e2b65bd83ec570be2578821ee8c094131a34929e203acd5",
+   "lane": "nbpro i2i (gemini-3-pro-image), SHOTGEN lane 2 gate pick 2026-08-17 \u2014 assets/raw/ody-shots/manifest-lane2.json",
+   "encode": "cover-crop 1366x768 -> 1408x768 (scale 1408/1366 LANCZOS, centre crop 12px top+bottom), JPEG q93",
+   "heads": {
+    "ULYSSES": [
+     858,
+     357
+    ],
+    "CREW": [
+     168,
+     255
+    ]
+   }
+  },
+  "shot-scheme": {
+   "file": "assets/set/cave/shot/scheme.jpg",
+   "sha256": "768981636f12c9048d035ef81c819aff92aca3f42327617b9acc530800aae7a1",
+   "bytes": 206823,
+   "kind": "still",
+   "class": "dialogue",
+   "units": [
+    "scheme"
+   ],
+   "size": "1408x768",
+   "source": "assets/raw/ody-shots/L2-scheme-cand2.png",
+   "sourceSha256": "2abaabcf300c8386505b217856ddce4a1ddf8048fa3c5dee704ab264d225d5ba",
+   "lane": "nbpro i2i (gemini-3-pro-image), SHOTGEN lane 2 gate pick 2026-08-17 \u2014 assets/raw/ody-shots/manifest-lane2.json",
+   "encode": "cover-crop 1366x768 -> 1408x768 (scale 1408/1366 LANCZOS, centre crop 12px top+bottom), JPEG q93",
+   "heads": {
+    "ULYSSES": [
+     820,
+     266
+    ],
+    "CREW": [
+     1096,
+     329
+    ]
+   }
+  },
+  "shot-ram": {
+   "file": "assets/set/cave/shot/ram.jpg",
+   "sha256": "cc555eb6d13d8cae30a6aba4a60208ae9e92d2f73929ae098420ab20f3a69fc4",
+   "bytes": 245932,
+   "kind": "still",
+   "class": "object",
+   "units": [
+    "greatram"
+   ],
+   "size": "1408x768",
+   "source": "assets/raw/ody-shots/L2-greatram-cand2.png",
+   "sourceSha256": "22a0b66d927badc976b0417a651831155db1b3bb6fca754607dcbe428e32a3a7",
+   "lane": "nbpro i2i (gemini-3-pro-image), SHOTGEN lane 2 gate pick 2026-08-17 \u2014 assets/raw/ody-shots/manifest-lane2.json",
+   "encode": "cover-crop 1366x768 -> 1408x768 (scale 1408/1366 LANCZOS, centre crop 12px top+bottom), JPEG q93",
+   "heads": {
+    "ULYSSES": [
+     564,
+     321
+    ]
+   },
+   "targets": {
+    "ram-great": [
+     742,
+     287
+    ]
+   }
+  },
+  "shot-council": {
+   "file": "assets/set/shore/shot/council.jpg",
+   "sha256": "809e6de3bd9e5719a3227adf0c27f0035fd08130fc23a2c65ce25aca13417510",
+   "bytes": 187282,
+   "kind": "still",
+   "class": "dialogue",
+   "units": [
+    "council"
+   ],
+   "size": "1408x768",
+   "source": "assets/raw/ody-shots/L1-shot-council-cand1.png",
+   "sourceSha256": "19dfd15d0a47e3bda6dc7eab7cb53902c2fdee400801f2ff7c30c1c0e5ebd3f0",
+   "lane": "SHOTGEN lane 1 (nbpro i2i off the live-staged tableau seed, gemini-3-pro-image), gated by shotgate.py 2026-08-17 - assets/raw/ody-shots/manifest-lane1.json",
+   "encode": "cover-crop -> 1408x768 (scale 1408w LANCZOS, centre crop 12px top+bottom), JPEG q93",
+   "gates": {
+    "identity": {
+     "ULYSSES": {
+      "warmcool": 9.9,
+      "delta": 14.3,
+      "ok": true
+     },
+     "CREW": {
+      "warmcool": 41.9,
+      "delta": 8.4,
+      "ok": true
+     }
+    },
+    "continuity": {
+     "global_ncc": 0.891,
+     "q00": 0.927,
+     "q01": 0.813,
+     "q10": 0.943,
+     "q11": 0.959
+    },
+    "register_vs_seed": {
+     "hue_hist_intersection": 0.951,
+     "sat_delta": 0.017,
+     "val_delta": -0.009
+    },
+    "register_vs_plate_info": {
+     "hue_hist_intersection": 0.5,
+     "sat_delta": -0.022,
+     "val_delta": -0.102
+    },
+    "ok": true
+   },
+   "heads": {
+    "ULYSSES": [
+     845,
+     392
+    ]
+   },
+   "targets": {
+    "ship": [
+     1196,
+     168
+    ]
+   }
+  },
+  "shot-bowl": {
+   "file": "assets/set/cave/shot/bowl.jpg",
+   "sha256": "eef23e183b8a8f79d7c22bf29e114c0f02da366337d5ff9fa9544ff445d443b0",
+   "bytes": 236157,
+   "kind": "still",
+   "class": "object",
+   "units": [
+    "lookhere",
+    "thrice"
+   ],
+   "size": "1408x768",
+   "source": "assets/raw/ody-shots/L1-shot-bowl-cand2.png",
+   "sourceSha256": "160da5e3f66522a93914f50322eeebd1f0ba7cb1f04d15f5f253d597a68f2d24",
+   "lane": "SHOTGEN lane 1 (nbpro i2i off the live-staged tableau seed, gemini-3-pro-image), gated by shotgate.py 2026-08-17 - assets/raw/ody-shots/manifest-lane1.json",
+   "encode": "cover-crop -> 1408x768 (scale 1408w LANCZOS, centre crop 12px top+bottom), JPEG q93",
+   "gates": {
+    "identity": {
+     "ULYSSES": {
+      "warmcool": -1.7,
+      "delta": -15.0,
+      "ok": true
+     },
+     "POLYPHEMUS": {
+      "warmcool": -4.4,
+      "delta": -8.9,
+      "ok": true
+     }
+    },
+    "continuity": {
+     "global_ncc": 0.843,
+     "q00": 0.811,
+     "q01": 0.701,
+     "q10": 0.915,
+     "q11": 0.913
+    },
+    "register_vs_seed": {
+     "hue_hist_intersection": 0.951,
+     "sat_delta": 0.033,
+     "val_delta": -0.037
+    },
+    "register_vs_plate_info": {
+     "hue_hist_intersection": 0.352,
+     "sat_delta": -0.11,
+     "val_delta": 0.276
+    },
+    "ok": true
+   },
+   "heads": {
+    "ULYSSES": [
+     755,
+     405
+    ],
+    "POLYPHEMUS": [
+     1050,
+     150
+    ]
+   },
+   "holds": {
+    "bowl": [
+     818,
+     470
+    ]
+   }
+  },
+  "shot-embers": {
+   "file": "assets/set/cave/shot/embers.jpg",
+   "sha256": "26b7ca7dd50b1b1e184fca840d224976bc9f652b05006545890ad8f3ebf8c07c",
+   "bytes": 208644,
+   "kind": "clip",
+   "class": "action",
+   "units": [
+    "embers",
+    "glowing"
+   ],
+   "size": "1408x768",
+   "source": "assets/raw/ody-shots/L1-shot-embers-cand2.png",
+   "sourceSha256": "cf2c3d35011e6ac8db83e299fbd4795c8982fec3f9658cfd484ee12985310bc7",
+   "lane": "SHOTGEN lane 1 (nbpro i2i off the live-staged tableau seed, gemini-3-pro-image), gated by shotgate.py 2026-08-17 - assets/raw/ody-shots/manifest-lane1.json",
+   "encode": "cover-crop -> 1408x768 (scale 1408w LANCZOS, centre crop 12px top+bottom), JPEG q93",
+   "gates": {
+    "identity": {
+     "ULYSSES": {
+      "warmcool": -12.7,
+      "delta": 6.3,
+      "ok": true
+     },
+     "POLYPHEMUS": {
+      "warmcool": -15.0,
+      "delta": -3.3,
+      "ok": true
+     }
+    },
+    "continuity": {
+     "global_ncc": 0.827,
+     "q00": 0.926,
+     "q01": 0.918,
+     "q10": 0.815,
+     "q11": 0.667
+    },
+    "register_vs_seed": {
+     "hue_hist_intersection": 0.922,
+     "sat_delta": -0.019,
+     "val_delta": -0.055
+    },
+    "register_vs_plate_info": {
+     "hue_hist_intersection": 0.379,
+     "sat_delta": -0.145,
+     "val_delta": 0.045
+    },
+    "ok": true
+   },
+   "holds": {
+    "stake": [
+     700,
+     420
+    ]
+   },
+   "clip": "assets/set/cave/shot/embers.mp4",
+   "clipSha256": "dddcae4dbf8b0657ef27262a843f158336a1359f74a4d667d5169ab445057663",
+   "clipBytes": 569868,
+   "clipSource": "assets/raw/ody-shots/shot-embers.mp4",
+   "clipSourceSha256": "1db882098724c5ccb7cd41a71a6770c095c9b469fcd054a5f57c6d2a59875064",
+   "clipEncode": "scale 1408x792 lanczos, crop 1408x768 y=12, libx264 slow crf19 yuv420p faststart, no audio",
+   "clipGates": {
+    "sampledAt": [
+     0.0,
+     0.808,
+     1.617,
+     2.425,
+     3.233,
+     3.972
+    ],
+    "identity": {
+     "ULYSSES": {
+      "canonical": -13.58,
+      "warmcool": [
+       -12.09,
+       -12.55,
+       -11.6,
+       -12.17,
+       -11.55,
+       -12.04
+      ],
+      "delta": [
+       1.5,
+       1.03,
+       1.99,
+       1.42,
+       2.04,
+       1.54
+      ],
+      "ok": true
+     },
+     "POLYPHEMUS": {
+      "canonical": -15.69,
+      "warmcool": [
+       -16.5,
+       -15.76,
+       -15.97,
+       -16.4,
+       -15.68,
+       -16.28
+      ],
+      "delta": [
+       0.81,
+       0.07,
+       0.28,
+       0.71,
+       0.01,
+       0.58
+      ],
+      "ok": true
+     }
+    },
+    "identity_ok": true,
+    "bg_luma": [
+     48.55,
+     49.11,
+     49.32,
+     49.32,
+     49.28,
+     48.1
+    ],
+    "luma_delta": [
+     0.56,
+     0.2,
+     0.0,
+     0.04,
+     1.18
+    ],
+    "luma_ok": true,
+    "seed_match": 0.0059,
+    "bg_drift": [
+     0.0024,
+     0.0048,
+     0.0048,
+     0.0,
+     0.0
+    ],
+    "bg_drift_ok": true,
+    "deflickered": false,
+    "clip": "/Users/samz/Documents/gaslight-remake/assets/raw/ody-shots/shot-embers.mp4",
+    "ok": true
+   },
+   "clipLane": "Seedance-2.0 via Scenario img2video off the gated repainted seed (B recipe), 4s 720p, deflicker law shotclip_gate.py"
+  },
+  "shot-drive": {
+   "file": "assets/set/cave/shot/drive.jpg",
+   "sha256": "268bc3984ed8c77554d485423a3e1d967cdf8f1fc5c7b0102bf35e2562c4737b",
+   "bytes": 206973,
+   "kind": "clip",
+   "class": "action",
+   "units": [
+    "auger",
+    "bore",
+    "hiss"
+   ],
+   "size": "1408x768",
+   "source": "assets/raw/ody-shots/L1-shot-drive-cand2.png",
+   "sourceSha256": "59052ee1cb9a3e5456ddc1adcd42667c60ae5d320340866737965a816897da6c",
+   "lane": "SHOTGEN lane 1 (nbpro i2i off the live-staged tableau seed, gemini-3-pro-image), gated by shotgate.py 2026-08-17 - assets/raw/ody-shots/manifest-lane1.json",
+   "encode": "cover-crop -> 1408x768 (scale 1408w LANCZOS, centre crop 12px top+bottom), JPEG q93",
+   "gates": {
+    "identity": {
+     "ULYSSES": {
+      "warmcool": -9.4,
+      "delta": -1.0,
+      "ok": true
+     },
+     "POLYPHEMUS": {
+      "warmcool": -0.8,
+      "delta": 11.6,
+      "ok": true
+     },
+     "CREW": {
+      "warmcool": -4.0,
+      "delta": 0.3,
+      "ok": true
+     }
+    },
+    "continuity": {
+     "global_ncc": 0.87,
+     "q00": 0.897,
+     "q01": 0.822,
+     "q10": 0.975,
+     "q11": 0.815
+    },
+    "register_vs_seed": {
+     "hue_hist_intersection": 0.932,
+     "sat_delta": -0.01,
+     "val_delta": -0.027
+    },
+    "register_vs_plate_info": {
+     "hue_hist_intersection": 0.644,
+     "sat_delta": -0.122,
+     "val_delta": 0.054
+    },
+    "ok": true
+   },
+   "clip": "assets/set/cave/shot/drive.mp4",
+   "clipSha256": "08e6fb118e52809f8de1a24bbdf2a60ed8846a6241b8919c9a47d65b9238d129",
+   "clipBytes": 773320,
+   "clipSource": "assets/raw/ody-shots/shot-drive.mp4",
+   "clipSourceSha256": "e79f63a557e33fabfe4836c1f4c4e4504a7a04b83542a6e3592c8fe25e502fab",
+   "clipEncode": "scale 1408x792 lanczos, crop 1408x768 y=12, libx264 slow crf19 yuv420p faststart, no audio",
+   "clipGates": {
+    "sampledAt": [
+     0.0,
+     0.808,
+     1.617,
+     2.425,
+     3.233,
+     3.972
+    ],
+    "identity": {
+     "ULYSSES": {
+      "canonical": -11.12,
+      "warmcool": [
+       -6.38,
+       -6.86,
+       -6.17,
+       -6.13,
+       -6.31,
+       -5.71
+      ],
+      "delta": [
+       4.73,
+       4.26,
+       4.95,
+       4.99,
+       4.81,
+       5.4
+      ],
+      "ok": true
+     },
+     "POLYPHEMUS": {
+      "canonical": -3.08,
+      "warmcool": [
+       -1.9,
+       -3.21,
+       -1.38,
+       -3.51,
+       -3.01,
+       -2.01
+      ],
+      "delta": [
+       1.17,
+       0.13,
+       1.7,
+       0.43,
+       0.06,
+       1.06
+      ],
+      "ok": true
+     },
+     "CREW": {
+      "canonical": -7.35,
+      "warmcool": [
+       -7.37,
+       -7.35,
+       -7.37,
+       -7.22,
+       -7.38,
+       -7.29
+      ],
+      "delta": [
+       0.02,
+       0.0,
+       0.03,
+       0.13,
+       0.03,
+       0.06
+      ],
+      "ok": true
+     }
+    },
+    "identity_ok": true,
+    "bg_luma": [
+     44.86,
+     45.33,
+     45.28,
+     45.63,
+     45.55,
+     44.98
+    ],
+    "luma_delta": [
+     0.47,
+     0.04,
+     0.34,
+     0.08,
+     0.58
+    ],
+    "luma_ok": true,
+    "seed_match": 0.0032,
+    "bg_drift": [
+     0.0143,
+     0.0,
+     0.0127,
+     0.0159,
+     0.0
+    ],
+    "bg_drift_ok": true,
+    "deflickered": false,
+    "clip": "/Users/samz/Documents/gaslight-remake/assets/raw/ody-shots/shot-drive.mp4",
+    "ok": true
+   },
+   "clipLane": "Seedance-2.0 via Scenario img2video off the gated repainted seed (B recipe), 4s 720p, deflicker law shotclip_gate.py"
+  },
+  "shot-taunt": {
+   "file": "assets/set/sea/shot/taunt.jpg",
+   "sha256": "d5f9a75cc910b4c34f512b0f4991ce397fe6a200c51a734fd27666ae0e8d5af3",
+   "bytes": 188175,
+   "kind": "still",
+   "class": "dialogue",
+   "units": [
+    "taunt"
+   ],
+   "size": "1408x768",
+   "source": "assets/raw/ody-shots/L1-shot-taunt-cand1.png",
+   "sourceSha256": "06baa9eac82ef3caa1dca3140eac46bebdbb4c9d2e841760a935957d6e49b7de",
+   "lane": "SHOTGEN lane 1 (nbpro i2i off the live-staged tableau seed, gemini-3-pro-image), gated by shotgate.py 2026-08-17 - assets/raw/ody-shots/manifest-lane1.json",
+   "encode": "cover-crop -> 1408x768 (scale 1408w LANCZOS, centre crop 12px top+bottom), JPEG q93",
+   "gates": {
+    "identity": {
+     "ULYSSES": {
+      "warmcool": -0.0,
+      "delta": 15.1,
+      "ok": true
+     },
+     "CREW": {
+      "warmcool": -10.0,
+      "delta": -8.9,
+      "ok": true
+     }
+    },
+    "continuity": {
+     "global_ncc": 0.926,
+     "q00": 0.902,
+     "q01": 0.913,
+     "q10": 0.923,
+     "q11": 0.979
+    },
+    "register_vs_seed": {
+     "hue_hist_intersection": 0.915,
+     "sat_delta": 0.037,
+     "val_delta": -0.025
+    },
+    "register_vs_plate_info": {
+     "hue_hist_intersection": 0.191,
+     "sat_delta": -0.382,
+     "val_delta": 0.295
+    },
+    "ok": true
+   },
+   "heads": {
+    "ULYSSES": [
+     672,
+     330
+    ]
+   }
+  },
+  "shot-myname": {
+   "file": "assets/set/sea/shot/myname.jpg",
+   "sha256": "29762955b52e1e8d59185e180633be9f5c30345c58a35c3144cded436076152a",
+   "bytes": 205554,
+   "kind": "still",
+   "class": "dialogue",
+   "units": [
+    "myname"
+   ],
+   "size": "1408x768",
+   "source": "assets/raw/ody-shots/L1-shot-myname-cand1.png",
+   "sourceSha256": "057b09f4a6d231019d2663cf41e8b107030d2955825f321d45a0090dfaf4ce08",
+   "lane": "SHOTGEN lane 1 (nbpro i2i off the live-staged tableau seed, gemini-3-pro-image), gated by shotgate.py 2026-08-17 - assets/raw/ody-shots/manifest-lane1.json",
+   "encode": "cover-crop -> 1408x768 (scale 1408w LANCZOS, centre crop 12px top+bottom), JPEG q93",
+   "gates": {
+    "identity": {
+     "ULYSSES": {
+      "warmcool": -1.5,
+      "delta": 12.8,
+      "ok": true
+     }
+    },
+    "continuity": {
+     "global_ncc": 0.862,
+     "q00": 0.865,
+     "q01": 0.876,
+     "q10": 0.852,
+     "q11": 0.873
+    },
+    "register_vs_seed": {
+     "hue_hist_intersection": 0.854,
+     "sat_delta": 0.044,
+     "val_delta": -0.074
+    },
+    "register_vs_plate_info": {
+     "hue_hist_intersection": 0.2,
+     "sat_delta": -0.442,
+     "val_delta": 0.38
+    },
+    "ok": true
+   },
+   "heads": {
+    "ULYSSES": [
+     672,
+     240
+    ]
+   },
+   "holds": {
+    "breath": [
+     672,
+     300
+    ]
+   }
+  }
+ }
+}

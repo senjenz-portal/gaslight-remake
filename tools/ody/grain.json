@@ -1,0 +1,23 @@
+{
+ "lane": "ody-grain (R3, tools/ody/research/SYNTHESIS.md)",
+ "tool": "tools/ody/seamless/bake_grain.py",
+ "law": "one seeded baked grain tile blended 'overlay' at 0.08 over the composed stage (plate+actors+insets, isolation:isolate), plus one stage-level feComponentTransfer gamma 0.98 \u2014 no feTurbulence, no wall clock, no per-layer grades. The lap holds: served sha, the css wiring, paint proven by missing, same-frame byte determinism, and the noise register at the audited settles.",
+ "seed": 20260817,
+ "size": 512,
+ "std": 25.0,
+ "stdMeasured": 25.0,
+ "file": "assets/fx/grain.png",
+ "sha256": "0f5e8c93c339f220952ebf9955ba9049a2287e0c74dfff453e3a77d7a519c4c9",
+ "css": {
+  "opacity": 0.08,
+  "blend": "overlay",
+  "tileCss": 256
+ },
+ "grade": {
+  "filter": "gradef",
+  "type": "gamma",
+  "exponent": 0.98,
+  "amplitude": 1,
+  "offset": 0
+ }
+}

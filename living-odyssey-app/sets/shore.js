@@ -61,6 +61,7 @@ import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp, floorY,
          gradedActor } from '../setkit.js';
 import { STRIPS } from '../strips.js';
 import { SHADOWS } from '../shadows.js';
+import { SHOT_FILES } from '../shots.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SCALE = { pxPerM: 11.3, ulysses: 20, crew: 19 };
@@ -384,6 +385,22 @@ export class ShoreSet {
   /** The chapter's ONLY inset (inset law §6): the priest's gift, read as
    *  foresight. Raised by the `plate-wineskin` act on i-12 `misgave`. */
   static insets = { wineskin: 'inset/plate-wineskin.jpg' };
+  /** [shot] SHOTGEN lane (2026-08-17): shot-council — G1's dialogue close
+   *  (i-07). Anchors in SHOT space on the shipped plate's own pixels: the
+   *  gate target is the beached hull's planks (the ring must never point
+   *  into the covered world); the leader head is the speaker as painted. */
+  static shots = {
+    'shot-council': {
+      ...SHOT_FILES['shot-council'],
+      targets: { ship: [1196, 168] },
+      heads: { ULYSSES: [845, 392] },
+    },
+    /* [shot] lane 2: i-10's object close — the dark goatskin shouldered */
+    'shot-wineskin': {
+      ...SHOT_FILES['shot-wineskin'],
+      heads: { ULYSSES: [858, 357], CREW: [168, 255] },
+    },
+  };
   static beds = ['shore'];
 
   constructor(root, st) {
@@ -492,6 +509,17 @@ export class ShoreSet {
     this.bloom = img(LAYER.bloom.file, 'lyr');
     box(this.bloom, ...LAYER.bloom.box);
     this.bloom.style.mixBlendMode = 'screen';
+
+    /* ---- [atmo] R5 (SYNTHESIS): the ATMOSPHERE SANDWICH — each painted
+       state's own extracted haze/bloom band (bake_atmo.py; gain baked in),
+       OVER the actors, screen-blended, riding the night/day crossfade. */
+    this.atmoNight = img('set/shore/atmo/night.png', 'lyr atmo');
+    box(this.atmoNight, 0, 0, PLATE.w, PLATE.h);
+    this.atmoNight.style.mixBlendMode = 'screen';
+    this.atmoDay = img('set/shore/atmo/day.png', 'lyr atmo');
+    box(this.atmoDay, 0, 0, PLATE.w, PLATE.h);
+    this.atmoDay.style.mixBlendMode = 'screen';
+    this.atmoDay.style.opacity = '0';
 
     /* ---- the measured emissives, last ------------------------------- */
     this.emis = emissives(EMIS, root);
@@ -670,6 +698,12 @@ export class ShoreSet {
     /* ---- the two masters crossfade; the scrim rides the inset -------- */
     this.day.style.opacity = easeInOut(dayK).toFixed(3);
     this.scrim.style.opacity = (dim * DIM_SCRIM).toFixed(3);
+    /* [atmo] R5: each state's band rides its own plate's crossfade weight
+       and the emissive dim discipline */
+    this.atmoNight.style.opacity =
+      ((1 - easeInOut(dayK)) * (1 - 0.55 * dim)).toFixed(3);
+    this.atmoDay.style.opacity =
+      (easeInOut(dayK) * (1 - 0.55 * dim)).toFixed(3);
 
     /* ---- the waterline breath: drift + slow swell; day burns it back - */
     const F = LAYER.fog;

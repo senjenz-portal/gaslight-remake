@@ -1,9 +1,10 @@
 {
- "lane": "ody-regrade (Explorer B adopted; tools/ody/seamless/explore-regrade.md)",
- "tool": "tools/ody/seamless/regrade.py via bake_regrade.py",
- "law": "one graded variant per set x cut, graded against the state the cut mostly plays in (unit majority; cave shut/embers ties per the report's ring data); sets load graded, fall back to the raw cut; the lap holds the shas AND dE <= 9 at the six settle entries",
+ "lane": "ody-regrade (Explorer B adopted; tools/ody/seamless/explore-regrade.md) + R2 wrap (tools/ody/research/SYNTHESIS.md; tools/ody/seamless/wrap.py)",
+ "tool": "tools/ody/seamless/regrade.py + wrap.py via bake_regrade.py",
+ "law": "one graded variant per set x cut, graded against the state the cut mostly plays in (unit majority; cave shut/embers ties per the report's ring data), then R2 light wrap + edge decontamination (erode+feather, interior screen wrap, plate skirt); sets load graded, fall back to the raw cut; the lap holds the shas AND dE <= 9 AND the rim-register ratio <= 1.3 at the six settle entries",
  "gate": {
   "deltaEMax": 9,
+  "rimRatioMax": 1.3,
   "settles": [
    "cave/ulysses-stand",
    "cave/ulysses-offer",
@@ -20,7 +21,7 @@
    "source": "assets/actor/ulysses-stand.png",
    "sourceSha256": "840694f7cbc64ea6f39e84221f9275c09529e940c8d6daa9db4831699a827a55",
    "graded": "assets/actor/graded/cave/ulysses-stand.png",
-   "gradedSha256": "4ab726d81ca0ebce44c8063ace5380d2e10037590a0a6aec1a408a08606778f2",
+   "gradedSha256": "81a8a567eb703e41ce328f3f24d3b2c24d8af0f05626f70b4d2c8a3212c71854",
    "plate": "assets/set/cave/cave-shut.jpg",
    "state": "shut",
    "mark": [
@@ -29,6 +30,31 @@
    ],
    "hPx": 75,
    "flip": false,
+   "pin": [
+    125,
+    676
+   ],
+   "wrap": {
+    "erode_px": 1.05,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 6.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 91724,
+    "rimBefore": {
+     "rim": 77.71,
+     "plateEdge": 73.44,
+     "ratio": 1.058,
+     "boundaryPx": 724
+    },
+    "rimAfter": {
+     "rim": 62.3,
+     "plateEdge": 73.44,
+     "ratio": 0.848,
+     "boundaryPx": 635
+    }
+   },
    "light": [
     638,
     427
@@ -49,7 +75,7 @@
    },
    "deltaE": {
     "before": 22.5,
-    "after": 4.2
+    "after": 4.0
    },
    "cct": {
     "ring": 3662,
@@ -70,7 +96,7 @@
    "source": "assets/actor/ulysses-walk.png",
    "sourceSha256": "a32e1a537fc20ce20f8b80dd9af7b1ff41285311942ff47d0fff3e5221ab160a",
    "graded": "assets/actor/graded/cave/ulysses-walk.png",
-   "gradedSha256": "3be4ffc9c5351e6157facaf017b5af31fc3ba759479583cf0f4df42eca0c0f1f",
+   "gradedSha256": "c6b8e7930c3ea9fafbb944fdf1a0e94b2a60d54778b3c6cf4484ebbf72730e25",
    "plate": "assets/set/cave/cave-shut.jpg",
    "state": "shut",
    "mark": [
@@ -79,6 +105,31 @@
    ],
    "hPx": 75,
    "flip": false,
+   "pin": [
+    208,
+    658
+   ],
+   "wrap": {
+    "erode_px": 1.05,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 6.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 91983,
+    "rimBefore": {
+     "rim": 82.57,
+     "plateEdge": 74.42,
+     "ratio": 1.109,
+     "boundaryPx": 798
+    },
+    "rimAfter": {
+     "rim": 81.12,
+     "plateEdge": 74.42,
+     "ratio": 1.09,
+     "boundaryPx": 624
+    }
+   },
    "light": [
     638,
     427
@@ -99,7 +150,7 @@
    },
    "deltaE": {
     "before": 30.3,
-    "after": 9.8
+    "after": 9.0
    },
    "cct": {
     "ring": 3438,
@@ -120,7 +171,7 @@
    "source": "assets/actor/ulysses-offer.png",
    "sourceSha256": "7c0c15bbfd234622b0d6f2eae0d1663af1ed345ace832e0f35247cc27a9f111b",
    "graded": "assets/actor/graded/cave/ulysses-offer.png",
-   "gradedSha256": "5c81db33ef6e2b2e45b5d45d9f606a609b6f96e65afafb2b89f3c209bb2a3e9d",
+   "gradedSha256": "5d5c7fa40df853ff441e9280573ccb66cf394974bf74b0c1f9cdafeefd95f523",
    "plate": "assets/set/cave/cave-shut.jpg",
    "state": "shut",
    "mark": [
@@ -129,6 +180,31 @@
    ],
    "hPx": 75,
    "flip": false,
+   "pin": [
+    67,
+    678
+   ],
+   "wrap": {
+    "erode_px": 1.05,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 6.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 100259,
+    "rimBefore": {
+     "rim": 60.48,
+     "plateEdge": 73.44,
+     "ratio": 0.824,
+     "boundaryPx": 721
+    },
+    "rimAfter": {
+     "rim": 50.41,
+     "plateEdge": 73.44,
+     "ratio": 0.686,
+     "boundaryPx": 633
+    }
+   },
    "light": [
     638,
     427
@@ -149,7 +225,7 @@
    },
    "deltaE": {
     "before": 23.3,
-    "after": 5.9
+    "after": 5.6
    },
    "cct": {
     "ring": 3328,
@@ -170,7 +246,7 @@
    "source": "assets/actor/ulysses-sword.png",
    "sourceSha256": "ee3f393c3474d0c2379bd964566b94a328d479eb706f704da5ad23185e10041d",
    "graded": "assets/actor/graded/cave/ulysses-sword.png",
-   "gradedSha256": "ed64a606958ea2d75069d1644997b1cb35c6bc1cded096bbd12b6c73b0aabec6",
+   "gradedSha256": "3a1d1d67c698eed5f5d58dd053ba82d74e7804a307a12ba052bab71951083eb1",
    "plate": "assets/set/cave/cave-embers.jpg",
    "state": "embers",
    "mark": [
@@ -179,6 +255,31 @@
    ],
    "hPx": 75,
    "flip": false,
+   "pin": [
+    125,
+    660
+   ],
+   "wrap": {
+    "erode_px": 1.05,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 6.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 104329,
+    "rimBefore": {
+     "rim": 56.08,
+     "plateEdge": 63.0,
+     "ratio": 0.89,
+     "boundaryPx": 813
+    },
+    "rimAfter": {
+     "rim": 46.41,
+     "plateEdge": 63.0,
+     "ratio": 0.737,
+     "boundaryPx": 673
+    }
+   },
    "light": [
     662,
     456
@@ -199,7 +300,7 @@
    },
    "deltaE": {
     "before": 7.0,
-    "after": 4.9
+    "after": 5.0
    },
    "cct": {
     "ring": 3893,
@@ -220,7 +321,7 @@
    "source": "assets/actor/ulysses-drive.png",
    "sourceSha256": "31dcdfd8ce07eb34febd00bb237a983ffe09d17ca2f40f8b631aaad5722e6b72",
    "graded": "assets/actor/graded/cave/ulysses-drive.png",
-   "gradedSha256": "89deb054f86a6a4ac0e64dd7ac14495fd4ded9d6d1bb57ecd57e356bd0282ed1",
+   "gradedSha256": "2b466e64217ea043fa1972684ac9421f44142db483c652f0db24f4547a221755",
    "plate": "assets/set/cave/cave-embers.jpg",
    "state": "embers",
    "mark": [
@@ -229,6 +330,31 @@
    ],
    "hPx": 66,
    "flip": false,
+   "pin": [
+    451,
+    553
+   ],
+   "wrap": {
+    "erode_px": 0.924,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 5.28,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 152435,
+    "rimBefore": {
+     "rim": 63.26,
+     "plateEdge": 63.08,
+     "ratio": 1.003,
+     "boundaryPx": 1304
+    },
+    "rimAfter": {
+     "rim": 49.99,
+     "plateEdge": 63.08,
+     "ratio": 0.792,
+     "boundaryPx": 1239
+    }
+   },
    "light": [
     662,
     456
@@ -249,7 +375,7 @@
    },
    "deltaE": {
     "before": 24.8,
-    "after": 13.6
+    "after": 13.4
    },
    "cct": {
     "ring": 16130,
@@ -270,7 +396,7 @@
    "source": "assets/actor/crew-a-stand.png",
    "sourceSha256": "994b57688d3ca7606ea48b8c35ee2df0be4c964c56de4d7166bd8913798b86ca",
    "graded": "assets/actor/graded/cave/crew-a-stand.png",
-   "gradedSha256": "7f2fdb943b2e87c8fa39a73e479c803152203f8399cfc7853c0ac10f005a014c",
+   "gradedSha256": "93fc5e55435ca95321a27b66aa63b9e4fbc69e719147dcb78aeef457cc867e46",
    "plate": "assets/set/cave/cave-embers.jpg",
    "state": "embers",
    "mark": [
@@ -279,6 +405,31 @@
    ],
    "hPx": 73,
    "flip": false,
+   "pin": [
+    132,
+    614
+   ],
+   "wrap": {
+    "erode_px": 1.022,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 5.84,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 73339,
+    "rimBefore": {
+     "rim": 41.99,
+     "plateEdge": 62.4,
+     "ratio": 0.673,
+     "boundaryPx": 816
+    },
+    "rimAfter": {
+     "rim": 37.26,
+     "plateEdge": 62.4,
+     "ratio": 0.597,
+     "boundaryPx": 585
+    }
+   },
    "light": [
     662,
     456
@@ -299,7 +450,7 @@
    },
    "deltaE": {
     "before": 50.7,
-    "after": 22.3
+    "after": 21.9
    },
    "cct": {
     "ring": 4887,
@@ -320,7 +471,7 @@
    "source": "assets/actor/crew-b-stand.png",
    "sourceSha256": "ced45bd57de01e6fffa48cef6674ad64ed04fbc3f77d67884b38cb596f34c2b2",
    "graded": "assets/actor/graded/cave/crew-b-stand.png",
-   "gradedSha256": "40bf3cabf952697a3596d4e5da1890a20b7337d9b599de2e861b20e3a0efd13f",
+   "gradedSha256": "4edf2c4e0595f27be6eecfb2acf8bf57db24331259a8865de3f9b1a28644c6d6",
    "plate": "assets/set/cave/cave-embers.jpg",
    "state": "embers",
    "mark": [
@@ -329,6 +480,31 @@
    ],
    "hPx": 73,
    "flip": false,
+   "pin": [
+    140,
+    629
+   ],
+   "wrap": {
+    "erode_px": 1.022,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 5.84,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 77436,
+    "rimBefore": {
+     "rim": 42.57,
+     "plateEdge": 56.72,
+     "ratio": 0.751,
+     "boundaryPx": 828
+    },
+    "rimAfter": {
+     "rim": 41.14,
+     "plateEdge": 56.72,
+     "ratio": 0.725,
+     "boundaryPx": 585
+    }
+   },
    "light": [
     662,
     456
@@ -349,7 +525,7 @@
    },
    "deltaE": {
     "before": 31.1,
-    "after": 8.5
+    "after": 8.4
    },
    "cct": {
     "ring": 5084,
@@ -370,7 +546,7 @@
    "source": "assets/actor/crew-carry.png",
    "sourceSha256": "d1af03577d6af912561e260cf49c7f2fbaf8690618cdb148e3b52fb9a89a0567",
    "graded": "assets/actor/graded/cave/crew-carry.png",
-   "gradedSha256": "3956ef6ca3fa675c99d1c154121540465e3f882ba23638e049e1b810ceaae603",
+   "gradedSha256": "361a448d75deba07eb27f958d25c418cdd5be92a46c67867f72dd97c2a3a5770",
    "plate": "assets/set/cave/cave-embers.jpg",
    "state": "embers",
    "mark": [
@@ -379,6 +555,31 @@
    ],
    "hPx": 70,
    "flip": false,
+   "pin": [
+    499,
+    622
+   ],
+   "wrap": {
+    "erode_px": 0.98,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 5.6,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 196866,
+    "rimBefore": {
+     "rim": 38.86,
+     "plateEdge": 59.37,
+     "ratio": 0.655,
+     "boundaryPx": 1513
+    },
+    "rimAfter": {
+     "rim": 37.68,
+     "plateEdge": 59.37,
+     "ratio": 0.635,
+     "boundaryPx": 1354
+    }
+   },
    "light": [
     662,
     456
@@ -399,7 +600,7 @@
    },
    "deltaE": {
     "before": 38.4,
-    "after": 17.6
+    "after": 17.4
    },
    "cct": {
     "ring": 7148,
@@ -420,7 +621,7 @@
    "source": "assets/actor/polyphemus-stand.png",
    "sourceSha256": "084f3a63037112a89eb50d3866e1d2389f8e44e6a7054744f3c8cda7466b9f68",
    "graded": "assets/actor/graded/cave/polyphemus-stand.png",
-   "gradedSha256": "abe4c10b2c366b691140d48fbcc750005a934fd82bd3d15ea829a9cc4dced0f6",
+   "gradedSha256": "5d692ec0341b24ead9701dd64577b83e7ad75d8a83fbe0761fce72a590704868",
    "plate": "assets/set/cave/cave-shut.jpg",
    "state": "shut",
    "mark": [
@@ -429,6 +630,31 @@
    ],
    "hPx": 300,
    "flip": false,
+   "pin": [
+    473,
+    1238
+   ],
+   "wrap": {
+    "erode_px": 1.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 8.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 130873,
+    "rimBefore": {
+     "rim": 80.05,
+     "plateEdge": 71.3,
+     "ratio": 1.123,
+     "boundaryPx": 3058
+    },
+    "rimAfter": {
+     "rim": 46.35,
+     "plateEdge": 71.3,
+     "ratio": 0.65,
+     "boundaryPx": 3012
+    }
+   },
    "light": [
     638,
     427
@@ -449,7 +675,7 @@
    },
    "deltaE": {
     "before": 27.2,
-    "after": 7.9
+    "after": 8.4
    },
    "cct": {
     "ring": 3301,
@@ -470,7 +696,7 @@
    "source": "assets/actor/polyphemus-seated.png",
    "sourceSha256": "c7f6d4f3ec55720e4f6c7094e43e454c9d8fb0d80eeea6a25d0ab40c581d3c05",
    "graded": "assets/actor/graded/cave/polyphemus-seated.png",
-   "gradedSha256": "55530609b287853deae1d02ee1f491211e17f9631b967877f1eb50bb0e7fb508",
+   "gradedSha256": "36b36f1648ecdcd3f07025ef4949700075ee7ca00eb6840082d1bc22e2ffd781",
    "plate": "assets/set/cave/cave-shut.jpg",
    "state": "shut",
    "mark": [
@@ -479,6 +705,31 @@
    ],
    "hPx": 165,
    "flip": false,
+   "pin": [
+    187,
+    967
+   ],
+   "wrap": {
+    "erode_px": 1.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 8.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 114814,
+    "rimBefore": {
+     "rim": 85.06,
+     "plateEdge": 72.17,
+     "ratio": 1.179,
+     "boundaryPx": 1844
+    },
+    "rimAfter": {
+     "rim": 54.81,
+     "plateEdge": 72.17,
+     "ratio": 0.759,
+     "boundaryPx": 2007
+    }
+   },
    "light": [
     638,
     427
@@ -499,7 +750,7 @@
    },
    "deltaE": {
     "before": 14.7,
-    "after": 6.7
+    "after": 6.9
    },
    "cct": {
     "ring": 3018,
@@ -520,7 +771,7 @@
    "source": "assets/actor/polyphemus-clutch.png",
    "sourceSha256": "0e0f45406b57a54b46465c5631e9b95c70f5dc2e41aabe44f776b84f5d504274",
    "graded": "assets/actor/graded/cave/polyphemus-clutch.png",
-   "gradedSha256": "ee9368dbedda76217766e2e41ca4fa3d1817f9ab6d2c575234f55735d9664c32",
+   "gradedSha256": "ec3fffdbcde81de8ef87e2047b49e3d6d542605f15e1931bb80ce3b494c351ba",
    "plate": "assets/set/cave/cave-shut.jpg",
    "state": "shut",
    "mark": [
@@ -529,6 +780,31 @@
    ],
    "hPx": 190,
    "flip": false,
+   "pin": [
+    509,
+    1202
+   ],
+   "wrap": {
+    "erode_px": 1.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 8.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 199318,
+    "rimBefore": {
+     "rim": 76.42,
+     "plateEdge": 72.96,
+     "ratio": 1.047,
+     "boundaryPx": 2317
+    },
+    "rimAfter": {
+     "rim": 44.46,
+     "plateEdge": 72.96,
+     "ratio": 0.609,
+     "boundaryPx": 2365
+    }
+   },
    "light": [
     638,
     427
@@ -549,7 +825,7 @@
    },
    "deltaE": {
     "before": 16.3,
-    "after": 7.2
+    "after": 7.3
    },
    "cct": {
     "ring": 2995,
@@ -570,7 +846,7 @@
    "source": "assets/actor/polyphemus-drink.png",
    "sourceSha256": "c1df0b574db8b15d46590e4d772ed86c71d50d40d3fd656b57ef3b0e323a023f",
    "graded": "assets/actor/graded/cave/polyphemus-drink.png",
-   "gradedSha256": "87de5fccbd29ac4452a04edb73833f7746bb0505c653b5d49aeb4ad23acee561",
+   "gradedSha256": "fac2bbc1c1701ffcc8995c859a1f9f30a7d60ded6fd8f766c0d6ebe65cb8e58a",
    "plate": "assets/set/cave/cave-shut.jpg",
    "state": "shut",
    "mark": [
@@ -579,6 +855,31 @@
    ],
    "hPx": 175,
    "flip": false,
+   "pin": [
+    451,
+    1249
+   ],
+   "wrap": {
+    "erode_px": 1.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 8.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 213537,
+    "rimBefore": {
+     "rim": 73.24,
+     "plateEdge": 71.79,
+     "ratio": 1.02,
+     "boundaryPx": 1815
+    },
+    "rimAfter": {
+     "rim": 42.4,
+     "plateEdge": 71.79,
+     "ratio": 0.591,
+     "boundaryPx": 1851
+    }
+   },
    "light": [
     638,
     427
@@ -599,7 +900,7 @@
    },
    "deltaE": {
     "before": 15.5,
-    "after": 7.7
+    "after": 7.8
    },
    "cct": {
     "ring": 3007,
@@ -620,7 +921,7 @@
    "source": "assets/actor/polyphemus-sprawl.png",
    "sourceSha256": "4fd46cef47e19f9e8764cd3d5539993eb86d763b39ed63f7e4703c87263d60e8",
    "graded": "assets/actor/graded/cave/polyphemus-sprawl.png",
-   "gradedSha256": "e579b3956309186fbb4ca1ec66183dc3a73f1f0d863213daa73b406fd43d4fcb",
+   "gradedSha256": "62d52e3d8186d14aa1d3875a2cf489d4e520632caad662a6622887e6baaf3900",
    "plate": "assets/set/cave/cave-embers.jpg",
    "state": "embers",
    "mark": [
@@ -629,6 +930,31 @@
    ],
    "hPx": 70,
    "flip": false,
+   "pin": [
+    119,
+    445
+   ],
+   "wrap": {
+    "erode_px": 0.98,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 5.6,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 119590,
+    "rimBefore": {
+     "rim": 51.21,
+     "plateEdge": 62.59,
+     "ratio": 0.818,
+     "boundaryPx": 1558
+    },
+    "rimAfter": {
+     "rim": 44.4,
+     "plateEdge": 62.59,
+     "ratio": 0.709,
+     "boundaryPx": 1499
+    }
+   },
    "light": [
     662,
     456
@@ -649,7 +975,7 @@
    },
    "deltaE": {
     "before": 36.2,
-    "after": 10.2
+    "after": 10.5
    },
    "cct": {
     "ring": 11736,
@@ -670,7 +996,7 @@
    "source": "assets/actor/polyphemus-blinded-grope.png",
    "sourceSha256": "a99fa975ba0136691cfc261a43687a932a097f03d75464dd09ee7ed4e852845c",
    "graded": "assets/actor/graded/cave/polyphemus-blinded-grope.png",
-   "gradedSha256": "7342ad65f3d637be7a66d7be42b390ddc4ff85ee92afb4327d5af5513cdc1360",
+   "gradedSha256": "f0c20ccc19c9b90538bd80b08a40a5cf4dd58b16adbf253a79acc4b861a042de",
    "plate": "assets/set/cave/cave-predawn.jpg",
    "state": "predawn",
    "mark": [
@@ -679,6 +1005,31 @@
    ],
    "hPx": 165,
    "flip": false,
+   "pin": [
+    361,
+    603
+   ],
+   "wrap": {
+    "erode_px": 1.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 8.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 90332,
+    "rimBefore": {
+     "rim": 38.81,
+     "plateEdge": 77.71,
+     "ratio": 0.499,
+     "boundaryPx": 2547
+    },
+    "rimAfter": {
+     "rim": 39.03,
+     "plateEdge": 77.71,
+     "ratio": 0.502,
+     "boundaryPx": 2445
+    }
+   },
    "light": [
     662,
     456
@@ -699,7 +1050,7 @@
    },
    "deltaE": {
     "before": 37.8,
-    "after": 10.8
+    "after": 10.5
    },
    "cct": {
     "ring": 13678,
@@ -720,7 +1071,7 @@
    "source": "assets/actor/polyphemus-stroke.png",
    "sourceSha256": "9cd32c45651fc02998a686408ae08d34c63257919f3a25483f6d8e4036668289",
    "graded": "assets/actor/graded/cave/polyphemus-stroke.png",
-   "gradedSha256": "baa8b6210da02aadbb772b61d8263baf3e0b2c90d10c61c46f5e2623d9c733c9",
+   "gradedSha256": "509502f20626d72438eeb2b8a01e9f93c1bdbe1859017426d4ce942eee2b7472",
    "plate": "assets/set/cave/cave-dawn.jpg",
    "state": "dawn",
    "mark": [
@@ -729,6 +1080,31 @@
    ],
    "hPx": 190,
    "flip": false,
+   "pin": [
+    428,
+    1202
+   ],
+   "wrap": {
+    "erode_px": 1.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 8.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 184484,
+    "rimBefore": {
+     "rim": 88.42,
+     "plateEdge": 77.98,
+     "ratio": 1.134,
+     "boundaryPx": 2098
+    },
+    "rimAfter": {
+     "rim": 82.85,
+     "plateEdge": 77.98,
+     "ratio": 1.062,
+     "boundaryPx": 2016
+    }
+   },
    "light": [
     337,
     312
@@ -749,7 +1125,7 @@
    },
    "deltaE": {
     "before": 21.0,
-    "after": 5.7
+    "after": 5.6
    },
    "cct": {
     "ring": 4044,
@@ -770,7 +1146,7 @@
    "source": "assets/actor/ram-great.png",
    "sourceSha256": "29cfce7a566adb59f85871ccab77d0a113a0b872cfecb24b15fec1764f987588",
    "graded": "assets/actor/graded/cave/ram-great.png",
-   "gradedSha256": "4c9171b0f52a5333caeba420a6c10f979f2d44de6f0aa19c4e15b3e1ee96de50",
+   "gradedSha256": "ac5f12246956465c4543ee26dd919ffaff7ad75eda87efca8b5203d44cd3764a",
    "plate": "assets/set/cave/cave-predawn.jpg",
    "state": "predawn",
    "mark": [
@@ -779,6 +1155,31 @@
    ],
    "hPx": 83,
    "flip": false,
+   "pin": [
+    376,
+    681
+   ],
+   "wrap": {
+    "erode_px": 1.162,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 6.64,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 122564,
+    "rimBefore": {
+     "rim": 39.06,
+     "plateEdge": 69.86,
+     "ratio": 0.559,
+     "boundaryPx": 966
+    },
+    "rimAfter": {
+     "rim": 34.03,
+     "plateEdge": 69.86,
+     "ratio": 0.487,
+     "boundaryPx": 886
+    }
+   },
    "light": [
     662,
     456
@@ -799,7 +1200,7 @@
    },
    "deltaE": {
     "before": 36.1,
-    "after": 6.2
+    "after": 6.4
    },
    "cct": {
     "ring": 6971,
@@ -820,7 +1221,7 @@
    "source": "assets/actor/ram-great-slung.png",
    "sourceSha256": "39dae0aa5a47af39334877d09c7f0fae691d712a55f25b3afe20eea1ee364158",
    "graded": "assets/actor/graded/cave/ram-great-slung.png",
-   "gradedSha256": "f046d154a56addc62ba72d5ecd36f4ce5b3f2ddd4d355107733088b4c9fe68ed",
+   "gradedSha256": "4528cc37941e2a1b64bac68e038aa40d1173c73462d3c6c540dd631d7a240dce",
    "plate": "assets/set/cave/cave-dawn.jpg",
    "state": "dawn",
    "mark": [
@@ -829,6 +1230,31 @@
    ],
    "hPx": 84,
    "flip": false,
+   "pin": [
+    375,
+    683
+   ],
+   "wrap": {
+    "erode_px": 1.176,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 6.72,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 121106,
+    "rimBefore": {
+     "rim": 73.62,
+     "plateEdge": 68.54,
+     "ratio": 1.074,
+     "boundaryPx": 979
+    },
+    "rimAfter": {
+     "rim": 62.62,
+     "plateEdge": 68.54,
+     "ratio": 0.914,
+     "boundaryPx": 886
+    }
+   },
    "light": [
     337,
     312
@@ -849,7 +1275,7 @@
    },
    "deltaE": {
     "before": 14.0,
-    "after": 7.9
+    "after": 8.1
    },
    "cct": {
     "ring": 3451,
@@ -870,7 +1296,7 @@
    "source": "assets/actor/ram-pair-slung.png",
    "sourceSha256": "c7e8334afcbf61f4a32fb15e1e3983d74575896a08aedddaa46996788175cd6e",
    "graded": "assets/actor/graded/cave/ram-pair-slung.png",
-   "gradedSha256": "0c65f72c12894957449c1ee442555bf65e00e4584d6c5308062e5cab470ca92c",
+   "gradedSha256": "8f5276761861f0f4251ee4cddb737998762172d41304ae39393b9b5caa20326c",
    "plate": "assets/set/cave/cave-dawn.jpg",
    "state": "dawn",
    "mark": [
@@ -879,6 +1305,31 @@
    ],
    "hPx": 57,
    "flip": false,
+   "pin": [
+    675,
+    573
+   ],
+   "wrap": {
+    "erode_px": 0.798,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 4.56,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 189170,
+    "rimBefore": {
+     "rim": 74.08,
+     "plateEdge": 78.92,
+     "ratio": 0.939,
+     "boundaryPx": 1405
+    },
+    "rimAfter": {
+     "rim": 58.2,
+     "plateEdge": 78.92,
+     "ratio": 0.737,
+     "boundaryPx": 1253
+    }
+   },
    "light": [
     337,
     312
@@ -899,7 +1350,7 @@
    },
    "deltaE": {
     "before": 31.7,
-    "after": 5.2
+    "after": 5.3
    },
    "cct": {
     "ring": 4838,
@@ -920,7 +1371,7 @@
    "source": "assets/actor/prop-bowl.png",
    "sourceSha256": "2300fdc1c8a925a238d4d49596c264df7bd37df4b1e8954cc09bc7d22d56fa12",
    "graded": "assets/actor/graded/cave/prop-bowl.png",
-   "gradedSha256": "36dec2798019ad12d5c5dd8419f4182292fec06b1700d50d40650cb1e0878ebe",
+   "gradedSha256": "83fad93316c875bd87864311218c8fdb2486bf2150c1212ebd3d35a09055a5ab",
    "plate": "assets/set/cave/cave-shut.jpg",
    "state": "shut",
    "mark": [
@@ -929,6 +1380,31 @@
    ],
    "hPx": 16,
    "flip": false,
+   "pin": [
+    426,
+    443
+   ],
+   "wrap": {
+    "erode_px": 0.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 113948,
+    "rimBefore": {
+     "rim": 46.78,
+     "plateEdge": 51.14,
+     "ratio": 0.915,
+     "boundaryPx": 216
+    },
+    "rimAfter": {
+     "rim": 26.77,
+     "plateEdge": 51.14,
+     "ratio": 0.523,
+     "boundaryPx": 200
+    }
+   },
    "light": [
     638,
     427
@@ -949,7 +1425,7 @@
    },
    "deltaE": {
     "before": 24.1,
-    "after": 9.6
+    "after": 9.5
    },
    "cct": {
     "ring": 3044,
@@ -970,7 +1446,7 @@
    "source": "assets/actor/prop-sword.png",
    "sourceSha256": "fa06903e09c3fe4342cc1d69a2d97547190e7ebc8c0827077d614343fa74bc3c",
    "graded": "assets/actor/graded/cave/prop-sword.png",
-   "gradedSha256": "4fb6e8d8565686b7d1eff47745f440ac58440c5ae7c655f6ab2dc4c9971d60cf",
+   "gradedSha256": "0cfbb68cb7b397288593b088965a181c8eb5ec8eb240ac3f2b2689e68d3c1d68",
    "plate": "assets/set/cave/cave-embers.jpg",
    "state": "embers",
    "mark": [
@@ -979,6 +1455,31 @@
    ],
    "hPx": 12,
    "flip": false,
+   "pin": [
+    13,
+    493
+   ],
+   "wrap": {
+    "erode_px": 0.25,
+    "feather_px": 0.3,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 286460,
+    "rimBefore": {
+     "rim": 32.18,
+     "plateEdge": 51.94,
+     "ratio": 0.62,
+     "boundaryPx": 95
+    },
+    "rimAfter": {
+     "rim": 15.1,
+     "plateEdge": 51.94,
+     "ratio": 0.291,
+     "boundaryPx": 71
+    }
+   },
    "light": [
     662,
     456
@@ -1020,7 +1521,7 @@
    "source": "assets/actor/prop-stake.png",
    "sourceSha256": "147fe744823fcb81dd17209acf9112820750fe5d1648fbeb7603713417d192ab",
    "graded": "assets/actor/graded/cave/prop-stake.png",
-   "gradedSha256": "fbd30837c1b0358ed31903998245e23c8e3f01b24d4dc1dcbd106fa3ab0d7436",
+   "gradedSha256": "57bfec3f4fc8321e61861c1c08b83f8cdf18aec86af8ef4a90fdbf1eac9ada09",
    "plate": "assets/set/cave/cave-predawn.jpg",
    "state": "predawn",
    "mark": [
@@ -1029,6 +1530,31 @@
    ],
    "hPx": 41,
    "flip": false,
+   "pin": [
+    56,
+    586
+   ],
+   "wrap": {
+    "erode_px": 0.574,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 153096,
+    "rimBefore": {
+     "rim": 40.54,
+     "plateEdge": 65.13,
+     "ratio": 0.622,
+     "boundaryPx": 502
+    },
+    "rimAfter": {
+     "rim": 31.32,
+     "plateEdge": 65.13,
+     "ratio": 0.481,
+     "boundaryPx": 484
+    }
+   },
    "light": [
     662,
     456
@@ -1070,7 +1596,7 @@
    "source": "assets/actor/prop-stake-glowing.png",
    "sourceSha256": "8e46564e521f96575b2ba8d0ed6ccf57b337f582d48957a511a4e83ae71d1450",
    "graded": "assets/actor/graded/cave/prop-stake-glowing.png",
-   "gradedSha256": "98e79a2cb5efd9fc191550d4c17a288c042d6ab0ff69b4bd76452bf62f6ee983",
+   "gradedSha256": "44e1fcb263923a54bb24e31799a70f4b5a881e05eef5877f90b4c411c1f928f6",
    "plate": "assets/set/cave/cave-embers.jpg",
    "state": "embers",
    "mark": [
@@ -1079,6 +1605,31 @@
    ],
    "hPx": 43,
    "flip": false,
+   "pin": [
+    1000,
+    576
+   ],
+   "wrap": {
+    "erode_px": 0.602,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 151404,
+    "rimBefore": {
+     "rim": 44.79,
+     "plateEdge": 66.21,
+     "ratio": 0.676,
+     "boundaryPx": 553
+    },
+    "rimAfter": {
+     "rim": 32.83,
+     "plateEdge": 66.21,
+     "ratio": 0.496,
+     "boundaryPx": 513
+    }
+   },
    "light": [
     662,
     456
@@ -1099,7 +1650,7 @@
    },
    "deltaE": {
     "before": 22.7,
-    "after": 9.4
+    "after": 9.5
    },
    "cct": {
     "ring": 4369,
@@ -1120,7 +1671,7 @@
    "source": "assets/actor/ulysses-stand.png",
    "sourceSha256": "840694f7cbc64ea6f39e84221f9275c09529e940c8d6daa9db4831699a827a55",
    "graded": "assets/actor/graded/shore/ulysses-stand.png",
-   "gradedSha256": "f078101929ab567bde24010e436b690daf1319ff570778d11bf19d666606ff87",
+   "gradedSha256": "1c51b32f120c44c71469e16035fb4014820ab52a4146191554853e4e1fbb24ca",
    "plate": "assets/set/shore/shore-day.jpg",
    "state": "day",
    "mark": [
@@ -1129,6 +1680,31 @@
    ],
    "hPx": 20,
    "flip": true,
+   "pin": [
+    125,
+    676
+   ],
+   "wrap": {
+    "erode_px": 0.25,
+    "feather_px": 0.3,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 112625,
+    "rimBefore": {
+     "rim": 92.44,
+     "plateEdge": 90.11,
+     "ratio": 1.026,
+     "boundaryPx": 124
+    },
+    "rimAfter": {
+     "rim": 53.93,
+     "plateEdge": 90.11,
+     "ratio": 0.599,
+     "boundaryPx": 100
+    }
+   },
    "light": null,
    "reach": null,
    "why": "stand plays day i-05..12 (8) vs night i-01..04 (4); mark = council-ulysses (the report's shore settle, now on the state it actually plays in)",
@@ -1146,7 +1722,7 @@
    },
    "deltaE": {
     "before": 17.7,
-    "after": 9.2
+    "after": 9.1
    },
    "cct": {
     "ring": 2959,
@@ -1167,7 +1743,7 @@
    "source": "assets/actor/crew-a-stand.png",
    "sourceSha256": "994b57688d3ca7606ea48b8c35ee2df0be4c964c56de4d7166bd8913798b86ca",
    "graded": "assets/actor/graded/shore/crew-a-stand.png",
-   "gradedSha256": "1d60a8e3a2612934b5f7b05d1444f3a96afc2f34d22e96633e77b97e5c52ef2b",
+   "gradedSha256": "a6eac0d6fa917d463259c14288e37124f70f3230154805e3d4b22e7ad0141251",
    "plate": "assets/set/shore/shore-day.jpg",
    "state": "day",
    "mark": [
@@ -1176,6 +1752,31 @@
    ],
    "hPx": 19,
    "flip": false,
+   "pin": [
+    132,
+    614
+   ],
+   "wrap": {
+    "erode_px": 0.25,
+    "feather_px": 0.3,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 82861,
+    "rimBefore": {
+     "rim": 44.89,
+     "plateEdge": 77.69,
+     "ratio": 0.578,
+     "boundaryPx": 130
+    },
+    "rimAfter": {
+     "rim": 42.6,
+     "plateEdge": 77.69,
+     "ratio": 0.548,
+     "boundaryPx": 86
+    }
+   },
    "light": null,
    "reach": null,
    "why": "day majority as ulysses; mark = council crew arc [0]",
@@ -1193,7 +1794,7 @@
    },
    "deltaE": {
     "before": 24.5,
-    "after": 9.7
+    "after": 9.6
    },
    "cct": {
     "ring": 3013,
@@ -1214,7 +1815,7 @@
    "source": "assets/actor/crew-b-stand.png",
    "sourceSha256": "ced45bd57de01e6fffa48cef6674ad64ed04fbc3f77d67884b38cb596f34c2b2",
    "graded": "assets/actor/graded/shore/crew-b-stand.png",
-   "gradedSha256": "3468cc09161491c089f204c06e827413eb88b04b06a42e4b4d9cc79631a8765c",
+   "gradedSha256": "f06d47115121ac6fee1b38c3d81a07705df6612a405c852e2e63052fc0a5f66c",
    "plate": "assets/set/shore/shore-day.jpg",
    "state": "day",
    "mark": [
@@ -1223,6 +1824,31 @@
    ],
    "hPx": 19,
    "flip": false,
+   "pin": [
+    140,
+    629
+   ],
+   "wrap": {
+    "erode_px": 0.25,
+    "feather_px": 0.3,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 87307,
+    "rimBefore": {
+     "rim": 55.28,
+     "plateEdge": 78.85,
+     "ratio": 0.701,
+     "boundaryPx": 132
+    },
+    "rimAfter": {
+     "rim": 41.34,
+     "plateEdge": 78.85,
+     "ratio": 0.524,
+     "boundaryPx": 85
+    }
+   },
    "light": null,
    "reach": null,
    "why": "day majority; mark = council crew arc [1] (the ledger's council-crew centroid)",
@@ -1261,7 +1887,7 @@
    "source": "assets/actor/prop-wineskin.png",
    "sourceSha256": "c6a68fc0983169b056a277f02893b39515e11fb7784a6721f95de3f60c2594ba",
    "graded": "assets/actor/graded/shore/prop-wineskin.png",
-   "gradedSha256": "d0d7d5ba9e2d182125437658000b15aa43607face5165a629899ccc828f2a0ba",
+   "gradedSha256": "122fbbc9585e1bf2e68c3419728520f32c2f86aec7037e38411d23a552c83dac",
    "plate": "assets/set/shore/shore-day.jpg",
    "state": "day",
    "mark": [
@@ -1270,6 +1896,31 @@
    ],
    "hPx": 7,
    "flip": false,
+   "pin": [
+    347,
+    491
+   ],
+   "wrap": {
+    "erode_px": 0.0,
+    "feather_px": 0.25,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 218297,
+    "rimBefore": {
+     "rim": 62.84,
+     "plateEdge": 51.37,
+     "ratio": 1.223,
+     "boundaryPx": 45
+    },
+    "rimAfter": {
+     "rim": 44.53,
+     "plateEdge": 51.37,
+     "ratio": 0.867,
+     "boundaryPx": 39
+    }
+   },
    "light": null,
    "reach": null,
    "why": "shouldered i-10..12, all day; mark = the twelve-at-ship shoulder point (560+4, 503-20x0.42)",
@@ -1308,7 +1959,7 @@
    "source": "assets/actor/polyphemus-stand.png",
    "sourceSha256": "084f3a63037112a89eb50d3866e1d2389f8e44e6a7054744f3c8cda7466b9f68",
    "graded": "assets/actor/graded/sea/polyphemus-stand.png",
-   "gradedSha256": "1b2af3f315b2d6e64512faf65d94f2f941f47e644edeaa4a1b123910f3f81cc3",
+   "gradedSha256": "1e3ad4907fe63d13f4cd52d86cad363530899a67d6c68918766f085a640b280b",
    "plate": "assets/set/sea/sea.jpg",
    "state": "master",
    "mark": [
@@ -1317,6 +1968,31 @@
    ],
    "hPx": 89,
    "flip": false,
+   "pin": [
+    473,
+    1238
+   ],
+   "wrap": {
+    "erode_px": 1.246,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 7.12,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 258420,
+    "rimBefore": {
+     "rim": 24.11,
+     "plateEdge": 43.51,
+     "ratio": 0.554,
+     "boundaryPx": 850
+    },
+    "rimAfter": {
+     "rim": 20.48,
+     "plateEdge": 43.51,
+     "ratio": 0.471,
+     "boundaryPx": 803
+    }
+   },
    "light": [
     820,
     339
@@ -1337,7 +2013,7 @@
    },
    "deltaE": {
     "before": 21.1,
-    "after": 9.2
+    "after": 9.3
    },
    "cct": {
     "ring": 5883,
@@ -1358,7 +2034,7 @@
    "source": "assets/actor/polyphemus-hurl.png",
    "sourceSha256": "df0cd140641a49daaafe19cdd69d98b8a85f738484823843b6ab60a2247c8a4c",
    "graded": "assets/actor/graded/sea/polyphemus-hurl.png",
-   "gradedSha256": "f58aa809286e5b28d6bf663377edd05d28e271a14b1667d325e07acb0cdb6741",
+   "gradedSha256": "f84faf6c71b3d7a45447db68b6c98342217e094f9ecc5d6c23bf94773d357869",
    "plate": "assets/set/sea/sea.jpg",
    "state": "master",
    "mark": [
@@ -1367,6 +2043,31 @@
    ],
    "hPx": 105,
    "flip": false,
+   "pin": [
+    57,
+    1280
+   ],
+   "wrap": {
+    "erode_px": 1.47,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 8.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 334984,
+    "rimBefore": {
+     "rim": 28.83,
+     "plateEdge": 41.0,
+     "ratio": 0.703,
+     "boundaryPx": 1169
+    },
+    "rimAfter": {
+     "rim": 23.62,
+     "plateEdge": 41.0,
+     "ratio": 0.576,
+     "boundaryPx": 1147
+    }
+   },
    "light": [
     820,
     339
@@ -1387,7 +2088,7 @@
    },
    "deltaE": {
     "before": 22.2,
-    "after": 7.7
+    "after": 7.2
    },
    "cct": {
     "ring": 6182,
@@ -1408,7 +2109,7 @@
    "source": "assets/actor/polyphemus-curse.png",
    "sourceSha256": "bd824c7284cacccd0542b864c79cd27e710c60fe2794995d7df13a340740ac60",
    "graded": "assets/actor/graded/sea/polyphemus-curse.png",
-   "gradedSha256": "791c2822a0c89f6bb85e7715168dfa07990bf8cdad44c5f70ec64dcb4afcd54e",
+   "gradedSha256": "65a014c64e6ec626eb3a09a5d9785e619bff666be078ba167d1d52a73ecf1afb",
    "plate": "assets/set/sea/sea.jpg",
    "state": "master",
    "mark": [
@@ -1417,6 +2118,31 @@
    ],
    "hPx": 105,
    "flip": false,
+   "pin": [
+    440,
+    1281
+   ],
+   "wrap": {
+    "erode_px": 1.47,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 8.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 367110,
+    "rimBefore": {
+     "rim": 29.38,
+     "plateEdge": 42.22,
+     "ratio": 0.696,
+     "boundaryPx": 1301
+    },
+    "rimAfter": {
+     "rim": 25.79,
+     "plateEdge": 42.22,
+     "ratio": 0.611,
+     "boundaryPx": 1184
+    }
+   },
    "light": [
     820,
     339
@@ -1437,7 +2163,7 @@
    },
    "deltaE": {
     "before": 24.5,
-    "after": 10.2
+    "after": 9.9
    },
    "cct": {
     "ring": 6182,
@@ -1458,7 +2184,7 @@
    "source": "assets/actor/ulysses-stand.png",
    "sourceSha256": "840694f7cbc64ea6f39e84221f9275c09529e940c8d6daa9db4831699a827a55",
    "graded": "assets/actor/graded/sea/ulysses-stand.png",
-   "gradedSha256": "6d823720b58c624f24af501c04b7c4ddcf80bce5d3271856b79363b1701b9897",
+   "gradedSha256": "8f62e07b1f2718258d40529a0740e447c7164c4fc6b25fbff239bc703aee41a4",
    "plate": "assets/set/sea/sea.jpg",
    "state": "master",
    "mark": [
@@ -1467,6 +2193,31 @@
    ],
    "hPx": 22,
    "flip": true,
+   "pin": [
+    125,
+    676
+   ],
+   "wrap": {
+    "erode_px": 0.25,
+    "feather_px": 0.3,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 112625,
+    "rimBefore": {
+     "rim": 47.02,
+     "plateEdge": 131.34,
+     "ratio": 0.358,
+     "boundaryPx": 147
+    },
+    "rimAfter": {
+     "rim": 24.99,
+     "plateEdge": 131.34,
+     "ratio": 0.19,
+     "boundaryPx": 129
+    }
+   },
    "light": [
     818,
     457
@@ -1508,7 +2259,7 @@
    "source": "assets/actor/ulysses-taunt.png",
    "sourceSha256": "28b2d64945d851fdde16da22d3c2829a9b4909aec41e8604d33a3938e940544c",
    "graded": "assets/actor/graded/sea/ulysses-taunt.png",
-   "gradedSha256": "74f6014f55598a961c2917c2b6ee09783069176e605ae0a9cac3c61704bb2f96",
+   "gradedSha256": "b00876a0d64914054333aae2ed74a6965ddba0f3b7e40ab025e8415b73e23abe",
    "plate": "assets/set/sea/sea.jpg",
    "state": "master",
    "mark": [
@@ -1517,6 +2268,31 @@
    ],
    "hPx": 22,
    "flip": true,
+   "pin": [
+    43,
+    674
+   ],
+   "wrap": {
+    "erode_px": 0.25,
+    "feather_px": 0.3,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 103462,
+    "rimBefore": {
+     "rim": 41.61,
+     "plateEdge": 129.99,
+     "ratio": 0.32,
+     "boundaryPx": 151
+    },
+    "rimAfter": {
+     "rim": 30.62,
+     "plateEdge": 129.99,
+     "ratio": 0.236,
+     "boundaryPx": 128
+    }
+   },
    "light": [
     818,
     457
@@ -1537,7 +2313,7 @@
    },
    "deltaE": {
     "before": 22.6,
-    "after": 9.1
+    "after": 9.0
    },
    "cct": {
     "ring": 5264,
@@ -1558,7 +2334,7 @@
    "source": "assets/actor/prop-rock.png",
    "sourceSha256": "3f65d838a994c058ebda8820e9c69911796fc10bbd2a36c785e57a50d9bf7ae2",
    "graded": "assets/actor/graded/sea/prop-rock.png",
-   "gradedSha256": "96ac7a116b6ce9a7c6e8d65d3cfbd1671bf57362b733970f75a722aa201dd6a9",
+   "gradedSha256": "822b733fb87d29828a82147c255c23bbbc4ba84e8fb0fd948c0654a4e8371856",
    "plate": "assets/set/sea/sea.jpg",
    "state": "master",
    "mark": [
@@ -1567,6 +2343,31 @@
    ],
    "hPx": 48,
    "flip": false,
+   "pin": [
+    225,
+    562
+   ],
+   "wrap": {
+    "erode_px": 0.672,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 130770,
+    "rimBefore": {
+     "rim": 42.52,
+     "plateEdge": 66.73,
+     "ratio": 0.637,
+     "boundaryPx": 502
+    },
+    "rimAfter": {
+     "rim": 42.17,
+     "plateEdge": 66.73,
+     "ratio": 0.632,
+     "boundaryPx": 363
+    }
+   },
    "light": [
     818,
     457
@@ -1587,7 +2388,7 @@
    },
    "deltaE": {
     "before": 35.9,
-    "after": 5.3
+    "after": 5.2
    },
    "cct": {
     "ring": 25000,
@@ -1608,7 +2409,7 @@
    "source": "assets/actor/prop-splash.png",
    "sourceSha256": "c954b2eb8813c3fc98ad60fe873e27738638a2a1e6543735c9753f45d637e278",
    "graded": "assets/actor/graded/sea/prop-splash.png",
-   "gradedSha256": "20c8bc11fc2735ea7e7b74f64b79c09f0967798321b7979f52970a22f475205c",
+   "gradedSha256": "e2f397d55da3a57c0d6a6087d7a84a2054b8187d4894395fddc8ee052e6443f9",
    "plate": "assets/set/sea/sea.jpg",
    "state": "master",
    "mark": [
@@ -1617,6 +2418,31 @@
    ],
    "hPx": 76,
    "flip": false,
+   "pin": [
+    253,
+    1121
+   ],
+   "wrap": {
+    "erode_px": 1.064,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 6.08,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 230223,
+    "rimBefore": {
+     "rim": 38.76,
+     "plateEdge": 97.01,
+     "ratio": 0.4,
+     "boundaryPx": 653
+    },
+    "rimAfter": {
+     "rim": 38.77,
+     "plateEdge": 97.01,
+     "ratio": 0.4,
+     "boundaryPx": 493
+    }
+   },
    "light": [
     818,
     457
@@ -1637,7 +2463,7 @@
    },
    "deltaE": {
     "before": 71.2,
-    "after": 6.4
+    "after": 6.7
    },
    "cct": {
     "ring": 25000,
@@ -1658,7 +2484,7 @@
    "source": "assets/actor/prop-altar.png",
    "sourceSha256": "eb9a8036dc2fa21b9b5bcd3f276dd74047982ddf53f9bcca559ebb5b69fc8fcb",
    "graded": "assets/actor/graded/sea/prop-altar.png",
-   "gradedSha256": "a27be05884ac39931d0a9f2498bdf9b8a3b60ebe98c64ada936ea4988b9fb945",
+   "gradedSha256": "877f7a50753c4122564f9e1092f5bbec79a62082498a2a8b2a45cea025d4558f",
    "plate": "assets/set/sea/sea.jpg",
    "state": "beach",
    "mark": [
@@ -1667,6 +2493,31 @@
    ],
    "hPx": 26,
    "flip": false,
+   "pin": [
+    335,
+    532
+   ],
+   "wrap": {
+    "erode_px": 0.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 145773,
+    "rimBefore": {
+     "rim": 48.61,
+     "plateEdge": 78.38,
+     "ratio": 0.62,
+     "boundaryPx": 350
+    },
+    "rimAfter": {
+     "rim": 37.28,
+     "plateEdge": 78.38,
+     "ratio": 0.476,
+     "boundaryPx": 314
+    }
+   },
    "light": null,
    "reach": null,
    "why": "the driftwood altar (u13) \u2014 itself the fire's stand, no rim",
@@ -1684,7 +2535,7 @@
    },
    "deltaE": {
     "before": 27.8,
-    "after": 11.9
+    "after": 11.2
    },
    "cct": {
     "ring": 8595,
@@ -1705,7 +2556,7 @@
    "source": "assets/actor/ram-great.png",
    "sourceSha256": "29cfce7a566adb59f85871ccab77d0a113a0b872cfecb24b15fec1764f987588",
    "graded": "assets/actor/graded/sea/ram-great.png",
-   "gradedSha256": "ee3bbd025012f4e56ecf4c3ab32ed308aa2b96d07eeed9128383e61805e6d429",
+   "gradedSha256": "badb879b53cad40b56c16b71515ddde4028b82577a2c4bfe1341defdfd0b61f8",
    "plate": "assets/set/sea/sea.jpg",
    "state": "beach",
    "mark": [
@@ -1714,6 +2565,31 @@
    ],
    "hPx": 34,
    "flip": false,
+   "pin": [
+    376,
+    681
+   ],
+   "wrap": {
+    "erode_px": 0.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 156512,
+    "rimBefore": {
+     "rim": 54.79,
+     "plateEdge": 82.59,
+     "ratio": 0.663,
+     "boundaryPx": 354
+    },
+    "rimAfter": {
+     "rim": 44.29,
+     "plateEdge": 82.59,
+     "ratio": 0.536,
+     "boundaryPx": 331
+    }
+   },
    "light": [
     330,
     646
@@ -1734,7 +2610,7 @@
    },
    "deltaE": {
     "before": 25.7,
-    "after": 5.1
+    "after": 4.9
    },
    "cct": {
     "ring": 9111,
@@ -1755,7 +2631,7 @@
    "source": "assets/actor/ram-walk.png",
    "sourceSha256": "a6f726045cad6362d6a41416ce8e3f85b89ae5f4522599659697051912d853a5",
    "graded": "assets/actor/graded/sea/ram-walk.png",
-   "gradedSha256": "771732605edef74cf8d660f901ce413932f324c165b4c74020b0f794460228b4",
+   "gradedSha256": "25ba7c868505258ef763c7cb42c09e30813ced5aced7ce93fabb4dbbd69882cd",
    "plate": "assets/set/sea/sea.jpg",
    "state": "beach",
    "mark": [
@@ -1764,6 +2640,31 @@
    ],
    "hPx": 24,
    "flip": false,
+   "pin": [
+    343,
+    657
+   ],
+   "wrap": {
+    "erode_px": 0.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 231407,
+    "rimBefore": {
+     "rim": 23.4,
+     "plateEdge": 16.54,
+     "ratio": 1.415,
+     "boundaryPx": 291
+    },
+    "rimAfter": {
+     "rim": 14.68,
+     "plateEdge": 16.54,
+     "ratio": 0.887,
+     "boundaryPx": 197
+    }
+   },
    "light": null,
    "reach": null,
    "why": "the flock ashore (c7), three instances off one cut",
@@ -1781,7 +2682,7 @@
    },
    "deltaE": {
     "before": 17.7,
-    "after": 4.0
+    "after": 3.9
    },
    "cct": {
     "ring": 8487,
@@ -1802,7 +2703,7 @@
    "source": "assets/actor/crew-a-stand.png",
    "sourceSha256": "994b57688d3ca7606ea48b8c35ee2df0be4c964c56de4d7166bd8913798b86ca",
    "graded": "assets/actor/graded/sea/crew-a-stand.png",
-   "gradedSha256": "9e9feee03804d9672a84a67afaaa17862a6e99ece3d42045e8fe8d681eb46711",
+   "gradedSha256": "d0267eddf5c6268288718ce8bff84b4104916a10c149eef0888fe58b4fc2cce5",
    "plate": "assets/set/sea/sea.jpg",
    "state": "beach",
    "mark": [
@@ -1811,6 +2712,31 @@
    ],
    "hPx": 32,
    "flip": false,
+   "pin": [
+    132,
+    614
+   ],
+   "wrap": {
+    "erode_px": 0.25,
+    "feather_px": 0.3,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 81656,
+    "rimBefore": {
+     "rim": 21.1,
+     "plateEdge": 52.86,
+     "ratio": 0.399,
+     "boundaryPx": 279
+    },
+    "rimAfter": {
+     "rim": 11.31,
+     "plateEdge": 52.86,
+     "ratio": 0.214,
+     "boundaryPx": 244
+    }
+   },
    "light": null,
    "reach": null,
    "why": "comrades ashore (c6), doubled along the sand",
@@ -1828,7 +2754,7 @@
    },
    "deltaE": {
     "before": 47.3,
-    "after": 41.8
+    "after": 41.7
    },
    "cct": {
     "ring": 8256,
@@ -1849,7 +2775,7 @@
    "source": "assets/actor/crew-b-stand.png",
    "sourceSha256": "ced45bd57de01e6fffa48cef6674ad64ed04fbc3f77d67884b38cb596f34c2b2",
    "graded": "assets/actor/graded/sea/crew-b-stand.png",
-   "gradedSha256": "6bfc7a363ba7c6223d7a3c6c5679d3121a711a5c4edc5b6e63747137a40e6652",
+   "gradedSha256": "6edc2aae9c024124babb3834fdd28e3cb3dcb4b781f9f37fdf2f684defcf88d7",
    "plate": "assets/set/sea/sea.jpg",
    "state": "beach",
    "mark": [
@@ -1858,6 +2784,31 @@
    ],
    "hPx": 32,
    "flip": false,
+   "pin": [
+    140,
+    629
+   ],
+   "wrap": {
+    "erode_px": 0.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 86004,
+    "rimBefore": {
+     "rim": 38.84,
+     "plateEdge": 55.06,
+     "ratio": 0.705,
+     "boundaryPx": 279
+    },
+    "rimAfter": {
+     "rim": 22.11,
+     "plateEdge": 55.06,
+     "ratio": 0.402,
+     "boundaryPx": 161
+    }
+   },
    "light": null,
    "reach": null,
    "why": "comrades ashore (c6)",
@@ -1896,7 +2847,7 @@
    "source": "assets/actor/crew-plead.png",
    "sourceSha256": "5613d4cc8fdd46601f8913b4645d6b84dfcf70b13cf2d554372311773e1b7671",
    "graded": "assets/actor/graded/sea/crew-plead.png",
-   "gradedSha256": "98502d715618a99088f39067098345d8de656cbecdc09e9167a5b21cc2d9a7ed",
+   "gradedSha256": "318f961a444c4664e2a523b4f84b0b0029e8552353a608a26f2e645219e4c5a0",
    "plate": "assets/set/sea/sea.jpg",
    "state": "beach",
    "mark": [
@@ -1905,6 +2856,31 @@
    ],
    "hPx": 32,
    "flip": false,
+   "pin": [
+    208,
+    925
+   ],
+   "wrap": {
+    "erode_px": 0.5,
+    "feather_px": 0.5,
+    "wrap_in_px": 1.5,
+    "band_px": 4.0,
+    "screen_k": 0.45,
+    "fill_blur_px": 3.0,
+    "skirtPxMax": 278488,
+    "rimBefore": {
+     "rim": 28.22,
+     "plateEdge": 47.33,
+     "ratio": 0.596,
+     "boundaryPx": 287
+    },
+    "rimAfter": {
+     "rim": 19.2,
+     "plateEdge": 47.33,
+     "ratio": 0.406,
+     "boundaryPx": 199
+    }
+   },
    "light": null,
    "reach": null,
    "why": "the lifted-arms lament (c6), doubled",
@@ -1922,7 +2898,7 @@
    },
    "deltaE": {
     "before": 22.1,
-    "after": 15.4
+    "after": 15.2
    },
    "cct": {
     "ring": 8045,

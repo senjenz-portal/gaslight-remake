@@ -1,0 +1,252 @@
+{
+ "lane": "ody-atmo (R5, tools/ody/research/SYNTHESIS.md \u2014 the bloomFire device promoted to a per-scene law)",
+ "tool": "tools/ody/seamless/bake_atmo.py",
+ "law": "one extracted haze/bloom band per painted state, composited OVER the actor group (screen; gain 0.50 baked in); a set drives only the state's crossfade weight. The lap holds the served shas, the over-actors DOM order, and at each gated settle: the sampled actor region SHOWS the band's tint, proven by missing (band hidden vs shown).",
+ "gain": 0.5,
+ "blurPx": 14.0,
+ "pLo": 90.0,
+ "pHi": 99.0,
+ "gateLumaMin": 1.5,
+ "sets": {
+  "cave": {
+   "states": {
+    "master": {
+     "file": "assets/set/cave/atmo/master.png",
+     "source": "assets/set/cave/cave.jpg",
+     "sha256": "7378bf1f0c1fe7e6400f37a7a25f90eac85e068fff206c901d82df8554d6e368",
+     "thr": [
+      108.4,
+      201.5
+     ],
+     "meanLuma": 3.67,
+     "coveragePct": 19.1
+    },
+    "dawn": {
+     "file": "assets/set/cave/atmo/dawn.png",
+     "source": "assets/set/cave/cave-dawn.jpg",
+     "sha256": "486be3ba2e447cf9f2aedb24d14f496b43efed13ab3286289710100fe5d557d8",
+     "thr": [
+      112.0,
+      207.6
+     ],
+     "meanLuma": 3.95,
+     "coveragePct": 16.4
+    },
+    "shut": {
+     "file": "assets/set/cave/atmo/shut.png",
+     "source": "assets/set/cave/cave-shut.jpg",
+     "sha256": "941d32c0efb490dbe9054d84fa3d5a84311a373857c34ef27122d3fd3a33cd80",
+     "thr": [
+      98.4,
+      186.9
+     ],
+     "meanLuma": 3.68,
+     "coveragePct": 19.0
+    },
+    "embers": {
+     "file": "assets/set/cave/atmo/embers.png",
+     "source": "assets/set/cave/cave-embers.jpg",
+     "sha256": "3fa382cb3f7c3128136c6e952231ef491daf27fccbd9ad01d6d54c9a53fe36f9",
+     "thr": [
+      74.2,
+      169.1
+     ],
+     "meanLuma": 2.52,
+     "coveragePct": 15.0
+    },
+    "predawn": {
+     "file": "assets/set/cave/atmo/predawn.png",
+     "source": "assets/set/cave/cave-predawn.jpg",
+     "sha256": "d55a5c1bce0cb0ef8e955eab8fee9e7745c41ba36972ca500b4b3abece34ad3c",
+     "thr": [
+      79.7,
+      170.6
+     ],
+     "meanLuma": 2.59,
+     "coveragePct": 15.8
+    }
+   }
+  },
+  "shore": {
+   "states": {
+    "night": {
+     "file": "assets/set/shore/atmo/night.png",
+     "source": "assets/set/shore/shore.jpg",
+     "sha256": "80e0765f0b17f717a8ad0ddc1d47c0b27e3c679228306b3c8046d36ad1bda28c",
+     "thr": [
+      75.4,
+      193.0
+     ],
+     "meanLuma": 2.75,
+     "coveragePct": 9.2
+    },
+    "day": {
+     "file": "assets/set/shore/atmo/day.png",
+     "source": "assets/set/shore/shore-day.jpg",
+     "sha256": "aeaa55430775077e374f3689784c75db1b56b84fd466906e6dbffd71ff63bd85",
+     "thr": [
+      209.6,
+      224.9
+     ],
+     "meanLuma": 4.84,
+     "coveragePct": 12.0
+    }
+   }
+  },
+  "sea": {
+   "states": {
+    "master": {
+     "file": "assets/set/sea/atmo/master.png",
+     "source": "assets/set/sea/sea.jpg",
+     "sha256": "41491b68c6de4817c5c0720292c02c30145c17634cda87e118509515681ce362",
+     "thr": [
+      64.3,
+      177.7
+     ],
+     "meanLuma": 1.99,
+     "coveragePct": 7.0
+    }
+   }
+  }
+ },
+ "settles": [
+  {
+   "unit": "plea",
+   "set": "cave",
+   "state": "shut",
+   "mark": [
+    690,
+    495
+   ],
+   "hPx": 75,
+   "box": [
+    663,
+    427,
+    53,
+    60
+   ],
+   "tint": [
+    73.69,
+    56.08,
+    38.31
+   ],
+   "luma": 58.54,
+   "gated": true
+  },
+  {
+   "unit": "lookhere",
+   "set": "cave",
+   "state": "shut",
+   "mark": [
+    700,
+    468
+   ],
+   "hPx": 75,
+   "box": [
+    673,
+    400,
+    53,
+    60
+   ],
+   "tint": [
+    52.17,
+    38.3,
+    25.45
+   ],
+   "luma": 40.32,
+   "gated": true
+  },
+  {
+   "unit": "strangers",
+   "set": "cave",
+   "state": "shut",
+   "mark": [
+    760,
+    452
+   ],
+   "hPx": 165,
+   "box": [
+    702,
+    303,
+    115,
+    132
+   ],
+   "tint": [
+    8.52,
+    6.12,
+    4.5
+   ],
+   "luma": 6.52,
+   "gated": true
+  },
+  {
+   "unit": "greatram",
+   "set": "cave",
+   "state": "predawn",
+   "mark": [
+    838,
+    430
+   ],
+   "hPx": 83,
+   "box": [
+    808,
+    355,
+    59,
+    66
+   ],
+   "tint": [
+    5.1,
+    4.98,
+    4.86
+   ],
+   "luma": 5.0,
+   "gated": true
+  },
+  {
+   "unit": "council",
+   "set": "shore",
+   "state": "day",
+   "mark": [
+    445,
+    507
+   ],
+   "hPx": 19,
+   "box": [
+    438,
+    489,
+    13,
+    16
+   ],
+   "tint": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "luma": 0.0,
+   "gated": false
+  },
+  {
+   "unit": "jeer",
+   "set": "sea",
+   "state": "master",
+   "mark": [
+    860,
+    210
+   ],
+   "hPx": 105,
+   "box": [
+    823,
+    115,
+    73,
+    84
+   ],
+   "tint": [
+    0.35,
+    0.32,
+    0.36
+   ],
+   "luma": 0.33,
+   "gated": false
+  }
+ ]
+}

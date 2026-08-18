@@ -85,10 +85,7 @@
    "posterSha256": "8d41ac2fb1c40388f17c11fbc7a266065c55acd3db64b831fa1418b3ab1646c6",
    "bytes": 481811,
    "loop": true,
-   "units": [
-    "auger",
-    "bore"
-   ],
+   "units": [],
    "seed": "twist",
    "encode": "libx264 slow crf21 yuv420p 1280x720 faststart, no audio",
    "gates": {
@@ -155,7 +152,8 @@
     "loop_ok": true,
     "deflickered": false,
     "ok": true
-   }
+   },
+   "retired": "2026-08-17 [shot] SHOTS.md 1.4: shot-drive (full-frame clip shot off this inset's own staged seed) supersedes the inset; grants removed from main.js HEROCLIPS (auger/bore). Asset + gates kept for the record."
   },
   "clip-underbelly": {
    "file": "assets/inset/clip-underbelly.mp4",

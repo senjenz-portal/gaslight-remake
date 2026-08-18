@@ -65,6 +65,7 @@ import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp,
 import { STRIPS } from '../strips.js';
 import { SHADOWS } from '../shadows.js';
 import { HEROCLIP_FILES } from '../heroclips.js';
+import { SHOT_FILES } from '../shots.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SHIP = {
@@ -275,7 +276,7 @@ const FOCUS = {
   'ship-deck':  [575, 450, 2.60],   // vi-04: the doubled distance (composed)
   clifftop:     [870, 195, 3.10],   // vi-08/09 — the giant 30.9% at world
                                     // 0.86 (was 2.8 = 27.9%, under the floor)
-  curse:        [870, 180, 2.60],   // vi-11 — the lifted arms 31.7% at world
+  curse:        [870, 180, 2.50],   // [shot] re-valued 2.6 -> KCAP   // vi-11 — the lifted arms 31.7% at world
                                     // 0.86 (was 2.2 = 26.9%); sky kept above
   strait:       [585, 330, 2.00],   // vi-12: rock 2's window (splash 455,540)
   'defy-strait': [640, 300, 2.25],  // vi-06 split off `strait` (which is
@@ -365,6 +366,22 @@ export class SeaSet {
    *  living close-up seeded from this very tableau (jeer+11.3, the plume). */
   static clips = {
     'clip-splash': HEROCLIP_FILES['clip-splash'],
+  };
+  /** [shot] SHOTGEN lane (2026-08-17) — native full-frame closes, anchors in
+   *  SHOT space pinned on each shipped plate's own pixels:
+   *  shot-taunt — vi-02's dialogue close (the taunt at the stern).
+   *  shot-myname — vi-07's release close (the name on the rail): the hold
+   *  ring stands on the man drawing breath. */
+  static shots = {
+    'shot-taunt': {
+      ...SHOT_FILES['shot-taunt'],
+      heads: { ULYSSES: [672, 330] },
+    },
+    'shot-myname': {
+      ...SHOT_FILES['shot-myname'],
+      holds: { breath: [672, 300] },
+      heads: { ULYSSES: [672, 240] },
+    },
   };
   static beds = ['sea'];
 
@@ -475,6 +492,14 @@ export class SeaSet {
     this.bloomMoon = img('set/sea/sea-bloom-moon.png', 'lyr', this.world);
     box(this.bloomMoon, ...LAYER.bloomMoon.box);
     this.bloomMoon.style.mixBlendMode = 'screen';
+
+    /* ---- [atmo] R5 (SYNTHESIS): the ATMOSPHERE SANDWICH — the master's
+       own extracted haze/bloom band (bake_atmo.py; gain baked in), OVER
+       the actors, screen-blended, INSIDE the world so the recede scales
+       the air with the deck it hangs over. */
+    this.atmo = img('set/sea/atmo/master.png', 'lyr atmo', this.world);
+    box(this.atmo, 0, 0, PLATE.w, PLATE.h);
+    this.atmo.style.mixBlendMode = 'screen';
 
     /* ---- THE RETURN TABLEAU (§3.4): the island beach, OUTSIDE the world -- *
      * One group, one rise: the band and every body ashore ride beachG's
@@ -866,6 +891,9 @@ export class SeaSet {
     this.bloomMoon.style.opacity =
       ((BM.op[0] + (BM.op[1] - BM.op[0]) * breath(BM.per)) * nightK *
        (1 - 0.5 * S.k.veil)).toFixed(3);
+    /* [atmo] R5: the master's band rides the night master's own weight —
+       static (no breath): the air is the painting's, not a flicker's */
+    this.atmo.style.opacity = (nightK * (1 - 0.5 * S.k.veil)).toFixed(3);
 
     /* the sky: the curse's stop of darkness, the dawn's stand-in glow */
     this.veil.style.opacity = (0.20 * S.k.veil).toFixed(3);
