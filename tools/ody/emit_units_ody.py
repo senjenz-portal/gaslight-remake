@@ -94,6 +94,15 @@ def rows():
 #      hold -> release + gateAct 'bowl-pour' + amended cue. The fill banks
 #      on the hold (rest kept), the pour fires on the pointerup — the
 #      contract's "each release drained" made mechanical. Butler untouched.
+#
+# THE CLOSE-UP LAW (staging, 2026-08-17 — owner: "scene large, character
+# small = worse, hard to see"): every unit whose CONTRACT staging subject is
+# a character's act or speech now carries a lens that draws its principal
+# >= 30% of panel height (two-shots >= 22%); only headings/arrivals/
+# establishing go wide, max 2 wide per beat after its heading. 12 focus
+# fields changed below (i-02/06/07, iii-13, iv-08, v-01/02/03, vi-05/06/07/
+# 10); the new lens names are ledger lenses (ledger.json re-recorded), the
+# values live in the sets' FOCUS tables. No verb, cue or Butler byte moved.
 S = {
  # ---- BEAT I - THE TALE BEGUN - SET shore - leaf 1 ------------------------
  # AMENDMENT A6 2026-08-17 (first contact is the reader's): verb auto/dwell
@@ -120,6 +129,11 @@ S = {
                              cap='Ulysses · Son of Laertes · of Ithaca',
                              c='cameo card, first appearance — the caption '
                                'plants Beat VI\'s O.12 echo (cut c-firstly); '
+                               'the CARD is this unit\'s close (the staging '
+                               'column stages the cameo + the landfall '
+                               'tail, and the man is still WADING IN — an '
+                               'in-scene close here framed empty sand and '
+                               'broke the anti-skate law at k 11.6); '
                                'landfall pantomime tail.'),
  'ody-i-03-troy': dict(verb='click', focus='camp-fire',
                        c='camp embers; bridges the chapter-level '
@@ -134,18 +148,22 @@ S = {
                        c='shore day state — goats scattering; the hunt is '
                          'pantomime after the line (cut c-hunt); the bed '
                          'crosses to the daytime shore WITH the visual.'),
- 'ody-i-06-smoke': dict(verb='click', focus='establishing', clear=True,
+ 'ody-i-06-smoke': dict(verb='click', focus='council', clear=True,
                         act='council-ulysses', sfx='bleats',
                         c='beach feast, all eyes to the strait — stubble-fire '
                           'smoke plainly seen (O.1 reinforcement); sun-down '
-                          'time-lapse; the crew gathers to the council marks.'),
+                          'time-lapse; the crew gathers to the council marks '
+                          '(the ledger\'s own council lens — the wide budget '
+                          'is spent on bard + dawn, the close-up law).'),
  'ody-i-07-council': dict(verb='target', target='ship', gateAct='crossing',
                           gateSfx='oars',
                           cue='click the ship · cross to the mainland',
-                          focus='council', clear=True,
+                          focus='council-close', clear=True,
                           c='GATE G1 — the beached ship (ship-2 hull centre '
-                            'per the ledger); gateAct crossing performs the '
-                            'embarkation and the strait (cut c-board).'),
+                            'per the ledger); the speech is a two-shot CLOSE '
+                            'over the huddle, the hull dot kept in frame '
+                            '(the close-up law); gateAct crossing performs '
+                            'the embarkation and the strait (cut c-board).'),
  'ody-i-08-cave': dict(verb='click', focus='cavemouth-push-to', clear=True,
                        act='entry-mainland', sfx='wind',
                        c='mainland approach — slow push onto the laurel '
@@ -332,14 +350,15 @@ S = {
                               c='the price, adjacent to the pun; the empty '
                                 'bowl loose in his fingers; this click fires '
                                 'the collapse.'),
- 'ody-iii-13-neck': dict(verb='auto', dwell=6.5, focus='establishing',
+ 'ody-iii-13-neck': dict(verb='auto', dwell=6.5, focus='collapse',
                          clear=True, seg='collapse', segDur=6.0, segHold=True,
                          act='cave-embers', bed='snore', sfx='fall',
-                         c='rides the collapse segment (~6 s); the sick-turn '
-                           'in shadow, sound-led — the wine takes him and '
-                           'the snore-bed comes up under the stake; Beat '
-                           'IV\'s heading lands on this SAME leaf — NO page '
-                           'turn.'),
+                         c='rides the collapse segment (~6 s) on its OWN '
+                           'composed lens (the close-up law: the wide budget '
+                           'is club + return); the sick-turn in shadow, '
+                           'sound-led — the wine takes him and the snore-bed '
+                           'comes up under the stake; Beat IV\'s heading '
+                           'lands on this SAME leaf — NO page turn.'),
 
  # ---- BEAT IV - THE STAKE - SET cave - leaf 3 (SHARED with Beat III) ------
  'ody-iv-00-head': dict(head=True, num='IV', text='The Stake', verb='auto',
@@ -384,8 +403,13 @@ S = {
                             cameo='a-cyclops', cap='A Cyclops · the Neighbours',
                             c='voices from BEYOND the stone — voice-only '
                               'card, first appearance; O.10 opens.'),
- 'ody-iv-08-nomankilling': dict(verb='click', focus='mouth', fact='O.10a',
-                                c='the pun lands — a held beat of silence '
+ 'ody-iv-08-nomankilling': dict(verb='click', focus='sprawl-groan',
+                                fact='O.10a',
+                                c='the pun lands — the shout is HIS, so the '
+                                  'lens leaves the seams for the groaning '
+                                  'bulk against his own fire-glow (the '
+                                  'close-up law; the mouth lens had cropped '
+                                  'the shouter); a held beat of silence '
                                   'outside.'),
  'ody-iv-09-mustbeill': dict(verb='click', focus='mouth', fact='O.13a',
                              c='O.13a PLANTED — "pray to your father '
@@ -412,17 +436,20 @@ S = {
                        c='leaf 4 mounts, pre-dawn dark; the giant seated '
                          'filling the doorway (mark doorway-seat); six crew '
                          'huddled by the pens.'),
- 'ody-v-01-puzzling': dict(verb='click', focus='establishing', clear=True,
+ 'ody-v-01-puzzling': dict(verb='click', focus='puzzling', clear=True,
                            c='slow pull from the blocked mouth to Ulysses\' '
                              'face; the seated giant stays in frame — the '
-                             'problem IS the doorway.'),
- 'ody-v-02-withies': dict(verb='click', focus='meal-close', clear=True,
+                             'problem IS the doorway (own composed lens, the '
+                             'close-up law: the wide read Ulysses at 9.8%).'),
+ 'ody-v-02-withies': dict(verb='click', focus='lash-close', clear=True,
                           seg='lash-trios', segDur=5.0, segHold=False,
                           sfx='withies',
                           c='withies from the sleeping-litter; ram-trios '
                             'lashed noiselessly UNDER the giant\'s '
-                            'breathing.'),
- 'ody-v-03-threetoaman': dict(verb='click', focus='meal-close',
+                            'breathing; the lens is ON the working hands '
+                            '(the close-up law — meal-close aimed at the '
+                            'hearth, not the trios).'),
+ 'ody-v-03-threetoaman': dict(verb='click', focus='lash-close',
                               c='first man slides under the middle ram; the '
                                 'flanks close over him; five more trios '
                                 'stagger in, lens low at sheep height.'),
@@ -495,20 +522,26 @@ S = {
  'ody-vi-04-twiceasfar': dict(verb='click', focus='ship-deck', clear=True,
                               c='double distance — headland layer scaled '
                                 'back; THE MEN turn from their oars.'),
- 'ody-vi-05-menbeg': dict(verb='click', focus='ship-deck', cameo='the-men',
+ 'ody-vi-05-menbeg': dict(verb='click', focus='menbeg-close',
+                          cameo='the-men',
                           cap='The Men · six at the oars',
-                          c='the plea — it stays LIT while gate 2 waits; the '
-                            'next click on the Cyclops is a click OVER these '
-                            'words (O.12 mechanism).'),
+                          c='the plea — the rowers\' faces UP at Ulysses, '
+                            'one gripping his arm (the close-up law: at '
+                            'ship-deck they were a 4% speck); it stays LIT '
+                            'while gate 2 waits; the next click on the '
+                            'Cyclops is a click OVER these words (O.12 '
+                            'mechanism).'),
  'ody-vi-06-defy': dict(verb='target', target='cyclops', gateAct='defy',
                         gateSfx='shout',
                         cue='click the Cyclops · name yourself',
-                        focus='strait',
+                        focus='defy-strait',
                         c='GATE G6, second resolution — NO clear: the men\'s '
-                          'plea still stands in the margin; the strait '
-                          'lens keeps pleaders and target in one frame, '
-                          'composed inside the painting at the doubled '
-                          'distance (F2).'),
+                          'plea still stands in the margin; defy-strait '
+                          'keeps pleaders and target in one frame BOTH '
+                          'orientations with the giant at the two-shot '
+                          'floor (split off `strait`, which rock 2\'s '
+                          'splash pins — the close-up law), composed inside '
+                          'the painting at the doubled distance (F2).'),
  # AMENDMENT 2026-08-16 (release-as-verb): was auto/dwell 6.0 — the self-naming
  # is now the reader's own RELEASE. Press-and-hold draws the breath at the
  # stern (the taunt cut swells on the held k); LETTING GO past the 0.6 s
@@ -518,11 +551,13 @@ S = {
  # press is a stray click: it reads as a beat and holds the page. Soft-fail
  # auto-releases at 30 s (sec 2.6). Verbs are OUR authoring; Butler untouched.
  'ody-vi-07-myname': dict(verb='release', hold=0.6, gateAct='shout',
-                          gateSfx='shout', focus='stern', clear=True,
+                          gateSfx='shout', focus='stern-rail', clear=True,
                           cue='press and hold · draw breath — release the name',
                           act='stern-rail', fact='O.12',
                           c='O.12 lands — he shakes off the gripping hand '
-                            'and steps onto the stern rail; the reader\'s own '
+                            'and steps onto the stern rail; a TRUE close on '
+                            'the man at the rail (the close-up law — the '
+                            'story\'s peak at 30%, not 7%); the reader\'s own '
                             'RELEASE fires the shout; echo off the cliff.'),
  'ody-vi-08-prophecy': dict(verb='click', focus='clifftop', clear=True,
                             cameo='off', sfx='groan',
@@ -533,10 +568,13 @@ S = {
                              c='O.13b — "Neptune and I are father and son" '
                                'confirms Beat IV\'s plant; the tone turns '
                                'wheedling.'),
- 'ody-vi-10-hades': dict(verb='click', focus='stern', clear=True,
+ 'ody-vi-10-hades': dict(verb='click', focus='hades-twoshot', clear=True,
                          act='stern-ulysses',
-                         c='flat and cold over dead-calm water; stern '
-                           'foreground, cliff figure small and dark behind.'),
+                         c='flat and cold over dead-calm water; the '
+                           'contract\'s own two-shot on its own lens (the '
+                           'close-up law: `stern` is a solo close now) — '
+                           'stern foreground, cliff figure small and dark '
+                           'behind at the two-shot floor.'),
  'ody-vi-11-curse': dict(verb='click', focus='curse', clear=True, act='curse',
                          fact='O.14a',
                          c='O.14a — both hands to the firmament (cut c3); '

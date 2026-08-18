@@ -122,6 +122,8 @@ export class Stage {
     const set = new Cls(wrap, this);
     // the insets this SET may raise are its bytes too, and they decode with it
     for (const [id, file] of Object.entries(Cls.insets || {})) this.makeInset(id, file);
+    // ... and so are its HERO CLIPS (video insets): poster AND mp4 decode with it
+    for (const [id, spec] of Object.entries(Cls.clips || {})) this.makeClip(id, spec);
     const pending = this.building;
     this.building = prev;
 
@@ -132,8 +134,9 @@ export class Stage {
     })).then(() => {
       rec.decoded = true;
       for (const src of rec.missing) {
-        const id = Object.entries(this.insets).find(([, v]) => v.file &&
-          (this.base + v.file) === src);
+        const id = Object.entries(this.insets).find(([, v]) =>
+          (v.file && (this.base + v.file) === src) ||
+          (v.poster && (this.base + v.poster) === src));
         if (id) { this.insets[id[0]].art = false; this.gaps.push('inset:' + id[0]); }
         else this.gaps.push('bitmap:' + String(src).split('/').slice(-2).join('/'));
       }
@@ -202,6 +205,62 @@ export class Stage {
   }
 
   /**
+   * A VIDEO inset — the HERO CLIP card. Same card, same rise, same dim, same
+   * law as the image plates; what is printed on it is a muted close-up clip
+   * seeded from the staged tableau itself. The DETERMINISM law holds because
+   * the card is treated exactly like an inset: the sim drives raised/lowered
+   * (k, want, at), the world beneath is untouched, and the clip's first frame
+   * IS the poster the registry shas — the video element merely plays that
+   * same picture forward on the wall clock while the card is up.
+   *
+   * A reader who asked the OS for less motion gets the POSTER STILL: the
+   * close-up fact still lands (the card, the frame, the dim), only the loop
+   * nobody asked for is gone — the same trade every ambient makes.
+   *
+   * The clip's bytes decode WITH ITS SET (the lazy-load law): the poster
+   * rides the normal img path and the mp4 joins the same preload set through
+   * a decode shim, so nothing the story can reveal is still on the wire.
+   */
+  makeClip(id, spec) {
+    if (this.insets[id]) return this.insets[id];
+    const card = el('div', 'inset', this.insetWrap);
+    const im = this.img(spec.poster, 'insetimg', card);
+    const vid = document.createElement('video');
+    vid.className = 'insetimg';
+    vid.muted = true; vid.defaultMuted = true;
+    vid.loop = !!spec.loop;
+    vid.playsInline = true;
+    vid.setAttribute('playsinline', '');
+    vid.setAttribute('muted', '');
+    vid.setAttribute('aria-hidden', 'true');
+    vid.preload = 'auto';
+    /* THE ONE LOAD: assigning src starts the resource fetch, and it is the
+       only start this element ever gets. The old decode shim called
+       vid.load() again on the way into the preload set, and load() ABORTS
+       whatever fetch src already had in flight (net::ERR_ABORTED) — a
+       requestfailed console error for bytes that were arriving fine, timing-
+       dependent (only when decode ran before canplaythrough). So the ready
+       promise LISTENS FROM BIRTH instead: it is created here, before any
+       await can lose an event, and decode() merely hands it over. */
+    vid.src = this.base + spec.file;
+    if (this.reduced) vid.style.display = 'none';   // the poster carries the frame
+    card.appendChild(vid);                          // over the poster while playing
+    const reduced = this.reduced;
+    const ready = new Promise((ok, err) => {
+      if (reduced) { ok(); return; }                // still page: bytes not owed
+      if (vid.readyState >= 3) { ok(); return; }
+      vid.addEventListener('canplaythrough', () => ok(), { once: true });
+      vid.addEventListener('error', () => err(new Error('video ' + spec.file)), { once: true });
+    });
+    ready.catch(() => {});   // settled early is fine; ensure()'s gap path reads it
+    this.building.push({ src: this.base + spec.file, decode: () => ready });
+    const rec = { card, im, vid, k: 0, want: 0, file: spec.file, poster: spec.poster,
+                  loop: !!spec.loop, art: true, playing: false, delay: 0, at: -1e9 };
+    this.insets[id] = rec;
+    return rec;
+  }
+
+  /**
    * Raise one inset plate (and dim the world under it), or take them all down.
    * `after` delays the RAISE without delaying the push, which is Beat VII's
    * `plateAt 1.4 s`: the camera gets there first and the plate lands on a frame
@@ -215,6 +274,29 @@ export class Stage {
   plate(id, k, after = 0) {
     for (const name of Object.keys(this.insets)) {
       const it = this.insets[name];
+      const want = (name === id) ? k : 0;
+      if (want && !it.art) {
+        if (!this.gaps.includes('raise:' + name)) this.gaps.push('raise:' + name);
+        continue;
+      }
+      it.want = want;
+      it.at = want ? this.state.t + (after || 0) : -1e9;
+    }
+  }
+
+  /**
+   * Raise one HERO CLIP card (or take them all down) — the video-inset half
+   * of plate()'s law, scoped so the two kinds cannot fight: clip() never
+   * touches an image plate (the wineskin keeps its own §6 grant) and plate()
+   * lowering everything still lowers clips, because a risen image plate owns
+   * the whole frame. `after` delays the RAISE without delaying the world —
+   * the seize card lands on a clutch already composed, the splash card on
+   * the land tick itself.
+   */
+  clip(id, k, after = 0) {
+    for (const name of Object.keys(this.insets)) {
+      const it = this.insets[name];
+      if (!it.vid) continue;
       const want = (name === id) ? k : 0;
       if (want && !it.art) {
         if (!this.gaps.includes('raise:' + name)) this.gaps.push('raise:' + name);
@@ -368,6 +450,11 @@ export class Stage {
     for (const name of Object.keys(this.insets)) {
       const it = this.insets[name];
       it.k = 0; it.want = 0; it.at = -1e9;
+      if (it.vid && it.playing) {
+        it.playing = false;
+        it.vid.pause();
+        try { it.vid.currentTime = 0; } catch (_) { /* poster on next raise */ }
+      }
     }
     this.state.dim = 0; this.state.reveal = 0; this.state.hold = 0;
     for (const rec of Object.values(this.sets)) {
@@ -414,6 +501,27 @@ export class Stage {
       P.card.style.transform =
         `translateY(${((1 - e) * 26).toFixed(2)}px) scale(${(0.965 + 0.035 * e).toFixed(4)})`;
       P.card.style.pointerEvents = 'none';
+      /* a HERO CLIP plays while its card is up. The sim decides WHEN (want/at,
+         deterministic); the wall clock merely advances the frames of a card
+         the sim has already asserted. Rewound on the way down so a re-raise
+         (a jump, a re-read) always starts from the poster frame — the card's
+         contents are a pure function of "how long has this card been up". */
+      if (P.vid) {
+        if (want > 0 && !P.playing) {
+          P.playing = true;
+          if (!this.reduced) {
+            try { P.vid.currentTime = 0; } catch (_) { /* not yet seekable */ }
+            const pr = P.vid.play();
+            if (pr && pr.catch) pr.catch(() => {});
+          }
+        } else if (!want && P.playing && P.k <= 0) {
+          P.playing = false;
+          if (!this.reduced) {
+            P.vid.pause();
+            try { P.vid.currentTime = 0; } catch (_) { /* unseekable: poster next raise */ }
+          }
+        }
+      }
     }
     // the watermark RESOLVES with the hold: the monogram comes up out of the
     // paper in proportion, which is the whole point of the verb

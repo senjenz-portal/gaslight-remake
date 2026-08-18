@@ -64,6 +64,7 @@ import { PLATE, el, box, clamp01, easeInOut, easeOut, lerp,
          bridgeFrame, loopFrame, gradedActor } from '../setkit.js';
 import { STRIPS } from '../strips.js';
 import { SHADOWS } from '../shadows.js';
+import { HEROCLIP_FILES } from '../heroclips.js';
 
 /* ---- the ledger, transcribed ---------------------------------------- */
 const SHIP = {
@@ -256,11 +257,34 @@ const FOCUS = {
      benches and the moon — and the static plate measures dead L4 R4 T0 B0
      (max 4% against the 22% law; the breath can only ADD light). */
   'gate-wide':  [610, 325, 1.29],
-  stern:        [530, 430, 2.80],
-  'ship-deck':  [575, 450, 2.60],
-  clifftop:     [870, 195, 2.80],
-  curse:        [870, 180, 2.20],
-  strait:       [585, 330, 2.00],
+  /* THE CLOSE-UP LAW (owner round, 2026-08-17): character units render their
+     principal >= 30% of panel height, two-shots >= 22%. On this 12.7 px/m
+     plate the 22 px Ulysses needs k ~10.5-12.3 for the dialogue floor — the
+     three speech lenses below are TRUE closes now (the plate goes soft under
+     the crisp 600+ px cuts; it reads as depth of field), and the exchanges
+     the CONTRACT stages as two-plane keep both subjects with the LARGER
+     body carrying the 22% floor. Close-lens centres still map through the
+     world transform every frame; drawn heights shrink with the recede, and
+     the ks below are set at each unit's own world station. */
+  stern:        [518, 415, 10.60],  // vi-02: the taunt — Ulysses 30.1% (was
+                                    // [530,430,2.8] = an 8% speck)
+  'stern-rail': [506, 400, 12.30],  // vi-07: the name given on the rail —
+                                    // 30.3% at the out-station's world 0.86
+  'menbeg-close': [545, 433, 14.10],// vi-05: the rowers' faces up at him, the
+                                    // gripped arm — nearest rower 22% (T)
+  'ship-deck':  [575, 450, 2.60],   // vi-04: the doubled distance (composed)
+  clifftop:     [870, 195, 3.10],   // vi-08/09 — the giant 30.9% at world
+                                    // 0.86 (was 2.8 = 27.9%, under the floor)
+  curse:        [870, 180, 2.60],   // vi-11 — the lifted arms 31.7% at world
+                                    // 0.86 (was 2.2 = 26.9%); sky kept above
+  strait:       [585, 330, 2.00],   // vi-12: rock 2's window (splash 455,540)
+  'defy-strait': [640, 300, 2.25],  // vi-06 split off `strait` (which is
+                                    // pinned by rock 2's splash): pleaders,
+                                    // stern and the 22.4% giant in one frame
+                                    // BOTH orientations — O.12's mechanism
+  'hades-twoshot': [663, 315, 2.30],// vi-10: the contract's own two-shot —
+                                    // stern foreground, the struck giant
+                                    // (22.9%, the T floor) dark behind
   homeward:     [450, 570, 1.90],
   moonpath:     [590, 340, 3.20],
 };
@@ -337,6 +361,11 @@ const SHADOW_CUT_H = { 'polyphemus-stand': 1244, 'polyphemus-hurl': 1286,
 export class SeaSet {
   static id = 'sea';
   static insets = {};                 // Beat VI raises none — the inset was Beat I's
+  /** ...but ONE hero clip does (heroclip law, main.js): rock 1's splash, the
+   *  living close-up seeded from this very tableau (jeer+11.3, the plume). */
+  static clips = {
+    'clip-splash': HEROCLIP_FILES['clip-splash'],
+  };
   static beds = ['sea'];
 
   constructor(root, st) {

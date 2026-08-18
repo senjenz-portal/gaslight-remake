@@ -56,7 +56,8 @@ const TIMEOUT = +argv('--timeout', 600000);
 const BASE = argv('--base', null);
 
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json',
-  '.png': 'image/png', '.jpg': 'image/jpeg', '.mp3': 'audio/mpeg', '.svg': 'image/svg+xml' };
+  '.png': 'image/png', '.jpg': 'image/jpeg', '.mp3': 'audio/mpeg', '.svg': 'image/svg+xml',
+  '.mp4': 'video/mp4', '.glb': 'model/gltf-binary' };
 
 function serve(dir, port) {
   const srv = createServer(async (req, res) => {
@@ -96,6 +97,22 @@ const STRIPS = JSON.parse(fs.readFileSync(path.join(HERE, 'strips.json'), 'utf8'
 const REGRADE = JSON.parse(fs.readFileSync(path.join(HERE, 'regrade.json'), 'utf8'));
 const REGRADE_DE_MAX = 9;
 const REGRADE_SETTLES = 6;
+/* tools/ody/heroclips.json — the HERO CLIP registry: four living close-up
+ * video insets, seeded from the staged tableaux (_heroseed.mjs), generated
+ * (Seedance) and build-gated by heroclip_gate.py (identity ±20 on 6 frames,
+ * bg drift <= 8% structural, the deflicker law <= 4 luma, loop closure), with
+ * the sha256 of the mp4 AND poster as shipped. The lap asserts (a) the served
+ * bytes ARE the registry's, (b) each card is RAISED at its own unit, LIVING
+ * (currentTime advances on the wall clock — the sim asserts the card, never
+ * reads its pixels), SIZED 1280x720, and (c) lowered on every other unit
+ * (the inset law, clip-scoped). */
+const HEROREG = JSON.parse(fs.readFileSync(path.join(HERE, 'heroclips.json'), 'utf8'));
+const HERO_OF = {};                 // unit key -> the clip granted to it
+for (const [id, c] of Object.entries(HEROREG.clips || {})) {
+  for (const k of c.units || []) HERO_OF[k] = id;
+}
+const HERO_UP_MIN = 0.85;           // raised, same floor as the wineskin's
+const HERO_DOWN_MAX = 0.1;          // lowered, same ceiling as the inset law's
 
 function contentUnits() {
   const md = fs.readFileSync(path.join(ROOT, 'CONTENT-odyssey.md'), 'utf8');
@@ -296,6 +313,58 @@ const PERSP = {
   shoreBeach: { pxPerM: 11.3 },
   cave: { pxPerM: 43 },
   realM: { ulysses: 1.75, crew: 1.70, giant: 7.0, ramStock: 0.58 },
+};
+/* [closeup] THE CLOSE-UP LAW (owner round, 2026-08-17: "when the scene is
+ * large and the character small the experience is worse and hard to see").
+ * Audited against the CONTRACT's staging column (tools/ody/closeup_audit.mjs
+ * is the table's provenance): at every character unit's settle the
+ * principal's DRAWN height / panel height >= its class floor —
+ *   C  the unit's subject is one character's act or speech       >= 30%
+ *   T  a staged two-shot; the floor rides the shot's anchor body >= 22%
+ * and the principal's drawn box centre sits INSIDE the lens window in BOTH
+ * orientations (a floor met off-frame is a cropped subject, the iv-08
+ * defect class). Exempt (E, not listed): headings, arrivals, establishing,
+ * object/environment carriers, voice-through-the-stone units — and a beat
+ * may spend at most 2 units WIDE (settle k < CLOSEUP_WIDE_K) after its
+ * heading. Drawn height is the snapshot's own box (plate px; the sea boxes
+ * carry the world transform), panel height is 768/k of plate — so the
+ * fraction is box[3] * cam.k / 768, the exact on-screen share. */
+const CLOSEUP_FLOOR = { C: 0.30, T: 0.22 };
+const CLOSEUP_SLACK = 0.004;        // idle bob/sy AABB + box rounding
+const CLOSEUP_WIDE_K = 1.7;         // under it a frame reads WIDE
+const CLOSEUP_WIDE_MAX = 2;         // per beat, after its heading
+const CLOSEUP = {                   // key -> [class, principal]
+  /* Beat I — shore (20 px Ulysses: the floors are k 8.6 closes). iamulysses
+   * is EXEMPT by its own staging column — the CAMEO CARD is that unit's
+   * close and the man is still wading in (an in-scene k 11.6 close framed
+   * empty sand and broke the anti-skate law's css measure). */
+  council: ['T', 'ulysses'], wineskin: ['T', 'ulysses'],
+  /* Beat II — cave */
+  beg: ['T', 'crew'], return2: ['C', 'giant'], strangers: ['C', 'giant'],
+  plea: ['T', 'ulysses'], pitiless: ['T', 'giant'], shipfast: ['T', 'giant'],
+  shiplie: ['T', 'ulysses'], firstmeal: ['C', 'giant'], sword: ['C', 'ulysses'],
+  /* Beat III — cave */
+  morningmeal: ['C', 'giant'], scheme: ['C', 'ulysses'], lots: ['T', 'crew'],
+  suppertwo: ['C', 'giant'], lookhere: ['C', 'ulysses'],
+  besokind: ['C', 'giant'], thrice: ['C', 'ulysses'], noman: ['T', 'ulysses'],
+  nomanlast: ['T', 'giant'],
+  /* Beat IV — cave (the drive is the five men's act: the crew bear on the
+   * beam; whatails/mustbeill are voice-only by the contract's own staging) */
+  embers: ['C', 'ulysses'], glowing: ['C', 'ulysses'], auger: ['C', 'crew'],
+  bore: ['C', 'crew'], hiss: ['C', 'crew'], nomankilling: ['C', 'giant'],
+  stone: ['C', 'giant'], doorway: ['C', 'giant'],
+  /* Beat V — cave (v-01's anchor is the seated giant — the problem IS the
+   * doorway; the ram is G5's licensed principal) */
+  puzzling: ['T', 'giant'], withies: ['C', 'ulysses'],
+  threetoaman: ['C', 'crew'], greatram: ['C', 'ram'],
+  feltbacks: ['C', 'giant'], lastofall: ['T', 'giant'],
+  ramspeech1: ['T', 'giant'], ramspeech2: ['T', 'giant'],
+  ramspeech3: ['T', 'giant'], freed: ['T', 'ulysses'],
+  /* Beat VI — sea (22 px Ulysses: the speech floors are k 10.6-12.3 TRUE
+   * closes; the contract's own two-plane shots anchor on the giant) */
+  taunt: ['C', 'ulysses'], menbeg: ['T', 'rower'], defy: ['T', 'giant'],
+  myname: ['C', 'ulysses'], prophecy: ['C', 'giant'], fatherson: ['C', 'giant'],
+  hades: ['T', 'giant'], curse: ['C', 'giant'],
 };
 /* [grounding] EXPLORER C (tools/ody/seamless/explore-grounding.md): every
  * SETTLED principal stands on a CONTACT SHADOW — a node under the actor
@@ -977,6 +1046,16 @@ async function main() {
      and it also silently exempts that frame from every dim-gated law below,
      which is why it is asserted BY NAME and not left to the side effects. */
   const insetStuck = [];
+  /* THE HEROCLIP LAW (the inset law, clip-scoped): four hero moments raise a
+     LIVING CLOSE-UP — a muted VIDEO inset seeded from the staged tableau
+     (main.js HEROCLIPS; registry tools/ody/heroclips.json). Each card must be
+     up at its granted unit(s) ONLY (clipStuck mirrors insetStuck), and at its
+     unit it must be RAISED, LIVING and SIZED — the DETERMINISM law holds
+     because the card is asserted like any inset (sim-driven k/want) and its
+     LIVING proof reads the video element on the WALL clock, never video
+     pixels into a sim assertion. */
+  const clipStuck = [];
+  const heroEv = {};                 // clip id -> the proof row
   const sprawlLedger = [];
   const cameoLog = [];
   const meals = [];                  // {key, box, crewN, pose, rect, frame}
@@ -1147,6 +1226,183 @@ async function main() {
                    PERSP.realM.crew * kAt(c.mark[0], c.mark[1]));
       }
     });
+  };
+
+  /* ---- [closeup] THE CLOSE-UP LAW, sampled at every unit's settle -------- *
+   * The floor is judged against the unit's OWN lens (ledger k — the eased
+   * camera may still be mid-whip at the sample; the lens is the law, and the
+   * drawn box does not ride the camera). Containment is judged in BOTH
+   * orientations against the lens window through stage.applyCam's own edge
+   * clamp, with sea centres mapped through the snapshot's world transform;
+   * a WALKING principal is mid-stride, not a settle — its containment is
+   * the next settled frame's business (the parking law's own exemption),
+   * but its drawn HEIGHT is scale-true and is judged always. */
+  const closeBad = [];
+  const closeLedger = [];
+  const wideLedger = {};             // beat -> [key@k]
+  let closeSamples = 0;
+  const closeupWindow = (cx, cy, k, visW) => {
+    let X = visW / 2 - cx * k;
+    X = Math.min(0, Math.max(visW - 1408 * k, X));
+    let Y = 384 - cy * k;
+    Y = Math.min(0, Math.max(768 * (1 - k), Y));
+    return [-X / k, -Y / k, (visW - X) / k, (768 - Y) / k];
+  };
+  const closeupLens = (q) => {
+    const sn = q.stage || {};
+    const set = LEDGER.sets[sn.set];
+    const lens = set && (set.lenses || []).find((l) => l.name === q.unit.focus);
+    if (!lens) return null;
+    let [cx, cy] = lens.at;
+    if (sn.set === 'sea' && sn.world && lens.k >= 1.7) {
+      /* close-lens centres ride the world transform (sea.js law) */
+      const o = sn.world.origin || [575, 450];
+      cx = o[0] + (cx - o[0]) * sn.world.k + sn.world.dx;
+      cy = o[1] + (cy - o[1]) * sn.world.k + sn.world.dy;
+    }
+    return { cx, cy, k: lens.k };
+  };
+  const closeupLaw = (u, q) => {
+    const sn = q.stage || {};
+    if (sn.plate && sn.plate.dim > 0.5) {
+      /* the frame is the card's. When the card is the unit's OWN hero clip
+         (bore rides the twist card raised on auger), the close-up law is met
+         by the card itself — a 74%-of-panel living close-up of this very
+         action — so the sample is COUNTED, not exempted, and the tally stays
+         honest. Any other card owning this frame is the clipStuck/insetStuck
+         laws' problem, asserted by name below. */
+      const hc = HERO_OF[u.key];
+      if (hc && CLOSEUP[u.key] && (sn.plate[hc] || 0) > 0.5) closeSamples++;
+      return;
+    }
+    const lens = closeupLens(q);
+    if (!lens) return;
+    /* the WIDE budget: a non-head unit under CLOSEUP_WIDE_K spends one of
+       the beat's CLOSEUP_WIDE_MAX; jeer carries beat VI's heading */
+    const isHead = /^head\d$/.test(u.key || '') || u.key === 'jeer';
+    if (!isHead && lens.k < CLOSEUP_WIDE_K) {
+      (wideLedger[u.beat] = wideLedger[u.beat] || []).push(`${u.key}@k${lens.k}`);
+    }
+    const cls = CLOSEUP[u.key];
+    if (!cls) return;
+    closeSamples++;
+    const [c, who] = cls;
+    const floor = CLOSEUP_FLOOR[c];
+    let box = null, moving = false;
+    if (sn.set === 'cave' || sn.set === 'shore') {
+      const cast = sn.cast || {};
+      if (who === 'ulysses' && cast.ulysses) {
+        box = cast.ulysses.box;
+        moving = cast.ulysses.kind === 'walk' || !!cast.ulysses.moving;
+      } else if (who === 'crew') {
+        /* the framed-man law (same as the rowers): the principal crewman is
+           the tallest one BOTH orientations hold (the portrait crop is the
+           narrower window) — beat IV's sixth man stands off at the huddle,
+           and the drive line's outermost man may leave the portrait crop;
+           neither is the shot's subject */
+        const inWin = (x, w) => {
+          const [x0, y0, x1, y1] = closeupWindow(lens.cx, lens.cy, lens.k, w);
+          const bx = x.box[0] + x.box[2] / 2, by = x.box[1] + x.box[3] / 2;
+          return bx >= x0 && bx <= x1 && by >= y0 && by <= y1;
+        };
+        const all = (cast.crew || []).filter((x) => x.op > 0.5 && x.box);
+        const cs = [all.filter((x) => inWin(x, 1060) && inWin(x, 1408)),
+                    all.filter((x) => inWin(x, 1408)), all].find((l) => l.length)
+                   || [];
+        const best = cs.length
+          ? cs.reduce((a, b) => (a.box[3] >= b.box[3] ? a : b)) : null;
+        box = best && best.box;
+        moving = !!(best && (best.walking || best.moving));
+      } else if (who === 'giant' && sn.giant) {
+        box = sn.giant.pose === 'sprawl'
+          ? ((sn.sprawl && sn.sprawl.box) || sn.giant.box) : sn.giant.box;
+        moving = !!sn.giant.walking;
+      } else if (who === 'ram' && sn.flock && sn.flock.ram) {
+        box = sn.flock.ram.box;
+        moving = !!sn.flock.ram.moving;
+      }
+    } else if (sn.set === 'sea') {
+      if (who === 'ulysses' && sn.ulysses) box = sn.ulysses.box;
+      else if (who === 'giant' && sn.giant) box = sn.giant.box;
+      else if (who === 'rower') {
+        /* the nearest-crewman law: the tallest rower BOTH windows hold */
+        const inWin = (r, w) => {
+          const [x0, y0, x1, y1] = closeupWindow(lens.cx, lens.cy, lens.k, w);
+          const bx = r.box[0] + r.box[2] / 2, by = r.box[1] + r.box[3] / 2;
+          return bx >= x0 && bx <= x1 && by >= y0 && by <= y1;
+        };
+        const all = (sn.rowers || []).filter((r) => r.box);
+        const rs = [all.filter((r) => inWin(r, 1060) && inWin(r, 1408)),
+                    all.filter((r) => inWin(r, 1408))].find((l) => l.length)
+                   || [];
+        box = rs.length
+          ? rs.reduce((a, b) => (a.box[3] >= b.box[3] ? a : b)).box : null;
+      }
+    }
+    if (!box) {
+      closeBad.push(`${u.key}: the ${c}-class principal '${who}' has NO drawn ` +
+                    `box at the settle — nothing to hold the ${floor * 100}% floor`);
+      return;
+    }
+    const frac = box[3] * lens.k / 768;
+    closeLedger.push({ unit: u.key, who, cls: c, k: lens.k,
+                       frac: +frac.toFixed(3), floor, moving });
+    if (frac + CLOSEUP_SLACK < floor) {
+      closeBad.push(`${u.key}: ${who} draws ${(frac * 100).toFixed(1)}% of panel ` +
+                    `height under lens '${q.unit.focus}' k ${lens.k} — below the ` +
+                    `${c}-class floor ${floor * 100}% (box h ${box[3]} plate px)`);
+    }
+    if (!moving) {
+      const bx = box[0] + box[2] / 2, by = box[1] + box[3] / 2;
+      for (const [tag, w] of [['landscape', 1408], ['portrait', 1060]]) {
+        const [x0, y0, x1, y1] = closeupWindow(lens.cx, lens.cy, lens.k, w);
+        if (bx < x0 || bx > x1 || by < y0 || by > y1) {
+          closeBad.push(`${u.key}: the principal '${who}' box centre ` +
+                        `(${bx.toFixed(0)},${by.toFixed(0)}) is OUTSIDE the ` +
+                        `${tag} window [${x0.toFixed(0)},${y0.toFixed(0)}..` +
+                        `${x1.toFixed(0)},${y1.toFixed(0)}] of lens ` +
+                        `'${q.unit.focus}' — a met floor off-frame is a crop`);
+        }
+      }
+    }
+  };
+
+  /* ---- [heroclip] raised + LIVING + sized, at the clip's own unit -------- */
+  const heroCheck = async (unitKey, id) => {
+    await page.evaluate(() => window.__renderNow());
+    const read = (cid) => page.evaluate((c) => {
+      const P = window.__refs.stage.insets[c];
+      if (!P || !P.vid) return null;
+      return { k: +P.k.toFixed(3), playing: !!P.playing,
+               t: P.vid.currentTime, ended: !!P.vid.ended,
+               w: P.vid.videoWidth, h: P.vid.videoHeight,
+               src: P.vid.currentSrc.split('/').slice(-2).join('/') };
+    }, cid);
+    const s1 = await read(id);
+    if (!s1) { bad(`${unitKey}: [heroclip] ${id} has no video inset on the stage`); return; }
+    if (!(s1.k >= HERO_UP_MIN)) {
+      bad(`${unitKey}: [heroclip] the ${id} card is not RAISED at its unit ` +
+          `(k ${s1.k}, floor ${HERO_UP_MIN})`);
+    }
+    if (!(s1.w === 1280 && s1.h === 720)) {
+      bad(`${unitKey}: [heroclip] ${id} decoded ${s1.w}x${s1.h}, the registry ships 1280x720`);
+    }
+    /* LIVING: the card plays on the WALL clock (the sim asserts the card, the
+       wall advances its frames) — so the two samples are wall-separated. A
+       one-shot that already stands at its end has played through: that IS
+       the proof (ended), not a stall (a never-played video sits at 0). */
+    await page.waitForTimeout(400);
+    const s2 = await read(id);
+    const living = (s2.t > s1.t + 0.03) || s2.ended;
+    if (!living) {
+      bad(`${unitKey}: [heroclip] the ${id} card is not LIVING — currentTime ` +
+          `${s1.t.toFixed(3)} -> ${s2.t.toFixed(3)}, ended ${s2.ended}`);
+    }
+    heroEv[id] = { unit: unitKey, k: s1.k, t: [+s1.t.toFixed(2), +s2.t.toFixed(2)],
+                   ended: s2.ended, size: `${s1.w}x${s1.h}`, src: s1.src };
+    note(`[heroclip] ${id} at ${unitKey}: k ${s1.k}, currentTime ` +
+         `${s1.t.toFixed(2)} -> ${s2.t.toFixed(2)}${s2.ended ? ' (played through)' : ''}, ` +
+         `${s1.w}x${s1.h}`);
   };
 
   /* ---- [feet]+[parking], sampled at every settled unit ------------------ */
@@ -2091,7 +2347,19 @@ async function main() {
     }
     const before = pre.i;
     const preRes = (pre.stage.gate && pre.stage.gate.resolutions) || 0;
-    const miss = await page.evaluate(() => window.__gateMiss());
+    /* [closeup] council's lens is a CLOSE now (k 8.6): the default 190 px
+       screen nudge lands ON the hull at this magnification — a legitimate
+       hit surface, not a miss. Its miss probe aims at the open sand left of
+       the hull's slack band (plate 475,450 — clear of the rect+48 px slack
+       and of the crew arc) through the live camera's own mapping. */
+    const miss = await page.evaluate((key) => {
+      if (key !== 'council') return window.__gateMiss();
+      const stg = window.__refs.stage;
+      const a = stg.targetPlate('ship');
+      const p = stg.toScreen(a[0], a[1]);
+      const s = stg.toScreen(475, 450);
+      return window.__gateMiss(s.x - p.x, s.y - p.y);
+    }, u.key);
     const afterMiss = await st();
     if (miss.advanced || afterMiss.i !== before) bad(`${u.target} gate advanced on a MISS (${u.key})`);
     if (afterMiss.gate.resolved) bad(`${u.target} gate resolved on a MISS (${u.key})`);
@@ -2147,6 +2415,11 @@ async function main() {
         bad(`greatram: [O.11] Ulysses is still standing beside the ram he is under (op ${uOp})`);
       }
       await shot('b5-gate-ram-slung');
+      /* [heroclip] the UNDERBELLY card — raised BY THIS RESOLUTION (G5's
+         click advances into dawn5 on the resolution's own frame, and dawn5
+         is the card's granted unit); a loop, so it is still living however
+         long the stream probe above spent */
+      await heroCheck('greatram->dawn5 (G5 resolution)', 'clip-underbelly');
     }
     if (u.key === 'jeer') {
       const q = await st();
@@ -2440,12 +2713,21 @@ async function main() {
 
       const q0 = await st();
       await footLaw(u, q0);
+      closeupLaw(u, q0);
       if (q0.cameo) cameoLog.push({ unit: u.key, ...q0.cameo });
       /* the inset law: no plate may still be up on a unit it was not minted
          for (misgave is the chapter's one grant) */
       if (u.key !== 'misgave' && q0.stage.plate &&
           (q0.stage.plate.wineskin || 0) > 0.1) {
         insetStuck.push({ unit: u.key, op: q0.stage.plate.wineskin });
+      }
+      /* the heroclip law's residency half: a clip card up at a unit the
+         registry never granted it (greatram itself is ungranted — its clip
+         belongs to the RESOLUTION, which is dawn5's entry frame) */
+      for (const clipId of Object.keys(HEROREG.clips || {})) {
+        if ((q0.stage.plate[clipId] || 0) > HERO_DOWN_MAX && HERO_OF[u.key] !== clipId) {
+          clipStuck.push({ unit: u.key, clip: clipId, op: q0.stage.plate[clipId] });
+        }
       }
 
       /* ---- headings ----------------------------------------------------- */
@@ -2845,6 +3127,14 @@ async function main() {
           if (g.pose !== 'clutch') {
             bad(`${u.key}: [O.6] mid-seg the giant is '${g.pose}', not the clutch`);
           }
+          /* [heroclip] the O.6 instant is measured UNDER OPEN SKY at all
+             three meals: firstmeal's card is delayed past it BY LAW (main.js
+             HEROCLIPS after 3.6 > the 3.0 s sample), and the other two meals
+             are granted no card at all */
+          if ((q.stage.plate['clip-seize'] || 0) > HERO_DOWN_MAX) {
+            bad(`${u.key}: [heroclip] the seize card is over the O.6 sample ` +
+                `(k ${q.stage.plate['clip-seize']}) — the after-delay law is broken`);
+          }
           /* [teleport] the MEAL CHAIN's remaining handoffs — bridge-end ->
              static clutch (segK ~0.56), clutch -> seat (segK 0.9) and
              seat -> sprawl + the tip-over slide (seg end) — single-stepped
@@ -2852,6 +3142,11 @@ async function main() {
              only: the seize staging is identical x3 by O.6, and ii-10 alone
              owns the sprawl chain. */
           if (u.key === 'firstmeal') await teleProbe('firstmeal-chain', 4.4);
+          /* [heroclip] the SEIZE card — raised at 3.6 (the static clutch
+             composed beneath it), so by the chain probe's end it is up and
+             living; the completing click lowers it (clipStuck asserts that
+             at every later unit's own entry) */
+          if (u.key === 'firstmeal') await heroCheck('firstmeal', 'clip-seize');
           break;
         }
         case 'sword':
@@ -3040,6 +3335,15 @@ async function main() {
               `${facts['O.9-auger']}; bore ${facts['O.9-bore']}`;
           }
           await shot(`b4-O9-tip-${u.key}-tick`);
+          /* [heroclip] the TWIST card — raised on auger at +1.2 (after the
+             settled frame the close-up law measured), CARRIED across the
+             bore tick (one twist, two clock units), down on hiss (clipStuck).
+             On auger the probe may stand before the raise tick; walk onto it. */
+          {
+            const qh = await st();
+            if (u.key === 'auger') await T(Math.max(0, 2.0 - (qh.unitT || 0)));
+            await heroCheck(u.key, 'clip-twist');
+          }
           break;
         }
         case 'whatails': {
@@ -3206,6 +3510,21 @@ async function main() {
           if (!(q.stage.ulysses && q.stage.ulysses.pose === 'taunt')) {
             bad(`taunt: the whip to the stern has no taunting Ulysses (pose=${q.stage.ulysses && q.stage.ulysses.pose})`);
           }
+          break;
+        }
+        case 'rock1': {
+          /* [heroclip] the SPLASH card rises WITH the plume (raise tick +3.6
+             = the LAND tick, 10.8 on rock1's clock) — but THE INSET LAW says
+             the world keeps playing beneath a raised card, and so must the
+             probe's eyes: walking the clock to the raise tick HERE spent the
+             whole tear(0..1.6)/flight(1.6..3.8) window before the wait-block
+             probe below ever sampled it (the starved-flight lap of
+             2026-08-17: '[throw] rock1: the probe never saw the rock fly' +
+             'tear/flight never played on the clock' + the windup's play-once
+             seen mid-play only once). The card is asserted INSIDE the
+             wait-block instead, AFTER the single-stepped throw probe has
+             crossed the land tick — the flight on its clock first, the card
+             riding above it second. */
           break;
         }
         case 'twiceasfar': {
@@ -3446,6 +3765,19 @@ async function main() {
             if (['tear', 'flight'].includes(rk0.phase)) sawFlight = true;
             const sp0 = q.stage.splash || {};
             if (sp0.of === which && sp0.k > sawSplash) sawSplash = sp0.k;
+          }
+          /* [heroclip] the SPLASH card — asserted only NOW, after the probe
+             has watched the flight on its own clock and single-stepped past
+             the raise/land tick (the inset law: the world beneath the card
+             played on, and every throw fact above was read from the SNAPSHOT,
+             not from pixels the risen card covers). Walk onto +4.5 if the
+             probe is not already past it (damp headroom over the +3.6 raise),
+             then assert raised + living + sized. The wait:'rock1' click after
+             this lowers it (clipStuck). */
+          if (which === 'rock1') {
+            const qh = await st();
+            await T(Math.max(0, 4.5 - (qh.unitT || 0)));
+            await heroCheck('rock1', 'clip-splash');
           }
           /* [O.14b] THE CARRIER'S OWN RISE WINDOW: the resynced throw lane
              (arc end tick == splash rise tick) puts the whole rise INSIDE
@@ -4056,6 +4388,27 @@ async function main() {
     }
   }
 
+  /* ---- 5.1 the HERO CLIPS' bytes: served == the registry's (identity) ---- *
+   * heroclip_gate.py gated the raw clip (identity ±20 on 6 frames, bg drift,
+   * the deflicker law, loop closure) against THESE bytes and shas both the
+   * shipped mp4 and its frame-1 poster. A served file with a different sha is
+   * a card about different pictures — the same law as the strips'. */
+  for (const [clipId, c] of Object.entries(HEROREG.clips || {})) {
+    for (const [kind, rel, want] of [['mp4', c.file, c.sha256],
+                                     ['poster', c.poster, c.posterSha256]]) {
+      const res = await page.request.get(new URL(rel, URL_).toString());
+      if (!res.ok()) { bad(`[heroclip] ${clipId} ${kind} did not load (${res.status()})`); continue; }
+      const sha = createHash('sha256').update(await res.body()).digest('hex');
+      if (sha !== want) {
+        bad(`[heroclip] ${clipId}: the served ${kind} is NOT the registry's gated ` +
+            `file (sha ${sha.slice(0, 12)}… != registry ${String(want).slice(0, 12)}…)`);
+      }
+    }
+    if (heroEv[clipId]) heroEv[clipId].sha = 'registry';
+  }
+  note(`[heroclip] served bytes: ${Object.keys(HEROREG.clips || {}).length} clips' ` +
+       `mp4 + poster sha-equal to tools/ody/heroclips.json`);
+
   /* ---- 5.5 THE SEEDED DEDICATION (identity-as-seed, zero generation) ------ *
    * The closing card's ask: a name typed onto the settled card regenerates,
    * LIVE PER KEYSTROKE, a laurel sigil that is a PURE FUNCTION of the name —
@@ -4623,6 +4976,26 @@ async function main() {
   } else {
     note('the inset law: the wineskin rises on misgave and is down on every later unit');
   }
+  /* ---- the heroclip law, tallied ----------------------------------------- */
+  if (clipStuck.length) {
+    bad(`[heroclip] a clip card is raised off its grant on ${clipStuck.length} unit(s) ` +
+        `(first: ${clipStuck[0].clip} over ${clipStuck[0].unit} at k ${clipStuck[0].op}) — ` +
+        `the inset law, clip-scoped: the completing click drops the card`);
+  } else {
+    note('[heroclip] the clip-scoped inset law: every card down on every ungranted unit');
+  }
+  {
+    const heroWant = Object.keys(HEROREG.clips || {}).length;
+    const heroGot = Object.keys(heroEv).length;
+    if (heroGot < heroWant) {
+      bad(`[heroclip] only ${heroGot} of the registry's ${heroWant} clips were ` +
+          `proven RAISED+LIVING at their units (${Object.keys(heroEv).join(', ') || 'none'})`);
+    } else {
+      note(`[heroclip] ${heroGot}/${heroWant} living close-ups proven at their units: ` +
+           Object.entries(heroEv).map(([id, e]) =>
+             `${id}@${e.unit} t ${e.t[0]}->${e.t[1]}${e.ended ? ' (end)' : ''}`).join('; '));
+    }
+  }
   const dedupe = (a) => [...new Set(a)];
   for (const m of dedupe(feetBad)) bad('[feet] ' + m);
   if (!feetBad.length) {
@@ -4654,6 +5027,31 @@ async function main() {
   }
   if (!perspSamples && !insetStuck.length) {
     bad('[perspective] no settled height was ever sampled — the gate did not run');
+  }
+  /* ---- [closeup], tallied (THE CLOSE-UP LAW, owner round 2026-08-17) ----- */
+  for (const m of dedupe(closeBad)) bad('[closeup] ' + m);
+  const closeWant = Object.keys(CLOSEUP).length;
+  if (closeSamples < closeWant) {
+    bad(`[closeup] only ${closeSamples} of the audit's ${closeWant} character ` +
+        `units were ever sampled — the close-up law did not run in full`);
+  }
+  for (const [b, list] of Object.entries(wideLedger)) {
+    if (list.length > CLOSEUP_WIDE_MAX) {
+      bad(`[closeup] beat ${b} spends ${list.length} WIDE units after its ` +
+          `heading (${list.join(', ')}) — the budget is ${CLOSEUP_WIDE_MAX}`);
+    }
+  }
+  if (!closeBad.length && closeSamples >= closeWant) {
+    const worst = closeLedger.reduce(
+      (a, r) => (r.frac - r.floor < a.frac - a.floor ? r : a), closeLedger[0]);
+    note(`[closeup] every character unit's principal held its class floor ` +
+         `(C >= ${CLOSEUP_FLOOR.C * 100}%, T >= ${CLOSEUP_FLOOR.T * 100}% of ` +
+         `panel height) in frame both orientations across ${closeSamples} ` +
+         `settles; worst margin ${worst.unit} (${worst.who} ` +
+         `${(worst.frac * 100).toFixed(1)}% vs ${worst.floor * 100}%); wide ` +
+         `budget <= ${CLOSEUP_WIDE_MAX}/beat held: ` +
+         Object.entries(wideLedger).map(([b, l]) => `b${b}:${l.length}`)
+           .join(' '));
   }
   /* ---- [shadow]+[occluder], tallied (Explorer C) -------------------------- */
   for (const m of dedupe(shadowBad)) bad('[shadow] ' + m);
@@ -5103,6 +5501,7 @@ async function main() {
     facts, cameoLog, sprawl: sprawlLedger, insetStuck,
     deadBands: bandRows.slice(0, 14), limit: LANDSCAPE_MAX,
     feetSamples, parkSamples,
+    closeups: closeLedger, closeupWides: wideLedger,
     strips: Object.fromEntries(STRIP_LAW.map(([k]) => [k, {
       frames: [...stripEv[k].frames].sort(), n: stripEv[k].n,
       worst: +stripEv[k].worst.toFixed(2), worstAt: stripEv[k].worstAt,

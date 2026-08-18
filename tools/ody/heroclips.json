@@ -1,0 +1,318 @@
+{
+ "clips": {
+  "clip-seize": {
+   "file": "assets/inset/clip-seize.mp4",
+   "poster": "assets/inset/clip-seize.png",
+   "sha256": "7b7175ace8b801127e272e5c90af4d86d491dbb411734aeac0216796d18a07bf",
+   "posterSha256": "0d07e566892b4d5c9b8258985f282c3c4d1fc5324ed12624101cf63d2208d127",
+   "bytes": 457203,
+   "loop": false,
+   "units": [
+    "firstmeal"
+   ],
+   "seed": "seize",
+   "encode": "libx264 slow crf21 yuv420p 1280x720 faststart, no audio",
+   "gates": {
+    "src": "assets/raw/ody-heroclips/clip-seize.mp4",
+    "duration": 4.042,
+    "sampledAt": [
+     0.0,
+     0.808,
+     1.617,
+     2.425,
+     3.233,
+     3.972
+    ],
+    "identity_canonical": 7.2,
+    "identity_warmcool": [
+     3.1,
+     3.3,
+     3.1,
+     3.6,
+     1.1,
+     0.8
+    ],
+    "identity_delta": [
+     4.1,
+     3.9,
+     4.2,
+     3.7,
+     6.1,
+     6.4
+    ],
+    "identity_ok": true,
+    "identity_box_px": [
+     320,
+     84,
+     580,
+     585
+    ],
+    "seed_match": 0.0077,
+    "bg_drift": [
+     0.0,
+     0.0,
+     0.0,
+     0.025,
+     0.025
+    ],
+    "bg_drift_ok": true,
+    "frame_luma": [
+     41.54,
+     41.59,
+     42.19,
+     41.72,
+     42.51,
+     41.83
+    ],
+    "luma_delta": [
+     0.05,
+     0.6,
+     0.47,
+     0.79,
+     0.68
+    ],
+    "luma_ok": true,
+    "loop_closure": null,
+    "loop_ok": true,
+    "deflickered": false,
+    "ok": true
+   }
+  },
+  "clip-twist": {
+   "file": "assets/inset/clip-twist.mp4",
+   "poster": "assets/inset/clip-twist.png",
+   "sha256": "0062b28f9762bd7d1c91b17a93b8fdecc0a53efa9ef424b9f03cf50daf3f9f3f",
+   "posterSha256": "8d41ac2fb1c40388f17c11fbc7a266065c55acd3db64b831fa1418b3ab1646c6",
+   "bytes": 481811,
+   "loop": true,
+   "units": [
+    "auger",
+    "bore"
+   ],
+   "seed": "twist",
+   "encode": "libx264 slow crf21 yuv420p 1280x720 faststart, no audio",
+   "gates": {
+    "src": "assets/raw/ody-heroclips/clip-twist.mp4",
+    "duration": 4.042,
+    "sampledAt": [
+     0.0,
+     0.808,
+     1.617,
+     2.425,
+     3.233,
+     3.972
+    ],
+    "identity_canonical": -14.4,
+    "identity_warmcool": [
+     -14.7,
+     -14.2,
+     -14.5,
+     -14.3,
+     -14.3,
+     -14.2
+    ],
+    "identity_delta": [
+     0.3,
+     0.1,
+     0.1,
+     0.0,
+     0.1,
+     0.2
+    ],
+    "identity_ok": true,
+    "identity_box_px": [
+     544,
+     41,
+     736,
+     679
+    ],
+    "seed_match": 0.0025,
+    "bg_drift": [
+     0.005,
+     0.0101,
+     0.0151,
+     0.0,
+     0.0
+    ],
+    "bg_drift_ok": true,
+    "frame_luma": [
+     52.51,
+     52.7,
+     52.99,
+     52.88,
+     53.08,
+     52.56
+    ],
+    "luma_delta": [
+     0.2,
+     0.28,
+     0.11,
+     0.21,
+     0.52
+    ],
+    "luma_ok": true,
+    "loop_closure": 0.0,
+    "loop_ok": true,
+    "deflickered": false,
+    "ok": true
+   }
+  },
+  "clip-underbelly": {
+   "file": "assets/inset/clip-underbelly.mp4",
+   "poster": "assets/inset/clip-underbelly.png",
+   "sha256": "22262aaa9b02a36f245d32142d153cf96a3c85229cbc31e0a476cd9a2a7a1e51",
+   "posterSha256": "f3d71749122c080474e1f518767d28739875506bac42576cb94756c0bf8e0fdb",
+   "bytes": 361684,
+   "loop": true,
+   "units": [
+    "dawn5"
+   ],
+   "seed": "underbelly",
+   "encode": "libx264 slow crf21 yuv420p 1280x720 faststart, no audio",
+   "gates": {
+    "src": "assets/raw/ody-heroclips/clip-underbelly.mp4",
+    "duration": 4.042,
+    "sampledAt": [
+     0.0,
+     0.808,
+     1.617,
+     2.425,
+     3.233,
+     3.972
+    ],
+    "identity_canonical": 26.5,
+    "identity_warmcool": [
+     30.2,
+     29.5,
+     29.1,
+     28.7,
+     29.2,
+     29.7
+    ],
+    "identity_delta": [
+     3.8,
+     3.0,
+     2.6,
+     2.2,
+     2.7,
+     3.2
+    ],
+    "identity_ok": true,
+    "identity_box_px": [
+     472,
+     214,
+     335,
+     265
+    ],
+    "seed_match": 0.0207,
+    "bg_drift": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "bg_drift_ok": true,
+    "frame_luma": [
+     103.58,
+     103.0,
+     103.14,
+     103.15,
+     103.12,
+     103.19
+    ],
+    "luma_delta": [
+     0.59,
+     0.15,
+     0.01,
+     0.03,
+     0.06
+    ],
+    "luma_ok": true,
+    "loop_closure": 0.0,
+    "loop_ok": true,
+    "deflickered": false,
+    "ok": true
+   }
+  },
+  "clip-splash": {
+   "file": "assets/inset/clip-splash.mp4",
+   "poster": "assets/inset/clip-splash.png",
+   "sha256": "f7160060a0dcf7195ee243aaf455a879c1a3c940693c9fe58e1fd1b8dfe666f5",
+   "posterSha256": "f5ea53ac2238cd9c16e1044e1b53ebd1e93372cd882a31f869c5fb41143f50bc",
+   "bytes": 762250,
+   "loop": false,
+   "units": [
+    "rock1"
+   ],
+   "seed": "splash",
+   "encode": "libx264 slow crf21 yuv420p 1280x720 faststart, no audio",
+   "gates": {
+    "src": "assets/raw/ody-heroclips/clip-splash.mp4",
+    "duration": 4.042,
+    "sampledAt": [
+     0.0,
+     0.808,
+     1.617,
+     2.425,
+     3.233,
+     3.972
+    ],
+    "identity_canonical": -23.7,
+    "identity_warmcool": [
+     -19.8,
+     -17.0,
+     -18.6,
+     -19.3,
+     -17.7,
+     -17.3
+    ],
+    "identity_delta": [
+     3.9,
+     6.6,
+     5.0,
+     4.3,
+     6.0,
+     6.4
+    ],
+    "identity_ok": true,
+    "identity_box_px": [
+     422,
+     155,
+     256,
+     435
+    ],
+    "seed_match": 0.0,
+    "bg_drift": [
+     0.0256,
+     0.0427,
+     0.0427,
+     0.0513,
+     0.0769
+    ],
+    "bg_drift_ok": true,
+    "frame_luma": [
+     19.17,
+     18.78,
+     21.19,
+     20.04,
+     19.16,
+     18.64
+    ],
+    "luma_delta": [
+     0.39,
+     2.4,
+     1.14,
+     0.88,
+     0.52
+    ],
+    "luma_ok": true,
+    "loop_closure": null,
+    "loop_ok": true,
+    "deflickered": false,
+    "ok": true
+   }
+  }
+ },
+ "law": "identity +-20 on 6 frames; bg blocks(32px,>12) <= 0.08; luma adjacency <= 4 (deflicker once, else reject); loop <= 0.05; encode libx264 crf21 yuv420p; poster = frame 1 PNG"
+}

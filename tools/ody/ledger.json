@@ -289,8 +289,7 @@
      "serves": [
       "ody-i-00",
       "ody-i-01",
-      "ody-i-05",
-      "ody-i-06"
+      "ody-i-05"
      ],
      "note": "the black strait wide; day state reuses it",
      "landscapeMargin": 0.0,
@@ -320,11 +319,25 @@
      ],
      "k": 2.2,
      "serves": [
-      "ody-i-06",
-      "ody-i-07"
+      "ody-i-06"
      ],
      "landscapeMargin": 123.5,
      "portraitMargin": 123.5,
+     "ok": true
+    },
+    {
+     "name": "council-close",
+     "at": [
+      545,
+      480
+     ],
+     "k": 8.6,
+     "serves": [
+      "ody-i-07"
+     ],
+     "note": "the close-up law: the G1 speech as a two-shot close over the huddle (22.4%), hull dot (600,455) in frame both orientations; split off council, which keeps i-06's gathering",
+     "landscapeMargin": 243.3,
+     "portraitMargin": 243.3,
      "ok": true
     },
     {
@@ -340,21 +353,22 @@
      ],
      "landscapeMargin": 136.7,
      "portraitMargin": 140.0,
-     "ok": true
+     "ok": true,
+     "note": "i-02 is the close-up law's one shore exemption: its staging column stages the CAMEO card + the landfall tail (the card is the close; the man is still wading in \u2014 a k 11.6 close broke the anti-skate css law)"
     },
     {
      "name": "ship-mid",
      "at": [
-      560,
-      470
+      545,
+      488
      ],
-     "k": 3.0,
+     "k": 8.6,
      "serves": [
       "ody-i-10"
      ],
-     "note": "mid lens on Ulysses shouldering the skin at the hull",
-     "landscapeMargin": 170.0,
-     "portraitMargin": 170.0,
+     "note": "mid lens on Ulysses shouldering the skin at the hull \u2014 the close-up law: recomposed from [560,470,3.0] (Ulysses 7.8%) to the two-shot floor 22.4% \u2014 the twelve's two flanks (484..566) whole in frame",
+     "landscapeMargin": 235.3,
+     "portraitMargin": 235.3,
      "ok": true
     },
     {
@@ -956,15 +970,15 @@
      "name": "racks-sweep",
      "at": [
       700,
-      300
+      315
      ],
-     "k": 2.0,
+     "k": 2.4,
      "serves": [
       "ody-ii-01"
      ],
-     "note": "sweep keyframe centre over racks + ranked pens (K2)",
-     "landscapeMargin": 108.0,
-     "portraitMargin": 108.0,
+     "note": "sweep keyframe centre over racks + ranked pens (K2) \u2014 the close-up law: k 2.0 -> 2.4 (laden crew 19% -> 22.8%, the two-shot floor); racks A..D stay in the sweep",
+     "landscapeMargin": 155.0,
+     "portraitMargin": 155.0,
      "ok": true
     },
     {
@@ -1070,6 +1084,22 @@
      "ok": true
     },
     {
+     "name": "lash-close",
+     "at": [
+      950,
+      505
+     ],
+     "k": 3.2,
+     "serves": [
+      "ody-v-02",
+      "ody-v-03"
+     ],
+     "note": "the close-up law: the lashing is ON the trios (968/1022,537..543) and the working hands \u2014 Ulysses 31.3%; split off meal-close, which aims at the hearth",
+     "landscapeMargin": 143.0,
+     "portraitMargin": 143.0,
+     "ok": true
+    },
+    {
      "name": "sword",
      "at": [
       740,
@@ -1088,16 +1118,17 @@
     {
      "name": "scheme-push",
      "at": [
-      640,
-      470
+      770,
+      500
      ],
-     "k": 3.0,
+     "k": 3.2,
      "serves": [
       "ody-iii-03"
      ],
-     "landscapeMargin": 170.0,
-     "portraitMargin": 170.0,
-     "ok": true
+     "landscapeMargin": 148.0,
+     "portraitMargin": 148.0,
+     "ok": true,
+     "note": "the close-up law: recentred ON the swept scheme mark (800,530), k 3.0 -> 3.2 (Ulysses 29.3% -> 31.3%, the dialogue floor)"
     },
     {
      "name": "club-wide",
@@ -1126,6 +1157,21 @@
      ],
      "landscapeMargin": 150.0,
      "portraitMargin": 150.0,
+     "ok": true
+    },
+    {
+     "name": "collapse",
+     "at": [
+      770,
+      460
+     ],
+     "k": 2.2,
+     "serves": [
+      "ody-iii-13"
+     ],
+     "note": "the close-up law: iii-13 left the establishing wide (beat III's budget is club + return) \u2014 the whole fall in one composed window, seat (760,452) to the sprawl box [636..938, 443..547]",
+     "landscapeMargin": 133.5,
+     "portraitMargin": 133.5,
      "ok": true
     },
     {
@@ -1178,8 +1224,8 @@
     {
      "name": "drive-tight",
      "at": [
-      780,
-      430
+      590,
+      490
      ],
      "k": 3.4,
      "serves": [
@@ -1187,9 +1233,24 @@
       "ody-iv-04",
       "ody-iv-05"
      ],
-     "note": "leaning bodies, turning shaft, at the sprawl head",
-     "landscapeMargin": 225.1,
-     "portraitMargin": 225.1,
+     "note": "leaning bodies, turning shaft, at the sprawl head \u2014 E2 re-aim off the pens, then the close-up law recentre: the four bearing men (452..482), the shaft and the eye (676,495) in frame BOTH orientations; (644,505) cut the crew out of the portrait crop",
+     "landscapeMargin": 165.1,
+     "portraitMargin": 165.1,
+     "ok": true
+    },
+    {
+     "name": "sprawl-groan",
+     "at": [
+      720,
+      480
+     ],
+     "k": 2.6,
+     "serves": [
+      "ody-iv-08"
+     ],
+     "note": "the close-up law: the Noman shout is HIS \u2014 the groaning sprawled bulk (35.2%) against his own fire-glow; the mouth lens cropped the shouter at x 638",
+     "landscapeMargin": 140.3,
+     "portraitMargin": 140.3,
      "ok": true
     },
     {
@@ -1246,13 +1307,28 @@
       430,
       430
      ],
-     "k": 2.0,
+     "k": 2.35,
      "serves": [
       "ody-v-11"
      ],
-     "note": "back at the mouth, the giant small now",
-     "landscapeMargin": 78.0,
-     "portraitMargin": 146.0,
+     "note": "back at the mouth, the giant small now \u2014 the close-up law: k 2.0 -> 2.35 (Ulysses 19.5% -> 22.9%); the giant stays small in the mouth \u2014 the contract's own point",
+     "landscapeMargin": 130.4,
+     "portraitMargin": 174.6,
+     "ok": true
+    },
+    {
+     "name": "puzzling",
+     "at": [
+      638,
+      450
+     ],
+     "k": 1.75,
+     "serves": [
+      "ody-v-01"
+     ],
+     "note": "the close-up law: v-01 left the wide (Ulysses read 9.8%) \u2014 the blocked mouth, the seated giant (the two-shot anchor, 37.6%) and Ulysses by the pens (933,541) share the window both orientations",
+     "landscapeMargin": 98.6,
+     "portraitMargin": 98.6,
      "ok": true
     }
    ],
@@ -1533,20 +1609,49 @@
      "ok": true
     },
     {
+     "name": "gate-wide",
+     "at": [
+      610,
+      325
+     ],
+     "k": 1.29,
+     "serves": [
+      "ody-vi-01",
+      "ody-vi-03"
+     ],
+     "note": "THE FIRST-GATE WIDE (round 4, F2; recorded in the ledger with the close-up round): jeer/rock1 compose INSIDE the painting \u2014 both planes, the ammunition, rock 1's whole arc \u2014 the k=1 wide's right band rode the breath's phase",
+     "landscapeMargin": 27.3,
+     "portraitMargin": 27.3,
+     "ok": true
+    },
+    {
      "name": "stern",
      "at": [
-      530,
-      430
+      518,
+      415
      ],
-     "k": 2.8,
+     "k": 10.6,
      "serves": [
-      "ody-vi-02",
-      "ody-vi-07",
-      "ody-vi-10"
+      "ody-vi-02"
      ],
-     "note": "whip to Ulysses at the stern; the name-line; the flat Hades answer",
-     "landscapeMargin": 200.9,
-     "portraitMargin": 200.9,
+     "note": "whip to Ulysses at the stern; the name-line; the flat Hades answer \u2014 the close-up law: vi-02's taunt is a TRUE close now (Ulysses 30.1%; was 8% at [530,430,2.8]); vi-07/vi-10 moved to their own lenses",
+     "landscapeMargin": 316.8,
+     "portraitMargin": 316.8,
+     "ok": true
+    },
+    {
+     "name": "stern-rail",
+     "at": [
+      506,
+      400
+     ],
+     "k": 12.3,
+     "serves": [
+      "ody-vi-07"
+     ],
+     "note": "the close-up law: the name given on the rail \u2014 30.3% at world 0.86 (the story's peak was a 7% speck); centre maps through the world transform like every close lens",
+     "landscapeMargin": 336.8,
+     "portraitMargin": 336.8,
      "ok": true
     },
     {
@@ -1557,12 +1662,26 @@
      ],
      "k": 2.6,
      "serves": [
-      "ody-vi-04",
-      "ody-vi-05"
+      "ody-vi-04"
      ],
      "note": "ship-interior three-quarter \u2014 THE MEN turn from their oars",
      "landscapeMargin": 170.3,
      "portraitMargin": 170.3,
+     "ok": true
+    },
+    {
+     "name": "menbeg-close",
+     "at": [
+      545,
+      433
+     ],
+     "k": 14.1,
+     "serves": [
+      "ody-vi-05"
+     ],
+     "note": "the close-up law: the rowers' faces UP at Ulysses, the gripped arm \u2014 nearest rower at the 22% two-shot floor (the 14 px strip man at world 0.86); ship-deck keeps vi-04's distance",
+     "landscapeMargin": 307.8,
+     "portraitMargin": 307.8,
      "ok": true
     },
     {
@@ -1571,14 +1690,14 @@
       870,
       195
      ],
-     "k": 2.8,
+     "k": 3.1,
      "serves": [
       "ody-vi-08",
       "ody-vi-09"
      ],
-     "note": "past the ship to the cliff-top close, ruined eye toward the sea",
-     "landscapeMargin": 57.9,
-     "portraitMargin": 57.9,
+     "note": "past the ship to the cliff-top close, ruined eye toward the sea \u2014 the close-up law: k 2.8 -> 3.1 \u2014 the giant 30.9% at the out-station's world 0.86 (27.9% broke the dialogue floor)",
+     "landscapeMargin": 71.1,
+     "portraitMargin": 71.1,
      "ok": true
     },
     {
@@ -1587,13 +1706,13 @@
       870,
       180
      ],
-     "k": 2.2,
+     "k": 2.6,
      "serves": [
       "ody-vi-11"
      ],
-     "note": "document-weight frame: both hands to the firmament, sky darkened a stop",
-     "landscapeMargin": 5.5,
-     "portraitMargin": 5.5,
+     "note": "document-weight frame: both hands to the firmament, sky darkened a stop \u2014 the close-up law: k 2.2 -> 2.6 \u2014 the lifted arms 31.7% at world 0.86; the darkened sky kept above (margin 32.3)",
+     "landscapeMargin": 32.3,
+     "portraitMargin": 32.3,
      "ok": true
     },
     {
@@ -1604,12 +1723,41 @@
      ],
      "k": 2.0,
      "serves": [
-      "ody-vi-06",
       "ody-vi-12"
      ],
      "note": "F2 recompose (round 3): the two-plane frame tightened to the painted strait for the units after the first wash (world 0.86) \u2014 stern, rowers, splash water (455,540) and the whole cursing giant in one window; the k=1 wide read 28% dead band here against the 22% law",
      "landscapeMargin": 138.0,
      "portraitMargin": 138.0,
+     "ok": true
+    },
+    {
+     "name": "defy-strait",
+     "at": [
+      640,
+      300
+     ],
+     "k": 2.25,
+     "serves": [
+      "ody-vi-06"
+     ],
+     "note": "the close-up law: split off strait (pinned by rock 2's splash 455,540) \u2014 pleaders, stern and the giant at the 22.4% two-shot floor in one window BOTH orientations; O.12's mechanism kept",
+     "landscapeMargin": 129.3,
+     "portraitMargin": 129.3,
+     "ok": true
+    },
+    {
+     "name": "hades-twoshot",
+     "at": [
+      663,
+      315
+     ],
+     "k": 2.3,
+     "serves": [
+      "ody-vi-10"
+     ],
+     "note": "the close-up law: the contract's own two-shot \u2014 stern foreground, the struck giant (22.9%, the two-shot anchor) small and dark behind",
+     "landscapeMargin": 148.0,
+     "portraitMargin": 148.0,
      "ok": true
     },
     {
@@ -1943,9 +2091,10 @@
  },
  "counts": {
   "marks": 30,
-  "lenses": 37,
+  "lenses": 47,
   "gates": 6,
   "gateResolutions": 7,
   "lensDeadBandFailures": []
- }
+ },
+ "closeUpLaw": "THE CLOSE-UP LAW (owner round 2026-08-17): character units >= 30% of panel height, two-shots >= 22%; wides only for headings/arrivals/establishing, max 2 per beat after its heading"
 }
