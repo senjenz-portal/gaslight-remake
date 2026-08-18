@@ -145,6 +145,50 @@ export class Stage {
   cue(id, delay) { if (this.audio) this.audio.cue(id, { delay: delay || 0 }); }
   gain(id, v) { if (this.audio && this.audio.setBedGain) this.audio.setBedGain(id, v); }
 
+  /**
+   * THE ONE LOAD, made literal — every video element (hero-clip inset, shot
+   * clip) gets its bytes through HERE and nowhere else.
+   *
+   * The old law assigned `vid.src = url` and trusted the media engine to
+   * fetch once. But the media engine is NOT a one-shot fetcher: Chromium's
+   * media resource loader runs its own budget, and with the SHOT rail the
+   * cave ensure() went from 3 mp4s to 5 — past that budget it SUSPENDS a
+   * request mid-flight and later cancels it ITSELF: net::ERR_ABORTED for
+   * bytes that were arriving fine, seconds after ensure() resolved, with no
+   * navigation and no reset anywhere near (the lap watched shot/drive.mp4
+   * hang 15 s after its four siblings landed, then die). And every play()
+   * or rewind reopened range requests the next teardown could abort — the
+   * band probe already routed around one such ghost on a fresh page.
+   *
+   * So the network is taken OUT of the media element's hands: the bytes are
+   * fetched ONCE with fetch() — a request that COMPLETES and closes — and
+   * the element is handed an in-memory blob: URL. From a blob src the media
+   * engine never touches the wire again: play, seek, rewind, loop are all
+   * memory reads. No request is ever left open, so none can be aborted.
+   *
+   * The laws hold unchanged: the fetch joins the SAME decode set (lazy-load
+   * — nothing the story can reveal is still on the wire when the cover
+   * falls), `ready` still settles only when the element can PLAY the bytes
+   * (canplaythrough), a fetch that fails feeds ensure()'s gap path exactly
+   * as a broken src did, and a reduced-motion reader keeps the poster still
+   * and is owed no video bytes at all. The blob URL is never revoked: the
+   * element re-plays it for the life of the page.
+   */
+  loadVideo(vid, file) {
+    const src = this.base + file;
+    const ready = this.reduced ? Promise.resolve()   // still page: bytes not owed
+      : fetch(src)
+        .then((r) => { if (!r.ok) throw new Error('video ' + file); return r.blob(); })
+        .then((b) => new Promise((ok, err) => {
+          vid.addEventListener('canplaythrough', () => ok(), { once: true });
+          vid.addEventListener('error', () => err(new Error('video ' + file)), { once: true });
+          vid.src = URL.createObjectURL(b);
+          if (vid.readyState >= 3) ok();
+        }));
+    ready.catch(() => {});   // settled early is fine; ensure()'s gap path reads it
+    this.building.push({ src, decode: () => ready });
+  }
+
   /* ---- SETS: build once, decode once, mount one ---------------------- */
   /**
    * Build `name` if it has never been built, and resolve when every byte it
@@ -283,26 +327,9 @@ export class Stage {
     vid.setAttribute('muted', '');
     vid.setAttribute('aria-hidden', 'true');
     vid.preload = 'auto';
-    /* THE ONE LOAD: assigning src starts the resource fetch, and it is the
-       only start this element ever gets. The old decode shim called
-       vid.load() again on the way into the preload set, and load() ABORTS
-       whatever fetch src already had in flight (net::ERR_ABORTED) — a
-       requestfailed console error for bytes that were arriving fine, timing-
-       dependent (only when decode ran before canplaythrough). So the ready
-       promise LISTENS FROM BIRTH instead: it is created here, before any
-       await can lose an event, and decode() merely hands it over. */
-    vid.src = this.base + spec.file;
     if (this.reduced) vid.style.display = 'none';   // the poster carries the frame
     card.appendChild(vid);                          // over the poster while playing
-    const reduced = this.reduced;
-    const ready = new Promise((ok, err) => {
-      if (reduced) { ok(); return; }                // still page: bytes not owed
-      if (vid.readyState >= 3) { ok(); return; }
-      vid.addEventListener('canplaythrough', () => ok(), { once: true });
-      vid.addEventListener('error', () => err(new Error('video ' + spec.file)), { once: true });
-    });
-    ready.catch(() => {});   // settled early is fine; ensure()'s gap path reads it
-    this.building.push({ src: this.base + spec.file, decode: () => ready });
+    this.loadVideo(vid, spec.file);                 // THE ONE LOAD (blob law, above)
     const rec = { card, im, vid, k: 0, want: 0, file: spec.file, poster: spec.poster,
                   loop: !!spec.loop, art: true, playing: false, delay: 0, at: -1e9 };
     this.insets[id] = rec;
@@ -388,18 +415,9 @@ export class Stage {
       vid.setAttribute('muted', '');
       vid.setAttribute('aria-hidden', 'true');
       vid.preload = 'auto';
-      vid.src = this.base + spec.clip;            // THE ONE LOAD (makeClip law)
       if (this.reduced) vid.style.display = 'none';   // the poster carries the frame
       card.appendChild(vid);
-      const reduced = this.reduced;
-      const ready = new Promise((ok, err) => {
-        if (reduced) { ok(); return; }
-        if (vid.readyState >= 3) { ok(); return; }
-        vid.addEventListener('canplaythrough', () => ok(), { once: true });
-        vid.addEventListener('error', () => err(new Error('video ' + spec.clip)), { once: true });
-      });
-      ready.catch(() => {});
-      this.building.push({ src: this.base + spec.clip, decode: () => ready });
+      this.loadVideo(vid, spec.clip);             // THE ONE LOAD (blob law)
     }
     const rec = { card, im, vid, k: 0, want: 0, at: -1e9, art: true,
                   playing: false, file: spec.file,
