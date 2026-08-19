@@ -55,13 +55,12 @@
   <h1>The King, written in code</h1>
   <div class="rule"></div>
   <p class="note">
-    The same King as the <a href="../index.html">mesh demo</a> — but no mesh file is loaded here.
-    This is the <em>img2threejs</em> character method's dense track: the rigged GLB was sampled
-    offline into a 1.4-million-point cloud, distilled to a signed-distance field (430&nbsp;KB of
-    data, not geometry), and the smooth organic surface you see — implicit surfaces from the GLB
-    point cloud — is reconstructed <em>in code, in your browser</em>, by marching cubes at load
-    (king-sdf.js), vertex-coloured from king2-look's palette. A real bone skeleton drives
-    procedural walk and idle cycles in sim-time; every triangle is made on this page.
+    The same King as the <a href="../index.html">mesh demo</a> — but there is no model file here.
+    Every part below (head, hair, greatcoat with its orange lining, waistcoat, boots) is authored
+    as native Three.js geometry by the <em>img2threejs</em> character method: one reference image
+    → measured proportions → sculpt spec → this factory. A real bone skeleton drives procedural
+    walk and idle cycles in sim-time. The rigged GLB was used as a measurement target only —
+    nothing from it is loaded on this page.
   </p>
 
   <div class="stage-grid">
@@ -88,7 +87,7 @@
 
 <div id="srcmodal">
   <header>
-    <span class="lbl">king-factory.js + king-sdf.js — the generated source (also: <a href="king-sculpt-spec.json" target="_blank">sculpt spec</a>)</span>
+    <span class="lbl">king-factory.js — the generated source (also: <a href="king-sculpt-spec.json" target="_blank">sculpt spec</a>)</span>
     <button class="ctl" id="b-closesrc">close</button>
   </header>
   <pre id="srctext">loading…</pre>
@@ -100,7 +99,7 @@
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from '../../app/vendor/controls/OrbitControls.js';
-import { createKingModel, createKingAnimator, KING_DATA, loadKingField } from './king-factory.js';
+import { createKingModel, createKingAnimator, KING_DATA } from './king-factory.js';
 
 const canvas = document.getElementById('viewer');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -165,14 +164,33 @@ function buildModel(tier) {
   animator = createKingAnimator(king);
   scene.add(king.root);
   king.root.updateMatrixWorld(true);
-  // explode carriers: one entry per PART (assembly gate: parts and picking share this list).
-  // A SkinnedMesh follows its bones, so parts separate through a world-space shader offset
-  // (king-sdf.js makeExplodable) rather than a transform.
+  // explode carriers: one entry per PART (assembly gate: parts and picking share this list)
   const centre = new THREE.Vector3(0, KING_DATA.totalHeight * 0.55, 0);
-  king.parts = king.partList.map((p) => ({
-    name: p.name, layer: p.layer, obj: p.mesh, meshes: [p.mesh],
-    tris: p.tris, dirW: p.centroid.clone().sub(centre), setOffset: p.setOffset,
-  }));
+  king.parts = [];
+  const skinnedHandled = new Set();
+  for (const p of king.partList) {
+    const m = p.mesh;
+    if (m.userData.explodeWithParent) continue;
+    if (m.isSkinnedMesh) {
+      // the coat assembly explodes through its root bone, once
+      if (!skinnedHandled.has(p.bone)) {
+        skinnedHandled.add(p.bone);
+        const b = king.bones[p.bone];
+        const wp = b.getWorldPosition(new THREE.Vector3());
+        const dirW = wp.clone().sub(centre);
+        king.parts.push({ name: 'coat-assembly', layer: p.layer, obj: b, isBone: true,
+          rest: b.position.clone(), dirW, tris: 0, meshes: [] });
+      }
+      const entry = king.parts.find(e => e.name === 'coat-assembly');
+      entry.tris += triCount(m); entry.meshes.push(m);
+      continue;
+    }
+    const wp = m.getWorldPosition(new THREE.Vector3());
+    const dirW = wp.clone().sub(centre);
+    king.parts.push({ name: m.name, layer: p.layer, obj: m, isBone: false,
+      rest: m.position.clone(), dirW, tris: triCount(m), meshes: [m] });
+  }
+  // piping rides the coat assembly in the panel numbers
   renderPartsPanel();
   reportProportions();
 }
@@ -195,12 +213,14 @@ function renderPartsPanel() {
     `total ${total} triangles - ${king.parts.length} parts - quality ${king.quality}`;
 }
 
+const hiMat = new THREE.MeshStandardMaterial({ color: 0xd8b45a, emissive: 0x8a6a1e, roughness: 0.5, flatShading: true });
 function setHighlight(p, on) {
-  // per-part material emissive (each part owns its material; explode + vertex colours survive)
-  for (const m of p.meshes) {
-    m.material.emissive.setHex(on ? 0x8a6a1e : 0x000000);
-    m.material.emissiveIntensity = on ? 0.8 : 1;
-  }
+  for (const m of p.meshes) m.traverse(o => {
+    if (!o.isMesh && !o.isSkinnedMesh) return;
+    if (on) { if (!o.userData._mat) { o.userData._mat = o.material; o.material = hiMat; } }
+    else if (o.userData._mat) { o.material = o.userData._mat; delete o.userData._mat; }
+  });
+  // meshes[] holds top objects; traverse covers ride-along children
 }
 function selectPart(p, li) {
   document.querySelectorAll('#parts li').forEach(x => x.classList.remove('sel'));
@@ -239,7 +259,6 @@ function reportProportions() {
 
 /* ---------------- sim-time loop (deterministic fixed step) ---------------- */
 let simTime = 0, frozen = false, walkBlend = 0, walkTarget = 0, explodeF = 0, explodeTarget = 0;
-const _off = new THREE.Vector3();
 let last = performance.now();
 const FIXED = 1 / 60;
 let acc = 0;
@@ -251,10 +270,16 @@ function step(dt) {
   animator.apply(simTime, walkBlend);
   // explode: scale the part layout about the model centre (never a uniform push)
   const spread = explodeF * 1.25;
-  for (const p of king.parts) p.setOffset(_off.copy(p.dirW).multiplyScalar(spread));
+  for (const p of king.parts) {
+    const off = p.dirW.clone().multiplyScalar(spread);
+    const parent = p.obj.parent;
+    if (spread < 0.001) { p.obj.position.copy(p.rest); continue; }
+    const q = parent.getWorldQuaternion(new THREE.Quaternion()).invert();
+    p.obj.position.copy(p.rest).add(off.applyQuaternion(q));
+  }
   if (selected) {
     const pulse = 0.6 + Math.sin(simTime * 6) * 0.4;
-    selected.meshes[0].material.emissiveIntensity = pulse;
+    hiMat.emissiveIntensity = pulse;
   }
 }
 
@@ -298,12 +323,8 @@ bQ.onclick = () => {
 document.getElementById('b-src').onclick = async () => {
   const modal = document.getElementById('srcmodal');
   modal.classList.add('open');
-  const [fac, sdf] = await Promise.all([
-    fetch('./king-factory.js').then(r => r.text()),
-    fetch('./king-sdf.js').then(r => r.text()),
-  ]);
-  document.getElementById('srctext').textContent =
-    fac + '\n\n/* ================ king-sdf.js ================ */\n\n' + sdf;
+  const txt = await fetch('./king-factory.js').then(r => r.text());
+  document.getElementById('srctext').textContent = txt;
 };
 document.getElementById('b-closesrc').onclick = () =>
   document.getElementById('srcmodal').classList.remove('open');
@@ -354,7 +375,6 @@ window.__KING__ = {
   setYaw(y) { king.root.rotation.y = y; king.root.updateMatrixWorld(true); renderer.render(scene, camera); },
 };
 
-await loadKingField('./king-field.bin');
 buildModel(quality);
 requestAnimationFrame(frame);
 </script>
