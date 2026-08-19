@@ -1,0 +1,330 @@
+{
+ "model": "the-king-code-character",
+ "parts": [
+  {
+   "name": "the-king",
+   "kind": "container",
+   "module": "the-king",
+   "triangles": 3792
+  },
+  {
+   "name": "head-group",
+   "kind": "container",
+   "module": "head-group",
+   "triangles": 926
+  },
+  {
+   "name": "head",
+   "kind": "part",
+   "module": "head",
+   "triangles": 120
+  },
+  {
+   "name": "jaw",
+   "kind": "part",
+   "module": "jaw",
+   "triangles": 126
+  },
+  {
+   "name": "brow-r",
+   "kind": "part",
+   "module": "brow-r",
+   "triangles": 12
+  },
+  {
+   "name": "eye-r",
+   "kind": "part",
+   "module": "eye-r",
+   "triangles": 270
+  },
+  {
+   "name": "iris-r",
+   "kind": "part",
+   "module": "iris-r",
+   "triangles": 120
+  },
+  {
+   "name": "catchlight-r",
+   "kind": "part",
+   "module": "catchlight-r",
+   "triangles": 30
+  },
+  {
+   "name": "ear-r",
+   "kind": "part",
+   "module": "ear-r",
+   "triangles": 48
+  },
+  {
+   "name": "brow-l",
+   "kind": "part",
+   "module": "brow-l",
+   "triangles": 12
+  },
+  {
+   "name": "eye-l",
+   "kind": "part",
+   "module": "eye-l",
+   "triangles": 270
+  },
+  {
+   "name": "iris-l",
+   "kind": "part",
+   "module": "iris-l",
+   "triangles": 120
+  },
+  {
+   "name": "catchlight-l",
+   "kind": "part",
+   "module": "catchlight-l",
+   "triangles": 30
+  },
+  {
+   "name": "ear-l",
+   "kind": "part",
+   "module": "ear-l",
+   "triangles": 48
+  },
+  {
+   "name": "nose",
+   "kind": "part",
+   "module": "nose",
+   "triangles": 8
+  },
+  {
+   "name": "mouth",
+   "kind": "part",
+   "module": "mouth",
+   "triangles": 12
+  },
+  {
+   "name": "hair",
+   "kind": "container",
+   "module": "hair",
+   "triangles": 190
+  },
+  {
+   "name": "hair-cap",
+   "kind": "part",
+   "module": "hair-cap",
+   "triangles": 130
+  },
+  {
+   "name": "hair-fringe-0",
+   "kind": "part",
+   "module": "hair-fringe-0",
+   "triangles": 12
+  },
+  {
+   "name": "hair-fringe-1",
+   "kind": "part",
+   "module": "hair-fringe-1",
+   "triangles": 12
+  },
+  {
+   "name": "hair-fringe-2",
+   "kind": "part",
+   "module": "hair-fringe-2",
+   "triangles": 12
+  },
+  {
+   "name": "hair-temple-r",
+   "kind": "part",
+   "module": "hair-temple-r",
+   "triangles": 12
+  },
+  {
+   "name": "hair-temple-l",
+   "kind": "part",
+   "module": "hair-temple-l",
+   "triangles": 12
+  },
+  {
+   "name": "neck",
+   "kind": "part",
+   "module": "neck",
+   "triangles": 36
+  },
+  {
+   "name": "cravat",
+   "kind": "part",
+   "module": "cravat",
+   "triangles": 120
+  },
+  {
+   "name": "collar",
+   "kind": "part",
+   "module": "collar",
+   "triangles": 36
+  },
+  {
+   "name": "collar-lining",
+   "kind": "part",
+   "module": "collar-lining",
+   "triangles": 18
+  },
+  {
+   "name": "cuff-l",
+   "kind": "part",
+   "module": "cuff-l",
+   "triangles": 36
+  },
+  {
+   "name": "hand-l",
+   "kind": "part",
+   "module": "hand-l",
+   "triangles": 138
+  },
+  {
+   "name": "thumb-l",
+   "kind": "part",
+   "module": "thumb-l",
+   "triangles": 126
+  },
+  {
+   "name": "forearm-l",
+   "kind": "part",
+   "module": "forearm-l",
+   "triangles": 126
+  },
+  {
+   "name": "upper-arm-l",
+   "kind": "part",
+   "module": "upper-arm-l",
+   "triangles": 126
+  },
+  {
+   "name": "cuff-r",
+   "kind": "part",
+   "module": "cuff-r",
+   "triangles": 36
+  },
+  {
+   "name": "hand-r",
+   "kind": "part",
+   "module": "hand-r",
+   "triangles": 138
+  },
+  {
+   "name": "thumb-r",
+   "kind": "part",
+   "module": "thumb-r",
+   "triangles": 126
+  },
+  {
+   "name": "forearm-r",
+   "kind": "part",
+   "module": "forearm-r",
+   "triangles": 126
+  },
+  {
+   "name": "upper-arm-r",
+   "kind": "part",
+   "module": "upper-arm-r",
+   "triangles": 126
+  },
+  {
+   "name": "coat-back",
+   "kind": "part",
+   "module": "coat-back",
+   "triangles": 144
+  },
+  {
+   "name": "coat-lining-inner",
+   "kind": "part",
+   "module": "coat-lining-inner",
+   "triangles": 144
+  },
+  {
+   "name": "piping-r",
+   "kind": "part",
+   "module": "piping-r",
+   "triangles": 12
+  },
+  {
+   "name": "piping-l",
+   "kind": "part",
+   "module": "piping-l",
+   "triangles": 12
+  },
+  {
+   "name": "chest",
+   "kind": "part",
+   "module": "chest",
+   "triangles": 126
+  },
+  {
+   "name": "vest",
+   "kind": "part",
+   "module": "vest",
+   "triangles": 126
+  },
+  {
+   "name": "vest-buttons",
+   "kind": "part",
+   "module": "vest-buttons",
+   "triangles": 216
+  },
+  {
+   "name": "abdomen",
+   "kind": "part",
+   "module": "abdomen",
+   "triangles": 126
+  },
+  {
+   "name": "boot-foot-l",
+   "kind": "part",
+   "module": "boot-foot-l",
+   "triangles": 12
+  },
+  {
+   "name": "shin-l",
+   "kind": "part",
+   "module": "shin-l",
+   "triangles": 126
+  },
+  {
+   "name": "boot-shaft-l",
+   "kind": "part",
+   "module": "boot-shaft-l",
+   "triangles": 36
+  },
+  {
+   "name": "thigh-l",
+   "kind": "part",
+   "module": "thigh-l",
+   "triangles": 126
+  },
+  {
+   "name": "boot-foot-r",
+   "kind": "part",
+   "module": "boot-foot-r",
+   "triangles": 12
+  },
+  {
+   "name": "shin-r",
+   "kind": "part",
+   "module": "shin-r",
+   "triangles": 126
+  },
+  {
+   "name": "boot-shaft-r",
+   "kind": "part",
+   "module": "boot-shaft-r",
+   "triangles": 36
+  },
+  {
+   "name": "thigh-r",
+   "kind": "part",
+   "module": "thigh-r",
+   "triangles": 126
+  },
+  {
+   "name": "pelvis",
+   "kind": "part",
+   "module": "pelvis",
+   "triangles": 126
+  }
+ ],
+ "unnamedMeshes": 0
+}

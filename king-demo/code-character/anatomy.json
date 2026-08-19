@@ -1,0 +1,33 @@
+{
+  "source": "measured",
+  "evidence": {
+    "fullbody": "king2-fullbody-admit.png (bg-normalized derivative of king2-look.png)",
+    "bust": "bust-head-grid.png (gridded crop of king2-unmasked.png, crop 520,40,880,480)",
+    "method": "numpy color-class scans (fullbody) + 0.1-grid visual read (bust). Normalized to head bbox crown=0, chin=1."
+  },
+  "headUnit": 0.181,
+  "headUnits": 5.53,
+  "proportions": {
+    "totalHeightPx": 713, "headHeightPx": 129,
+    "headWidth_over_headHeight": 0.62,
+    "headWidthDesign": 0.75,
+    "shoulderWidthHU": 1.73,
+    "shoulderNote": "1.73 HU includes greatcoat bulk over shoulders; body shoulders inferred ~1.5 HU",
+    "coatFlareHU": 2.09,
+    "legsHU_hipToFloor": 2.65,
+    "torsoHU_chinToHip": 1.9,
+    "neckHU": 0.25
+  },
+  "faceLandmarks": {
+    "hairline": 0.27, "browLine": 0.44, "eyeLine": 0.56,
+    "eyeSpacing_innerCorners_overHeadWidth": 0.20,
+    "pupilSpacing_overHeadWidth": 0.37,
+    "noseBase": 0.79, "mouthLine": 0.89,
+    "earTop": 0.50, "earBottom": 0.78,
+    "note": "short lower face third is a measured stylization: noseBase 0.79 vs canon ~0.65"
+  },
+  "pose": {
+    "stance": "upright symmetric, arms at sides, head yaw ~15deg to his right",
+    "occluded": ["left arm partially behind coat", "boot soles", "coat back"]
+  }
+}

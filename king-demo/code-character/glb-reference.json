@@ -1,0 +1,573 @@
+{
+  "schemaVersion": 1,
+  "kind": "glb-reference",
+  "path": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/king2-rigged.glb",
+  "sha256": "55527fe18f95630e060fa93236699ef58bd12c2982801c451f30e39bd06a4915",
+  "bytes": 4703376,
+  "binary": {
+    "version": 2,
+    "declaredLength": 4703376,
+    "jsonChunkBytes": 25186,
+    "binChunkBytes": 4678160,
+    "chunks": [
+      {
+        "type": "JSON",
+        "bytes": 25188
+      },
+      {
+        "type": "BIN\u0000",
+        "bytes": 4678160
+      }
+    ]
+  },
+  "asset": {
+    "version": "2.0",
+    "generator": "Khronos glTF Blender I/O v5.2.39"
+  },
+  "scene": {
+    "defaultScene": 0,
+    "sceneCount": 7,
+    "nodeCount": 27,
+    "meshCount": 3,
+    "primitiveCount": 3,
+    "materialCount": 2,
+    "skinCount": 1,
+    "animationCount": 1
+  },
+  "nodes": [
+    {
+      "index": 0,
+      "name": "mixamorig:LeftToeBase",
+      "mesh": null,
+      "skin": null,
+      "children": []
+    },
+    {
+      "index": 1,
+      "name": "mixamorig:LeftFoot",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        0
+      ]
+    },
+    {
+      "index": 2,
+      "name": "mixamorig:LeftLeg",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        1
+      ]
+    },
+    {
+      "index": 3,
+      "name": "mixamorig:LeftUpLeg",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        2
+      ]
+    },
+    {
+      "index": 4,
+      "name": "mixamorig:RightToeBase",
+      "mesh": null,
+      "skin": null,
+      "children": []
+    },
+    {
+      "index": 5,
+      "name": "mixamorig:RightFoot",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        4
+      ]
+    },
+    {
+      "index": 6,
+      "name": "mixamorig:RightLeg",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        5
+      ]
+    },
+    {
+      "index": 7,
+      "name": "mixamorig:RightUpLeg",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        6
+      ]
+    },
+    {
+      "index": 8,
+      "name": "mixamorig:LeftHand",
+      "mesh": null,
+      "skin": null,
+      "children": []
+    },
+    {
+      "index": 9,
+      "name": "mixamorig:LeftForeArm",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        8
+      ]
+    },
+    {
+      "index": 10,
+      "name": "mixamorig:LeftArm",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        9
+      ]
+    },
+    {
+      "index": 11,
+      "name": "mixamorig:LeftShoulder",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        10
+      ]
+    },
+    {
+      "index": 12,
+      "name": "mixamorig:Head",
+      "mesh": null,
+      "skin": null,
+      "children": []
+    },
+    {
+      "index": 13,
+      "name": "mixamorig:Neck",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        12
+      ]
+    },
+    {
+      "index": 14,
+      "name": "mixamorig:RightHand",
+      "mesh": null,
+      "skin": null,
+      "children": []
+    },
+    {
+      "index": 15,
+      "name": "mixamorig:RightForeArm",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        14
+      ]
+    },
+    {
+      "index": 16,
+      "name": "mixamorig:RightArm",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        15
+      ]
+    },
+    {
+      "index": 17,
+      "name": "mixamorig:RightShoulder",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        16
+      ]
+    },
+    {
+      "index": 18,
+      "name": "mixamorig:Spine2",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        11,
+        13,
+        17
+      ]
+    },
+    {
+      "index": 19,
+      "name": "mixamorig:Spine1",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        18
+      ]
+    },
+    {
+      "index": 20,
+      "name": "mixamorig:Spine",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        19
+      ]
+    },
+    {
+      "index": 21,
+      "name": "mixamorig:Hips",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        3,
+        7,
+        20
+      ]
+    },
+    {
+      "index": 22,
+      "name": "goodface_head",
+      "mesh": 0,
+      "skin": 0,
+      "children": []
+    },
+    {
+      "index": 23,
+      "name": "mesh",
+      "mesh": 1,
+      "skin": 0,
+      "children": []
+    },
+    {
+      "index": 24,
+      "name": "neckCravat",
+      "mesh": 2,
+      "skin": 0,
+      "children": []
+    },
+    {
+      "index": 25,
+      "name": "Armature",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        22,
+        23,
+        24,
+        21
+      ]
+    },
+    {
+      "index": 26,
+      "name": "RootNode",
+      "mesh": null,
+      "skin": null,
+      "children": [
+        25
+      ]
+    }
+  ],
+  "meshes": [
+    {
+      "index": 0,
+      "name": "goodface_head",
+      "primitiveCount": 1,
+      "primitives": [
+        {
+          "index": 0,
+          "mode": 4,
+          "attributes": [
+            "JOINTS_0",
+            "NORMAL",
+            "POSITION",
+            "TEXCOORD_0",
+            "WEIGHTS_0"
+          ],
+          "material": 0,
+          "positionBounds": {
+            "min": [
+              -0.12890669703483582,
+              0.5809330344200134,
+              -0.23004037141799927
+            ],
+            "max": [
+              0.12072533369064331,
+              0.9043917059898376,
+              0.0551675483584404
+            ]
+          }
+        }
+      ],
+      "bounds": {
+        "space": "mesh-local-untransformed",
+        "min": [
+          -0.12890669703483582,
+          0.5809330344200134,
+          -0.23004037141799927
+        ],
+        "max": [
+          0.12072533369064331,
+          0.9043917059898376,
+          0.0551675483584404
+        ],
+        "size": [
+          0.24963203072547913,
+          0.3234586715698242,
+          0.28520791977643967
+        ],
+        "center": [
+          -0.0040906816720962524,
+          0.7426623702049255,
+          -0.08743641152977943
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "name": "mesh",
+      "primitiveCount": 1,
+      "primitives": [
+        {
+          "index": 0,
+          "mode": 4,
+          "attributes": [
+            "JOINTS_0",
+            "NORMAL",
+            "POSITION",
+            "TEXCOORD_0",
+            "WEIGHTS_0"
+          ],
+          "material": 1,
+          "positionBounds": {
+            "min": [
+              -0.9093625545501709,
+              -1.0077781677246094,
+              -0.6158590316772461
+            ],
+            "max": [
+              0.8951070308685303,
+              0.6817635297775269,
+              0.2628677189350128
+            ]
+          }
+        }
+      ],
+      "bounds": {
+        "space": "mesh-local-untransformed",
+        "min": [
+          -0.9093625545501709,
+          -1.0077781677246094,
+          -0.6158590316772461
+        ],
+        "max": [
+          0.8951070308685303,
+          0.6817635297775269,
+          0.2628677189350128
+        ],
+        "size": [
+          1.8044695854187012,
+          1.6895416975021362,
+          0.8787267506122589
+        ],
+        "center": [
+          -0.0071277618408203125,
+          -0.16300731897354126,
+          -0.17649565637111664
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "name": "neckCravatMesh",
+      "primitiveCount": 1,
+      "primitives": [
+        {
+          "index": 0,
+          "mode": 4,
+          "attributes": [
+            "JOINTS_0",
+            "NORMAL",
+            "POSITION",
+            "TEXCOORD_0",
+            "WEIGHTS_0"
+          ],
+          "material": 1,
+          "positionBounds": {
+            "min": [
+              -0.08959458023309708,
+              0.5086931586265564,
+              -0.19845134019851685
+            ],
+            "max": [
+              0.09487658739089966,
+              0.6453647017478943,
+              -0.011234826408326626
+            ]
+          }
+        }
+      ],
+      "bounds": {
+        "space": "mesh-local-untransformed",
+        "min": [
+          -0.08959458023309708,
+          0.5086931586265564,
+          -0.19845134019851685
+        ],
+        "max": [
+          0.09487658739089966,
+          0.6453647017478943,
+          -0.011234826408326626
+        ],
+        "size": [
+          0.18447116762399673,
+          0.1366715431213379,
+          0.18721651379019022
+        ],
+        "center": [
+          0.002641003578901291,
+          0.5770289301872253,
+          -0.10484308330342174
+        ]
+      }
+    }
+  ],
+  "materials": [
+    {
+      "index": 0,
+      "name": "tripoHeadSkin",
+      "alphaMode": "OPAQUE"
+    },
+    {
+      "index": 1,
+      "name": "tripo_material_f86ceccf-4a80-4c9b-8277-387d6766e516",
+      "alphaMode": "OPAQUE"
+    }
+  ],
+  "skins": [
+    {
+      "index": 0,
+      "name": "Armature",
+      "jointCount": 22
+    }
+  ],
+  "bounds": {
+    "space": "mesh-local-untransformed",
+    "min": [
+      -0.9093625545501709,
+      -1.0077781677246094,
+      -0.6158590316772461
+    ],
+    "max": [
+      0.8951070308685303,
+      0.9043917059898376,
+      0.2628677189350128
+    ],
+    "size": [
+      1.8044695854187012,
+      1.912169873714447,
+      0.8787267506122589
+    ],
+    "center": [
+      -0.0071277618408203125,
+      -0.051693230867385864,
+      -0.17649565637111664
+    ]
+  },
+  "semanticDecomposition": {
+    "schemaVersion": 1,
+    "status": "rich",
+    "reliableSemanticBoundary": "named-node-or-mesh",
+    "reason": "Multiple named scene/mesh entities provide an explicit semantic starting point.",
+    "metadataEvidence": {
+      "nodeCount": 27,
+      "meshCount": 3,
+      "primitiveCount": 3,
+      "materialCount": 2,
+      "textureCount": 2,
+      "namedNodes": [
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightFoot",
+        "mixamorig:RightLeg",
+        "mixamorig:RightUpLeg",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftShoulder",
+        "mixamorig:Head",
+        "mixamorig:Neck",
+        "mixamorig:RightHand",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightArm",
+        "mixamorig:RightShoulder",
+        "mixamorig:Spine2",
+        "mixamorig:Spine1",
+        "mixamorig:Spine",
+        "mixamorig:Hips",
+        "goodface_head",
+        "mesh",
+        "neckCravat",
+        "Armature",
+        "RootNode"
+      ],
+      "namedMeshes": [
+        "goodface_head",
+        "mesh",
+        "neckCravatMesh"
+      ],
+      "namedMaterials": [
+        "tripoHeadSkin",
+        "tripo_material_f86ceccf-4a80-4c9b-8277-387d6766e516"
+      ]
+    },
+    "strategies": [
+      {
+        "id": "named-node",
+        "status": "available"
+      },
+      {
+        "id": "primitive-material-boundary",
+        "status": "available"
+      },
+      {
+        "id": "uv-texture-boundary",
+        "status": "available"
+      },
+      {
+        "id": "connected-component-hypothesis",
+        "status": "candidate-only"
+      },
+      {
+        "id": "curvature-normal-region-growing-hypothesis",
+        "status": "candidate-only"
+      },
+      {
+        "id": "multiview-id-mask",
+        "status": "required-for-runtime-region-evidence"
+      },
+      {
+        "id": "multipart-glb",
+        "status": "recommended"
+      }
+    ],
+    "claimsAllowed": [
+      "scene and drawable inventory",
+      "material/primitive boundaries explicitly present in the GLB",
+      "browser-rendered ID-mask evidence when captured"
+    ],
+    "claimsForbiddenUntilEvidence": [
+      "exact semantic labels inferred from a merged mesh",
+      "per-region material equality without region crops or ID masks",
+      "multipart topology reconstructed from metadata alone"
+    ]
+  },
+  "referenceReadiness": "pass",
+  "warnings": [],
+  "note": "Metadata only. Render the GLB through the target Three.js route before using it as a visual baseline; do not copy its topology into a procedural factory."
+}

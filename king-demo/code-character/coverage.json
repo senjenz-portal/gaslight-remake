@@ -1,0 +1,94 @@
+{
+  "model": "the-king-code-character",
+  "specifiedComponents": 44,
+  "builtParts": 54,
+  "errors": 0,
+  "warnings": 0,
+  "result": "pass",
+  "findings": [
+    {
+      "check": "component-folded",
+      "severity": "info",
+      "subject": "foot-l",
+      "detail": "no mesh of its own \u2014 folded into 'shin-l', which is built. Correct for relief; a real gap only if this needed to be separable."
+    },
+    {
+      "check": "component-folded",
+      "severity": "info",
+      "subject": "foot-r",
+      "detail": "no mesh of its own \u2014 folded into 'shin-r', which is built. Correct for relief; a real gap only if this needed to be separable."
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "catchlight-l",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "catchlight-r",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "hair-cap",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "hair-fringe-0",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "hair-fringe-1",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "hair-fringe-2",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "hair-temple-l",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "hair-temple-r",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "head-group",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "iris-l",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "iris-r",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    },
+    {
+      "check": "part-not-specified",
+      "severity": "info",
+      "subject": "the-king",
+      "detail": "built part has no matching component in the spec (fine for detail groups; a sign of spec drift for anything larger)"
+    }
+  ]
+}

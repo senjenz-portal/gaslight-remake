@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The New King — pure-code character</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c; --cream:#efe4c8; --cream-bright:#f6edd6;
+    --gold:#a8862f; --gold-soft:#bda86e; --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+    --mono:"SF Mono",Menlo,Consolas,monospace;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1180px;margin:0 auto;padding:36px 24px 80px;}
+  h1{font-weight:normal;font-size:30px;margin:6px 0 2px;color:var(--cream-bright);}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:14px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;max-width:78ch;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  .stage-grid{display:grid;grid-template-columns:1fr 280px;gap:18px;margin-top:16px;align-items:start;}
+  @media(max-width:900px){.stage-grid{grid-template-columns:1fr;}}
+  #viewer{width:100%;aspect-ratio:16/11;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px;}
+  button.ctl{font-family:var(--serif);font-variant-caps:small-caps;text-transform:lowercase;
+    letter-spacing:.14em;font-size:13px;color:var(--cream);background:#101526;
+    border:1px solid #2a2417;border-radius:3px;padding:7px 14px;cursor:pointer;}
+  button.ctl:hover{border-color:var(--gold);}
+  button.ctl.on{color:#0a0e1c;background:var(--gold-soft);border-color:var(--gold-soft);}
+  #panel{border:1px solid #2a2417;border-radius:3px;background:#0c1120;padding:14px 14px 10px;}
+  #panel h3{font-weight:normal;font-size:14px;margin:0 0 8px;font-variant-caps:small-caps;
+    text-transform:lowercase;letter-spacing:.16em;color:var(--gold-soft);}
+  #parts{list-style:none;margin:0;padding:0;max-height:420px;overflow:auto;font-family:var(--mono);font-size:11.5px;}
+  #parts li{display:flex;justify-content:space-between;gap:8px;padding:3px 6px;border-radius:2px;
+    color:#b9c2da;cursor:pointer;}
+  #parts li:hover{background:#141b31;}
+  #parts li.sel{background:#1b2340;color:#f6edd6;}
+  #parts li .tri{color:#71809f;}
+  #totals{font-family:var(--mono);font-size:11.5px;color:#8f9dbd;margin:8px 6px 2px;line-height:1.7;}
+  #propgate{font-family:var(--mono);font-size:11px;color:#71809f;margin:6px 6px 0;line-height:1.6;white-space:pre;}
+  #srcmodal{position:fixed;inset:4vh 6vw;z-index:20;display:none;background:#0a0f1e;
+    border:1px solid var(--gold);border-radius:4px;padding:0;overflow:hidden;flex-direction:column;}
+  #srcmodal.open{display:flex;}
+  #srcmodal header{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid #2a2417;}
+  #srcmodal pre{margin:0;padding:16px;overflow:auto;font-family:var(--mono);font-size:11px;color:#c5cde4;flex:1;}
+  .cap{font-size:12.5px;color:var(--note);margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lbl">gaslight — the new king — 3d track</div>
+  <h1>The King, written in code</h1>
+  <div class="rule"></div>
+  <p class="note">
+    The same King as the <a href="../index.html">mesh demo</a> — but there is no model file here.
+    Every part below (head, hair, greatcoat with its orange lining, waistcoat, boots) is authored
+    as native Three.js geometry by the <em>img2threejs</em> character method: one reference image
+    → measured proportions → sculpt spec → this factory. A real bone skeleton drives procedural
+    walk and idle cycles in sim-time. The rigged GLB was used as a measurement target only —
+    nothing from it is loaded on this page.
+  </p>
+
+  <div class="stage-grid">
+    <div>
+      <canvas id="viewer"></canvas>
+      <div class="bar">
+        <button class="ctl on" id="b-idle">idle</button>
+        <button class="ctl" id="b-walk">walk</button>
+        <button class="ctl" id="b-explode">explode</button>
+        <button class="ctl" id="b-quality">quality: standard</button>
+        <button class="ctl" id="b-src">view generated source</button>
+      </div>
+      <div class="cap">drag to orbit · wheel to zoom · click a part to select it</div>
+    </div>
+    <div id="panel">
+      <h3>parts</h3>
+      <ul id="parts"></ul>
+      <div id="totals"></div>
+      <h3 style="margin-top:12px">proportion gate — vs glb baseline</h3>
+      <div id="propgate">measuring…</div>
+    </div>
+  </div>
+</div>
+
+<div id="srcmodal">
+  <header>
+    <span class="lbl">king-factory.js — the generated source (also: <a href="king-sculpt-spec.json" target="_blank">sculpt spec</a>)</span>
+    <button class="ctl" id="b-closesrc">close</button>
+  </header>
+  <pre id="srctext">loading…</pre>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "../../app/vendor/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from '../../app/vendor/controls/OrbitControls.js';
+import { createKingModel, createKingAnimator, KING_DATA } from './king-factory.js';
+
+const canvas = document.getElementById('viewer');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.55;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0e1c);
+
+const camera = new THREE.PerspectiveCamera(38, 16/11, 0.05, 60);
+camera.position.set(1.45, 1.35, 2.55);
+const controls = new OrbitControls(camera, canvas);
+controls.target.set(0, 0.95, 0);
+controls.enableDamping = true;
+
+/* lighting per sculpt-spec lightingFromPhoto */
+const key = new THREE.DirectionalLight(0xfff2e0, 2.3);
+key.position.set(-1.6, 2.6, 2.2);
+key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+key.shadow.camera.left = -1.4; key.shadow.camera.right = 1.4;
+key.shadow.camera.top = 2.4; key.shadow.camera.bottom = -0.4;
+scene.add(key);
+scene.add(new THREE.HemisphereLight(0xa8b8dd, 0x4a5470, 1.35));
+const rim = new THREE.DirectionalLight(0xe8722a, 0.5);
+rim.position.set(1.8, 1.9, -2.0);
+scene.add(rim);
+
+const ground = new THREE.Mesh(
+  new THREE.CircleGeometry(1.6, 40),
+  new THREE.ShadowMaterial({ opacity: 0.42 }));
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+const groundRing = new THREE.Mesh(
+  new THREE.RingGeometry(1.58, 1.6, 40),
+  new THREE.MeshBasicMaterial({ color: 0x2a2417 }));
+groundRing.rotation.x = -Math.PI / 2; groundRing.position.y = 0.001;
+scene.add(groundRing);
+
+/* ---------------- model + parts panel ---------------- */
+let king = null, animator = null, quality = 'standard';
+let selected = null;
+
+function triCount(obj) {
+  let t = 0;
+  obj.traverse((o) => {
+    if (o.isMesh || o.isSkinnedMesh) {
+      const g = o.geometry;
+      const n = g.index ? g.index.count / 3 : g.getAttribute('position').count / 3;
+      t += o.isInstancedMesh ? n * o.count : n;
+    }
+  });
+  return Math.round(t);
+}
+
+function buildModel(tier) {
+  if (king) { scene.remove(king.root); }
+  king = createKingModel(tier);
+  animator = createKingAnimator(king);
+  scene.add(king.root);
+  king.root.updateMatrixWorld(true);
+  // explode carriers: one entry per PART (assembly gate: parts and picking share this list)
+  const centre = new THREE.Vector3(0, KING_DATA.totalHeight * 0.55, 0);
+  king.parts = [];
+  const skinnedHandled = new Set();
+  for (const p of king.partList) {
+    const m = p.mesh;
+    if (m.userData.explodeWithParent) continue;
+    if (m.isSkinnedMesh) {
+      // the coat assembly explodes through its root bone, once
+      if (!skinnedHandled.has(p.bone)) {
+        skinnedHandled.add(p.bone);
+        const b = king.bones[p.bone];
+        const wp = b.getWorldPosition(new THREE.Vector3());
+        const dirW = wp.clone().sub(centre);
+        king.parts.push({ name: 'coat-assembly', layer: p.layer, obj: b, isBone: true,
+          rest: b.position.clone(), dirW, tris: 0, meshes: [] });
+      }
+      const entry = king.parts.find(e => e.name === 'coat-assembly');
+      entry.tris += triCount(m); entry.meshes.push(m);
+      continue;
+    }
+    const wp = m.getWorldPosition(new THREE.Vector3());
+    const dirW = wp.clone().sub(centre);
+    king.parts.push({ name: m.name, layer: p.layer, obj: m, isBone: false,
+      rest: m.position.clone(), dirW, tris: triCount(m), meshes: [m] });
+  }
+  // piping rides the coat assembly in the panel numbers
+  renderPartsPanel();
+  reportProportions();
+}
+
+function renderPartsPanel() {
+  const ul = document.getElementById('parts');
+  ul.innerHTML = '';
+  let total = 0;
+  for (const p of king.parts) {
+    total += p.tris;
+    const li = document.createElement('li');
+    const name = document.createElement('span'); name.textContent = `${p.name} · ${p.layer}`;
+    const tri = document.createElement('span'); tri.className = 'tri'; tri.textContent = `${p.tris} tri`;
+    li.append(name, tri);
+    li.onclick = () => selectPart(p, li);
+    p.li = li;
+    ul.appendChild(li);
+  }
+  document.getElementById('totals').textContent =
+    `total ${total} triangles - ${king.parts.length} parts - quality ${king.quality}`;
+}
+
+const hiMat = new THREE.MeshStandardMaterial({ color: 0xd8b45a, emissive: 0x8a6a1e, roughness: 0.5, flatShading: true });
+function setHighlight(p, on) {
+  for (const m of p.meshes) m.traverse(o => {
+    if (!o.isMesh && !o.isSkinnedMesh) return;
+    if (on) { if (!o.userData._mat) { o.userData._mat = o.material; o.material = hiMat; } }
+    else if (o.userData._mat) { o.material = o.userData._mat; delete o.userData._mat; }
+  });
+  // meshes[] holds top objects; traverse covers ride-along children
+}
+function selectPart(p, li) {
+  document.querySelectorAll('#parts li').forEach(x => x.classList.remove('sel'));
+  if (selected) setHighlight(selected, false);
+  if (selected === p) { selected = null; return; }
+  selected = p; setHighlight(p, true);
+  if (li) li.classList.add('sel');
+}
+
+/* proportion gate vs GLB baseline — live measurement of the built skeleton */
+function reportProportions() {
+  king.root.updateMatrixWorld(true);
+  const Ht = KING_DATA.totalHeight;
+  const v = new THREE.Vector3();
+  const rows = [
+    ['hips', king.bones.hips, KING_DATA.landmarks.hips],
+    ['knee', king.bones['knee-l'], KING_DATA.landmarks.knee],
+    ['ankle', king.bones['ankle-l'], KING_DATA.landmarks.ankle],
+    ['shoulder', king.bones['shoulder-l'], KING_DATA.landmarks.shoulder],
+    ['neck', king.bones.neck, KING_DATA.landmarks.neck],
+    ['head', king.bones.head, KING_DATA.landmarks.headJoint],
+  ];
+  let out = 'landmark   built  glb    Δ%\n';
+  let worst = 0;
+  for (const [name, b, target] of rows) {
+    b.getWorldPosition(v);
+    const built = v.y / Ht;
+    const d = Math.abs(built - target) / target * 100;
+    worst = Math.max(worst, d);
+    out += `${name.padEnd(9)} ${built.toFixed(3)}  ${target.toFixed(3)}  ${d.toFixed(1)}%\n`;
+  }
+  out += `worst delta ${worst.toFixed(1)}% — law: <8%`;
+  document.getElementById('propgate').textContent = out;
+  window.__KING_PROPORTIONS__ = { worstPct: worst, text: out };
+}
+
+/* ---------------- sim-time loop (deterministic fixed step) ---------------- */
+let simTime = 0, frozen = false, walkBlend = 0, walkTarget = 0, explodeF = 0, explodeTarget = 0;
+let last = performance.now();
+const FIXED = 1 / 60;
+let acc = 0;
+
+function step(dt) {
+  simTime += dt;
+  walkBlend += (walkTarget - walkBlend) * Math.min(1, dt * 4);
+  explodeF += (explodeTarget - explodeF) * Math.min(1, dt * 5);
+  animator.apply(simTime, walkBlend);
+  // explode: scale the part layout about the model centre (never a uniform push)
+  const spread = explodeF * 1.25;
+  for (const p of king.parts) {
+    const off = p.dirW.clone().multiplyScalar(spread);
+    const parent = p.obj.parent;
+    if (spread < 0.001) { p.obj.position.copy(p.rest); continue; }
+    const q = parent.getWorldQuaternion(new THREE.Quaternion()).invert();
+    p.obj.position.copy(p.rest).add(off.applyQuaternion(q));
+  }
+  if (selected) {
+    const pulse = 0.6 + Math.sin(simTime * 6) * 0.4;
+    hiMat.emissiveIntensity = pulse;
+  }
+}
+
+function frame(now) {
+  requestAnimationFrame(frame);
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  if (!frozen) { acc += dt; while (acc >= FIXED) { step(FIXED); acc -= FIXED; } }
+  controls.update();
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== w * devicePixelRatio || canvas.height !== h * devicePixelRatio) {
+    renderer.setSize(w, h, false);
+    renderer.setPixelRatio(devicePixelRatio);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  renderer.render(scene, camera);
+  window.__IMG2THREEJS_READY__ = true;
+}
+
+/* ---------------- controls ---------------- */
+const bIdle = document.getElementById('b-idle');
+const bWalk = document.getElementById('b-walk');
+const bExp = document.getElementById('b-explode');
+const bQ = document.getElementById('b-quality');
+function setAnim(name) {
+  walkTarget = name === 'walk' ? 1 : 0;
+  bIdle.classList.toggle('on', name === 'idle');
+  bWalk.classList.toggle('on', name === 'walk');
+}
+bIdle.onclick = () => setAnim('idle');
+bWalk.onclick = () => setAnim('walk');
+bExp.onclick = () => {
+  explodeTarget = explodeTarget > 0 ? 0 : 1;
+  bExp.textContent = explodeTarget ? 'assemble' : 'explode';
+  bExp.classList.toggle('on', !!explodeTarget);
+};
+bQ.onclick = () => {
+  quality = quality === 'standard' ? 'low' : 'standard';
+  bQ.textContent = 'quality: ' + quality;
+  buildModel(quality);
+};
+document.getElementById('b-src').onclick = async () => {
+  const modal = document.getElementById('srcmodal');
+  modal.classList.add('open');
+  const txt = await fetch('./king-factory.js').then(r => r.text());
+  document.getElementById('srctext').textContent = txt;
+};
+document.getElementById('b-closesrc').onclick = () =>
+  document.getElementById('srcmodal').classList.remove('open');
+
+/* click-to-pick shares the parts definition with explode */
+const ray = new THREE.Raycaster(); const mouse = new THREE.Vector2();
+canvas.addEventListener('click', (e) => {
+  const r = canvas.getBoundingClientRect();
+  mouse.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(mouse, camera);
+  const hits = ray.intersectObject(king.root, true);
+  if (!hits.length) return;
+  let o = hits[0].object;
+  const p = king.parts.find(p => p.meshes.some(m => m === o || m.getObjectById?.(o.id)));
+  if (p) selectPart(p, p.li);
+});
+
+/* ---------------- capture + automation contracts ---------------- */
+window.__IMG2THREEJS_CAPTURE__ = {
+  setCamera(spec) {
+    if (spec.position) camera.position.fromArray(spec.position);
+    if (spec.target) controls.target.fromArray(spec.target);
+    if (spec.fov) { camera.fov = spec.fov; camera.updateProjectionMatrix(); }
+    controls.update();
+    renderer.render(scene, camera);
+    return { ok: true };
+  },
+  capturePass() { renderer.render(scene, camera); return { ok: true, selector: 'canvas' }; },
+  setReferenceMode() { return { ok: false, reason: 'code-only page: no GLB reference mode' }; },
+};
+window.__KING__ = {
+  get root() { return king.root; },
+  get bones() { return king.bones; },
+  parts: () => king.parts.map(p => ({ name: p.name, layer: p.layer, tris: p.tris })),
+  setAnim,
+  setPhase(t, walk = 1) { frozen = true; simTime = t; walkBlend = walk; walkTarget = walk;
+    animator.apply(t, walk); king.root.updateMatrixWorld(true); renderer.render(scene, camera); },
+  resume() { frozen = false; },
+  explode(on) { explodeTarget = on ? 1 : 0; explodeF = on ? 1 : 0;
+    step(0.0001); renderer.render(scene, camera); },
+  setQuality(tier) { quality = tier; buildModel(tier); },
+  proportions: () => window.__KING_PROPORTIONS__,
+  maskMode(on) {
+    scene.background = new THREE.Color(on ? 0xffffff : 0x0a0e1c);
+    ground.visible = !on; groundRing.visible = !on;
+    renderer.render(scene, camera);
+  },
+  setYaw(y) { king.root.rotation.y = y; king.root.updateMatrixWorld(true); renderer.render(scene, camera); },
+};
+
+buildModel(quality);
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

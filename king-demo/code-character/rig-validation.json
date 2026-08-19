@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "passed": true,
+  "errors": [],
+  "warnings": [
+    "joints with no active vertex influence: hips, spine, chest, neck, head, shoulder-l, elbow-l, wrist-l, hip-l, knee-l, ankle-l, shoulder-r, elbow-r, wrist-r, hip-r, knee-r, ankle-r"
+  ],
+  "summary": {
+    "jointCount": 20,
+    "vertexCount": 91,
+    "maxInfluences": 4,
+    "activeVertexCountByJoint": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      39,
+      65,
+      52
+    ]
+  },
+  "evidenceBoundary": "structural payload only; runtime deformation and screenshot gates are separate"
+}

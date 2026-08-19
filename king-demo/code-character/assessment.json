@@ -1,0 +1,496 @@
+{
+ "targetName": "The King",
+ "sourceImage": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/king2-look.png",
+ "preSpecAssessment": {
+  "objectClass": {
+   "primaryType": "costumed humanoid character (regency nobleman, 'the King')",
+   "primaryDomain": "character",
+   "formLanguage": [
+    "faceted low-poly",
+    "organic volumes under planar facets",
+    "draped cloth"
+   ],
+   "structureKind": [
+    "articulated humanoid",
+    "layered garments (shirt/vest/coat)",
+    "cape-style greatcoat"
+   ],
+   "motionPotential": [
+    "walk cycle",
+    "idle breathing/sway",
+    "head turn",
+    "coat hem sway"
+   ],
+   "materialFamilies": [
+    "matte painterly cloth",
+    "matte skin",
+    "satin brass buttons",
+    "matte leather boots"
+   ],
+   "notes": "Stylized low-poly register; single accent colour per part; likeness carried by proportions, palette, collar/lining/waistcoat identity features."
+  },
+  "complexity": {
+   "tier": "complex",
+   "scores": {
+    "silhouetteComplexity": 3,
+    "componentCount": 3,
+    "hierarchyDepth": 3,
+    "repetitionDensity": 2,
+    "materialLayerCount": 3,
+    "localDetailDensity": 2,
+    "occlusionRisk": 2,
+    "actionReadinessNeed": 4
+   },
+   "estimatedCounts": {
+    "macroComponents": 7,
+    "mesoComponents": 14,
+    "microFeatureGroups": 8,
+    "materialLayers": 10,
+    "repetitionSystems": 2
+   },
+   "reasoning": [
+    "7 macro parts (head, hair, torso garments, coat, 2 arms, legs+boots)",
+    "repetition systems: gold button grid (2x3), coat piping strips",
+    "full skeleton + walk/idle demanded: actionReadinessNeed high"
+   ]
+  },
+  "specDepthDecision": {
+   "requiredDepth": "complex",
+   "minimumComponentLevels": [
+    "macro",
+    "meso",
+    "micro"
+   ],
+   "needsRepetitionSystems": true,
+   "needsMaterialLocalOverrides": true,
+   "needsMultipleReviewViews": true,
+   "needsActionReadyHierarchy": true,
+   "rationale": "Choose simple/moderate/complex/ultra-complex from observed structure, not from a hardcoded domain."
+  },
+  "unknownsToResolveBeforeImplementation": [
+   "coat back panel drape detail (single view; inferred simple A-line drape, confidence 0.6)",
+   "boot soles and foot top (hidden; canon low-poly boot, confidence 0.7)",
+   "hair crown/back (bust view partially shows; inferred swept-back mass, confidence 0.7)",
+   "trouser/vest boundary behind coat front (occluded; inferred at hip line, confidence 0.8)"
+  ],
+  "detailInventory": {
+   "scanMethod": "component-zones",
+   "targetMinDetails": 10,
+   "note": "Enumerate every identity-defining small detail before authoring the spec. Each detail must map to a component.localFeatures entry or material.localOverrides entry, never prose only. Use forge/stage1_intake/build_detail_inventory.py to scan zones.",
+   "details": [
+    {
+     "id": "collar-standing",
+     "zone": "neck",
+     "kind": "bevel highlight",
+     "desc": "high standing coat collar, orange inner face visible both sides of head",
+     "mapsTo": "component:coatCollar",
+     "evidenceRef": "bust-head-grid.png y0.65-0.85"
+    },
+    {
+     "id": "lining-orange",
+     "zone": "coat front edges",
+     "kind": "decal/two-tone",
+     "desc": "vivid orange lining #f08033\u2192#c8511f revealed along full coat opening",
+     "mapsTo": "material:coatLining",
+     "evidenceRef": "king2-look.png x560-810"
+    },
+    {
+     "id": "piping-front",
+     "zone": "coat front edges",
+     "kind": "seam line",
+     "desc": "orange piping strip tracing both front edges crown\u2192hem",
+     "mapsTo": "component:coatPipingL/R",
+     "evidenceRef": "king2-look.png"
+    },
+    {
+     "id": "buttons-gold",
+     "zone": "waistcoat",
+     "kind": "fastener",
+     "desc": "double-breasted 2 columns x 3 gold buttons",
+     "mapsTo": "component:vestButtons (instanced)",
+     "evidenceRef": "king2-look.png x690-760 y280-360"
+    },
+    {
+     "id": "cravat-knot",
+     "zone": "neckline",
+     "kind": "fabric mass",
+     "desc": "navy cravat filling vest neckline with soft knot",
+     "mapsTo": "component:cravat",
+     "evidenceRef": "bust view y0.78-0.95"
+    },
+    {
+     "id": "vest-vneck",
+     "zone": "torso",
+     "kind": "seam line",
+     "desc": "ivory waistcoat V-neckline lapel edges",
+     "mapsTo": "component:vest",
+     "evidenceRef": "king2-look.png"
+    },
+    {
+     "id": "cuff-shirt",
+     "zone": "wrist",
+     "kind": "bevel highlight",
+     "desc": "ivory shirt cuff at wrist below coat edge",
+     "mapsTo": "component:cuffL/R",
+     "evidenceRef": "king2-look.png x630 y400"
+    },
+    {
+     "id": "boot-top-edge",
+     "zone": "knee",
+     "kind": "seam line",
+     "desc": "boot shaft top edge just below knee, trouser tucked",
+     "mapsTo": "component:bootL/R shaft",
+     "evidenceRef": "king2-look.png y560-590"
+    },
+    {
+     "id": "hair-sidepart",
+     "zone": "head",
+     "kind": "silhouette mass",
+     "desc": "black hair swept from side part, fringe facets over forehead, temple coverage",
+     "mapsTo": "component:hair",
+     "evidenceRef": "bust-head-grid.png y0.02-0.30"
+    },
+    {
+     "id": "brows-straight",
+     "zone": "face",
+     "kind": "decal",
+     "desc": "strong straight near-black brows",
+     "mapsTo": "component:browL/R",
+     "evidenceRef": "bust-head-grid.png y0.31"
+    },
+    {
+     "id": "eyes-dark",
+     "zone": "face",
+     "kind": "decal+gloss",
+     "desc": "narrow dark eyes with tiny catchlight",
+     "mapsTo": "component:eyeL/R",
+     "evidenceRef": "bust-head-grid.png y0.39"
+    },
+    {
+     "id": "coat-facets",
+     "zone": "coat body",
+     "kind": "faceting",
+     "desc": "large planar facets with 2-3 value steps on navy coat",
+     "mapsTo": "material:coatOuter flatShading",
+     "evidenceRef": "king2-look.png"
+    }
+   ],
+   "count": 12
+  },
+  "anatomy": {
+   "source": "measured",
+   "headUnits": 5.53,
+   "headUnit": 0.181,
+   "proportions": {
+    "totalHeightPx": 713,
+    "headHeightPx": 129,
+    "headWidth_over_headHeight": 0.62,
+    "headWidthDesign": 0.75,
+    "shoulderWidthHU": 1.73,
+    "shoulderNote": "1.73 HU includes greatcoat bulk over shoulders; body shoulders inferred ~1.5 HU",
+    "coatFlareHU": 2.09,
+    "legsHU_hipToFloor": 2.65,
+    "torsoHU_chinToHip": 1.9,
+    "neckHU": 0.25
+   },
+   "faceLandmarks": {
+    "hairline": 0.27,
+    "browLine": 0.44,
+    "eyeLine": 0.56,
+    "eyeSpacing_innerCorners_overHeadWidth": 0.2,
+    "pupilSpacing_overHeadWidth": 0.37,
+    "noseBase": 0.79,
+    "mouthLine": 0.89,
+    "earTop": 0.5,
+    "earBottom": 0.78,
+    "note": "short lower face third is a measured stylization: noseBase 0.79 vs canon ~0.65"
+   },
+   "pose": {
+    "stance": "upright symmetric, arms at sides, head yaw ~15deg to his right",
+    "occluded": [
+     "left arm partially behind coat",
+     "boot soles",
+     "coat back"
+    ]
+   },
+   "glbBaseline": {
+    "path": "../king2-rigged.glb",
+    "totalHeight": 1.9122,
+    "normalizedLandmarks": {
+     "hips": 0.526,
+     "knee": 0.278,
+     "ankle": 0.066,
+     "shoulder": 0.774,
+     "neck": 0.813,
+     "headJoint": 0.865,
+     "shoulderHalfSpanX": 0.225,
+     "hipHalfSpanX": 0.1
+    },
+    "headMesh": {
+     "height": 0.3235,
+     "width": 0.2496,
+     "depth": 0.2852
+    },
+    "law": "procedural skeleton landmark heights within 8% of these normalized values"
+   },
+   "evidenceRefs": [
+    "anatomy.json",
+    "glb-reference.json",
+    "bust-head-grid.png"
+   ]
+  },
+  "sourceImage": "/Users/samz/Documents/gaslight-remake/site-deploy/king-demo/king2-look.png",
+  "pipelineRouting": {
+   "version": 1,
+   "track": "character-v1.5",
+   "source": "explicit",
+   "status": "resolved",
+   "classification": {
+    "kind": "character",
+    "confidence": 1.0,
+    "evidenceRefs": [
+     "pipeline-routing:explicit:character-v1.5"
+    ],
+    "provider": "pipeline-routing-cli",
+    "version": "1"
+   },
+   "conflicts": []
+  }
+ },
+ "qualityContract": {
+  "qualityBar": "complex",
+  "definitionOfDone": [
+   "The rendered model matches the reference silhouette, primary proportions, visible component hierarchy, material response, and most recognizable local features for the selected fidelity tier."
+  ],
+  "minimumSpecDepth": {
+   "macroComponents": 3,
+   "mesoComponents": 8,
+   "microFeatureGroups": 5,
+   "materialLayers": 3,
+   "repetitionSystems": 1,
+   "reviewViewpoints": 4
+  },
+  "featureGroups": [
+   {
+    "id": "overall-silhouette",
+    "name": "Overall silhouette and proportions",
+    "required": true,
+    "qualityCriteria": [
+     "Bounding shape, dominant curves, negative spaces, and scale relationships are explicitly described."
+    ],
+    "evidenceRefs": [
+     "full-object"
+    ],
+    "failureModes": [
+     "model reads as a generic placeholder instead of the reference object",
+     "major proportions are guessed without evidence"
+    ]
+   },
+   {
+    "id": "primary-structure",
+    "name": "Primary structure and hierarchy",
+    "required": true,
+    "qualityCriteria": [
+     "Major parts, joints, seams, contact points, and parent-child relationships are named before code generation."
+    ],
+    "evidenceRefs": [
+     "full-object"
+    ],
+    "failureModes": [
+     "large visible parts are merged into one mesh",
+     "component hierarchy is too shallow for the observed complexity"
+    ]
+   },
+   {
+    "id": "attachment-joint-correctness",
+    "name": "Attachment and joint correctness",
+    "required": true,
+    "qualityCriteria": [
+     "Every visible child appendage, branch, limb, handle, connector, tube, cable, horn, wing, leg, or hinged part has an attachment contract with parent socket, localStart/localEnd, contact type, embed/overlap, and gap tolerance."
+    ],
+    "evidenceRefs": [
+     "full-object"
+    ],
+    "failureModes": [
+     "child part root floats away from the parent",
+     "branch/limb/tube is centered in space instead of pivoting from its root",
+     "parent-child transform mixes world and local coordinates"
+    ]
+   },
+   {
+    "id": "surface-material-response",
+    "name": "Surface material response",
+    "required": true,
+    "qualityCriteria": [
+     "Albedo zones, roughness, normal/bump/displacement intent, cavity dirt, edge wear, and local overrides are specified where visible.",
+     "Important materials define independent albedo, roughness, height/normal, and AO responses instead of reusing one texture for unrelated PBR channels.",
+     "Surface response is decomposed into macro, meso, and micro frequency bands with scale and amplitude tied to object scale."
+    ],
+    "evidenceRefs": [
+     "full-object"
+    ],
+    "failureModes": [
+     "surface looks like flat plastic",
+     "local material variation is missing or not tied to image evidence"
+    ]
+   },
+   {
+    "id": "reference-lookdev",
+    "name": "Reference color, material, and lighting response",
+    "required": true,
+    "qualityCriteria": [
+     "Material-pass names the reference-derived albedo palette, roughness variation, tactile normal/bump/displacement response, and local masks.",
+     "When a source image is available, run reference PBR extraction and require confidence >= 0.7 before treating maps as implementation-ready.",
+     "Lighting-pass names key/fill/rim or environment light, exposure, tone mapping, background, and contact shadow behavior.",
+     "Neutral, grazing-angle, and reference-matched renders prove that surface relief survives relighting and is not painted into albedo."
+    ],
+    "evidenceRefs": [
+     "full-object"
+    ],
+    "failureModes": [
+     "model has acceptable shape but reads as flat shaded or plastic",
+     "colors are a generic average instead of reference-observed local color zones",
+     "lighting is evenly ambient and cannot reproduce the source value range"
+    ]
+   }
+  ],
+  "visualDeltaChecks": [
+   "silhouette and negative-space delta",
+   "component hierarchy depth delta",
+   "repetition density and distribution delta",
+   "material albedo/roughness/normal response delta",
+   "local feature placement and scale delta"
+  ],
+  "antiShallowSpecRules": [
+   "Do not proceed to code if qualityContract.qualityBar is unassessed.",
+   "Do not proceed to code if the spec only contains a root component for a moderate or complex object.",
+   "Do not proceed to code if required featureGroups are not represented by componentTree, materials, or repetitionSystems.",
+   "Do not proceed to code if visible local features are described only in prose and not attached to components/materials/evidenceRefs.",
+   "Do not proceed past structural-pass if attached child parts lack attachment.parentSocket, localStart, localEnd, embedDepth/overlap, and gapTolerance.",
+   "Do not pass material look-dev when albedo is reused as roughness, height, normal, or AO.",
+   "Do not pass material look-dev without macro, meso, and micro surface frequency bands for close-up materials.",
+   "Do not pass reference-fidelity material look-dev from a source image without usable referencePbr maps or an explicit documented limitation.",
+   "Do not patch a spec with extracted PBR maps when extraction confidence is below the target threshold unless the user explicitly accepts lower fidelity.",
+   "Do not place adjacent separate-geometry parts below 0.02 world-unit seam overlap (source: grimoire/build/geometry_patterns.md).",
+   "Do not satisfy raised or recessed relief, fasteners, or grip structure with a map alone when the feature affects form; use geometry or displacement (source: grimoire/build/geometry_patterns.md)."
+  ]
+ },
+ "authoringInstruction": "Fill observed object class, complexity reasoning, featureGroups, visualDeltaChecks, and unknowns before generating or implementing ObjectSculptSpec.",
+ "pipelineRouting": {
+  "version": 1,
+  "track": "character-v1.5",
+  "source": "explicit",
+  "status": "resolved",
+  "classification": {
+   "kind": "character",
+   "confidence": 1.0,
+   "evidenceRefs": [
+    "pipeline-routing:explicit:character-v1.5"
+   ],
+   "provider": "pipeline-routing-cli",
+   "version": "1"
+  },
+  "conflicts": []
+ },
+ "localSpecSearch": {
+  "collection": "core_3d",
+  "query": "The King stylized humanoid proportions head units greatcoat standing collar cape drape cloth low poly flat shaded character material walk cycle idle skeleton procedural animation double breasted waistcoat buttons",
+  "index": {
+   "status": "hit",
+   "reason": "current",
+   "fingerprint": "6857e5ab528b42ac12f4f411f862610a0bffce8e47aee3610a7603c318072fe8"
+  },
+  "matches": [
+   {
+    "record_id": "core.coordinate-relative-units",
+    "file_path": "grimoire/glossary/3d_vocabulary.md",
+    "heading": "Geometry And Topology",
+    "key_path": null,
+    "score": 6.548517477049,
+    "snippets": [
+     "A bevel radius is sized in object-relative units."
+    ],
+    "source_refs": [
+     {
+      "path": "grimoire/glossary/3d_vocabulary.md",
+      "heading": "Geometry And Topology",
+      "key_path": null
+     },
+     {
+      "path": "grimoire/intake/image_analysis.md",
+      "heading": "Layer 2 \u2014 Overall form & silhouette",
+      "key_path": null
+     }
+    ],
+    "evidence_refs": [
+     {
+      "kind": "source",
+      "ref": "grimoire/glossary/3d_vocabulary.md"
+     },
+     {
+      "kind": "notebooklm-research",
+      "ref": "notebooklm:4b03c2f9-8393-411f-b5b4-039ab9532843",
+      "note": "Validated generic schema vocabulary; numeric claims remain backed by local source_refs."
+     }
+    ]
+   },
+   {
+    "record_id": "core.measurement-source-text",
+    "file_path": "grimoire/intake/image_analysis.md",
+    "heading": "Layer 2 \u2014 Overall form & silhouette",
+    "key_path": null,
+    "score": 5.268490296339,
+    "snippets": [
+     "Record proportions relative to a named reference dimension and keep observations separate from inference."
+    ],
+    "source_refs": [
+     {
+      "path": "grimoire/intake/image_analysis.md",
+      "heading": "Layer 2 \u2014 Overall form & silhouette",
+      "key_path": null
+     },
+     {
+      "path": "grimoire/intake/image_analysis.md",
+      "heading": "The Rule",
+      "key_path": null
+     }
+    ],
+    "evidence_refs": [
+     {
+      "kind": "source",
+      "ref": "grimoire/intake/image_analysis.md"
+     },
+     {
+      "kind": "notebooklm-research",
+      "ref": "notebooklm:4b03c2f9-8393-411f-b5b4-039ab9532843",
+      "note": "Validated generic schema vocabulary; numeric claims remain backed by local source_refs."
+     }
+    ]
+   },
+   {
+    "record_id": "core.shader-mapping-customshadermaterial-csm-weathering-hooks",
+    "file_path": "docs/raw/img2threejs-skill-dataset.json",
+    "heading": null,
+    "key_path": "categories.rendering_shader_mapping[1]",
+    "score": 5.050750963312,
+    "snippets": [
+     "Extension library exposing csm_* output variables to inject procedural noise/masks into an otherwise-standard lit material, used for dynamic tarnish/patina effects. Th\u01b0 vi\u1ec7n m\u1edf r\u1ed9ng cung c\u1ea5p c\u00e1c bi\u1ebfn \u0111\u1ea7u ra csm_* \u0111\u1ec3 ch\u00e8n nhi\u1ec5u/m\u1eb7t n\u1ea1 th\u1ee7 t\u1ee5c v\u00e0o ..."
+    ],
+    "source_refs": [
+     {
+      "path": "docs/raw/img2threejs-skill-dataset.json",
+      "heading": null,
+      "key_path": "categories.rendering_shader_mapping[1]"
+     }
+    ],
+    "evidence_refs": [
+     {
+      "kind": "source",
+      "ref": "docs/raw/img2threejs-skill-dataset.json",
+      "note": "img2threejs NotebookLM research distillation"
+     }
+    ]
+   }
+  ]
+ }
+}
