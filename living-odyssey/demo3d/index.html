@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ulysses, photographed — the 3D track meets the Living Book</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --gold-dim:rgba(205,171,99,.55);
+    --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.55;max-width:78ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  figure{margin:0;}
+  figure img{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;}
+  figcaption{font-size:13px;color:var(--note);margin-top:7px;line-height:1.45;}
+  figcaption b{color:var(--cream-bright);font-weight:normal;}
+
+  /* ---- the stage: the book's own frame ---- */
+  #stage{width:100%;aspect-ratio:1408/768;display:block;border:1px solid #2a2417;
+    border-radius:3px;background:#060a18;}
+  .stage-cue{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);margin-top:7px;}
+
+  .law{font-size:14px;color:var(--note);border-left:2px solid var(--gold);padding:2px 0 2px 14px;
+    margin:26px 0 20px;max-width:74ch;}
+  .law b{color:var(--cream-bright);font-weight:normal;}
+  .art-row{display:grid;gap:18px;margin-top:6px;}
+  .cols-3{grid-template-columns:1fr 1fr 1fr;}
+  .cols-4{grid-template-columns:1fr 1fr 1fr 1fr;}
+  @media (max-width:640px){.cols-3,.cols-4{grid-template-columns:1fr 1fr;}}
+  .counts{margin-top:20px;font-size:13px;color:var(--note);line-height:1.9;}
+  .counts b{color:var(--cream-bright);font-weight:normal;}
+  .counts .num{color:#d8b45a;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  @media (max-width:760px){.two-col{grid-template-columns:1fr;}}
+
+  footer{margin-top:80px;}
+  footer p{color:var(--note);font-size:14px;}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../app/vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Pipeline Demo · Unlisted</div>
+  <h1>Ulysses, photographed — the 3D track meets the Living Book</h1>
+  <div class="rule"></div>
+  <p class="note">The five gated stages that photographed the King, pointed at the sealed
+  Ulysses canonical: stylize <span class="tag">(gemini-3-pro-image, i2i, cameo as identity source)</span> →
+  turnaround <span class="tag">(front passed back as reference)</span> →
+  multiview reconstruction <span class="tag">(model_tripo-p1-multiview-to-3d via Scenario)</span> →
+  auto-rig + banked walk <span class="tag">(model_tripo-rigging-v1, biped)</span> —
+  and then the new move: the rigged man set down <i>inside the book's own plate</i>.
+  The frame below is the cave-shut plate itself; he walks the ledger's floor line at the
+  ledger's 43&nbsp;px/m (1.75&nbsp;m&nbsp;=&nbsp;75&nbsp;px), keyed warm by the fire anchor at
+  (638,&nbsp;427), cool-filled by the night. He keeps his crimson chiton and bronze belt —
+  the accent law. Every count below is read from the delivered files.</p>
+
+  <canvas id="stage"></canvas>
+  <div class="stage-cue"><span>the walk loops — behind the blaze, down the open floor, and round again</span>
+    <span id="clip-cue">banked biped clip, retargeted at rig time</span></div>
+
+  <div class="law"><b>Plate-space, not orbit-space.</b> The camera is orthographic over the plate's own
+    1408×768 — the book's isometric law (actor height never changes with depth) is what an
+    orthographic camera does natively. The path threads the ledger: in at the mouth threshold,
+    upstage past the cheese racks, behind the fire ring (the ring's own front-lip cutout occludes
+    him), down the giant-seat lane, and out along the downstage floor past the tub. The blaze is a
+    point light AT the fire anchor with the plate's own flicker period; the bloom layer breathes
+    over him as he passes behind it.</div>
+
+  <div class="two-col">
+    <div>
+      <div class="lbl" style="margin-bottom:10px;">the turnaround — same-person gated</div>
+      <div class="art-row cols-3">
+        <figure><img src="front-accepted.png" alt="Stylized front view — accepted"><figcaption><b>front · 0°</b> — accepted of two</figcaption></figure>
+        <figure><img src="view-left.png" alt="Left profile view"><figcaption><b>left · 90°</b> — front as reference</figcaption></figure>
+        <figure><img src="view-back.png" alt="Back view"><figcaption><b>back · 180°</b> — front as reference</figcaption></figure>
+      </div>
+      <div class="counts" id="c-turnaround"></div>
+    </div>
+    <div>
+      <div class="lbl" style="margin-bottom:10px;">the mesh — rendered from the delivered GLB</div>
+      <div class="art-row cols-4">
+        <figure><img src="mesh-turn-front.png" alt="Mesh turntable front"><figcaption><b>front</b></figcaption></figure>
+        <figure><img src="mesh-turn-left.png" alt="Mesh turntable left"><figcaption><b>left</b></figcaption></figure>
+        <figure><img src="mesh-turn-back.png" alt="Mesh turntable back"><figcaption><b>back</b></figcaption></figure>
+        <figure><img src="mesh-turn-right.png" alt="Mesh turntable right"><figcaption><b>right</b></figcaption></figure>
+      </div>
+      <div class="counts" id="c-mesh"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="rule"></div>
+    <p class="lbl"><a href="../">THE LIVING ODYSSEY</a> ·
+      <a href="../../king-demo/photo-rig/">the King photo-rig demo</a></p>
+    <p>Demo only — not wired into the book. <a href="../../">← back to the landing page</a></p>
+  </footer>
+</div>
+
+<script>
+/* ---- per-stage counts, read from stats.json (itself read from the delivered files) ---- */
+(function(){
+  const fmt = (n) => typeof n === 'number' ? n.toLocaleString('en-US') : n;
+  const row = (label, val) => '<b>' + label + '</b> · <span class="num">' + val + '</span><br>';
+  fetch('stats.json').then((r) => r.json()).then((s) => {
+    document.getElementById('c-turnaround').innerHTML =
+      row('stylize model', s.stylize.model_id) +
+      row('identity gate', s.stylize.gate) +
+      row('same-person gate', s.turnaround.gate) +
+      row('chiton colour drift across views (max ΔRGB)', s.turnaround.chiton_dRGB_max) +
+      row('accent law', 'crimson chiton + bronze belt, held in all three views');
+    const m = s.mesh, tg = m.turntable_gate || {}, r2 = s.rig, an = s.animate;
+    const clip = (an.animations && an.animations[0]) || {};
+    document.getElementById('c-mesh').innerHTML =
+      row('mesh model', m.model_id) +
+      row('vertices / triangles', fmt(m.vertices) + ' / ' + fmt(m.triangles)) +
+      row('turntable gate', (tg.verdict || '—') + ' — no view under ' +
+        Math.round((tg.minCoverage || 0) * 1000) / 10 + '% coverage') +
+      row('rig', s.rig_model_id + ' — ' + r2.joints + ' joints') +
+      row('walk clip', (clip.name || 'walk') + ' · ' + (clip.duration_s || 0) + ' s · ' +
+        (clip.channels || 0) + ' channels') +
+      row('scale law', s.scene.scale_law) +
+      row('fire anchor', '(' + s.scene.fire_anchor.join(', ') + ') — plate px, EMIS ledger');
+    window.__statsLoaded = true;                       /* verification hook */
+  }).catch((e) => console.error('stats.json failed', e));
+})();
+</script>
+
+<script type="module">
+/* ---- the Living Book stage: the rigged Ulysses inside the cave-shut plate ---- */
+import * as THREE from 'three';
+import { GLTFLoader } from '../../app/vendor/loaders/GLTFLoader.js';
+
+const PLATE_W = 1408, PLATE_H = 768;
+const PX_PER_M = 43;                     /* ledger yardstick: the penned ewes */
+const ULYSSES_PX = 75;                   /* 1.75 m at 43 px/m — the ledger's own number */
+const FIRE = [638, 427];                 /* EMIS blaze anchor, plate px */
+const FLICK_PER = 3.1;                   /* the plate's own fire period, seconds */
+
+const wx = (px) => px;                   /* plate x -> world x */
+const wy = (py) => PLATE_H - py;         /* plate y -> world y (y-up) */
+
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;   /* the plate ships its own grade — do not regrade the book */
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, PLATE_W, PLATE_H, 0, 0.1, 2000);
+camera.position.set(0, 0, 1000);
+
+const texLoader = new THREE.TextureLoader();
+const srgb = (t) => { t.colorSpace = THREE.SRGBColorSpace; return t; };
+
+/* the plate itself — full-frame backdrop, unlit, exactly the book's frame */
+{
+  const t = srgb(texLoader.load('../assets/set/cave/cave-shut.jpg'));
+  const plate = new THREE.Mesh(
+    new THREE.PlaneGeometry(PLATE_W, PLATE_H),
+    new THREE.MeshBasicMaterial({ map: t }));
+  plate.position.set(PLATE_W / 2, PLATE_H / 2, 0);
+  scene.add(plate);
+}
+
+/* the fire ring's front lip — the book's own occluder cutout (origin 523,409 · 214×98) */
+{
+  const t = srgb(texLoader.load('../assets/set/cave/firering-front-shut.png'));
+  const lip = new THREE.Mesh(
+    new THREE.PlaneGeometry(214, 98),
+    new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false }));
+  lip.position.set(wx(523 + 107), wy(409 + 49), 85);
+  lip.renderOrder = 30;
+  scene.add(lip);
+}
+
+/* the blaze bloom — the plate's additive fire layer, breathing IN FRONT of him */
+let bloom = null;
+{
+  const t = srgb(texLoader.load('../assets/set/cave/cave-bloom-fire.png'));
+  bloom = new THREE.Mesh(
+    new THREE.PlaneGeometry(536, 536),
+    new THREE.MeshBasicMaterial({ map: t, blending: THREE.AdditiveBlending,
+      transparent: true, depthWrite: false, opacity: 0.3 }));
+  bloom.position.set(wx(FIRE[0]), wy(FIRE[1]), 90);
+  bloom.renderOrder = 40;
+  scene.add(bloom);
+}
+
+/* lights: warm key AT the fire anchor (flickers on sim-time), cool night fill */
+const fireLight = new THREE.PointLight(0xffbf4a, 30000, 0, 2);
+fireLight.position.set(wx(FIRE[0]), wy(FIRE[1]) + 16, 150);
+scene.add(fireLight);
+const fill = new THREE.DirectionalLight(0x9db8ff, 1.7);
+fill.position.set(300, 900, 600);
+fill.target.position.set(704, 300, 0);
+scene.add(fill, fill.target);
+scene.add(new THREE.HemisphereLight(0x3a4f7f, 0x2a1f14, 0.95));
+/* the plate's own lanterns (EMIS lampL 248,356 · lampR 1260,371) key his entry and exit */
+const lampL = new THREE.PointLight(0xff8506, 8000, 0, 2);
+lampL.position.set(wx(248), wy(356), 120);
+const lampR = new THREE.PointLight(0xffd764, 11000, 0, 2);
+lampR.position.set(wx(1260), wy(371), 120);
+scene.add(lampL, lampR);
+
+/* the ledger path — foot line in plate px, threaded between the object boxes:
+   mouth threshold -> upstage of the fire ring past the cheese racks ->
+   the giant-seat lane -> downstage floor in front of the tub -> out right */
+const PATH_PTS = [
+  [250, 452], [360, 450], [432, 432], [505, 414], [640, 405], [710, 414],
+  [748, 437], [762, 455], [778, 488], [800, 528], [845, 549], [900, 551],
+  [960, 545], [1000, 538], [1045, 530], [1068, 527],
+];
+const path = new THREE.CatmullRomCurve3(
+  PATH_PTS.map(([x, y]) => new THREE.Vector3(x, y, 0)), false, 'catmullrom', 0.35);
+const PATH_LEN = path.getLength();
+const WALK_SPEED = 1.4 * PX_PER_M;       /* 1.4 m/s in plate px — honest against the ewes */
+const FADE = 0.06;                        /* fade in/out fraction at the path's ends */
+const RESPAWN_HOLD = 0.9;                 /* seconds of dark between crossings */
+
+/* contact shadow — a soft isometric ellipse under his feet */
+let shadow = null;
+{
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 96;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(128, 48, 4, 128, 48, 46);
+  grad.addColorStop(0.00, 'rgba(6,6,10,.55)');
+  grad.addColorStop(0.55, 'rgba(6,6,10,.28)');
+  grad.addColorStop(1.00, 'rgba(6,6,10,0)');
+  g.save(); g.translate(128, 48); g.scale(2.4, 1); g.translate(-128, -48);
+  g.fillStyle = grad; g.fillRect(0, 0, 256, 96); g.restore();
+  shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(96, 36),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c),
+      transparent: true, depthWrite: false, opacity: 0.5 }));
+  shadow.renderOrder = 10;
+  scene.add(shadow);
+}
+
+/* material hygiene (the casting demo's law: generated cloth ships part-metal) */
+const fadeMats = [];
+function dressMaterials(model){
+  model.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of (Array.isArray(o.material) ? o.material : [o.material])){
+      if (!m || !m.isMeshStandardMaterial) continue;
+      m.metalness = 0;
+      m.roughness = Math.min(m.roughness, 0.9);
+      m.transparent = true;
+      m.needsUpdate = true;
+      fadeMats.push(m);
+    }
+  });
+}
+
+const actor = new THREE.Group();          /* origin = his animated sole */
+scene.add(actor);
+actor.visible = false;
+
+let mixer = null;
+let clips = [];
+new GLTFLoader().load('ulysses-walk.glb', (gltf) => {
+  const model = gltf.scene;
+  clips = gltf.animations.map((a) => a.name);
+  const box = new THREE.Box3().setFromObject(model);
+  model.scale.setScalar(ULYSSES_PX / (box.max.y - box.min.y));
+  const b = new THREE.Box3().setFromObject(model);
+  const center = b.getCenter(new THREE.Vector3());
+  model.position.x -= center.x;
+  model.position.z -= center.z;
+  model.position.y -= b.min.y;
+  model.traverse((o) => { if (o.isSkinnedMesh) o.frustumCulled = false; });
+  dressMaterials(model);
+  actor.add(model);
+  if (gltf.animations.length){
+    /* the King demo's grounding law: the clip drives the skeleton below the
+     * bind pose — measure the bind sole BEFORE any mixer exists, sweep the
+     * clip for its lowest foot-bone world Y, lift so the ANIMATED sole meets
+     * the group origin (which rides the ledger floor line). */
+    const feet = [];
+    model.traverse((o) => { if (o.isBone && /Foot|ToeBase/i.test(o.name)) feet.push(o); });
+    const v = new THREE.Vector3();
+    const minFootY = () => {
+      actor.updateMatrixWorld(true);
+      return Math.min(...feet.map((bn) => bn.getWorldPosition(v).y));
+    };
+    const bindFootY = feet.length ? minFootY() : 0;
+    mixer = new THREE.AnimationMixer(model);
+    mixer.clipAction(gltf.animations[0]).play();
+    if (feet.length){
+      const dur = gltf.animations[0].duration;
+      let minY = Infinity;
+      for (let i = 0; i <= 24; i++){
+        mixer.setTime((i / 24) * dur);
+        minY = Math.min(minY, minFootY());
+      }
+      mixer.setTime(0);
+      model.position.y += bindFootY - minY;
+    }
+  }
+  actor.visible = true;
+  window.__meshLoaded = true;                          /* verification hook */
+}, undefined, (err) => console.error('walk glb load failed', err));
+
+/* ---- the crossing ---- */
+let simT = 0;                 /* flicker clock */
+let dist = 0;                 /* distance walked along the path, px */
+let hold = 0;                 /* respawn dark-time */
+const P = new THREE.Vector3(), TAN = new THREE.Vector3();
+
+function placeActor(){
+  const u = Math.min(dist / PATH_LEN, 1);
+  path.getPointAt(u, P);
+  path.getTangentAt(u, TAN);
+  const x = P.x, footY = wy(P.y);
+  actor.position.set(x, footY, 40);
+  /* facing from the path tangent: plate y-down is downstage (toward the reader) */
+  actor.rotation.y = Math.atan2(TAN.x, TAN.y * 2.2);
+  /* isometric law: NO scale change with depth — the ledger's own projection */
+  const fade = Math.min(1, Math.min(u, 1 - u) / FADE);
+  for (const m of fadeMats) m.opacity = fade;
+  shadow.position.set(x, footY - 2, 30);
+  shadow.material.opacity = 0.5 * fade;
+  shadow.visible = actor.visible;
+  return u;
+}
+
+function flick(t){
+  return 0.84 + 0.11 * Math.sin(2 * Math.PI * t / FLICK_PER)
+       + 0.05 * Math.sin(2 * Math.PI * t / 0.47 + 1.7)
+       + 0.04 * Math.sin(2 * Math.PI * t / 1.13 + 0.6);
+}
+
+function resize(){
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== Math.floor(w * renderer.getPixelRatio()) ||
+      canvas.height !== Math.floor(h * renderer.getPixelRatio())){
+    renderer.setSize(w, h, false);
+  }
+}
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  resize();
+  const dt = Math.min(clock.getDelta(), 0.1);
+  simT += dt;
+  if (actor.visible || hold > 0){
+    if (hold > 0){
+      hold -= dt;
+      if (hold <= 0){ dist = 0; actor.visible = true; }
+    } else {
+      dist += WALK_SPEED * dt;
+      if (mixer) mixer.update(dt);
+      const u = placeActor();
+      if (u >= 1){ actor.visible = false; shadow.visible = false; hold = RESPAWN_HOLD; }
+    }
+  }
+  const f = flick(simT);
+  fireLight.intensity = 30000 * f;
+  lampL.intensity = 8000 * (0.85 + 0.15 * Math.sin(2 * Math.PI * simT / 5.7));
+  lampR.intensity = 11000 * (0.85 + 0.15 * Math.sin(2 * Math.PI * simT / 6.3));
+  /* the glare law: when he crosses BEHIND the flame column the blaze's own
+   * bloom washes over him — the painted fire stays in front of the man */
+  const glare = actor.visible
+    ? Math.exp(-((actor.position.x - 640) ** 2) / (2 * 70 * 70)) : 0;
+  if (bloom) bloom.material.opacity = 0.22 + 0.55 * (f - 0.72) + 0.30 * glare;
+  renderer.render(scene, camera);
+});
+
+window.__demo3d = {                                    /* verification hooks */
+  get mixerTime(){ return mixer ? mixer.time : -1; },
+  get dist(){ return dist; },
+  get u(){ return Math.min(dist / PATH_LEN, 1); },
+  get x(){ return actor.position.x; },
+  get clips(){ return clips; },
+  setProgress(u){ dist = u * PATH_LEN; hold = 0; actor.visible = true; placeActor(); },
+  scene, camera, renderer,
+};
+</script>
+</body>
+</html>

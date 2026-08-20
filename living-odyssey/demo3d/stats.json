@@ -1,0 +1,110 @@
+{
+ "generated_from": "assets/raw/ulysses-photorig (manifests + the files themselves)",
+ "stylize": {
+  "model_id": "gemini-3-pro-image (NB Pro i2i, canonical + cameo)",
+  "candidates": {
+   "front-cand1.png": {
+    "bytes": 211658,
+    "w": 1376,
+    "h": 768,
+    "sha256": "d4e8f2bc818bd63d"
+   },
+   "front-cand2.png": {
+    "bytes": 267869,
+    "w": 1376,
+    "h": 768,
+    "sha256": "0f6da3f9243e4d9d"
+   }
+  },
+  "accepted": "front-cand2.png",
+  "gate": "PASS"
+ },
+ "turnaround": {
+  "front": {
+   "source": "real input (accepted stylize)",
+   "bytes": 267869,
+   "w": 1376,
+   "h": 768,
+   "sha256": "0f6da3f9243e4d9d"
+  },
+  "left": {
+   "source": "generated WITH the front passed as reference",
+   "bytes": 358225,
+   "w": 1376,
+   "h": 768,
+   "sha256": "2331a63d82de41f2"
+  },
+  "back": {
+   "source": "generated WITH the front passed as reference",
+   "bytes": 408237,
+   "w": 1376,
+   "h": 768,
+   "sha256": "fe91007b87b84400"
+  },
+  "gate": "PASS",
+  "chiton_dRGB_max": 4.5
+ },
+ "mesh": {
+  "model_id": "model_tripo-p1-multiview-to-3d (Tripo P1 Multi View via Scenario)",
+  "bytes": 1188708,
+  "sha256": "431497595a719fa6",
+  "vertices": 21774,
+  "triangles": 17032,
+  "meshes": 1,
+  "materials": 1,
+  "textures": 1,
+  "joints": 0,
+  "animations": [],
+  "turntable_gate": {
+   "coverage": {
+    "front": 0.1335,
+    "left": 0.0946,
+    "back": 0.1317,
+    "right": 0.0884
+   },
+   "minCoverage": 0.0884,
+   "maxOverMin": 1.51,
+   "verdict": "PASS"
+  }
+ },
+ "rig_model_id": "model_tripo-rigging-v1 (Tripo Rigging 1.0 [Biped] via Scenario)",
+ "rig": {
+  "bytes": 1639444,
+  "sha256": "c5a07aa54ad5ec86",
+  "vertices": 21817,
+  "triangles": 17032,
+  "meshes": 1,
+  "materials": 1,
+  "textures": 1,
+  "joints": 41,
+  "animations": [],
+  "gate": "PASS"
+ },
+ "animate": {
+  "clip": "biped:walk (Tripo banked clip, retargeted at rig time)",
+  "bytes": 1769120,
+  "sha256": "81fdc6bc73d83e5d",
+  "vertices": 21839,
+  "triangles": 17032,
+  "meshes": 1,
+  "materials": 1,
+  "textures": 1,
+  "joints": 41,
+  "animations": [
+   {
+    "name": "preset:biped:walk",
+    "channels": 126,
+    "duration_s": 1.9
+   }
+  ]
+ },
+ "scene": {
+  "plate": "living-odyssey cave-shut.jpg (1408x768), plate-space orthographic camera",
+  "scale_law": "1.75 m x 43 px/m = 75 px \u2014 the ledger's own actorHeightPx.ulysses",
+  "fire_anchor": [
+   638,
+   427
+  ],
+  "floor": "ledger cave floor, path threaded between the object boxes (racks, fire ring, pens, tub)"
+ }
+}
