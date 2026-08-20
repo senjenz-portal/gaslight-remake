@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The King, photographed — photo → rigged character</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --gold-dim:rgba(205,171,99,.55);
+    --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1060px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.55;max-width:74ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  figure{margin:0;}
+  figure img{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;cursor:zoom-in;}
+  figcaption{font-size:13px;color:var(--note);margin-top:7px;line-height:1.45;}
+  figcaption b{color:var(--cream-bright);font-weight:normal;}
+
+  /* ---- the viewer, center ---- */
+  #viewer{width:100%;aspect-ratio:16/10;max-height:74vh;display:block;border:1px solid #2a2417;
+    border-radius:3px;background:#0d1428;cursor:grab;touch-action:none;}
+  #viewer:active{cursor:grabbing;}
+  .viewer-cue{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);margin-top:7px;}
+
+  /* ---- the stage rail (Teddy-style tabs) ---- */
+  #stages{margin-top:46px;}
+  #stage-tabs{display:flex;gap:0;border-bottom:1px solid #2a2417;flex-wrap:wrap;}
+  .stage-tab{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.16em;
+    font-size:13px;color:var(--gold-soft);padding:10px 18px 9px;cursor:pointer;
+    border:1px solid transparent;border-bottom:0;border-radius:3px 3px 0 0;user-select:none;}
+  .stage-tab:hover{color:#d8b45a;}
+  .stage-tab.active{color:var(--cream-bright);border-color:#2a2417;background:#0d1428;cursor:default;}
+  .stage-tab .n{color:var(--gold-dim);padding-right:7px;}
+  .stage-panel{display:none;border:1px solid #2a2417;border-top:0;border-radius:0 0 3px 3px;
+    background:#0d1428;padding:24px;}
+  .stage-panel.active{display:block;}
+  .stage-panel h3{font-weight:normal;font-size:19px;margin:0 0 4px;color:var(--cream-bright);}
+  .law{font-size:14px;color:var(--note);border-left:2px solid var(--gold);padding:2px 0 2px 14px;
+    margin:14px 0 20px;max-width:70ch;}
+  .law b{color:var(--cream-bright);font-weight:normal;}
+  .art-row{display:grid;gap:18px;margin-top:6px;}
+  .cols-2{grid-template-columns:1fr 1fr;}
+  .cols-3{grid-template-columns:1fr 1fr 1fr;}
+  .cols-4{grid-template-columns:1fr 1fr 1fr 1fr;}
+  @media (max-width:640px){.cols-2,.cols-3,.cols-4{grid-template-columns:1fr 1fr;}}
+  .accepted{outline:1px solid var(--gold);outline-offset:3px;border-radius:3px;}
+  .counts{margin-top:20px;font-size:13px;color:var(--note);line-height:1.9;}
+  .counts b{color:var(--cream-bright);font-weight:normal;}
+  .counts .num{color:#d8b45a;}
+
+  /* ---- lightbox ---- */
+  #lightbox{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+    background:rgba(6,8,16,.94);cursor:zoom-out;padding:4vmin;box-sizing:border-box;}
+  #lightbox.open{display:flex;}
+  #lightbox img{max-width:100%;max-height:100%;display:block;border:1px solid #2a2417;
+    border-radius:3px;box-shadow:0 0 60px rgba(0,0,0,.8);cursor:zoom-out;}
+  #lightbox figcaption{position:absolute;left:0;right:0;bottom:18px;text-align:center;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);pointer-events:none;}
+
+  footer{margin-top:80px;}
+  footer p{color:var(--note);font-size:14px;}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../app/vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Pipeline Demo · Unlisted</div>
+  <h1>The King, photographed — photo → rigged character</h1>
+  <div class="rule"></div>
+  <p class="note">One picture in, a walking character out — five gated stages, zero manual
+  DCC. Stylize <span class="tag">(gemini-3-pro-image, i2i)</span> →
+  turnaround <span class="tag">(front passed back as reference)</span> →
+  multiview reconstruction <span class="tag">(model_tripo-p1-multiview-to-3d via Scenario)</span> →
+  auto-rig + banked walk <span class="tag">(model_tripo-rigging-v1, biped)</span> →
+  this viewer. Every count below is read from the delivered files.</p>
+
+  <figure id="viewer-fig">
+    <canvas id="viewer"></canvas>
+    <div class="viewer-cue"><span>drag to turn him — he keeps walking</span>
+      <span id="clip-cue">the walk: rigging-time retarget of a banked biped clip</span></div>
+  </figure>
+
+  <div id="stages">
+    <div id="stage-tabs" role="tablist" aria-label="Pipeline stages">
+      <div class="stage-tab active" data-panel="p-stylize" role="tab" tabindex="0"><span class="n">1</span>stylize</div>
+      <div class="stage-tab" data-panel="p-reconstruct" role="tab" tabindex="0"><span class="n">2</span>reconstruct</div>
+      <div class="stage-tab" data-panel="p-mesh" role="tab" tabindex="0"><span class="n">3</span>mesh</div>
+      <div class="stage-tab" data-panel="p-rig" role="tab" tabindex="0"><span class="n">4</span>rig</div>
+      <div class="stage-tab" data-panel="p-animate" role="tab" tabindex="0"><span class="n">5</span>animate</div>
+    </div>
+
+    <div class="stage-panel active" id="p-stylize" role="tabpanel">
+      <h3>1 · Stylize</h3>
+      <div class="law"><b>Stylize first.</b> Smooth, appealing, simplified forms reconstruct
+        cleanly; photoreal noise is what ruined the earlier photo-direct mesh. The canonical look
+        and the portrait go in together; a full-body A-pose game-avatar register comes out.</div>
+      <div class="art-row cols-2">
+        <figure><img src="../king2-look.png" alt="Canonical look reference"><figcaption><b>input · the look</b> — the sealed canonical</figcaption></figure>
+        <figure><img src="../king2-unmasked.png" alt="Canonical portrait"><figcaption><b>input · the portrait</b> — identity source</figcaption></figure>
+      </div>
+      <div class="art-row cols-2" style="margin-top:18px;">
+        <figure><img src="front-cand1.png" alt="Stylized front candidate 1"><figcaption><b>candidate 1</b> — drifted younger, rounder</figcaption></figure>
+        <figure><img src="front-cand2.png" alt="Stylized front candidate 2 — accepted" class="accepted"><figcaption><b>candidate 2 · accepted</b> — the brows and facial structure hold against the portrait</figcaption></figure>
+      </div>
+      <div class="counts" id="c-stylize"></div>
+    </div>
+
+    <div class="stage-panel" id="p-reconstruct" role="tabpanel">
+      <h3>2 · Reconstruct — the turnaround</h3>
+      <div class="law"><b>Multi-view, one person.</b> The front is the real input. The side and
+        the back are <i>generated with the accepted front passed back as reference</i>, so all
+        three are the same man — then reconstruction gets all three at once.</div>
+      <div class="art-row cols-3">
+        <figure><img src="front-accepted.png" alt="Front view — real input"><figcaption><b>front · 0°</b> — the real input</figcaption></figure>
+        <figure><img src="view-left.png" alt="Left view — generated with front as reference"><figcaption><b>left · 90°</b> — generated, front as reference</figcaption></figure>
+        <figure><img src="view-back.png" alt="Back view — generated with front as reference"><figcaption><b>back · 180°</b> — generated, front as reference</figcaption></figure>
+      </div>
+      <div class="counts" id="c-reconstruct"></div>
+    </div>
+
+    <div class="stage-panel" id="p-mesh" role="tabpanel">
+      <h3>3 · Mesh — Tripo P1 Multi View</h3>
+      <div class="law"><b>All three views feed one native 3D diffusion.</b> Newest Tripo on the
+        Scenario catalog that takes multiple angles — newer than the Tripo 3.1 the project
+        started on. The turntable below is rendered from the delivered GLB.</div>
+      <div class="art-row cols-4">
+        <figure><img src="mesh-turn-front.png" alt="Mesh turntable — front"><figcaption><b>front</b></figcaption></figure>
+        <figure><img src="mesh-turn-left.png" alt="Mesh turntable — left"><figcaption><b>left</b></figcaption></figure>
+        <figure><img src="mesh-turn-back.png" alt="Mesh turntable — back"><figcaption><b>back</b></figcaption></figure>
+        <figure><img src="mesh-turn-right.png" alt="Mesh turntable — right"><figcaption><b>right</b></figcaption></figure>
+      </div>
+      <div class="counts" id="c-mesh"></div>
+    </div>
+
+    <div class="stage-panel" id="p-rig" role="tabpanel">
+      <h3>4 · Rig — Tripo Rigging 1.0, biped</h3>
+      <div class="law"><b>The rigging track the project began with.</b> The catalog's Rigging 2.5
+        turned out to be quadruped-and-up; Rigging&nbsp;1.0 is the biped. It took the mesh
+        server-side (the reconstruction's own asset id — no re-upload) and returned a skinned
+        skeleton in a clean A-pose.</div>
+      <div class="art-row cols-2">
+        <figure><img src="rig-rest-front.png" alt="Rigged model rest pose — front"><figcaption><b>the rest pose</b> — rendered from the rigged GLB: symmetric A-pose, feet planted</figcaption></figure>
+        <figure><figcaption class="counts" id="c-rig" style="margin-top:0;"></figcaption></figure>
+      </div>
+    </div>
+
+    <div class="stage-panel" id="p-animate" role="tabpanel">
+      <h3>5 · Animate — the banked walk</h3>
+      <div class="law"><b>Retarget, don't keyframe.</b> The walk is a banked biped clip retargeted
+        onto the new skeleton at rigging time — the same move the first King demo made with a
+        Mixamo run. The viewer above is playing it on an AnimationMixer, on loop, right now.</div>
+      <div class="counts" id="c-animate"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="rule"></div>
+    <p class="lbl">Explorations · <a href="../">the casting demo</a> ·
+      <a href="../../living/">THE LIVING BOOK — Beat I</a> ·
+      <a href="../blender/">the blender demo</a></p>
+    <p>Demo only — not wired into the book. <a href="../../">← back to the landing page</a></p>
+  </footer>
+</div>
+
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image">
+  <img alt="">
+  <figcaption></figcaption>
+</div>
+
+<script>
+/* ---- stage tabs ---- */
+(function(){
+  const tabs = document.querySelectorAll('.stage-tab');
+  function pick(tab){
+    tabs.forEach((t) => t.classList.toggle('active', t === tab));
+    document.querySelectorAll('.stage-panel').forEach((p) =>
+      p.classList.toggle('active', p.id === tab.dataset.panel));
+  }
+  tabs.forEach((t) => {
+    t.addEventListener('click', () => pick(t));
+    t.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pick(t); }
+    });
+  });
+})();
+
+/* ---- lightbox ---- */
+(function(){
+  const box = document.getElementById('lightbox');
+  const big = box.querySelector('img');
+  const cap = box.querySelector('figcaption');
+  document.querySelectorAll('.wrap figure img').forEach(function(img){
+    img.addEventListener('click', function(){
+      const fig = img.closest('figure');
+      const capEl = fig && fig.querySelector('figcaption');
+      big.src = img.src; big.alt = img.alt || '';
+      cap.textContent = capEl ? capEl.textContent : (img.alt || '');
+      box.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  const close = () => { box.classList.remove('open'); big.src = ''; document.body.style.overflow = ''; };
+  box.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && box.classList.contains('open')) close();
+  });
+})();
+
+/* ---- per-stage counts, read from stats.json (itself read from the delivered files) ---- */
+(function(){
+  const fmt = (n) => typeof n === 'number' ? n.toLocaleString('en-US') : n;
+  const row = (label, val) => '<b>' + label + '</b> · <span class="num">' + val + '</span><br>';
+  fetch('stats.json').then((r) => r.json()).then((s) => {
+    document.getElementById('c-stylize').innerHTML =
+      row('model', s.stylize.model_id) +
+      row('candidates', Object.keys(s.stylize.candidates).length) +
+      row('accepted', s.stylize.accepted) +
+      row('identity gate', s.stylize.gate);
+    const rv = s.reconstruct_views;
+    document.getElementById('c-reconstruct').innerHTML =
+      row('views', '3 — front (real) + left + back (generated off the front)') +
+      row('same-person gate', rv.same_person_gate) +
+      row('coat colour drift across views (max ΔRGB)', rv.coat_dRGB_max) +
+      row('view sizes', ['front', 'left', 'back'].map((k) => rv[k].w + '×' + rv[k].h).join(' · '));
+    const m = s.mesh, tg = m.turntable_gate || {};
+    document.getElementById('c-mesh').innerHTML =
+      row('model', m.model_id) +
+      row('vertices', fmt(m.vertices)) + row('triangles', fmt(m.triangles)) +
+      row('materials / textures', m.materials + ' / ' + m.textures) +
+      row('turntable gate', (tg.verdict || '—') + ' — no view under ' +
+        Math.round((tg.minCoverage || 0) * 1000) / 10 + '% coverage');
+    const r = s.rig;
+    document.getElementById('c-rig').innerHTML =
+      row('model', r.model_id) +
+      row('joints', r.joints) +
+      row('vertices skinned', fmt(r.vertices)) +
+      row('rest pose', 'A-pose (see render)') +
+      row('gate', r.gate);
+    const an = s.animate, clip = (an.animations && an.animations[0]) || {};
+    document.getElementById('c-animate').innerHTML =
+      row('clip', an.clip) +
+      row('name in file', clip.name || '—') +
+      row('duration', (clip.duration_s || 0) + ' s, looped') +
+      row('animated channels', clip.channels || 0) +
+      row('joints driven', an.joints);
+    window.__statsLoaded = true;                       /* verification hook */
+  }).catch((e) => console.error('stats.json failed', e));
+})();
+</script>
+
+<script type="module">
+/* ---- the animated viewer: the rigged King walking his banked clip ---- */
+import * as THREE from 'three';
+import { GLTFLoader } from '../../app/vendor/loaders/GLTFLoader.js';
+import { OrbitControls } from '../../app/vendor/controls/OrbitControls.js';
+import { RoomEnvironment } from '../../app/vendor/environments/RoomEnvironment.js';
+
+const canvas = document.getElementById('viewer');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NeutralToneMapping;   /* the figure curve from the casting demo */
+renderer.toneMappingExposure = 1.0;
+
+const scene = new THREE.Scene();
+
+/* Prussian-blue night backdrop, the house gradient */
+(function(){
+  const c = document.createElement('canvas');
+  c.width = c.height = 256;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(128, 108, 6, 128, 108, 200);
+  grad.addColorStop(0.00, '#17325f');
+  grad.addColorStop(0.34, '#0d2749');
+  grad.addColorStop(0.72, '#081a3a');
+  grad.addColorStop(1.00, '#050f28');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 256, 256);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  scene.background = tex;
+})();
+
+const CHEST = 1.0;
+const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+camera.position.set(2.6, 1.5, 3.1);
+
+/* image-based fill + a warm key + amber rim — the casting demo's figure rig */
+const pmrem = new THREE.PMREMGenerator(renderer);
+const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+pmrem.dispose();
+scene.environment = envTex;
+scene.environmentIntensity = 0.65;
+const key = new THREE.DirectionalLight(0xffe6c4, 0.9);
+key.position.set(2.0, 3.0, 4.0);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0xffb45a, 1.0);
+rim.position.set(-2.2, 2.1, -2.8);
+scene.add(rim);
+
+/* ground disc + contact patch */
+(function(){
+  const disc = new THREE.Mesh(
+    new THREE.CircleGeometry(2.6, 64),
+    new THREE.MeshStandardMaterial({ color:0x0c1730, roughness:0.95, metalness:0 })
+  );
+  disc.rotation.x = -Math.PI / 2;
+  scene.add(disc);
+  const c = document.createElement('canvas');
+  c.width = c.height = 128;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(64, 64, 2, 64, 64, 62);
+  grad.addColorStop(0.00, 'rgba(3,7,18,.62)');
+  grad.addColorStop(0.45, 'rgba(3,7,18,.30)');
+  grad.addColorStop(1.00, 'rgba(3,7,18,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 128, 128);
+  const patch = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.35, 1.35),
+    new THREE.MeshBasicMaterial({ map:new THREE.CanvasTexture(c), transparent:true, depthWrite:false })
+  );
+  patch.rotation.x = -Math.PI / 2;
+  patch.position.y = 0.006;
+  scene.add(patch);
+})();
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.enablePan = false;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.7;
+controls.minDistance = 1.8;
+controls.maxDistance = 7.0;
+controls.minPolarAngle = 0.5;
+controls.maxPolarAngle = 1.5;
+controls.target.set(0, CHEST, 0);
+controls.update();
+
+/* material hygiene (the casting demo's law: generated cloth ships part-metal) */
+function dressMaterials(model){
+  model.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of (Array.isArray(o.material) ? o.material : [o.material])){
+      if (!m || !m.isMeshStandardMaterial) continue;
+      m.metalness = 0;
+      m.roughness = Math.min(m.roughness, 0.9);
+      m.envMapIntensity = 1.0;
+      m.needsUpdate = true;
+    }
+  });
+}
+
+const HEIGHT = 1.9;
+let mixer = null;
+new GLTFLoader().load('king-photorig-walk.glb', (gltf) => {
+  const model = gltf.scene;
+  const box = new THREE.Box3().setFromObject(model);
+  model.scale.setScalar(HEIGHT / (box.max.y - box.min.y));
+  const b = new THREE.Box3().setFromObject(model);
+  const center = b.getCenter(new THREE.Vector3());
+  model.position.x -= center.x;
+  model.position.z -= center.z;
+  model.position.y -= b.min.y;
+  model.traverse((o) => { if (o.isSkinnedMesh) o.frustumCulled = false; });
+  dressMaterials(model);
+  scene.add(model);
+  if (gltf.animations.length){
+    /* Ground him by the walk itself, not the bind pose: the clip drives the
+     * skeleton lower than the A-pose bbox, which read as him sunk to the thigh.
+     * The bind-pose foot-bone height is measured BEFORE any mixer exists (a
+     * mixer.setTime(0) would already apply the clip's first frame); then the
+     * clip is swept for its lowest foot-bone world Y and the model lifted so
+     * the animated sole — not the bind sole — meets the ground. */
+    const feet = [];
+    model.traverse((o) => { if (o.isBone && /Foot|ToeBase/i.test(o.name)) feet.push(o); });
+    const v = new THREE.Vector3();
+    const minFootY = () => {
+      model.updateMatrixWorld(true);
+      return Math.min(...feet.map((b) => b.getWorldPosition(v).y));
+    };
+    const bindFootY = feet.length ? minFootY() : 0;  /* bind: sole sits at world 0 */
+    mixer = new THREE.AnimationMixer(model);
+    mixer.clipAction(gltf.animations[0]).play();     /* LoopRepeat is the default */
+    if (feet.length){
+      const dur = gltf.animations[0].duration;
+      let minY = Infinity;
+      for (let i = 0; i <= 24; i++){
+        mixer.setTime((i / 24) * dur);
+        minY = Math.min(minY, minFootY());
+      }
+      mixer.setTime(0);
+      model.position.y += bindFootY - minY;          /* animated sole -> ground */
+    }
+  }
+  window.__photoRig = {                              /* verification hook */
+    get mixerTime(){ return mixer ? mixer.time : -1; },
+    clips: gltf.animations.map((a) => a.name),
+    scene, model, camera, controls, renderer,
+  };
+  window.__meshLoaded = true;                        /* verification hook */
+}, undefined, (err) => console.error('walk glb load failed', err));
+
+function resize(){
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== Math.floor(w * renderer.getPixelRatio()) ||
+      canvas.height !== Math.floor(h * renderer.getPixelRatio())){
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+}
+window.addEventListener('resize', resize);
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  resize();
+  const dt = Math.min(clock.getDelta(), 0.1);
+  if (mixer) mixer.update(dt);
+  controls.update(dt);
+  renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+{
+ "generated_from": "assets/raw/king-photorig (manifests + the files themselves)",
+ "stylize": {
+  "model_id": "gemini-3-pro-image (NB Pro i2i, two reference images)",
+  "candidates": {
+   "front-cand1.png": {
+    "bytes": 235519,
+    "w": 1408,
+    "h": 768,
+    "sha256": "db166e1fa7a52ec4"
+   },
+   "front-cand2.png": {
+    "bytes": 261454,
+    "w": 1408,
+    "h": 768,
+    "sha256": "88ca81840d399da4"
+   }
+  },
+  "accepted": "front-cand2.png",
+  "gate": "PASS"
+ },
+ "reconstruct_views": {
+  "front": {
+   "source": "real input (accepted stylize)",
+   "bytes": 261454,
+   "w": 1408,
+   "h": 768,
+   "sha256": "88ca81840d399da4"
+  },
+  "left": {
+   "source": "generated WITH the front passed as reference",
+   "bytes": 339041,
+   "w": 1408,
+   "h": 768,
+   "sha256": "2fb4c84fb9970565"
+  },
+  "back": {
+   "source": "generated WITH the front passed as reference",
+   "bytes": 365965,
+   "w": 1408,
+   "h": 768,
+   "sha256": "31513ad4e399cca2"
+  },
+  "same_person_gate": "PASS",
+  "coat_dRGB_max": 9.2
+ },
+ "mesh": {
+  "model_id": "model_tripo-p1-multiview-to-3d (Tripo P1 Multi View via Scenario)",
+  "bytes": 1052436,
+  "sha256": "521c50d17c4dce32",
+  "vertices": 19176,
+  "triangles": 16937,
+  "meshes": 1,
+  "materials": 1,
+  "textures": 1,
+  "joints": 0,
+  "jointNames": [],
+  "animations": [],
+  "turntable_gate": {
+   "coverage": {
+    "front": 0.126,
+    "left": 0.0842,
+    "back": 0.1237,
+    "right": 0.09
+   },
+   "minCoverage": 0.0842,
+   "maxOverMin": 1.5,
+   "verdict": "PASS"
+  }
+ },
+ "rig": {
+  "model_id": "model_tripo-rigging-v1 (Tripo Rigging 1.0 [Biped] via Scenario)",
+  "bytes": 1449328,
+  "sha256": "df4571594ea4a33b",
+  "vertices": 19176,
+  "triangles": 16937,
+  "meshes": 1,
+  "materials": 1,
+  "textures": 1,
+  "joints": 41,
+  "animations": [],
+  "gate": "PASS"
+ },
+ "animate": {
+  "clip": "biped:walk (Tripo banked clip, retargeted at rig time)",
+  "bytes": 1577476,
+  "sha256": "a1bb6e6a3717942d",
+  "vertices": 19196,
+  "triangles": 16937,
+  "meshes": 1,
+  "materials": 1,
+  "textures": 1,
+  "joints": 41,
+  "animations": [
+   {
+    "name": "preset:biped:walk",
+    "channels": 126,
+    "duration_s": 1.9
+   }
+  ]
+ }
+}
