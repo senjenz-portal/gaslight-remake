@@ -1,0 +1,320 @@
+{
+ "sam2": {
+  "model": "meta/sam-2",
+  "version": "fe97b453a6455861e3bac769b441ca1f1086110da7466dbb65cf1eecfd60dc83",
+  "prediction": "bsjcpnjb91rmw0d03zcan0mk8g",
+  "masks": 84
+ },
+ "coveragePct": 36.2,
+ "assigned": {
+  "fire": 1,
+  "pens": 7,
+  "racks": 17,
+  "woodpile": 1,
+  "boulder": 1,
+  "bed": 6,
+  "tub": 1,
+  "cheeses": 1,
+  "stones": 4,
+  "walls": 25,
+  "night": 18,
+  "floor": 2
+ },
+ "decals": [
+  {
+   "mask": 59,
+   "grayStd": 9.6,
+   "rgb": [
+    114,
+    70,
+    50
+   ],
+   "area": 775,
+   "bbox": [
+    452,
+    402,
+    505,
+    421
+   ]
+  },
+  {
+   "mask": 66,
+   "grayStd": 19.5,
+   "rgb": [
+    171,
+    125,
+    111
+   ],
+   "area": 1517,
+   "bbox": [
+    762,
+    453,
+    837,
+    478
+   ]
+  }
+ ],
+ "components": [
+  1908,
+  9,
+  4,
+  1
+ ],
+ "heuristics": [
+  {
+   "check": "fire = warmest large region",
+   "mask": 8,
+   "assigned": "fire",
+   "agrees": true
+  },
+  {
+   "check": "boulder = largest round region left of the racks",
+   "mask": 0,
+   "assigned": "boulder",
+   "agrees": true
+  }
+ ],
+ "iou": [
+  {
+   "target": "fire",
+   "box": "fireRingOuter",
+   "bestSingleIoU": 0.567,
+   "bestSingleMask": 8,
+   "greedyUnionIoU": 0.611,
+   "unionMasks": [
+    8,
+    38
+   ],
+   "unionBboxIoU": 0.797
+  },
+  {
+   "target": "fire",
+   "box": "fireRingRimNW",
+   "bestSingleIoU": 0.0,
+   "bestSingleMask": 83,
+   "greedyUnionIoU": 0.0,
+   "unionMasks": [],
+   "unionBboxIoU": 0.0
+  },
+  {
+   "target": "pens",
+   "box": "mainPen",
+   "bestSingleIoU": 0.023,
+   "bestSingleMask": 36,
+   "greedyUnionIoU": 0.079,
+   "unionMasks": [
+    36,
+    80,
+    44,
+    82,
+    41,
+    83,
+    35
+   ],
+   "unionBboxIoU": 0.317
+  },
+  {
+   "target": "pens",
+   "box": "frontPen",
+   "bestSingleIoU": 0.152,
+   "bestSingleMask": 9,
+   "greedyUnionIoU": 0.174,
+   "unionMasks": [
+    9,
+    76
+   ],
+   "unionBboxIoU": 0.381
+  },
+  {
+   "target": "racks",
+   "box": "rackA",
+   "bestSingleIoU": 0.049,
+   "bestSingleMask": 52,
+   "greedyUnionIoU": 0.225,
+   "unionMasks": [
+    52,
+    34,
+    42,
+    75,
+    57
+   ],
+   "unionBboxIoU": 0.486
+  },
+  {
+   "target": "racks",
+   "box": "rackB",
+   "bestSingleIoU": 0.654,
+   "bestSingleMask": 13,
+   "greedyUnionIoU": 0.655,
+   "unionMasks": [
+    13,
+    27
+   ],
+   "unionBboxIoU": 0.68
+  },
+  {
+   "target": "racks",
+   "box": "rackC",
+   "bestSingleIoU": 0.671,
+   "bestSingleMask": 12,
+   "greedyUnionIoU": 0.671,
+   "unionMasks": [
+    12
+   ],
+   "unionBboxIoU": 0.723
+  },
+  {
+   "target": "racks",
+   "box": "rackD",
+   "bestSingleIoU": 0.063,
+   "bestSingleMask": 47,
+   "greedyUnionIoU": 0.181,
+   "unionMasks": [
+    47,
+    51,
+    50
+   ],
+   "unionBboxIoU": 0.246
+  },
+  {
+   "target": "woodpile",
+   "box": "firewood",
+   "bestSingleIoU": 0.016,
+   "bestSingleMask": 8,
+   "greedyUnionIoU": 0.016,
+   "unionMasks": [
+    8
+   ],
+   "unionBboxIoU": 0.035
+  },
+  {
+   "target": "woodpile",
+   "box": "logBundle",
+   "bestSingleIoU": 0.287,
+   "bestSingleMask": 38,
+   "greedyUnionIoU": 0.288,
+   "unionMasks": [
+    38,
+    20
+   ],
+   "unionBboxIoU": 0.372
+  },
+  {
+   "target": "woodpile",
+   "box": "logsRight",
+   "bestSingleIoU": 0.008,
+   "bestSingleMask": 1,
+   "greedyUnionIoU": 0.008,
+   "unionMasks": [
+    1
+   ],
+   "unionBboxIoU": 0.007
+  },
+  {
+   "target": "boulder",
+   "box": "mouthAperture",
+   "bestSingleIoU": 0.631,
+   "bestSingleMask": 0,
+   "greedyUnionIoU": 0.631,
+   "unionMasks": [
+    0
+   ],
+   "unionBboxIoU": 0.514
+  },
+  {
+   "target": "bed",
+   "box": "bed",
+   "bestSingleIoU": 0.262,
+   "bestSingleMask": 44,
+   "greedyUnionIoU": 0.465,
+   "unionMasks": [
+    44,
+    19,
+    53,
+    41,
+    37,
+    77,
+    54
+   ],
+   "unionBboxIoU": 0.397
+  },
+  {
+   "target": "tub",
+   "box": "milkTub",
+   "bestSingleIoU": 0.57,
+   "bestSingleMask": 9,
+   "greedyUnionIoU": 0.57,
+   "unionMasks": [
+    9
+   ],
+   "unionBboxIoU": 0.509
+  },
+  {
+   "target": "tub",
+   "box": "clayBowl",
+   "bestSingleIoU": 0.766,
+   "bestSingleMask": 10,
+   "greedyUnionIoU": 0.766,
+   "unionMasks": [
+    10
+   ],
+   "unionBboxIoU": 0.718
+  },
+  {
+   "target": "cheeses",
+   "box": "floorCheeses",
+   "bestSingleIoU": 0.279,
+   "bestSingleMask": 79,
+   "greedyUnionIoU": 0.279,
+   "unionMasks": [
+    79
+   ],
+   "unionBboxIoU": 0.357
+  }
+ ],
+ "autoLedger": {
+  "coreObstacles": 12,
+  "meanGreedyUnionIoU": 0.295,
+  "meanUnionBboxIoU": 0.38
+ },
+ "nav": {
+  "cells": 1908,
+  "ofCells": 67584,
+  "spawn": [
+   354,
+   458
+  ],
+  "corners": {
+   "C1": [
+    970,
+    542
+   ],
+   "C2": [
+    682,
+    358
+   ],
+   "C3": [
+    758,
+    554
+   ],
+   "C4": [
+    514,
+    398
+   ]
+  },
+  "erosion": {
+   "obstacles": [
+    9,
+    5
+   ],
+   "fire": [
+    12,
+    6
+   ],
+   "floorRim": [
+    6,
+    5
+   ]
+  }
+ }
+}

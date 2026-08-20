@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ulysses, click-steered — SAM 2 labels the scene so he knows where to go</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --gold-dim:rgba(205,171,99,.55);
+    --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.55;max-width:78ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  figure{margin:0;}
+  figure img{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;}
+  figcaption{font-size:13px;color:var(--note);margin-top:7px;line-height:1.45;}
+  figcaption b{color:var(--cream-bright);font-weight:normal;}
+
+  /* ---- the stage: the book's own frame ---- */
+  #stage{width:100%;aspect-ratio:1408/768;display:block;border:1px solid #2a2417;
+    border-radius:3px;background:#060a18;cursor:crosshair;}
+  .stage-cue{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);margin-top:7px;}
+  #voice{color:#d8b45a;opacity:0;min-height:1.4em;}
+
+  .law{font-size:14px;color:var(--note);border-left:2px solid var(--gold);padding:2px 0 2px 14px;
+    margin:26px 0 20px;max-width:74ch;}
+  .law b{color:var(--cream-bright);font-weight:normal;}
+  .art-row{display:grid;gap:18px;margin-top:6px;}
+  .counts{margin-top:20px;font-size:13px;color:var(--note);line-height:1.9;}
+  .counts b{color:var(--cream-bright);font-weight:normal;}
+  .counts .num{color:#d8b45a;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  @media (max-width:760px){.two-col{grid-template-columns:1fr;}}
+  table.iou{border-collapse:collapse;font-size:13px;color:var(--note);margin-top:8px;}
+  table.iou th{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.12em;
+    font-size:11px;color:var(--gold-soft);text-align:left;padding:3px 14px 3px 0;font-weight:normal;}
+  table.iou td{padding:2px 14px 2px 0;border-top:1px solid #1d1a10;}
+  table.iou td.num{color:#d8b45a;}
+
+  footer{margin-top:80px;}
+  footer p{color:var(--note);font-size:14px;}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../../app/vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Pipeline Demo · Unlisted</div>
+  <h1>Ulysses, click-steered — SAM 2 labels the scene so he knows where to go</h1>
+  <div class="rule"></div>
+  <p class="note">The photographed man from the <a href="../">demo before this one</a>, now with a
+  <i>map</i>: meta/sam-2 <span class="tag">(Replicate, automatic mask generation)</span> segments the
+  cave-shut plate into regions; the regions are named by position and colour with the hand ledger as
+  reference; the floor that remains — minus every segmented object, every ledger box, and half his own
+  footprint — becomes an A* grid at 4&nbsp;plate-px a cell. <b>Click anywhere on the floor</b> and he
+  walks there, threading the obstacles; click the fire or the pens and the margin names what refused
+  him. The posture law, the 43&nbsp;px/m scale law and the banked walk clip all ride along unchanged.
+  The fire breathes ember sparks, a smoke wisp climbs off the blaze, dust hangs in the two lamp
+  halos — all seeded, all on the sim clock.</p>
+
+  <canvas id="stage"></canvas>
+  <div class="stage-cue"><span>click the floor — he paths around the fire, the tub, the pens</span>
+    <span id="voice"></span></div>
+
+  <div class="law"><b>The scene, read by machine.</b> SAM 2 returns <span id="n-masks">84</span> regions
+    over the plate. Each is labeled by heuristics — the warmest bright region is the fire, the round
+    mass at the mouth is the door-stone, tall amber stacks are the racks — with the ledger's boxes as
+    the reference key, and the flat floor-paint patches (the dung flecks the ledger itself calls paint)
+    are returned to the floor. What SAM&nbsp;2 finds that the ledger never boxed — the whey tub, the
+    cream bowl, the grey stone by the mouth — blocks the walk anyway; what it misses (the firewood
+    pile, the ring's NW rim spill) the ledger's own boxes still forbid. Neither map is trusted alone.</div>
+
+  <div class="two-col">
+    <div>
+      <figure><img src="seg-overlay.jpg" alt="SAM 2 regions, labeled over the plate">
+        <figcaption><b>the labeled scene</b> — SAM 2 regions tinted by name: the fire, the pens,
+        the racks, the door-stone, the bed, the tubs.</figcaption></figure>
+    </div>
+    <div>
+      <figure><img src="nav-grid.jpg" alt="Derived walkable grid over the plate">
+        <figcaption><b>the walkable floor</b> — the ledger's floor band minus every region and box,
+        eroded by half his footprint; the ring marks his spawn at the mouth threshold.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:26px;">
+    <div>
+      <div class="lbl">sam 2 vs the hand ledger — IoU per obstacle</div>
+      <table class="iou" id="iou-table"></table>
+    </div>
+    <div>
+      <div class="lbl">the counts</div>
+      <div class="counts" id="c-nav"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="rule"></div>
+    <p class="lbl"><a href="../">the 3d walk demo</a> ·
+      <a href="../../">THE LIVING ODYSSEY</a> ·
+      <a href="../../../king-demo/photo-rig/">the King photo-rig demo</a></p>
+    <p>Demo only — not wired into the book. <a href="../../../">← back to the landing page</a></p>
+  </footer>
+</div>
+
+<script>
+/* ---- the counts + IoU table, read from stats.json (itself baked from the raw masks) ---- */
+(function(){
+  const row = (label, val) => '<b>' + label + '</b> · <span class="num">' + val + '</span><br>';
+  fetch('stats.json').then((r) => r.json()).then((s) => {
+    document.getElementById('n-masks').textContent = s.sam2.masks;
+    const core = s.iou.filter((r2) => ['fire','pens','racks','woodpile','boulder'].includes(r2.target));
+    let html = '<tr><th>ledger box</th><th>mask IoU</th><th>box IoU</th></tr>';
+    for (const r2 of s.iou){
+      const missed = r2.greedyUnionIoU < 0.05;
+      html += '<tr><td>' + r2.box + (missed ? ' <span class="tag">unsegmented</span>' : '') +
+        '</td><td class="num">' + r2.greedyUnionIoU.toFixed(3) +
+        '</td><td class="num">' + r2.unionBboxIoU.toFixed(3) + '</td></tr>';
+    }
+    document.getElementById('iou-table').innerHTML = html;
+    const seg = s.iou.filter((r2) => r2.greedyUnionIoU >= 0.05);
+    document.getElementById('c-nav').innerHTML =
+      row('segmentation', s.sam2.model + ' · ' + s.sam2.masks + ' regions · ' +
+          s.coveragePct + '% of the plate') +
+      row('auto-ledger feasibility (core obstacles)', 'mask IoU ' +
+          s.autoLedger.meanGreedyUnionIoU.toFixed(3) + ' · box IoU ' +
+          s.autoLedger.meanUnionBboxIoU.toFixed(3) + ' over ' + s.autoLedger.coreObstacles + ' boxes') +
+      row('segmented vs unsegmented', seg.length + ' of ' + s.iou.length +
+          ' ledger boxes found by SAM 2 alone') +
+      row('found beyond the ledger', 'the whey tub, the cream bowl, the grey stone (blocked), ' +
+          s.decals.length + ' floor decals (walkable)') +
+      row('walkable grid', s.nav.cells.toLocaleString('en-US') + ' of ' +
+          s.nav.ofCells.toLocaleString('en-US') + ' cells · 4 px cells · footprint erosion ' +
+          s.nav.erosion.obstacles.join('/') + ' px (fire ' + s.nav.erosion.fire.join('/') + ')') +
+      row('particles', '120 embers + 50 smoke + 140 dust motes = 310 of a 500 budget · ' +
+          'one draw call each · seeded, sim-time only');
+    window.__statsLoaded = true;                       /* verification hook */
+  }).catch((e) => console.error('stats.json failed', e));
+})();
+</script>
+
+<script type="module">
+/* ---- the Living Book stage: click-to-walk over the SAM2-labeled plate ---- */
+import * as THREE from 'three';
+import { GLTFLoader } from '../../../app/vendor/loaders/GLTFLoader.js';
+
+const PLATE_W = 1408, PLATE_H = 768;
+const PX_PER_M = 43;                     /* ledger yardstick: the penned ewes */
+const ULYSSES_PX = 75;                   /* 1.75 m at 43 px/m — the ledger's own number */
+const FIRE = [638, 427];                 /* EMIS blaze anchor, plate px */
+const FLICK_PER = 3.1;                   /* the plate's own fire period, seconds */
+const WALK_SPEED = 1.4 * PX_PER_M;       /* 1.4 m/s in plate px — honest against the ewes */
+
+const wx = (px) => px;                   /* plate x -> world x */
+const wy = (py) => PLATE_H - py;         /* plate y -> world y (y-up) */
+
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;   /* the plate ships its own grade — do not regrade the book */
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, PLATE_W, PLATE_H, 0, 0.1, 2000);
+camera.position.set(0, 0, 1000);
+
+const texLoader = new THREE.TextureLoader();
+const srgb = (t) => { t.colorSpace = THREE.SRGBColorSpace; return t; };
+
+/* the plate itself — full-frame backdrop, unlit, exactly the book's frame */
+{
+  const t = srgb(texLoader.load('../../assets/set/cave/cave-shut.jpg'));
+  const plate = new THREE.Mesh(
+    new THREE.PlaneGeometry(PLATE_W, PLATE_H),
+    new THREE.MeshBasicMaterial({ map: t }));
+  plate.position.set(PLATE_W / 2, PLATE_H / 2, 0);
+  scene.add(plate);
+}
+
+/* the plate's own front cutouts — the living book's occluders, each with its
+   GROUND line: when his feet are downstage of the ground he walks in front
+   and the cutout drops behind him; upstage, the painted stones cover him */
+const cutouts = [];
+for (const o of [
+  { src: '../../assets/set/cave/firering-front-shut.png', origin: [523, 409], size: [214, 98], ground: 503 },
+  { src: '../../assets/set/cave/woodpile-front-shut.png', origin: [483, 497], size: [140, 57], ground: 550 },
+  { src: '../../assets/set/cave/tub-front-shut.png',      origin: [845, 455], size: [94, 95],  ground: 546 },
+]){
+  const t = srgb(texLoader.load(o.src));
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(o.size[0], o.size[1]),
+    new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false }));
+  m.position.set(wx(o.origin[0] + o.size[0] / 2), wy(o.origin[1] + o.size[1] / 2), 45);
+  m.userData.ground = o.ground;
+  scene.add(m);
+  cutouts.push(m);
+}
+
+/* the blaze bloom — the plate's additive fire layer, breathing IN FRONT of him */
+let bloom = null;
+{
+  const t = srgb(texLoader.load('../../assets/set/cave/cave-bloom-fire.png'));
+  bloom = new THREE.Mesh(
+    new THREE.PlaneGeometry(536, 536),
+    new THREE.MeshBasicMaterial({ map: t, blending: THREE.AdditiveBlending,
+      transparent: true, depthWrite: false, opacity: 0.3 }));
+  bloom.position.set(wx(FIRE[0]), wy(FIRE[1]), 90);
+  bloom.renderOrder = 40;
+  scene.add(bloom);
+}
+
+/* lights: warm key AT the fire anchor (flickers on sim-time), cool night fill */
+const fireLight = new THREE.PointLight(0xffbf4a, 30000, 0, 2);
+fireLight.position.set(wx(FIRE[0]), wy(FIRE[1]) + 16, 150);
+scene.add(fireLight);
+const fill = new THREE.DirectionalLight(0x9db8ff, 1.7);
+fill.position.set(300, 900, 600);
+fill.target.position.set(704, 300, 0);
+scene.add(fill, fill.target);
+scene.add(new THREE.HemisphereLight(0x3a4f7f, 0x2a1f14, 0.95));
+/* the plate's own lanterns (EMIS lampL 248,356 · lampR 1260,371) */
+const LAMPS = [[248, 356], [1260, 371]];
+const lampL = new THREE.PointLight(0xff8506, 8000, 0, 2);
+lampL.position.set(wx(LAMPS[0][0]), wy(LAMPS[0][1]), 120);
+const lampR = new THREE.PointLight(0xffd764, 11000, 0, 2);
+lampR.position.set(wx(LAMPS[1][0]), wy(LAMPS[1][1]), 120);
+scene.add(lampL, lampR);
+
+/* ---- deterministic seeds: FNV-1a -> mulberry32, the sigil's own law ---- */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+/* ---- particles: three seeded systems, one draw call each, sim-time only ----
+ * budget: 120 embers + 50 smoke + 140 dust motes = 310 (<= 500).
+ * All motion is a pure function of uTime (the sim clock) and the baked seeds —
+ * no wall clock, no per-frame CPU writes: the vertex shader does the flight. */
+const fxUniforms = { uTime: { value: 0 }, uScale: { value: 1 } };
+const fxSystems = [];
+
+function makePoints(n, seedKey, vertexBody, fragBody, blending, z, order){
+  const rand = mulberry32(seedKey);
+  const seeds = new Float32Array(n * 4);
+  for (let i = 0; i < n * 4; i++) seeds[i] = rand();
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+  geo.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 4));
+  geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(704, 384, 0), 1600);
+  const mat = new THREE.ShaderMaterial({
+    uniforms: fxUniforms,
+    vertexShader: `
+      attribute vec4 aSeed;
+      uniform float uTime; uniform float uScale;
+      varying vec4 vCol;
+      ${vertexBody}`,
+    fragmentShader: `
+      varying vec4 vCol;
+      void main(){
+        float d = length(gl_PointCoord - 0.5) * 2.0;
+        float fall = smoothstep(1.0, 0.0, d);
+        ${fragBody}
+      }`,
+    blending, transparent: true, depthWrite: false, depthTest: false,
+  });
+  const pts = new THREE.Points(geo, mat);
+  pts.position.z = z;
+  pts.renderOrder = order;
+  pts.frustumCulled = false;
+  scene.add(pts);
+  fxSystems.push({ points: pts, count: n });
+  return pts;
+}
+
+/* ember sparks — rising off the blaze anchor, looped lifetimes */
+makePoints(120, 0xE3BE55, `
+  void main(){
+    float life = mix(1.3, 2.6, aSeed.x);
+    float t = fract(uTime / life + aSeed.y);
+    float ang = aSeed.z * 6.2832;
+    float rad = sqrt(aSeed.w) ;
+    vec2 spawn = vec2(${wx(FIRE[0])}.0 + cos(ang) * rad * 46.0,
+                      ${wy(FIRE[1] + 28)}.0 + sin(ang) * rad * 14.0);
+    float rise = mix(60.0, 130.0, aSeed.x);
+    vec2 p = spawn + vec2(sin(t * 6.2832 * mix(1.0, 2.2, aSeed.z) + aSeed.y * 6.2832) * 9.0 * t,
+                          t * rise);
+    float a = smoothstep(0.0, 0.12, t) * (1.0 - t);
+    vCol = vec4(mix(vec3(1.0, 0.78, 0.32), vec3(0.85, 0.22, 0.04), t) * a, a);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 0.0, 1.0);
+    gl_PointSize = mix(2.5, 5.0, aSeed.w) * (1.0 - 0.45 * t) * uScale;
+  }`, `
+    gl_FragColor = vec4(vCol.rgb * fall, 1.0);`,
+  THREE.AdditiveBlending, 88, 41);
+
+/* the smoke wisp — faint, climbing off the blaze, under the bloom */
+makePoints(50, 0x51D0CF, `
+  void main(){
+    float life = mix(4.0, 7.0, aSeed.x);
+    float t = fract(uTime / life + aSeed.y);
+    vec2 spawn = vec2(${wx(FIRE[0])}.0 + (aSeed.z - 0.5) * 26.0, ${wy(FIRE[1] - 14)}.0);
+    float rise = mix(120.0, 170.0, aSeed.w);
+    vec2 p = spawn + vec2(sin(t * 3.1416 * mix(0.8, 1.6, aSeed.z) + aSeed.x * 6.2832)
+                            * (8.0 + 26.0 * t) + t * t * 14.0,
+                          t * rise);
+    float a = smoothstep(0.0, 0.25, t) * (1.0 - t) * 0.16;
+    vCol = vec4(vec3(0.58, 0.60, 0.68), a);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 0.0, 1.0);
+    gl_PointSize = mix(22.0, 58.0, t) * uScale;
+  }`, `
+    gl_FragColor = vec4(vCol.rgb, vCol.a * fall * fall);`,
+  THREE.NormalBlending, 86, 39);
+
+/* dust motes — hanging in the two lamp halos, drifting on Lissajous loops */
+makePoints(140, 0xD055, `
+  void main(){
+    vec2 lamp = aSeed.w < 0.5 ? vec2(${wx(LAMPS[0][0])}.0, ${wy(LAMPS[0][1])}.0)
+                              : vec2(${wx(LAMPS[1][0])}.0, ${wy(LAMPS[1][1])}.0);
+    float rr = sqrt(fract(aSeed.w * 2.0)) * 54.0;
+    float ang = aSeed.z * 6.2832;
+    vec2 home = lamp + vec2(cos(ang), sin(ang) * 0.8) * rr;
+    vec2 p = home + vec2(sin(uTime * mix(0.10, 0.24, aSeed.x) * 6.2832 + aSeed.y * 6.2832),
+                         cos(uTime * mix(0.07, 0.16, aSeed.y) * 6.2832 + aSeed.x * 6.2832)) * 7.0;
+    float tw = 0.5 + 0.5 * sin(uTime * mix(0.4, 1.1, aSeed.z) * 6.2832 + aSeed.w * 6.2832);
+    float halo = 1.0 - rr / 58.0;
+    float a = (0.10 + 0.30 * tw) * halo;
+    vCol = vec4(vec3(1.0, 0.85, 0.55) * a, a);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 0.0, 1.0);
+    gl_PointSize = mix(1.6, 3.2, aSeed.w) * uScale;
+  }`, `
+    gl_FragColor = vec4(vCol.rgb * fall, 1.0);`,
+  THREE.AdditiveBlending, 60, 42);
+
+window.__fx = {
+  systems: fxSystems.map((s) => ({ isPoints: s.points.isPoints === true, count: s.count })),
+  total: fxSystems.reduce((a, s) => a + s.count, 0),
+};
+
+/* ---- the nav grid: SAM2 + ledger bake (navgrid.json) ---- */
+let NAV = null;      /* { w, h, cell, walk:Uint8, obst:Uint8, label:Uint8Array, names } */
+function unpackBits(b64, n){
+  const raw = atob(b64);
+  const out = new Uint8Array(n);
+  for (let i = 0; i < n; i++)
+    out[i] = (raw.charCodeAt(i >> 3) >> (7 - (i & 7))) & 1;
+  return out;
+}
+const navReady = fetch('navgrid.json').then((r) => r.json()).then((g) => {
+  const n = g.w * g.h;
+  const label = atob(g.label);
+  NAV = {
+    w: g.w, h: g.h, cell: g.cell,
+    walk: unpackBits(g.walk, n),
+    obst: unpackBits(g.obst, n),
+    label: Uint8Array.from({ length: n }, (_, i) => label.charCodeAt(i)),
+    names: g.labelNames,
+    spawn: g.spawn, corners: g.corners, erosion: g.erosion,
+  };
+  window.__navLoaded = true;                           /* verification hook */
+  return NAV;
+});
+
+/* A* over the grid — 8-connected, no corner cutting, octile heuristic */
+function astar(nav, sx, sy, tx, ty){
+  const { w, h, walk } = nav;
+  const id = (x, y) => y * w + x;
+  const open = [];                                     /* binary min-heap on f */
+  const g = new Float32Array(w * h).fill(Infinity);
+  const came = new Int32Array(w * h).fill(-1);
+  const closed = new Uint8Array(w * h);
+  const hx = (x, y) => {
+    const dx = Math.abs(x - tx), dy = Math.abs(y - ty);
+    return (dx + dy) + (Math.SQRT2 - 2) * Math.min(dx, dy);
+  };
+  const push = (f, i) => {
+    open.push([f, i]);
+    let c = open.length - 1;
+    while (c > 0){
+      const p = (c - 1) >> 1;
+      if (open[p][0] <= open[c][0]) break;
+      [open[p], open[c]] = [open[c], open[p]]; c = p;
+    }
+  };
+  const pop = () => {
+    const top = open[0], last = open.pop();
+    if (open.length){
+      open[0] = last;
+      let c = 0;
+      for (;;){
+        const l = 2 * c + 1, r = l + 1;
+        let m = c;
+        if (l < open.length && open[l][0] < open[m][0]) m = l;
+        if (r < open.length && open[r][0] < open[m][0]) m = r;
+        if (m === c) break;
+        [open[m], open[c]] = [open[c], open[m]]; c = m;
+      }
+    }
+    return top;
+  };
+  g[id(sx, sy)] = 0;
+  push(hx(sx, sy), id(sx, sy));
+  const N = [[1,0,1],[-1,0,1],[0,1,1],[0,-1,1],
+             [1,1,Math.SQRT2],[1,-1,Math.SQRT2],[-1,1,Math.SQRT2],[-1,-1,Math.SQRT2]];
+  while (open.length){
+    const [, cur] = pop();
+    if (closed[cur]) continue;
+    closed[cur] = 1;
+    const cx2 = cur % w, cy2 = (cur / w) | 0;
+    if (cx2 === tx && cy2 === ty){
+      const path = [];
+      for (let i = cur; i !== -1; i = came[i]) path.push([i % w, (i / w) | 0]);
+      return path.reverse();
+    }
+    for (const [dx, dy, cost] of N){
+      const nx = cx2 + dx, ny = cy2 + dy;
+      if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+      if (!walk[id(nx, ny)]) continue;
+      if (dx && dy && (!walk[id(cx2 + dx, cy2)] || !walk[id(cx2, cy2 + dy)])) continue;
+      const ng = g[cur] + cost;
+      if (ng < g[id(nx, ny)]){
+        g[id(nx, ny)] = ng;
+        came[id(nx, ny)] = cur;
+        push(ng + hx(nx, ny), id(nx, ny));
+      }
+    }
+  }
+  return null;
+}
+
+/* supercover line-of-sight over walkable cells (Amanatides & Woo) */
+function los(nav, ax, ay, bx, by){
+  /* a, b in plate px; every cell the segment crosses must be walkable */
+  const c = nav.cell;
+  let x = Math.floor(ax / c), y = Math.floor(ay / c);
+  const ex = Math.floor(bx / c), ey = Math.floor(by / c);
+  const dx = bx - ax, dy = by - ay;
+  const sx = dx > 0 ? 1 : -1, sy = dy > 0 ? 1 : -1;
+  let tMaxX = dx !== 0 ? (((x + (sx > 0 ? 1 : 0)) * c) - ax) / dx : Infinity;
+  let tMaxY = dy !== 0 ? (((y + (sy > 0 ? 1 : 0)) * c) - ay) / dy : Infinity;
+  const tDx = dx !== 0 ? Math.abs(c / dx) : Infinity;
+  const tDy = dy !== 0 ? Math.abs(c / dy) : Infinity;
+  for (let guard = 0; guard < 4096; guard++){
+    if (!NAVWALK(nav, x, y)) return false;
+    if (x === ex && y === ey) return true;
+    if (tMaxX < tMaxY){ x += sx; tMaxX += tDx; }
+    else if (tMaxY < tMaxX){ y += sy; tMaxY += tDy; }
+    else {  /* exact corner: both cells adjacent to the corner must be open */
+      if (!NAVWALK(nav, x + sx, y) || !NAVWALK(nav, x, y + sy)) return false;
+      x += sx; y += sy; tMaxX += tDx; tMaxY += tDy;
+    }
+  }
+  return false;
+}
+const NAVWALK = (nav, x, y) =>
+  x >= 0 && y >= 0 && x < nav.w && y < nav.h && nav.walk[y * nav.w + x] === 1;
+
+/* string-pull: keep the farthest waypoint each cell-run can see */
+function smooth(nav, cells, endPx, startPx){
+  const px = cells.map(([x, y]) => [x * nav.cell + nav.cell / 2, y * nav.cell + nav.cell / 2]);
+  px[0] = startPx;
+  px[px.length - 1] = endPx;
+  const out = [px[0]];
+  let i = 0;
+  while (i < px.length - 1){
+    let j = px.length - 1;
+    for (; j > i + 1; j--)
+      if (los(nav, px[i][0], px[i][1], px[j][0], px[j][1])) break;
+    out.push(px[j]);
+    i = j;
+  }
+  return out;
+}
+
+/* ---- the walker ---- */
+const actor = new THREE.Group();          /* origin = his animated sole */
+scene.add(actor);
+actor.visible = false;
+
+/* contact shadow — a soft isometric ellipse under his feet */
+let shadow = null;
+{
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 96;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(128, 48, 4, 128, 48, 46);
+  grad.addColorStop(0.00, 'rgba(6,6,10,.55)');
+  grad.addColorStop(0.55, 'rgba(6,6,10,.28)');
+  grad.addColorStop(1.00, 'rgba(6,6,10,0)');
+  g.save(); g.translate(128, 48); g.scale(2.4, 1); g.translate(-128, -48);
+  g.fillStyle = grad; g.fillRect(0, 0, 256, 96); g.restore();
+  shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(96, 36),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c),
+      transparent: true, depthWrite: false, opacity: 0.5 }));
+  shadow.renderOrder = 10;
+  scene.add(shadow);
+}
+
+/* the path he is on — a dim gold thread the reader can see him keep */
+const pathLine = new THREE.Line(
+  new THREE.BufferGeometry().setAttribute('position',
+    new THREE.BufferAttribute(new Float32Array(3 * 128), 3)),
+  new THREE.LineBasicMaterial({ color: 0xd8b45a, transparent: true, opacity: 0.0 }));
+pathLine.position.z = 24;
+pathLine.frustumCulled = false;
+scene.add(pathLine);
+const targetRing = new THREE.Mesh(
+  new THREE.RingGeometry(5, 7, 24),
+  new THREE.MeshBasicMaterial({ color: 0xd8b45a, transparent: true, opacity: 0 }));
+targetRing.position.z = 24;
+scene.add(targetRing);
+
+/* material hygiene (the casting demo's law: generated cloth ships part-metal) */
+const fadeMats = [];
+function dressMaterials(model){
+  model.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of (Array.isArray(o.material) ? o.material : [o.material])){
+      if (!m || !m.isMeshStandardMaterial) continue;
+      m.metalness = 0;
+      m.roughness = Math.min(m.roughness, 0.9);
+      m.transparent = true;
+      m.needsUpdate = true;
+      fadeMats.push(m);
+    }
+  });
+}
+
+/* ---- posture law (owner defect: "pelvis picked too low, head bowed") ----
+ * Same corrective rest rotations as the walk demo, applied before the mixer:
+ * CLIP_CORR baked into the walk clip's quaternion tracks per key (slerp is
+ * right-invariant, so per-key post-multiplication is exact); REST_CORR zeroes
+ * the bind pose's own back-lean on the node rotations. */
+const CLIP_CORR = { Spine02: 4, NeckTwist01: 5, Head: 6 };   /* deg, walk tracks */
+const REST_CORR = { NeckTwist01: -3, Head: -3 };             /* deg, bind pose  */
+const FWD_BIND = new THREE.Vector3(0.166, 0, 0.986).normalize(); /* toe line, bind */
+const qcx = (deg) => new THREE.Quaternion()
+  .setFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(deg));
+
+let mixer = null;
+let walkAction = null;
+let clips = [];
+new GLTFLoader().load('../ulysses-walk.glb', (gltf) => {
+  const model = gltf.scene;
+  clips = gltf.animations.map((a) => a.name);
+
+  /* corrective rest rotations — bind pose first, then the clip's own tracks */
+  const bones = {};
+  model.traverse((o) => { if (o.isBone) bones[o.name] = o; });
+  for (const [name, deg] of Object.entries(REST_CORR))
+    if (bones[name]) bones[name].quaternion.multiply(qcx(deg));
+  for (const track of (gltf.animations[0] ? gltf.animations[0].tracks : [])){
+    const m = track.name.match(/(?:^|[/.])([A-Za-z0-9_]+)\.quaternion$/);
+    if (!m || !(m[1] in CLIP_CORR)) continue;
+    const c = qcx(CLIP_CORR[m[1]]), q = new THREE.Quaternion();
+    for (let i = 0; i < track.values.length; i += 4){
+      q.fromArray(track.values, i).multiply(c).toArray(track.values, i);
+    }
+  }
+
+  /* head-pitch instrument (the smoke gate reads these) */
+  const headBone = bones.Head, pelvisBone = bones.Pelvis || bones.Hip;
+  const _q = new THREE.Quaternion(), _qm = new THREE.Quaternion(),
+        _v = new THREE.Vector3();
+  const headPitchDeg = () => {
+    actor.updateMatrixWorld(true);
+    headBone.getWorldQuaternion(_q);
+    model.getWorldQuaternion(_qm).invert();
+    _q.premultiply(_qm);
+    _v.set(0, 1, 0).applyQuaternion(_q);
+    return THREE.MathUtils.radToDeg(Math.atan2(_v.dot(FWD_BIND), _v.y));
+  };
+  const box = new THREE.Box3().setFromObject(model);
+  model.scale.setScalar(ULYSSES_PX / (box.max.y - box.min.y));
+  const b = new THREE.Box3().setFromObject(model);
+  const center = b.getCenter(new THREE.Vector3());
+  model.position.x -= center.x;
+  model.position.z -= center.z;
+  model.position.y -= b.min.y;
+  model.traverse((o) => { if (o.isSkinnedMesh) o.frustumCulled = false; });
+  dressMaterials(model);
+  actor.add(model);
+
+  /* standing = the corrected bind, measured before any mixer exists */
+  const standingPitchDeg = +headPitchDeg().toFixed(2);
+  const pelvisFraction = +(new THREE.Vector3().setFromMatrixPosition(
+    (actor.updateMatrixWorld(true), pelvisBone.matrixWorld)).y / ULYSSES_PX)
+    .toFixed(4);
+
+  if (gltf.animations.length){
+    /* grounding law: measure the bind sole BEFORE any mixer exists, sweep the
+     * clip for its lowest foot-bone world Y, lift so the ANIMATED sole meets
+     * the group origin (which rides the ledger floor line). */
+    const feet = [];
+    model.traverse((o) => { if (o.isBone && /Foot|ToeBase/i.test(o.name)) feet.push(o); });
+    const v = new THREE.Vector3();
+    const minFootY = () => {
+      actor.updateMatrixWorld(true);
+      return Math.min(...feet.map((bn) => bn.getWorldPosition(v).y));
+    };
+    const bindFootY = feet.length ? minFootY() : 0;
+    mixer = new THREE.AnimationMixer(model);
+    walkAction = mixer.clipAction(gltf.animations[0]);
+    walkAction.play();
+    if (feet.length){
+      const dur = gltf.animations[0].duration;
+      let minY = Infinity;
+      for (let i = 0; i <= 24; i++){
+        mixer.setTime((i / 24) * dur);
+        minY = Math.min(minY, minFootY());
+      }
+      mixer.setTime(0);
+      model.position.y += bindFootY - minY;
+    }
+    walkAction.setEffectiveWeight(0);       /* he arrives standing */
+  }
+  window.__rig = {                                     /* posture gate hooks */
+    standingPitchDeg, pelvisFraction,
+    clipCorr: CLIP_CORR, restCorr: REST_CORR,
+    walkPitchSamples(n = 48){
+      if (!mixer || !gltf.animations.length) return null;
+      const dur = gltf.animations[0].duration, out = [];
+      const w = walkAction.getEffectiveWeight();
+      walkAction.setEffectiveWeight(1);
+      for (let i = 0; i < n; i++){
+        mixer.setTime(dur * i / n);
+        out.push(+headPitchDeg().toFixed(2));
+      }
+      mixer.setTime(0);
+      walkAction.setEffectiveWeight(w);
+      return out;
+    },
+  };
+  navReady.then((nav) => {
+    place(nav.spawn[0], nav.spawn[1]);
+    actor.visible = true;
+    window.__meshLoaded = true;                        /* verification hook */
+  });
+}, undefined, (err) => console.error('walk glb load failed', err));
+
+/* ---- the crossing, click-steered ---- */
+let simT = 0;                 /* the sim clock — every animated thing rides it */
+let pos = [354, 458];         /* his feet, plate px */
+let route = null;             /* smoothed waypoints, plate px */
+let seg = 0, segT = 0;        /* current segment + distance along it */
+let heading = Math.PI / 2;    /* facing */
+let walkW = 0;                /* walk-clip weight ramp (stand <-> stride) */
+let voiceT = -10;             /* margin-voice flash clock */
+let lastPath = null;          /* verification: last accepted route */
+const voiceEl = document.getElementById('voice');
+
+function place(x, y){
+  pos = [x, y];
+  actor.position.set(wx(x), wy(y), 40);
+  shadow.position.set(wx(x), wy(y) - 2, 30);
+}
+
+function setRoute(waypoints){
+  route = waypoints; seg = 0; segT = 0;
+  lastPath = waypoints.map((p) => [p[0], p[1]]);
+  const arr = pathLine.geometry.attributes.position;
+  for (let i = 0; i < 128; i++){
+    const p = waypoints[Math.min(i, waypoints.length - 1)];
+    arr.setXYZ(i, wx(p[0]), wy(p[1]), 0);
+  }
+  arr.needsUpdate = true;
+  const end = waypoints[waypoints.length - 1];
+  targetRing.position.set(wx(end[0]), wy(end[1]), 24);
+}
+
+function clickPlate(x, y){
+  if (!NAV) return { ok: false, reason: 'not ready' };
+  const cx2 = Math.floor(x / NAV.cell), cy2 = Math.floor(y / NAV.cell);
+  if (!NAVWALK(NAV, cx2, cy2)){
+    const lid = (cx2 >= 0 && cy2 >= 0 && cx2 < NAV.w && cy2 < NAV.h)
+      ? NAV.label[cy2 * NAV.w + cx2] : 11;
+    const label = NAV.names[String(lid)] || 'the dark';
+    voiceEl.textContent = '— ' + label + '; no road there.';
+    voiceT = simT;
+    return { ok: false, label };
+  }
+  const sx = Math.floor(pos[0] / NAV.cell), sy = Math.floor(pos[1] / NAV.cell);
+  const cells = astar(NAV, sx, sy, cx2, cy2);
+  if (!cells){
+    voiceEl.textContent = '— no road through.';
+    voiceT = simT;
+    return { ok: false, label: 'no road' };
+  }
+  const waypoints = smooth(NAV, cells, [x, y], [pos[0], pos[1]]);
+  if (waypoints.length === 1) waypoints.push([x, y]);
+  setRoute(waypoints);
+  return { ok: true, path: lastPath };
+}
+
+canvas.addEventListener('pointerdown', (e) => {
+  const r = canvas.getBoundingClientRect();
+  clickPlate((e.clientX - r.left) * PLATE_W / r.width,
+             (e.clientY - r.top) * PLATE_H / r.height);
+});
+
+function stepWalk(dt){
+  if (!route){ walkW = Math.max(0, walkW - dt / 0.25); return; }
+  walkW = Math.min(1, walkW + dt / 0.25);
+  let travel = WALK_SPEED * dt;
+  while (travel > 0 && route){
+    const a = route[seg], b = route[seg + 1];
+    const dx = b[0] - a[0], dy = b[1] - a[1];
+    const len = Math.hypot(dx, dy);
+    const want = Math.atan2(dx, dy * 2.2);
+    /* smooth the turn on sim-time (shortest arc) */
+    let dh = want - heading;
+    while (dh > Math.PI) dh -= 2 * Math.PI;
+    while (dh < -Math.PI) dh += 2 * Math.PI;
+    heading += dh * Math.min(1, dt * 9);
+    const left = len - segT;
+    if (travel < left){
+      segT += travel; travel = 0;
+      const t = segT / len;
+      place(a[0] + dx * t, a[1] + dy * t);
+    } else {
+      travel -= left;
+      seg += 1; segT = 0;
+      place(b[0], b[1]);
+      if (seg >= route.length - 1){ route = null; break; }
+    }
+  }
+  actor.rotation.y = heading;
+}
+
+function flick(t){
+  return 0.84 + 0.11 * Math.sin(2 * Math.PI * t / FLICK_PER)
+       + 0.05 * Math.sin(2 * Math.PI * t / 0.47 + 1.7)
+       + 0.04 * Math.sin(2 * Math.PI * t / 1.13 + 0.6);
+}
+
+function resize(){
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== Math.floor(w * renderer.getPixelRatio()) ||
+      canvas.height !== Math.floor(h * renderer.getPixelRatio())){
+    renderer.setSize(w, h, false);
+  }
+  fxUniforms.uScale.value = (canvas.width || 1) / PLATE_W;
+}
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  resize();
+  const dt = Math.min(clock.getDelta(), 0.1);
+  simT += dt;
+  fxUniforms.uTime.value = simT;
+
+  if (actor.visible){
+    stepWalk(dt);
+    if (mixer){
+      walkAction.setEffectiveWeight(walkW);
+      mixer.update(dt * (0.25 + 0.75 * walkW));
+    }
+  }
+  /* the occluder-mirror law: cutouts drop behind him past their ground line */
+  for (const c of cutouts) c.position.z = pos[1] > c.userData.ground ? 5 : 45;
+
+  /* the path thread + target ring fade on the sim clock */
+  const routed = route !== null;
+  pathLine.material.opacity += ((routed ? 0.4 : 0) - pathLine.material.opacity)
+    * Math.min(1, dt * 6);
+  targetRing.material.opacity = routed ? 0.55 + 0.25 * Math.sin(simT * 6) : 0;
+  /* margin voice: flash then fade, all sim-time */
+  voiceEl.style.opacity = Math.max(0, Math.min(1, 1 - (simT - voiceT - 1.6) / 1.2)).toFixed(3);
+
+  const f = flick(simT);
+  fireLight.intensity = 30000 * f;
+  lampL.intensity = 8000 * (0.85 + 0.15 * Math.sin(2 * Math.PI * simT / 5.7));
+  lampR.intensity = 11000 * (0.85 + 0.15 * Math.sin(2 * Math.PI * simT / 6.3));
+  /* the glare law: crossing behind the flame column, the bloom washes him */
+  const glare = actor.visible
+    ? Math.exp(-((actor.position.x - 640) ** 2) / (2 * 70 * 70)) : 0;
+  if (bloom) bloom.material.opacity = 0.22 + 0.55 * (f - 0.72) + 0.30 * glare;
+  renderer.render(scene, camera);
+});
+
+window.__nav = {                                       /* verification hooks */
+  get pos(){ return [pos[0], pos[1]]; },
+  get walking(){ return route !== null; },
+  get lastPath(){ return lastPath; },
+  get grid(){ return NAV ? { w: NAV.w, h: NAV.h, cell: NAV.cell,
+    spawn: NAV.spawn, corners: NAV.corners } : null; },
+  clickPlate,
+  place,
+  cellWalkable: (x, y) => NAV
+    ? NAVWALK(NAV, Math.floor(x / NAV.cell), Math.floor(y / NAV.cell)) : null,
+  labelAt: (x, y) => NAV
+    ? NAV.names[String(NAV.label[Math.floor(y / NAV.cell) * NAV.w + Math.floor(x / NAV.cell)])]
+    : null,
+  get simT(){ return simT; },
+};
+window.__demo3d = {                                    /* shared gate hooks */
+  get mixerTime(){ return mixer ? mixer.time : -1; },
+  get x(){ return actor.position.x; },
+  get visible(){ return actor.visible; },
+  get clips(){ return clips; },
+  scene, camera, renderer,
+};
+</script>
+</body>
+</html>
