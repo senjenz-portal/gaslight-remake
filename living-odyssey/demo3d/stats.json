@@ -106,5 +106,15 @@
    427
   ],
   "floor": "ledger cave floor, path threaded between the object boxes (racks, fire ring, pens, tub)"
+ },
+ "posture": {
+  "defect": "pelvis joint auto-rigged at 0.485 of stature (anatomical 0.50-0.55) -> retargeted walk bowed the head",
+  "instrument": "tools/rigpitch.py (skeleton parse + walk-cycle bone sweep, 48 samples)",
+  "pelvis_fraction": 0.4853,
+  "standing_pitch_before_deg": -5.87,
+  "standing_pitch_after_deg": 0.04,
+  "walk_pitch_before_deg": "16.3-20.4 (mean 18.0)",
+  "walk_pitch_after_deg": "1.5-5.6 (mean 3.2)",
+  "fix": "corrective rest rotations in the loader, before the mixer - CLIP local-X: Spine02 +4, NeckTwist01 +5, Head +6; REST: NeckTwist01 -3, Head -3 (model_tripo-rigging-v1 exposes no skeleton/pelvis hint, so no re-rig path exists)"
  }
 }

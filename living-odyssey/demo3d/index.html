@@ -80,16 +80,17 @@
   the accent law. Every count below is read from the delivered files.</p>
 
   <canvas id="stage"></canvas>
-  <div class="stage-cue"><span>the walk loops — behind the blaze, down the open floor, and round again</span>
+  <div class="stage-cue"><span>the walk loops — down the giant-seat lane, round the front of the blaze, and out along the open floor</span>
     <span id="clip-cue">banked biped clip, retargeted at rig time</span></div>
 
   <div class="law"><b>Plate-space, not orbit-space.</b> The camera is orthographic over the plate's own
     1408×768 — the book's isometric law (actor height never changes with depth) is what an
-    orthographic camera does natively. The path threads the ledger: in at the mouth threshold,
-    upstage past the cheese racks, behind the fire ring (the ring's own front-lip cutout occludes
-    him), down the giant-seat lane, and out along the downstage floor past the tub. The blaze is a
-    point light AT the fire anchor with the plate's own flicker period; the bloom layer breathes
-    over him as he passes behind it.</div>
+    orthographic camera does natively. The path threads the ledger, the parking law extended to
+    the walk: in at the mouth threshold, upstage past the cheese racks, down the giant-seat lane,
+    then <b>round the front of the fire ring</b> — never nearer than 10 plate px to the ledger's
+    own ring box, the man himself occluding the blaze as he passes — a turn at the hearth's near
+    corner, and out along the downstage floor past the tub. The blaze is a point light AT the
+    fire anchor with the plate's own flicker period; the bloom layer rims him as he crosses it.</div>
 
   <div class="two-col">
     <div>
@@ -143,6 +144,9 @@
       row('rig', s.rig_model_id + ' — ' + r2.joints + ' joints') +
       row('walk clip', (clip.name || 'walk') + ' · ' + (clip.duration_s || 0) + ' s · ' +
         (clip.channels || 0) + ' channels') +
+      (s.posture ? row('posture law', 'pelvis rigged at ' + s.posture.pelvis_fraction +
+        ' of stature (anatomical 0.50–0.55) — spine/neck counter-rotated: walk head pitch ' +
+        s.posture.walk_pitch_before_deg + '° → ' + s.posture.walk_pitch_after_deg + '°') : '') +
       row('scale law', s.scene.scale_law) +
       row('fire anchor', '(' + s.scene.fire_anchor.join(', ') + ') — plate px, EMIS ledger');
     window.__statsLoaded = true;                       /* verification hook */
@@ -187,14 +191,15 @@ const srgb = (t) => { t.colorSpace = THREE.SRGBColorSpace; return t; };
   scene.add(plate);
 }
 
-/* the fire ring's front lip — the book's own occluder cutout (origin 523,409 · 214×98) */
+/* the fire ring's front lip (origin 523,409 · 214×98) — he now passes IN FRONT of the
+   ring (the rerouted path), so the lip sits just off the plate BEHIND him: the man
+   occludes the ring's stones and the blaze, not the other way round */
 {
   const t = srgb(texLoader.load('../assets/set/cave/firering-front-shut.png'));
   const lip = new THREE.Mesh(
     new THREE.PlaneGeometry(214, 98),
     new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false }));
-  lip.position.set(wx(523 + 107), wy(409 + 49), 85);
-  lip.renderOrder = 30;
+  lip.position.set(wx(523 + 107), wy(409 + 49), 5);
   scene.add(lip);
 }
 
@@ -227,13 +232,19 @@ const lampR = new THREE.PointLight(0xffd764, 11000, 0, 2);
 lampR.position.set(wx(1260), wy(371), 120);
 scene.add(lampL, lampR);
 
-/* the ledger path — foot line in plate px, threaded between the object boxes:
-   mouth threshold -> upstage of the fire ring past the cheese racks ->
-   the giant-seat lane -> downstage floor in front of the tub -> out right */
+/* the ledger path — foot line in plate px, the parking law extended to the walk:
+   no sampled segment intersects ANY cave object box, and the fire ring
+   (outer [527,418..733,500] + rimNW) keeps >= 10 px clearance
+   (audited: tools/demo3d_pathaudit.mjs — min 10.67 px to the ring, 8.0 px to the
+   nearest fence corner, floor polylines held). mouth threshold -> upstage past
+   the cheese racks -> down the giant-seat lane -> ROUND THE FRONT of the fire
+   ring (the man occludes the blaze) -> turn at the hearth's near corner ->
+   out along the downstage floor past the tub. Isometric law: 75 px at 43 px/m
+   at EVERY y — actor height does not change with depth, only the floor line moves. */
 const PATH_PTS = [
-  [250, 452], [360, 450], [432, 432], [505, 414], [640, 405], [710, 414],
-  [748, 437], [762, 455], [778, 488], [800, 528], [845, 549], [900, 551],
-  [960, 545], [1000, 538], [1045, 530], [1068, 527],
+  [250, 452], [360, 450], [450, 425], [500, 409], [600, 402], [705, 401],
+  [762, 419], [774, 458], [782, 505], [762, 528], [700, 534], [648, 537],
+  [668, 549], [730, 554], [820, 557], [900, 551], [962, 546], [1015, 538],
 ];
 const path = new THREE.CatmullRomCurve3(
   PATH_PTS.map(([x, y]) => new THREE.Vector3(x, y, 0)), false, 'catmullrom', 0.35);
@@ -282,11 +293,57 @@ const actor = new THREE.Group();          /* origin = his animated sole */
 scene.add(actor);
 actor.visible = false;
 
+/* ---- posture law (owner defect: "pelvis picked too low, head bowed") ----
+ * Measured from the delivered GLB (tools/rigpitch.py): the auto-rig set the
+ * pelvis joint at 0.485 of stature (anatomical 0.50–0.55), so the banked walk
+ * retargets onto a too-long spine and the head bows 16.3–20.4° through the
+ * cycle (rest pose leans back 5.9°). model_tripo-rigging-v1 exposes no
+ * skeleton/pelvis hint (schema: model/animation/includeRiggedModel only), so
+ * the fix is corrective rest rotations, applied HERE, before the mixer:
+ *   CLIP_CORR — local-X counter-rotation baked into every key of the walk
+ *     clip's quaternion tracks (slerp is right-invariant, so per-key
+ *     post-multiplication is exact): walk head pitch -> 1.5–5.6°, mean 3.2°.
+ *   REST_CORR — the bind pose's own back-lean, zeroed on the node rotations
+ *     (standing head pitch -5.87° -> +0.04°).                              */
+const CLIP_CORR = { Spine02: 4, NeckTwist01: 5, Head: 6 };   /* deg, walk tracks */
+const REST_CORR = { NeckTwist01: -3, Head: -3 };             /* deg, bind pose  */
+const FWD_BIND = new THREE.Vector3(0.166, 0, 0.986).normalize(); /* toe line, bind */
+const qcx = (deg) => new THREE.Quaternion()
+  .setFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(deg));
+
 let mixer = null;
 let clips = [];
 new GLTFLoader().load('ulysses-walk.glb', (gltf) => {
   const model = gltf.scene;
   clips = gltf.animations.map((a) => a.name);
+
+  /* corrective rest rotations — bind pose first, then the clip's own tracks */
+  const bones = {};
+  model.traverse((o) => { if (o.isBone) bones[o.name] = o; });
+  for (const [name, deg] of Object.entries(REST_CORR))
+    if (bones[name]) bones[name].quaternion.multiply(qcx(deg));
+  for (const track of (gltf.animations[0] ? gltf.animations[0].tracks : [])){
+    const m = track.name.match(/(?:^|[/.])([A-Za-z0-9_]+)\.quaternion$/);
+    if (!m || !(m[1] in CLIP_CORR)) continue;
+    const c = qcx(CLIP_CORR[m[1]]), q = new THREE.Quaternion();
+    for (let i = 0; i < track.values.length; i += 4){
+      q.fromArray(track.values, i).multiply(c).toArray(track.values, i);
+    }
+  }
+
+  /* head-pitch instrument (the smoke gate reads these) — pitch of the head
+   * bone's up-axis from vertical, toward the bind facing, in model space */
+  const headBone = bones.Head, pelvisBone = bones.Pelvis || bones.Hip;
+  const _q = new THREE.Quaternion(), _qm = new THREE.Quaternion(),
+        _v = new THREE.Vector3();
+  const headPitchDeg = () => {
+    actor.updateMatrixWorld(true);
+    headBone.getWorldQuaternion(_q);
+    model.getWorldQuaternion(_qm).invert();
+    _q.premultiply(_qm);
+    _v.set(0, 1, 0).applyQuaternion(_q);
+    return THREE.MathUtils.radToDeg(Math.atan2(_v.dot(FWD_BIND), _v.y));
+  };
   const box = new THREE.Box3().setFromObject(model);
   model.scale.setScalar(ULYSSES_PX / (box.max.y - box.min.y));
   const b = new THREE.Box3().setFromObject(model);
@@ -297,6 +354,13 @@ new GLTFLoader().load('ulysses-walk.glb', (gltf) => {
   model.traverse((o) => { if (o.isSkinnedMesh) o.frustumCulled = false; });
   dressMaterials(model);
   actor.add(model);
+
+  /* standing = the corrected bind, measured before any mixer exists */
+  const standingPitchDeg = +headPitchDeg().toFixed(2);
+  const pelvisFraction = +(new THREE.Vector3().setFromMatrixPosition(
+    (actor.updateMatrixWorld(true), pelvisBone.matrixWorld)).y / ULYSSES_PX)
+    .toFixed(4);
+
   if (gltf.animations.length){
     /* the King demo's grounding law: the clip drives the skeleton below the
      * bind pose — measure the bind sole BEFORE any mixer exists, sweep the
@@ -323,6 +387,20 @@ new GLTFLoader().load('ulysses-walk.glb', (gltf) => {
       model.position.y += bindFootY - minY;
     }
   }
+  window.__rig = {                                     /* posture gate hooks */
+    standingPitchDeg, pelvisFraction,
+    clipCorr: CLIP_CORR, restCorr: REST_CORR,
+    walkPitchSamples(n = 48){
+      if (!mixer || !gltf.animations.length) return null;
+      const dur = gltf.animations[0].duration, out = [];
+      for (let i = 0; i < n; i++){
+        mixer.setTime(dur * i / n);
+        out.push(+headPitchDeg().toFixed(2));
+      }
+      mixer.setTime(0);
+      return out;
+    },
+  };
   actor.visible = true;
   window.__meshLoaded = true;                          /* verification hook */
 }, undefined, (err) => console.error('walk glb load failed', err));
@@ -397,7 +475,9 @@ window.__demo3d = {                                    /* verification hooks */
   get dist(){ return dist; },
   get u(){ return Math.min(dist / PATH_LEN, 1); },
   get x(){ return actor.position.x; },
+  get visible(){ return actor.visible; },
   get clips(){ return clips; },
+  pathPts: PATH_PTS,                     /* plate px — the path audit reads these */
   setProgress(u){ dist = u * PATH_LEN; hold = 0; actor.visible = true; placeActor(); },
   scene, camera, renderer,
 };
