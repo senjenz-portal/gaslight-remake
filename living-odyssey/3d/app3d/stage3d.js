@@ -32,7 +32,6 @@ import { buildActor } from './actor3d.js';
 import { createCaveScene, createCaveIsoCamera } from '../../demo3d/full3d/createCaveScene.js';
 import { createShoreScene, createShoreIsoCamera } from '../sets/shore3d.js';
 import { createSeaScene, createSeaIsoCamera } from '../sets/sea3d.js';
-import { createGreatBowl, createStake, createWineskin } from '../../demo3d/polyphemus/poly-props.js';
 
 /* ---------------- the three sets ---------------- */
 const SETS = {
@@ -50,46 +49,16 @@ const SETS = {
   },
 };
 
-/* ---------------- the foundation's staging (ledger marks, plate px) ----------
- * A boot staging, not the story's: enough of the cast on each set to prove the
- * mount, the render and the scale gate. The story lane replaces this table
- * with the units' own marks.                                                  */
-const STAGING = {
-  shore: {
-    cast: [
-      { id: 'ulysses',  rig: 'ulysses', px: [390, 480], yaw: 0.4 },
-      { id: 'crew-1',   rig: 'crew',    px: [472, 507], yaw: -0.8 },
-      { id: 'crew-2',   rig: 'crew',    px: [560, 503], yaw: 2.1 },
-    ],
-    props: [],
-  },
-  cave: {
-    cast: [
-      { id: 'ulysses',    rig: 'ulysses',    px: [648, 537], yaw: 2.55 },
-      { id: 'crew-1',     rig: 'crew',       px: [933, 541], yaw: -1.9 },
-      { id: 'crew-2',     rig: 'crew',       px: [900, 551], yaw: -2.3 },
-      /* the ledger's giant-seat mark is a SEATED mark — the vault is 5.4 m */
-      { id: 'polyphemus', rig: 'polyphemus-seat', px: [774, 458], yaw: -1.55, pose: 'seated' },
-      { id: 'ram-great',  rig: 'ram-great',  px: [430, 530], yaw: 1.4 },
-      { id: 'ewe-1',      rig: 'ewe',        px: [370, 520], yaw: 1.1 },
-    ],
-    props: [
-      /* the stake LIES on the firewood (its local +Y is its length — tip it
-         onto the floor plane instead of standing a beam on end) */
-      { id: 'stake',    make: createStake,     kind: 'stake',    px: [560, 530],
-        y: 0.14, rot: [Math.PI / 2, 0.35, 0] },
-      { id: 'bowl',     make: createGreatBowl, kind: 'bowl',     px: [800, 489], rot: [0, 0, 0] },
-      { id: 'wineskin', make: createWineskin,  kind: 'wineskin', px: [333, 487], rot: [0, 0.5, 0] },
-    ],
-  },
-  sea: {
-    cast: [
-      { id: 'ulysses',    rig: 'ulysses',         socket: 'root:deck-mount', yaw: 2.6 },
-      { id: 'crew-1',     rig: 'crew',            socket: 'root:deck-mount', offset: [-1.8, 0, 1.1], yaw: 2.6 },
-      { id: 'polyphemus', rig: 'polyphemus-idle', socket: 'root:brow-giant', yaw: 3.3 },
-    ],
-    props: [],
-  },
+/* ---------------- what a SUBJECT name means ---------------- *
+ * The shot table asks for `{t:'cyclops'}` and `{p:'fire'}`; those are the
+ * ledger's own names for things the stage keeps in three different registers
+ * (a set part, a mounted actor, a story prop). One alias table, resolved in
+ * that order, so the camera never has to know which register a name lives in. */
+const SUBJECT_ALIAS = {
+  cyclops: { a: 'poly-idle' },
+  giant: { a: 'poly-idle' },
+  fire: { t: 'fire-pit' },
+  ship: { t: 'ship-2' },
 };
 
 export class Stage3D {
@@ -105,6 +74,11 @@ export class Stage3D {
     this.simT = 0;
     this.orbit = 0;
     this.mounted = null;             /* the mount report the smoke reads */
+    /* THE DIRECTOR'S SEAM. The story lane hands the stage an object with
+       populate(setName) and tick(simT); the stage calls them and asks nothing
+       else of it. With no director mounted the stage is the foundation's own
+       empty theatre — which is what the set demos want. */
+    this.director = null;
   }
 
   /* ---------- mounting ---------- */
@@ -116,7 +90,14 @@ export class Stage3D {
     const spec = SETS[name];
     const api = spec.build();
     this.scene.add(api.root);
-    this.camera = spec.camera(this.canvas.clientWidth / Math.max(1, this.canvas.clientHeight));
+    /* THE LENS SURVIVES THE LEAF TURN. Every set ships its own isometric
+       camera — the demo's framing, and the default when nobody else wants the
+       frame. But a lens handed over by setCamera() belongs to whoever took it
+       (the storyteller), and a page turn is not a reason to take it back:
+       clobbering it here put the cine camera on the first leaf only and every
+       later beat back on the diorama's turntable view. */
+    this.isoCamera = spec.camera(this.canvas.clientWidth / Math.max(1, this.canvas.clientHeight));
+    this.camera = this.lens || this.isoCamera;
     this.set = api;
     this.setName = name;
 
@@ -152,52 +133,65 @@ export class Stage3D {
    */
   unmount() {
     if (!this.set) return;
-    for (const a of this.actors.values()) { this.scene.remove(a.group); disposeTree(a.group); }
+    for (const a of this.actors.values()) {
+      /* a decked body rides the SHIP's sway group, not the scene — detach it
+         first or it is struck twice: once here and once with the set root */
+      if (a.group.parent) a.group.parent.remove(a.group);
+      disposeTree(a.group);
+    }
     for (const g of this.props.values()) { this.scene.remove(g); disposeTree(g); }
     this.actors.clear();
     this.props.clear();
     this.scene.remove(this.set.root);
     disposeTree(this.set.root);
     world.clear(this.setName);
-    this.set = null; this.setName = null; this.camera = null;
+    this.set = null; this.setName = null; this.isoCamera = null;
+    this.camera = this.lens || null;
   }
 
-  /* ---------- the staging ---------- */
+  /* ---------- the staging ---------- *
+   * The stage does not know who stands where; the director does. What the
+   * stage owns is the WAY a body arrives: the demo's build path (actor3d),
+   * the scale authority's metre, and the registration that puts the instance
+   * in front of the [scale] gate. Nothing reaches the scene except through
+   * these two doors.                                                        */
   async _stage(name) {
-    const plan = STAGING[name] || { cast: [], props: [] };
+    if (this.director) await this.director.populate(name);
+  }
+
+  /** Mount one body: the demo's rig path, the authority's metre, registered. */
+  async addActor(id, rig, { pose = 'standing' } = {}) {
+    if (this.actors.has(id)) return this.actors.get(id);
+    const actor = await buildActor(rig, id);
+    this.scene.add(actor.group);
+    this.actors.set(id, actor);
+    world.register({
+      id: `${this.setName}/${id}`, kind: actor.kind, set: this.setName,
+      object3d: actor.group, pose, note: `rig ${rig}`,
+    });
+    return actor;
+  }
+
+  /** Mount one prop: authored in unit dimensions, SIZED BY THE AUTHORITY. */
+  async addProp(id, make, kind, spec = {}) {
+    if (this.props.has(id)) return this.props.get(id);
+    const g = make();
+    const want = SIZE_TABLE[kind];
+    if (!want) throw new Error(`[scale] prop "${id}" claims unknown kind "${kind}"`);
+    const unit = measure(g, want.axis);
+    if (isFinite(unit) && unit > 0) g.scale.setScalar(want.m / unit);
     const sockets = (this.set.root.userData.sculptRuntime || {}).sockets || {};
-
-    for (const spec of plan.cast) {
-      const actor = await buildActor(spec.rig, spec.id);
-      const p = this._place(name, spec, sockets);
-      actor.group.position.set(p.x, p.y, p.z);
-      actor.group.rotation.y = spec.yaw || 0;
-      this.scene.add(actor.group);
-      this.actors.set(spec.id, actor);
-      world.register({
-        id: `${name}/${spec.id}`, kind: actor.kind, set: name,
-        object3d: actor.group, pose: spec.pose || 'standing', note: `rig ${spec.rig}`,
-      });
-    }
-
-    for (const spec of plan.props) {
-      const g = spec.make();
-      /* props are authored in UNIT dimensions — the authority sizes them */
-      const want = SIZE_TABLE[spec.kind].m;
-      const axis = SIZE_TABLE[spec.kind].axis;
-      const unit = measure(g, axis);
-      if (isFinite(unit) && unit > 0) g.scale.setScalar(want / unit);
-      const p = this._place(name, spec, sockets);
-      g.position.set(p.x, p.y, p.z);
-      if (spec.rot) g.rotation.set(spec.rot[0], spec.rot[1], spec.rot[2]);
-      g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-      this.scene.add(g);
-      this.props.set(spec.id, g);
-      world.register({
-        id: `${name}/${spec.id}`, kind: spec.kind, set: name,
-        object3d: g, note: 'pure-code prop (poly-props)',
-      });
-    }
+    const p = this._place(this.setName, spec, sockets);
+    g.position.set(p.x, p.y, p.z);
+    if (spec.rot) g.rotation.set(spec.rot[0], spec.rot[1], spec.rot[2]);
+    g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+    this.scene.add(g);
+    this.props.set(id, g);
+    world.register({
+      id: `${this.setName}/${id}`, kind, set: this.setName, object3d: g,
+      note: 'pure-code prop',
+    });
+    return g;
   }
 
   /** A staging mark -> metres: the set's socket, or the ledger's plate px. */
@@ -207,6 +201,7 @@ export class Stage3D {
       const o = spec.offset || [0, 0, 0];
       return { x: x + o[0], y: y + o[1], z: z + o[2] };
     }
+    if (!spec.px) return { x: 0, y: spec.y || 0, z: 0 };
     const f = FRAMES[name];
     return { x: f.X(spec.px[0]), y: spec.y || 0, z: f.Z(spec.px[1]) };
   }
@@ -226,8 +221,12 @@ export class Stage3D {
 
   _tick(dt) {
     if (!this.set) return;
+    /* THE SET FIRST, then the story on top of it: the director's cave-hour
+       grade multiplies the blaze's own flicker rather than replacing it, and
+       an actor's clip time is decided by what the story has him DOING. */
     this.set.tick(this.simT);
-    for (const a of this.actors.values()) {
+    if (this.director) this.director.tick(this.simT, dt);
+    else for (const a of this.actors.values()) {
       if (!a.mixer) continue;
       /* deterministic: the clip is a pure function of sim-time */
       a.mixer.setTime(a.clipDur ? (this.simT % a.clipDur) : 0);
@@ -235,9 +234,11 @@ export class Stage3D {
     void dt;
   }
 
+  /** the turntable is the SET's own iso camera — the storyteller does not orbit */
   setOrbit(deg) {
     this.orbit = deg;
-    if (this.camera && this.camera.userData.setOrbit) this.camera.userData.setOrbit(deg);
+    const iso = this.isoCamera;
+    if (iso && iso.userData.setOrbit) iso.userData.setOrbit(deg);
   }
 
   /* ---------- the frame ---------- *
@@ -245,7 +246,7 @@ export class Stage3D {
    * the quality bar. Two seams let a later lane take the frame without
    * touching this file: setCamera() swaps the lens (the cinematography lane's
    * PerspectiveCamera), setRenderPass() swaps the draw (its DoF pass).       */
-  setCamera(cam) { this.camera = cam; return cam; }
+  setCamera(cam) { this.lens = cam; this.camera = cam || this.isoCamera; return this.camera; }
   setRenderPass(fn) { this.renderPass = fn || null; }
 
   render() {
@@ -260,9 +261,21 @@ export class Stage3D {
    * Returns { p, box, face } or null for a mark the stage does not own.
    */
   resolve(subject = {}) {
+    const parts = (this.set && this.set.parts) || {};
+    /* one name, three registers, resolved in the order the ledger uses them:
+       the alias first, then the set's own part, then the cast, then the props */
+    const byName = (n) => {
+      const alias = SUBJECT_ALIAS[n];
+      if (alias) {
+        const a = alias.a ? this.actors.get(alias.a) : null;
+        if (a && a.group.visible) return a.group;
+        if (alias.t && parts[alias.t]) return parts[alias.t];
+      }
+      return parts[n] || this.actors.get(n)?.group || this.props.get(n) || null;
+    };
     const obj = subject.a ? this.actors.get(subject.a)?.group
-      : subject.p ? this.props.get(subject.p)
-      : subject.t ? (this.set && this.set.parts ? this.set.parts[subject.t] : null)
+      : subject.p ? (this.props.get(subject.p) || byName(subject.p))
+      : subject.t ? byName(subject.t)
       : null;
     if (!obj) return null;
     const box = new THREE.Box3().setFromObject(obj);

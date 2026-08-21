@@ -1,0 +1,2979 @@
+{
+ "lane": "assembly-book3d-r1",
+ "when": "2026-08-21T22:15:30.292Z",
+ "base": "http://127.0.0.1:51445",
+ "scale": {
+  "rows": [
+   {
+    "id": "shore/ulysses",
+    "kind": "human",
+    "set": "shore",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.739,
+    "deltaPct": -0.6,
+    "verdict": "PASS",
+    "note": "rig ulysses"
+   },
+   {
+    "id": "shore/crew-0",
+    "kind": "human",
+    "set": "shore",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "shore/crew-1",
+    "kind": "human",
+    "set": "shore",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "shore/crew-2",
+    "kind": "human",
+    "set": "shore",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "shore/crew-3",
+    "kind": "human",
+    "set": "shore",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "cave/ulysses",
+    "kind": "human",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.739,
+    "deltaPct": -0.6,
+    "verdict": "PASS",
+    "note": "rig ulysses"
+   },
+   {
+    "id": "cave/crew-0",
+    "kind": "human",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "cave/crew-1",
+    "kind": "human",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "cave/crew-2",
+    "kind": "human",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "cave/crew-3",
+    "kind": "human",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "cave/poly-seat",
+    "kind": "giant",
+    "set": "cave",
+    "axis": "height",
+    "pose": "seated",
+    "expectedM": 3.85,
+    "measuredM": 4.262,
+    "deltaPct": 10.7,
+    "verdict": "PASS",
+    "note": "rig polyphemus-seat"
+   },
+   {
+    "id": "cave/poly-idle",
+    "kind": "giant",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 7,
+    "measuredM": 6.971,
+    "deltaPct": -0.4,
+    "verdict": "PASS",
+    "note": "rig polyphemus-idle"
+   },
+   {
+    "id": "cave/poly-walk",
+    "kind": "giant",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 7,
+    "measuredM": 6.946,
+    "deltaPct": -0.8,
+    "verdict": "PASS",
+    "note": "rig polyphemus"
+   },
+   {
+    "id": "cave/ram-great",
+    "kind": "ram-great",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.4,
+    "measuredM": 1.469,
+    "deltaPct": 5,
+    "verdict": "PASS",
+    "note": "rig ram-great"
+   },
+   {
+    "id": "cave/ewe-0",
+    "kind": "sheep",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1,
+    "measuredM": 1.05,
+    "deltaPct": 5,
+    "verdict": "PASS",
+    "note": "rig ewe"
+   },
+   {
+    "id": "cave/ewe-1",
+    "kind": "sheep",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1,
+    "measuredM": 1.05,
+    "deltaPct": 5,
+    "verdict": "PASS",
+    "note": "rig ewe"
+   },
+   {
+    "id": "cave/ewe-2",
+    "kind": "sheep",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1,
+    "measuredM": 1.05,
+    "deltaPct": 5,
+    "verdict": "PASS",
+    "note": "rig ewe"
+   },
+   {
+    "id": "cave/ewe-3",
+    "kind": "sheep",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1,
+    "measuredM": 1.05,
+    "deltaPct": 5,
+    "verdict": "PASS",
+    "note": "rig ewe"
+   },
+   {
+    "id": "cave/flock-0",
+    "kind": "sheep",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1,
+    "measuredM": 1.05,
+    "deltaPct": 5,
+    "verdict": "PASS",
+    "note": "rig ewe"
+   },
+   {
+    "id": "cave/flock-1",
+    "kind": "sheep",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1,
+    "measuredM": 1.05,
+    "deltaPct": 5,
+    "verdict": "PASS",
+    "note": "rig ewe"
+   },
+   {
+    "id": "cave/flock-2",
+    "kind": "sheep",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1,
+    "measuredM": 1.05,
+    "deltaPct": 5,
+    "verdict": "PASS",
+    "note": "rig ewe"
+   },
+   {
+    "id": "cave/stake",
+    "kind": "stake",
+    "set": "cave",
+    "axis": "length",
+    "pose": "standing",
+    "expectedM": 1.79,
+    "measuredM": 1.736,
+    "deltaPct": -3,
+    "verdict": "PASS",
+    "note": "pure-code prop"
+   },
+   {
+    "id": "cave/bowl",
+    "kind": "bowl",
+    "set": "cave",
+    "axis": "length",
+    "pose": "standing",
+    "expectedM": 1.4,
+    "measuredM": 1.4,
+    "deltaPct": 0,
+    "verdict": "PASS",
+    "note": "pure-code prop"
+   },
+   {
+    "id": "cave/wineskin",
+    "kind": "wineskin",
+    "set": "cave",
+    "axis": "length",
+    "pose": "standing",
+    "expectedM": 0.98,
+    "measuredM": 1.032,
+    "deltaPct": 5.3,
+    "verdict": "PASS",
+    "note": "pure-code prop"
+   },
+   {
+    "id": "cave/sword",
+    "kind": "sword",
+    "set": "cave",
+    "axis": "length",
+    "pose": "standing",
+    "expectedM": 0.78,
+    "measuredM": 0.693,
+    "deltaPct": -11.1,
+    "verdict": "PASS",
+    "note": "pure-code prop"
+   },
+   {
+    "id": "sea/ulysses",
+    "kind": "human",
+    "set": "sea",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.739,
+    "deltaPct": -0.6,
+    "verdict": "PASS",
+    "note": "rig ulysses"
+   },
+   {
+    "id": "sea/crew-0",
+    "kind": "human",
+    "set": "sea",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "sea/crew-1",
+    "kind": "human",
+    "set": "sea",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "sea/crew-2",
+    "kind": "human",
+    "set": "sea",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "sea/crew-3",
+    "kind": "human",
+    "set": "sea",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "sea/poly-idle",
+    "kind": "giant",
+    "set": "sea",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 7,
+    "measuredM": 6.971,
+    "deltaPct": -0.4,
+    "verdict": "PASS",
+    "note": "rig polyphemus-idle"
+   }
+  ],
+  "ok": true
+ },
+ "mounted": {
+  "set": "shore",
+  "triangles": 19732,
+  "parts": 36,
+  "shadow": {
+   "caster": "PointLight",
+   "mapSize": 1024,
+   "near": 0.3,
+   "far": 60,
+   "bias": -0.004
+  },
+  "actors": [
+   "ulysses",
+   "crew-0",
+   "crew-1",
+   "crew-2",
+   "crew-3"
+  ],
+  "props": []
+ },
+ "walk": {
+  "log": [
+   {
+    "id": "ody-i-00-head",
+    "verb": "click",
+    "how": "click",
+    "t": 0,
+    "next": "ody-i-01-bard",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-01-bard",
+    "verb": "click",
+    "how": "click",
+    "t": 0.5,
+    "next": "ody-i-02-iamulysses",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-02-iamulysses",
+    "verb": "click",
+    "how": "click",
+    "t": 1,
+    "next": "ody-i-03-troy",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-03-troy",
+    "verb": "click",
+    "how": "click",
+    "t": 1.5,
+    "next": "ody-i-04-lawless",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-04-lawless",
+    "verb": "click",
+    "how": "click",
+    "t": 2,
+    "next": "ody-i-05-dawn",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-05-dawn",
+    "verb": "click",
+    "how": "click",
+    "t": 2.5,
+    "next": "ody-i-06-smoke",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-06-smoke",
+    "verb": "click",
+    "how": "click",
+    "t": 3,
+    "next": "ody-i-07-council",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-07-council",
+    "verb": "target",
+    "how": "target",
+    "t": 3.5,
+    "next": "ody-i-08-cave",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-08-cave",
+    "verb": "click",
+    "how": "click",
+    "t": 3.5,
+    "next": "ody-i-09-monster",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-09-monster",
+    "verb": "click",
+    "how": "click",
+    "t": 4,
+    "next": "ody-i-10-wineskin",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-10-wineskin",
+    "verb": "click",
+    "how": "click",
+    "t": 4.5,
+    "next": "ody-i-11-twentyone",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-11-twentyone",
+    "verb": "click",
+    "how": "click",
+    "t": 5,
+    "next": "ody-i-12-misgave",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-i-12-misgave",
+    "verb": "click",
+    "how": "click",
+    "t": 5.5,
+    "next": "ody-ii-00-head",
+    "set": "shore",
+    "beat": 1,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-00-head",
+    "verb": "click",
+    "how": "click",
+    "t": 6,
+    "next": "ody-ii-01-beg",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-01-beg",
+    "verb": "click",
+    "how": "click",
+    "t": 6.5,
+    "next": "ody-ii-02-present",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-02-present",
+    "verb": "click",
+    "how": "click",
+    "t": 7,
+    "next": "ody-ii-03-return",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-03-return",
+    "verb": "click",
+    "how": "click",
+    "t": 7.5,
+    "next": "ody-ii-04-boulder",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-04-boulder",
+    "verb": "click",
+    "how": "click",
+    "t": 8,
+    "next": "ody-ii-05-strangers",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-05-strangers",
+    "verb": "click",
+    "how": "click",
+    "t": 8.5,
+    "next": "ody-ii-06-plea",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-06-plea",
+    "verb": "click",
+    "how": "click",
+    "t": 9,
+    "next": "ody-ii-07-pitiless",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-07-pitiless",
+    "verb": "click",
+    "how": "click",
+    "t": 9.5,
+    "next": "ody-ii-08-shipfast",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-08-shipfast",
+    "verb": "click",
+    "how": "click",
+    "t": 10,
+    "next": "ody-ii-09-shiplie",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-09-shiplie",
+    "verb": "click",
+    "how": "click",
+    "t": 10.5,
+    "next": "ody-ii-10-firstmeal",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 0,
+     "headcount": 12
+    }
+   },
+   {
+    "id": "ody-ii-10-firstmeal",
+    "verb": "click",
+    "how": "click",
+    "t": 11,
+    "next": "ody-ii-11-sword",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 1,
+     "headcount": 10
+    }
+   },
+   {
+    "id": "ody-ii-11-sword",
+    "verb": "target",
+    "how": "target",
+    "t": 11.5,
+    "next": "ody-ii-12-shiftstone",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 1,
+     "headcount": 10
+    }
+   },
+   {
+    "id": "ody-ii-12-shiftstone",
+    "verb": "click",
+    "how": "click",
+    "t": 11.5,
+    "next": "ody-ii-13-tillmorning",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 1,
+     "headcount": 10
+    }
+   },
+   {
+    "id": "ody-ii-13-tillmorning",
+    "verb": "click",
+    "how": "click",
+    "t": 12,
+    "next": "ody-iii-00-head",
+    "set": "cave",
+    "beat": 2,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 1,
+     "headcount": 10
+    }
+   },
+   {
+    "id": "ody-iii-00-head",
+    "verb": "click",
+    "how": "click",
+    "t": 12.5,
+    "next": "ody-iii-01-morningmeal",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 1,
+     "headcount": 10
+    }
+   },
+   {
+    "id": "ody-iii-01-morningmeal",
+    "verb": "click",
+    "how": "click",
+    "t": 13,
+    "next": "ody-iii-02-quiverlid",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 2,
+     "headcount": 8
+    }
+   },
+   {
+    "id": "ody-iii-02-quiverlid",
+    "verb": "click",
+    "how": "click",
+    "t": 13.5,
+    "next": "ody-iii-03-scheme",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 1,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 2,
+     "headcount": 8
+    }
+   },
+   {
+    "id": "ody-iii-03-scheme",
+    "verb": "click",
+    "how": "click",
+    "t": 14,
+    "next": "ody-iii-04-club",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 1,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 2,
+     "headcount": 8
+    }
+   },
+   {
+    "id": "ody-iii-04-club",
+    "verb": "click",
+    "how": "click",
+    "t": 14.5,
+    "next": "ody-iii-05-lots",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 1,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 1,
+     "sheep": 4,
+     "humanoids": 3,
+     "cap": 3,
+     "meals": 2,
+     "headcount": 8
+    }
+   },
+   {
+    "id": "ody-iii-05-lots",
+    "verb": "click",
+    "how": "click",
+    "t": 15,
+    "next": "ody-iii-06-return",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 1,
+     "sheep": 4,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 2,
+     "headcount": 8
+    }
+   },
+   {
+    "id": "ody-iii-06-return",
+    "verb": "click",
+    "how": "click",
+    "t": 15.5,
+    "next": "ody-iii-07-suppertwo",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 1,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 2,
+     "headcount": 8
+    }
+   },
+   {
+    "id": "ody-iii-07-suppertwo",
+    "verb": "click",
+    "how": "click",
+    "t": 16,
+    "next": "ody-iii-08-lookhere",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 1,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iii-08-lookhere",
+    "verb": "release",
+    "how": "release",
+    "t": 16.5,
+    "next": "ody-iii-09-besokind",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 1,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iii-09-besokind",
+    "verb": "auto",
+    "how": "auto",
+    "t": 19.9,
+    "next": "ody-iii-10-thrice",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 2,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iii-10-thrice",
+    "verb": "auto",
+    "how": "auto",
+    "t": 29.15,
+    "next": "ody-iii-11-noman",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 2,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iii-11-noman",
+    "verb": "click",
+    "how": "click",
+    "t": 37.15,
+    "next": "ody-iii-12-nomanlast",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 2,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iii-12-nomanlast",
+    "verb": "click",
+    "how": "click",
+    "t": 37.65,
+    "next": "ody-iii-13-neck",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 2,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iii-13-neck",
+    "verb": "auto",
+    "how": "auto",
+    "t": 38.15,
+    "next": "ody-iv-00-head",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 2,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-00-head",
+    "verb": "auto",
+    "how": "auto",
+    "t": 44.9,
+    "next": "ody-iv-01-embers",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 0,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 2,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-01-embers",
+    "verb": "hold",
+    "how": "hold",
+    "t": 48.15,
+    "next": "ody-iv-02-glowing",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-02-glowing",
+    "verb": "auto",
+    "how": "auto",
+    "t": 51.4,
+    "next": "ody-iv-03-auger",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-03-auger",
+    "verb": "clock",
+    "how": "clock",
+    "t": 54.9,
+    "next": "ody-iv-04-bore",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-04-bore",
+    "verb": "clock",
+    "how": "clock",
+    "t": 55.4,
+    "next": "ody-iv-05-hiss",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-05-hiss",
+    "verb": "clock",
+    "how": "clock",
+    "t": 58.65,
+    "next": "ody-iv-06-fright",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 1,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 3,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-06-fright",
+    "verb": "clock",
+    "how": "clock",
+    "t": 61.65,
+    "next": "ody-iv-07-whatails",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-07-whatails",
+    "verb": "click",
+    "how": "click",
+    "t": 63.9,
+    "next": "ody-iv-08-nomankilling",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-08-nomankilling",
+    "verb": "click",
+    "how": "click",
+    "t": 64.4,
+    "next": "ody-iv-09-mustbeill",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-09-mustbeill",
+    "verb": "click",
+    "how": "click",
+    "t": 64.9,
+    "next": "ody-iv-10-wentaway",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-10-wentaway",
+    "verb": "click",
+    "how": "click",
+    "t": 65.4,
+    "next": "ody-iv-11-stone",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-11-stone",
+    "verb": "click",
+    "how": "click",
+    "t": 65.9,
+    "next": "ody-iv-12-doorway",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-iv-12-doorway",
+    "verb": "click",
+    "how": "click",
+    "t": 66.4,
+    "next": "ody-v-00-head",
+    "set": "cave",
+    "beat": 4,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-00-head",
+    "verb": "auto",
+    "how": "auto",
+    "t": 66.9,
+    "next": "ody-v-01-puzzling",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-01-puzzling",
+    "verb": "click",
+    "how": "click",
+    "t": 70.4,
+    "next": "ody-v-02-withies",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-02-withies",
+    "verb": "click",
+    "how": "click",
+    "t": 70.9,
+    "next": "ody-v-03-threetoaman",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-03-threetoaman",
+    "verb": "click",
+    "how": "click",
+    "t": 71.4,
+    "next": "ody-v-04-greatram",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-04-greatram",
+    "verb": "target",
+    "how": "target",
+    "t": 71.9,
+    "next": "ody-v-05-dawn",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 1,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-05-dawn",
+    "verb": "click",
+    "how": "click",
+    "t": 71.9,
+    "next": "ody-v-06-feltbacks",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 3,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 4,
+     "sheep": 4,
+     "humanoids": 5,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-06-feltbacks",
+    "verb": "click",
+    "how": "click",
+    "t": 72.4,
+    "next": "ody-v-07-lastofall",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 2,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 4,
+     "sheep": 4,
+     "humanoids": 4,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-07-lastofall",
+    "verb": "click",
+    "how": "click",
+    "t": 72.9,
+    "next": "ody-v-08-ramspeech1",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 0,
+     "ulysses": 0,
+     "giant": 1,
+     "rams": 4,
+     "sheep": 4,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-08-ramspeech1",
+    "verb": "click",
+    "how": "click",
+    "t": 73.4,
+    "next": "ody-v-09-ramspeech2",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 0,
+     "ulysses": 0,
+     "giant": 1,
+     "rams": 4,
+     "sheep": 4,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-09-ramspeech2",
+    "verb": "click",
+    "how": "click",
+    "t": 73.9,
+    "next": "ody-v-10-ramspeech3",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 0,
+     "ulysses": 0,
+     "giant": 1,
+     "rams": 4,
+     "sheep": 4,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-10-ramspeech3",
+    "verb": "click",
+    "how": "click",
+    "t": 74.4,
+    "next": "ody-v-11-freed",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 0,
+     "ulysses": 0,
+     "giant": 1,
+     "rams": 4,
+     "sheep": 4,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-11-freed",
+    "verb": "click",
+    "how": "click",
+    "t": 74.9,
+    "next": "ody-v-12-aboard",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 0,
+     "ulysses": 0,
+     "giant": 1,
+     "rams": 4,
+     "sheep": 4,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-v-12-aboard",
+    "verb": "click",
+    "how": "click",
+    "t": 75.4,
+    "next": "ody-vi-01-jeer",
+    "set": "cave",
+    "beat": 5,
+    "census": {
+     "crew": 0,
+     "ulysses": 0,
+     "giant": 1,
+     "rams": 4,
+     "sheep": 4,
+     "humanoids": 1,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-01-jeer",
+    "verb": "target",
+    "how": "target",
+    "t": 75.9,
+    "next": "ody-vi-02-taunt",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-02-taunt",
+    "verb": "auto",
+    "how": "auto",
+    "t": 75.9,
+    "next": "ody-vi-03-rock1",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-03-rock1",
+    "verb": "clock",
+    "how": "clock",
+    "t": 82.15,
+    "next": "ody-vi-04-twiceasfar",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-04-twiceasfar",
+    "verb": "click",
+    "how": "click",
+    "t": 84.65,
+    "next": "ody-vi-05-menbeg",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-05-menbeg",
+    "verb": "click",
+    "how": "click",
+    "t": 85.15,
+    "next": "ody-vi-06-defy",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-06-defy",
+    "verb": "target",
+    "how": "target",
+    "t": 85.65,
+    "next": "ody-vi-07-myname",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-07-myname",
+    "verb": "release",
+    "how": "release",
+    "t": 85.65,
+    "next": "ody-vi-08-prophecy",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-08-prophecy",
+    "verb": "click",
+    "how": "click",
+    "t": 89.05,
+    "next": "ody-vi-09-fatherson",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-09-fatherson",
+    "verb": "click",
+    "how": "click",
+    "t": 89.55,
+    "next": "ody-vi-10-hades",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-10-hades",
+    "verb": "click",
+    "how": "click",
+    "t": 90.05,
+    "next": "ody-vi-11-curse",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-11-curse",
+    "verb": "click",
+    "how": "click",
+    "t": 90.55,
+    "next": "ody-vi-12-heard",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-12-heard",
+    "verb": "clock",
+    "how": "clock",
+    "t": 91.05,
+    "next": "ody-vi-13-ram",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-13-ram",
+    "verb": "click",
+    "how": "click",
+    "t": 93.3,
+    "next": "ody-vi-14-sailedon",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   },
+   {
+    "id": "ody-vi-14-sailedon",
+    "verb": "click",
+    "how": "click",
+    "t": 93.8,
+    "next": "ody-vi-14-sailedon",
+    "set": "sea",
+    "beat": 6,
+    "census": {
+     "crew": 4,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 0,
+     "sheep": 0,
+     "humanoids": 6,
+     "cap": 3,
+     "meals": 3,
+     "headcount": 6
+    }
+   }
+  ],
+  "stuck": [],
+  "gates": {
+   "ody-i-07-council": {
+    "verb": "target",
+    "live": true,
+    "resolved": true
+   },
+   "ody-ii-11-sword": {
+    "verb": "target",
+    "live": true,
+    "resolved": true
+   },
+   "ody-iii-08-lookhere": {
+    "verb": "release",
+    "resolved": true
+   },
+   "ody-iv-01-embers": {
+    "verb": "hold",
+    "resolved": true
+   },
+   "ody-v-04-greatram": {
+    "verb": "target",
+    "live": true,
+    "resolved": true
+   },
+   "ody-vi-01-jeer": {
+    "verb": "target",
+    "live": true,
+    "resolved": true
+   },
+   "ody-vi-06-defy": {
+    "verb": "target",
+    "live": true,
+    "resolved": true
+   },
+   "ody-vi-07-myname": {
+    "verb": "release",
+    "resolved": true
+   }
+  },
+  "ended": true,
+  "simT": 94.3,
+  "visited": 81,
+  "guard": 81
+ },
+ "gates": {
+  "council": {
+   "ok": true,
+   "verb": "target",
+   "target": "ship",
+   "misses": 0,
+   "at": 3.5
+  },
+  "sword": {
+   "ok": true,
+   "verb": "target",
+   "target": "sword",
+   "misses": 0,
+   "at": 11.5
+  },
+  "lookhere": {
+   "ok": true,
+   "verb": "release",
+   "at": 19.9
+  },
+  "embers": {
+   "ok": true,
+   "verb": "hold",
+   "at": 51.167
+  },
+  "greatram": {
+   "ok": true,
+   "verb": "target",
+   "target": "ram-great",
+   "misses": 0,
+   "at": 71.9
+  },
+  "jeer": {
+   "ok": true,
+   "verb": "target",
+   "target": "cyclops",
+   "misses": 0,
+   "at": 75.9
+  },
+  "defy": {
+   "ok": true,
+   "verb": "target",
+   "target": "cyclops",
+   "misses": 0,
+   "at": 85.65
+  },
+  "myname": {
+   "ok": true,
+   "verb": "release",
+   "at": 89.05
+  }
+ },
+ "routes": [
+  {
+   "label": "shore:fire->council",
+   "hits": []
+  },
+  {
+   "label": "cave:entry-u",
+   "hits": []
+  },
+  {
+   "label": "cave:entry-crew",
+   "hits": []
+  },
+  {
+   "label": "cave:entry-crew",
+   "hits": []
+  },
+  {
+   "label": "cave:entry-crew",
+   "hits": []
+  },
+  {
+   "label": "cave:scatter",
+   "hits": []
+  },
+  {
+   "label": "cave:scatter",
+   "hits": []
+  },
+  {
+   "label": "cave:scatter",
+   "hits": []
+  },
+  {
+   "label": "cave:scatter-u",
+   "hits": []
+  },
+  {
+   "label": "cave:giant-enter",
+   "hits": []
+  },
+  {
+   "label": "cave:huddle->suppliant",
+   "hits": []
+  },
+  {
+   "label": "cave:suppliant->sword",
+   "hits": []
+  },
+  {
+   "label": "cave:flock-out",
+   "hits": []
+  },
+  {
+   "label": "cave:flock-out",
+   "hits": []
+  },
+  {
+   "label": "cave:flock-out",
+   "hits": []
+  },
+  {
+   "label": "cave:flock-out",
+   "hits": []
+  },
+  {
+   "label": "cave:flock-out",
+   "hits": []
+  },
+  {
+   "label": "cave:giant-out",
+   "hits": []
+  },
+  {
+   "label": "cave:huddle->scheme",
+   "hits": []
+  },
+  {
+   "label": "cave:scheme->lots",
+   "hits": []
+  },
+  {
+   "label": "cave:flock-in",
+   "hits": []
+  },
+  {
+   "label": "cave:flock-in",
+   "hits": []
+  },
+  {
+   "label": "cave:flock-in",
+   "hits": []
+  },
+  {
+   "label": "cave:flock-in",
+   "hits": []
+  },
+  {
+   "label": "cave:flock-in",
+   "hits": []
+  },
+  {
+   "label": "cave:giant-return",
+   "hits": []
+  },
+  {
+   "label": "cave:lots->bowl",
+   "hits": []
+  },
+  {
+   "label": "cave:bowl->embers",
+   "hits": []
+  },
+  {
+   "label": "cave:bearers",
+   "hits": []
+  },
+  {
+   "label": "cave:bearers",
+   "hits": []
+  },
+  {
+   "label": "cave:bearers",
+   "hits": []
+  },
+  {
+   "label": "cave:drive-u",
+   "hits": []
+  },
+  {
+   "label": "cave:drive-crew",
+   "hits": []
+  },
+  {
+   "label": "cave:fright-u",
+   "hits": []
+  },
+  {
+   "label": "cave:fright-crew",
+   "hits": []
+  },
+  {
+   "label": "cave:fright-crew",
+   "hits": []
+  },
+  {
+   "label": "cave:fright-crew",
+   "hits": []
+  },
+  {
+   "label": "cave:lash",
+   "hits": []
+  },
+  {
+   "label": "cave:lash",
+   "hits": []
+  },
+  {
+   "label": "cave:lash",
+   "hits": []
+  },
+  {
+   "label": "cave:lash",
+   "hits": []
+  },
+  {
+   "label": "cave:ram-in",
+   "hits": []
+  },
+  {
+   "label": "cave:stream-out",
+   "hits": []
+  },
+  {
+   "label": "cave:stream-out",
+   "hits": []
+  },
+  {
+   "label": "cave:stream-out",
+   "hits": []
+  },
+  {
+   "label": "cave:ram-last",
+   "hits": []
+  },
+  {
+   "label": "cave:ram-clear",
+   "hits": []
+  }
+ ],
+ "voice": {
+  "enabled": false,
+  "plays": 76,
+  "playing": null,
+  "cached": 0,
+  "log": [
+   {
+    "t": 85.65,
+    "key": "myname",
+    "dur": 11.2
+   },
+   {
+    "t": 89.05,
+    "key": "prophecy",
+    "dur": 24.4
+   },
+   {
+    "t": 89.55,
+    "key": "fatherson",
+    "dur": 31.92
+   },
+   {
+    "t": 90.05,
+    "key": "hades",
+    "dur": 8.8
+   },
+   {
+    "t": 90.55,
+    "key": "curse",
+    "dur": 19.76
+   },
+   {
+    "t": 91.05,
+    "key": "heard",
+    "dur": 3.36
+   },
+   {
+    "t": 93.267,
+    "key": "ram",
+    "dur": 17.92
+   },
+   {
+    "t": 93.8,
+    "key": "sailedon",
+    "dur": 13.52
+   }
+  ]
+ },
+ "pitch": {
+  "ulysses": 2.81,
+  "crew-0": 2.69,
+  "crew-1": 2.69,
+  "crew-2": 2.69,
+  "crew-3": 2.69,
+  "poly-idle": 16.96
+ },
+ "director": {
+  "set": "sea",
+  "beat": 6,
+  "state": "cave-dawn",
+  "census": {
+   "crew": 0,
+   "ulysses": 0,
+   "giant": 0,
+   "rams": 0,
+   "sheep": 0,
+   "humanoids": 0,
+   "cap": 3,
+   "meals": 3,
+   "headcount": 6
+  },
+  "meals": 3,
+  "boulderK": 1,
+  "movers": [
+   "wash-onward",
+   "dusk-dip",
+   "return-glide",
+   "sea-dawn",
+   "sail-off"
+  ],
+  "walking": [],
+  "acts": 74,
+  "audits": 47,
+  "routeHits": [],
+  "swordLive": true,
+  "jeers": 2,
+  "clockT": 3.75,
+  "pov": false,
+  "shake": false,
+  "station": 0,
+  "swing": 0
+ },
+ "endcard": {
+  "ended": true,
+  "kicker": "END OF BOOK IX",
+  "title": "The Cyclops",
+  "sub": "told by Ulysses at the court of Alcinous — he gave the monster his name at once",
+  "dedication": "This reading belonged to Fable",
+  "sigilInkPx": 2964
+ },
+ "determinism": {
+  "a": {
+   "simT": 6,
+   "pose": {
+    "ulysses": [
+     -2.9567,
+     0,
+     -3.1025,
+     1.7349
+    ],
+    "crew-0": [
+     -3.1754,
+     0,
+     -3.0663,
+     1.7349
+    ],
+    "poly-walk": [
+     -8.1163,
+     0,
+     -1.2106,
+     1.4
+    ]
+   },
+   "boulderK": 0
+  },
+  "b": {
+   "simT": 6,
+   "pose": {
+    "ulysses": [
+     -2.9567,
+     0,
+     -3.1025,
+     1.7349
+    ],
+    "crew-0": [
+     -3.1754,
+     0,
+     -3.0663,
+     1.7349
+    ],
+    "poly-walk": [
+     -8.1163,
+     0,
+     -1.2106,
+     1.4
+    ]
+   },
+   "boulderK": 0
+  },
+  "identical": true
+ },
+ "frames": [
+  {
+   "file": "beat1-council.png",
+   "unit": "ody-i-07-council",
+   "hold": 8,
+   "why": "I · the council on the sand, the ship behind",
+   "set": "shore",
+   "cine": {
+    "unit": "ody-i-07-council",
+    "cls": "OTS",
+    "set": "shore",
+    "floor": 0.3,
+    "size": 0.23902641753353893,
+    "inFrame": 1,
+    "cutSides": 0,
+    "fill": false,
+    "lookRoom": 0.012,
+    "lookRoomOk": true,
+    "roll": 0,
+    "cx": 0.0058539635356107365,
+    "cy": 0.014401467122816591,
+    "live": true,
+    "cuts": 8,
+    "fov": 26,
+    "camY": 1.5886582107140166,
+    "focus": 16.19569096038153,
+    "fstop": 2.5,
+    "move": "push",
+    "shake": 0,
+    "overOnScreen": true
+   },
+   "census": {
+    "crew": 3,
+    "ulysses": 1,
+    "giant": 0,
+    "rams": 0,
+    "sheep": 0,
+    "humanoids": 4,
+    "cap": 3,
+    "meals": 0,
+    "headcount": 12
+   },
+   "bytes": 98687
+  },
+  {
+   "file": "beat2-plea.png",
+   "unit": "ody-ii-06-plea",
+   "hold": 9,
+   "why": "II · the suppliant at the seated giant",
+   "set": "cave",
+   "cine": {
+    "unit": "ody-ii-06-plea",
+    "cls": "DIALOGUE",
+    "set": "cave",
+    "floor": 0.3,
+    "size": 0.8918759243976637,
+    "inFrame": 1,
+    "cutSides": 0,
+    "fill": false,
+    "lookRoom": 0.314,
+    "lookRoomOk": true,
+    "roll": 0,
+    "cx": -0.1570356758583142,
+    "cy": -0.002485462209454392,
+    "live": true,
+    "cuts": 20,
+    "fov": 27,
+    "camY": 2.0532326848301135,
+    "focus": 4.4044707742007345,
+    "fstop": 2.5,
+    "move": "push",
+    "shake": 0,
+    "overOnScreen": true
+   },
+   "census": {
+    "crew": 3,
+    "ulysses": 1,
+    "giant": 1,
+    "rams": 0,
+    "sheep": 0,
+    "humanoids": 5,
+    "cap": 3,
+    "meals": 0,
+    "headcount": 12
+   },
+   "bytes": 208471
+  },
+  {
+   "file": "beat3-bowl.png",
+   "unit": "ody-iii-08-lookhere",
+   "hold": 6,
+   "why": "III · the bowl offered at the knee",
+   "set": "cave",
+   "cine": {
+    "unit": "ody-iii-08-lookhere",
+    "cls": "GATE",
+    "set": "cave",
+    "floor": 0.22,
+    "size": 0.44606440045946627,
+    "inFrame": 1,
+    "cutSides": 0,
+    "fill": false,
+    "lookRoom": -0.248,
+    "lookRoomOk": false,
+    "roll": 0,
+    "cx": -0.1239725961023052,
+    "cy": -0.03447539269742972,
+    "live": true,
+    "cuts": 36,
+    "fov": 30,
+    "camY": 1.2569241326996659,
+    "focus": 4.153555426950646,
+    "fstop": 2,
+    "move": "push",
+    "shake": 0,
+    "overOnScreen": true
+   },
+   "census": {
+    "crew": 0,
+    "ulysses": 1,
+    "giant": 1,
+    "rams": 0,
+    "sheep": 0,
+    "humanoids": 2,
+    "cap": 3,
+    "meals": 3,
+    "headcount": 6
+   },
+   "bytes": 251022
+  },
+  {
+   "file": "beat4-auger.png",
+   "unit": "ody-iv-03-auger",
+   "hold": 3,
+   "why": "IV · the beam driven into the eye",
+   "set": "cave",
+   "cine": {
+    "unit": "ody-iv-03-auger",
+    "cls": "CLOCK",
+    "set": "cave",
+    "floor": 0.18,
+    "size": 0.2682684648660691,
+    "inFrame": 1,
+    "cutSides": 0,
+    "fill": false,
+    "lookRoom": 0.148,
+    "lookRoomOk": true,
+    "roll": 0,
+    "cx": 0.07391360785531961,
+    "cy": 0.026641328269305264,
+    "live": true,
+    "cuts": 45,
+    "fov": 34,
+    "camY": 1.452286757187302,
+    "focus": 7.400320840828274,
+    "fstop": 2.2,
+    "move": "handheld",
+    "shake": 0.014
+   },
+   "census": {
+    "crew": 1,
+    "ulysses": 1,
+    "giant": 1,
+    "rams": 0,
+    "sheep": 0,
+    "humanoids": 3,
+    "cap": 3,
+    "meals": 3,
+    "headcount": 6
+   },
+   "bytes": 146269
+  },
+  {
+   "file": "beat5-ram.png",
+   "unit": "ody-v-07-lastofall",
+   "hold": 7,
+   "why": "V · the great ram at the mouth",
+   "set": "cave",
+   "cine": {
+    "unit": "ody-v-07-lastofall",
+    "cls": "ACTION",
+    "set": "cave",
+    "floor": 0.17,
+    "size": 0.5133317878473774,
+    "inFrame": 1,
+    "cutSides": 0,
+    "fill": false,
+    "lookRoom": null,
+    "lookRoomOk": true,
+    "roll": 0,
+    "cx": -0.15749109266718592,
+    "cy": -0.01926778832597717,
+    "live": false,
+    "cuts": 62,
+    "fov": 32,
+    "camY": 1.0195186349878929,
+    "focus": 5.218955762555415,
+    "fstop": 2.5,
+    "move": "push",
+    "shake": 0
+   },
+   "census": {
+    "crew": 0,
+    "ulysses": 0,
+    "giant": 1,
+    "rams": 1,
+    "sheep": 4,
+    "humanoids": 1,
+    "cap": 3,
+    "meals": 3,
+    "headcount": 6
+   },
+   "bytes": 259363
+  },
+  {
+   "file": "beat6-curse.png",
+   "unit": "ody-vi-11-curse",
+   "hold": 3.2,
+   "why": "VI · the curse from the water",
+   "set": "sea",
+   "cine": {
+    "unit": "ody-vi-11-curse",
+    "cls": "GIANT",
+    "set": "sea",
+    "floor": 0.42,
+    "size": 0.5326859011112575,
+    "inFrame": 1,
+    "cutSides": 0,
+    "fill": false,
+    "lookRoom": 0.231,
+    "lookRoomOk": true,
+    "roll": 0,
+    "cx": 0.1153653428125789,
+    "cy": -0.0564121063341943,
+    "live": true,
+    "cuts": 78,
+    "fov": 15,
+    "camY": 3.4570818687434706,
+    "focus": 50.890003534656636,
+    "fstop": 4,
+    "move": "push",
+    "shake": 0
+   },
+   "census": {
+    "crew": 4,
+    "ulysses": 1,
+    "giant": 1,
+    "rams": 0,
+    "sheep": 0,
+    "humanoids": 6,
+    "cap": 3,
+    "meals": 3,
+    "headcount": 6
+   },
+   "bytes": 137816
+  },
+  {
+   "file": "feel-giant.png",
+   "unit": "ody-ii-05-strangers",
+   "hold": 4,
+   "why": "the low angle up at seven metres",
+   "set": "cave",
+   "cine": {
+    "unit": "ody-ii-05-strangers",
+    "cls": "GIANT",
+    "set": "cave",
+    "floor": 0.42,
+    "size": 0.717022201886972,
+    "inFrame": 1,
+    "cutSides": 0,
+    "fill": false,
+    "lookRoom": 0.213,
+    "lookRoomOk": true,
+    "roll": 0,
+    "cx": -0.10625283272496311,
+    "cy": 0.02995756612025602,
+    "live": true,
+    "cuts": 19,
+    "fov": 50,
+    "camY": 1.2859161046111351,
+    "focus": 7.3036294845382645,
+    "fstop": 2.8,
+    "move": "push",
+    "shake": 0,
+    "scaleRef": {
+     "id": "crew-0",
+     "ratio": 1.486
+    },
+    "scaleRefOk": false
+   },
+   "census": {
+    "crew": 3,
+    "ulysses": 1,
+    "giant": 1,
+    "rams": 0,
+    "sheep": 0,
+    "humanoids": 5,
+    "cap": 3,
+    "meals": 0,
+    "headcount": 12
+   },
+   "bytes": 354395
+  },
+  {
+   "file": "feel-blinding.png",
+   "unit": "ody-iv-05-hiss",
+   "hold": 1.1,
+   "why": "the blinding — flare, shake, nothing shown",
+   "set": "cave",
+   "cine": {
+    "unit": "ody-iv-05-hiss",
+    "cls": "CLOCK",
+    "set": "cave",
+    "floor": 0.18,
+    "size": 0.933365555088409,
+    "inFrame": 1,
+    "cutSides": 0,
+    "fill": false,
+    "lookRoom": 0.267,
+    "lookRoomOk": true,
+    "roll": 0,
+    "cx": -0.13338224501775425,
+    "cy": -0.006864771752103593,
+    "live": true,
+    "cuts": 47,
+    "fov": 52,
+    "camY": 1.3307918058891066,
+    "focus": 8.321358798921027,
+    "fstop": 2.2,
+    "move": "handheld",
+    "shake": 0.034
+   },
+   "census": {
+    "crew": 1,
+    "ulysses": 1,
+    "giant": 1,
+    "rams": 0,
+    "sheep": 0,
+    "humanoids": 3,
+    "cap": 3,
+    "meals": 3,
+    "headcount": 6
+   },
+   "bytes": 237764
+  },
+  {
+   "file": "feel-sailoff.png",
+   "unit": "ody-vi-14-sailedon",
+   "hold": 6,
+   "why": "the sail-off down the moonpath",
+   "set": "sea",
+   "cine": {
+    "unit": "ody-vi-14-sailedon",
+    "cls": "WIDE",
+    "set": "sea",
+    "floor": 0.045,
+    "size": 0.40591804465969483,
+    "inFrame": 1,
+    "cutSides": 0,
+    "fill": true,
+    "lookRoom": null,
+    "lookRoomOk": true,
+    "roll": 0,
+    "cx": -0.042136069331007164,
+    "cy": -0.012290355198195824,
+    "live": false,
+    "cuts": 81,
+    "fov": 38,
+    "camY": 7.860844854306867,
+    "focus": 34.65420278827906,
+    "fstop": 11,
+    "move": "crane",
+    "shake": 0
+   },
+   "census": {
+    "crew": 4,
+    "ulysses": 1,
+    "giant": 1,
+    "rams": 0,
+    "sheep": 0,
+    "humanoids": 6,
+    "cap": 3,
+    "meals": 3,
+    "headcount": 6
+   },
+   "bytes": 203501
+  }
+ ],
+ "errors": [],
+ "scaleConsole": [
+  "[scale] (advisory, set dressing — not gated) shore/sheep-flock height 0.893 m · length 7.292 m",
+  "[scale] (advisory, set dressing — not gated) shore/ship-2 height 11.516 m · length 16.198 m",
+  "[scale] (advisory, set dressing — not gated) shore/ship-1 height 11.523 m · length 15.257 m",
+  "[scale] (advisory, set dressing — not gated) cave/sheep-flock height 0.615 m · length 7.937 m",
+  "[scale] THE INSTANCE TABLE · every set — 31 mounted, tolerance ±15%",
+  "[scale] instance                  kind       set    pose      axis     expect  measured   delta  verdict",
+  "[scale] shore/ulysses             human      shore  standing  height     1.75      1.74   -0.6%  PASS",
+  "[scale] shore/crew-0              human      shore  standing  height     1.75      1.68     -4%  PASS",
+  "[scale] shore/crew-1              human      shore  standing  height     1.75      1.68     -4%  PASS",
+  "[scale] shore/crew-2              human      shore  standing  height     1.75      1.68     -4%  PASS",
+  "[scale] shore/crew-3              human      shore  standing  height     1.75      1.68     -4%  PASS",
+  "[scale] cave/ulysses              human      cave   standing  height     1.75      1.74   -0.6%  PASS",
+  "[scale] cave/crew-0               human      cave   standing  height     1.75      1.68     -4%  PASS",
+  "[scale] cave/crew-1               human      cave   standing  height     1.75      1.68     -4%  PASS",
+  "[scale] cave/crew-2               human      cave   standing  height     1.75      1.68     -4%  PASS",
+  "[scale] cave/crew-3               human      cave   standing  height     1.75      1.68     -4%  PASS",
+  "[scale] cave/poly-seat            giant      cave   seated    height     3.85      4.26  +10.7%  PASS",
+  "[scale] cave/poly-idle            giant      cave   standing  height     7.00      6.97   -0.4%  PASS",
+  "[scale] cave/poly-walk            giant      cave   standing  height     7.00      6.95   -0.8%  PASS",
+  "[scale] cave/ram-great            ram-great  cave   standing  height     1.40      1.47     +5%  PASS",
+  "[scale] cave/ewe-0                sheep      cave   standing  height     1.00      1.05     +5%  PASS",
+  "[scale] cave/ewe-1                sheep      cave   standing  height     1.00      1.05     +5%  PASS",
+  "[scale] cave/ewe-2                sheep      cave   standing  height     1.00      1.05     +5%  PASS",
+  "[scale] cave/ewe-3                sheep      cave   standing  height     1.00      1.05     +5%  PASS",
+  "[scale] cave/flock-0              sheep      cave   standing  height     1.00      1.05     +5%  PASS",
+  "[scale] cave/flock-1              sheep      cave   standing  height     1.00      1.05     +5%  PASS",
+  "[scale] cave/flock-2              sheep      cave   standing  height     1.00      1.05     +5%  PASS",
+  "[scale] cave/stake                stake      cave   standing  length     1.79      1.74     -3%  PASS",
+  "[scale] cave/bowl                 bowl       cave   standing  length     1.40      1.40      0%  PASS",
+  "[scale] cave/wineskin             wineskin   cave   standing  length     0.98      1.03   +5.3%  PASS",
+  "[scale] cave/sword                sword      cave   standing  length     0.78      0.69  -11.1%  PASS",
+  "[scale] sea/ulysses               human      sea    standing  height     1.75      1.74   -0.6%  PASS",
+  "[scale] sea/crew-0                human      sea    standing  height     1.75      1.68     -4%  PASS",
+  "[scale] sea/crew-1                human      sea    standing  height     1.75      1.68     -4%  PASS",
+  "[scale] sea/crew-2                human      sea    standing  height     1.75      1.68     -4%  PASS",
+  "[scale] sea/crew-3                human      sea    standing  height     1.75      1.68     -4%  PASS",
+  "[scale] sea/poly-idle             giant      sea    standing  height     7.00      6.97   -0.4%  PASS",
+  "[scale] GREEN — 31/31 inside ±15%",
+  "[scale] (advisory, set dressing — not gated) shore/sheep-flock height 0.893 m · length 7.292 m",
+  "[scale] (advisory, set dressing — not gated) shore/ship-2 height 11.516 m · length 16.198 m",
+  "[scale] (advisory, set dressing — not gated) shore/ship-1 height 11.523 m · length 15.257 m"
+ ],
+ "verdicts": [
+  {
+   "name": "zero console/page errors",
+   "verdict": "PASS",
+   "detail": "clean"
+  },
+  {
+   "name": "[scale] gate green — every mounted instance",
+   "verdict": "PASS",
+   "detail": "31/31 inside ±15%"
+  },
+  {
+   "name": "[scale] full instance table printed",
+   "verdict": "PASS",
+   "detail": "41 [scale] console lines"
+  },
+  {
+   "name": "the 81-unit walk completes",
+   "verdict": "PASS",
+   "detail": "81 units · 0 stuck · sim 94.3s · ended true"
+  },
+  {
+   "name": "every gate resolved by its own verb",
+   "verdict": "PASS",
+   "detail": "8/8 — all"
+  },
+  {
+   "name": "all six beats played",
+   "verdict": "PASS",
+   "detail": "beats 1,2,3,4,5,6"
+  },
+  {
+   "name": "all three sets mounted in the walk",
+   "verdict": "PASS",
+   "detail": "shore -> cave -> sea"
+  },
+  {
+   "name": "obstacle law: no audited route crosses a ledger box",
+   "verdict": "PASS",
+   "detail": "47 routes audited · 0 crossings"
+  },
+  {
+   "name": "census law: <=3 crew on a leaf (4 at the lots, 4 at the oars)",
+   "verdict": "PASS",
+   "detail": "max crew 4 · lots 4 · sea max 4 · over cap: none"
+  },
+  {
+   "name": "census law: one giant rig on the leaf at a time",
+   "verdict": "PASS",
+   "detail": "never two"
+  },
+  {
+   "name": "posture law: every rig's head pitch inside its band",
+   "verdict": "PASS",
+   "detail": "ulysses 2.81° · crew-0 2.69° · crew-1 2.69° · crew-2 2.69° · crew-3 2.69° · poly-idle 16.96°"
+  },
+  {
+   "name": "voice: a mastered line asserted per unit",
+   "verdict": "PASS",
+   "detail": "76 lines logged in sim time"
+  },
+  {
+   "name": "determinism: two fresh laps land identically",
+   "verdict": "PASS",
+   "detail": "{\"ulysses\":[-2.9567,0,-3.1025,1.7349],\"crew-0\":[-3.1754,0,-3.0663,1.7349],\"poly-walk\":[-8.1163,0,-1.2106,1.4]}"
+  },
+  {
+   "name": "the closing card lands and the sigil is drawn",
+   "verdict": "PASS",
+   "detail": "\"told by Ulysses at the court of Alcinous — he gave the monster his name at once\" · sigil 2964 px · This reading belonged to Fable"
+  },
+  {
+   "name": "9 frames rendered through the storyteller's lens",
+   "verdict": "PASS",
+   "detail": "9/9 · beat1-council beat2-plea beat3-bowl beat4-auger beat5-ram beat6-curse feel-giant feel-blinding feel-sailoff"
+  },
+  {
+   "name": "every frame keeps its subject in frame",
+   "verdict": "PASS",
+   "detail": "beat1-council OTS 0.24 · beat2-plea DIALOGUE 0.89 · beat3-bowl GATE 0.45 · beat4-auger CLOCK 0.27 · beat5-ram ACTION 0.51 · beat6-curse GIANT 0.53 · feel-giant GIANT 0.72 · feel-blinding CLOCK 0.93 · feel-sailoff WIDE 0.41"
+  }
+ ],
+ "green": true,
+ "framesDir": "/Users/samz/Documents/gaslight-remake/shots/book3d-r1"
+}

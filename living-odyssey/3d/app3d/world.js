@@ -39,19 +39,21 @@ export const FRAMES = {
     pxPerM: CAVE_WORLD.S, elevDeg: 25,
     X: CAVE_WORLD.X, Z: CAVE_WORLD.Z,
     M: (px) => px / CAVE_WORLD.S,
-    obstacles: CAVE_WORLD.OBSTACLES,
+    obstacles: CAVE_WORLD.OBSTACLES, path: CAVE_WORLD.PATH_PTS,
   },
   shore: {
     pxPerM: SHORE_WORLD.S, elevDeg: 28,
     X: SHORE_WORLD.X, Z: SHORE_WORLD.Z, ZH: SHORE_WORLD.ZH,
     M: (px) => px / SHORE_WORLD.S,
     obstacles: SHORE_WORLD.OBSTACLES, marks: SHORE_WORLD.MARKS,
+    path: SHORE_WORLD.PATH_PTS,
   },
   sea: {
     pxPerM: SEA_WORLD.S, elevDeg: 30,
     X: SEA_WORLD.X, Z: SEA_WORLD.Z, ZH: SEA_WORLD.ZH,
     M: (px) => px / SEA_WORLD.S,
     obstacles: SEA_WORLD.OBSTACLES, marks: SEA_WORLD.MARKS,
+    path: (SEA_WORLD.FLOORS.deck || {}).polyline || [],
   },
 };
 export const SET_NAMES = Object.freeze(['shore', 'cave', 'sea']);
@@ -73,6 +75,7 @@ export const SIZE_TABLE = Object.freeze({
   stake:      { m: 1.79, axis: 'length', from: 'ledger objectLedger — 77 px = 6 ft @ 43 px/m' },
   bowl:       { m: 1.40, axis: 'length', from: 'ledger — the giant’s ivy-wood bowl, 60 px across @ 43 px/m' },
   wineskin:   { m: 0.98, axis: 'length', from: 'ledger — the shouldered skin, 42 px @ 43 px/m' },
+  sword:      { m: 0.78, axis: 'length', from: 'ledger objectLedger — the hip xiphos, 34 px @ 43 px/m (G2 glint anchor)' },
 });
 export const TOLERANCE = 0.15;          /* ±15%, the mandate's band */
 
