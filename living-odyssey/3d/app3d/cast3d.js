@@ -446,8 +446,31 @@ export async function buildActor(rigName, id) {
     return +THREE.MathUtils.radToDeg(Math.atan2(_v.dot(fwd), _v.y)).toFixed(2);
   };
 
+  /* THE POSED FOOTPRINT. Box3.setFromObject on a SkinnedMesh reports the BIND
+     bounds — the skin transform lives on the GPU — so a seated giant measured
+     that way hands back a standing A-pose box (4.24 x 1.53 m) and his contact
+     shadow comes out a third of his real depth. Sweep the skinned vertices in
+     the pose the stage will mount and hand the stage the truth. */
+  const skinBox = new THREE.Box3();
+  {
+    const p = new THREE.Vector3();
+    group.updateMatrixWorld(true);
+    model.traverse((o) => {
+      if (!o.isSkinnedMesh) return;
+      const n = o.geometry.attributes.position.count;
+      const stride = Math.max(1, Math.floor(n / 900));
+      for (let i = 0; i < n; i += stride) {
+        o.getVertexPosition(i, p);
+        skinBox.expandByPoint(p.applyMatrix4(o.matrixWorld));
+      }
+    });
+  }
+  const skinSize = skinBox.getSize(new THREE.Vector3());
+
   return { id, rig: rigName, group, model, mixer, clip,
            clipDur: clip ? clip.duration : 0, mats,
+           skinSize: [+skinSize.x.toFixed(3), +skinSize.y.toFixed(3),
+                      +skinSize.z.toFixed(3)],
            heightM: rig.heightM || null, lengthM: rig.lengthM || null, pitchDeg,
            /* the boot evidence the [materials] gate reads back */
            identity: { tex: texDims, canon: canon.peaks.slice(0, 4), satPx: canon.sat } };

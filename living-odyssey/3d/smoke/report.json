@@ -1,6 +1,6 @@
 {
-  "when": "2026-08-21T18:20:54.771Z",
-  "origin": "http://127.0.0.1:65207",
+  "when": "2026-08-21T19:11:15.542Z",
+  "origin": "http://127.0.0.1:64856",
   "until": null,
   "reached": "end-card",
   "reachedIdx": 80,
@@ -169,11 +169,11 @@
   "consoleErrors": [],
   "pageErrors": [],
   "consoleWarns": [
-    "[.WebGL-0x13c00575a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x124005a9c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
     "THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.",
-    "[.WebGL-0x13c00575a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
-    "[.WebGL-0x13c00575a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
-    "[.WebGL-0x13c00575a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    "[.WebGL-0x124005a9c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x124005a9c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x124005a9c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
   ],
   "requestsFailed": [],
   "voicePlays": 76,
@@ -1255,7 +1255,7 @@
       "playing": "troy",
       "before": 1,
       "during": 0.5016,
-      "after": 0.9777,
+      "after": 0.9779,
       "dB": -5.99
     },
     "duckOk": true,

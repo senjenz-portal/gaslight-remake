@@ -404,7 +404,13 @@ export class Stage3D {
            A blob scaled off stature alone gives a 2.1 m disc to a 7 m giant
            who is LYING DOWN across the hearth; the posed bounding box is the
            honest footprint, and the stage tints and fades it per frame. */
-        const bb = new THREE.Box3().setFromObject(a.model);
+        /* off the POSED skinned sweep (cast3d's skinSize) — Box3.setFromObject
+           reads a SkinnedMesh's BIND box, which gave the seated giant a
+           standing A-pose footprint 1.5 m deep instead of his real 3.4 m. */
+        const bb = a.skinSize
+          ? { max: { x: a.skinSize[0] / 2, z: a.skinSize[2] / 2 },
+              min: { x: -a.skinSize[0] / 2, z: -a.skinSize[2] / 2 } }
+          : new THREE.Box3().setFromObject(a.model);
         const fx = Math.max(0.16, (bb.max.x - bb.min.x) * 0.56);
         const fz = Math.max(0.12, (bb.max.z - bb.min.z) * 0.62);
         a.footprint = [+fx.toFixed(3), +fz.toFixed(3)];
@@ -486,6 +492,13 @@ export class Stage3D {
       tree(keepAll, rec.api.parts['thrown-rocks']);
       tree(keepPts, rec.api.parts['splash-pool']);
     }
+    /* THE HAND PROPS ARE THE STORY, NOT SCENERY. The sword, the bowl and the
+       stake are built into rec.api.root by _buildProps, so this sweep retired
+       them with the painted dressing: iii-08's whole readable action is "take
+       this and drink some wine" and there was NO BOWL in the frame (SOL#1),
+       G2's glint had no sword and Beat IV's stake was an invisible drive.
+       Keep every prop the reader is asked to look at. */
+    if (rec.propsGroup) tree(keepAll, rec.propsGroup);
     let hidden = 0, kept = 0, points = 0;
     rec.api.root.traverse((o) => {
       const drawable = o.isMesh || o.isSprite || o.isLine || o.isInstancedMesh || o.isPoints;
@@ -693,6 +706,12 @@ export class Stage3D {
     const k = Math.min(1, Math.max(0, s.lum / 150));
     m.color.setRGB(s.rgb[0] / 255 * 0.26, s.rgb[1] / 255 * 0.24, s.rgb[2] / 255 * 0.24);
     m.opacity = (0.17 + 0.40 * k) * (a.opacity === undefined ? 1 : a.opacity);
+    /* SOL#6's cast smear is the SAME light as the contact blob — one reading
+       of the plate drives both, or the two shadows disagree about the fire */
+    if (a.scaleShadow && a.scaleShadow.visible) {
+      a.scaleShadow.material.color.copy(m.color);
+      a.scaleShadow.material.opacity = m.opacity * 0.72;
+    }
     const rec = this.sets[this.activeName];
     if (!rec || !rec.fireAnchor) return;
     const p = a.group.position, fa = rec.fireAnchor;
@@ -1117,6 +1136,10 @@ export class Stage3D {
     stake.visible = false;
     grp.add(stake);
     rec.api.root.add(grp);
+    /* named so _retireScenery can spare it: these are the story's hand props,
+       built into the set's root and therefore in the sweep's path */
+    grp.name = 'story-props';
+    rec.propsGroup = grp;
     this.props.sword = sword;
     this.props.bowl = bowl;
     this.props.wine = wine;
@@ -1127,7 +1150,37 @@ export class Stage3D {
     this.props.stakeTipLight = tipLight;
     /* prop marks (ledger px -> world) */
     this.props.swordAt = toWorld(680, 554); this.props.swordAt.y = 0.85;
-    this.props.bowlAt = toWorld(700, 514); this.props.bowlAt.y = 1.05;
+    /* SOL#1 — THE BOWL IS OFFERED, not carried. Round 3 put it on the hero's
+       own mark at chest height, which is INSIDE his torso from this camera:
+       the one readable action of iii-08 ("take this and drink some wine") had
+       no visible object in it. Step it off the mark along the bowl-offer ->
+       giant-seat axis, at the height of a lifted arm, so the hero's silhouette
+       carries a held bowl pointed at the giant. */
+    this.props.bowlAt = toWorld(700, 514);
+    {
+      const seat = toWorld(...GIANT_SEAT_PX);
+      const dx = seat.x - this.props.bowlAt.x, dz = seat.z - this.props.bowlAt.z;
+      const L = Math.max(1e-3, Math.hypot(dx, dz));
+      /* ACROSS, barely UPSTAGE, and the step is measured in PLAN. The giant
+         sits up-and-back, so a straight 0.6 m down that axis is only 0.23 m
+         across (it reads as still inside the hero's torso) and 0.55 m upstage
+         — past the firering-front cut at z 2.45, which swallowed it whole.
+         Fix the lateral step in PLAN and take a fifth of the depth.
+         ROUND 4 — A BOWL THAT DOES NOT TOUCH HIM IS NOT OFFERED. 0.55 m is
+         23.6 plate px on a hero whose drawn half-width is ~16 px, so the cup
+         cleared his silhouette entirely and read as a dark disc floating at
+         his shoulder — the one readable action of iii-08 with no hand in it.
+         0.34 m puts the cup's near half OVER his body edge and its far half
+         out on the lit ground toward the giant: held, and still legible. */
+      const step = 0.34 / Math.max(0.2, Math.abs(dx / L));
+      this.props.bowlAt.x += (dx / L) * step;
+      this.props.bowlAt.z += (dz / L) * step * 0.22;
+    }
+    /* AT HIS HANDS, and clear of the logbundle cut. 1.15 m floated the cup at
+       his chin; 1.02 m is where a man carries a bowl he means to hand over,
+       and it still draws at plate row ~473 — below the logbundle card's own
+       ground (497), so the card cannot take it back. */
+    this.props.bowlAt.y = 1.02;
     this.props.stakeAt = toWorld(782, 496); this.props.stakeAt.y = 0.35;
     sword.position.copy(this.props.swordAt);
     bowl.position.copy(this.props.bowlAt);
@@ -1154,11 +1207,20 @@ export class Stage3D {
 
   /**
    * SOL #6 — SCALE EVIDENCE. A blob under the feet seats a man; it does not
-   * say how big he is. The seated giant gets a SECOND, long soft shadow that
-   * leaves his own footprint and falls DOWNSTAGE-WEST across the floor the
-   * small hero stands on, so the two bodies share one lit ground plane and the
-   * size reads spatially. It is the same painted-blob decal, stretched along
-   * the giant-seat -> bowl-offer axis and laid flat on the plate's floor.
+   * say how big he is. The seated giant gets a SECOND, soft shadow that leaves
+   * his own footprint and falls DOWNSTAGE-WEST across the floor the small hero
+   * stands on, so the two bodies share one lit ground plane and the size reads
+   * spatially. It is the same painted-blob decal, laid flat on the plate's
+   * floor and aimed down the giant-seat -> bowl-offer axis.
+   *
+   * IT IS THE GIANT'S SHADOW, NOT A FLOOR WASH. Round 3 scaled the decal off
+   * the DISTANCE to the hero (2.15 x 1.35 of a 3.5 m span) and centred it at
+   * 46% of the way there: a 15 x 6 m smear at opacity 0.26, which covers the
+   * whole hearth, reads as haze and proves nothing. A cast shadow is the size
+   * of the BODY that casts it — so the width is his own posed width, the
+   * length is his depth plus the reach to the hero's mark, the NEAR END sits
+   * under him (a shadow is attached to its body or it is a stain), and the
+   * opacity is the contact shadow's, because it is the same light.
    */
   _scaleShadow(a, on) {
     const rec = this.sets[this.activeName];
@@ -1169,21 +1231,34 @@ export class Stage3D {
          yaw, and a cast shadow does not turn when the body turns */
       a.scaleShadow = makeContactShadow(1, 0.62);
       a.scaleShadow.name = 'scale-shadow';
-      a.scaleShadow.material.opacity = 0.26;
       a.scaleShadow.rotation.order = 'YXZ';
       this.actorLayer.add(a.scaleShadow);
     }
     const from = rec.toWorld(...GIANT_SEAT_PX);
     const to = rec.toWorld(...GIANT_SEAT_SHADOW_TO);
     const dx = to.x - from.x, dz = to.z - from.z;
-    const len = Math.max(1e-3, Math.hypot(dx, dz));
+    const reach = Math.max(1e-3, Math.hypot(dx, dz));
+    /* his own bulk (posed skinned sweep), never the distance to someone else */
+    const bodyW = a.skinSize ? a.skinSize[0] : 4.2;
+    const bodyD = a.skinSize ? a.skinSize[2] : 3.4;
+    const len = bodyD * 0.5 + reach + 0.9;   /* under him, out past the hero */
     const sh = a.scaleShadow;
     sh.visible = true;
-    sh.position.set(from.x + dx * 0.46, 0.015, from.z + dz * 0.46);
+    /* the near end under the body: centre it half a length down the axis */
+    const ux = dx / reach, uz = dz / reach;
+    const mid = len * 0.5 - bodyD * 0.35;
+    sh.position.set(from.x + ux * mid, 0.015, from.z + uz * mid);
     /* the blob is a plane in XZ, its long axis local +X: aim it down the axis
        (YXZ order, so the yaw applies after the lay-flat tilt) */
     sh.rotation.set(-Math.PI / 2, Math.atan2(-dz, dx), 0);
-    sh.scale.set(2.15 * len, 1.35 * len, 1);
+    /* the decal is 2 m x 1.24 m at scale 1 (makeContactShadow(1, 0.62)) */
+    sh.scale.set(len / 2, (bodyW * 0.86) / 1.24, 1);
+    /* the same light as the contact shadow — tinted and dimmed per frame by
+       _seatShadow's own reading of the plate, so keep them in step here */
+    if (a.shadow && a.shadow.material) {
+      sh.material.color.copy(a.shadow.material.color);
+      sh.material.opacity = a.shadow.material.opacity * 0.72;
+    }
     return sh;
   }
 
@@ -1336,7 +1411,11 @@ export class Stage3D {
     if (this.__acts) return this.__acts;
     const S = this;
     const shoreMarks = {
-      fire: [390, 480], council: [563, 499], councilCrew: [472, 507],
+      /* councilCrew: the ledger's arc centroid, moved 472 -> 479 by the C2 lens
+         audit — 472 put the arc's west man outside council-close's own window
+         (west edge 463.2); 479 keeps all three in the audited sand pocket
+         (450..495) AND inside the lens. */
+      fire: [390, 480], council: [563, 499], councilCrew: [479, 507],
       twelveAtShip: [560, 503],
     };
     const caveMarks = {
@@ -1391,7 +1470,22 @@ export class Stage3D {
       const g = giant('idle');
       if (!g) return;
       if (g.mode === 'pose') return;             /* already down — idempotent */
-      const mid = rec.toWorld(814, 533, 1.05);
+      /* C2 — THE SPRAWL SITS ON ITS OWN LEDGER BOX. The anchor is the rig's
+         ORIGIN (his soles), and laying a 7 m body down puts that origin at the
+         FOOT end: measured through the stage (tools/ody/_stageprobe.mjs), the
+         rendered plate box starts 293.4 px WEST of the anchor px. Anchored at
+         814 the body drew [520.6..820.8] — 116 px west of the ledger's audited
+         sprawl box [636.6..937.8] (round-7 placement audit #5), which laid his
+         torso straight across the fire ring [531..735]. That is the frame Sol
+         read as "the fire grows out of his torso", and it also stranded every
+         thing staged AT the ledger: the auger drives to (668,528)->(702,533)
+         and the bearers walk to 700..735, all of which were landing 100+ px
+         off the body they act on. 930 - 293.4 = 636.6, the ledger's head end,
+         so the eye comes back to the drive-tight lens's own aim point
+         (676,495) and the stake meets the head it is driven into.
+         The 2 px lift clears the meal-close bottom edge (571.6): the sprawl
+         drew to 572.5 and ii-10's leaf ended on a foot crop. */
+      const mid = rec.toWorld(930, 531, 1.05);
       const euler = new THREE.Euler(-Math.PI / 2, Math.PI / 2 + 0.25, 0, 'YXZ');
       if (silent) { S._pose(g, mid, euler); return; }
       const from = g.group.visible ? g.group.position.clone()
@@ -1466,14 +1560,26 @@ export class Stage3D {
         S._walkRoute(u, rec, shoreMarks.fire, shoreMarks.council,
           { silent, label: 'shore:fire->council' });
         /* the crew arc, gathered to the council marks (the amendment: three
-           of the twelve stand IN the frame, the rest are off it) */
-        const centre = rec.toWorld(...shoreMarks.councilCrew);
+           of the twelve stand IN the frame, the rest are off it).
+           C2 — THE ARC IS THE LEDGER'S ARC, NOT A DICE ROLL. A 2.6 m cluster
+           on an 11.3 px/m set scatters bodies ±29 plate px, and i-07's lens is
+           council-close (545,480) k8.6 — a 163.7 px window whose west edge is
+           463.2. Measured, round 3: the three stood at plate x 452..462, ALL
+           THREE ENTIRELY OUTSIDE the frame, so the "two-shot close over the
+           huddle" the ledger records played as one man alone on empty sand
+           (Sol: "he feels stranded"). The ledger names the arc itself —
+           (460,504)(472,507)(484,509) in the sand pocket between the day goat
+           (x<=450) and the stern curl (x>=495) — so stand them ON it, at the
+           mark ±9 px, which is the widest arc that keeps every body inside
+           both the pocket and the lens. */
         const crew = S._aliveCrew();
-        const spots = S._cluster(centre, crew.length, 70999, 2.6);
+        const [cmx, cmy] = shoreMarks.councilCrew;
+        const ARC = [[-9, -3], [0, 0], [9, 2], [18, 4]];
+        const face = rec.toWorld(...shoreMarks.council);
         crew.forEach((c, i) => {
-          S._stand(c, spots[i],
-            Math.atan2(rec.toWorld(...shoreMarks.council).x - spots[i].x,
-                       rec.toWorld(...shoreMarks.council).z - spots[i].z));
+          const [dx, dy] = ARC[i % ARC.length];
+          const p = rec.toWorld(cmx + dx, cmy + dy);
+          S._stand(c, p, Math.atan2(face.x - p.x, face.z - p.z));
         });
       },
       crossing: (rec, silent) => {               /* G1 — camera + ship glide */
@@ -1621,8 +1727,16 @@ export class Stage3D {
         const st = S.props.stake;
         st.visible = true;
         const y0 = S.props.stakeAt.y;
-        S._mover('stake-hide', 1.4, (k) => { st.position.y = y0 - easeInOut(k) * 0.22; },
-          { silent });
+        /* SOL#1 — THE HIDDEN STAKE IS HIDDEN. The act is "we hid it under the
+           dung": a 0.22 m sink left the beam lying in plain sight for the rest
+           of Beat III, and at iii-08 it drew as a dark bar across the giant's
+           forearm — a second object competing with the one readable action.
+           It goes under the floor and off the leaf; iv-01's stake-to-embers
+           lifts it back (st.visible = true is the first thing that act does). */
+        S._mover('stake-hide', 1.4, (k) => {
+          st.position.y = y0 - easeInOut(k) * 0.62;
+          if (k >= 1) st.visible = false;
+        }, { silent });
         /* THE LOTS is the one unit the amendment lets past three: the text
            shakes FOUR chips, so the FOUR bearers materialise (iii-05 only —
            the flock-in seg scatters them back to the huddle) */
@@ -1715,11 +1829,20 @@ export class Stage3D {
           st.quaternion.slerpQuaternions(q0, toQ, e);
         }, { silent });
         if (!silent) S.driveSpin = { t0: S.t + 1.2 };
-        S._walkRoute(S.actors.ulysses, rec, [648, 517], [684, 537],
+        /* C2 — THE BEARERS STAND IN FRONT OF THE HEAD THEY LEAN ON. Their old
+           row (700..735, feet 539) was built around a sprawl that lay 116 px
+           west of its ledger box; with the body back on the ledger his head
+           fills 637..730 and that row put five men INSIDE it — the drive-tight
+           frame lost every one of them behind his hair. The row moves
+           downstage of the sprawl's baseline (571) and of the woodpile card
+           (ground 555), so the leaning bodies read in FRONT of the head, the
+           shaft passes over them into the eye at (676,495), and the overlap is
+           itself the scale evidence at this lens. */
+        S._walkRoute(S.actors.ulysses, rec, [648, 517], [640, 566],
           { silent, label: 'cave:drive-u' });
         S._aliveCrew().forEach((c, i) => {
           S._walkRoute(c, rec, [668 + i * 9, 521 + (i % 3) * 5],
-            [700 + i * 8, 539 + (i % 2) * 6],
+            [664 + i * 22, 562 + (i % 2) * 7],
             { silent, delay: 0.15 * i, label: 'cave:drive-crew' });
         });
       },
