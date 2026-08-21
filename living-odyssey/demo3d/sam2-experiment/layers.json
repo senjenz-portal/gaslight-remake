@@ -13,23 +13,23 @@
   "cave": {
    "plate": {
     "cave-shut": {
-     "file": "../assets/set/cave/cave-shut.jpg",
+     "file": "../../assets/set/cave/cave-shut.jpg",
      "sha256": "b6137386780c65249c4c2ce874364c859887b2c687a89daa0071fecf453f5f81"
     },
     "cave-embers": {
-     "file": "../assets/set/cave/cave-embers.jpg",
+     "file": "../../assets/set/cave/cave-embers.jpg",
      "sha256": "a88dd06c8f8967374d36e204cae7eded9b175b92142948e87d41a19f519918a1"
     },
     "cave-predawn": {
-     "file": "../assets/set/cave/cave-predawn.jpg",
+     "file": "../../assets/set/cave/cave-predawn.jpg",
      "sha256": "a75a2af8088baa7913c309512fc3fc74c5e2b24ef3e2a049c3b40666a2cb0748"
     },
     "cave-dawn": {
-     "file": "../assets/set/cave/cave-dawn.jpg",
+     "file": "../../assets/set/cave/cave-dawn.jpg",
      "sha256": "3786d632d5e050ddd77228b7fdd20a38ea2ecea6b74389c168c23c25f0937d1e"
     },
     "cave-open": {
-     "file": "../assets/set/cave/cave.jpg",
+     "file": "../../assets/set/cave/cave.jpg",
      "sha256": "ee756bd0920d21e3d08b3f0682984eeb475cc30bc6d66d8b41e27949659b30e1"
     }
    },
@@ -471,11 +471,11 @@
   "shore": {
    "plate": {
     "shore": {
-     "file": "../assets/set/shore/shore.jpg",
+     "file": "../../assets/set/shore/shore.jpg",
      "sha256": "fed5307a4f9796c46a972a4bca334b170b2c16cd84e6ccc800a3e0ff92ac74d3"
     },
     "shore-day": {
-     "file": "../assets/set/shore/shore-day.jpg",
+     "file": "../../assets/set/shore/shore-day.jpg",
      "sha256": "df09ab809f3391d8f58dba0156017add850ca1e94145972cd15e9fb453994caf"
     }
    },
@@ -686,7 +686,7 @@
   "sea": {
    "plate": {
     "sea": {
-     "file": "../assets/set/sea/sea.jpg",
+     "file": "../../assets/set/sea/sea.jpg",
      "sha256": "6c38bc900fd5a3a939443cdba3b0c7deb616e45ef39b09ef9fe9515d5636e0f4"
     }
    },

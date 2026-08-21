@@ -1,1303 +1,540 @@
 {
-  "when": "2026-08-21T19:11:15.542Z",
-  "origin": "http://127.0.0.1:64856",
-  "until": null,
-  "reached": "end-card",
-  "reachedIdx": 80,
-  "units": 81,
-  "visited": 81,
-  "beats": 6,
-  "advances": 77,
-  "softFails": 0,
-  "meals": 3,
-  "boulderK": 0,
-  "caveState": "cave-dawn",
-  "audits": 52,
-  "facts": {
-    "tipGlow": 1,
-    "flareK": 0.974,
-    "pov": true,
-    "povK": 5.6,
-    "boulderAtDawn": 0,
-    "freedCrew": 3,
-    "freedUlysses": 1,
-    "rock1": 153.6,
-    "shipDxAtSail": -23.53,
-    "rocks": [
-      153.6,
-      163.55
-    ],
-    "seaHits": [
-      155.3,
-      165.25
-    ],
-    "shipDx": -28.85,
-    "hesit": 0.35
-  },
-  "ded": {
-    "shown": true,
-    "skipped": false,
-    "name": "The Smoke Reader",
-    "hash": 3126645752
-  },
-  "gates": {
-    "council": {
-      "ok": true,
-      "from": 7,
-      "to": 8,
-      "target": "ship",
-      "endsBeat": false,
-      "held": false,
-      "turning": false,
-      "at": {
-        "x": 1693.8,
-        "y": 42
-      }
-    },
-    "sword": {
-      "ok": true,
-      "from": 24,
-      "to": 25,
-      "target": "sword",
-      "endsBeat": false,
-      "held": false,
-      "turning": false,
-      "at": {
-        "x": 922.5,
-        "y": 650
-      }
-    },
-    "lookhere": {
-      "ok": true,
-      "verb": "release"
-    },
-    "embers": {
-      "ok": true,
-      "verb": "hold"
-    },
-    "greatram": {
-      "ok": true,
-      "from": 58,
-      "to": 59,
-      "target": "ram-great",
-      "endsBeat": false,
-      "held": false,
-      "turning": false,
-      "at": {
-        "x": 1117.3,
-        "y": 626.1
-      }
-    },
-    "jeer": {
-      "ok": true,
-      "from": 67,
-      "to": 68,
-      "target": "cyclops",
-      "endsBeat": false,
-      "held": false,
-      "turning": false,
-      "at": {
-        "x": 1280.3,
-        "y": 325.4
-      }
-    },
-    "defy": {
-      "ok": true,
-      "from": 72,
-      "to": 73,
-      "target": "cyclops",
-      "endsBeat": false,
-      "held": false,
-      "turning": false,
-      "at": {
-        "x": 1874.4,
-        "y": -124.6
-      }
-    },
-    "myname": {
-      "ok": true,
-      "verb": "release"
-    }
-  },
-  "posture": {
-    "ulysses": {
-      "standing": 2.81,
-      "walkMax": 5.64,
-      "range": 4.04
-    },
-    "crew-0": {
-      "standing": 2.69,
-      "walkMax": 5.61,
-      "range": 4.04
-    },
-    "poly-walk": {
-      "standing": 2.55,
-      "walkMax": 5.57,
-      "range": 4.06
-    },
-    "poly-idle": {
-      "standing": 17.78,
-      "walkMax": 20.77,
-      "range": 3.97
-    },
-    "ram-great": {
-      "standing": 115.56,
-      "walkMax": 117.95,
-      "range": 8.8
-    }
-  },
-  "postureVerdict": {
-    "ulysses": "PASS",
-    "crew-0": "PASS",
-    "poly-walk": "PASS",
-    "poly-idle": "PASS",
-    "ram-great": "PASS"
-  },
-  "shots": {
-    "ody-i-07-council": "beat1.png",
-    "ody-ii-05-strangers": "beat2.png",
-    "ody-iii-08-lookhere": "beat3.png",
-    "ody-iv-03-auger": "beat4.png",
-    "ody-iv-05-hiss": "beat4-blind.png",
-    "beat5-pov": "beat5-pov.png",
-    "ody-v-05-dawn": "beat5.png",
-    "ody-vi-03-rock1": "beat6.png",
-    "ody-vi-14-sailedon": "beat6-sailoff.png",
-    "end-card": "endcard.png"
-  },
-  "appErrors": [],
-  "consoleErrors": [],
-  "pageErrors": [],
-  "consoleWarns": [
-    "[.WebGL-0x124005a9c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
-    "THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.",
-    "[.WebGL-0x124005a9c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
-    "[.WebGL-0x124005a9c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
-    "[.WebGL-0x124005a9c00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+ "lane": "foundation3d",
+ "when": "2026-08-21T21:20:12.035Z",
+ "base": "http://127.0.0.1:63376",
+ "scale": {
+  "rows": [
+   {
+    "id": "shore/ulysses",
+    "kind": "human",
+    "set": "shore",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.739,
+    "deltaPct": -0.6,
+    "verdict": "PASS",
+    "note": "rig ulysses"
+   },
+   {
+    "id": "shore/crew-1",
+    "kind": "human",
+    "set": "shore",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "shore/crew-2",
+    "kind": "human",
+    "set": "shore",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "cave/ulysses",
+    "kind": "human",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.739,
+    "deltaPct": -0.6,
+    "verdict": "PASS",
+    "note": "rig ulysses"
+   },
+   {
+    "id": "cave/crew-1",
+    "kind": "human",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "cave/crew-2",
+    "kind": "human",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "cave/polyphemus",
+    "kind": "giant",
+    "set": "cave",
+    "axis": "height",
+    "pose": "seated",
+    "expectedM": 3.85,
+    "measuredM": 4.262,
+    "deltaPct": 10.7,
+    "verdict": "PASS",
+    "note": "rig polyphemus-seat"
+   },
+   {
+    "id": "cave/ram-great",
+    "kind": "ram-great",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.4,
+    "measuredM": 1.469,
+    "deltaPct": 5,
+    "verdict": "PASS",
+    "note": "rig ram-great"
+   },
+   {
+    "id": "cave/ewe-1",
+    "kind": "sheep",
+    "set": "cave",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1,
+    "measuredM": 1.05,
+    "deltaPct": 5,
+    "verdict": "PASS",
+    "note": "rig ewe"
+   },
+   {
+    "id": "cave/stake",
+    "kind": "stake",
+    "set": "cave",
+    "axis": "length",
+    "pose": "standing",
+    "expectedM": 1.79,
+    "measuredM": 1.736,
+    "deltaPct": -3,
+    "verdict": "PASS",
+    "note": "pure-code prop (poly-props)"
+   },
+   {
+    "id": "cave/bowl",
+    "kind": "bowl",
+    "set": "cave",
+    "axis": "length",
+    "pose": "standing",
+    "expectedM": 1.4,
+    "measuredM": 1.4,
+    "deltaPct": 0,
+    "verdict": "PASS",
+    "note": "pure-code prop (poly-props)"
+   },
+   {
+    "id": "cave/wineskin",
+    "kind": "wineskin",
+    "set": "cave",
+    "axis": "length",
+    "pose": "standing",
+    "expectedM": 0.98,
+    "measuredM": 1.032,
+    "deltaPct": 5.3,
+    "verdict": "PASS",
+    "note": "pure-code prop (poly-props)"
+   },
+   {
+    "id": "sea/ulysses",
+    "kind": "human",
+    "set": "sea",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.739,
+    "deltaPct": -0.6,
+    "verdict": "PASS",
+    "note": "rig ulysses"
+   },
+   {
+    "id": "sea/crew-1",
+    "kind": "human",
+    "set": "sea",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 1.75,
+    "measuredM": 1.679,
+    "deltaPct": -4,
+    "verdict": "PASS",
+    "note": "rig crew"
+   },
+   {
+    "id": "sea/polyphemus",
+    "kind": "giant",
+    "set": "sea",
+    "axis": "height",
+    "pose": "standing",
+    "expectedM": 7,
+    "measuredM": 6.971,
+    "deltaPct": -0.4,
+    "verdict": "PASS",
+    "note": "rig polyphemus-idle"
+   }
   ],
-  "requestsFailed": [],
-  "voicePlays": 76,
-  "audioCues": 143,
-  "census": [
-    {
-      "id": "ody-i-00-head",
-      "i": 0,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 0,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 1
-    },
-    {
-      "id": "ody-i-01-bard",
-      "i": 1,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 0,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-i-02-iamulysses",
-      "i": 2,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-i-03-troy",
-      "i": 3,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-i-04-lawless",
-      "i": 4,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-i-05-dawn",
-      "i": 5,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-i-06-smoke",
-      "i": 6,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-i-07-council",
-      "i": 7,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 4
-    },
-    {
-      "id": "ody-i-08-cave",
-      "i": 8,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-i-09-monster",
-      "i": 9,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-i-10-wineskin",
-      "i": 10,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-i-11-twentyone",
-      "i": 11,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-i-12-misgave",
-      "i": 12,
-      "set": "shore",
-      "beat": 1,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-ii-00-head",
-      "i": 13,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 12
-    },
-    {
-      "id": "ody-ii-01-beg",
-      "i": 14,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-ii-02-present",
-      "i": 15,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-ii-03-return",
-      "i": 16,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 16
-    },
-    {
-      "id": "ody-ii-04-boulder",
-      "i": 17,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-ii-05-strangers",
-      "i": 18,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 8
-    },
-    {
-      "id": "ody-ii-06-plea",
-      "i": 19,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-ii-07-pitiless",
-      "i": 20,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-ii-08-shipfast",
-      "i": 21,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-ii-09-shiplie",
-      "i": 22,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-ii-10-firstmeal",
-      "i": 23,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 14
-    },
-    {
-      "id": "ody-ii-11-sword",
-      "i": 24,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 1,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 12
-    },
-    {
-      "id": "ody-ii-12-shiftstone",
-      "i": 25,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 1,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-ii-13-tillmorning",
-      "i": 26,
-      "set": "cave",
-      "beat": 2,
-      "cap": 3,
-      "crew": 1,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-iii-00-head",
-      "i": 27,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-iii-01-morningmeal",
-      "i": 28,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 14
-    },
-    {
-      "id": "ody-iii-02-quiverlid",
-      "i": 29,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 1,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 1,
-      "sheep": 4,
-      "samples": 12
-    },
-    {
-      "id": "ody-iii-03-scheme",
-      "i": 30,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 1,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 1,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-iii-04-club",
-      "i": 31,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 1,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 1,
-      "sheep": 4,
-      "samples": 14
-    },
-    {
-      "id": "ody-iii-05-lots",
-      "i": 32,
-      "set": "cave",
-      "beat": 3,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 0,
-      "rams": 1,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-iii-06-return",
-      "i": 33,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 1,
-      "sheep": 4,
-      "samples": 14
-    },
-    {
-      "id": "ody-iii-07-suppertwo",
-      "i": 34,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 1,
-      "sheep": 4,
-      "samples": 14
-    },
-    {
-      "id": "ody-iii-08-lookhere",
-      "i": 35,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 1,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 1,
-      "sheep": 4,
-      "samples": 5
-    },
-    {
-      "id": "ody-iii-09-besokind",
-      "i": 36,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 10
-    },
-    {
-      "id": "ody-iii-10-thrice",
-      "i": 37,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 8
-    },
-    {
-      "id": "ody-iii-11-noman",
-      "i": 38,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-iii-12-nomanlast",
-      "i": 39,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-iii-13-neck",
-      "i": 40,
-      "set": "cave",
-      "beat": 3,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 14
-    },
-    {
-      "id": "ody-iv-00-head",
-      "i": 41,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-iv-01-embers",
-      "i": 42,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 4
-    },
-    {
-      "id": "ody-iv-02-glowing",
-      "i": 43,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 6
-    },
-    {
-      "id": "ody-iv-03-auger",
-      "i": 44,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 4
-    },
-    {
-      "id": "ody-iv-04-bore",
-      "i": 45,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 6
-    },
-    {
-      "id": "ody-iv-05-hiss",
-      "i": 46,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 5
-    },
-    {
-      "id": "ody-iv-06-fright",
-      "i": 47,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 3
-    },
-    {
-      "id": "ody-iv-07-whatails",
-      "i": 48,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-iv-08-nomankilling",
-      "i": 49,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-iv-09-mustbeill",
-      "i": 50,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-iv-10-wentaway",
-      "i": 51,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-iv-11-stone",
-      "i": 52,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-iv-12-doorway",
-      "i": 53,
-      "set": "cave",
-      "beat": 4,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-v-00-head",
-      "i": 54,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 2,
-      "rams": 0,
-      "sheep": 4,
-      "samples": 4
-    },
-    {
-      "id": "ody-v-01-puzzling",
-      "i": 55,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 2,
-      "rams": 0,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-v-02-withies",
-      "i": 56,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 2,
-      "rams": 0,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-v-03-threetoaman",
-      "i": 57,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 2,
-      "rams": 0,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-v-04-greatram",
-      "i": 58,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 2,
-      "rams": 1,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-v-05-dawn",
-      "i": 59,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 0,
-      "giant": 2,
-      "rams": 4,
-      "sheep": 4,
-      "samples": 6
-    },
-    {
-      "id": "ody-v-06-feltbacks",
-      "i": 60,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 0,
-      "giant": 2,
-      "rams": 4,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-v-07-lastofall",
-      "i": 61,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 0,
-      "giant": 2,
-      "rams": 4,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-v-08-ramspeech1",
-      "i": 62,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 0,
-      "giant": 2,
-      "rams": 4,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-v-09-ramspeech2",
-      "i": 63,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 0,
-      "giant": 2,
-      "rams": 4,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-v-10-ramspeech3",
-      "i": 64,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 0,
-      "ulysses": 0,
-      "giant": 2,
-      "rams": 4,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-v-11-freed",
-      "i": 65,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 2,
-      "rams": 4,
-      "sheep": 4,
-      "samples": 4
-    },
-    {
-      "id": "ody-v-12-aboard",
-      "i": 66,
-      "set": "cave",
-      "beat": 5,
-      "cap": 3,
-      "crew": 3,
-      "ulysses": 1,
-      "giant": 2,
-      "rams": 3,
-      "sheep": 4,
-      "samples": 2
-    },
-    {
-      "id": "ody-vi-01-jeer",
-      "i": 67,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-vi-02-taunt",
-      "i": 68,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 8
-    },
-    {
-      "id": "ody-vi-03-rock1",
-      "i": 69,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 5
-    },
-    {
-      "id": "ody-vi-04-twiceasfar",
-      "i": 70,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-vi-05-menbeg",
-      "i": 71,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-vi-06-defy",
-      "i": 72,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-vi-07-myname",
-      "i": 73,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 3
-    },
-    {
-      "id": "ody-vi-08-prophecy",
-      "i": 74,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-vi-09-fatherson",
-      "i": 75,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-vi-10-hades",
-      "i": 76,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 2
-    },
-    {
-      "id": "ody-vi-11-curse",
-      "i": 77,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 6
-    },
-    {
-      "id": "ody-vi-12-heard",
-      "i": 78,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 11
-    },
-    {
-      "id": "ody-vi-13-ram",
-      "i": 79,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 18
-    },
-    {
-      "id": "ody-vi-14-sailedon",
-      "i": 80,
-      "set": "sea",
-      "beat": 6,
-      "cap": 4,
-      "crew": 4,
-      "ulysses": 1,
-      "giant": 1,
-      "rams": 0,
-      "sheep": 0,
-      "samples": 8
-    }
+  "ok": true
+ },
+ "units": {
+  "first": "ody-i-00-head",
+  "total": 1
+ },
+ "mount_shore": {
+  "set": "shore",
+  "triangles": 19732,
+  "parts": 36,
+  "shadow": {
+   "caster": "PointLight",
+   "mapSize": 1024,
+   "near": 0.3,
+   "far": 60,
+   "bias": -0.004
+  },
+  "actors": [
+   "ulysses",
+   "crew-1",
+   "crew-2"
   ],
-  "censusVerdict": {
-    "unitsCensused": 81,
-    "maxCrewAnyUnit": 4,
-    "maxHumanoidsAnyUnit": 6,
-    "maxRamsAnyUnit": 4,
-    "overCap": [],
-    "ramsOverCap": [],
-    "PASS": true
+  "props": []
+ },
+ "mount_cave": {
+  "set": "cave",
+  "triangles": 18404,
+  "parts": 27,
+  "shadow": {
+   "caster": "PointLight",
+   "mapSize": 1024,
+   "near": 0.3,
+   "far": 40,
+   "bias": -0.004
   },
-  "voiceVerdict": {
-    "owed": 76,
-    "fired": 76,
-    "decoded": 76,
-    "missing": [],
-    "extra": [],
-    "dupes": [],
-    "inUnitOrder": true,
-    "duck": {
-      "ok": true,
-      "playing": "troy",
-      "before": 1,
-      "during": 0.5016,
-      "after": 0.9779,
-      "dB": -5.99
-    },
-    "duckOk": true,
-    "PASS": true
+  "actors": [
+   "ulysses",
+   "crew-1",
+   "crew-2",
+   "polyphemus",
+   "ram-great",
+   "ewe-1"
+  ],
+  "props": [
+   "stake",
+   "bowl",
+   "wineskin"
+  ]
+ },
+ "mount_sea": {
+  "set": "sea",
+  "triangles": 8859,
+  "parts": 19,
+  "shadow": {
+   "caster": null
   },
-  "lean": {
-    "unit": "ody-i-03-troy",
-    "due": 8.18,
-    "narr": 7.28,
-    "earlyIdx": 3,
-    "lateIdx": 4,
-    "advanced": true,
-    "held": true,
-    "gateKept": true,
-    "gateUnit": "ody-i-07-council"
+  "actors": [
+   "ulysses",
+   "crew-1",
+   "polyphemus"
+  ],
+  "props": []
+ },
+ "walk": {
+  "steps": [
+   {
+    "from": "ody-i-00-head",
+    "to": "ody-i-01-bard",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-01-bard",
+    "to": "ody-i-02-iamulysses",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-02-iamulysses",
+    "to": "ody-i-03-troy",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-03-troy",
+    "to": "ody-i-04-lawless",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-04-lawless",
+    "to": "ody-i-05-dawn",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-05-dawn",
+    "to": "ody-i-06-smoke",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-06-smoke",
+    "to": "ody-i-07-council",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-07-council",
+    "to": "ody-i-08-cave",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-08-cave",
+    "to": "ody-i-09-monster",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-09-monster",
+    "to": "ody-i-10-wineskin",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-10-wineskin",
+    "to": "ody-i-11-twentyone",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-11-twentyone",
+    "to": "ody-i-12-misgave",
+    "set": "shore"
+   },
+   {
+    "from": "ody-i-12-misgave",
+    "to": "ody-ii-00-head",
+    "set": "cave"
+   },
+   {
+    "from": "ody-ii-00-head",
+    "to": "ody-ii-01-beg",
+    "set": "cave"
+   },
+   {
+    "from": "ody-ii-01-beg",
+    "to": "ody-ii-02-present",
+    "set": "cave"
+   },
+   {
+    "from": "ody-ii-02-present",
+    "to": "ody-ii-03-return",
+    "set": "cave"
+   }
+  ],
+  "setAtStart": "shore",
+  "setAtEnd": "cave",
+  "marginText": "When he came, he brought in with him a h",
+  "progress": "II · THE CAVE — unit 4/14"
+ },
+ "pitch": {
+  "ulysses": 1.49,
+  "crew-1": 5.28,
+  "crew-2": 5.28,
+  "polyphemus": 31.76,
+  "ram-great": null,
+  "ewe-1": null
+ },
+ "dressing": [
+  {
+   "part": "sheep-flock",
+   "kind": "sheep",
+   "set": "cave",
+   "measuredM": 0.615,
+   "lengthM": 7.937
+  }
+ ],
+ "compare": {
+  "cave": {
+   "meanLumBook": 37.32,
+   "meanLumDemo": 40.26,
+   "lumRatio": 0.927,
+   "meanRegionDelta": 3.25,
+   "worstRegionDelta": 78.6,
+   "worstRegion": "r5c8",
+   "outlierRegions": 4,
+   "regions": 144,
+   "bookPx": "986x538",
+   "demoPx": "1102x603"
   },
-  "leanVerdict": {
-    "heldUntilNarrationEnd": true,
-    "advancedOnNarrationEnd": true,
-    "verbNeverSpent": true,
-    "PASS": true
+  "shore": {
+   "meanLumBook": 47.18,
+   "meanLumDemo": 46.32,
+   "lumRatio": 1.019,
+   "meanRegionDelta": 0.99,
+   "worstRegionDelta": 2.78,
+   "worstRegion": "r6c5",
+   "outlierRegions": 0,
+   "regions": 144,
+   "bookPx": "986x538",
+   "demoPx": "1102x603"
   },
-  "gatesVerdict": {
-    "council_G1": true,
-    "sword_G2": true,
-    "lookhere_G3_release": true,
-    "embers_G4_hold": true,
-    "greatram_G5": true,
-    "jeer_G6a": true,
-    "defy_G6b": true,
-    "myname_release": true
+  "sea": {
+   "meanLumBook": 30.75,
+   "meanLumDemo": 31.51,
+   "lumRatio": 0.976,
+   "meanRegionDelta": 0.78,
+   "worstRegionDelta": 5.23,
+   "worstRegion": "r2c9",
+   "outlierRegions": 0,
+   "regions": 144,
+   "bookPx": "986x538",
+   "demoPx": "1102x603"
+  }
+ },
+ "demoRenderer": {
+  "cave": {
+   "antialias": true,
+   "preserveDrawingBuffer": true,
+   "maxPixelRatio": 1,
+   "outputColorSpace": "srgb",
+   "toneMapping": "ACESFilmicToneMapping",
+   "toneMappingExposure": 1.38,
+   "shadowMapEnabled": true,
+   "shadowMapType": "PCFShadowMap"
   },
-  "factsVerdict": {
-    "tipGlow": true,
-    "blindFlare": true,
-    "povEngaged": true,
-    "boulderOpenAtDawn": true,
-    "freedMenLand": true,
-    "twoRocksThrown": true,
-    "twoHullHits": true,
-    "sailedOff": true,
-    "sigilDrawn": true
+  "shore": {
+   "antialias": true,
+   "preserveDrawingBuffer": true,
+   "maxPixelRatio": 1,
+   "outputColorSpace": "srgb",
+   "toneMapping": "ACESFilmicToneMapping",
+   "toneMappingExposure": 1.35,
+   "shadowMapEnabled": true,
+   "shadowMapType": "PCFShadowMap"
   },
-  "PASS": true
+  "sea": {
+   "antialias": true,
+   "preserveDrawingBuffer": true,
+   "maxPixelRatio": 1,
+   "outputColorSpace": "srgb",
+   "toneMapping": "ACESFilmicToneMapping",
+   "toneMappingExposure": 1.42,
+   "shadowMapEnabled": true,
+   "shadowMapType": "PCFShadowMap"
+  }
+ },
+ "renderConfig": {
+  "book": {
+   "antialias": true,
+   "preserveDrawingBuffer": true,
+   "maxPixelRatio": 1,
+   "outputColorSpace": "srgb",
+   "toneMapping": "ACESFilmicToneMapping",
+   "toneMappingExposure": 1.38,
+   "shadowMapEnabled": true,
+   "shadowMapType": "PCFShadowMap"
+  },
+  "demo": {
+   "antialias": true,
+   "preserveDrawingBuffer": true,
+   "maxPixelRatio": 1,
+   "outputColorSpace": "srgb",
+   "toneMapping": "ACESFilmicToneMapping",
+   "toneMappingExposure": 1.38,
+   "shadowMapEnabled": true,
+   "shadowMapType": "PCFShadowMap"
+  },
+  "diff": []
+ },
+ "setPageExposure": {
+  "shore": 1.35,
+  "sea": 1.42,
+  "cave": 1.38
+ },
+ "errors": [],
+ "scaleConsole": [
+  "[scale] (advisory, set dressing — not gated) shore/sheep-flock height 0.893 m · length 7.292 m",
+  "[scale] (advisory, set dressing — not gated) shore/ship-2 height 11.516 m · length 16.198 m",
+  "[scale] (advisory, set dressing — not gated) shore/ship-1 height 11.523 m · length 15.257 m",
+  "[scale] (advisory, set dressing — not gated) cave/sheep-flock height 0.615 m · length 7.937 m",
+  "[scale] THE INSTANCE TABLE · every set — 15 mounted, tolerance ±15%",
+  "[scale] instance                  kind       set    pose      axis     expect  measured   delta  verdict",
+  "[scale] shore/ulysses             human      shore  standing  height     1.75      1.74   -0.6%  PASS",
+  "[scale] shore/crew-1              human      shore  standing  height     1.75      1.68     -4%  PASS",
+  "[scale] shore/crew-2              human      shore  standing  height     1.75      1.68     -4%  PASS",
+  "[scale] cave/ulysses              human      cave   standing  height     1.75      1.74   -0.6%  PASS",
+  "[scale] cave/crew-1               human      cave   standing  height     1.75      1.68     -4%  PASS",
+  "[scale] cave/crew-2               human      cave   standing  height     1.75      1.68     -4%  PASS",
+  "[scale] cave/polyphemus           giant      cave   seated    height     3.85      4.26  +10.7%  PASS",
+  "[scale] cave/ram-great            ram-great  cave   standing  height     1.40      1.47     +5%  PASS",
+  "[scale] cave/ewe-1                sheep      cave   standing  height     1.00      1.05     +5%  PASS",
+  "[scale] cave/stake                stake      cave   standing  length     1.79      1.74     -3%  PASS",
+  "[scale] cave/bowl                 bowl       cave   standing  length     1.40      1.40      0%  PASS",
+  "[scale] cave/wineskin             wineskin   cave   standing  length     0.98      1.03   +5.3%  PASS",
+  "[scale] sea/ulysses               human      sea    standing  height     1.75      1.74   -0.6%  PASS",
+  "[scale] sea/crew-1                human      sea    standing  height     1.75      1.68     -4%  PASS",
+  "[scale] sea/polyphemus            giant      sea    standing  height     7.00      6.97   -0.4%  PASS",
+  "[scale] GREEN — 15/15 inside ±15%",
+  "[scale] (advisory, set dressing — not gated) shore/sheep-flock height 0.893 m · length 7.292 m",
+  "[scale] (advisory, set dressing — not gated) shore/ship-2 height 11.516 m · length 16.198 m",
+  "[scale] (advisory, set dressing — not gated) shore/ship-1 height 11.523 m · length 15.257 m"
+ ],
+ "verdicts": [
+  {
+   "name": "zero console/page errors",
+   "verdict": "PASS",
+   "detail": "clean"
+  },
+  {
+   "name": "[scale] gate green",
+   "verdict": "PASS",
+   "detail": "15/15 inside ±15%"
+  },
+  {
+   "name": "[scale] full table printed",
+   "verdict": "PASS",
+   "detail": "25 [scale] console lines"
+  },
+  {
+   "name": "shore: mounts",
+   "verdict": "PASS",
+   "detail": "19,732 tris · 36 parts · 3 cast · 0 props"
+  },
+  {
+   "name": "shore: renders at demo quality (region sanity)",
+   "verdict": "PASS",
+   "detail": "mean region ΔL 0.99 · lum ratio 1.019 · 0/144 regions >40 (the cast the demo has not) · worst 2.78 @r6c5"
+  },
+  {
+   "name": "cave: mounts",
+   "verdict": "PASS",
+   "detail": "18,404 tris · 27 parts · 6 cast · 3 props"
+  },
+  {
+   "name": "cave: renders at demo quality (region sanity)",
+   "verdict": "PASS",
+   "detail": "mean region ΔL 3.25 · lum ratio 0.927 · 4/144 regions >40 (the cast the demo has not) · worst 78.6 @r5c8"
+  },
+  {
+   "name": "sea: mounts",
+   "verdict": "PASS",
+   "detail": "8,859 tris · 19 parts · 3 cast · 0 props"
+  },
+  {
+   "name": "sea: renders at demo quality (region sanity)",
+   "verdict": "PASS",
+   "detail": "mean region ΔL 0.78 · lum ratio 0.976 · 0/144 regions >40 (the cast the demo has not) · worst 5.23 @r2c9"
+  },
+  {
+   "name": "story grammar: 16 units walked, leaf 1 -> leaf 2 changes the set",
+   "verdict": "PASS",
+   "detail": "shore -> cave · last unit ody-ii-03-return · prog \"II · THE CAVE — unit 4/14\""
+  },
+  {
+   "name": "render config == the demo (no diff)",
+   "verdict": "PASS",
+   "detail": "identical on all 8 fields"
+  }
+ ],
+ "green": true
 }

@@ -19,30 +19,30 @@
  * bytes and the recipe (cast.json's ewe-grey / slate-elder ops).
  */
 import * as THREE from 'three';
-import { GLTFLoader } from '../../../app/vendor/loaders/GLTFLoader.js';
+import { GLTFLoader } from '../../../../app/vendor/loaders/GLTFLoader.js';
 
 /* ---- the measured posture corrections (demo pages + cast.json) ---- */
 export const RIGS = {
   ulysses: {
-    file: '../demo3d/ulysses-walk.glb', heightM: 1.75,
+    file: '../ulysses-walk.glb', heightM: 1.75,
     clipCorr: { Spine02: 4, NeckTwist01: 5, Head: 6 },
     restCorr: { NeckTwist01: -3, Head: -3 },
     fwdBind: [0.166, 0, 0.986],
   },
   crew: {
-    file: 'cast/crew-walk.glb', heightM: 1.70,
+    file: '../../3d/cast/crew-walk.glb', heightM: 1.70,
     clipCorr: { Spine02: 4, NeckTwist01: 5, Head: 6 },
     restCorr: {},
     fwdBind: [0.097, 0, 0.995],
   },
   polyphemus: {
-    file: '../demo3d/polyphemus/polyphemus-walk.glb', heightM: 7.0,
+    file: '../polyphemus/polyphemus-walk.glb', heightM: 7.0,
     clipCorr: { Spine02: 4, NeckTwist01: 5, Head: 6 },
     restCorr: {},
     fwdBind: [0.03, 0, 1.0],
   },
   'polyphemus-idle': {
-    file: '../demo3d/polyphemus/polyphemus-idle.glb', heightM: 7.0,
+    file: '../polyphemus/polyphemus-idle.glb', heightM: 7.0,
     clipCorr: {},                     /* the idle breathes level — no bow */
     restCorr: {},
     fwdBind: [0.03, 0, 1.0],
@@ -96,7 +96,7 @@ export const RIGS = {
    *   head pitch +15.5 deg — bowed to the bowls, face still to the lens.
    */
   'polyphemus-seat': {
-    file: '../demo3d/polyphemus/polyphemus-idle.glb', heightM: 7.0,
+    file: '../polyphemus/polyphemus-idle.glb', heightM: 7.0,
     clipCorr: {}, restCorr: {},
     fwdBind: [0.03, 0, 1.0],
     seatPose: {
@@ -115,11 +115,11 @@ export const RIGS = {
     },
   },
   ram: {
-    file: 'cast/ram-walk.glb', lengthM: 105 / 43,   /* the authored anomaly */
+    file: '../../3d/cast/ram-walk.glb', lengthM: 105 / 43,   /* the authored anomaly */
     clipCorr: {}, restCorr: {}, fwdBind: [0, 0, 1],
   },
   ewe: {
-    file: 'cast/ram-walk.glb', heightM: 24 / 43,    /* the ewes' stock height */
+    file: '../../3d/cast/ram-walk.glb', heightM: 24 / 43,    /* the ewes' stock height */
     clipCorr: {}, restCorr: {}, fwdBind: [0, 0, 1],
     tint: [   /* cast.json ram-flock 'ewe-grey' */
       { match: { sMin: 0.30 }, satMul: 0.55, lightMul: 1.00 },
@@ -129,7 +129,7 @@ export const RIGS = {
   flock: {
     /* Beat V's streaming males: the same photo-rig at a stock-male height
        between the ewes and the authored great ram — fleece kept warm */
-    file: 'cast/ram-walk.glb', heightM: 30 / 43,
+    file: '../../3d/cast/ram-walk.glb', heightM: 30 / 43,
     clipCorr: {}, restCorr: {}, fwdBind: [0, 0, 1],
   },
 };
