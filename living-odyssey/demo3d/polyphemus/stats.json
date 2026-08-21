@@ -1,0 +1,101 @@
+{
+ "generated_from": "assets/raw/polyphemus-photorig/20260821T022442Z (manifest gates + the delivered files themselves)",
+ "stylize": {
+  "model_id": "gemini-3-pro-image (NB Pro i2i, canonical + single-eye cameo)",
+  "candidates": {
+   "front-accepted.png": {
+    "bytes": 363668,
+    "w": 1376,
+    "h": 768,
+    "sha256": "75689fad9a93bbe5"
+   }
+  },
+  "accepted": "front-cand1.png",
+  "gate": "PASS \u2014 ONE amber eye blob on the midline (offset -0.005), no second eye, olive tunic dominant, smooth register"
+ },
+ "turnaround": {
+  "gate": "PASS \u2014 same person in all three views; profile REGENERATED until the eye read (first attempt failed honestly)",
+  "eye_law": "front: 1 amber iris blob \u00b7 profile: 1 orb cluster (bright 77 / gold 82 px) \u00b7 back: none",
+  "tunic_dRGB_max": 29.9
+ },
+ "mesh": {
+  "model_id": "model_tripo-p1-multiview-to-3d (Tripo P1 Multi View via Scenario)",
+  "bytes": 797272,
+  "sha256": "f7ecd5767194eb34",
+  "vertices": 7386,
+  "triangles": 4822,
+  "meshes": 1,
+  "materials": 1,
+  "textures": 1,
+  "joints": 41,
+  "turntable_gate": {
+   "coverage": {
+    "front": 0.1944,
+    "left": 0.1175,
+    "back": 0.1911,
+    "right": 0.1134
+   },
+   "minCoverage": 0.1134,
+   "maxOverMin": 1.71,
+   "verdict": "PASS"
+  },
+  "eye_on_mesh": "turn-front: the one amber-iris eye at the face midline (orb 326 px) \u00b7 turn-left: the sclera orb bulge (71 px \u2014 a 3D eyeball faces forward) \u00b7 turn-back: none"
+ },
+ "rig_model_id": "model_tripo-rigging-v1 (Tripo Rigging 1.0 [Biped] via Scenario)",
+ "rig": {
+  "joints": 41,
+  "skins": 1,
+  "skeleton": "Tripo biped (Pelvis/Spine/limb chains + twist bones, L_/R_ naming)"
+ },
+ "animate": {
+  "walk": {
+   "name": "preset:biped:walk",
+   "channels": 126,
+   "duration_s": 2.375,
+   "bytes": 797272,
+   "sha256": "f7ecd5767194eb34"
+  },
+  "idle": {
+   "name": "preset:biped:idle",
+   "channels": 126,
+   "duration_s": 15.375,
+   "bytes": 1319244,
+   "sha256": "489fd968e0136c0e"
+  }
+ },
+ "posture": {
+  "amendment": "standing pitch gated within \u00b18\u00b0 of the CANONICAL'S stance (0.75\u00b0), not upright; walk/idle cycles within 12\u00b0 of the same anchor \u2014 his hunch is character, carried by the mesh",
+  "canonicalStancePitchDeg": 0.75,
+  "standingPitchDeg": -2.81,
+  "pelvis_fraction": 0.382,
+  "walk_pitch_before_deg": "16.4\u201320.5",
+  "walk_pitch_after_deg": "1.4\u20135.6",
+  "idle_pitch_after_deg": "1.5\u20136.1",
+  "clipCorr": {
+   "Spine02": 4,
+   "NeckTwist01": 5,
+   "Head": 6
+  }
+ },
+ "scene": {
+  "scale_law": "7 m = 301 px at the ledger's 43 px/m \u2014 four Ulysses (75 px) tall, honest against the penned ewes",
+  "fire_anchor": [
+   638,
+   427
+  ]
+ },
+ "props": {
+  "line": "great bowl + stake (ember-tip material state) + wineskin \u2014 seeded procedural three.js, $0, faceted to the prop art",
+  "source": "poly-props.js (pure code, mulberry32 seeds 90210/1727)"
+ },
+ "spend": {
+  "scenario_cu": 215,
+  "scenario_jobs": [
+   "mv 75 CU",
+   "rig+walk 70 CU",
+   "idle 70 CU"
+  ],
+  "nbpro_images": 6,
+  "approx_usd": "\u22483.0 (cap 3.0) \u2014 all remaining work $0"
+ }
+}

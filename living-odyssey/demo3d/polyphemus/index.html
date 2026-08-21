@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Polyphemus, photographed — the giant on the ledger's own floor</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --gold-dim:rgba(205,171,99,.55);
+    --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.55;max-width:78ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  figure{margin:0;}
+  figure img{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;}
+  figcaption{font-size:13px;color:var(--note);margin-top:7px;line-height:1.45;}
+  figcaption b{color:var(--cream-bright);font-weight:normal;}
+  #stage{width:100%;aspect-ratio:1408/768;display:block;border:1px solid #2a2417;
+    border-radius:3px;background:#060a18;}
+  .stage-cue{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);margin-top:7px;}
+  .law{font-size:14px;color:var(--note);border-left:2px solid var(--gold);padding:2px 0 2px 14px;
+    margin:26px 0 20px;max-width:74ch;}
+  .law b{color:var(--cream-bright);font-weight:normal;}
+  .art-row{display:grid;gap:18px;margin-top:6px;}
+  .cols-3{grid-template-columns:1fr 1fr 1fr;}
+  .cols-4{grid-template-columns:1fr 1fr 1fr 1fr;}
+  @media (max-width:640px){.cols-3,.cols-4{grid-template-columns:1fr 1fr;}}
+  .counts{margin-top:20px;font-size:13px;color:var(--note);line-height:1.9;}
+  .counts b{color:var(--cream-bright);font-weight:normal;}
+  .counts .num{color:#d8b45a;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  @media (max-width:760px){.two-col{grid-template-columns:1fr;}}
+  footer{margin-top:80px;}
+  footer p{color:var(--note);font-size:14px;}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../../app/vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Pipeline Demo · Unlisted</div>
+  <h1>Polyphemus, photographed — the giant on the ledger's own floor</h1>
+  <div class="rule"></div>
+  <p class="note">The proven photo-rig recipe pointed at the sealed Polyphemus canonical +
+  the single-eye cameo: stylize <span class="tag">(gemini-3-pro-image i2i, cameo as identity source,
+  THE EYE gated in every frame — fact O.1)</span> →
+  turnaround <span class="tag">(front passed back as reference; the eye demanded in profile, forbidden in back)</span> →
+  multiview reconstruction <span class="tag">(model_tripo-p1-multiview-to-3d via Scenario)</span> →
+  auto-rig + banked walk AND idle <span class="tag">(model_tripo-rigging-v1, biped)</span> —
+  set down inside the cave plate at his ledger height: <b>7&nbsp;m = 301&nbsp;px</b> at the
+  ledger's 43&nbsp;px/m, four Ulysses tall. His three props — the great bowl, the stake with its
+  ember-tip material state, the wineskin — are <b>pure code</b>: seeded procedural meshes, $0.
+  Every count below is read from the delivered files.</p>
+
+  <canvas id="stage"></canvas>
+  <div class="stage-cue"><span>he strides in at the mouth, holds at the giant-seat by the blaze (the banked idle),
+    then rounds the front of the fire and out along the downstage floor</span>
+    <span id="clip-cue">banked biped walk + idle, retargeted at rig time</span></div>
+
+  <div class="law"><b>The posture amendment, on the record.</b> The posture law gates a standing
+    rig upright (±5°) with walk-cycle head pitch ≤ 12°. Polyphemus' hunch is <b>character</b> —
+    the stoop lives in the mesh silhouette the same-person gates sealed, and the canonical's own
+    measured stance is the anchor: the amended gate is standing pitch within <b>±8° of the
+    canonical's 0.75°</b> (tools/polystance.py), walk and idle cycles within 12° of that same
+    anchor. The delivered rig walked 16.4–20.5° bowed (the known low-pelvis defect class); the
+    same per-key quaternion counter-rotation that saved Ulysses brings it to 1.4–5.6° — his back
+    stays bent, his head stops staring at the floor.</div>
+
+  <div class="two-col">
+    <div>
+      <div class="lbl" style="margin-bottom:10px;">the turnaround — same-person gated, THE EYE in every face</div>
+      <div class="art-row cols-3">
+        <figure><img src="front-accepted.png" alt="Stylized front view — accepted, single amber eye"><figcaption><b>front · 0°</b> — one amber eye, dead on the midline</figcaption></figure>
+        <figure><img src="view-left.png" alt="Left profile view — the eye orb reads"><figcaption><b>left · 90°</b> — the orb bulges on the face's forward line</figcaption></figure>
+        <figure><img src="view-back.png" alt="Back view — no eye"><figcaption><b>back · 180°</b> — no eye, correctly</figcaption></figure>
+      </div>
+      <div class="counts" id="c-turnaround"></div>
+    </div>
+    <div>
+      <div class="lbl" style="margin-bottom:10px;">the mesh — rendered from the delivered GLB</div>
+      <div class="art-row cols-4">
+        <figure><img src="mesh-turn-front.png" alt="Mesh turntable front"><figcaption><b>front</b></figcaption></figure>
+        <figure><img src="mesh-turn-left.png" alt="Mesh turntable left"><figcaption><b>left</b></figcaption></figure>
+        <figure><img src="mesh-turn-back.png" alt="Mesh turntable back"><figcaption><b>back</b></figcaption></figure>
+        <figure><img src="mesh-turn-right.png" alt="Mesh turntable right"><figcaption><b>right</b></figcaption></figure>
+      </div>
+      <div class="counts" id="c-mesh"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="rule"></div>
+    <p class="lbl"><a href="../">the Ulysses demo3d walk</a> ·
+      <a href="../../">THE LIVING ODYSSEY</a> ·
+      <a href="../../../king-demo/photo-rig/">the King photo-rig demo</a></p>
+    <p>Demo only — not wired into the book. <a href="../../../">← back to the landing page</a></p>
+  </footer>
+</div>
+
+<script>
+/* ---- per-stage counts, read from stats.json (itself read from the delivered files) ---- */
+(function(){
+  const fmt = (n) => typeof n === 'number' ? n.toLocaleString('en-US') : n;
+  const row = (label, val) => '<b>' + label + '</b> · <span class="num">' + val + '</span><br>';
+  fetch('stats.json').then((r) => r.json()).then((s) => {
+    document.getElementById('c-turnaround').innerHTML =
+      row('stylize model', s.stylize.model_id) +
+      row('identity + THE EYE gate', s.stylize.gate) +
+      row('same-person + eye gate', s.turnaround.gate) +
+      row('the eye, by instrument', s.turnaround.eye_law) +
+      row('tunic colour drift across views (max ΔRGB)', s.turnaround.tunic_dRGB_max) +
+      row('accent law', 'olive one-shoulder tunic + bare skin, held in all three views');
+    const m = s.mesh, tg = m.turntable_gate || {}, r2 = s.rig;
+    document.getElementById('c-mesh').innerHTML =
+      row('mesh model', m.model_id) +
+      row('vertices / triangles', fmt(m.vertices) + ' / ' + fmt(m.triangles)) +
+      row('turntable gate', (tg.verdict || '—') + ' — no view under ' +
+        Math.round((tg.minCoverage || 0) * 1000) / 10 + '% coverage') +
+      row('eye on the mesh', m.eye_on_mesh) +
+      row('rig', s.rig_model_id + ' — ' + r2.joints + ' joints') +
+      row('walk clip', s.animate.walk.name + ' · ' + s.animate.walk.duration_s + ' s · ' +
+        s.animate.walk.channels + ' channels') +
+      row('idle clip', s.animate.idle.name + ' · ' + s.animate.idle.duration_s + ' s · ' +
+        s.animate.idle.channels + ' channels') +
+      row('posture amendment', 'standing ' + s.posture.standingPitchDeg + '° vs canonical ' +
+        s.posture.canonicalStancePitchDeg + '° (±8° band) — walk pitch ' +
+        s.posture.walk_pitch_before_deg + '° → ' + s.posture.walk_pitch_after_deg + '°') +
+      row('scale law', s.scene.scale_law) +
+      row('props, pure code', s.props.line);
+    window.__statsLoaded = true;                       /* verification hook */
+  }).catch((e) => console.error('stats.json failed', e));
+})();
+</script>
+
+<script type="module">
+/* ---- the Living Book stage: the rigged giant inside the cave-shut plate ---- */
+import * as THREE from 'three';
+import { GLTFLoader } from '../../../app/vendor/loaders/GLTFLoader.js';
+import { createGreatBowl, createStake, createWineskin, propTriangles } from './poly-props.js';
+
+const PLATE_W = 1408, PLATE_H = 768;
+const PX_PER_M = 43;                     /* ledger yardstick: the penned ewes */
+const POLY_M = 7.0;                      /* the ledger's own giant: ~7 m */
+const POLY_PX = POLY_M * PX_PER_M;       /* 301 px — 4x Ulysses' 75 px */
+const FIRE = [638, 427];                 /* EMIS blaze anchor, plate px */
+const FLICK_PER = 3.1;                   /* the plate's own fire period, seconds */
+
+const wx = (px) => px;
+const wy = (py) => PLATE_H - py;
+
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;   /* the plate ships its own grade */
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, PLATE_W, PLATE_H, 0, 0.1, 2000);
+camera.position.set(0, 0, 1000);
+
+const texLoader = new THREE.TextureLoader();
+const srgb = (t) => { t.colorSpace = THREE.SRGBColorSpace; return t; };
+
+/* the plate itself — full-frame backdrop, unlit, exactly the book's frame */
+{
+  const t = srgb(texLoader.load('../../assets/set/cave/cave-shut.jpg'));
+  const plate = new THREE.Mesh(
+    new THREE.PlaneGeometry(PLATE_W, PLATE_H),
+    new THREE.MeshBasicMaterial({ map: t }));
+  plate.position.set(PLATE_W / 2, PLATE_H / 2, 0);
+  scene.add(plate);
+}
+
+/* the fire ring's front lip — the giant passes IN FRONT of the ring, so the
+   lip sits just off the plate BEHIND him */
+{
+  const t = srgb(texLoader.load('../../assets/set/cave/firering-front-shut.png'));
+  const lip = new THREE.Mesh(
+    new THREE.PlaneGeometry(214, 98),
+    new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false }));
+  lip.position.set(wx(523 + 107), wy(409 + 49), 5);
+  scene.add(lip);
+}
+
+/* the blaze bloom — the plate's additive fire layer */
+let bloom = null;
+{
+  const t = srgb(texLoader.load('../../assets/set/cave/cave-bloom-fire.png'));
+  bloom = new THREE.Mesh(
+    new THREE.PlaneGeometry(536, 536),
+    new THREE.MeshBasicMaterial({ map: t, blending: THREE.AdditiveBlending,
+      transparent: true, depthWrite: false, opacity: 0.3 }));
+  bloom.position.set(wx(FIRE[0]), wy(FIRE[1]), 90);
+  bloom.renderOrder = 40;
+  scene.add(bloom);
+}
+
+/* lights: warm key AT the fire anchor (flickers on sim-time), cool night fill */
+const fireLight = new THREE.PointLight(0xffbf4a, 30000, 0, 2);
+fireLight.position.set(wx(FIRE[0]), wy(FIRE[1]) + 16, 150);
+scene.add(fireLight);
+const fill = new THREE.DirectionalLight(0x9db8ff, 1.7);
+fill.position.set(300, 900, 600);
+fill.target.position.set(704, 300, 0);
+scene.add(fill, fill.target);
+scene.add(new THREE.HemisphereLight(0x3a4f7f, 0x2a1f14, 0.95));
+const lampL = new THREE.PointLight(0xff8506, 8000, 0, 2);
+lampL.position.set(wx(248), wy(356), 120);
+const lampR = new THREE.PointLight(0xffd764, 11000, 0, 2);
+lampR.position.set(wx(1260), wy(371), 120);
+scene.add(lampL, lampR);
+
+/* ---- the ledger path — the SAME audited lane (obstacle law): in at the mouth
+   threshold, upstage past the cheese racks, down the giant-seat chute, ROUND
+   THE FRONT of the fire ring (>= 10 px to the ring boxes), out along the
+   downstage floor. tools/demo3d_pathaudit.mjs audits these very points. ---- */
+const PATH_PTS = [
+  [250, 452], [360, 450], [450, 425], [500, 409], [600, 402], [705, 401],
+  [762, 419], [774, 458], [782, 505], [762, 528], [700, 534], [648, 537],
+  [668, 549], [730, 554], [820, 557], [900, 551], [962, 546], [1015, 538],
+];
+const SEAT_PT = [774, 458];              /* ledger giant-seat lane — the idle hold */
+const path = new THREE.CatmullRomCurve3(
+  PATH_PTS.map(([x, y]) => new THREE.Vector3(x, y, 0)), false, 'catmullrom', 0.35);
+const PATH_LEN = path.getLength();
+/* seat distance: nearest sampled point to the seat mark (deterministic) */
+let SEAT_DIST = 0;
+{
+  let best = Infinity;
+  for (let i = 0; i <= 1200; i++) {
+    const p = path.getPointAt(i / 1200);
+    const d = (p.x - SEAT_PT[0]) ** 2 + (p.y - SEAT_PT[1]) ** 2;
+    if (d < best) { best = d; SEAT_DIST = (i / 1200) * PATH_LEN; }
+  }
+}
+const WALK_MPS = 2.2;                    /* giant stride — honest vs the ewes */
+const WALK_SPEED = WALK_MPS * PX_PER_M;  /* px/s */
+const WALK_TIMESCALE = 0.55;             /* heavier cadence for the 7 m frame */
+const IDLE_HOLD = 7.0;                   /* seconds at the giant-seat */
+const XFADE = 0.35;
+const FADE = 0.06;
+const RESPAWN_HOLD = 0.9;
+
+/* ---- the PROPS, pure code ($0): bowl at his knee, stake on the woodpile
+   (ember-tip material state cycles on sim-time), wineskin at the threshold ---- */
+const props = { stake: null, bowl: null, wineskin: null };
+const GLOW_PERIOD = 16;                  /* 8 s cold / 8 s ember, sim-time */
+let glowOverride = null;                 /* smoke hook may pin the state */
+{
+  const bowl = createGreatBowl();        /* ~1.4 m wide for a giant's meal */
+  const bs = 60 / 1.15;
+  bowl.scale.setScalar(bs);
+  bowl.position.set(wx(800), wy(489), 20);
+  bowl.rotation.x = 0.42;                /* isometric tip — show the rim */
+  scene.add(bowl); props.bowl = bowl;
+
+  const stake = createStake();           /* the ledger's 6 ft beam = 77 px */
+  stake.scale.setScalar(77);
+  stake.position.set(wx(560), wy(512), 18);
+  stake.rotation.z = 0.12; stake.rotation.y = -0.25;
+  scene.add(stake); props.stake = stake;
+
+  const skin = createWineskin();         /* shouldered on entry — dropped here */
+  skin.scale.setScalar(42);
+  skin.position.set(wx(333), wy(487), 18);
+  skin.rotation.y = 0.5;
+  scene.add(skin); props.wineskin = skin;
+}
+
+/* contact shadow — soft isometric ellipse under the giant's feet, 4x the man's */
+let shadow = null;
+{
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 96;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(128, 48, 4, 128, 48, 46);
+  grad.addColorStop(0.00, 'rgba(6,6,10,.55)');
+  grad.addColorStop(0.55, 'rgba(6,6,10,.28)');
+  grad.addColorStop(1.00, 'rgba(6,6,10,0)');
+  g.save(); g.translate(128, 48); g.scale(2.4, 1); g.translate(-128, -48);
+  g.fillStyle = grad; g.fillRect(0, 0, 256, 96); g.restore();
+  shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(340, 120),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c),
+      transparent: true, depthWrite: false, opacity: 0.5 }));
+  shadow.renderOrder = 10;
+  scene.add(shadow);
+}
+
+/* material hygiene: generated cloth ships part-metal */
+const fadeMats = [];
+function dressMaterials(model){
+  model.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of (Array.isArray(o.material) ? o.material : [o.material])){
+      if (!m || !m.isMeshStandardMaterial) continue;
+      m.metalness = 0;
+      m.roughness = Math.min(m.roughness, 0.9);
+      m.transparent = true;
+      m.needsUpdate = true;
+      fadeMats.push(m);
+    }
+  });
+}
+
+const actor = new THREE.Group();          /* origin = his animated sole */
+scene.add(actor);
+actor.visible = false;
+
+/* ---- POSTURE AMENDMENT (documented in the manifest + the law block above) ----
+ * Canonical stance target (tools/polystance.py on the sealed profile): +0.75°
+ * — his HEAD rides level; the hunch is back-curve, carried by the mesh.
+ * Amended gates: |standing - 0.75| <= 8; walk & idle cycles |pitch - 0.75| <= 12.
+ * Delivered rig (tools/rigpitch.py): rest -2.81° (inside the band, NO rest
+ * correction), walk bowed 16.4–20.5° (the low-pelvis defect class) -> per-key
+ * local-X counter-rotation baked into BOTH clips' quaternion tracks:        */
+const CLIP_CORR = { Spine02: 4, NeckTwist01: 5, Head: 6 };   /* deg */
+const REST_CORR = {};                                        /* none needed */
+const STANCE_TARGET = 0.75;                                  /* deg, canonical */
+const FWD_BIND = new THREE.Vector3(0.03, 0, 1.0).normalize();
+const qcx = (deg) => new THREE.Quaternion()
+  .setFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(deg));
+
+function bakeCorr(clip){
+  for (const track of clip.tracks){
+    const m = track.name.match(/(?:^|[/.])([A-Za-z0-9_]+)\.quaternion$/);
+    if (!m || !(m[1] in CLIP_CORR)) continue;
+    const c = qcx(CLIP_CORR[m[1]]), q = new THREE.Quaternion();
+    for (let i = 0; i < track.values.length; i += 4){
+      q.fromArray(track.values, i).multiply(c).toArray(track.values, i);
+    }
+  }
+}
+
+let mixer = null;
+let walkAction = null, idleAction = null;
+let activeClip = '';
+let clips = [];
+const loader = new GLTFLoader();
+Promise.all([
+  loader.loadAsync('polyphemus-walk.glb'),
+  loader.loadAsync('polyphemus-idle.glb'),
+]).then(([walkG, idleG]) => {
+  const model = walkG.scene;
+  const walkClip = walkG.animations[0];
+  const idleClip = idleG.animations[0];
+  clips = [walkClip.name, idleClip.name];
+  document.getElementById('clip-cue').textContent =
+    clips.join(' + ') + ' · retargeted at rig time';
+  bakeCorr(walkClip); bakeCorr(idleClip);
+
+  const bones = {};
+  model.traverse((o) => { if (o.isBone) bones[o.name] = o; });
+  for (const [name, deg] of Object.entries(REST_CORR))
+    if (bones[name]) bones[name].quaternion.multiply(qcx(deg));
+
+  /* head-pitch instrument (the smoke gate reads these) */
+  const headBone = bones.Head, pelvisBone = bones.Pelvis || bones.Hip;
+  const _q = new THREE.Quaternion(), _qm = new THREE.Quaternion(),
+        _v = new THREE.Vector3();
+  const headPitchDeg = () => {
+    actor.updateMatrixWorld(true);
+    headBone.getWorldQuaternion(_q);
+    model.getWorldQuaternion(_qm).invert();
+    _q.premultiply(_qm);
+    _v.set(0, 1, 0).applyQuaternion(_q);
+    return THREE.MathUtils.radToDeg(Math.atan2(_v.dot(FWD_BIND), _v.y));
+  };
+
+  const box = new THREE.Box3().setFromObject(model);
+  model.scale.setScalar(POLY_PX / (box.max.y - box.min.y));   /* 7 m, honest */
+  const b = new THREE.Box3().setFromObject(model);
+  const center = b.getCenter(new THREE.Vector3());
+  model.position.x -= center.x;
+  model.position.z -= center.z;
+  model.position.y -= b.min.y;
+  model.traverse((o) => { if (o.isSkinnedMesh) o.frustumCulled = false; });
+  dressMaterials(model);
+  actor.add(model);
+
+  const standingPitchDeg = +headPitchDeg().toFixed(2);
+  const pelvisFraction = +(new THREE.Vector3().setFromMatrixPosition(
+    (actor.updateMatrixWorld(true), pelvisBone.matrixWorld)).y / POLY_PX)
+    .toFixed(4);
+
+  /* grounding law: measure the bind sole BEFORE any mixer exists, sweep the
+   * walk clip for its lowest foot-bone world Y, lift so the ANIMATED sole
+   * meets the group origin */
+  const feet = [];
+  model.traverse((o) => { if (o.isBone && /Foot|ToeBase/i.test(o.name)) feet.push(o); });
+  const v = new THREE.Vector3();
+  const minFootY = () => {
+    actor.updateMatrixWorld(true);
+    return Math.min(...feet.map((bn) => bn.getWorldPosition(v).y));
+  };
+  const bindFootY = feet.length ? minFootY() : 0;
+
+  mixer = new THREE.AnimationMixer(model);
+  walkAction = mixer.clipAction(walkClip);
+  idleAction = mixer.clipAction(idleClip);
+  walkAction.play();
+  walkAction.timeScale = WALK_TIMESCALE;
+  idleAction.timeScale = 1;
+  activeClip = walkClip.name;
+  if (feet.length){
+    let minY = Infinity;
+    for (let i = 0; i <= 24; i++){
+      mixer.setTime((i / 24) * walkClip.duration / WALK_TIMESCALE);
+      minY = Math.min(minY, minFootY());
+    }
+    mixer.setTime(0);
+    model.position.y += bindFootY - minY;
+  }
+
+  const pitchSamples = (action, clip, n) => {
+    const wasW = walkAction.weight, wasI = idleAction.weight;
+    walkAction.weight = action === walkAction ? 1 : 0;
+    idleAction.weight = action === idleAction ? 1 : 0;
+    idleAction.play();
+    const out = [];
+    for (let i = 0; i < n; i++){
+      mixer.setTime((clip.duration * i / n) / action.timeScale);
+      out.push(+headPitchDeg().toFixed(2));
+    }
+    mixer.setTime(0);
+    walkAction.weight = wasW; idleAction.weight = wasI;
+    return out;
+  };
+  window.__rig = {                                     /* posture gate hooks */
+    standingPitchDeg, pelvisFraction,
+    stanceTargetDeg: STANCE_TARGET,
+    clipCorr: CLIP_CORR, restCorr: REST_CORR,
+    walkPitchSamples: (n = 48) => pitchSamples(walkAction, walkClip, n),
+    idlePitchSamples: (n = 48) => pitchSamples(idleAction, idleClip, n),
+  };
+  actor.visible = true;
+  window.__meshLoaded = true;                          /* verification hook */
+}).catch((err) => console.error('glb load failed', err));
+
+/* ---- the crossing, with the giant-seat idle hold (sim-time state machine) ---- */
+let simT = 0;
+let dist = 0;
+let hold = 0;                 /* respawn dark-time */
+let idleT = -1;               /* >=0 while holding at the seat */
+let seatDone = false;
+const P = new THREE.Vector3(), TAN = new THREE.Vector3();
+
+let mode = 'walk';            /* 'walk' | 'idle' — the crossfade guard */
+function toClip(target){
+  if (mode === target || !walkAction || !idleAction) return;
+  const [into, from] = target === 'idle'
+    ? [idleAction, walkAction] : [walkAction, idleAction];
+  into.reset(); into.play();
+  into.timeScale = into === walkAction ? WALK_TIMESCALE : 1;
+  from.crossFadeTo(into, XFADE, false);
+  mode = target;
+  activeClip = into.getClip().name;
+}
+
+function placeActor(){
+  const u = Math.min(dist / PATH_LEN, 1);
+  path.getPointAt(u, P);
+  path.getTangentAt(u, TAN);
+  const x = P.x, footY = wy(P.y);
+  actor.position.set(x, footY, 40);
+  actor.rotation.y = Math.atan2(TAN.x, TAN.y * 2.2);
+  const fade = Math.min(1, Math.min(u, 1 - u) / FADE);
+  for (const m of fadeMats) m.opacity = fade;
+  shadow.position.set(x, footY - 2, 30);
+  shadow.material.opacity = 0.5 * fade;
+  shadow.visible = actor.visible;
+  return u;
+}
+
+function flick(t){
+  return 0.84 + 0.11 * Math.sin(2 * Math.PI * t / FLICK_PER)
+       + 0.05 * Math.sin(2 * Math.PI * t / 0.47 + 1.7)
+       + 0.04 * Math.sin(2 * Math.PI * t / 1.13 + 0.6);
+}
+
+function resize(){
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== Math.floor(w * renderer.getPixelRatio()) ||
+      canvas.height !== Math.floor(h * renderer.getPixelRatio())){
+    renderer.setSize(w, h, false);
+  }
+}
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  resize();
+  const dt = Math.min(clock.getDelta(), 0.1);
+  simT += dt;
+  if (actor.visible || hold > 0){
+    if (hold > 0){
+      hold -= dt;
+      if (hold <= 0){ dist = 0; seatDone = false; actor.visible = true; }
+    } else if (idleT >= 0){
+      idleT += dt;                       /* the giant-seat hold: banked idle */
+      if (mixer) mixer.update(dt);
+      placeActor();
+      /* he turns to face the blaze while he holds */
+      actor.rotation.y += (-0.55 - actor.rotation.y) * Math.min(1, dt * 3);
+      if (idleT >= IDLE_HOLD){
+        idleT = -1; seatDone = true;
+        toClip('walk');
+      }
+    } else {
+      dist += WALK_SPEED * dt;
+      if (!seatDone && dist >= SEAT_DIST){
+        dist = SEAT_DIST; idleT = 0;
+        toClip('idle');
+      }
+      if (mixer) mixer.update(dt);
+      const u = placeActor();
+      if (u >= 1){ actor.visible = false; shadow.visible = false; hold = RESPAWN_HOLD; }
+    }
+  }
+  const f = flick(simT);
+  fireLight.intensity = 30000 * f;
+  lampL.intensity = 8000 * (0.85 + 0.15 * Math.sin(2 * Math.PI * simT / 5.7));
+  lampR.intensity = 11000 * (0.85 + 0.15 * Math.sin(2 * Math.PI * simT / 6.3));
+  const glare = actor.visible
+    ? Math.exp(-((actor.position.x - 640) ** 2) / (2 * 70 * 70)) : 0;
+  if (bloom) bloom.material.opacity = 0.22 + 0.55 * (f - 0.72) + 0.30 * glare;
+  /* the stake's material STATE: 8 s cold / 8 s ember, phase-locked to sim-time */
+  const cycleGlow = (simT % GLOW_PERIOD) >= GLOW_PERIOD / 2;
+  const want = glowOverride === null ? cycleGlow : glowOverride;
+  if (props.stake.userData.isGlowing() !== want) props.stake.userData.setGlow(want);
+  props.stake.userData.pulse(simT);
+  renderer.render(scene, camera);
+});
+
+window.__demo3d = {                                    /* verification hooks */
+  get mixerTime(){ return mixer ? mixer.time : -1; },
+  get dist(){ return dist; },
+  get u(){ return Math.min(dist / PATH_LEN, 1); },
+  get x(){ return actor.position.x; },
+  get visible(){ return actor.visible; },
+  get clips(){ return clips; },
+  get activeClip(){ return activeClip; },
+  get idling(){ return idleT >= 0; },
+  seatU: 0,                              /* filled below */
+  pathPts: PATH_PTS,
+  setProgress(u){
+    dist = u * PATH_LEN; hold = 0; idleT = -1;
+    seatDone = dist >= SEAT_DIST - 1;    /* no surprise re-hold mid-probe */
+    toClip('walk');
+    actor.visible = true; placeActor();
+  },
+  setIdleAtSeat(){
+    dist = SEAT_DIST; hold = 0; idleT = 0; seatDone = false;
+    toClip('idle');
+    actor.visible = true; placeActor();
+  },
+  scene, camera, renderer,
+};
+window.__demo3d.seatU = SEAT_DIST / PATH_LEN;
+window.__props = {                                     /* props gate hooks */
+  kinds: ['greatBowl', 'stake', 'wineskin'],
+  triangles: {
+    greatBowl: propTriangles(props.bowl),
+    stake: propTriangles(props.stake),
+    wineskin: propTriangles(props.wineskin),
+  },
+  stakeGlowing: () => props.stake.userData.isGlowing(),
+  setStakeGlow(on){ glowOverride = on; },              /* null = sim cycle */
+  clearStakeGlow(){ glowOverride = null; },
+  glowPeriodS: GLOW_PERIOD,
+};
+</script>
+</body>
+</html>
