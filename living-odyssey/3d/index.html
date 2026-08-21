@@ -84,6 +84,16 @@
     opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s linear .6s;}
   #hint.on{opacity:1;visibility:visible;transition:opacity .6s ease,visibility 0s;}
 
+  #chrome{position:fixed;right:18px;top:16px;z-index:8;}
+  #chrome button{font-family:var(--serif);font-variant:small-caps;letter-spacing:.18em;
+    font-size:12px;color:rgba(226,208,170,.80);background:rgba(8,11,22,.55);
+    border:1px solid rgba(205,171,99,.28);border-radius:3px;padding:6px 11px;
+    cursor:pointer;transition:color .3s ease,border-color .3s ease,background .3s ease;}
+  #chrome button:hover{color:#f5dfa6;border-color:rgba(205,171,99,.55);}
+  #chrome button[aria-pressed="true"]{color:#f5dfa6;background:rgba(58,45,20,.62);
+    border-color:rgba(205,171,99,.66);}
+  .harness #chrome{display:none;}
+
   #hold,#target{position:fixed;left:0;top:0;width:78px;height:78px;margin:-39px 0 0 -39px;
     z-index:6;pointer-events:none;opacity:0;transition:opacity .35s ease;}
   #hold.on,#target.on{opacity:1;}
@@ -223,6 +233,9 @@
 
   <div id="hint"></div>
   <div id="prog"></div>
+  <!-- LEAN-BACK: the narration's own clock turns the click leaves; every
+       VERB gate still waits for the hand (AMENDMENT A8). -->
+  <div id="chrome"><button id="lean" type="button" aria-pressed="false">Lean back</button></div>
   <div id="cover"></div>
   <div id="endcard">
     <div class="rule"></div>

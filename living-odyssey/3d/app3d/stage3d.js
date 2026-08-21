@@ -26,11 +26,33 @@ import { createShoreScene, createShoreIsoCamera, SHORE_WORLD } from '../sets/sho
 import { createSeaScene, SEA_WORLD } from '../sets/sea3d.js';
 import { createCave3D, CAVE_WORLD, CAVE_STATES } from '../sets/cave3d.js';
 import { buildActor } from './cast3d.js';
+import { loadPlateSet, samplePlateLight, makeContactShadow, PLATE_W, PLATE_H }
+  from './plate3d.js';
 
 const WALK_MPS = 1.1;                 /* cast.json processionSpeedMps */
 const SCURRY_MPS = 1.9;               /* the scatter-to-the-dark pace */
 const GIANT_MPS = 1.6;                /* seven metres of stride */
 const EASE_RATE = 3.2;                /* camera pursuit, s^-1 */
+
+/* ---------------------------------------------------------------------- *
+ * THE CROWD AMENDMENT (owner ruling, 2026-08-21: "it just needs a few of
+ * them"). Butler's text says TWELVE and the text is untouched — what
+ * changes is the STAGING: a leaf shows a few bodies and IMPLIES the rest
+ * off-frame, which is the 2D book's own convention carried over unchanged
+ * (its plates never drew twelve either). Ulysses and the giant are
+ * principals, never crowd; sheep and rams are not men.
+ *
+ *   CREW_CAP   3   the default: three crew besides Ulysses
+ *   LOTS_CAP   4   iii-05 shakes FOUR chips — the four bearers materialise
+ *   ROWER_CAP  4   Beat VI's deck: four oars visible
+ *   FLOCK_CAP  3   Beat V's escape: three rams with slung men + the great ram
+ *   CREW_POOL  4   so only four crew rigs are ever built (was twelve)
+ * ---------------------------------------------------------------------- */
+const CREW_CAP = 3;
+const LOTS_CAP = 4;
+const ROWER_CAP = 4;
+const FLOCK_CAP = 3;
+const CREW_POOL = Math.max(CREW_CAP, LOTS_CAP, ROWER_CAP);
 
 function mulberry32(seed) {
   let a = seed >>> 0;
@@ -257,12 +279,12 @@ export class Stage3D {
   async _ensureActors(names) {
     const WANT = {
       ulysses: ['ulysses'],
-      crew: Array.from({ length: 12 }, (_, i) => 'crew-' + i),
+      crew: Array.from({ length: CREW_POOL }, (_, i) => 'crew-' + i),
       polyphemus: ['poly-walk'],
       'polyphemus-idle': ['poly-idle'],
       ram: ['ram-great'],
       ewe: Array.from({ length: 4 }, (_, i) => 'ewe-' + i),
-      flock: Array.from({ length: 6 }, (_, i) => 'flock-' + i),
+      flock: Array.from({ length: FLOCK_CAP }, (_, i) => 'flock-' + i),
     };
     for (const rig of names) {
       for (const id of WANT[rig]) {
@@ -449,6 +471,7 @@ export class Stage3D {
     a.group.visible = true;
     a.walk = null;
     a.poseEuler = null;
+    a.fade = null; a.opacity = 1;      /* a placed body is a solid body */
   }
 
   /** Fade an actor IN at a mark (Beat V's freed men). */
@@ -469,6 +492,7 @@ export class Stage3D {
     a.model.scale.setScalar(a.baseScale * local);
     a.walk = null;
     a.poseEuler = null;
+    a.fade = null; a.opacity = 1;      /* a placed body is a solid body */
   }
 
   _pose(a, world, euler) {
@@ -495,6 +519,7 @@ export class Stage3D {
     }
     a.mode = 'walk';
     a.group.visible = true;
+    a.fade = null; a.opacity = 1;      /* a walking body is a solid body */
     a.walk = new Walk(pts, this.t + delay, speed);
   }
 
@@ -503,11 +528,39 @@ export class Stage3D {
     a.fade = { t0: this.t, dur, from: a.opacity, to };
   }
 
+  /* ---- the crowd amendment's roster ---- */
   _crew(n) {
-    return Array.from({ length: 12 }, (_, i) => this.actors['crew-' + i])
-      .filter(Boolean).slice(0, n);
+    return Array.from({ length: CREW_POOL }, (_, i) => this.actors['crew-' + i])
+      .filter(Boolean).slice(0, Math.min(n, CREW_POOL));
   }
-  _aliveCrew() { return this._crew(Math.max(0, 12 - 2 * this.meals)); }
+  /** the STAGED company: capped at three, and never more than the twelve
+   *  the giant has left alive (the headcount law survives the amendment —
+   *  it just stops being the number of bodies on the leaf). */
+  crewCap() { return Math.max(1, Math.min(CREW_CAP, 12 - 2 * this.meals)); }
+  _aliveCrew() { return this._crew(this.crewCap()); }
+  /** every crew rig currently ON the leaf (whatever act put it there) */
+  _onStageCrew() {
+    return this._crew(CREW_POOL)
+      .filter((c) => c.mode !== 'off' && c.group.visible && c.opacity > 0.05);
+  }
+
+  /** THE CROWD CENSUS — the amendment's gate reads this. Ulysses and the
+   *  giant are principals, sheep and rams are livestock; `crew` is the only
+   *  number the cap governs. */
+  census() {
+    const on = (a) => !!(a && a.group.visible && a.opacity > 0.05);
+    let crew = 0, rams = 0, sheep = 0;
+    for (const [id, a] of Object.entries(this.actors)) {
+      if (!on(a)) continue;
+      if (id.startsWith('crew-')) crew++;
+      else if (id.startsWith('flock-') || id === 'ram-great') rams++;
+      else if (id.startsWith('ewe-')) sheep++;
+    }
+    const ulysses = on(this.actors.ulysses) ? 1 : 0;
+    const giant = (on(this.actors['poly-idle']) ? 1 : 0) +
+                  (on(this.actors['poly-walk']) ? 1 : 0);
+    return { crew, ulysses, giant, rams, sheep, humanoids: crew + ulysses + giant };
+  }
 
   /* seeded cluster offsets around a world point */
   _cluster(world, n, seed, spread = 0.9) {
@@ -630,10 +683,12 @@ export class Stage3D {
         if (u.mode === 'off') S._stand(u, rec.toWorld(...shoreMarks.fire), 0);
         S._walkRoute(u, rec, shoreMarks.fire, shoreMarks.council,
           { silent, label: 'shore:fire->council' });
-        /* the crew arc, gathered to the council marks */
+        /* the crew arc, gathered to the council marks (the amendment: three
+           of the twelve stand IN the frame, the rest are off it) */
         const centre = rec.toWorld(...shoreMarks.councilCrew);
-        const spots = S._cluster(centre, 12, 70999, 2.6);
-        S._crew(12).forEach((c, i) => {
+        const crew = S._aliveCrew();
+        const spots = S._cluster(centre, crew.length, 70999, 2.6);
+        crew.forEach((c, i) => {
           S._stand(c, spots[i],
             Math.atan2(rec.toWorld(...shoreMarks.council).x - spots[i].x,
                        rec.toWorld(...shoreMarks.council).z - spots[i].z));
@@ -647,7 +702,7 @@ export class Stage3D {
         const rot1 = rot0 + 0.55;
         /* the twelve board: the beach empties with the keel */
         S._off(S.actors.ulysses);
-        for (const c of S._crew(12)) S._off(c);
+        for (const c of S._crew(CREW_POOL)) S._off(c);
         S._mover('crossing', 9.0, (k) => {
           const e = easeInOut(k);
           ship.position.lerpVectors(from, to, e);
@@ -657,16 +712,18 @@ export class Stage3D {
         if (silent) { ship.position.copy(to); ship.rotation.y = rot1; S.followShip = false; }
       },
       'entry-mainland': (rec, silent) => {
-        /* landfall: Ulysses + the twelve at the laurel mouth (dual-scale lobe) */
-        const spots = S._cluster(mainlandEntry, 13, 71011, 1.6);
+        /* landfall: Ulysses + his few at the laurel mouth (dual-scale lobe) */
+        const crew = S._aliveCrew();
+        const spots = S._cluster(mainlandEntry, crew.length + 1, 71011, 1.6);
         const u = S.actors.ulysses;
         S._stand(u, spots[0], -0.5, MAINLAND_LOCAL);
-        S._crew(12).forEach((c, i) => S._stand(c, spots[i + 1], -0.6, MAINLAND_LOCAL));
+        crew.forEach((c, i) => S._stand(c, spots[i + 1], -0.6, MAINLAND_LOCAL));
       },
       'twelve-at-ship': (rec, silent) => {
         const base = mainlandLanding.clone();
-        const spots = S._cluster(base, 12, 71021, 2.2);
-        S._crew(12).forEach((c, i) => S._stand(c, spots[i], 0.4, MAINLAND_LOCAL));
+        const crew = S._aliveCrew();
+        const spots = S._cluster(base, crew.length, 71021, 2.2);
+        crew.forEach((c, i) => S._stand(c, spots[i], 0.4, MAINLAND_LOCAL));
         S._stand(S.actors.ulysses, base.clone().add(new THREE.Vector3(1.6, 0, -1.6)),
           -0.4, MAINLAND_LOCAL);
       },
@@ -700,8 +757,10 @@ export class Stage3D {
           S._hideProps();
           const g = giant('idle');
           if (g) S._stand(g, rec.toWorld(...caveMarks.doorwaySeat), 2.1);
-          const spots = S._cluster(rec.toWorld(890, 537), 6, 71033, 1.2);
-          S._aliveCrew().forEach((c, i) => S._stand(c, spots[i], -2.3));
+          const survivors = S._aliveCrew();
+          const spots = S._cluster(rec.toWorld(890, 537), survivors.length, 71033, 1.2);
+          survivors.forEach((c, i) => S._stand(c, spots[i], -2.3));
+          for (const c of S._crew(CREW_POOL).slice(survivors.length)) S._off(c);
           S._stand(S.actors.ulysses, rec.toWorld(858, 542), -2.4);
           const ewePx = [[938, 538], [972, 545], [1002, 540], [915, 548]];
           ewePx.forEach(([px, py], i) => {
@@ -712,15 +771,18 @@ export class Stage3D {
         }
         S.meals = Math.max(S.meals, 1);           /* leaf 3 opens after meal one */
         giantSprawl(rec, true);                   /* asleep as the leaf mounts */
-        const spots = S._cluster(rec.toWorld(...caveMarks.huddle), 10, 71031, 1.3);
-        S._aliveCrew().forEach((c, i) => S._stand(c, spots[i], -1.1));
+        const left = S._aliveCrew();
+        const spots = S._cluster(rec.toWorld(...caveMarks.huddle), left.length, 71031, 1.3);
+        left.forEach((c, i) => S._stand(c, spots[i], -1.1));
+        for (const c of S._crew(CREW_POOL).slice(left.length)) S._off(c);
         S._stand(S.actors.ulysses, rec.toWorld(933, 528), -1.2);
       },
       'cheese-rack': (rec, silent) => {
         /* the laden tableau before rack B, heads jerked seaward — the stand
            row keeps NORTH of the fire ring's box (y <= 415 in plate px) */
-        const spots = S._cluster(rec.toWorld(640, 398), 12, 71041, 1.0);
-        S._crew(12).forEach((c, i) => {
+        const crew = S._aliveCrew();
+        const spots = S._cluster(rec.toWorld(640, 398), crew.length, 71041, 1.0);
+        crew.forEach((c, i) => {
           if (c.mode === 'off' || silent) S._stand(c, spots[i], -2.2);
         });
         const u = S.actors.ulysses;
@@ -729,7 +791,7 @@ export class Stage3D {
       'huddle-far': (rec, silent) => {
         /* the scatter to the far dark (with seg `return`) */
         const rnd = mulberry32(71051);
-        S._crew(12).forEach((c, i) => {
+        S._aliveCrew().forEach((c, i) => {
           const tx = caveMarks.huddle[0] + (rnd() - 0.5) * 56;
           const ty = caveMarks.huddle[1] + (rnd() - 0.5) * 18;
           S._walkRoute(c, rec, [604 + (i % 4) * 24, 396 + (i % 3) * 6], [tx, ty],
@@ -777,9 +839,12 @@ export class Stage3D {
         const y0 = S.props.stakeAt.y;
         S._mover('stake-hide', 1.4, (k) => { st.position.y = y0 - easeInOut(k) * 0.22; },
           { silent });
+        /* THE LOTS is the one unit the amendment lets past three: the text
+           shakes FOUR chips, so the FOUR bearers materialise (iii-05 only —
+           the flock-in seg scatters them back to the huddle) */
         const centre = rec.toWorld(...caveMarks.lots);
-        const spots = S._cluster(centre, 4, 71061, 0.9);
-        S._aliveCrew().slice(0, 4).forEach((c, i) => S._stand(c, spots[i], 2.6));
+        const spots = S._cluster(centre, LOTS_CAP, 71061, 0.9);
+        S._crew(LOTS_CAP).forEach((c, i) => S._stand(c, spots[i], 2.6));
         S._walkRoute(S.actors.ulysses, rec, caveMarks.scheme, caveMarks.lots,
           { silent, label: 'cave:scheme->lots' });
       },
@@ -815,7 +880,7 @@ export class Stage3D {
         }, { silent });
         S._walkRoute(S.actors.ulysses, rec, caveMarks.bowlOffer, [648, 517],
           { silent, label: 'cave:bowl->embers' });
-        S._aliveCrew().slice(0, 4).forEach((c, i) => {
+        S._aliveCrew().forEach((c, i) => {
           S._walkRoute(c, rec, [713 + (i % 2) * 10, 527 + (i % 2) * 6],
             [668 + i * 9, 521 + (i % 3) * 5],
             { silent, delay: 0.2 * i, label: 'cave:bearers' });
@@ -854,7 +919,7 @@ export class Stage3D {
         if (!silent) S.driveSpin = { t0: S.t + 1.2 };
         S._walkRoute(S.actors.ulysses, rec, [648, 517], [684, 537],
           { silent, label: 'cave:drive-u' });
-        S._aliveCrew().slice(0, 4).forEach((c, i) => {
+        S._aliveCrew().forEach((c, i) => {
           S._walkRoute(c, rec, [668 + i * 9, 521 + (i % 3) * 5],
             [700 + i * 8, 539 + (i % 2) * 6],
             { silent, delay: 0.15 * i, label: 'cave:drive-crew' });
@@ -899,7 +964,7 @@ export class Stage3D {
       'fright-scatter': (rec, silent) => {        /* "we ran away in a fright" */
         S._walkRoute(S.actors.ulysses, rec, [684, 537], [933, 528],
           { speed: SCURRY_MPS, silent, label: 'cave:fright-u' });
-        S._aliveCrew().slice(0, 4).forEach((c, i) => {
+        S._aliveCrew().forEach((c, i) => {
           S._walkRoute(c, rec, [700 + i * 8, 539 + (i % 2) * 6],
             [903 + (i % 2) * 20, 535 + (i % 3) * 7],
             { speed: SCURRY_MPS, silent, delay: 0.12 * i, label: 'cave:fright-crew' });
@@ -945,7 +1010,7 @@ export class Stage3D {
 
       /* ---------- BEAT V · THE RAMS ---------- */
       'trios-under': (rec, silent) => {           /* the men slide under the fleeces */
-        S._aliveCrew().forEach((c, i) => S._fade(c, 0, 1.1 + 0.2 * i, silent));
+        S._onStageCrew().forEach((c, i) => S._fade(c, 0, 1.1 + 0.2 * i, silent));
       },
       'ram-stand': (rec, silent) => {
         const r = S.actors['ram-great'];
@@ -975,7 +1040,8 @@ export class Stage3D {
       'flock-stream': (rec, silent) => {
         /* dawn: the males hurry out to feed — the stream down the audited
            lane and out the mouth; the ewes stay bleating by the pens */
-        const walkers = Array.from({ length: 6 }, (_, i) => S.actors['flock-' + i])
+        /* THREE rams stream out with men slung under them (the amendment) */
+        const walkers = Array.from({ length: FLOCK_CAP }, (_, i) => S.actors['flock-' + i])
           .filter(Boolean);
         walkers.forEach((a, i) => {
           S._walkRoute(a, rec, [905 + i * 15, 543 + (i % 2) * 5], [332, 441],
@@ -1005,7 +1071,7 @@ export class Stage3D {
         const DECK = rec.api.SHIP.deckY;
         S._deck(S.actors.ulysses, rec, [0, DECK, -4.6], 0);
         const rows = [-3.8, -1.3, 1.2];
-        S._crew(6).forEach((c, i) => {
+        S._crew(ROWER_CAP).forEach((c, i) => {     /* four oars in the frame */
           S._deck(c, rec, [(i % 2 ? -0.78 : 0.78), DECK, rows[Math.floor(i / 2)]],
             Math.PI);
         });
@@ -1164,7 +1230,7 @@ export class Stage3D {
         const u = this.actors.ulysses;
         this._walkRoute(u, rec, caveEntryPts.from, [610, 412],
           { silent, label: 'cave:entry-u' });
-        this._crew(12).forEach((c, i) => {
+        this._aliveCrew().forEach((c, i) => {
           this._walkRoute(c, rec, caveEntryPts.from,
             [604 + (i % 4) * 24, 396 + (i % 3) * 6],
             { silent, delay: 0.28 * i, label: 'cave:entry-crew' });
@@ -1182,7 +1248,10 @@ export class Stage3D {
       case 'milking': break;
       case 'seize': {                              /* O.6 — identical, three times */
         this.meals = Math.min(3, this.meals + 1);
-        const taken = this._crew(12).slice(12 - 2 * this.meals, 12 - 2 * this.meals + 2);
+        /* the headcount law is arithmetic (12 − 2·meals); the STAGE shows
+           two of the few on the leaf go, and the next act restages the
+           capped roster out of the company still off-frame */
+        const taken = this._onStageCrew().slice(-2);
         for (const c of taken) this._fade(c, 0, 1.4, silent);
         if (!silent) {
           /* the clutch: a scale/pose beat on the seated bulk — kept abstract */
@@ -1206,6 +1275,14 @@ export class Stage3D {
       case 'flock-in': {
         if (this.activeName !== 'cave') break;
         this._flockStream(rec, 'in', dur, silent);
+        /* the stone rolls up and the four leave the chip circle for the dark
+           corner — the leaf drops back to the capped roster (crowd amendment) */
+        {
+          const left = this._aliveCrew();
+          const spots = this._cluster(rec.toWorld(933, 541), left.length, 71031, 1.3);
+          left.forEach((c, j) => this._stand(c, spots[j], -1.1));
+          for (const c of this._crew(CREW_POOL).slice(left.length)) this._off(c);
+        }
         const w = this.actors['poly-walk'], i = this.actors['poly-idle'];
         if (i) this._off(i);
         if (w) this._walkRoute(w, rec, [340, 436], [760, 452],
@@ -1254,8 +1331,10 @@ export class Stage3D {
         }
         this._appear(this.actors.ulysses, rec.toWorld(372, 486), 2.6,
           { delay: 1.4, silent });
-        const spots = this._cluster(rec.toWorld(414, 498), 6, 71081, 1.5);
-        this._aliveCrew().forEach((c, i) => this._appear(c, spots[i], 2.2 + 0.2 * i,
+        /* the men who rode out under the three rams stand up on the grass */
+        const freed = this._aliveCrew();
+        const spots = this._cluster(rec.toWorld(414, 498), freed.length, 71081, 1.5);
+        freed.forEach((c, i) => this._appear(c, spots[i], 2.2 + 0.2 * i,
           { delay: 2.2 + 0.35 * i, silent }));
         break;
       }
@@ -1728,6 +1807,8 @@ export class Stage3D {
                              k: +this.camState.k.toFixed(2) } : null,
       dim: 0,
       meals: this.meals,
+      census: this.census(),          /* the crowd amendment's own gate */
+      crewCap: this.crewCap(),
       boulderK: this._boulderK === undefined ? 1 : +(+this._boulderK).toFixed(2),
       caveState: this.sets.cave && this.sets.cave.built ? this.sets.cave.api.state.name : null,
       movers: this.movers.map((m) => m.id),

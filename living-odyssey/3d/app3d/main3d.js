@@ -43,6 +43,15 @@ const TAP_DEBOUNCE_S = 0.25;
 const DRAG_REJECT_PX = 24;
 const HESIT_EAGER_S = 4;
 
+/* LEAN-BACK (AMENDMENT A8's second half): the narration's own clock spends
+ * the reader's CLICK for them. It never spends a VERB — a target, a hold, a
+ * release and a clock unit all still wait for the hand, so "all gates by
+ * verbs" survives the mode. The wait is the MASTERED duration out of
+ * app/voice.js plus a breath; the media element's currentTime is never read
+ * (determinism law), and an unvoiced leaf (our headings) gets LEAN_MIN. */
+const LEAN_TAIL = 0.9;
+const LEAN_MIN = 2.6;
+
 const errors = [];
 window.addEventListener('error', (e) => errors.push({ kind: 'error', msg: String(e.message) }));
 window.addEventListener('unhandledrejection', (e) =>
@@ -100,6 +109,7 @@ const targetEl = document.getElementById('target');
 const targetRing = targetEl.querySelector('.ring');
 const endEl = document.getElementById('endcard');
 const wrapEl = document.getElementById('stagewrap');
+const leanBtn = document.getElementById('lean');
 const ARC_LEN = 2 * Math.PI * 33;
 
 /* ---- layout: the 1408:768 canvas fitted, margin under it in portrait ---- */
@@ -142,6 +152,9 @@ const S = {
   lastAdv: -1e9,
   hesit: null,
   ded: { shown: false, skipped: false, name: '', hash: 0 },
+  lean: QS.get('lean') === '1',      /* lean-back: the narration advances */
+  narr: 0,                           /* this unit's mastered line length */
+  leanAdvances: 0,
 };
 
 const unitErrors = validateUnits(UNITS);
@@ -158,6 +171,7 @@ function enterUnit(n, { silent = false } = {}) {
   const idx = Math.max(0, Math.min(UNITS.length - 1, n | 0));
   const u = UNITS[idx];
   S.i = idx; S.unit = u; S.unitT = 0; S.page = u.page;
+  S.narr = (VOICE[u.key] && VOICE[u.key].dur) || 0;
   S.visited.add(u.id);
   S.finished = false;
   S.latch = false;
@@ -219,6 +233,22 @@ function applyCameo(idx) {
     return;
   }
   cameo.hide();
+}
+
+/** when a lean-back leaf is due to turn itself (sim seconds into the unit) */
+function leanDue(u) {
+  const dur = (VOICE[u.key] && VOICE[u.key].dur) || 0;
+  return Math.max(u.dwell || 0, dur > 0 ? dur + LEAN_TAIL : LEAN_MIN);
+}
+
+function setLean(on) {
+  S.lean = !!on;
+  document.body.classList.toggle('lean', S.lean);
+  if (leanBtn) {
+    leanBtn.setAttribute('aria-pressed', S.lean ? 'true' : 'false');
+    leanBtn.textContent = S.lean ? 'Lean back · on' : 'Lean back';
+  }
+  return S.lean;
 }
 
 function cueFor(u) {
@@ -530,6 +560,13 @@ function step(dt) {
     advance();
   }
 
+  /* LEAN-BACK: the line ends, the leaf turns itself. Only the CLICK verb is
+     spent this way — target/hold/release/clock stay the reader's. */
+  if (S.lean && quiet && u && u.verb === 'click' && S.unitT >= leanDue(u)) {
+    S.leanAdvances++;
+    advance();
+  }
+
   if (quiet && u) {
     const next = UNITS[S.i + 1];
     if (next && next.verb === 'clock' && clockDue(next) &&
@@ -599,8 +636,16 @@ function firstGesture() {
 
 const ptr = { x: 0, y: 0, dnX: null, dnY: null };
 
+/* the leaf's own chrome (the lean-back toggle) is not the stage: a press on
+   it is never a page-turn */
+const onChrome = (ev) => !!(ev && ev.target && ev.target.closest &&
+                            ev.target.closest('#chrome'));
+let chromePress = false;
+
 function pressDown(ev) {
   firstGesture();
+  if (onChrome(ev)) { chromePress = true; return; }
+  chromePress = false;
   if (ev && ev.clientX !== undefined) {
     ptr.x = ev.clientX; ptr.y = ev.clientY;
     ptr.dnX = ev.clientX; ptr.dnY = ev.clientY;
@@ -616,6 +661,7 @@ function pressDown(ev) {
 }
 
 function pressUp(ev) {
+  if (chromePress || onChrome(ev)) { chromePress = false; return; }
   const wasHoldPress = S.hold.wasPress;
   S.hold.pressing = false;
   S.hold.wasPress = false;
@@ -638,8 +684,10 @@ function pressUp(ev) {
 document.addEventListener('pointerdown', pressDown);
 window.addEventListener('pointerup', pressUp);
 window.addEventListener('pointercancel', () => { S.hold.pressing = false; S.hold.wasPress = false; });
+if (leanBtn) leanBtn.addEventListener('click', () => { firstGesture(); setLean(!S.lean); });
 window.addEventListener('keydown', (e) => {
   if (e.repeat) return;
+  if (e.code === 'KeyL') { e.preventDefault(); firstGesture(); setLean(!S.lean); return; }
   if (e.code === 'Space' || e.code === 'Enter' || e.code === 'ArrowRight') {
     e.preventDefault();
     if (S.unit && S.unit.verb === 'target' && !S.gate.resolved) {
@@ -664,6 +712,7 @@ async function boot() {
   stage.mount(first);
   if (snd.missing.length) errors.push({ kind: 'audio', msg: 'undecodable: ' + snd.missing.join(', ') });
   layout();
+  setLean(S.lean);
   enterUnit(0, { silent: true });
   refreshFocus(true);
   audio.bed(UNITS[0].bed || null, 0.01);
@@ -758,6 +807,9 @@ harnessOnly.__renderNow = () => { step(0); stage.render(); return S.renders; };
 harnessOnly.__mute = (m) => { audio.setMuted(m !== false); return audio.snapshot(); };
 harnessOnly.__audio = () => audio.snapshot();
 harnessOnly.__voice = () => voice.snapshot();
+harnessOnly.__voiceLog = () => voice.log.slice();
+harnessOnly.__lean = (on) => setLean(on !== false);
+harnessOnly.__census = () => stage.census();
 harnessOnly.__ensureAll = () => stage.preloadAll();
 harnessOnly.__refs = { stage, audio, voice, margin, clock, S, UNITS };
 
@@ -781,6 +833,9 @@ window.__state = () => ({
   end: { active: S.end.active, k: +S.end.k.toFixed(3), card: +S.end.card.toFixed(3) },
   ded: { ...S.ded },
   hesit: S.hesit,
+  lean: { on: S.lean, narr: S.narr, due: S.unit ? +leanDue(S.unit).toFixed(2) : null,
+          advances: S.leanAdvances },
+  census: stage.census(),
   view: { w: +view.w.toFixed(1), h: +view.h.toFixed(1), portrait: view.portrait,
           fit: +stage.F.toFixed(4) },
   viewport: { w: window.innerWidth, h: window.innerHeight, dpr: window.devicePixelRatio || 1 },
