@@ -31,6 +31,7 @@ import { VOICE, VOICE_BASE } from '../../app/voice.js';
 import { drawSigil } from '../../app/sigil.js';
 import { Stage3D } from './stage3d.js';
 import { Voice3D } from './voice3d.js';
+import { huePeaks, hueDist } from './cast3d.js';
 
 const TURN_IN = 0.55;
 const TURN_HOLD = 0.18;
@@ -75,6 +76,17 @@ const EXTRA_FX = {
  * act/seg tokens is keyed here by unit key and fired exactly like an act
  * (silent on replay). Beat IV's stake, Beat V's stream, Beat VI's throws. */
 const EXTRA_ACTS = {
+  /* C2 — THE SEATED GIANT. The ledger's cave mark table gives `giant-seat` to
+   * ii-05/07/08 and iii-08/09; the meal units (ii-10, iii-01, iii-07) play at
+   * his knee. units.js only names the act where the STAGING column changed, so
+   * the rail re-asserts the seat on every unit the ledger puts him at the mark
+   * — the call is idempotent (same rig, same mark, same yaw). */
+  pitiless: ['giant-seat'],
+  shipfast: ['giant-seat'],
+  suppertwo: ['giant-seat'],
+  lookhere: ['giant-seat'],
+  besokind: ['giant-seat'],
+  thrice: ['giant-seat'],
   embers: ['stake-to-embers'],
   glowing: ['stake-draw'],
   auger: ['stake-drive'],
@@ -89,6 +101,10 @@ const EXTRA_ACTS = {
 
 const QS = new URLSearchParams(location.search);
 const HARNESS_BOOT = QS.get('harness') === '1';
+/* C3 — the path / guide / control overlays are DEBUG ONLY. The production
+   render carries none of them; ?debug=1 puts them back. */
+const DEBUG_OVERLAYS = QS.get('debug') === '1';
+if (DEBUG_OVERLAYS) document.documentElement.classList.add('debug');
 
 const clock = new SimClock();
 if (HARNESS_BOOT) { clock.harness = true; document.documentElement.classList.add('harness'); }
@@ -604,6 +620,9 @@ function step(dt) {
 /* ---- the leader line: type -> the speaker's head (3D projected) ---- */
 const EMBODIED = new Set(['ULYSSES', 'POLYPHEMUS', 'A CYCLOPS', 'THE MEN']);
 function stepLeader() {
+  /* C3: the leader is a GUIDE drawn over the render — debug only, and not
+     even computed otherwise (a cleared path can never contribute a pixel) */
+  if (!DEBUG_OVERLAYS) { leader.clear(); return; }
   const u = S.unit;
   const who = u && u.speaker;
   if (!u || S.end.active || S.turn.active || !EMBODIED.has(who)) {
@@ -826,6 +845,17 @@ harnessOnly.__plate = {
   body: (px, py, w, h) => stage.probeBody(px, py, w, h),
   nobody: () => stage.hideProbeBody(),
   bypassGrade: (on) => stage.setGradeBypass(on !== false),
+  /* the [materials] + [register] gates' own instruments */
+  bypassRegister: (on) => stage.setRegisterBypass(on !== false),
+  bypassGrain: (on) => stage.setGrainBypass(on !== false),
+  shadows: (on) => stage.setShadows(on !== false),
+  cast: () => stage.castIdentity(),
+  /* the SAME statistic the canon was measured with — the identity gate has to
+     compare like with like, so the gate borrows the engine's own function */
+  huePeaks: (list, minFrac) => huePeaks(list, minFrac),
+  hueDist: (a, b) => hueDist(a, b),
+  finish: () => { const r = stage.sets[stage.activeName];
+    return r ? { state: stage.plateState(r), fin: r.finish || null } : null; },
   stand: (id, px, py, yaw) => stage.probeStand(id, px, py, yaw || 0),
   cam: (px, py, k) => stage.probeCam(px, py, k),
   clear: () => { for (const a of Object.values(stage.actors)) stage._off(a); return true; },

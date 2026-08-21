@@ -122,21 +122,31 @@ function blobTexture() {
 }
 
 /**
- * A soft contact shadow laid flat on the plate under an actor. The plate is a
- * painted render with its own shadows; ours only has to seat the character on
- * the floor, so it is a squashed blob, dark and cheap, never a shadow map.
+ * SOL#4 — THE CONTACT SHADOW, plate-matched.
+ *
+ * The plate is a painted render with its own shadows; ours only has to SEAT
+ * the character on the floor, so it is a squashed blob decal, never a shadow
+ * map. Two things make it belong to the painting rather than sit on it:
+ *
+ *  - it is sized to the BODY's own footprint (the giant sprawled across the
+ *    hearth needs a four-metre smear; a ewe needs a hand's width), and
+ *  - it is never black. A pure-black blob on warm ochre paint reads as a hole
+ *    punched in the plate. The stage tints it each frame to the plate's OWN
+ *    ring colour at the actor's mark, darkened — the painting's shadow colour
+ *    — and scales its opacity with the light that is actually there.
  */
-export function makeContactShadow(radiusM) {
+export function makeContactShadow(halfX, halfZ) {
   const mat = new THREE.MeshBasicMaterial({
-    map: blobTexture(), transparent: true, opacity: 0.42,
+    map: blobTexture(), transparent: true, opacity: 0.34,
     depthWrite: false, depthTest: true, color: 0x000000,
     blending: THREE.NormalBlending, toneMapped: false,
   });
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(2 * radiusM, 2 * radiusM * 0.62), mat);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(2 * halfX, 2 * (halfZ === undefined ? halfX * 0.62 : halfZ)), mat);
   m.rotation.x = -Math.PI / 2;
   m.position.y = 0.02;
   m.renderOrder = -1;
   m.name = 'contact-shadow';
+  m.userData.half = [halfX, halfZ === undefined ? halfX * 0.62 : halfZ];
   return m;
 }
 
@@ -309,7 +319,13 @@ export function samplePlateLight(table, setName, state, px, py) {
   const s = table.sets[setName];
   const st = s && (s.states[state] || s.states[Object.keys(s.states)[0]]);
   if (!st) return { rgb: [128, 128, 128], lum: 128 };
-  const g = table.gridPx;
+  /* the cell is PER SET (bakestage GRID_BY_SET): one global 64 px cell was
+     three times coarser than the shore's and the sea's own regrade ring, so
+     the grade aimed at a blur the gate never measured. Older tables carried a
+     single number — honour both. */
+  const g = (typeof s.gridPx === 'number' ? s.gridPx
+    : (typeof table.gridPx === 'number' ? table.gridPx
+      : (table.gridPx || {})[setName])) || 64;
   const fx = Math.min(st.gridW - 1.001, Math.max(0, px / g - 0.5));
   const fy = Math.min(st.gridH - 1.001, Math.max(0, py / g - 0.5));
   const x0 = Math.floor(fx), y0 = Math.floor(fy);

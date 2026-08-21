@@ -1,6 +1,6 @@
 {
-  "when": "2026-08-21T16:32:44.662Z",
-  "origin": "http://127.0.0.1:56794",
+  "when": "2026-08-21T18:20:54.771Z",
+  "origin": "http://127.0.0.1:65207",
   "until": null,
   "reached": "end-card",
   "reachedIdx": 80,
@@ -12,7 +12,7 @@
   "meals": 3,
   "boulderK": 0,
   "caveState": "cave-dawn",
-  "audits": 50,
+  "audits": 52,
   "facts": {
     "tipGlow": 1,
     "flareK": 0.974,
@@ -84,8 +84,8 @@
       "held": false,
       "turning": false,
       "at": {
-        "x": 999.6,
-        "y": 359.8
+        "x": 1117.3,
+        "y": 626.1
       }
     },
     "jeer": {
@@ -169,11 +169,11 @@
   "consoleErrors": [],
   "pageErrors": [],
   "consoleWarns": [
-    "[.WebGL-0x1040052e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x13c00575a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
     "THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.",
-    "[.WebGL-0x1040052e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
-    "[.WebGL-0x1040052e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
-    "[.WebGL-0x1040052e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    "[.WebGL-0x13c00575a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x13c00575a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x13c00575a00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
   ],
   "requestsFailed": [],
   "voicePlays": 76,
@@ -577,7 +577,7 @@
       "cap": 3,
       "crew": 1,
       "ulysses": 1,
-      "giant": 1,
+      "giant": 0,
       "rams": 1,
       "sheep": 4,
       "samples": 2
@@ -590,7 +590,7 @@
       "cap": 3,
       "crew": 1,
       "ulysses": 1,
-      "giant": 1,
+      "giant": 0,
       "rams": 1,
       "sheep": 4,
       "samples": 14
@@ -603,7 +603,7 @@
       "cap": 4,
       "crew": 4,
       "ulysses": 1,
-      "giant": 1,
+      "giant": 0,
       "rams": 1,
       "sheep": 4,
       "samples": 2
@@ -653,11 +653,11 @@
       "set": "cave",
       "beat": 3,
       "cap": 3,
-      "crew": 1,
+      "crew": 0,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 10
     },
     {
@@ -666,11 +666,11 @@
       "set": "cave",
       "beat": 3,
       "cap": 3,
-      "crew": 1,
+      "crew": 0,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 8
     },
     {
@@ -679,11 +679,11 @@
       "set": "cave",
       "beat": 3,
       "cap": 3,
-      "crew": 1,
+      "crew": 0,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 2
     },
     {
@@ -692,11 +692,11 @@
       "set": "cave",
       "beat": 3,
       "cap": 3,
-      "crew": 1,
+      "crew": 0,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 2
     },
     {
@@ -705,11 +705,11 @@
       "set": "cave",
       "beat": 3,
       "cap": 3,
-      "crew": 1,
+      "crew": 0,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 14
     },
     {
@@ -718,11 +718,11 @@
       "set": "cave",
       "beat": 4,
       "cap": 3,
-      "crew": 1,
+      "crew": 0,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 2
     },
     {
@@ -734,8 +734,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 4
     },
     {
@@ -747,8 +747,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 6
     },
     {
@@ -760,8 +760,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 4
     },
     {
@@ -773,8 +773,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 6
     },
     {
@@ -786,8 +786,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 5
     },
     {
@@ -799,8 +799,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 3
     },
     {
@@ -812,8 +812,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 2
     },
     {
@@ -825,8 +825,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 2
     },
     {
@@ -838,8 +838,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 2
     },
     {
@@ -851,8 +851,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 2
     },
     {
@@ -864,8 +864,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 2
     },
     {
@@ -877,8 +877,8 @@
       "crew": 3,
       "ulysses": 1,
       "giant": 1,
-      "rams": 1,
-      "sheep": 4,
+      "rams": 0,
+      "sheep": 0,
       "samples": 2
     },
     {
@@ -889,8 +889,8 @@
       "cap": 3,
       "crew": 3,
       "ulysses": 1,
-      "giant": 1,
-      "rams": 1,
+      "giant": 2,
+      "rams": 0,
       "sheep": 4,
       "samples": 4
     },
@@ -902,8 +902,8 @@
       "cap": 3,
       "crew": 3,
       "ulysses": 1,
-      "giant": 1,
-      "rams": 1,
+      "giant": 2,
+      "rams": 0,
       "sheep": 4,
       "samples": 2
     },
@@ -915,8 +915,8 @@
       "cap": 3,
       "crew": 3,
       "ulysses": 1,
-      "giant": 1,
-      "rams": 1,
+      "giant": 2,
+      "rams": 0,
       "sheep": 4,
       "samples": 2
     },
@@ -928,8 +928,8 @@
       "cap": 3,
       "crew": 3,
       "ulysses": 1,
-      "giant": 1,
-      "rams": 1,
+      "giant": 2,
+      "rams": 0,
       "sheep": 4,
       "samples": 2
     },
@@ -941,7 +941,7 @@
       "cap": 3,
       "crew": 3,
       "ulysses": 1,
-      "giant": 1,
+      "giant": 2,
       "rams": 1,
       "sheep": 4,
       "samples": 2
@@ -954,7 +954,7 @@
       "cap": 3,
       "crew": 0,
       "ulysses": 0,
-      "giant": 1,
+      "giant": 2,
       "rams": 4,
       "sheep": 4,
       "samples": 6
@@ -967,7 +967,7 @@
       "cap": 3,
       "crew": 0,
       "ulysses": 0,
-      "giant": 1,
+      "giant": 2,
       "rams": 4,
       "sheep": 4,
       "samples": 2
@@ -980,7 +980,7 @@
       "cap": 3,
       "crew": 0,
       "ulysses": 0,
-      "giant": 1,
+      "giant": 2,
       "rams": 4,
       "sheep": 4,
       "samples": 2
@@ -993,7 +993,7 @@
       "cap": 3,
       "crew": 0,
       "ulysses": 0,
-      "giant": 1,
+      "giant": 2,
       "rams": 4,
       "sheep": 4,
       "samples": 2
@@ -1006,7 +1006,7 @@
       "cap": 3,
       "crew": 0,
       "ulysses": 0,
-      "giant": 1,
+      "giant": 2,
       "rams": 4,
       "sheep": 4,
       "samples": 2
@@ -1019,7 +1019,7 @@
       "cap": 3,
       "crew": 0,
       "ulysses": 0,
-      "giant": 1,
+      "giant": 2,
       "rams": 4,
       "sheep": 4,
       "samples": 2
@@ -1032,7 +1032,7 @@
       "cap": 3,
       "crew": 3,
       "ulysses": 1,
-      "giant": 1,
+      "giant": 2,
       "rams": 4,
       "sheep": 4,
       "samples": 4
@@ -1045,7 +1045,7 @@
       "cap": 3,
       "crew": 3,
       "ulysses": 1,
-      "giant": 1,
+      "giant": 2,
       "rams": 3,
       "sheep": 4,
       "samples": 2
@@ -1254,8 +1254,8 @@
       "ok": true,
       "playing": "troy",
       "before": 1,
-      "during": 0.5017,
-      "after": 0.9779,
+      "during": 0.5016,
+      "after": 0.9777,
       "dB": -5.99
     },
     "duckOk": true,

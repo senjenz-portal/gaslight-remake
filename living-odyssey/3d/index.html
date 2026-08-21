@@ -94,6 +94,23 @@
     border-color:rgba(205,171,99,.66);}
   .harness #chrome{display:none;}
 
+  /* ------------------------------------------------------------------ *
+   * C3 — THE PRODUCTION FRAME CARRIES NO OVERLAY.
+   *
+   * Three things draw OVER the stage rectangle: the leader path from the
+   * margin to a speaker's head, the hold arc, and the target ring. Every one
+   * of them is a path / guide / control drawn on top of the render, and every
+   * one of them landed in the shipped beat frames. They are now DEBUG
+   * affordances: opt in with ?debug=1 and they exist, otherwise they do not
+   * render at all, and the gate proves it by re-shooting each frame with them
+   * force-hidden and asserting the two PNGs are byte-identical.
+   *
+   * Everything else the leaf draws (#margin, #cue, #hint, #prog, #cameo,
+   * #chrome) lives OUTSIDE the stage rectangle and never touches the frame.
+   * ------------------------------------------------------------------ */
+  #leader,#hold,#target{display:none;}
+  html.debug #leader,html.debug #hold,html.debug #target{display:block;}
+
   #hold,#target{position:fixed;left:0;top:0;width:78px;height:78px;margin:-39px 0 0 -39px;
     z-index:6;pointer-events:none;opacity:0;transition:opacity .35s ease;}
   #hold.on,#target.on{opacity:1;}

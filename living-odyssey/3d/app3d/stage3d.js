@@ -32,6 +32,17 @@ import { loadPlateSet, samplePlateLight, makeContactShadow, PLATE_W, PLATE_H }
 const WALK_MPS = 1.1;                 /* cast.json processionSpeedMps */
 const SCURRY_MPS = 1.9;               /* the scatter-to-the-dark pace */
 const GIANT_MPS = 1.6;                /* seven metres of stride */
+/* the seated giant's yaw at the giant-seat mark: knees downstage toward the
+   fire, face turned west-downstage to the huddled strangers */
+const GIANT_SEAT_FACE = 1.05;
+/* the ledger's giant-seat mark (tools/ody/ledger.json cave.marks) */
+const GIANT_SEAT_PX = [760, 452];
+/* Sol #6 — the cast shadow the seated bulk throws across the hero's ground:
+   from the giant-seat mark toward the suppliant/bowl marks, in plate px */
+const GIANT_SEAT_SHADOW_TO = [706, 512];
+/* the seated crown height (metres) — where the leader line lands on his head;
+   measured off the posed rig by tools/ody/_stageprobe.mjs */
+const GIANT_SEAT_CROWN_M = 4.15;
 const EASE_RATE = 3.2;                /* camera pursuit, s^-1 */
 
 /* ---------------------------------------------------------------------- *
@@ -151,6 +162,8 @@ class Walk {
   }
 }
 
+if (typeof window !== 'undefined') window.__THREE = THREE;
+
 export class Stage3D {
   /* THE REGRADE LAW ON 3D LIGHTING, in two halves.
      (1) the RIG is fixed and white — one key, one hemisphere fill, one rim, the
@@ -161,11 +174,50 @@ export class Stage3D {
      so the per-actor grade is target/ref in LINEAR — exactly regrade.py's
      "grade the cut to the plate ring at its mark", applied to an albedo
      instead of to a painted cut. Re-measure with --calibrate. */
-  static PLATE_RIG = { key: 1.35, fill: 0.62, rim: 0.30 };
+  /* SOL#3's triad. The total irradiance is held at the old rig's (key+fill+rim
+     = 2.27) so BODY_REF stays the constant it was measured as; what changed is
+     WHERE the light comes from and WHAT COLOUR it is. */
+  static PLATE_RIG = { key: 1.05, fill: 0.52, rim: 0.34, cool: 0.36 };
+  static FIRE_KEY = '#ffd2a3';        /* the hearth's own warm */
+  static FIRE_RIM = '#ff8a3c';        /* the rake off the ember side */
+  static COOL_KEY = '#8fa4d6';        /* the counter, opposite the fire */
+  static COOL_SKY = '#9fb0d4';
+  static COOL_GROUND = '#4a4640';
+  /* how far the plate-sampled fire signal may push the key/cool balance */
+  static FIRE_SPLIT = [0.35, 1.85];
+  /* the reference rig's rendered mean under THIS rig, grade bypassed, contact
+     decal hidden, and the REGISTER BYPASSED — the grade now aims at the value
+     the register will carry onto the plate (see _gradeActor), so its reference
+     has to live upstream of the register too, or the loop does not close.
+     (tools/sam2path_smoke.mjs --calibrate, shots/sam2path-cal)
+     The single-point read is then CENTRED on the whole mark set: the smoke's
+     --calibrate reports the geometric mean of Y(body)/Y(ring) over every mark
+     of a set, and BODY_REF is scaled by that ratio in linear (cave came back
+     1.005 and was left alone; shore 0.918 and sea 0.781 were centred). One
+     mark cannot speak for a set whose targets span 2.3 stops. */
   static BODY_REF = {
-    cave: [77, 34, 33], shore: [64, 28, 30], sea: [73, 40, 46],
+    cave: [36, 18, 17], shore: [42, 19, 17], sea: [47, 23, 21],
   };
-  static GRADE_CLAMP = [0.06, 14.0];   /* the fire-lit marks need 9x green */
+  /* the plate rig is deliberately weak (BODY_REF is L* ~13) and the grade does
+     the lifting, so the bright cheese-rack marks legitimately want ~15x. The
+     old ceiling of 14 was BINDING there — the grade saturated and the body
+     rendered short of its ring no matter what else was fixed. */
+  static GRADE_CLAMP = [0.06, 40.0];
+  /* THE IDENTITY LAW ON THE LIVE RENDER.
+     The regrade law was written for PAINTED CUTS — two pieces of one painting,
+     where matching chroma outright is right. A CHARACTER is not a cut: his
+     skin and his cloth ARE his identity, and a per-channel gain that forces
+     his mean colour onto the plate ring's chromaticity destroys it. Measured,
+     round 3: at cave/huddle-far the gain came out [0.287, 0.915, 1.819] — 6.3x
+     more blue than red — and bronze skin whose atlas hue is 19 deg rendered at
+     298 deg, violet; at the fire-lit cheese rack the gain was [5.41, 9.46,
+     3.36] and the same skin rendered at 45 deg, yellow-green. The giant went
+     the same way, 33 deg -> 271 deg, which is the "flat pink" the owner saw.
+     So the grade is SPLIT. Luminance is matched exactly — that is the whole of
+     what seats a body in the plate's light. Chroma is only NUDGED, by at most
+     CHROMA_W either side of the luminance gain: a white-balance breath worth a
+     couple of degrees of hue, never a transplant. */
+  static CHROMA_W = 0.20;
 
   /** sea lenses anchored to the hull, not the mooring (Beat VI's travel) */
   static SHIP_LENSES = new Set(['stern', 'ship-deck', 'menbeg-close',
@@ -208,6 +260,18 @@ export class Stage3D {
     this.driveSpin = null;            /* { t0 } — the auger's own rotation */
     this.seaHits = [];                /* rock-impact times -> hull pitch impulses */
     this.audits = 0;                  /* obstacle-law route audits performed */
+
+    /* SOL#5's shared register uniforms — ONE object graph, referenced by every
+       actor material's compiled shader, so the whole character layer moves
+       together and a set change is four assignments, not a recompile. */
+    this.reg = {
+      grain: { value: 0 }, contrast: { value: 1 }, mid: { value: 0.5 },
+      black: { value: new THREE.Color(0, 0, 0) },
+      white: { value: new THREE.Color(1, 1, 1) },
+      seed: { value: new THREE.Vector2(17.31, 5.77) },   /* fixed = deterministic */
+    };
+    this.registerBypass = false;
+    this.grainBypass = false;         /* the [register] gate's grain-only switch */
 
     this.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1200);
     this.camState = null;             /* {x,y,z,k} eased */
@@ -256,7 +320,8 @@ export class Stage3D {
           rec.api.parts['fire-pit'].traverse((o) => { if (o.isPoints) pts.push(o); });
           rec.flames = pts[0] || null;
         }
-        await this._ensureActors(['ulysses', 'crew', 'polyphemus', 'polyphemus-idle', 'ram', 'ewe', 'flock']);
+        await this._ensureActors(['ulysses', 'crew', 'polyphemus', 'polyphemus-idle',
+                                  'polyphemus-seat', 'ram', 'ewe', 'flock']);
       } else if (name === 'sea') {
         rec.api = createSeaScene();
         rec.world = SEA_WORLD;
@@ -307,6 +372,7 @@ export class Stage3D {
       crew: Array.from({ length: CREW_POOL }, (_, i) => 'crew-' + i),
       polyphemus: ['poly-walk'],
       'polyphemus-idle': ['poly-idle'],
+      'polyphemus-seat': ['poly-seat'],
       ram: ['ram-great'],
       ewe: Array.from({ length: 4 }, (_, i) => 'ewe-' + i),
       flock: Array.from({ length: FLOCK_CAP }, (_, i) => 'flock-' + i),
@@ -330,11 +396,19 @@ export class Stage3D {
            times the mean of its map — and normalise the grade by the ratio. */
         a.albedo = this._rigAlbedo(a);
         this.actors[id] = a;
-        /* THE CONTACT SHADOW: the plate is a painted render with its own
-           shadows — ours only has to seat the body on the floor, so it is a
-           soft blob decal scaled off the rig's own stature, never a map. */
-        const stature = a.heightM || a.lengthM || 1.7;
-        a.shadow = makeContactShadow(Math.max(0.22, 0.30 * stature));
+        /* SOL#5 — the register post-pass rides on the actor's OWN materials,
+           so the plate's grain and the plate's levels reach the character
+           layer and nothing else. Installed once, per material. */
+        for (const m of a.mats) this._installRegister(m);
+        /* SOL#4 — THE CONTACT SHADOW, sized to this body's own footprint.
+           A blob scaled off stature alone gives a 2.1 m disc to a 7 m giant
+           who is LYING DOWN across the hearth; the posed bounding box is the
+           honest footprint, and the stage tints and fades it per frame. */
+        const bb = new THREE.Box3().setFromObject(a.model);
+        const fx = Math.max(0.16, (bb.max.x - bb.min.x) * 0.56);
+        const fz = Math.max(0.12, (bb.max.z - bb.min.z) * 0.62);
+        a.footprint = [+fx.toFixed(3), +fz.toFixed(3)];
+        a.shadow = makeContactShadow(fx, fz);
         a.group.add(a.shadow);
         this.actorLayer.add(a.group);
       }
@@ -484,15 +558,32 @@ export class Stage3D {
    */
   _plateRig(rec) {
     const R = Stage3D.PLATE_RIG;
-    const key = new THREE.DirectionalLight('#ffffff', R.key);
-    key.position.set(-6, 9, 7);            /* the painter's own up-left-front */
+    /* SOL#3 — THE FIRE LIGHTS THE CAST. Every plate on this book has one
+       dominant practical: the hearth (cave), the blaze (shore), the cave-glow
+       across the water (sea). A white key from a fixed up-left-front made the
+       cast read as a separate render dropped on the painting. So the key now
+       stands AT THE FIRE ANCHOR and is warm, an orange rim rakes the same
+       side, and the fill is cool and comes from opposite — the classic
+       firelight triad, aimed by the set's own anchor rather than by taste.
+       The intensities are PLATE-SAMPLED each frame (_plateLightStep): the
+       fire's ring colour against the body's ring colour is what says how much
+       of this body's light is fire and how much is ambient. */
+    const key = new THREE.DirectionalLight(Stage3D.FIRE_KEY, R.key);
+    key.position.copy(rec.fireAnchor).add(new THREE.Vector3(0, 6, 0));
     key.target.position.set(0, 0, 0);
-    const fill = new THREE.HemisphereLight('#ffffff', '#5a5a66', R.fill);
-    const rim = new THREE.DirectionalLight('#ffffff', R.rim);
-    rim.position.set(7, 5, -6);
-    key.name = 'plate-key'; fill.name = 'plate-fill'; rim.name = 'plate-rim';
-    rec.scene.add(key, key.target, fill, rim);
-    rec.rig = { key, fill, rim };
+    const fill = new THREE.HemisphereLight(Stage3D.COOL_SKY, Stage3D.COOL_GROUND, R.fill);
+    const rim = new THREE.DirectionalLight(Stage3D.FIRE_RIM, R.rim);
+    rim.position.copy(rec.fireAnchor).add(new THREE.Vector3(0, 3, -4));
+    rim.target.position.set(0, 0, 0);
+    /* the cool counter-key, opposite the fire: it is what keeps a body from
+       going monochrome orange, and it is the plate's own shadow colour */
+    const cool = new THREE.DirectionalLight(Stage3D.COOL_KEY, R.cool);
+    cool.position.set(0, 7, 0);
+    cool.target.position.set(0, 0, 0);
+    key.name = 'plate-key'; fill.name = 'plate-fill';
+    rim.name = 'plate-rim'; cool.name = 'plate-cool';
+    rec.scene.add(key, key.target, fill, rim, rim.target, cool, cool.target);
+    rec.rig = { key, fill, rim, cool };
     /* THE PAINTED LIGHT IS ALREADY IN THE PLATE. Every diorama lamp, blaze and
        moon is paint now, so its three.js twin must stop shining or it lights
        the cast twice. The rigs stay (the acts drive them, and the fire's
@@ -505,14 +596,18 @@ export class Stage3D {
   }
 
   /** the actor grade: the plate ring where a body stands, over its measured ref */
-  _gradeActor(rec, a) {
+  _gradeActor(rec, a, apply = true) {
     if (!a.group.visible || a.mode === 'off') return;
     const w = rec.world;
     const p = a.group.getWorldPosition(this.__gv || (this.__gv = new THREE.Vector3()));
     const px = p.x * w.S + PLATE_W / 2 - w.X(PLATE_W / 2) * w.S;
     const py = p.z * w.S * w.SIN_E + PLATE_H / 2 - w.Z(PLATE_H / 2) * w.S * w.SIN_E;
     const s = samplePlateLight(this.lightTable, rec.name, this.plateState(rec), px, py);
-    const ref = Stage3D.BODY_REF[rec.name] || Stage3D.BODY_REF.cave;
+    /* the contact decal is seated from the SAME sample whether or not the
+       grade runs — it is a shadow, not a grade (the calibration render needs
+       it too, or BODY_REF is measured with a black hole in the body's feet) */
+    if (!apply) return s;
+    const ref0 = Stage3D.BODY_REF[rec.name] || Stage3D.BODY_REF.cave;
     const lin = (v) => { const c = v / 255; return c <= 0.04045 ? c / 12.92
       : Math.pow((c + 0.055) / 1.055, 2.4); };
     const [lo, hi] = Stage3D.GRADE_CLAMP;
@@ -522,8 +617,53 @@ export class Stage3D {
     const refA = this.__refAlbedo || (this.__refAlbedo =
       (this.actors.ulysses && this.actors.ulysses.albedo) || [1, 1, 1]);
     const own = a.albedo || refA;
-    const g = [0, 1, 2].map((i) => Math.min(hi, Math.max(lo,
-      lin(Math.max(2, s.rgb[i])) / Math.max(1e-4, lin(ref[i])) * (refA[i] / own[i]))));
+    /* this rig's own rendered reference, in linear */
+    const ref = [0, 1, 2].map((i) =>
+      Math.max(1e-6, lin(Math.max(2, ref0[i])) * (own[i] / Math.max(1e-6, refA[i]))));
+    /* ---- THE REGISTER IS DOWNSTREAM OF THE GRADE (round 4 root cause) ----
+       SOL#5's post-pass squeezes the character layer into the plate's own
+       black/white band AFTER this grade has run, so a body graded to hit the
+       plate's sampled colour lands compressed instead: out = black + (white -
+       black) * contrast(x). The error is zero at the plate's black point and
+       grows with level — measured over 29 marks in shots/sam2path-r2, EVERY
+       body rendered darker than its ring, by -2.8 L* where the ring was L 14
+       and -18.2 L* where the ring was L 54.
+       So the grade aims at the PRE-REGISTER value that the register will then
+       carry onto the plate's sample. BODY_REF is measured with the register
+       bypassed (tools/sam2path_smoke.mjs --calibrate), so both sides of the
+       ratio live in the same space and the loop closes at every level. */
+    const fin = this.registerBypass ? null : this._plateFinish(rec, this.plateState(rec));
+    const preReg = (v255) => {
+      let x = Math.max(2, v255) / 255;
+      if (fin) {
+        const mid = fin.mid === undefined ? 0.5 : fin.mid;
+        x = (x - fin.black) / Math.max(1e-4, 1 - fin.black);   /* undo the toe */
+        x = (x - mid) / Math.max(1e-4, fin.contrast) + mid;    /* undo the compression */
+      }
+      return Math.min(1, Math.max(0.008, x)) * 255;
+    };
+    const tgt = [0, 1, 2].map((i) => lin(preReg(s.rgb[i])));
+    const LUM = (v) => 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+    /* (1) LUMINANCE — matched exactly. This is what seats a body in the light
+           the painter put where he stands. */
+    const gLum = Math.min(hi, Math.max(lo, LUM(tgt) / Math.max(1e-6, LUM(ref))));
+    /* (2) CHROMA — a bounded white-balance breath about that gain, never a
+           transplant. +-CHROMA_W moves bronze skin about two degrees of hue. */
+    const W = Stage3D.CHROMA_W;
+    const shape = [0, 1, 2].map((i) => {
+      const c = (tgt[i] / ref[i]) / Math.max(1e-6, gLum);
+      return Math.min(1 + W, Math.max(1 - W, c));
+    });
+    /* (3) RE-NORMALISE. Clamping the chroma per channel silently un-does (1):
+           luminance is 71.5% GREEN, and a bronze rig whose green gain has just
+           been held down to 1.2 x gLum lands well under the target it was
+           supposed to match exactly. Measured: -8.3 L* mean over 29 marks.
+           Rescale the clamped shape so LUM(ref .* g) == LUM(tgt) again — the
+           chroma stays inside its budget, the luminance is exact. */
+    const kNorm = LUM(ref) / Math.max(1e-9,
+      LUM([ref[0] * shape[0], ref[1] * shape[1], ref[2] * shape[2]]));
+    const g = [0, 1, 2].map((i) =>
+      Math.min(hi, Math.max(lo, gLum * shape[i] * kNorm)));
     /* the fire's own flicker survives as a warm breath on the key side */
     const fk = 1 + 0.10 * (this.__fireK || 0) + 0.55 * this.flareK;
     if (!a.mats) return;
@@ -534,6 +674,239 @@ export class Stage3D {
       m.color.setRGB(b.r * g[0] * fk, b.g * g[1] * fk, b.b * g[2] * fk);
     }
     a.grade = g.map((v) => +v.toFixed(3));
+    a.gradeLum = +gLum.toFixed(3);
+    return s;
+  }
+
+  /**
+   * SOL#4 — seat one body's contact decal in the plate's own shadow.
+   * Colour: the ring the body stands in, darkened — the painting's shadow
+   * colour, never black. Opacity: the light that is actually there, so a body
+   * in the hearth's pool casts and a body in the far dark barely does. Offset:
+   * a fraction of the footprint AWAY from the fire, which is where a real
+   * contact shadow falls, rotated into the actor's own frame.
+   */
+  _seatShadow(a, s) {
+    const sh = a.shadow;
+    if (!sh || !sh.material) return;
+    const m = sh.material;
+    const k = Math.min(1, Math.max(0, s.lum / 150));
+    m.color.setRGB(s.rgb[0] / 255 * 0.26, s.rgb[1] / 255 * 0.24, s.rgb[2] / 255 * 0.24);
+    m.opacity = (0.17 + 0.40 * k) * (a.opacity === undefined ? 1 : a.opacity);
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.fireAnchor) return;
+    const p = a.group.position, fa = rec.fireAnchor;
+    let wx = p.x - fa.x, wz = p.z - fa.z;
+    const L = Math.hypot(wx, wz);
+    if (L < 1e-3) { sh.position.x = 0; sh.position.z = 0; return; }
+    wx /= L; wz /= L;
+    const th = a.group.rotation.y, cs = Math.cos(th), sn = Math.sin(th);
+    const half = sh.userData.half || [0.3, 0.2];
+    const d = 0.26 * Math.min(half[0], half[1]);
+    sh.position.x = (wx * cs - wz * sn) * d;
+    sh.position.z = (wx * sn + wz * cs) * d;
+  }
+
+  /* ---------------- SOL#5: THE REGISTER POST-PASS ---------------- *
+   * A clean three.js render composited onto a painted plate is legible as
+   * SEPARATE for two reasons that have nothing to do with lighting: the plate
+   * carries film grain and the character layer carries none, and the plate
+   * lives inside its own black/white levels while the character layer runs the
+   * full 0..1 range. So after compositing, the CHARACTER LAYER ONLY — the pass
+   * rides on the actor materials' own fragment shaders, so it can touch
+   * nothing else — is compressed into the plate's measured levels and given
+   * the plate's measured grain.
+   *
+   * The grain is a pure function of gl_FragCoord, so it is deterministic: the
+   * same frame renders the same bytes, which is what the harness requires.  */
+  _installRegister(m) {
+    if (!m || m.userData.__register) return;
+    m.userData.__register = true;
+    const R = this.reg;
+    const prev = m.onBeforeCompile;
+    m.onBeforeCompile = (shader, renderer) => {
+      if (prev) prev(shader, renderer);
+      shader.uniforms.uRegGrain = R.grain;
+      shader.uniforms.uRegBlack = R.black;
+      shader.uniforms.uRegWhite = R.white;
+      shader.uniforms.uRegContrast = R.contrast;
+      shader.uniforms.uRegMid = R.mid;
+      shader.uniforms.uRegSeed = R.seed;
+      /* THE LEVELS ARE A FINISH, NOT A REMAP (round 4).
+         Round 3 mapped the character layer's whole 0..1 range into the plate's
+         [black, white] band — for the cave a x0.659 squeeze. That is not a
+         finish, it is an exposure change, and it collided head-on with the
+         regrade law: the grade would raise a body to the plate's sampled
+         colour and the register would then squash it back, so the grade had to
+         aim ~2x higher, ran into GRADE_CLAMP, and clipped the body's lit side
+         against 1.0 before its MEAN ever reached the target. Measured: all 29
+         marks rendered dark, worst -18.2 L*.
+         The level is the GRADE's job. This pass owns only the finish:
+           - contrast compressed about the PLATE's own mid-tone (mean-preserving
+             at that mid, so it does not move the body's exposure),
+           - the plate's black as a TOE, so the character has no blacker black
+             than the painting does,
+           - the plate's white as a soft CEILING knee, so the character is never
+             the brightest thing in a frame the painter did not blow out,
+           - the plate's grain. */
+      shader.fragmentShader = 'uniform float uRegGrain;\nuniform vec3 uRegBlack;\n'
+        + 'uniform vec3 uRegWhite;\nuniform float uRegContrast;\nuniform float uRegMid;\n'
+        + 'uniform vec2 uRegSeed;\n'
+        + shader.fragmentShader.replace('#include <dithering_fragment>',
+          `#include <dithering_fragment>
+  {
+    vec3 rc = gl_FragColor.rgb;
+    rc = clamp(uRegMid + (rc - uRegMid) * uRegContrast, 0.0, 1.0);
+    rc = uRegBlack + rc * (1.0 - uRegBlack);
+    rc -= max(rc - uRegWhite, vec3(0.0)) * 0.70;
+    float rn = fract(sin(dot(gl_FragCoord.xy + uRegSeed,
+                             vec2(12.9898, 78.233))) * 43758.5453);
+    rc += (rn - 0.5) * uRegGrain;
+    gl_FragColor.rgb = clamp(rc, 0.0, 1.0);
+  }`);
+    };
+    m.needsUpdate = true;
+  }
+
+  /**
+   * The plate's own finish, measured off the painting FILE at native
+   * resolution and cached per (set, state):
+   *   grain    — the sigma of the plate's high-frequency residual, converted
+   *              to the shader's uniform-noise amplitude (sigma * sqrt(12))
+   *   black /  — the plate's own 2nd / 98th luminance percentiles per channel,
+   *   white      i.e. the range the painting actually occupies
+   *   contrast — bounded by the range the plate has: a flat, hazy painting
+   *              compresses the character layer, a full-range one leaves it
+   */
+  _plateFinish(rec, state) {
+    rec.finishBy = rec.finishBy || {};
+    if (rec.finishBy[state]) return rec.finishBy[state];
+    const t = rec.plate && rec.plate.tex.plate[state];
+    const img = t && t.image;
+    if (!img || !img.width) return null;
+    const W = img.width, H = img.height;
+    const c = document.createElement('canvas');
+    const TS = 192, TILES = [[0.18, 0.22], [0.52, 0.34], [0.78, 0.66], [0.34, 0.74]];
+    c.width = c.height = TS;
+    const g = c.getContext('2d', { willReadFrequently: true });
+    const res = [], lum = [];
+    for (const [fx, fy] of TILES) {
+      const sx = Math.min(W - TS, Math.max(0, Math.round(fx * W - TS / 2)));
+      const sy = Math.min(H - TS, Math.max(0, Math.round(fy * H - TS / 2)));
+      g.clearRect(0, 0, TS, TS);
+      g.drawImage(img, sx, sy, TS, TS, 0, 0, TS, TS);   /* NATIVE scale: grain survives */
+      const d = g.getImageData(0, 0, TS, TS).data;
+      for (let y = 0; y < TS; y++) {
+        for (let x = 1; x < TS - 1; x++) {
+          const i = (y * TS + x) << 2;
+          lum.push((0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) / 255);
+          /* the horizontal Laplacian residual of white noise has variance
+             1.5 sigma^2 — divide it back out */
+          res.push(Math.abs(d[i + 1] - (d[i - 3] + d[i + 5]) / 2));
+        }
+      }
+    }
+    if (!res.length) return null;
+    /* THE GRAIN FLOOR. A median-absolute-deviation of an 8-bit residual is
+       quantised to whole codes, and the sea plate's grain is under one — the
+       statistic reported 0.5 codes for two very different paintings. So the
+       floor is the RMS of the residuals that are SMALL (<= 4 codes): a
+       painting's brush edges are excluded by the cut, the grain is not, and
+       the result is continuous instead of a staircase. */
+    let ss = 0, n = 0;
+    for (const v of res) { if (v <= 4) { ss += v * v; n++; } }
+    const sigma = n >= 64 ? Math.sqrt(ss / n) / Math.sqrt(1.5) / 255 : 0;
+    lum.sort((a, b) => a - b);
+    const p = (q) => lum[Math.min(lum.length - 1, Math.floor(lum.length * q))];
+    const blk = Math.min(0.14, Math.max(0, p(0.02)));
+    const wht = Math.min(1, Math.max(0.55, p(0.98)));
+    const fin = {
+      grain: +Math.min(0.10, sigma * Math.sqrt(12)).toFixed(5),
+      sigma: +sigma.toFixed(6),
+      black: +blk.toFixed(4), white: +wht.toFixed(4),
+      /* the plate's own mid-tone — the pivot the contrast compresses about, so
+         the finish cannot move the character layer's exposure */
+      mid: +p(0.5).toFixed(4),
+      contrast: +Math.min(1, Math.max(0.86, 0.86 + 0.14 * (wht - blk))).toFixed(4),
+    };
+    rec.finishBy[state] = fin;
+    return fin;
+  }
+
+  /** push the mounted set's measured finish into the shared register uniforms */
+  _registerPass(rec, s) {
+    if (this.registerBypass) {
+      this.reg.grain.value = 0;
+      this.reg.contrast.value = 1;
+      this.reg.mid.value = 0.5;
+      this.reg.black.value.setRGB(0, 0, 0);
+      this.reg.white.value.setRGB(1, 1, 1);
+      rec.finish = null;
+      return null;
+    }
+    const fin = this._plateFinish(rec, this.plateState(rec));
+    if (!fin) return null;
+    rec.finish = fin;
+    /* THE GRAIN IS ITS OWN SWITCH. The [register] gate has to measure what the
+       grain adds, and the levels half of this pass SHRINKS the body's own
+       detail residual (x (white-black) x contrast ~ 0.66) — far more than the
+       grain adds back. Toggling the whole pass therefore measured sigma_on <
+       sigma_off and reported "added 0.00000" on all three sets, a gate that
+       could only ever fail. Toggling the grain ALONE leaves the levels live on
+       both renders, so the body's own detail cancels in the quadrature
+       subtraction and what is left is the grain, exactly. */
+    this.reg.grain.value = this.grainBypass ? 0 : fin.grain;
+    this.reg.contrast.value = fin.contrast;
+    this.reg.mid.value = fin.mid === undefined ? 0.5 : fin.mid;
+    this.reg.black.value.setRGB(fin.black, fin.black, fin.black);
+    this.reg.white.value.setRGB(fin.white, fin.white, fin.white);
+    return fin;
+  }
+
+  /**
+   * THE MATERIALS GATE's boot evidence: for every rig on the stage, the
+   * DECODED dimensions of its base-colour texture and the canonical hues that
+   * texture carries. cast3d already throws if a texture did not decode, so a
+   * stage that mounts at all has passed the hard half; this is what the smoke
+   * measures the LIVE RENDER against.
+   */
+  castIdentity() {
+    const out = {};
+    for (const [id, a] of Object.entries(this.actors)) {
+      if (!a.identity) continue;
+      out[id] = { rig: a.rig, tex: a.identity.tex, satPx: a.identity.satPx,
+                  canon: a.identity.canon,
+                  albedo: (a.albedo || []).map((v) => +v.toFixed(4)),
+                  footprint: a.footprint || null };
+    }
+    return out;
+  }
+
+  /** the gate hides the contact decals — BODY_REF is the RIG's own mean, and
+      a shadow under its feet is not part of the rig */
+  setShadows(on) {
+    let n = 0;
+    for (const a of Object.values(this.actors)) {
+      if (!a.shadow) continue;
+      a.shadow.visible = on !== false; n++;
+    }
+    return n;
+  }
+
+  /** the gate turns the register pass off, to measure what it added */
+  setRegisterBypass(on) {
+    this.registerBypass = !!on;
+    const rec = this.sets[this.activeName];
+    if (rec && rec.built) this._registerPass(rec, null);
+    return this.registerBypass;
+  }
+
+  /** the gate turns the GRAIN off with the levels still live (see _registerPass) */
+  setGrainBypass(on) {
+    this.grainBypass = !!on;
+    const rec = this.sets[this.activeName];
+    if (rec && rec.built) this._registerPass(rec, null);
+    return this.grainBypass;
   }
 
   /** the plate state a set is currently painted in */
@@ -555,24 +928,77 @@ export class Stage3D {
       this.__fireK = fl && rec.fireBase ? fl.intensity / rec.fireBase : 0;
       for (const L of rec.dioramaLights) L.intensity = 0;
     }
-    const R = Stage3D.PLATE_RIG;
-    rec.rig.key.intensity = R.key;
-    rec.rig.fill.intensity = R.fill;
-    rec.rig.rim.intensity = R.rim;
-    /* (2) grade each body to the ring it stands in */
-    if (!this.gradeBypass) {
-      for (const a of Object.values(this.actors)) this._gradeActor(rec, a);
-    }
     const w = rec.world;
     const c = this.camState || rec.camBase.target;
     const px = c.x * w.S + PLATE_W / 2 - w.X(PLATE_W / 2) * w.S;
     const py = c.z * w.S * w.SIN_E + PLATE_H / 2 - w.Z(PLATE_H / 2) * w.S * w.SIN_E;
     const s = samplePlateLight(this.lightTable, rec.name, this.plateState(rec), px, py);
+
+    /* (2) SOL#3 — THE FIRE SPLIT, plate-sampled. How much of the light at this
+       lens is the fire's is not a taste knob: it is the ratio of the plate's
+       own ring luminance AT THE FIRE ANCHOR to the ring luminance where the
+       lens is looking. A body standing in the hearth's pool gets a hot key and
+       a hard orange rake; a body out at the pen gets the cool counter and very
+       little fire. The hearth's live flicker rides on top of it. */
+    const fa = rec.fireAnchor;
+    const fpx = fa.x * w.S + PLATE_W / 2 - w.X(PLATE_W / 2) * w.S;
+    const fpy = fa.z * w.S * w.SIN_E + PLATE_H / 2 - w.Z(PLATE_H / 2) * w.S * w.SIN_E;
+    const fs = samplePlateLight(this.lightTable, rec.name, this.plateState(rec), fpx, fpy);
+    const [sLo, sHi] = Stage3D.FIRE_SPLIT;
+    const split = Math.min(sHi, Math.max(sLo, fs.lum / Math.max(6, s.lum)));
+    const flick = 1 + 0.16 * (this.__fireK || 0) + 0.9 * this.flareK;
+    const R = Stage3D.PLATE_RIG;
+    rec.rig.key.intensity = R.key * split * flick;
+    rec.rig.rim.intensity = R.rim * split * flick;
+    rec.rig.cool.intensity = R.cool * (2.2 - split);
+    rec.rig.fill.intensity = R.fill;
+    /* TRIED AND REJECTED (round 4): plate-sampling the triad's COLOUR as well
+       as its intensity. It is the obvious next step from SOL#3 and it is
+       wrong here, because the plate's colour is ALREADY applied per actor by
+       the regrade — tinting the light too applies it twice. Measured: the
+       cave's fire sample is warm enough that the giant's olive tunic fell from
+       43.7 deg to 23.6 and the great ram's fleece from 45.3 to 23.5, both past
+       the identity law's 20 deg (shots/sam2path-cal, /tmp cal2). The authored
+       constants stay; the per-actor grade owns the plate's colour. */
+    /* the triad AIMS at where the lens is looking, from the fire's own side */
+    const look = this.__lookAt || (this.__lookAt = new THREE.Vector3());
+    look.set(c.x, 0.9, c.z);
+    rec.rig.key.target.position.copy(look);
+    rec.rig.key.position.set(fa.x, fa.y + 5.5, fa.z);
+    rec.rig.rim.target.position.copy(look);
+    /* the rake sits on the fire side but UPSTAGE of the body, so its light
+       skims the silhouette edge the fire is on */
+    const dx = look.x - fa.x, dz = look.z - fa.z;
+    const dl = Math.hypot(dx, dz) || 1;
+    rec.rig.rim.position.set(fa.x - dz / dl * 3.2, fa.y + 3.4, fa.z + dx / dl * 3.2 - 3.0);
+    rec.rig.cool.target.position.copy(look);
+    rec.rig.cool.position.set(look.x + (look.x - fa.x) * 0.9 + 2.0,
+                              look.y + 6.5, look.z + (look.z - fa.z) * 0.9 + 4.0);
+    rec.rig.key.target.updateMatrixWorld();
+    rec.rig.rim.target.updateMatrixWorld();
+    rec.rig.cool.target.updateMatrixWorld();
+
+    /* (3) grade each body to the ring it stands in, and seat its contact
+           shadow in the plate's own shadow colour (SOL#4) */
+    for (const a of Object.values(this.actors)) {
+      const at = this._gradeActor(rec, a, !this.gradeBypass);
+      if (at) this._seatShadow(a, at);
+    }
+    /* (4) SOL#5 — the register post-pass follows the plate's own finish */
+    this._registerPass(rec, s);
+
     const u = this.actors.ulysses;
     this.lightSample = { px: Math.round(px), py: Math.round(py),
                          rgb: s.rgb.map((v) => Math.round(v)), lum: +s.lum.toFixed(1),
                          fireK: +(this.__fireK || 0).toFixed(3),
-                         grade: u && u.grade ? u.grade : null };
+                         fireAt: [Math.round(fpx), Math.round(fpy)],
+                         fireLum: +fs.lum.toFixed(1), split: +split.toFixed(3),
+                         key: +rec.rig.key.intensity.toFixed(3),
+                         rim: +rec.rig.rim.intensity.toFixed(3),
+                         cool: +rec.rig.cool.intensity.toFixed(3),
+                         register: rec.finish || null,
+                         grade: u && u.grade ? u.grade : null,
+                         gradeLum: u && u.gradeLum !== undefined ? u.gradeLum : null };
   }
 
   mount(name) {
@@ -725,9 +1151,46 @@ export class Stage3D {
   }
 
   /* ================= actors: placement + walks ================= */
+
+  /**
+   * SOL #6 — SCALE EVIDENCE. A blob under the feet seats a man; it does not
+   * say how big he is. The seated giant gets a SECOND, long soft shadow that
+   * leaves his own footprint and falls DOWNSTAGE-WEST across the floor the
+   * small hero stands on, so the two bodies share one lit ground plane and the
+   * size reads spatially. It is the same painted-blob decal, stretched along
+   * the giant-seat -> bowl-offer axis and laid flat on the plate's floor.
+   */
+  _scaleShadow(a, on) {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.built) return null;
+    if (!on) { if (a.scaleShadow) a.scaleShadow.visible = false; return null; }
+    if (!a.scaleShadow) {
+      /* world-space, NOT a child of the actor: the actor's group carries his
+         yaw, and a cast shadow does not turn when the body turns */
+      a.scaleShadow = makeContactShadow(1, 0.62);
+      a.scaleShadow.name = 'scale-shadow';
+      a.scaleShadow.material.opacity = 0.26;
+      a.scaleShadow.rotation.order = 'YXZ';
+      this.actorLayer.add(a.scaleShadow);
+    }
+    const from = rec.toWorld(...GIANT_SEAT_PX);
+    const to = rec.toWorld(...GIANT_SEAT_SHADOW_TO);
+    const dx = to.x - from.x, dz = to.z - from.z;
+    const len = Math.max(1e-3, Math.hypot(dx, dz));
+    const sh = a.scaleShadow;
+    sh.visible = true;
+    sh.position.set(from.x + dx * 0.46, 0.015, from.z + dz * 0.46);
+    /* the blob is a plane in XZ, its long axis local +X: aim it down the axis
+       (YXZ order, so the yaw applies after the lay-flat tilt) */
+    sh.rotation.set(-Math.PI / 2, Math.atan2(-dz, dx), 0);
+    sh.scale.set(2.15 * len, 1.35 * len, 1);
+    return sh;
+  }
+
   _off(a) {
     a.mode = 'off'; a.group.visible = false; a.walk = null; a.fade = null;
     a.opacity = 1; a.poseEuler = null;
+    if (a.scaleShadow) a.scaleShadow.visible = false;
     /* deck actors ride the ship's sway group — restore the stage layer */
     if (a.group.parent && a.group.parent !== this.actorLayer) this.actorLayer.add(a.group);
   }
@@ -832,7 +1295,8 @@ export class Stage3D {
     }
     const ulysses = on(this.actors.ulysses) ? 1 : 0;
     const giant = (on(this.actors['poly-idle']) ? 1 : 0) +
-                  (on(this.actors['poly-walk']) ? 1 : 0);
+                  (on(this.actors['poly-walk']) ? 1 : 0) +
+                  (on(this.actors['poly-seat']) ? 1 : 0);
     return { crew, ulysses, giant, rams, sheep, humanoids: crew + ulysses + giant };
   }
 
@@ -877,7 +1341,7 @@ export class Stage3D {
     };
     const caveMarks = {
       entry: [360, 450], cheeseRack: [640, 405], huddle: [933, 541],
-      suppliant: [690, 512], giantSeat: [760, 452], sword: [680, 554],
+      suppliant: [690, 512], giantSeat: GIANT_SEAT_PX, sword: [680, 554],
       scheme: [800, 530], lots: [713, 527], stakeHide: [782, 496],
       bowlOffer: [700, 514], sprawlHead: [664, 546], ramStand: [838, 430],
       ramAtMouth: [395, 438], doorwaySeat: [345, 470], mouth: [355, 438],
@@ -886,11 +1350,42 @@ export class Stage3D {
     const mainlandEntry = new THREE.Vector3(50.0, 1.35, -30.6);
     const MAINLAND_LOCAL = SHORE_WORLD.MAINLAND_S / SHORE_WORLD.S; /* the dual-scale ruling */
 
-    const giant = (mode) => {                    /* 'walk' | 'idle' */
-      const w = S.actors['poly-walk'], i = S.actors['poly-idle'];
-      if (!w || !i) return null;
-      if (mode === 'walk') { S._off(i); return w; }
-      S._off(w); return i;
+    /* THE GIANT IS THREE RIGS OF ONE BODY: the walk (he comes and goes), the
+     * idle (he stands, he sprawls) and the SEAT (the ledger's ~165 px seated
+     * silhouette). Only one is ever on the leaf, and the swap between them is
+     * a 180 ms crossfade at a shared mark — the TELEPORT LAW's no-bare-swap
+     * clause, applied to a rig change instead of a position change. */
+    const GIANT_RIGS = { walk: 'poly-walk', idle: 'poly-idle', seat: 'poly-seat' };
+    const giant = (mode) => {                    /* 'walk' | 'idle' | 'seat' */
+      const want = S.actors[GIANT_RIGS[mode]];
+      if (!want) return null;
+      for (const [m, id] of Object.entries(GIANT_RIGS)) {
+        if (m === mode) continue;
+        const other = S.actors[id];
+        if (other && other.group.visible && other.mode !== 'off') S._off(other);
+      }
+      return want;
+    };
+    /** whichever giant rig is standing on the leaf right now */
+    S._giantOn = () => {
+      for (const id of ['poly-seat', 'poly-idle', 'poly-walk']) {
+        const a = S.actors[id];
+        if (a && a.group.visible && a.mode !== 'off') return a;
+      }
+      return null;
+    };
+    /* THE SEAT ITSELF (C2). He works at the ledger's giant-seat mark, SEATED,
+     * whole in the lens, his knees downstage toward the fire and his face
+     * turned to the strangers. Sol #6 rides here too: the seated bulk gets a
+     * long soft floor shadow thrown DOWNSTAGE-WEST — across the ground the
+     * small hero stands on — so the size reads as space, not as layering. */
+    const seatGiant = (rec, px = caveMarks.giantSeat, face = GIANT_SEAT_FACE,
+                       shadow = true) => {
+      const g = giant('seat');
+      if (!g) return null;
+      S._stand(g, rec.toWorld(...px), face);
+      S._scaleShadow(g, shadow);
+      return g;
     };
     const giantSprawl = (rec, silent) => {
       const g = giant('idle');
@@ -1042,8 +1537,10 @@ export class Stage3D {
              night's props cleared with the leaf */
           S.meals = Math.max(S.meals, 3);
           S._hideProps();
-          const g = giant('idle');
-          if (g) S._stand(g, rec.toWorld(...caveMarks.doorwaySeat), 2.1);
+          /* the ledger's doorway-seat: "the blind giant SEATED filling the
+             160 px mouth" — the mouth is 3.7 m, so only the seated silhouette
+             fits it; standing he was twice the aperture */
+          seatGiant(rec, caveMarks.doorwaySeat, 2.1, false);
           const survivors = S._aliveCrew();
           const spots = S._cluster(rec.toWorld(890, 537), survivors.length, 71033, 1.2);
           survivors.forEach((c, i) => S._stand(c, spots[i], -2.3));
@@ -1088,10 +1585,11 @@ export class Stage3D {
           { speed: SCURRY_MPS, silent, label: 'cave:scatter-u' });
       },
       'giant-seat': (rec, silent) => {
-        /* seated working by the fire, head turned to the huddled strangers
-           downstage-east — the face (and the one eye) plays to the lens */
-        const g = giant('idle');
-        if (g) S._stand(g, rec.toWorld(...caveMarks.giantSeat), 1.05);
+        /* SEATED, working by the fire, head turned to the huddled strangers
+           downstage-east — the face (and the one eye) plays to the lens. The
+           ledger's law for this mark is a pixel law: ~165 px seated against
+           300 px standing, so the seat is the pose, not a scale. */
+        seatGiant(rec);
       },
       suppliant: (rec, silent) => {
         S._walkRoute(S.actors.ulysses, rec, caveMarks.huddle, caveMarks.suppliant,
@@ -1111,9 +1609,8 @@ export class Stage3D {
           sw.rotation.z = easeInOut(k) * -0.9;
         }, { silent });
       },
-      milking: (rec, silent) => {                 /* dawn routine: the giant is up */
-        const g = giant('idle');
-        if (g) S._stand(g, rec.toWorld(...caveMarks.giantSeat), 1.05);
+      milking: (rec, silent) => {                 /* dawn routine: back at his seat */
+        seatGiant(rec);
       },
       scheme: (rec, silent) => {
         S._walkRoute(S.actors.ulysses, rec, caveMarks.huddle, caveMarks.scheme,
@@ -1140,6 +1637,20 @@ export class Stage3D {
           { silent, label: 'cave:lots->bowl' });
         S.props.bowl.visible = true;
         S.holdAnchorName = 'bowl';
+        /* SOL #1 — ONE READABLE ACTION at III-08. The wine beat is Ulysses
+           ALONE at the giant's knee ("I took a bowl of wine and offered it to
+           him"); everything else on the leaf was competing with him at the
+           frame edge — a cropped crew man, the great ram, four ewes, all at
+           incompatible scales in the same corner. The company is hiding in the
+           dark and the flock is in its painted pens, so the 3D clutter leaves
+           the leaf here and the frame carries the hero, the giant and the
+           ground between them. Beat V restages every one of them (cave-predawn
+           for the ewes, ram-stand for the great ram, free-men for the crew). */
+        for (const c of S._crew(CREW_POOL)) if (c.mode !== 'off') S._fade(c, 0, 1.1, silent);
+        for (const id of ['ram-great', 'ewe-0', 'ewe-1', 'ewe-2', 'ewe-3']) {
+          const a = S.actors[id];
+          if (a && a.mode !== 'off') S._fade(a, 0, 1.3, silent);
+        }
       },
       'bowl-pour': (rec, silent) => {             /* G3's release — pour one */
         S._pour(rec, silent);
@@ -1267,9 +1778,9 @@ export class Stage3D {
         if (silent) rec.api.setBoulderK(0);
         /* the blind grope: he rolls to his feet among the sheep and feels
            his way down the audited lane to the door he can no longer see */
+        if (silent) { seatGiant(rec, caveMarks.doorwaySeat, 2.1, false); return; }
         const g = giant('idle');
         if (!g) return;
-        if (silent) { S._stand(g, rec.toWorld(...caveMarks.doorwaySeat), 2.1); return; }
         const gp = g.group.position.clone(), gq = g.group.quaternion.clone();
         const up = rec.toWorld(806, 545);
         const uq = new THREE.Quaternion()
@@ -1285,14 +1796,13 @@ export class Stage3D {
         } });
       },
       'doorway-seat': (rec, silent) => {
-        const g = giant('idle');
-        if (!g) return;
         const seat = rec.toWorld(...caveMarks.doorwaySeat);
-        if (!silent && g.mode === 'walk' && g.walk) {
-          const end = g.walk.pts[g.walk.pts.length - 1];
+        const groping = S.actors['poly-idle'];
+        if (!silent && groping && groping.mode === 'walk' && groping.walk) {
+          const end = groping.walk.pts[groping.walk.pts.length - 1];
           if (end.distanceTo(seat) < 1.5) return;  /* the grope already ends there */
         }
-        S._stand(g, seat, 2.1);
+        seatGiant(rec, caveMarks.doorwaySeat, 2.1, false);
       },
 
       /* ---------- BEAT V · THE RAMS ---------- */
@@ -1532,9 +2042,10 @@ export class Stage3D {
       }
       case 'return': {                             /* POLYPHEMUS in under the load */
         if (this.activeName !== 'cave') break;
-        const w = this.actors['poly-walk'], i = this.actors['poly-idle'];
-        if (i) this._off(i);
-        if (w) this._walkRoute(w, rec, [340, 436], [760, 452],
+        const w = this.actors['poly-walk'];
+        for (const id of ['poly-idle', 'poly-seat'])
+          if (this.actors[id]) this._off(this.actors[id]);
+        if (w) this._walkRoute(w, rec, [340, 436], GIANT_SEAT_PX,
           { speed: GIANT_MPS, silent, label: 'cave:giant-enter' });
         break;
       }
@@ -1548,7 +2059,7 @@ export class Stage3D {
         for (const c of taken) this._fade(c, 0, 1.4, silent);
         if (!silent) {
           /* the clutch: a scale/pose beat on the seated bulk — kept abstract */
-          const g = this.actors['poly-idle'];
+          const g = this._giantOn ? this._giantOn() : this.actors['poly-idle'];
           if (g && g.mode !== 'off') {
             this._mover('clutch', Math.min(4, dur), (k) => {
               const s = 1 + 0.05 * Math.sin(Math.PI * clamp01(k));
@@ -1563,6 +2074,23 @@ export class Stage3D {
       case 'flock-out': {                          /* stone up, flock out, stone to */
         if (this.activeName !== 'cave') break;
         this._flockStream(rec, 'out', dur, silent);
+        /* HE GOES OUT WITH THEM. The ledger gives iii-03..iii-05 (scheme,
+           club, lots) no giant on the leaf — the men scheme because he is on
+           the mountain. He drove the flock out; the seat empties with it. */
+        {
+          const seated = this.actors['poly-seat'], idle = this.actors['poly-idle'];
+          for (const a of [seated, idle]) if (a && a.mode !== 'off') this._off(a);
+          const w = this.actors['poly-walk'];
+          if (w) {
+            if (silent) { this._off(w); }
+            else {
+              this._walkRoute(w, rec, GIANT_SEAT_PX, [330, 438],
+                { speed: GIANT_MPS, delay: 0.4, label: 'cave:giant-out' });
+              this._fade(w, 0, 1.0, false);
+              w.fade = { t0: this.t + Math.max(1.2, dur - 1.8), dur: 1.0, from: 1, to: 0 };
+            }
+          }
+        }
         break;
       }
       case 'flock-in': {
@@ -1576,9 +2104,10 @@ export class Stage3D {
           left.forEach((c, j) => this._stand(c, spots[j], -1.1));
           for (const c of this._crew(CREW_POOL).slice(left.length)) this._off(c);
         }
-        const w = this.actors['poly-walk'], i = this.actors['poly-idle'];
-        if (i) this._off(i);
-        if (w) this._walkRoute(w, rec, [340, 436], [760, 452],
+        const w = this.actors['poly-walk'];
+        for (const id of ['poly-idle', 'poly-seat'])
+          if (this.actors[id]) this._off(this.actors[id]);
+        if (w) this._walkRoute(w, rec, [340, 436], GIANT_SEAT_PX,
           { speed: GIANT_MPS, silent, delay: 1.2, label: 'cave:giant-return' });
         break;
       }
@@ -1742,12 +2271,14 @@ export class Stage3D {
         return u.group.getWorldPosition(V).add(new THREE.Vector3(0, 1.62 * u.local, 0));
     }
     if (who === 'POLYPHEMUS') {
-      for (const id of ['poly-idle', 'poly-walk']) {
+      for (const id of ['poly-seat', 'poly-idle', 'poly-walk']) {
         const g = this.actors[id];
         if (g && g.group.visible) {
-          return g.mode === 'pose'
-            ? g.group.getWorldPosition(V).add(new THREE.Vector3(-2.6, 0.6, 0))
-            : g.group.getWorldPosition(V).add(new THREE.Vector3(0, 6.4, 0));
+          if (g.mode === 'pose')
+            return g.group.getWorldPosition(V).add(new THREE.Vector3(-2.6, 0.6, 0));
+          /* the seated head rides at the SEATED crown, not the standing one */
+          const crown = id === 'poly-seat' ? GIANT_SEAT_CROWN_M : 6.4;
+          return g.group.getWorldPosition(V).add(new THREE.Vector3(0, crown, 0));
         }
       }
     }
