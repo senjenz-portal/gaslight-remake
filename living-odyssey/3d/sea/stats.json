@@ -1,0 +1,5 @@
+{
+  "actor": "the rigged Ulysses (demo3d GLB), 1.75 m on the deck, pacing the port gangway, riding the ship's sway — posture law verbatim (standing 0.04°, walk max 5.64°)",
+  "laws": "deterministic replay byte-equal · posture ±5°/≤12° · obstacle law 0 floor-box hits · ledger scale measured (hull 14.97 m / mast 8.80 m / actor 1.75 m at 12.7 px/m) · row cycle sweeps 1.27 m · splashAt(x,z) births live · 5,879 tris of 60,000",
+  "compareVerdict": "same floor plan, register, palette and light logic — moon high left, shard moonpath, glow at the cliff base, ship on the ledger marks; the plate keeps its hand-cut facet grain and richer grade. Honest gap, stated."
+}

@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The sea — the escape rebuilt in native three.js</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.55;max-width:78ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  figure{margin:0;}
+  figure img{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;}
+  figcaption{font-size:13px;color:var(--note);margin-top:7px;line-height:1.45;}
+  figcaption b{color:var(--cream-bright);font-weight:normal;}
+  #stage{width:100%;aspect-ratio:1408/768;display:block;border:1px solid #2a2417;
+    border-radius:3px;background:#060a18;}
+  .stage-cue{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);margin-top:7px;}
+  .stage-cue button{font:inherit;font-variant-caps:small-caps;text-transform:lowercase;
+    letter-spacing:.19em;font-size:12px;color:var(--gold-soft);background:none;
+    border:1px solid #3a3120;border-radius:3px;padding:3px 14px;cursor:pointer;}
+  .stage-cue button:hover{color:var(--cream-bright);border-color:var(--gold);}
+  .stage-cue button[data-on="1"]{color:#0a0e1c;background:var(--gold-soft);}
+  .law{font-size:14px;color:var(--note);border-left:2px solid var(--gold);padding:2px 0 2px 14px;
+    margin:26px 0 20px;max-width:74ch;}
+  .law b{color:var(--cream-bright);font-weight:normal;}
+  .counts{margin-top:20px;font-size:13px;color:var(--note);line-height:1.9;}
+  .counts b{color:var(--cream-bright);font-weight:normal;}
+  .counts .num{color:#d8b45a;}
+  .art-row{display:grid;gap:18px;margin-top:6px;}
+  .cols-4{grid-template-columns:1fr 1fr 1fr 1fr;}
+  @media (max-width:640px){.cols-4{grid-template-columns:1fr 1fr;}}
+  footer{margin-top:80px;}
+  footer p{color:var(--note);font-size:14px;}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../../app/vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Pipeline Demo · Unlisted</div>
+  <h1>The sea — the escape rebuilt in native three.js</h1>
+  <div class="rule"></div>
+  <p class="note">Beat VI as native geometry: the headland cliff with the ammunition boulders
+  piled at its brow, the cave-glow burning at the water line, open sea with the moonpath, the
+  prop moon, and the <b>escape ship</b> — the twenty-oarer of the ledger's own yardstick
+  <span class="tag">(8 rowlocks a side painted → 15&nbsp;m tip-to-tip, 12.7&nbsp;px&nbsp;=&nbsp;1&nbsp;m)</span> —
+  hull, mast, furled sail, and <b>6&nbsp;+&nbsp;6 oars pulling a live row cycle</b>. Twice a
+  cycle the blinded giant's rock arcs off the brow and lands in the strait: the splash is a
+  <b>reusable seeded burst</b> — <code style="color:#d8b45a">splashAt(x,z)</code> — droplets and
+  plume computed in the vertex shader as pure functions of (seed, sim-time). Ulysses paces the
+  port gangway at the stern, riding the ship's own sway, throwing a true moon shadow.</p>
+
+  <canvas id="stage"></canvas>
+  <div class="stage-cue">
+    <span>the book's framing · rocks fall on the ledger's own splash points</span>
+    <span>
+      <button id="splash" data-on="0">test the splash</button>
+      <button id="orbit" data-on="0">slow orbit: off</button>
+    </span>
+  </div>
+
+  <div class="law"><b>The low-poly register is the point.</b> The sea plate is itself a faceted,
+    untextured render — so low-poly geometry IS the faithful reconstruction. Zero bound textures:
+    every surface is seeded facet jitter + palette. Deterministic throughout — one mulberry32
+    stream per system; the thrown rocks, their impact times and every splash droplet are pure
+    functions of sim-time, so any second of this scene replays byte-identically.</div>
+
+  <div class="lbl" style="margin-bottom:10px;">the turntable — 0° / 90° / 180° / 270°, no holes</div>
+  <div class="art-row cols-4">
+    <figure><img src="turn-000.png" alt="Turntable 0 - the book's framing"><figcaption><b>0°</b> — the book's frame</figcaption></figure>
+    <figure><img src="turn-090.png" alt="Turntable 90 - from behind the headland"><figcaption><b>90°</b> — behind the headland</figcaption></figure>
+    <figure><img src="turn-180.png" alt="Turntable 180 - the open sea side"><figcaption><b>180°</b> — the open sea</figcaption></figure>
+    <figure><img src="turn-270.png" alt="Turntable 270 - down the moonpath"><figcaption><b>270°</b> — down the moonpath</figcaption></figure>
+  </div>
+
+  <div style="margin-top:26px;">
+    <div class="lbl" style="margin-bottom:10px;">against the painted plate</div>
+    <figure><img src="compare.jpg" alt="Side by side: painted sea plate vs the rebuilt 3D set">
+    <figcaption><b>left:</b> the painted sea plate · <b>right:</b> this scene, default framing.
+    Same floor plan, register, palette and light logic — moon high left, glow at the cliff base,
+    ship on the same ledger marks; the painterly plate keeps its hand-cut facet grain. Honest gap, stated.</figcaption></figure>
+  </div>
+
+  <div class="counts" id="counts"></div>
+
+  <footer>
+    <div class="rule"></div>
+    <p class="lbl"><a href="../../demo3d/full3d/">the cave in native three.js</a> ·
+      <a href="../../demo3d/">the plate-walk demo</a> ·
+      <a href="../../">THE LIVING ODYSSEY</a></p>
+    <p>Demo only — not wired into the book. <a href="../../../">← back to the landing page</a></p>
+  </footer>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from '../../../app/vendor/loaders/GLTFLoader.js';
+import { createSeaScene, createSeaIsoCamera, SEA_WORLD } from '../sets/sea3d.js';
+
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.42;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const sea = createSeaScene();
+scene.add(sea.root);
+const camera = createSeaIsoCamera();
+
+/* ---- the actor: the rigged Ulysses pacing the deck (rides the sway) ---- */
+const DECK = sea.SHIP.deckPathLocal;
+const deckPath = new THREE.CatmullRomCurve3(
+  DECK.map(([x, y, z]) => new THREE.Vector3(x, y, z)), false, 'catmullrom', 0);
+const PATH_LEN = deckPath.getLength();
+const WALK_SPEED = 0.9;                    /* m/s — a stern-watch pace, not a march */
+const FADE = 0.08, RESPAWN_HOLD = 1.1;
+
+const actor = new THREE.Group();
+actor.visible = false;
+sea.SHIP.sway.add(actor);                  /* the deck carries him — the sway is his floor */
+
+/* posture law — the demo3d corrections, carried verbatim (owner defect fix c38ef93) */
+const CLIP_CORR = { Spine02: 4, NeckTwist01: 5, Head: 6 };
+const REST_CORR = { NeckTwist01: -3, Head: -3 };
+const FWD_BIND = new THREE.Vector3(0.166, 0, 0.986).normalize();
+const qcx = (deg) => new THREE.Quaternion()
+  .setFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(deg));
+
+const fadeMats = [];
+let mixer = null, clips = [], actorHeightM = 0;
+new GLTFLoader().load('../../demo3d/ulysses-walk.glb', (gltf) => { try {
+  const model = gltf.scene;
+  clips = gltf.animations.map((a) => a.name);
+  const bones = {};
+  model.traverse((o) => { if (o.isBone) bones[o.name] = o; });
+  for (const [name, deg] of Object.entries(REST_CORR))
+    if (bones[name]) bones[name].quaternion.multiply(qcx(deg));
+  for (const track of (gltf.animations[0] ? gltf.animations[0].tracks : [])) {
+    const m = track.name.match(/(?:^|[/.])([A-Za-z0-9_]+)\.quaternion$/);
+    if (!m || !(m[1] in CLIP_CORR)) continue;
+    const c = qcx(CLIP_CORR[m[1]]), q = new THREE.Quaternion();
+    for (let i = 0; i < track.values.length; i += 4)
+      q.fromArray(track.values, i).multiply(c).toArray(track.values, i);
+  }
+  const headBone = bones.Head, pelvisBone = bones.Pelvis || bones.Hip;
+  const _q = new THREE.Quaternion(), _qm = new THREE.Quaternion(), _v = new THREE.Vector3();
+  const headPitchDeg = () => {
+    actor.updateMatrixWorld(true);
+    headBone.getWorldQuaternion(_q);
+    model.getWorldQuaternion(_qm).invert();
+    _q.premultiply(_qm);
+    _v.set(0, 1, 0).applyQuaternion(_q);
+    return THREE.MathUtils.radToDeg(Math.atan2(_v.dot(FWD_BIND), _v.y));
+  };
+  const H = 1.75;                          /* metres — the ledger's Ulysses */
+  const box = new THREE.Box3().setFromObject(model);
+  model.scale.setScalar(H / (box.max.y - box.min.y));
+  const b = new THREE.Box3().setFromObject(model);
+  actorHeightM = +(b.max.y - b.min.y).toFixed(4);
+  const center = b.getCenter(new THREE.Vector3());
+  model.position.x -= center.x;
+  model.position.z -= center.z;
+  model.position.y -= b.min.y;
+  model.traverse((o) => {
+    if (o.isSkinnedMesh) { o.frustumCulled = false; o.castShadow = true; }
+    if (!o.isMesh) return;
+    for (const m of (Array.isArray(o.material) ? o.material : [o.material])) {
+      if (!m || !m.isMeshStandardMaterial) continue;
+      m.metalness = 0; m.roughness = Math.min(m.roughness, 0.9);
+      m.transparent = true; m.needsUpdate = true;
+      fadeMats.push(m);
+    }
+  });
+  actor.add(model);
+  const standingPitchDeg = +headPitchDeg().toFixed(2);
+  const pelvisFraction = +(new THREE.Vector3().setFromMatrixPosition(
+    (actor.updateMatrixWorld(true), pelvisBone.matrixWorld)).y / H).toFixed(4);
+  if (gltf.animations.length) {
+    /* grounding law: measure the bind sole BEFORE the mixer exists */
+    const feet = [];
+    model.traverse((o) => { if (o.isBone && /Foot|ToeBase/i.test(o.name)) feet.push(o); });
+    const v = new THREE.Vector3();
+    const minFootY = () => {
+      actor.updateMatrixWorld(true);
+      return Math.min(...feet.map((bn) => bn.getWorldPosition(v).y));
+    };
+    const bindFootY = feet.length ? minFootY() : 0;
+    mixer = new THREE.AnimationMixer(model);
+    mixer.clipAction(gltf.animations[0]).play();
+    if (feet.length) {
+      const dur = gltf.animations[0].duration;
+      let minY = Infinity;
+      for (let i = 0; i <= 24; i++) { mixer.setTime((i / 24) * dur); minY = Math.min(minY, minFootY()); }
+      mixer.setTime(0);
+      model.position.y += bindFootY - minY;
+    }
+  }
+  window.__rig = {
+    standingPitchDeg, pelvisFraction, clipCorr: CLIP_CORR, restCorr: REST_CORR,
+    walkPitchSamples(n = 48) {
+      if (!mixer || !gltf.animations.length) return null;
+      const dur = gltf.animations[0].duration, out = [];
+      for (let i = 0; i < n; i++) { mixer.setTime(dur * i / n); out.push(+headPitchDeg().toFixed(2)); }
+      mixer.setTime(0);
+      return out;
+    },
+  };
+  actor.visible = true;
+  window.__meshLoaded = true;
+} catch (e) { console.error('walk glb onload failed', e.message, e.stack); }
+}, undefined, (err) => console.error('walk glb load failed', err));
+
+/* ---- the deck pace (sim-time only) ---- */
+let simT = 0, dist = 0, hold = 0;
+let orbitOn = false, orbitBase = 0, orbitT0 = 0;
+const ORBIT_RATE = 6;                      /* deg/s */
+const P = new THREE.Vector3(), TAN = new THREE.Vector3();
+
+function placeActor() {
+  const u = Math.min(dist / PATH_LEN, 1);
+  deckPath.getPointAt(u, P);
+  deckPath.getTangentAt(u, TAN);
+  actor.position.copy(P);
+  actor.rotation.y = Math.atan2(TAN.x, TAN.z);
+  const fade = Math.min(1, Math.min(u, 1 - u) / FADE);
+  for (const m of fadeMats) m.opacity = fade;
+  return u;
+}
+
+const orbitBtn = document.getElementById('orbit');
+orbitBtn.addEventListener('click', () => {
+  orbitOn = !orbitOn;
+  if (orbitOn) { orbitT0 = simT; }
+  else { orbitBase = (orbitBase + (simT - orbitT0) * ORBIT_RATE) % 360; }
+  orbitBtn.dataset.on = orbitOn ? '1' : '0';
+  orbitBtn.textContent = 'slow orbit: ' + (orbitOn ? 'on' : 'off');
+});
+document.getElementById('splash').addEventListener('click', () => {
+  /* a test burst just off the port bow — the reusable verb, by hand */
+  const { X, Z } = SEA_WORLD;
+  sea.splashAt(X(640) - 2.5, Z(530));
+});
+
+function resize() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== Math.floor(w * renderer.getPixelRatio()) ||
+      canvas.height !== Math.floor(h * renderer.getPixelRatio())) {
+    renderer.setSize(w, h, false);
+    /* particle sizes are WORLD metres; give the shaders canvas px per metre (ortho) */
+    sea.setPixelScale((h * renderer.getPixelRatio()) / (camera.top - camera.bottom));
+  }
+}
+
+/* frame-time instrument (the smoke gate reads this) */
+const frame = { n: 0, ms: 0, worst: 0 };
+let lastT = performance.now();
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  resize();
+  const dt = Math.min(clock.getDelta(), 0.1);
+  simT += dt;
+  sea.tick(simT);
+  if (actor.visible || hold > 0) {
+    if (hold > 0) {
+      hold -= dt;
+      if (hold <= 0) { dist = 0; actor.visible = true; }
+    } else {
+      dist += WALK_SPEED * dt;
+      if (mixer) mixer.update(dt);
+      const u = placeActor();
+      if (u >= 1) { actor.visible = false; hold = RESPAWN_HOLD; }
+    }
+  }
+  const az = orbitOn ? (orbitBase + (simT - orbitT0) * ORBIT_RATE) % 360 : orbitBase;
+  camera.userData.setOrbit(az);
+  renderer.render(scene, camera);
+  const now = performance.now();
+  const ms = now - lastT; lastT = now;
+  if (frame.n > 5) {
+    frame.ms += ms; frame.worst = Math.max(frame.worst, ms);
+  }
+  frame.n++;
+});
+
+/* ---- counts (read from the built graph, not claimed) ---- */
+fetch('stats.json').then((r) => r.json()).then((s) => {
+  const row = (l, v) => '<b>' + l + '</b> · <span class="num">' + v + '</span><br>';
+  document.getElementById('counts').innerHTML =
+    row('set geometry', sea.triangles.toLocaleString('en-US') + ' triangles · ' +
+        Object.keys(sea.parts).length + ' named parts (budget ceiling 60,000)') +
+    row('the ship', '15 m tip-to-tip (the ledger yardstick) · 8.8 m mast · 6+6 oars, ' +
+        sea.ROW_PERIOD + ' s row cycle') +
+    row('the splash', '4-unit pool × (90 droplets + 30 plume + foam ring) — splashAt(x,z), pure f(seed, sim-time)') +
+    row('shadow budget', 'one caster: the moon (1024 ortho shadow)') +
+    row('floor plan', 'tools/ody/ledger.json · 12.7 px = 1 m · X=(px−704)/12.7, Z=(py−470)/(12.7·sin 30°)') +
+    row('actor', s.actor) +
+    row('laws held', s.laws) +
+    row('compare verdict', s.compareVerdict);
+  window.__statsLoaded = true;
+}).catch((e) => console.error('stats.json failed', e));
+
+/* ---- verification hooks ---- */
+const _b3 = new THREE.Box3();
+window.__sea3d = {
+  get simT() { return simT; },
+  get u() { return Math.min(dist / PATH_LEN, 1); },
+  get visible() { return actor.visible; },
+  get actorZ() { return actor.position.z; },
+  get mixerTime() { return mixer ? mixer.time : 0; },
+  get clips() { return clips; },
+  get actorHeightM() { return actorHeightM; },
+  get triangles() { return sea.triangles; },
+  get parts() { return Object.keys(sea.parts); },
+  get frameStats() { return { avgMs: frame.ms / Math.max(1, frame.n - 6), worstMs: frame.worst, frames: Math.max(0, frame.n - 6) }; },
+  world: {                                  /* plate-px law data — the audits read these */
+    S: SEA_WORLD.S,
+    floors: { deck: SEA_WORLD.FLOORS.deck.polyline, clifftopLedge: SEA_WORLD.FLOORS.clifftopLedge.polyline },
+    ledgeExempt: SEA_WORLD.FLOORS.clifftopLedge.exempt,
+    obstacles: SEA_WORLD.OBSTACLES,
+    marks: SEA_WORLD.MARKS,
+    shipPx: SEA_WORLD.SHIP_PX,
+  },
+  measures() {                              /* ledger-scale gate: measured, not claimed */
+    const hull = sea.parts.ship.getObjectByName('hull');
+    hull.geometry.computeBoundingBox();
+    const hb = hull.geometry.boundingBox;
+    const mast = sea.parts.ship.getObjectByName('mast');
+    mast.geometry.computeBoundingBox();
+    const mb = mast.geometry.boundingBox;
+    return {
+      shipLengthM: +(hb.max.z - hb.min.z).toFixed(3),
+      mastM: +(mb.max.y - mb.min.y).toFixed(3),
+      actorHeightM,
+      cliffTopM: sea.CLIFF_TOP,
+      pxPerM: SEA_WORLD.S,
+    };
+  },
+  oarTip(i) { const p = sea.oarTip(i); return { x: +p.x.toFixed(4), y: +p.y.toFixed(4), z: +p.z.toFixed(4) }; },
+  get rowPeriod() { return sea.ROW_PERIOD; },
+  sample(t) {                               /* determinism gate: pure f(t) by construction */
+    sea.tick(t);
+    const tip = sea.oarTip(0);
+    return {
+      flick: +sea.glowFlick(t).toFixed(6),
+      glow: +sea.caveGlow.intensity.toFixed(4),
+      bobY: +sea.SHIP.sway.position.y.toFixed(6),
+      oarTipY: +tip.y.toFixed(5),
+      rock1Visible: sea.parts['thrown-rocks'].children[0].visible,
+      splashT0: sea.splashUnits.map((u) => +u.t0.toFixed(4)),
+    };
+  },
+  splashAt(x, z) { const u = sea.splashAt(x, z); return { t0: u.t0, x, z }; },
+  splashState() { return sea.splashUnits.map((u) => ({ t0: +u.t0.toFixed(4), visible: u.grp.visible })); },
+  setProgress(u) { dist = u * PATH_LEN; hold = 0; actor.visible = true; placeActor(); },
+  setSim(t) { simT = t; sea.tick(t); },     /* absolute, deterministic */
+  setOrbit(deg) { orbitOn = false; orbitBase = deg % 360; camera.userData.setOrbit(orbitBase); },
+  stripMaps(on) {
+    scene.overrideMaterial = on ? new THREE.MeshBasicMaterial({ color: 0x8a8a8a }) : null;
+  },
+  scene, camera, renderer,
+};
+window.__sceneReady = true;
+</script>
+</body>
+</html>
