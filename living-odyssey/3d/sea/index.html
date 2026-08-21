@@ -69,7 +69,8 @@
   piled at its brow, the cave-glow burning at the water line, open sea with the moonpath, the
   prop moon, and the <b>escape ship</b> — the twenty-oarer of the ledger's own yardstick
   <span class="tag">(8 rowlocks a side painted → 15&nbsp;m tip-to-tip, 12.7&nbsp;px&nbsp;=&nbsp;1&nbsp;m)</span> —
-  hull, mast, furled sail, and <b>6&nbsp;+&nbsp;6 oars pulling a live row cycle</b>. Twice a
+  lofted hull, mast, raked yard with the furled sail, steering oar, thole pins, and
+  <b>8&nbsp;+&nbsp;8 oars pulling a live row cycle</b>. Twice a
   cycle the blinded giant's rock arcs off the brow and lands in the strait: the splash is a
   <b>reusable seeded burst</b> — <code style="color:#d8b45a">splashAt(x,z)</code> — droplets and
   plume computed in the vertex shader as pure functions of (seed, sim-time). Ulysses paces the
@@ -103,7 +104,9 @@
     <figure><img src="compare.jpg" alt="Side by side: painted sea plate vs the rebuilt 3D set">
     <figcaption><b>left:</b> the painted sea plate · <b>right:</b> this scene, default framing.
     Same floor plan, register, palette and light logic — moon high left, glow at the cliff base,
-    ship on the same ledger marks; the painterly plate keeps its hand-cut facet grain. Honest gap, stated.</figcaption></figure>
+    ship on the same ledger marks; the painterly plate keeps its hand-cut facet grain. Honest gap, stated.
+    Rebuilt through five gated passes — <a href="passes/passlog.md">the pass log</a>
+    (spec → blockout → structure → form → material → lighting, each pass rendered against the plate).</figcaption></figure>
   </div>
 
   <div class="counts" id="counts"></div>
@@ -318,7 +321,7 @@ fetch('stats.json').then((r) => r.json()).then((s) => {
   document.getElementById('counts').innerHTML =
     row('set geometry', sea.triangles.toLocaleString('en-US') + ' triangles · ' +
         Object.keys(sea.parts).length + ' named parts (budget ceiling 60,000)') +
-    row('the ship', '15 m tip-to-tip (the ledger yardstick) · 8.8 m mast · 6+6 oars, ' +
+    row('the ship', '15 m tip-to-tip (the ledger yardstick) · 8.8 m mast · 8+8 oars, ' +
         sea.ROW_PERIOD + ' s row cycle') +
     row('the splash', '4-unit pool × (90 droplets + 30 plume + foam ring) — splashAt(x,z), pure f(seed, sim-time)') +
     row('shadow budget', 'one caster: the moon (1024 ortho shadow)') +
