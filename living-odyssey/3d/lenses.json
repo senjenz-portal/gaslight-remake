@@ -351,15 +351,16 @@
     },
     "drive-tight": {
      "at": [
-      590,
-      490
+      790,
+      500
      ],
-     "k": 3.4,
+     "k": 2.6,
      "serves": [
       "ody-iv-03",
       "ody-iv-04",
       "ody-iv-05"
-     ]
+     ],
+     "note": "SOL#1 round 5 \u2014 the auger shot recomposed: [590,490] k3.4 framed plate x 383..797 and cut the sprawled giant (box 636..930) in half. 541x295 px about [790,500] holds the whole body, the hearth's rim and the two men downstage of it."
     },
     "sprawl-groan": {
      "at": [

@@ -848,6 +848,23 @@ harnessOnly.__plate = {
   /* the [materials] + [register] gates' own instruments */
   bypassRegister: (on) => stage.setRegisterBypass(on !== false),
   bypassGrain: (on) => stage.setGrainBypass(on !== false),
+  /* ROUND 5 — the focus pass is a NEIGHBOURHOOD operator: the geometric gates
+     (occlusion fractions, byte-equality) measure raw pixels and switch it off,
+     the [finish] gate toggles it to measure what it did. */
+  bypassSoft: (on) => stage.setSoftBypass(on !== false),
+  fireOff: (on) => stage.setFireOff(on !== false),
+  /* the colour-continuity law's own evidence: the ONE tint of this set-state */
+  tint: () => { const r = stage.sets[stage.activeName];
+    if (!r || !r.built) return null;
+    const st = stage.plateState(r);
+    const T = stage._sceneTint(r, st);
+    return { set: r.name, state: st, marks: T.marks, E0: +T.E0.toFixed(4),
+             hueDeg: T.hueDeg, chroma: T.chroma,
+             fire: stage._fireFalloff(r, st) }; },
+  actorGrade: () => Object.fromEntries(Object.entries(stage.actors)
+    .filter(([, a]) => a.group.visible && a.mode !== 'off')
+    .map(([id, a]) => [id, { seat: a.seat, E: a.gradeLum, tint: a.tint,
+                             mode: a.mode, contacts: a.contactKind }])),
   shadows: (on) => stage.setShadows(on !== false),
   cast: () => stage.castIdentity(),
   /* the SAME statistic the canon was measured with — the identity gate has to
