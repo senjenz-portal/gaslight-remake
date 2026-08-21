@@ -1,0 +1,200 @@
+{
+  "when": "2026-08-21T04:17:52.569Z",
+  "origin": "http://127.0.0.1:55110",
+  "until": null,
+  "reached": "end-card",
+  "reachedIdx": 80,
+  "units": 81,
+  "visited": 81,
+  "beats": 6,
+  "advances": 77,
+  "softFails": 0,
+  "meals": 3,
+  "boulderK": 0,
+  "caveState": "cave-dawn",
+  "audits": 74,
+  "facts": {
+    "tipGlow": 1,
+    "flareK": 0.974,
+    "pov": true,
+    "povK": 5.6,
+    "boulderAtDawn": 0,
+    "rock1": 149.55,
+    "shipDxAtSail": -23.53,
+    "rocks": [
+      149.55,
+      159.5
+    ],
+    "seaHits": [
+      151.25,
+      161.2
+    ],
+    "shipDx": -28.85,
+    "hesit": 0.35
+  },
+  "ded": {
+    "shown": true,
+    "skipped": false,
+    "name": "The Smoke Reader",
+    "hash": 3126645752
+  },
+  "gates": {
+    "council": {
+      "ok": true,
+      "from": 7,
+      "to": 8,
+      "target": "ship",
+      "endsBeat": false,
+      "held": false,
+      "turning": false,
+      "at": {
+        "x": 1264.4,
+        "y": 294.1
+      }
+    },
+    "sword": {
+      "ok": true,
+      "from": 24,
+      "to": 25,
+      "target": "sword",
+      "endsBeat": false,
+      "held": false,
+      "turning": false,
+      "at": {
+        "x": 1035.4,
+        "y": 484.5
+      }
+    },
+    "lookhere": {
+      "ok": true,
+      "verb": "release"
+    },
+    "embers": {
+      "ok": true,
+      "verb": "hold"
+    },
+    "greatram": {
+      "ok": true,
+      "from": 58,
+      "to": 59,
+      "target": "ram-great",
+      "endsBeat": false,
+      "held": false,
+      "turning": false,
+      "at": {
+        "x": 1054.7,
+        "y": 451.9
+      }
+    },
+    "jeer": {
+      "ok": true,
+      "from": 67,
+      "to": 68,
+      "target": "cyclops",
+      "endsBeat": false,
+      "held": false,
+      "turning": false,
+      "at": {
+        "x": 1164.6,
+        "y": 316.6
+      }
+    },
+    "defy": {
+      "ok": true,
+      "from": 72,
+      "to": 73,
+      "target": "cyclops",
+      "endsBeat": false,
+      "held": false,
+      "turning": false,
+      "at": {
+        "x": 1212.3,
+        "y": 199.6
+      }
+    },
+    "myname": {
+      "ok": true,
+      "verb": "release"
+    }
+  },
+  "posture": {
+    "ulysses": {
+      "standing": 2.81,
+      "walkMax": 5.64,
+      "range": 4.04
+    },
+    "crew-0": {
+      "standing": 2.69,
+      "walkMax": 5.61,
+      "range": 4.04
+    },
+    "poly-walk": {
+      "standing": 2.55,
+      "walkMax": 5.57,
+      "range": 4.06
+    },
+    "poly-idle": {
+      "standing": 17.78,
+      "walkMax": 20.77,
+      "range": 3.97
+    },
+    "ram-great": {
+      "standing": 115.56,
+      "walkMax": 117.95,
+      "range": 8.8
+    }
+  },
+  "postureVerdict": {
+    "ulysses": "PASS",
+    "crew-0": "PASS",
+    "poly-walk": "PASS",
+    "poly-idle": "PASS",
+    "ram-great": "PASS"
+  },
+  "shots": {
+    "ody-i-07-council": "beat1.png",
+    "ody-ii-05-strangers": "beat2.png",
+    "ody-iii-08-lookhere": "beat3.png",
+    "ody-iv-03-auger": "beat4.png",
+    "ody-iv-05-hiss": "beat4-blind.png",
+    "beat5-pov": "beat5-pov.png",
+    "ody-v-05-dawn": "beat5.png",
+    "ody-vi-03-rock1": "beat6.png",
+    "ody-vi-14-sailedon": "beat6-sailoff.png",
+    "end-card": "endcard.png"
+  },
+  "appErrors": [],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "consoleWarns": [
+    "[.WebGL-0x1140057e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.",
+    "[.WebGL-0x1140057e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x1140057e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x1140057e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+  ],
+  "requestsFailed": [],
+  "voicePlays": 76,
+  "audioCues": 143,
+  "gatesVerdict": {
+    "council_G1": true,
+    "sword_G2": true,
+    "lookhere_G3_release": true,
+    "embers_G4_hold": true,
+    "greatram_G5": true,
+    "jeer_G6a": true,
+    "defy_G6b": true,
+    "myname_release": true
+  },
+  "factsVerdict": {
+    "tipGlow": true,
+    "blindFlare": true,
+    "povEngaged": true,
+    "boulderOpenAtDawn": true,
+    "twoRocksThrown": true,
+    "twoHullHits": true,
+    "sailedOff": true,
+    "sigilDrawn": true
+  },
+  "PASS": true
+}
