@@ -201,7 +201,11 @@ function terrainH(x, z) {
 const MOON_O = [24.2, -36.0];             /* the band's far origin, world metres */
 const MOON_D = [0.036, 0.9994];           /* its axis, straight off the plate */
 const W_TIP = 7.4, W_FAR = 10.0;          /* half-widths: FWHM 1.3w = 9.6 m .. 13.0 m */
-const FACET_CAP = 0.84;                   /* the plate's hottest facet body luminance */
+/* Round 2 clamped every facet to 0.84 to kill whole-quad twinkle confetti. Round 4
+   replaces the twinkle gate with a STABLE shard mosaic, so the ceiling can go back
+   to where the plate actually sits: its band measures p95 0.981 / max 1.000, and
+   its brightest crest slivers ARE near-white. 0.94 keeps the roll-off honest. */
+const FACET_CAP = 0.94;
 const moonAlong = (x, z) => (x - MOON_O[0]) * MOON_D[0] + (z - MOON_O[1]) * MOON_D[1];
 const moonLat = (x, z) =>
   Math.abs((x - MOON_O[0]) * MOON_D[1] - (z - MOON_O[1]) * MOON_D[0]);
@@ -245,10 +249,27 @@ const YARD_TREES = [
   [X(1120), 1.3, ZH(350, 0.5), 0.8, 82007],
   [66.0, 6.2, -29.5, 0.7, 82008],
 ];
-const CRAG_SPOTS = [             /* olive bushes: spire feet + climbing the ledges */
-  [-16.2, 0.7, -4.2], [-11.5, 0.5, 1.2], [-19.5, 0.8, 0.5], [-9.0, 0.45, 6.0],
-  [-14.0, 0.7, 4.0], [-17.6, 5.4, -6.0], [-13.4, 4.0, -0.6], [-15.2, 8.0, -6.6],
-  [-19.8, 3.2, 2.2], [-12.4, 2.3, 3.4],
+/* THE CRAG TUFTS (round-4 minor). The plate does not scatter a few pebble-sized
+   bushes at the spire feet: it drapes BIG olive tufts across the crag flanks —
+   one broad mass halfway up the tall spire, another spilling off the second, and
+   a continuous olive skirt round all four feet. Count goes 10 -> 22 and the fill
+   scales them up (the [3] entry is a per-spot size multiplier). */
+const CRAG_SPOTS = [             /* [x, y, z, sizeMul] — spire feet + climbing the ledges */
+  [-16.2, 0.7, -4.2, 1.5], [-11.5, 0.5, 1.2, 1.3], [-19.5, 0.8, 0.5, 1.4],
+  [-9.0, 0.45, 6.0, 1.2], [-14.0, 0.7, 4.0, 1.45], [-17.6, 5.4, -6.0, 1.7],
+  [-13.4, 4.0, -0.6, 1.5], [-15.2, 8.0, -6.6, 1.8], [-19.8, 3.2, 2.2, 1.3],
+  [-12.4, 2.3, 3.4, 1.35],
+  /* the flank draperies the plate paints ACROSS the faces. Each one is solved onto
+     its spire's own downstage surface: cone radius at height y is r*(1 - y/h), and
+     the tuft is seated at ~0.85 of it so it bites into the rock instead of floating
+     in front of it. Spires: (-18.5,-7) h21 r3.6 · (-13.2,-1) h14.5 r3.1 ·
+     (-20.8,2.5) h9.5 r2.5 · (-10.5,4.5) h6.2 r2.1. */
+  [-18.0, 9.5, -5.3, 1.55], [-19.9, 5.2, -4.7, 1.4], [-18.9, 13.0, -5.9, 1.15],
+  [-12.6, 6.2, 0.55, 1.35], [-14.3, 2.8, 1.15, 1.45],
+  [-21.4, 3.8, 3.85, 1.2], [-10.1, 2.6, 5.55, 1.2],
+  /* the olive skirt round the feet */
+  [-22.4, 0.5, 3.6, 1.5], [-21.0, 0.6, -2.4, 1.35], [-8.2, 0.4, 3.0, 1.25],
+  [-13.0, 0.5, -7.6, 1.4], [-17.2, 0.6, 7.0, 1.45], [-9.6, 0.5, 9.0, 1.2],
 ];
 const BEACH_SPOTS = [
   /* beach SW cluster + south rim + north rim */
@@ -263,7 +284,7 @@ const BEACH_SPOTS = [
 const CANOPY = [
   ...LAUREL_TREES.map(([x, , z, s]) => [x, z, 2.5 * s + 0.9]),
   ...YARD_TREES.map(([x, , z, s]) => [x, z, 2.5 * s + 0.9]),
-  ...CRAG_SPOTS.map(([x, , z]) => [x, z, 1.9]),
+  ...CRAG_SPOTS.map(([x, , z, m = 1]) => [x, z, 1.9 * m]),
   ...BEACH_SPOTS.map(([x, , z]) => [x, z, 1.9]),
 ];
 
@@ -305,7 +326,10 @@ function tone(hex, seedInt, amount = 0.09) {
 /* THE MEADOW RAMP — the plate's olive ladder (#3e3d17 .23 · #514b25 .29 ·
    #59502e .32 · #5c593f .35) carried into albedo: R≈G, B low, a real 2x value
    spread so the greens VARY instead of reading as one flat green disc. */
-const MEADOW_RAMP = ['#4e5731', '#69733e', '#87904c', '#a5a45e'].map((h) => new THREE.Color(h));
+/* W5 warms the ladder toward the plate's own readings — every plate meadow mode
+   has R >= G (#3e3d17, #514b25, #59502e, #5c593f); the shipped ramp had G > R,
+   which the blue key turned to navy. */
+const MEADOW_RAMP = ['#5b5c33', '#777543', '#959051', '#b2a866'].map((h) => new THREE.Color(h));
 /* THE SAND RAMP — the plate's #4c4320 / #6a592f / #947551 / #a58469 ladder */
 const SAND_RAMP = ['#a89876', '#c1b087', '#d5c59c'].map((h) => new THREE.Color(h));
 const SAND_FIRELIT = new THREE.Color('#dfc78e');
@@ -499,10 +523,16 @@ export function createShoreScene() {
           /* strait basin: pale wet strip near the beach chain, dark rock below */
           c = cy > -0.35 ? tone('#dcc697', si, 0.07) : tone('#2c3348', si, 0.12);
         } else if (dM <= 0) {
-          /* MAINLAND: yard terrace + apron sand + the crown's meadow */
-          if (pointInPoly(cx, cz, TERRACE_POLY)) c = meadow(patch * 1.05, si, 0.09);
-          else if (-dM < 5.5) c = sandTone(patch, si, 0.0);
-          else c = meadow(patch, si, 0.11);
+          /* MAINLAND: yard terrace + apron sand + the crown's meadow.
+             W5 — the destination has to READ. The plate keeps this lobe clearly
+             lit (meadow L .308, terrace L .276) where the shipped build fell to
+             L .144 / L .098; the mainland key restores most of that, and this
+             lift carries the rest at the albedo, so the yard is legible even in
+             the cliff's own shadow. */
+          const LIFT = 1.30;
+          if (pointInPoly(cx, cz, TERRACE_POLY)) c = meadow(patch * 1.05, si, 0.09).multiplyScalar(LIFT);
+          else if (-dM < 5.5) c = sandTone(patch, si, 0.0).multiplyScalar(LIFT);
+          else c = meadow(patch, si, 0.11).multiplyScalar(LIFT);
         } else {
           const dF = Math.hypot(cx, cz);
           const dP = pathDist(cx, cz);           /* the camp walk, metres */
@@ -534,8 +564,28 @@ export function createShoreScene() {
   /* ===== MACRO: the strait water — clipped INSIDE the outline, seeded swell ===== */
   let waterMat;
   {
-    let g = new THREE.PlaneGeometry(52, 96, 26, 46);   /* ~2 m base facets */
+    /* THE CREST SLIVERS (W1). Measured off the plate at 4x: the band is not built
+       of chunky diamonds, it is built of LONG THIN shards lying across the path —
+       a typical white sliver runs ~83 plate px across by ~10 px deep, which through
+       the ledger's own scales (11.3 px/m across, 5.31 px/m into depth) is ~7.3 m by
+       ~1.9 m. So the water grid is deliberately ANISOTROPIC: few segments across
+       (6.5 m), many into depth (2.2 m). Every triangle is then a crest sliver, and
+       the shard mosaic does most of the work the old speckle was failing to do. */
+    let g = new THREE.PlaneGeometry(52, 96, 8, 44);
     g.rotateX(-Math.PI / 2);
+    /* IRREGULAR TRIANGULATION (the sea lane's trick, buildWater): plan-jitter the
+       grid in the plane's own frame before it is placed, so the slivers STAGGER
+       instead of tiling as a brick wall with visible column seams. Done on the
+       INDEXED grid and keyed off position, so shared corners always move together
+       and the sheet stays crack-free. y is untouched — the water law owns it. */
+    {
+      const p0 = g.attributes.position;
+      for (let i = 0; i < p0.count; i++) {
+        const x = p0.getX(i), z = p0.getZ(i);
+        p0.setX(i, x + (hash3(x, 0, z, 80925) - 0.5) * 2 * 2.55);
+        p0.setZ(i, z + (hash3(x, 0, z, 80926) - 0.5) * 2 * 0.82);
+      }
+    }
     g.rotateY(THREE.MathUtils.degToRad(29.4));    /* the beach shoreline's own axis */
     g.translate(34, WATER_Y, -13);
     g = g.toNonIndexed();
@@ -564,13 +614,15 @@ export function createShoreScene() {
         p0.setY(i, WATER_Y + sw);
       }
     }
-    /* FINER SUBDIVISION NEAR THE BAND (W1): split after the swell, so every child
-       vertex lies on its parent's plane — the refinement is crack-free by
-       construction. Two levels take the ~2 m base facets to ~1 m along the band
-       edge and ~0.5 m through the core, which is what lets the falloff read soft
-       instead of stair-stepping across whole quads. */
-    g = subdivideNear(g, (x, z) => moonLat(x, z) < moonWidth(moonAlong(x, z)) + 2.2);
-    g = subdivideNear(g, (x, z) => moonLat(x, z) < moonWidth(moonAlong(x, z)) * 0.75);
+    /* ROUND-4 W1 — THE BAND IS NOT REFINED. Round 3 pushed two midpoint levels
+       through the moonpath (~2 m facets down to ~0.5 m) chasing a soft falloff;
+       measured against the plate that was the mistake: it dissolved the painted
+       SHARDS into a smooth wash, and the fine speckle laid over it then read as
+       haze. The plate's band is built of bold ~3-4 m facets at hard contrast to
+       each other. So the band keeps the base facets, and the ONE refinement left
+       is the shore strip, where the foam line has to stay a crisp waterline (the
+       children sit on the parent plane, so it is still crack-free). */
+    g = subdivideNear(g, (x, z) => Math.abs(chainDist(SHORE_CHAIN, x, z)) < 2.4);
     const p = g.attributes.position;
     /* per-facet attributes: centroid, flat normal, seeded hash, shore distance */
     {
@@ -601,12 +653,26 @@ export function createShoreScene() {
       g.setAttribute('aShore', new THREE.BufferAttribute(shd, 1));
     }
     /* THE WATER LAW — facet-quantised body, sub-facet sparkle, pure f(pos, uTime):
-       the plate's swelling wine-dark base · THE MOONPATH as ONE soft-edged band on
-       the plate's own axis and width (FWHM 10.5 m ~ 115 plate px, 7 m at the far
-       tip) · every facet's luminance CAPPED at 0.84 so no quad ever blows out ·
-       near-white left to seeded sub-facet sparkle on a 0.3 m grid, ~6% coverage as
-       measured · shore foam along the beach chain.
-       Authored AS the plate's own sRGB values (ShaderMaterial writes raw). */
+       the plate's swelling wine-dark base · THE MOONPATH as ONE band on the plate's
+       own axis and width (FWHM 10.5 m ~ 115 plate px, 7 m at the far tip) · every
+       facet's luminance CAPPED at 0.84 so no quad ever blows out · shore foam along
+       the beach chain.
+       Authored AS the plate's own sRGB values (ShaderMaterial writes raw).
+
+       ROUND 4 (W1) — THE GLITTER, PORTED FROM THE SEA LANE. The sea's round-2
+       water (3d/sets/sea3d.js `buildWater`) solved this and the shore did not, so
+       the shore takes the sea's two mechanisms verbatim in spirit:
+         1. THE SHARD GATE. The sea gates whole facets on a coherent ~1.9 m cell
+            (`gate < 0.10 + 0.90*soft ? 1 : 0.07`) so the path breaks into painted
+            SHARDS and dissolves into scattered flecks at the margins, instead of
+            being a solid wash. The shore gates on its own 2.9 m facet scale.
+         2. THE SUB-FACET TWINKLE. The sea adds three incommensurate travelling
+            sine waves read in WORLD PLAN METRES and raises the sum to a high
+            power, so what survives is isolated pinpoint glints inside a facet —
+            no cell lattice and no dither field. The shore's round-3 fragment
+            shader used a 0.29 m cell grid at ~48% occupancy plus a 0.125 m grain
+            octave; at the book's 11.3 px/m that is a 3 px speckle at half
+            coverage, which is exactly the HAZE Fable named. Both are deleted. */
     waterMat = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 }, uDay: { value: 0 },
@@ -617,22 +683,35 @@ export function createShoreScene() {
         attribute vec2 aCent; attribute vec3 aNrm; attribute float aHash;
         attribute float aShore;
         varying vec3 vCol; varying float vLit; varying vec2 vW;
+        float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
         void main(){
           /* THE PLATE'S OWN AXIS: origin (${MOON_O[0]}, ${MOON_O[1]}), dir (${MOON_D[0]}, ${MOON_D[1]}) */
           vec2 rel = aCent - vec2(${MOON_O[0].toFixed(3)}, ${MOON_O[1].toFixed(3)});
           vec2 dir = vec2(${MOON_D[0].toFixed(4)}, ${MOON_D[1].toFixed(4)});
           float along = dot(rel, dir);
           float lat = abs(rel.x * dir.y - rel.y * dir.x);
-          lat += (aHash - 0.5) * 0.9;        /* facet-ragged edge, as painted */
+          lat += (aHash - 0.5) * 2.4;        /* facet-ragged edge, as painted */
           /* the measured half-width: 5.8 m at the far tip -> 8.3 m downstage
              (smoothstep half-point 0.65w -> FWHM 1.3w = 7.5 m .. 10.8 m) */
           float wOut = mix(${W_TIP.toFixed(2)}, ${W_FAR.toFixed(2)},
                            clamp((along + 6.0) / 38.0, 0.0, 1.0));
-          float band = smoothstep(wOut, wOut * 0.30, lat);      /* SOFT falloff each side */
+          float soft = smoothstep(wOut, wOut * 0.30, lat);      /* the band ENVELOPE */
+          /* THE SHARD GATE (W1, the sea lane's mechanism). The plate's path is not
+             a wash: it is a mosaic of lit shards with dark water showing between
+             them, and at the margins only scattered shards survive. Coherent on a
+             6.5 x 2.2 m cell — one crest sliver, one shard — so the break-up reads
+             as water faceting, never as per-pixel noise. */
+          float gate = h21(floor(aCent / vec2(6.5, 2.2)));
+          float on = step(gate, 0.10 + 0.84 * soft);
+          float band = soft * mix(0.055, 1.0, on);
           /* the plate's along-axis taper: dead by the far tip, ~0.90 peak just
              downstage of it, decaying to ~0.5 by the near shore */
           float amp = smoothstep(-6.0, 1.5, along) *
                       clamp(1.0 - (along - 6.0) * 0.0122, 0.5, 1.0);
+          /* THE FACET TWINKLE (the sea's own tw): each shard breathes on its own
+             seeded period — the band never blinks off, it shimmers. */
+          float tw = 0.66 + 0.34 * sin(uTime * (0.55 + fract(aHash * 7.3) * 1.7)
+                                       + aHash * 39.7);
           /* THE SWELL: the same four octaves the vertices carry, read at the facet
              centroid, so the tone bands follow the actual crests and troughs */
           float sw = 0.105 * sin(0.16 * aCent.x + 0.23 * aCent.y + 1.7)
@@ -645,16 +724,24 @@ export function createShoreScene() {
           vec3 deepLo = mix(vec3(0.120, 0.135, 0.164), vec3(0.20, 0.22, 0.24), uDay);
           vec3 deepHi = mix(vec3(0.256, 0.280, 0.322), vec3(0.36, 0.36, 0.35), uDay);
           vec3 col = mix(deepLo, deepHi, clamp(0.58 * crest + 0.27 * aHash + 0.15 * tilt, 0.0, 1.0));
-          /* THE BAND BODY: the plate's #8f95a0 .. #b5bcc6 silver, never brighter */
-          vec3 silverLo = mix(vec3(0.518, 0.542, 0.584), vec3(0.85, 0.76, 0.60), uDay);
-          vec3 silverHi = mix(vec3(0.688, 0.714, 0.752), vec3(0.99, 0.90, 0.72), uDay);
-          vec3 silver = mix(silverLo, silverHi, clamp(0.18 + 0.42 * aHash + 0.55 * crest, 0.0, 1.0));
+          /* THE BAND BODY: the plate's #8f95a0 .. #b5bcc6 silver, never brighter.
+             Round 4 widens the low end (#5c6068) and swings the shard tone on the
+             facet hash AND the crest, so neighbouring shards sit at real contrast
+             — the plate's band has a 0.27 luminance sigma, a smooth wash has none. */
+          vec3 silverLo = mix(vec3(0.300, 0.318, 0.352), vec3(0.66, 0.58, 0.46), uDay);
+          vec3 silverHi = mix(vec3(0.828, 0.852, 0.888), vec3(0.99, 0.90, 0.72), uDay);
+          vec3 silver = mix(silverLo, silverHi,
+                            clamp(0.06 + 1.00 * aHash + 0.34 * crest, 0.0, 1.0));
+          silver *= 0.84 + 0.24 * tw;               /* each shard breathes */
           float lit = clamp(band * amp, 0.0, 1.0);
           col = mix(col, silver, lit);
           /* the hot centre — still a grey, not a white */
-          vec3 hot = mix(vec3(0.798, 0.818, 0.848), vec3(1.0, 0.95, 0.82), uDay);
-          float core = smoothstep(wOut * 0.62, wOut * 0.18, lat) * amp * amp;
-          col = mix(col, hot, clamp(core * 0.66, 0.0, 0.66));
+          vec3 hot = mix(vec3(0.960, 0.972, 0.992), vec3(1.0, 0.95, 0.82), uDay);
+          /* the hot core is itself shard-wise: only the brighter-hashed facets in
+             the core take it, so the centre stays a mosaic and not a white slab */
+          float core = smoothstep(wOut * 0.88, wOut * 0.22, lat) * amp * amp * on * tw
+                     * smoothstep(0.22, 0.78, aHash);
+          col = mix(col, hot, clamp(core * 0.88, 0.0, 0.88));
           /* rare off-band glints (the plate's scattered flecks) — dim, never white */
           col = mix(col, silverLo, clamp(step(0.972, aHash) * tilt * 0.35, 0.0, 0.35));
           /* shore foam: pale edge hugging the beach chain, slow ripple */
@@ -679,19 +766,39 @@ export function createShoreScene() {
         float h21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
         void main(){
           vec3 col = vCol;
-          /* SUB-FACET SPARKLE: seeded twinkle on a 0.29 m cell grid — the plate's
-             speckle sits INSIDE the facets, it never gates a whole quad. Pure
-             f(surface position, uTime), so setSim replays it byte-identically. */
-          vec2 g = vW * 3.4;
-          vec2 ci = floor(g), cf = fract(g) - 0.5;
-          float r1 = h21(ci), r2 = h21(ci + 19.7);
-          float tw = 0.5 + 0.5 * sin(uTime * (0.7 + r2 * 2.1) + r1 * 57.3);
-          float sp = step(0.52, r1) * smoothstep(0.20, 0.92, tw)
-                   * smoothstep(0.46, 0.08, length(cf));
-          col = mix(col, vec3(0.885, 0.905, 0.935), clamp(sp * vLit * 0.92, 0.0, 0.92));
-          /* the plate's fine grain across the lit band */
-          col += (h21(floor(vW * 8.0)) - 0.5) * 0.075 * vLit;
-          gl_FragColor = vec4(col, 1.0);
+          /* SUB-FACET SPARKLE — the sea lane's mechanism (sea3d buildWater), ported
+             and then hardened for this set's much bigger band.
+             The sea adds three incommensurate travelling waves raised to a high
+             power, which leaves isolated pinpoint glints INSIDE each facet. Ported
+             straight, the shore's wider band showed that trio for what it is: a
+             quasi-periodic DOT LATTICE, ~10 px on a side at the book's 11.3 px/m
+             (rendered and rejected this round; the sea's band is narrow enough to
+             hide it). Domain-warping the waves only bent the lattice into zigzag
+             chains. So the same idea is carried on a JITTERED SEEDED CELL instead:
+             1.15 m cells, one seeded glint per cell placed at a hashed offset
+             inside it, ~32% of cells occupied, each breathing on its own seeded
+             period. Irregular by construction — no lattice, no dither field.
+             Coverage works out at ~4% of band area against the plate's measured
+             6.3% near-white, and each speck is ~3 px, so it reads as glitter on
+             water rather than the milky haze round 3 shipped.
+             Pure f(surface position, uTime): setSim replays it byte-identically. */
+          vec2 g = vW / 1.15;
+          vec2 ci = floor(g), cf = g - ci;
+          float spark = 0.0;
+          for (int j = -1; j <= 1; j++) {
+            for (int i = -1; i <= 1; i++) {
+              vec2 o = vec2(float(i), float(j));
+              vec2 id = ci + o;
+              float r3 = h21(id + 7.13);
+              if (r3 >= 0.32) continue;                 /* most cells stay dark */
+              float r1 = h21(id), r2 = h21(id + 31.7);
+              vec2 c = o + vec2(0.18 + 0.64 * r1, 0.18 + 0.64 * r2);
+              float tw = 0.5 + 0.5 * sin(uTime * (0.8 + r2 * 2.6) + r1 * 57.3);
+              spark = max(spark, smoothstep(0.24, 0.02, length(cf - c)) * tw);
+            }
+          }
+          col += vec3(0.90, 0.93, 0.99) * vLit * spark * 0.85;
+          gl_FragColor = vec4(min(col, vec3(1.0)), 1.0);
         }`,
     });
     const water = new THREE.Mesh(g, waterMat);
@@ -729,12 +836,12 @@ export function createShoreScene() {
       return !(c.y < archY && c.y > -0.5);
     });
     jitterByPos(g, 80931, 0.7);
-    const geo = facetColors(g, '#98948c', 80931, 0.14);
+    const geo = facetColors(g, '#a79079', 80931, 0.14);
     /* grass wrap on the up-facing crown facets (the plate's green cap edge) */
     {
       const pos = geo.attributes.position, col = geo.attributes.color;
       const a = new THREE.Vector3(), b = new THREE.Vector3(), c3 = new THREE.Vector3(), nn = new THREE.Vector3();
-      const grass = new THREE.Color('#74884f');
+      const grass = new THREE.Color('#a5a962');
       const rnd = mulberry32(80936);
       for (let f = 0; f < pos.count / 3; f++) {
         a.fromBufferAttribute(pos, f * 3); b.fromBufferAttribute(pos, f * 3 + 1);
@@ -756,7 +863,7 @@ export function createShoreScene() {
     const cg = new THREE.CircleGeometry(1, 24);
     cg.rotateX(-Math.PI / 2);
     jitterByPos(cg, 80934, 0.05);
-    const crownGeo = facetColors(cg, '#72864e', 80934, 0.12);
+    const crownGeo = facetColors(cg, '#a3a860', 80934, 0.12);
     crownGeo.scale(CLIFF.rx * 0.74, 1, CLIFF.rz * 0.74);
     /* W2: the crown is the plate's biggest meadow — give it the same patch field
        and canopy shade the island mass carries, or it reads as one flat disc */
@@ -861,7 +968,7 @@ export function createShoreScene() {
             new THREE.Vector3(ax + (bx - ax) * t, TER + 0.22 + course * 0.42, az + (bz - az) * t),
             q, new THREE.Vector3(0.55 + rnd() * 0.2, 0.42 + rnd() * 0.1, 0.95 + rnd() * 0.25));
           wallIM.setMatrixAt(wi, m4);
-          wallIM.setColorAt(wi, col.set('#93939b').multiplyScalar(0.82 + rnd() * 0.34));
+          wallIM.setColorAt(wi, col.set('#b3a893').multiplyScalar(0.82 + rnd() * 0.34));
           wi++;
         }
       }
@@ -874,8 +981,8 @@ export function createShoreScene() {
     /* timber pens: rotated rect behind the wall, posts + 3 rails + a divider */
     const wallYaw = Math.atan2(WALL_PTS[2][0] - WALL_PTS[1][0], WALL_PTS[2][1] - WALL_PTS[1][1]);
     const PEN = { cx: 53.8, cz: -23.2, w: 10.6, d: 6.2, yaw: wallYaw };
-    const postG = new THREE.CylinderGeometry(0.07, 0.09, 1.1, 6);
-    const railG = new THREE.CylinderGeometry(0.045, 0.045, 1, 5);
+    const postG = new THREE.CylinderGeometry(0.095, 0.118, 1.1, 6);
+    const railG = new THREE.CylinderGeometry(0.064, 0.064, 1, 5);
     railG.rotateZ(Math.PI / 2);
     const posts = [], rails = [];
     const cos = Math.cos(PEN.yaw), sin = Math.sin(PEN.yaw);
@@ -904,19 +1011,19 @@ export function createShoreScene() {
         }
       }
     }
-    const postIM = new THREE.InstancedMesh(postG, flatMat({ color: '#6e4a2a' }), posts.length);
-    const railIM = new THREE.InstancedMesh(railG, flatMat({ color: '#7a5c36' }), rails.length);
+    const postIM = new THREE.InstancedMesh(postG, flatMat({ color: '#825c34' }), posts.length);
+    const railIM = new THREE.InstancedMesh(railG, flatMat({ color: '#8e6c3e' }), rails.length);
     posts.forEach((pp, i) => {
       e.set(pp.lean, 0, pp.lean * 0.7); q.setFromEuler(e);
       m4.compose(new THREE.Vector3(pp.x, TER + 0.5, pp.z), q, new THREE.Vector3(1, pp.s, 1));
       postIM.setMatrixAt(i, m4);
-      postIM.setColorAt(i, col.set('#6e4a2a').multiplyScalar(0.85 + rnd() * 0.3));
+      postIM.setColorAt(i, col.set('#825c34').multiplyScalar(0.85 + rnd() * 0.3));
     });
     rails.forEach((r, i) => {
       e.set(0, r.ang - Math.PI / 2, r.bow); q.setFromEuler(e);
       m4.compose(new THREE.Vector3(r.x, r.y, r.z), q, new THREE.Vector3(r.len, 1, 1));
       railIM.setMatrixAt(i, m4);
-      railIM.setColorAt(i, col.set('#7a5c36').multiplyScalar(0.85 + rnd() * 0.3));
+      railIM.setColorAt(i, col.set('#8e6c3e').multiplyScalar(0.85 + rnd() * 0.3));
     });
     postIM.castShadow = railIM.castShadow = true;
     postIM.name = 'pen-posts'; railIM.name = 'pen-rails';
@@ -964,7 +1071,14 @@ export function createShoreScene() {
     const laurels = new THREE.Group(); laurels.name = 'laurels'; parts['laurels'] = laurels;
     const yardTrees = new THREE.Group(); yardTrees.name = 'yard-trees'; parts['yard-trees'] = yardTrees;
     grp.add(laurels, yardTrees);
-    const TON = ['#5f7a44', '#6e8c50', '#7d9457', '#93a86a'];
+    /* W5 — CANOPY TONES. Sampled off the plate's mainland trees: mean #474219,
+       lit tenth #585325, second cluster #36311c / #5c552c. That is an OLIVE with
+       R >= G and B at roughly 0.4 of R, not the green-dominant leaf the shipped
+       build used (#5f7a44 family, G >> R), which the blue night key then pushed
+       to the navy blobs Fable named (render canopy read #23321e / #1d1c1f).
+       These are albedos under a blue-keyed rig, so they sit above the plate's
+       rendered values by design. */
+    const TON = ['#6a6a35', '#77763e', '#848147', '#948f57'];
     const tree = (into, x, y, z, s, seed) => {
       const g = new THREE.Group();
       const R = mulberry32(seed);
@@ -997,16 +1111,20 @@ export function createShoreScene() {
     /* olive bushes — TWO instanced systems, plate density */
     const rnd = mulberry32(82010);
     const bushG = jitterByPos(new THREE.IcosahedronGeometry(1, 1), 82010, 0.2);
-    const bushGeo = facetColors(bushG, '#8a8c4e', 82010, 0.14);
+    const bushGeo = facetColors(bushG, '#9d9c58', 82010, 0.14);
     const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(),
           col = new THREE.Color();
-    const fill = (im, spots) => {
+    const fill = (im, spots, key = 1) => {
       spots.forEach((s0, i) => {
         e.set(0, rnd() * Math.PI, 0); q.setFromEuler(e);
-        const sc = 0.85 + rnd() * 0.85;
+        const sc = (0.85 + rnd() * 0.85) * (s0[3] || 1);   /* [3] = per-spot size mult */
         m4.compose(new THREE.Vector3(s0[0], s0[1], s0[2]), q, new THREE.Vector3(sc, sc * 0.72, sc));
         im.setMatrixAt(i, m4);
-        im.setColorAt(i, col.set(rnd() < 0.4 ? '#6e7440' : '#8a8c4e').multiplyScalar(0.85 + rnd() * 0.3));
+        /* `key` lifts a whole system's albedo: the crag tufts sit on the diorama's
+           dark west flank, away from both the moon and the fire, and the plate
+           still paints them a clear olive rather than a silhouette. */
+        im.setColorAt(i, col.set(rnd() < 0.4 ? '#84864a' : '#9d9c58')
+          .multiplyScalar((0.85 + rnd() * 0.3) * key));
       });
       im.count = spots.length;
       im.castShadow = true;
@@ -1014,7 +1132,7 @@ export function createShoreScene() {
     };
     const cragIM = new THREE.InstancedMesh(bushGeo, flatMat({ vertexColors: true }), CRAG_SPOTS.length);
     cragIM.name = 'crag-bushes'; parts['crag-bushes'] = cragIM;
-    fill(cragIM, CRAG_SPOTS);
+    fill(cragIM, CRAG_SPOTS, 1.5);
     const beachIM = new THREE.InstancedMesh(bushGeo, flatMat({ vertexColors: true }), BEACH_SPOTS.length);
     beachIM.name = 'beach-bushes'; parts['beach-bushes'] = beachIM;
     fill(beachIM, BEACH_SPOTS);
@@ -1044,7 +1162,7 @@ export function createShoreScene() {
         p.setXYZ(i, nx, py, nz);
       }
       jitterByPos(g, seed, r * 0.24);
-      const m = new THREE.Mesh(facetColors(g, '#b8b0a2', seed, 0.16), flatMat({ vertexColors: true }));
+      const m = new THREE.Mesh(facetColors(g, '#bdad95', seed, 0.16), flatMat({ vertexColors: true }));
       m.position.set(x, 0, z);
       m.rotation.set(leanX, 0, leanZ);
       m.castShadow = true;
@@ -1060,7 +1178,7 @@ export function createShoreScene() {
     const B = [[-15.5, 2.8], [-9.0, 7.5], [-22.5, 6.5], [10.8, 12.2], [14.3, 13.8],
       [16.2, 10.5], [-6.2, 10.8], [12.8, 15.6], [-24.5, 2.0], [8.3, 15.2], [17.5, 14.6],
       [-18.0, 8.8], [44.5, -25.5], [58.0, -16.0], [50.5, -15.2]];
-    const bIM = new THREE.InstancedMesh(facetColors(bG, '#9a9aa0', 83010, 0.14),
+    const bIM = new THREE.InstancedMesh(facetColors(bG, '#a89c8c', 83010, 0.14),
       flatMat({ vertexColors: true }), B.length);
     const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(),
           col = new THREE.Color();
@@ -1070,7 +1188,7 @@ export function createShoreScene() {
       m4.compose(new THREE.Vector3(s0[0], terrainH(s0[0], s0[1]) + 0.22 * sc, s0[1]),
         q, new THREE.Vector3(sc, sc * 0.8, sc));
       bIM.setMatrixAt(i, m4);
-      bIM.setColorAt(i, col.set('#9a9aa0').multiplyScalar(0.8 + rnd() * 0.36));
+      bIM.setColorAt(i, col.set('#a89c8c').multiplyScalar(0.8 + rnd() * 0.36));
     });
     bIM.castShadow = true;
     bIM.name = 'beach-boulders'; parts['beach-boulders'] = bIM;
@@ -1425,12 +1543,27 @@ export function createShoreScene() {
   });
 
   /* ===== the light rigs: night (the book's frame) / dawn preset ===== */
-  const hemi = new THREE.HemisphereLight('#4d6296', '#514034', 1.05);
+  /* W5 — the ambient key comes DOWN (1.05 -> 0.84) and warms off the blue. Measured
+     against the plate, the shipped rig was lifting the wrong things: the left crags
+     came out at L 0.197 against the plate's 0.157 and strongly blue (mean B 0.309 vs
+     R 0.187), while the mainland sat at 0.157 against the plate's 0.195. One flat
+     hemisphere cannot hold both, so the ambient drops and the mainland gets its own
+     key below. */
+  const hemi = new THREE.HemisphereLight('#4a5a84', '#57452f', 0.84);
   const moon = new THREE.DirectionalLight('#c0cce8', 0.75);
   moon.position.set(-35, 58, 62);                  /* high front-left — the plate's pale faces */
   const sun = new THREE.DirectionalLight('#ffc9a0', 0);
   sun.position.set(95, 32, 18);                    /* dawn, low from the east */
-  root.add(hemi, moon, sun);
+  /* THE MAINLAND KEY (W5). The far shore is the story's destination — the cave the
+     crew will walk into — and the plate keeps it CLEARLY lit while the strait stays
+     black. A directional light cannot do that (it lights the whole diorama), so the
+     mainland gets a local point key: parked downstage-above the yard, inverse-square,
+     no shadow (the campfire remains THE one shadow caster, unchanged). At the yard
+     it lands 1/350 of intensity; back at the camp 22 m further off it is 1/3150 —
+     a 9x falloff, so the beach and the strait keep their dark. */
+  const mainKey = new THREE.PointLight('#c8cfdc', 430, 92, 2);
+  mainKey.position.set(46, 18, -26);
+  root.add(hemi, moon, sun, mainKey);
   parts['light-rig'] = hemi;
 
   const setState = (state) => {
@@ -1440,11 +1573,12 @@ export function createShoreScene() {
     for (const o of nightOnly) o.visible = !day;
     for (const o of fireParts) o.visible = !day;
     waterMat.uniforms.uDay.value = day;
-    hemi.color.set(day ? '#e0a9a0' : '#4d6296');
-    hemi.groundColor.set(day ? '#6a5a48' : '#514034');
-    hemi.intensity = day ? 1.3 : 1.05;
+    hemi.color.set(day ? '#e0a9a0' : '#4a5a84');
+    hemi.groundColor.set(day ? '#6a5a48' : '#57452f');
+    hemi.intensity = day ? 1.3 : 0.84;
     moon.intensity = day ? 0 : 0.75;
     sun.intensity = day ? 1.7 : 0;
+    mainKey.intensity = day ? 0 : 430;      /* dawn's sun lights the mainland itself */
     return state;
   };
   setState('night');
