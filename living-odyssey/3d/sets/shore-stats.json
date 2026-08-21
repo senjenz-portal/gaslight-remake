@@ -1,5 +1,5 @@
 {
  "actor": "rigged Ulysses, 1.75 m (= the ledger's 20 px), walks the audited beach path at 1.4 m/s; posture 0.04° standing / 5.64° max walk (law ±5°/≤12°)",
- "laws": "deterministic (mulberry32-seeded; fireSample sim-replay byte-identical) · obstacle law: 241 path samples clear every census box +10 px · ledger scale honest per set: 11.3 px/m off ship-2, MAINLAND_S 19.5 exported · turntable 0/90/180/270 no holes · assembly gate 34/34 specified parts built, 0 fused · zero console errors",
- "compareVerdict": "same floor plan, register, palette and light logic as the plate; the painting keeps its richer grade, pale day-smoke and hand-drawn silhouettes — honest gap, stated"
+ "laws": "deterministic (mulberry32-seeded; fireSample sim-replay byte-identical) · obstacle law: 241 path samples clear every census box +10 px · ledger scale honest per set: 11.3 px/m off ship-2, MAINLAND_S 19.5 exported · turntable 0/90/180/270 no holes — the island is ONE closed sculpted mass · 18,638 triangles / 36 named parts (ceiling 60,000) · zero console errors",
+ "compareVerdict": "REBUILT to the cave's bar: the strait is a real water surface (coherent moonpath band, facet sparkle, wine-dark flanks, shore foam), the terrain one sculpted mass with ridged cliff and crag monoliths, the ships carry curls, rigging and shipped oars. Same floor plan, register, palette and light logic as the plate; the painting keeps its richer grade, larger-than-survey lobes and hand-drawn silhouettes — honest gap, stated in tools/shore-forge/rebuild/PASSLOG.md"
 }
