@@ -1,0 +1,98 @@
+{
+  "lane": "3d-cast",
+  "created": "2026-08-21",
+  "note": "The 3D cast registry — every entry read live by 3d/cast/. Two photo-rig BUILDS carry four parts: the crew pair is one biped rig (the slate elder is a tint recipe, not a second build), the rams are one quadruped rig (the flock is the same rig at the ewes' stock height). Scale is the ledger's own arithmetic per set; paths are the demo3d corridor audited against every ledger obstacle box.",
+  "pxPerM": { "cave": 43 },
+  "processionSpeedMps": 1.1,
+  "seed": 940127,
+  "members": [
+    {
+      "id": "crew-ochre",
+      "part": "the young crewman — the ochre man of the crew canonical",
+      "file": "cast/crew-walk.glb",
+      "sha256": "af68648c4aa3da799c33b1ac00434fb52821cf5c2bbf0ce0cfa93b219efd3cd8",
+      "kind": "biped",
+      "source": "assets/plates/odyssey/actors/crew-canonical.png (left figure, cropped)",
+      "pipeline": ["nbpro_edit_mv.py turnaround (left+back off the front)",
+                   "model_tripo-p1-multiview-to-3d (seed 1727)",
+                   "model_tripo-rigging-v1 + banked biped:walk"],
+      "clips": ["preset:biped:walk"],
+      "clipDuration_s": 2.375,
+      "clipRate": 1.0,
+      "heightM": 1.70,
+      "scalePx": { "cave": { "height": 73 } },
+      "posture": {
+        "head": "Head",
+        "feet": "Foot|ToeBase",
+        "fwdBind": [0.097, 0, 0.995],
+        "clipCorr": { "Spine02": 4, "NeckTwist01": 5, "Head": 6 },
+        "restCorr": {},
+        "law": "standing ±5°, walk ≤12° — banked walk bowed 16.4–20.5°, counter-rotated to 1.5–5.6 (tools/rigpitch.py)"
+      },
+      "tint": null
+    },
+    {
+      "id": "crew-slate",
+      "part": "the slate elder — the second crewman, a palette swap on the same rig ($0)",
+      "base": "crew-ochre",
+      "tint": {
+        "name": "slate-elder",
+        "ops": [
+          { "match": { "hMin": 25, "hMax": 48, "sMin": 0.22, "lMin": 0.25, "lMax": 0.82 },
+            "hueTo": 216, "satMul": 0.40, "lightMul": 0.92,
+            "note": "the ochre tunic to slate blue-grey (skin hue sits below 25°, untouched)" },
+          { "match": { "hMax": 50, "lMax": 0.30 },
+            "satMul": 0.22, "lightMul": 1.45,
+            "note": "dark warm hair/beard mass to grey" }
+        ]
+      }
+    },
+    {
+      "id": "ram-great",
+      "part": "THE GREAT RAM — the anomaly that hides a slung man (ledger O.11)",
+      "file": "cast/ram-walk.glb",
+      "sha256": "fddf4af01a52c323de539f08f18f017c1212358502a3aecd6b5641882fee4036",
+      "kind": "quadruped",
+      "source": "assets/plates/odyssey/actors/ram-great-canonical.png (the side view is the canonical itself)",
+      "pipeline": ["nbpro_edit_mv.py head-on front (side as reference)",
+                   "model_tripo-p1-multiview-to-3d (seed 940)",
+                   "model_tripo-rigging-v2-5 rigType:quadruped + banked quadruped:walk"],
+      "clips": ["preset:quadruped:walk"],
+      "clipDuration_s": 2.6,
+      "clipRate": 1.0,
+      "scalePx": { "cave": { "length": 105 } },
+      "scaleNote": "greatRam_authored: 100–110 px LONG at the cave's 43 px/m — must hide a slung 75 px Ulysses",
+      "posture": {
+        "head": "tripoHead_2",
+        "feet": "Limb_",
+        "fwdBind": [0, 0, 1],
+        "clipCorr": {},
+        "restCorr": {},
+        "law": "head-nod range ≤12° over the walk, body level ±5°"
+      },
+      "grade": [1.30, 1.10, 0.82],
+      "gradeNote": "near-white fleece goes blue under the night fill — warm bias to sit with the plate's painted ewes (the crew's warm albedo needs none)",
+      "tint": null
+    },
+    {
+      "id": "ram-flock",
+      "part": "the flock — the same rig at the painted ewes' stock height ($0)",
+      "base": "ram-great",
+      "count": 4,
+      "clipRate": 1.9,
+      "scalePx": { "cave": { "height": 24 } },
+      "scaleNote": "ramWalk_stock: walkers draw AT the painted ewes' 20–25 px (round-7 placement audit #9)",
+      "tint": {
+        "name": "ewe-grey",
+        "ops": [
+          { "match": { "sMin": 0.30 },
+            "satMul": 0.55, "lightMul": 1.00,
+            "note": "horns and hooves toward the ewes' duller horn-grey" },
+          { "match": {},
+            "lightMul": 1.06,
+            "note": "small bodies read darker at 24 px — lift the fleece a step so the flock sits with the painted ewes" }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "crew": {
+    "gates": { "tunic_dRGB_max": 13, "skin_dRGB_max": 14, "law": "<= 30, all three views" },
+    "mesh": { "model": "model_tripo-p1-multiview-to-3d", "triangles": 5351,
+              "vertices": null, "turntable": "PASS (min coverage 8.9%)" },
+    "rig": { "model": "model_tripo-rigging-v1", "joints": 41,
+             "clip": "preset:biped:walk", "clipDuration_s": 2.375 },
+    "posture": { "standingPitchDeg": -1.29, "walkPitchMaxDeg": 5.61,
+                 "uncorrected": "16.4-20.5", "corr": "Spine02+4 NeckTwist01+5 Head+6" },
+    "cu": { "mesh": 75, "rig": 70 }
+  },
+  "ram": {
+    "gates": { "fleece_dRGB": 7, "horn_dRGB": 9, "law": "<= 30, both views" },
+    "mesh": { "model": "model_tripo-p1-multiview-to-3d", "triangles": 5201,
+              "vertices": null, "turntable": "PASS (min coverage 21.4%)" },
+    "rig": { "model": "model_tripo-rigging-v2-5", "joints": 19,
+             "clip": "preset:quadruped:walk", "clipDuration_s": 2.6 },
+    "posture": { "nodRangeDeg": 8.8, "bodyPitchMeanDeg": -1.6,
+                 "note": "nod range over 48 walk samples (law <=12); body axis pitch -5.2..+3.7 through the clip (numpy GLB sweep)" },
+    "cu": { "mesh": 75, "rig": 70 }
+  },
+  "quadrupedVerdict": "model_tripo-rigging-v2-5 exposes rigType quadruped|hexapod|octopod|avian|serpentine|aquatic and banked quadruped:walk — the ram is a photo-rig, not a procedural fallback",
+  "procession": { "speedMps": 1.1, "corridor": "demo3d PATH_PTS (audited)", "seed": 940127 },
+  "smoke": { "tool": "tools/cast3d_smoke.mjs", "walkers": 7,
+             "determinism": "setSimT twice -> byte-identical positions",
+             "minGapPx": 180.5, "fireClearancePx": 10.67,
+             "scale": { "crew_heightPx": 73, "greatRam_lengthPx": 105, "flock_heightPx": 24 },
+             "tint": "slate tunic: warm-window mass 360793 -> 0; cool mass 360809 (median rgb 90,106,130)" }
+}

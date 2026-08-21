@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The cast — crew and rams, photo-rigged into the Living Book</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.55;max-width:78ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  figure{margin:0;}
+  figure img{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;}
+  figcaption{font-size:13px;color:var(--note);margin-top:7px;line-height:1.45;}
+  figcaption b{color:var(--cream-bright);font-weight:normal;}
+  #stage{width:100%;aspect-ratio:1408/768;display:block;border:1px solid #2a2417;
+    border-radius:3px;background:#060a18;}
+  .stage-cue{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);margin-top:7px;}
+  .law{font-size:14px;color:var(--note);border-left:2px solid var(--gold);padding:2px 0 2px 14px;
+    margin:26px 0 20px;max-width:74ch;}
+  .law b{color:var(--cream-bright);font-weight:normal;}
+  .counts{margin-top:20px;font-size:13px;color:var(--note);line-height:1.9;}
+  .counts b{color:var(--cream-bright);font-weight:normal;}
+  .counts .num{color:#d8b45a;}
+  .art-row{display:grid;gap:18px;margin-top:6px;}
+  .cols-3{grid-template-columns:1fr 1fr 1fr;}
+  @media (max-width:640px){.cols-3{grid-template-columns:1fr 1fr;}}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  @media (max-width:760px){.two-col{grid-template-columns:1fr;}}
+  footer{margin-top:80px;}
+  footer p{color:var(--note);font-size:14px;}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../../app/vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Pipeline Demo · Unlisted</div>
+  <h1>The cast — crew and rams, photo-rigged into the Living Book</h1>
+  <div class="rule"></div>
+  <p class="note">Two builds, four speaking parts. The crew pair is ONE photo-rig off the sealed
+  crew canonical — the ochre man reconstructed
+  <span class="tag">(model_tripo-p1-multiview-to-3d)</span> and rigged with the banked biped walk
+  <span class="tag">(model_tripo-rigging-v1)</span>; the slate elder is a deterministic
+  material-palette swap on the very same rig, no second build. The rams are ONE quadruped
+  photo-rig off the great-ram canonical — Tripo Rigging&nbsp;2.5's
+  <span class="tag">rigType:quadruped</span> preset with the banked
+  <span class="tag">quadruped:walk</span> — the great ram at his authored anomaly scale, the
+  flock the same rig set down at the painted ewes' stock height. All of them walk the cave's
+  audited corridor in one procession, every position a pure function of sim-time.</p>
+
+  <canvas id="stage"></canvas>
+  <div class="stage-cue"><span>the procession — ochre man, slate elder, the great ram, then the flock, in at the mouth and out along the downstage floor</span>
+    <span id="clip-cue">one shared pace — spacing can never close</span></div>
+
+  <div class="law"><b>The registry is the law.</b> Everything on this stage is read from
+  <a href="../cast.json">cast.json</a>: which GLB, which clips, the honest ledger scale per set
+  (the cave's 43&nbsp;px/m — crew at 73&nbsp;px, the great ram 105&nbsp;px long, flock at the
+  ewes' 24&nbsp;px stock height), and the tint recipes for the palette-swap variants. The walk
+  corridor is the demo3d path already audited against every ledger obstacle box (fire ring
+  clearance ≥&nbsp;10&nbsp;px); one shared speed means the procession's spacing is invariant —
+  no actor can ever walk through another, or through a box.</div>
+
+  <div class="two-col">
+    <div>
+      <div class="lbl" style="margin-bottom:10px;">the crew build — one rig, two men</div>
+      <div class="art-row cols-3">
+        <figure><img src="crew-front.png" alt="Crew front view"><figcaption><b>front · 0°</b> — cropped from the sealed canonical</figcaption></figure>
+        <figure><img src="crew-view-left.png" alt="Crew left profile"><figcaption><b>left · 90°</b> — front as reference</figcaption></figure>
+        <figure><img src="crew-view-back.png" alt="Crew back view"><figcaption><b>back · 180°</b> — front as reference</figcaption></figure>
+      </div>
+      <div class="counts" id="c-crew"></div>
+    </div>
+    <div>
+      <div class="lbl" style="margin-bottom:10px;">the ram build — one rig, the great one and the flock</div>
+      <div class="art-row cols-3">
+        <figure><img src="ram-front.png" alt="Ram head-on front view"><figcaption><b>front · 0°</b> — generated head-on, side as reference</figcaption></figure>
+        <figure><img src="ram-view-left.png" alt="Ram side view"><figcaption><b>left · 90°</b> — the canonical itself</figcaption></figure>
+        <figure><img src="ram-turn-left.png" alt="Ram mesh turntable"><figcaption><b>the delivered mesh</b> — turntable left</figcaption></figure>
+      </div>
+      <div class="counts" id="c-ram"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="rule"></div>
+    <p class="lbl"><a href="../../">THE LIVING ODYSSEY</a> ·
+      <a href="../../demo3d/">the Ulysses demo3d stage</a> ·
+      <a href="../../../king-demo/photo-rig/">the King photo-rig demo</a></p>
+    <p>Demo only — not wired into the book. <a href="../../../">← back to the landing page</a></p>
+  </footer>
+</div>
+
+<script>
+/* ---- per-build counts, read from stats.json (itself read from the delivered files) ---- */
+(function(){
+  const fmt = (n) => typeof n === 'number' ? n.toLocaleString('en-US') : n;
+  const row = (label, val) => '<b>' + label + '</b> · <span class="num">' + val + '</span><br>';
+  fetch('stats.json').then((r) => r.json()).then((s) => {
+    const c = s.crew, r = s.ram;
+    document.getElementById('c-crew').innerHTML =
+      row('source', 'crew-canonical.png — the ochre man, cropped') +
+      row('same-person gate', 'tunic ΔRGB ' + c.gates.tunic_dRGB_max + ' / skin ΔRGB ' +
+        c.gates.skin_dRGB_max + ' (law ≤ 30)') +
+      row('mesh', fmt(c.mesh.triangles) + ' triangles — turntable ' + c.mesh.turntable) +
+      row('rig', c.rig.model + ' — ' + c.rig.joints + ' joints, ' + c.rig.clip + ' · ' +
+        c.rig.clipDuration_s + ' s') +
+      row('posture law', 'standing ' + c.posture.standingPitchDeg + '° (±5) · walk max ' +
+        c.posture.walkPitchMaxDeg + '° (≤12)') +
+      row('the slate elder', 'palette swap on the same rig — $0');
+    document.getElementById('c-ram').innerHTML =
+      row('source', 'ram-great-canonical.png — the side view is the canonical itself') +
+      row('same-animal gate', 'fleece ΔRGB ' + r.gates.fleece_dRGB + ' / horn ΔRGB ' +
+        r.gates.horn_dRGB + ' (law ≤ 30)') +
+      row('mesh', fmt(r.mesh.triangles) + ' triangles — turntable ' + r.mesh.turntable) +
+      row('rig', r.rig.model + ' — rigType:quadruped, ' + r.rig.joints + ' joints, ' +
+        r.rig.clip + ' · ' + r.rig.clipDuration_s + ' s') +
+      row('posture law', 'head-nod range ' + r.posture.nodRangeDeg + '° (≤12) · body pitch ' +
+        r.posture.bodyPitchMeanDeg + '° (±5)') +
+      row('the flock', 'same rig at the ewes’ 24 px stock height — $0');
+    window.__statsLoaded = true;                       /* verification hook */
+  }).catch((e) => console.error('stats.json failed', e));
+})();
+</script>
+
+<script type="module">
+/* ---- THE CAST: crew pair + rams, registry-driven, deterministic in sim-time ---- */
+import * as THREE from 'three';
+import { GLTFLoader } from '../../../app/vendor/loaders/GLTFLoader.js';
+
+const PLATE_W = 1408, PLATE_H = 768;
+const FIRE = [638, 427];                  /* EMIS blaze anchor, plate px */
+const FLICK_PER = 3.1;                    /* the plate's own fire period, s */
+const SEED = 940127;                      /* the procession's one seed */
+
+const wx = (px) => px;
+const wy = (py) => PLATE_H - py;
+
+/* mulberry32 — the book's seeded RNG */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, preserveDrawingBuffer:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;   /* the plate ships its own grade */
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, PLATE_W, PLATE_H, 0, 0.1, 2000);
+camera.position.set(0, 0, 1000);
+
+const texLoader = new THREE.TextureLoader();
+const srgb = (t) => { t.colorSpace = THREE.SRGBColorSpace; return t; };
+
+/* the plate itself — full-frame backdrop, exactly the book's frame */
+{
+  const t = srgb(texLoader.load('../../assets/set/cave/cave-shut.jpg'));
+  const plate = new THREE.Mesh(
+    new THREE.PlaneGeometry(PLATE_W, PLATE_H),
+    new THREE.MeshBasicMaterial({ map: t }));
+  plate.position.set(PLATE_W / 2, PLATE_H / 2, 0);
+  scene.add(plate);
+}
+/* fire ring front lip — behind the actors (they pass in FRONT of the ring) */
+{
+  const t = srgb(texLoader.load('../../assets/set/cave/firering-front-shut.png'));
+  const lip = new THREE.Mesh(
+    new THREE.PlaneGeometry(214, 98),
+    new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false }));
+  lip.position.set(wx(523 + 107), wy(409 + 49), 5);
+  scene.add(lip);
+}
+/* the blaze bloom, breathing in front */
+let bloom = null;
+{
+  const t = srgb(texLoader.load('../../assets/set/cave/cave-bloom-fire.png'));
+  bloom = new THREE.Mesh(
+    new THREE.PlaneGeometry(536, 536),
+    new THREE.MeshBasicMaterial({ map: t, blending: THREE.AdditiveBlending,
+      transparent: true, depthWrite: false, opacity: 0.3 }));
+  bloom.position.set(wx(FIRE[0]), wy(FIRE[1]), 90);
+  bloom.renderOrder = 40;
+  scene.add(bloom);
+}
+/* lights — the demo3d rig: warm key at the blaze, cool night fill, the two lamps */
+const fireLight = new THREE.PointLight(0xffbf4a, 30000, 0, 2);
+fireLight.position.set(wx(FIRE[0]), wy(FIRE[1]) + 16, 150);
+scene.add(fireLight);
+const fill = new THREE.DirectionalLight(0x9db8ff, 1.7);
+fill.position.set(300, 900, 600);
+fill.target.position.set(704, 300, 0);
+scene.add(fill, fill.target);
+scene.add(new THREE.HemisphereLight(0x3a4f7f, 0x2a1f14, 0.95));
+const lampL = new THREE.PointLight(0xff8506, 8000, 0, 2);
+lampL.position.set(wx(248), wy(356), 120);
+const lampR = new THREE.PointLight(0xffd764, 11000, 0, 2);
+lampR.position.set(wx(1260), wy(371), 120);
+scene.add(lampL, lampR);
+
+/* the corridor — demo3d's audited path (tools/demo3d_pathaudit.mjs: zero box
+   intersections, fire ring >= 10 px), same points, same tension */
+const PATH_PTS = [
+  [250, 452], [360, 450], [450, 425], [500, 409], [600, 402], [705, 401],
+  [762, 419], [774, 458], [782, 505], [762, 528], [700, 534], [648, 537],
+  [668, 549], [730, 554], [820, 557], [900, 551], [962, 546], [1015, 538],
+];
+const path = new THREE.CatmullRomCurve3(
+  PATH_PTS.map(([x, y]) => new THREE.Vector3(x, y, 0)), false, 'catmullrom', 0.35);
+const PATH_LEN = path.getLength();
+
+/* ---- the tint engine: a palette swap is DATA (cast.json), not a second build ----
+ * match is an HSL window {hMin,hMax,sMin,sMax,lMin,lMax} (hue deg 0..360);
+ * ops are hueTo (set), satMul, lightMul. First matching op wins per pixel.   */
+function rgb2hsl(r, g, b){
+  r /= 255; g /= 255; b /= 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2;
+  if (mx === mn) return [0, 0, l];
+  const d = mx - mn;
+  const s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+  let h;
+  if (mx === r) h = ((g - b) / d + (g < b ? 6 : 0));
+  else if (mx === g) h = (b - r) / d + 2;
+  else h = (r - g) / d + 4;
+  return [h * 60, s, l];
+}
+function hsl2rgb(h, s, l){
+  h = ((h % 360) + 360) % 360 / 360;
+  if (s === 0){ const v = Math.round(l * 255); return [v, v, v]; }
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+  const f = (t) => {
+    t = ((t % 1) + 1) % 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  return [f(h + 1 / 3), f(h), f(h - 1 / 3)].map((v) => Math.round(v * 255));
+}
+function matchWin(hsl, m){
+  const [h, s, l] = hsl;
+  if (m.hMin !== undefined && h < m.hMin) return false;
+  if (m.hMax !== undefined && h > m.hMax) return false;
+  if (m.sMin !== undefined && s < m.sMin) return false;
+  if (m.sMax !== undefined && s > m.sMax) return false;
+  if (m.lMin !== undefined && l < m.lMin) return false;
+  if (m.lMax !== undefined && l > m.lMax) return false;
+  return true;
+}
+const tintCanvases = {};                   /* id -> canvas (the tint probe reads these) */
+function tintedTexture(srcTex, ops, id){
+  const img = srcTex.image;
+  const c = document.createElement('canvas');
+  c.width = img.width; c.height = img.height;
+  const g = c.getContext('2d', { willReadFrequently: true });
+  g.drawImage(img, 0, 0);
+  const d = g.getImageData(0, 0, c.width, c.height), p = d.data;
+  for (let i = 0; i < p.length; i += 4){
+    const hsl = rgb2hsl(p[i], p[i + 1], p[i + 2]);
+    for (const op of ops){
+      if (!matchWin(hsl, op.match || {})) continue;
+      const h2 = op.hueTo !== undefined ? op.hueTo : hsl[0];
+      const s2 = Math.min(1, hsl[1] * (op.satMul !== undefined ? op.satMul : 1));
+      const l2 = Math.min(1, hsl[2] * (op.lightMul !== undefined ? op.lightMul : 1));
+      const [r, gg, b] = hsl2rgb(h2, s2, l2);
+      p[i] = r; p[i + 1] = gg; p[i + 2] = b;
+      break;
+    }
+  }
+  g.putImageData(d, 0, 0);
+  tintCanvases[id] = c;
+  const t = new THREE.CanvasTexture(c);
+  t.flipY = srcTex.flipY;
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = srcTex.wrapS; t.wrapT = srcTex.wrapT;
+  return t;
+}
+function baseCanvas(srcTex, id){           /* untinted probe target */
+  const img = srcTex.image;
+  const c = document.createElement('canvas');
+  c.width = img.width; c.height = img.height;
+  c.getContext('2d', { willReadFrequently: true }).drawImage(img, 0, 0);
+  tintCanvases[id] = c;
+}
+
+/* contact shadow factory (demo3d's soft isometric ellipse) */
+function makeShadow(w, h){
+  const c = document.createElement('canvas');
+  c.width = 256; c.height = 96;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(128, 48, 4, 128, 48, 46);
+  grad.addColorStop(0.00, 'rgba(6,6,10,.55)');
+  grad.addColorStop(0.55, 'rgba(6,6,10,.28)');
+  grad.addColorStop(1.00, 'rgba(6,6,10,0)');
+  g.save(); g.translate(128, 48); g.scale(2.4, 1); g.translate(-128, -48);
+  g.fillStyle = grad; g.fillRect(0, 0, 256, 96); g.restore();
+  const m = new THREE.Mesh(
+    new THREE.PlaneGeometry(w, h),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c),
+      transparent: true, depthWrite: false, opacity: 0.5 }));
+  m.renderOrder = 10;
+  return m;
+}
+
+/* material hygiene + fade registry per actor */
+function dressMaterials(model, tintOps, id, grade){
+  const mats = [];
+  model.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of (Array.isArray(o.material) ? o.material : [o.material])){
+      if (!m || !m.isMeshStandardMaterial) continue;
+      if (tintOps && m.map) m.map = tintedTexture(m.map, tintOps, id);
+      else if (m.map && !(id in tintCanvases)) baseCanvas(m.map, id);
+      if (grade) m.color.multiply(new THREE.Color(...grade));
+      m.metalness = 0;
+      m.roughness = Math.min(m.roughness, 0.9);
+      m.transparent = true;
+      m.needsUpdate = true;
+      mats.push(m);
+    }
+  });
+  return mats;
+}
+
+const qcx = (deg) => new THREE.Quaternion()
+  .setFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(deg));
+
+/* ---- an actor: one parsed GLB instance placed on the corridor ---- */
+function buildActor(gltf, member, id){
+  const model = gltf.scene;
+  const bones = {};
+  model.traverse((o) => { if (o.isBone) bones[o.name] = o; });
+
+  /* posture law: corrective rest + clip counter-rotations from the registry */
+  const post = member.posture || {};
+  for (const [name, deg] of Object.entries(post.restCorr || {}))
+    if (bones[name]) bones[name].quaternion.multiply(qcx(deg));
+  const clip = gltf.animations[0] || null;
+  if (clip){
+    for (const track of clip.tracks){
+      const m = track.name.match(/(?:^|[/.])([A-Za-z0-9_]+)\.quaternion$/);
+      if (!m || !((post.clipCorr || {})[m[1]])) continue;
+      const c = qcx(post.clipCorr[m[1]]), q = new THREE.Quaternion();
+      for (let i = 0; i < track.values.length; i += 4)
+        q.fromArray(track.values, i).multiply(c).toArray(track.values, i);
+    }
+  }
+
+  /* honest ledger scale: height or length, in plate px, from the registry */
+  const box = new THREE.Box3().setFromObject(model);
+  const size = box.getSize(new THREE.Vector3());
+  const law = member.scalePx.cave;
+  const s = law.height !== undefined
+    ? law.height / size.y
+    : law.length / Math.max(size.x, size.z);
+  model.scale.setScalar(s);
+  const b = new THREE.Box3().setFromObject(model);
+  const bsz = b.getSize(new THREE.Vector3());
+  const bindSize = { height: +bsz.y.toFixed(2),
+                     length: +Math.max(bsz.x, bsz.z).toFixed(2) };
+  const center = b.getCenter(new THREE.Vector3());
+  model.position.x -= center.x;
+  model.position.z -= center.z;
+  model.position.y -= b.min.y;
+  model.traverse((o) => { if (o.isSkinnedMesh) o.frustumCulled = false; });
+  const mats = dressMaterials(model, member.tint ? member.tint.ops : null, id,
+                              member.grade || null);
+
+  const group = new THREE.Group();
+  group.add(model);
+  group.visible = false;
+  scene.add(group);
+
+  /* mixer + the grounding law, MESH-accurate: joints sit above the sole (a
+     quadruped's hoof mesh hangs below its last limb joint — the joint sweep
+     left the great ram floating), so sweep the SKINNED VERTICES through the
+     clip (boneTransform = the animated skin, exact) and lift the model so
+     the animated sole's minimum meets the group origin. */
+  let mixer = null;
+  if (clip){
+    const skins = [];
+    model.traverse((o) => { if (o.isSkinnedMesh) skins.push(o); });
+    mixer = new THREE.AnimationMixer(model);
+    mixer.clipAction(clip).play();
+    const v = new THREE.Vector3();
+    const minSkinY = () => {
+      group.updateMatrixWorld(true);
+      let min = Infinity;
+      for (const sm of skins){
+        const n = sm.geometry.attributes.position.count;
+        const stride = Math.max(1, Math.floor(n / 900));
+        for (let i = 0; i < n; i += stride){
+          sm.getVertexPosition(i, v);        /* skinned, mesh-local */
+          v.applyMatrix4(sm.matrixWorld);
+          if (v.y < min) min = v.y;
+        }
+      }
+      return min;
+    };
+    let minY = Infinity;
+    for (let i = 0; i <= 24; i++){
+      mixer.setTime((i / 24) * clip.duration);
+      minY = Math.min(minY, minSkinY());
+    }
+    mixer.setTime(0);
+    model.position.y -= minY - group.position.y;
+  }
+
+  /* posture instrument: pitch of a named bone's up-axis from vertical */
+  const headName = post.head;
+  const fwd = new THREE.Vector3(...(post.fwdBind || [0, 0, 1])).normalize();
+  const _q = new THREE.Quaternion(), _qm = new THREE.Quaternion(), _v = new THREE.Vector3();
+  const pitchDeg = () => {
+    if (!headName || !bones[headName]) return null;
+    group.updateMatrixWorld(true);
+    bones[headName].getWorldQuaternion(_q);
+    model.getWorldQuaternion(_qm).invert();
+    _q.premultiply(_qm);
+    _v.set(0, 1, 0).applyQuaternion(_q);
+    return THREE.MathUtils.radToDeg(Math.atan2(_v.dot(fwd), _v.y));
+  };
+
+  const shadowW = law.height !== undefined ? law.height * 1.3 : law.length * 1.15;
+  const shadow = makeShadow(shadowW, shadowW * 0.36);
+  scene.add(shadow);
+  shadow.visible = false;
+
+  return { id, member, group, model, mixer, clip, mats, shadow, pitchDeg,
+           bindSize, clipNames: gltf.animations.map((a) => a.name),
+           yaw: (member.yawOffsetDeg || 0) * Math.PI / 180 };
+}
+
+/* ---- registry load: cast.json is the single source of truth ---- */
+const registry = await (await fetch('../cast.json')).json();
+const loader = new GLTFLoader();
+const buffers = {};                        /* file -> ArrayBuffer, fetched once */
+async function bufferFor(file){
+  if (!buffers[file]) buffers[file] = await (await fetch('../' + file)).arrayBuffer();
+  return buffers[file];
+}
+async function parseInstance(file){
+  const buf = await bufferFor(file);
+  return new Promise((res, rej) => loader.parse(buf.slice(0), '', res, rej));
+}
+
+const actors = [];                         /* procession order = registry order */
+for (const member of registry.members){
+  const base = member.base
+    ? registry.members.find((m) => m.id === member.base) : member;
+  const spec = {                           /* variant inherits, then overrides */
+    ...base, ...member,
+    scalePx: member.scalePx || base.scalePx,
+    posture: member.posture || base.posture,
+    tint: member.tint || null,
+    grade: member.grade || base.grade || null,
+  };
+  const n = member.count || 1;
+  for (let i = 0; i < n; i++){
+    const gltf = await parseInstance(base.file);
+    actors.push(buildActor(gltf, spec, member.id + (n > 1 ? '-' + i : '')));
+  }
+}
+
+/* ---- the procession: pure f(simT), seeded phases, one shared speed ---- */
+const SPEED = registry.processionSpeedMps * registry.pxPerM.cave;  /* px/s */
+const WALK_T = PATH_LEN / SPEED;
+const CYCLE = WALK_T * (1 + 0.35);         /* 35% dark time behind the last walker */
+const SLOT = CYCLE / actors.length;
+const rng = mulberry32(SEED);
+const phases = actors.map((_, i) => i * SLOT + (rng() - 0.5) * 0.30 * SLOT);
+const FADE = 0.06;
+
+const P = new THREE.Vector3(), TAN = new THREE.Vector3();
+function placeAll(t){
+  for (let i = 0; i < actors.length; i++){
+    const a = actors[i];
+    const ct = ((t + phases[i]) % CYCLE + CYCLE) % CYCLE;
+    const walking = ct < WALK_T;
+    a.group.visible = walking;
+    a.shadow.visible = walking;
+    if (!walking) continue;
+    const u = ct / WALK_T;
+    const dist = u * PATH_LEN;
+    path.getPointAt(u, P);
+    path.getTangentAt(u, TAN);
+    const x = P.x, footY = wy(P.y);
+    a.group.position.set(x, footY, 40 + i * 0.01);
+    a.group.rotation.y = Math.atan2(TAN.x, TAN.y * 2.2) + a.yaw;
+    if (a.mixer && a.clip){
+      const rate = a.member.clipRate || 1;
+      a.mixer.setTime((((t + phases[i]) * rate) % a.clip.duration + a.clip.duration)
+        % a.clip.duration);
+    }
+    const fade = Math.min(1, Math.min(u, 1 - u) / FADE);
+    for (const m of a.mats) m.opacity = fade;
+    a.shadow.position.set(x, footY - 2, 30);
+    a.shadow.material.opacity = 0.5 * fade;
+    a._u = u; a._dist = dist;
+  }
+  /* the glare law (demo3d): whoever crosses BEHIND the flame column gets the
+     blaze's own bloom washed over them — the painted fire stays in front */
+  let glare = 0;
+  for (const a of actors){
+    if (!a.group.visible) continue;
+    if (wy(a.group.position.y) > 427) continue;      /* upstage of the blaze only */
+    glare = Math.max(glare,
+      Math.exp(-((a.group.position.x - 640) ** 2) / (2 * 70 * 70)));
+  }
+  placeAll._glare = glare;
+}
+
+function flick(t){
+  return 0.84 + 0.11 * Math.sin(2 * Math.PI * t / FLICK_PER)
+       + 0.05 * Math.sin(2 * Math.PI * t / 0.47 + 1.7)
+       + 0.04 * Math.sin(2 * Math.PI * t / 1.13 + 0.6);
+}
+
+function resize(){
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== Math.floor(w * renderer.getPixelRatio()) ||
+      canvas.height !== Math.floor(h * renderer.getPixelRatio())){
+    renderer.setSize(w, h, false);
+  }
+}
+
+let simT = 0;
+let frozen = false;
+function lightAll(t){
+  const f = flick(t);
+  fireLight.intensity = 30000 * f;
+  lampL.intensity = 8000 * (0.85 + 0.15 * Math.sin(2 * Math.PI * t / 5.7));
+  lampR.intensity = 11000 * (0.85 + 0.15 * Math.sin(2 * Math.PI * t / 6.3));
+  if (bloom) bloom.material.opacity = 0.22 + 0.55 * (f - 0.72)
+    + 0.30 * (placeAll._glare || 0);
+}
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  resize();
+  const dt = Math.min(clock.getDelta(), 0.1);
+  if (!frozen) simT += dt;
+  placeAll(simT);
+  lightAll(simT);
+  renderer.render(scene, camera);
+});
+
+/* ---- verification hooks ---- */
+window.__cast = {
+  get simT(){ return simT; },
+  setSimT(t){ frozen = true; simT = t; placeAll(t); lightAll(t);
+    renderer.render(scene, camera); },
+  resume(){ frozen = false; },
+  actors: actors.map((a, i) => ({
+    id: a.id,
+    get x(){ return a.group.position.x; },
+    get y(){ return a.group.position.y; },
+    get visible(){ return a.group.visible; },
+    get u(){ return a._u; },
+    clips: a.clipNames,
+    bindSize: a.bindSize,
+    phase: phases[i],
+  })),
+  pathPts: PATH_PTS,
+  pathLen: PATH_LEN,
+  cycle: CYCLE, walkT: WALK_T, speedPxS: SPEED,
+  /* honest-scale probe: the placed model's world-space size in plate px */
+  sizeOf(id){
+    const a = actors.find((x) => x.id === id);
+    if (!a) return null;
+    a.group.updateMatrixWorld(true);
+    const b = new THREE.Box3().setFromObject(a.model);
+    const s = b.getSize(new THREE.Vector3());
+    return { height: +s.y.toFixed(2), length: +Math.max(s.x, s.z).toFixed(2) };
+  },
+  /* posture probes */
+  standingPitchDeg(id){
+    const a = actors.find((x) => x.id === id);
+    if (!a || !a.mixer) return null;
+    const t0 = a.mixer.time;
+    a.mixer.setTime(0);                    /* clip frame 0, not bind — measured law */
+    const p = a.pitchDeg();
+    a.mixer.setTime(t0);
+    return p === null ? null : +p.toFixed(2);
+  },
+  walkPitchSamples(id, n = 48){
+    const a = actors.find((x) => x.id === id);
+    if (!a || !a.mixer || !a.clip) return null;
+    const t0 = a.mixer.time, out = [];
+    for (let i = 0; i < n; i++){
+      a.mixer.setTime(a.clip.duration * i / n);
+      const p = a.pitchDeg();
+      out.push(p === null ? null : +p.toFixed(2));
+    }
+    a.mixer.setTime(t0);
+    return out;
+  },
+  /* min along-path gap between any two visible walkers over a sim-time sweep */
+  minGapPx(steps = 200){
+    let best = Infinity;
+    for (let k = 0; k < steps; k++){
+      const t = (k / steps) * CYCLE;
+      const ds = [];
+      for (let i = 0; i < actors.length; i++){
+        const ct = ((t + phases[i]) % CYCLE + CYCLE) % CYCLE;
+        if (ct < WALK_T) ds.push((ct / WALK_T) * PATH_LEN);
+      }
+      ds.sort((a, b) => a - b);
+      for (let i = 1; i < ds.length; i++) best = Math.min(best, ds[i] - ds[i - 1]);
+    }
+    return +best.toFixed(1);
+  },
+  /* tint probe: median RGB of texture pixels matching an HSL window */
+  tintProbe(id, win){
+    const c = tintCanvases[id];
+    if (!c) return null;
+    const g = c.getContext('2d', { willReadFrequently: true });
+    const d = g.getImageData(0, 0, c.width, c.height).data;
+    const rs = [], gs = [], bs = [];
+    for (let i = 0; i < d.length; i += 16){
+      if (d[i + 3] < 200) continue;
+      const hsl = rgb2hsl(d[i], d[i + 1], d[i + 2]);
+      if (!matchWin(hsl, win || {})) continue;
+      rs.push(d[i]); gs.push(d[i + 1]); bs.push(d[i + 2]);
+    }
+    if (!rs.length) return null;
+    const med = (a) => { a.sort((x, y) => x - y); return a[a.length >> 1]; };
+    return { rgb: [med(rs), med(gs), med(bs)], n: rs.length };
+  },
+  registry, scene, camera, renderer,
+};
+window.__castReady = true;                 /* verification hook */
+</script>
+</body>
+</html>
