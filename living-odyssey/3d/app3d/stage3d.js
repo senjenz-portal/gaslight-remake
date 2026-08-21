@@ -257,10 +257,12 @@ export class Stage3D {
   }
 
   /**
-   * A staged SUBJECT in world space — {a:actorId} | {p:propId} | {t:partName}.
-   * Returns { p, box, face } or null for a mark the stage does not own.
+   * The OBJECT a staged SUBJECT names — {a:actorId} | {p:propId} | {t:partName}.
+   * This is the one lookup; resolve() is its measurement. A hit test needs the
+   * object itself (a ray goes into geometry, not into a box centre), so the
+   * lookup and the measurement are no longer welded together.
    */
-  resolve(subject = {}) {
+  resolveObject(subject = {}) {
     const parts = (this.set && this.set.parts) || {};
     /* one name, three registers, resolved in the order the ledger uses them:
        the alias first, then the set's own part, then the cast, then the props */
@@ -273,14 +275,22 @@ export class Stage3D {
       }
       return parts[n] || this.actors.get(n)?.group || this.props.get(n) || null;
     };
-    const obj = subject.a ? this.actors.get(subject.a)?.group
+    return subject.a ? (this.actors.get(subject.a)?.group || null)
       : subject.p ? (this.props.get(subject.p) || byName(subject.p))
       : subject.t ? byName(subject.t)
       : null;
+  }
+
+  /**
+   * A staged SUBJECT in world space — {a:actorId} | {p:propId} | {t:partName}.
+   * Returns { p, box, face } or null for a mark the stage does not own.
+   */
+  resolve(subject = {}) {
+    const obj = this.resolveObject(subject);
     if (!obj) return null;
     const box = new THREE.Box3().setFromObject(obj);
     const p = box.getCenter(new THREE.Vector3());
-    return { p, box, face: obj.rotation ? obj.rotation.y : 0 };
+    return { p, box, face: obj.rotation ? obj.rotation.y : 0, object: obj };
   }
 
   /* ---------- what the gates read ---------- */

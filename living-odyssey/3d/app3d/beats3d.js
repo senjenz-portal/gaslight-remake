@@ -1307,12 +1307,24 @@ export class Director {
     }
     return false;
   }
-  /** where the target sits in world space (the reader's ring is drawn there) */
+  /** THE ONE NAME TABLE: a gate's target -> the staged subject that IS it */
+  targetSubject(name) {
+    return { ship: { t: 'ship-2' }, sword: { p: 'sword' },
+      'ram-great': { a: 'ram-great' }, cyclops: { a: 'poly-idle' } }[name] || null;
+  }
+  /** THE THING ITSELF. A gate is decided against the target's own geometry —
+   *  a ray from the live lens goes into THIS, not at a projected box centre. */
+  targetObject(name) {
+    const s = this.targetSubject(name);
+    return s ? this.stage.resolveObject(s) : null;
+  }
+  /** where the target's box centre sits in world space (measurement only —
+   *  NOT where it renders: a long ship's centre can be off the frame while the
+   *  ship is on it, which is what the reader's ring and reach must follow) */
   targetWorld(name) {
-    const r = { ship: { t: 'ship-2' }, sword: { p: 'sword' },
-      'ram-great': { a: 'ram-great' }, cyclops: { a: 'poly-idle' } }[name];
-    if (!r) return null;
-    const hit = this.stage.resolve(r);
+    const s = this.targetSubject(name);
+    if (!s) return null;
+    const hit = this.stage.resolve(s);
     return hit ? hit.p : null;
   }
   /** the beat clock (jeer / shout / curse arm it; `clock` units read it) */

@@ -1,7 +1,7 @@
 {
  "lane": "assembly-book3d-r1",
- "when": "2026-08-21T22:15:30.292Z",
- "base": "http://127.0.0.1:51445",
+ "when": "2026-08-21T23:24:59.538Z",
+ "base": "http://127.0.0.1:57434",
  "scale": {
   "rows": [
    {
@@ -425,7 +425,7 @@
     "id": "ody-i-01-bard",
     "verb": "click",
     "how": "click",
-    "t": 0.5,
+    "t": 3,
     "next": "ody-i-02-iamulysses",
     "set": "shore",
     "beat": 1,
@@ -445,7 +445,7 @@
     "id": "ody-i-02-iamulysses",
     "verb": "click",
     "how": "click",
-    "t": 1,
+    "t": 6,
     "next": "ody-i-03-troy",
     "set": "shore",
     "beat": 1,
@@ -465,7 +465,7 @@
     "id": "ody-i-03-troy",
     "verb": "click",
     "how": "click",
-    "t": 1.5,
+    "t": 9,
     "next": "ody-i-04-lawless",
     "set": "shore",
     "beat": 1,
@@ -485,7 +485,7 @@
     "id": "ody-i-04-lawless",
     "verb": "click",
     "how": "click",
-    "t": 2,
+    "t": 12,
     "next": "ody-i-05-dawn",
     "set": "shore",
     "beat": 1,
@@ -505,7 +505,7 @@
     "id": "ody-i-05-dawn",
     "verb": "click",
     "how": "click",
-    "t": 2.5,
+    "t": 15,
     "next": "ody-i-06-smoke",
     "set": "shore",
     "beat": 1,
@@ -525,7 +525,7 @@
     "id": "ody-i-06-smoke",
     "verb": "click",
     "how": "click",
-    "t": 3,
+    "t": 18,
     "next": "ody-i-07-council",
     "set": "shore",
     "beat": 1,
@@ -545,7 +545,7 @@
     "id": "ody-i-07-council",
     "verb": "target",
     "how": "target",
-    "t": 3.5,
+    "t": 21,
     "next": "ody-i-08-cave",
     "set": "shore",
     "beat": 1,
@@ -565,7 +565,7 @@
     "id": "ody-i-08-cave",
     "verb": "click",
     "how": "click",
-    "t": 3.5,
+    "t": 46.5,
     "next": "ody-i-09-monster",
     "set": "shore",
     "beat": 1,
@@ -585,7 +585,7 @@
     "id": "ody-i-09-monster",
     "verb": "click",
     "how": "click",
-    "t": 4,
+    "t": 49.5,
     "next": "ody-i-10-wineskin",
     "set": "shore",
     "beat": 1,
@@ -605,7 +605,7 @@
     "id": "ody-i-10-wineskin",
     "verb": "click",
     "how": "click",
-    "t": 4.5,
+    "t": 52.5,
     "next": "ody-i-11-twentyone",
     "set": "shore",
     "beat": 1,
@@ -625,7 +625,7 @@
     "id": "ody-i-11-twentyone",
     "verb": "click",
     "how": "click",
-    "t": 5,
+    "t": 55.5,
     "next": "ody-i-12-misgave",
     "set": "shore",
     "beat": 1,
@@ -645,7 +645,7 @@
     "id": "ody-i-12-misgave",
     "verb": "click",
     "how": "click",
-    "t": 5.5,
+    "t": 58.5,
     "next": "ody-ii-00-head",
     "set": "shore",
     "beat": 1,
@@ -665,7 +665,7 @@
     "id": "ody-ii-00-head",
     "verb": "click",
     "how": "click",
-    "t": 6,
+    "t": 61.5,
     "next": "ody-ii-01-beg",
     "set": "cave",
     "beat": 2,
@@ -685,7 +685,7 @@
     "id": "ody-ii-01-beg",
     "verb": "click",
     "how": "click",
-    "t": 6.5,
+    "t": 64.5,
     "next": "ody-ii-02-present",
     "set": "cave",
     "beat": 2,
@@ -705,7 +705,7 @@
     "id": "ody-ii-02-present",
     "verb": "click",
     "how": "click",
-    "t": 7,
+    "t": 67.5,
     "next": "ody-ii-03-return",
     "set": "cave",
     "beat": 2,
@@ -725,7 +725,7 @@
     "id": "ody-ii-03-return",
     "verb": "click",
     "how": "click",
-    "t": 7.5,
+    "t": 70.5,
     "next": "ody-ii-04-boulder",
     "set": "cave",
     "beat": 2,
@@ -745,7 +745,7 @@
     "id": "ody-ii-04-boulder",
     "verb": "click",
     "how": "click",
-    "t": 8,
+    "t": 73.5,
     "next": "ody-ii-05-strangers",
     "set": "cave",
     "beat": 2,
@@ -765,7 +765,7 @@
     "id": "ody-ii-05-strangers",
     "verb": "click",
     "how": "click",
-    "t": 8.5,
+    "t": 76.5,
     "next": "ody-ii-06-plea",
     "set": "cave",
     "beat": 2,
@@ -785,7 +785,7 @@
     "id": "ody-ii-06-plea",
     "verb": "click",
     "how": "click",
-    "t": 9,
+    "t": 79.5,
     "next": "ody-ii-07-pitiless",
     "set": "cave",
     "beat": 2,
@@ -805,7 +805,7 @@
     "id": "ody-ii-07-pitiless",
     "verb": "click",
     "how": "click",
-    "t": 9.5,
+    "t": 82.5,
     "next": "ody-ii-08-shipfast",
     "set": "cave",
     "beat": 2,
@@ -825,7 +825,7 @@
     "id": "ody-ii-08-shipfast",
     "verb": "click",
     "how": "click",
-    "t": 10,
+    "t": 85.5,
     "next": "ody-ii-09-shiplie",
     "set": "cave",
     "beat": 2,
@@ -845,7 +845,7 @@
     "id": "ody-ii-09-shiplie",
     "verb": "click",
     "how": "click",
-    "t": 10.5,
+    "t": 88.5,
     "next": "ody-ii-10-firstmeal",
     "set": "cave",
     "beat": 2,
@@ -865,7 +865,7 @@
     "id": "ody-ii-10-firstmeal",
     "verb": "click",
     "how": "click",
-    "t": 11,
+    "t": 91.5,
     "next": "ody-ii-11-sword",
     "set": "cave",
     "beat": 2,
@@ -885,17 +885,17 @@
     "id": "ody-ii-11-sword",
     "verb": "target",
     "how": "target",
-    "t": 11.5,
+    "t": 94.5,
     "next": "ody-ii-12-shiftstone",
     "set": "cave",
     "beat": 2,
     "census": {
-     "crew": 3,
+     "crew": 1,
      "ulysses": 1,
      "giant": 1,
      "rams": 0,
      "sheep": 0,
-     "humanoids": 5,
+     "humanoids": 3,
      "cap": 3,
      "meals": 1,
      "headcount": 10
@@ -905,17 +905,17 @@
     "id": "ody-ii-12-shiftstone",
     "verb": "click",
     "how": "click",
-    "t": 11.5,
+    "t": 94.5,
     "next": "ody-ii-13-tillmorning",
     "set": "cave",
     "beat": 2,
     "census": {
-     "crew": 3,
+     "crew": 1,
      "ulysses": 1,
      "giant": 1,
      "rams": 0,
      "sheep": 0,
-     "humanoids": 5,
+     "humanoids": 3,
      "cap": 3,
      "meals": 1,
      "headcount": 10
@@ -925,17 +925,17 @@
     "id": "ody-ii-13-tillmorning",
     "verb": "click",
     "how": "click",
-    "t": 12,
+    "t": 97.5,
     "next": "ody-iii-00-head",
     "set": "cave",
     "beat": 2,
     "census": {
-     "crew": 3,
+     "crew": 1,
      "ulysses": 1,
      "giant": 1,
      "rams": 0,
      "sheep": 0,
-     "humanoids": 5,
+     "humanoids": 3,
      "cap": 3,
      "meals": 1,
      "headcount": 10
@@ -945,7 +945,7 @@
     "id": "ody-iii-00-head",
     "verb": "click",
     "how": "click",
-    "t": 12.5,
+    "t": 100.5,
     "next": "ody-iii-01-morningmeal",
     "set": "cave",
     "beat": 3,
@@ -965,7 +965,7 @@
     "id": "ody-iii-01-morningmeal",
     "verb": "click",
     "how": "click",
-    "t": 13,
+    "t": 103.5,
     "next": "ody-iii-02-quiverlid",
     "set": "cave",
     "beat": 3,
@@ -985,48 +985,8 @@
     "id": "ody-iii-02-quiverlid",
     "verb": "click",
     "how": "click",
-    "t": 13.5,
+    "t": 106.5,
     "next": "ody-iii-03-scheme",
-    "set": "cave",
-    "beat": 3,
-    "census": {
-     "crew": 3,
-     "ulysses": 1,
-     "giant": 1,
-     "rams": 1,
-     "sheep": 4,
-     "humanoids": 5,
-     "cap": 3,
-     "meals": 2,
-     "headcount": 8
-    }
-   },
-   {
-    "id": "ody-iii-03-scheme",
-    "verb": "click",
-    "how": "click",
-    "t": 14,
-    "next": "ody-iii-04-club",
-    "set": "cave",
-    "beat": 3,
-    "census": {
-     "crew": 3,
-     "ulysses": 1,
-     "giant": 1,
-     "rams": 1,
-     "sheep": 4,
-     "humanoids": 5,
-     "cap": 3,
-     "meals": 2,
-     "headcount": 8
-    }
-   },
-   {
-    "id": "ody-iii-04-club",
-    "verb": "click",
-    "how": "click",
-    "t": 14.5,
-    "next": "ody-iii-05-lots",
     "set": "cave",
     "beat": 3,
     "census": {
@@ -1042,20 +1002,60 @@
     }
    },
    {
+    "id": "ody-iii-03-scheme",
+    "verb": "click",
+    "how": "click",
+    "t": 109.5,
+    "next": "ody-iii-04-club",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 1,
+     "ulysses": 1,
+     "giant": 1,
+     "rams": 1,
+     "sheep": 4,
+     "humanoids": 3,
+     "cap": 3,
+     "meals": 2,
+     "headcount": 8
+    }
+   },
+   {
+    "id": "ody-iii-04-club",
+    "verb": "click",
+    "how": "click",
+    "t": 112.5,
+    "next": "ody-iii-05-lots",
+    "set": "cave",
+    "beat": 3,
+    "census": {
+     "crew": 1,
+     "ulysses": 1,
+     "giant": 0,
+     "rams": 1,
+     "sheep": 4,
+     "humanoids": 2,
+     "cap": 3,
+     "meals": 2,
+     "headcount": 8
+    }
+   },
+   {
     "id": "ody-iii-05-lots",
     "verb": "click",
     "how": "click",
-    "t": 15,
+    "t": 115.5,
     "next": "ody-iii-06-return",
     "set": "cave",
     "beat": 3,
     "census": {
      "crew": 4,
      "ulysses": 1,
-     "giant": 1,
+     "giant": 0,
      "rams": 1,
      "sheep": 4,
-     "humanoids": 6,
+     "humanoids": 5,
      "cap": 3,
      "meals": 2,
      "headcount": 8
@@ -1065,7 +1065,7 @@
     "id": "ody-iii-06-return",
     "verb": "click",
     "how": "click",
-    "t": 15.5,
+    "t": 118.5,
     "next": "ody-iii-07-suppertwo",
     "set": "cave",
     "beat": 3,
@@ -1085,7 +1085,7 @@
     "id": "ody-iii-07-suppertwo",
     "verb": "click",
     "how": "click",
-    "t": 16,
+    "t": 121.5,
     "next": "ody-iii-08-lookhere",
     "set": "cave",
     "beat": 3,
@@ -1105,17 +1105,17 @@
     "id": "ody-iii-08-lookhere",
     "verb": "release",
     "how": "release",
-    "t": 16.5,
+    "t": 124.5,
     "next": "ody-iii-09-besokind",
     "set": "cave",
     "beat": 3,
     "census": {
-     "crew": 3,
+     "crew": 1,
      "ulysses": 1,
      "giant": 1,
      "rams": 1,
      "sheep": 4,
-     "humanoids": 5,
+     "humanoids": 3,
      "cap": 3,
      "meals": 3,
      "headcount": 6
@@ -1125,7 +1125,7 @@
     "id": "ody-iii-09-besokind",
     "verb": "auto",
     "how": "auto",
-    "t": 19.9,
+    "t": 127.9,
     "next": "ody-iii-10-thrice",
     "set": "cave",
     "beat": 3,
@@ -1145,7 +1145,7 @@
     "id": "ody-iii-10-thrice",
     "verb": "auto",
     "how": "auto",
-    "t": 29.15,
+    "t": 136.9,
     "next": "ody-iii-11-noman",
     "set": "cave",
     "beat": 3,
@@ -1165,7 +1165,7 @@
     "id": "ody-iii-11-noman",
     "verb": "click",
     "how": "click",
-    "t": 37.15,
+    "t": 144.9,
     "next": "ody-iii-12-nomanlast",
     "set": "cave",
     "beat": 3,
@@ -1185,7 +1185,7 @@
     "id": "ody-iii-12-nomanlast",
     "verb": "click",
     "how": "click",
-    "t": 37.65,
+    "t": 147.9,
     "next": "ody-iii-13-neck",
     "set": "cave",
     "beat": 3,
@@ -1205,7 +1205,7 @@
     "id": "ody-iii-13-neck",
     "verb": "auto",
     "how": "auto",
-    "t": 38.15,
+    "t": 150.9,
     "next": "ody-iv-00-head",
     "set": "cave",
     "beat": 3,
@@ -1225,7 +1225,7 @@
     "id": "ody-iv-00-head",
     "verb": "auto",
     "how": "auto",
-    "t": 44.9,
+    "t": 157.4,
     "next": "ody-iv-01-embers",
     "set": "cave",
     "beat": 4,
@@ -1245,7 +1245,7 @@
     "id": "ody-iv-01-embers",
     "verb": "hold",
     "how": "hold",
-    "t": 48.15,
+    "t": 160.9,
     "next": "ody-iv-02-glowing",
     "set": "cave",
     "beat": 4,
@@ -1265,7 +1265,7 @@
     "id": "ody-iv-02-glowing",
     "verb": "auto",
     "how": "auto",
-    "t": 51.4,
+    "t": 164.15,
     "next": "ody-iv-03-auger",
     "set": "cave",
     "beat": 4,
@@ -1285,7 +1285,7 @@
     "id": "ody-iv-03-auger",
     "verb": "clock",
     "how": "clock",
-    "t": 54.9,
+    "t": 167.65,
     "next": "ody-iv-04-bore",
     "set": "cave",
     "beat": 4,
@@ -1305,7 +1305,7 @@
     "id": "ody-iv-04-bore",
     "verb": "clock",
     "how": "clock",
-    "t": 55.4,
+    "t": 168.15,
     "next": "ody-iv-05-hiss",
     "set": "cave",
     "beat": 4,
@@ -1325,7 +1325,7 @@
     "id": "ody-iv-05-hiss",
     "verb": "clock",
     "how": "clock",
-    "t": 58.65,
+    "t": 171.4,
     "next": "ody-iv-06-fright",
     "set": "cave",
     "beat": 4,
@@ -1345,7 +1345,7 @@
     "id": "ody-iv-06-fright",
     "verb": "clock",
     "how": "clock",
-    "t": 61.65,
+    "t": 174.4,
     "next": "ody-iv-07-whatails",
     "set": "cave",
     "beat": 4,
@@ -1365,7 +1365,7 @@
     "id": "ody-iv-07-whatails",
     "verb": "click",
     "how": "click",
-    "t": 63.9,
+    "t": 176.65,
     "next": "ody-iv-08-nomankilling",
     "set": "cave",
     "beat": 4,
@@ -1385,7 +1385,7 @@
     "id": "ody-iv-08-nomankilling",
     "verb": "click",
     "how": "click",
-    "t": 64.4,
+    "t": 179.65,
     "next": "ody-iv-09-mustbeill",
     "set": "cave",
     "beat": 4,
@@ -1405,7 +1405,7 @@
     "id": "ody-iv-09-mustbeill",
     "verb": "click",
     "how": "click",
-    "t": 64.9,
+    "t": 182.65,
     "next": "ody-iv-10-wentaway",
     "set": "cave",
     "beat": 4,
@@ -1425,7 +1425,7 @@
     "id": "ody-iv-10-wentaway",
     "verb": "click",
     "how": "click",
-    "t": 65.4,
+    "t": 185.65,
     "next": "ody-iv-11-stone",
     "set": "cave",
     "beat": 4,
@@ -1445,7 +1445,7 @@
     "id": "ody-iv-11-stone",
     "verb": "click",
     "how": "click",
-    "t": 65.9,
+    "t": 188.65,
     "next": "ody-iv-12-doorway",
     "set": "cave",
     "beat": 4,
@@ -1465,7 +1465,7 @@
     "id": "ody-iv-12-doorway",
     "verb": "click",
     "how": "click",
-    "t": 66.4,
+    "t": 191.65,
     "next": "ody-v-00-head",
     "set": "cave",
     "beat": 4,
@@ -1485,7 +1485,7 @@
     "id": "ody-v-00-head",
     "verb": "auto",
     "how": "auto",
-    "t": 66.9,
+    "t": 194.65,
     "next": "ody-v-01-puzzling",
     "set": "cave",
     "beat": 5,
@@ -1505,7 +1505,7 @@
     "id": "ody-v-01-puzzling",
     "verb": "click",
     "how": "click",
-    "t": 70.4,
+    "t": 198.15,
     "next": "ody-v-02-withies",
     "set": "cave",
     "beat": 5,
@@ -1525,7 +1525,7 @@
     "id": "ody-v-02-withies",
     "verb": "click",
     "how": "click",
-    "t": 70.9,
+    "t": 201.15,
     "next": "ody-v-03-threetoaman",
     "set": "cave",
     "beat": 5,
@@ -1545,7 +1545,7 @@
     "id": "ody-v-03-threetoaman",
     "verb": "click",
     "how": "click",
-    "t": 71.4,
+    "t": 204.15,
     "next": "ody-v-04-greatram",
     "set": "cave",
     "beat": 5,
@@ -1565,17 +1565,17 @@
     "id": "ody-v-04-greatram",
     "verb": "target",
     "how": "target",
-    "t": 71.9,
+    "t": 207.15,
     "next": "ody-v-05-dawn",
     "set": "cave",
     "beat": 5,
     "census": {
-     "crew": 3,
+     "crew": 0,
      "ulysses": 1,
      "giant": 1,
      "rams": 1,
      "sheep": 4,
-     "humanoids": 5,
+     "humanoids": 2,
      "cap": 3,
      "meals": 3,
      "headcount": 6
@@ -1585,17 +1585,17 @@
     "id": "ody-v-05-dawn",
     "verb": "click",
     "how": "click",
-    "t": 71.9,
+    "t": 207.15,
     "next": "ody-v-06-feltbacks",
     "set": "cave",
     "beat": 5,
     "census": {
-     "crew": 3,
+     "crew": 0,
      "ulysses": 1,
      "giant": 1,
      "rams": 4,
      "sheep": 4,
-     "humanoids": 5,
+     "humanoids": 2,
      "cap": 3,
      "meals": 3,
      "headcount": 6
@@ -1605,17 +1605,17 @@
     "id": "ody-v-06-feltbacks",
     "verb": "click",
     "how": "click",
-    "t": 72.4,
+    "t": 210.15,
     "next": "ody-v-07-lastofall",
     "set": "cave",
     "beat": 5,
     "census": {
-     "crew": 2,
-     "ulysses": 1,
+     "crew": 0,
+     "ulysses": 0,
      "giant": 1,
      "rams": 4,
      "sheep": 4,
-     "humanoids": 4,
+     "humanoids": 1,
      "cap": 3,
      "meals": 3,
      "headcount": 6
@@ -1625,7 +1625,7 @@
     "id": "ody-v-07-lastofall",
     "verb": "click",
     "how": "click",
-    "t": 72.9,
+    "t": 213.15,
     "next": "ody-v-08-ramspeech1",
     "set": "cave",
     "beat": 5,
@@ -1645,7 +1645,7 @@
     "id": "ody-v-08-ramspeech1",
     "verb": "click",
     "how": "click",
-    "t": 73.4,
+    "t": 216.15,
     "next": "ody-v-09-ramspeech2",
     "set": "cave",
     "beat": 5,
@@ -1665,7 +1665,7 @@
     "id": "ody-v-09-ramspeech2",
     "verb": "click",
     "how": "click",
-    "t": 73.9,
+    "t": 219.15,
     "next": "ody-v-10-ramspeech3",
     "set": "cave",
     "beat": 5,
@@ -1685,7 +1685,7 @@
     "id": "ody-v-10-ramspeech3",
     "verb": "click",
     "how": "click",
-    "t": 74.4,
+    "t": 222.15,
     "next": "ody-v-11-freed",
     "set": "cave",
     "beat": 5,
@@ -1705,7 +1705,7 @@
     "id": "ody-v-11-freed",
     "verb": "click",
     "how": "click",
-    "t": 74.9,
+    "t": 225.15,
     "next": "ody-v-12-aboard",
     "set": "cave",
     "beat": 5,
@@ -1713,7 +1713,7 @@
      "crew": 0,
      "ulysses": 0,
      "giant": 1,
-     "rams": 4,
+     "rams": 2,
      "sheep": 4,
      "humanoids": 1,
      "cap": 3,
@@ -1725,17 +1725,17 @@
     "id": "ody-v-12-aboard",
     "verb": "click",
     "how": "click",
-    "t": 75.4,
+    "t": 228.15,
     "next": "ody-vi-01-jeer",
     "set": "cave",
     "beat": 5,
     "census": {
-     "crew": 0,
-     "ulysses": 0,
+     "crew": 2,
+     "ulysses": 1,
      "giant": 1,
-     "rams": 4,
+     "rams": 1,
      "sheep": 4,
-     "humanoids": 1,
+     "humanoids": 4,
      "cap": 3,
      "meals": 3,
      "headcount": 6
@@ -1745,7 +1745,7 @@
     "id": "ody-vi-01-jeer",
     "verb": "target",
     "how": "target",
-    "t": 75.9,
+    "t": 231.15,
     "next": "ody-vi-02-taunt",
     "set": "sea",
     "beat": 6,
@@ -1765,7 +1765,7 @@
     "id": "ody-vi-02-taunt",
     "verb": "auto",
     "how": "auto",
-    "t": 75.9,
+    "t": 231.15,
     "next": "ody-vi-03-rock1",
     "set": "sea",
     "beat": 6,
@@ -1785,7 +1785,7 @@
     "id": "ody-vi-03-rock1",
     "verb": "clock",
     "how": "clock",
-    "t": 82.15,
+    "t": 237.15,
     "next": "ody-vi-04-twiceasfar",
     "set": "sea",
     "beat": 6,
@@ -1805,7 +1805,7 @@
     "id": "ody-vi-04-twiceasfar",
     "verb": "click",
     "how": "click",
-    "t": 84.65,
+    "t": 239.9,
     "next": "ody-vi-05-menbeg",
     "set": "sea",
     "beat": 6,
@@ -1825,7 +1825,7 @@
     "id": "ody-vi-05-menbeg",
     "verb": "click",
     "how": "click",
-    "t": 85.15,
+    "t": 242.9,
     "next": "ody-vi-06-defy",
     "set": "sea",
     "beat": 6,
@@ -1845,7 +1845,7 @@
     "id": "ody-vi-06-defy",
     "verb": "target",
     "how": "target",
-    "t": 85.65,
+    "t": 245.9,
     "next": "ody-vi-07-myname",
     "set": "sea",
     "beat": 6,
@@ -1865,7 +1865,7 @@
     "id": "ody-vi-07-myname",
     "verb": "release",
     "how": "release",
-    "t": 85.65,
+    "t": 245.9,
     "next": "ody-vi-08-prophecy",
     "set": "sea",
     "beat": 6,
@@ -1885,7 +1885,7 @@
     "id": "ody-vi-08-prophecy",
     "verb": "click",
     "how": "click",
-    "t": 89.05,
+    "t": 249.3,
     "next": "ody-vi-09-fatherson",
     "set": "sea",
     "beat": 6,
@@ -1905,7 +1905,7 @@
     "id": "ody-vi-09-fatherson",
     "verb": "click",
     "how": "click",
-    "t": 89.55,
+    "t": 252.3,
     "next": "ody-vi-10-hades",
     "set": "sea",
     "beat": 6,
@@ -1925,7 +1925,7 @@
     "id": "ody-vi-10-hades",
     "verb": "click",
     "how": "click",
-    "t": 90.05,
+    "t": 255.3,
     "next": "ody-vi-11-curse",
     "set": "sea",
     "beat": 6,
@@ -1945,7 +1945,7 @@
     "id": "ody-vi-11-curse",
     "verb": "click",
     "how": "click",
-    "t": 90.55,
+    "t": 258.3,
     "next": "ody-vi-12-heard",
     "set": "sea",
     "beat": 6,
@@ -1965,7 +1965,7 @@
     "id": "ody-vi-12-heard",
     "verb": "clock",
     "how": "clock",
-    "t": 91.05,
+    "t": 261.3,
     "next": "ody-vi-13-ram",
     "set": "sea",
     "beat": 6,
@@ -1985,7 +1985,7 @@
     "id": "ody-vi-13-ram",
     "verb": "click",
     "how": "click",
-    "t": 93.3,
+    "t": 263.55,
     "next": "ody-vi-14-sailedon",
     "set": "sea",
     "beat": 6,
@@ -2005,7 +2005,7 @@
     "id": "ody-vi-14-sailedon",
     "verb": "click",
     "how": "click",
-    "t": 93.8,
+    "t": 266.55,
     "next": "ody-vi-14-sailedon",
     "set": "sea",
     "beat": 6,
@@ -2027,12 +2027,24 @@
    "ody-i-07-council": {
     "verb": "target",
     "live": true,
-    "resolved": true
+    "resolved": true,
+    "waited": 25.5,
+    "aim": [
+     518,
+     670
+    ],
+    "onTarget": true
    },
    "ody-ii-11-sword": {
     "verb": "target",
     "live": true,
-    "resolved": true
+    "resolved": true,
+    "waited": 0,
+    "aim": [
+     917,
+     540
+    ],
+    "onTarget": true
    },
    "ody-iii-08-lookhere": {
     "verb": "release",
@@ -2045,17 +2057,35 @@
    "ody-v-04-greatram": {
     "verb": "target",
     "live": true,
-    "resolved": true
+    "resolved": true,
+    "waited": 0,
+    "aim": [
+     959,
+     556
+    ],
+    "onTarget": true
    },
    "ody-vi-01-jeer": {
     "verb": "target",
     "live": true,
-    "resolved": true
+    "resolved": true,
+    "waited": 0,
+    "aim": [
+     1064,
+     632
+    ],
+    "onTarget": true
    },
    "ody-vi-06-defy": {
     "verb": "target",
     "live": true,
-    "resolved": true
+    "resolved": true,
+    "waited": 0,
+    "aim": [
+     1059,
+     638
+    ],
+    "onTarget": true
    },
    "ody-vi-07-myname": {
     "verb": "release",
@@ -2063,7 +2093,7 @@
    }
   },
   "ended": true,
-  "simT": 94.3,
+  "simT": 269.55,
   "visited": 81,
   "guard": 81
  },
@@ -2073,50 +2103,50 @@
    "verb": "target",
    "target": "ship",
    "misses": 0,
-   "at": 3.5
+   "at": 46.5
   },
   "sword": {
    "ok": true,
    "verb": "target",
    "target": "sword",
    "misses": 0,
-   "at": 11.5
+   "at": 94.5
   },
   "lookhere": {
    "ok": true,
    "verb": "release",
-   "at": 19.9
+   "at": 127.9
   },
   "embers": {
    "ok": true,
    "verb": "hold",
-   "at": 51.167
+   "at": 163.917
   },
   "greatram": {
    "ok": true,
    "verb": "target",
    "target": "ram-great",
    "misses": 0,
-   "at": 71.9
+   "at": 207.15
   },
   "jeer": {
    "ok": true,
    "verb": "target",
    "target": "cyclops",
    "misses": 0,
-   "at": 75.9
+   "at": 231.15
   },
   "defy": {
    "ok": true,
    "verb": "target",
    "target": "cyclops",
    "misses": 0,
-   "at": 85.65
+   "at": 245.9
   },
   "myname": {
    "ok": true,
    "verb": "release",
-   "at": 89.05
+   "at": 249.3
   }
  },
  "routes": [
@@ -2269,6 +2299,10 @@
    "hits": []
   },
   {
+   "label": "cave:grope",
+   "hits": []
+  },
+  {
    "label": "cave:lash",
    "hits": []
   },
@@ -2316,42 +2350,42 @@
   "cached": 0,
   "log": [
    {
-    "t": 85.65,
+    "t": 245.9,
     "key": "myname",
     "dur": 11.2
    },
    {
-    "t": 89.05,
+    "t": 249.3,
     "key": "prophecy",
     "dur": 24.4
    },
    {
-    "t": 89.55,
+    "t": 252.3,
     "key": "fatherson",
     "dur": 31.92
    },
    {
-    "t": 90.05,
+    "t": 255.3,
     "key": "hades",
     "dur": 8.8
    },
    {
-    "t": 90.55,
+    "t": 258.3,
     "key": "curse",
     "dur": 19.76
    },
    {
-    "t": 91.05,
+    "t": 261.3,
     "key": "heard",
     "dur": 3.36
    },
    {
-    "t": 93.267,
+    "t": 263.517,
     "key": "ram",
     "dur": 17.92
    },
    {
-    "t": 93.8,
+    "t": 266.55,
     "key": "sailedon",
     "dur": 13.52
    }
@@ -2363,7 +2397,7 @@
   "crew-1": 2.69,
   "crew-2": 2.69,
   "crew-3": 2.69,
-  "poly-idle": 16.96
+  "poly-idle": 19.32
  },
  "director": {
   "set": "sea",
@@ -2383,19 +2417,17 @@
   "meals": 3,
   "boulderK": 1,
   "movers": [
-   "wash-onward",
-   "dusk-dip",
    "return-glide",
    "sea-dawn",
    "sail-off"
   ],
   "walking": [],
   "acts": 74,
-  "audits": 47,
+  "audits": 48,
   "routeHits": [],
   "swordLive": true,
   "jeers": 2,
-  "clockT": 3.75,
+  "clockT": 11.25,
   "pov": false,
   "shake": false,
   "station": 0,
@@ -2408,6 +2440,201 @@
   "sub": "told by Ulysses at the court of Alcinous — he gave the monster his name at once",
   "dedication": "This reading belonged to Fable",
   "sigilInkPx": 2964
+ },
+ "hit": {
+  "gates": [
+   {
+    "g": "G1",
+    "unit": "ody-i-07-council",
+    "key": "council",
+    "verb": "target",
+    "target": "ship",
+    "shot": "OTS",
+    "aim": [
+     586,
+     584
+    ],
+    "onPixels": true,
+    "ringOnTarget": true,
+    "ringOn": true,
+    "ringOffsetPx": 0,
+    "turned": true,
+    "gate": {
+     "ok": true,
+     "verb": "target",
+     "target": "ship",
+     "misses": 0,
+     "at": 2
+    },
+    "resolved": true
+   },
+   {
+    "g": "G2",
+    "unit": "ody-ii-11-sword",
+    "key": "sword",
+    "verb": "target",
+    "target": "sword",
+    "shot": "GATE",
+    "aim": [
+     916,
+     540
+    ],
+    "onPixels": true,
+    "ringOnTarget": true,
+    "ringOn": true,
+    "ringOffsetPx": 0,
+    "turned": true,
+    "gate": {
+     "ok": true,
+     "verb": "target",
+     "target": "sword",
+     "misses": 0,
+     "at": 4.5
+    },
+    "resolved": true
+   },
+   {
+    "g": "G3",
+    "unit": "ody-iii-08-lookhere",
+    "key": "lookhere",
+    "verb": "release",
+    "shot": "GATE",
+    "aim": null,
+    "onPixels": false,
+    "ringOnTarget": null,
+    "ringOn": false,
+    "turned": true,
+    "gate": {
+     "ok": true,
+     "verb": "release",
+     "at": 11
+    },
+    "resolved": true
+   },
+   {
+    "g": "G4",
+    "unit": "ody-iv-01-embers",
+    "key": "embers",
+    "verb": "hold",
+    "shot": "GATE",
+    "aim": null,
+    "onPixels": false,
+    "ringOnTarget": null,
+    "ringOn": false,
+    "turned": true,
+    "gate": {
+     "ok": true,
+     "verb": "hold",
+     "at": 16.517
+    },
+    "resolved": true
+   },
+   {
+    "g": "G5",
+    "unit": "ody-v-04-greatram",
+    "key": "greatram",
+    "verb": "target",
+    "target": "ram-great",
+    "shot": "GATE",
+    "aim": [
+     921,
+     561
+    ],
+    "onPixels": true,
+    "ringOnTarget": true,
+    "ringOn": true,
+    "ringOffsetPx": 0,
+    "turned": true,
+    "gate": {
+     "ok": true,
+     "verb": "target",
+     "target": "ram-great",
+     "misses": 0,
+     "at": 20
+    },
+    "resolved": true
+   },
+   {
+    "g": "G6",
+    "unit": "ody-vi-01-jeer",
+    "key": "jeer",
+    "verb": "target",
+    "target": "cyclops",
+    "shot": "GATE",
+    "aim": [
+     1054,
+     634
+    ],
+    "onPixels": true,
+    "ringOnTarget": true,
+    "ringOn": true,
+    "ringOffsetPx": 0,
+    "turned": true,
+    "gate": {
+     "ok": true,
+     "verb": "target",
+     "target": "cyclops",
+     "misses": 0,
+     "at": 22.5
+    },
+    "resolved": true
+   },
+   {
+    "g": "G7",
+    "unit": "ody-vi-06-defy",
+    "key": "defy",
+    "verb": "target",
+    "target": "cyclops",
+    "shot": "GATE",
+    "aim": [
+     1039,
+     642
+    ],
+    "onPixels": true,
+    "ringOnTarget": true,
+    "ringOn": true,
+    "ringOffsetPx": 0,
+    "turned": true,
+    "gate": {
+     "ok": true,
+     "verb": "target",
+     "target": "cyclops",
+     "misses": 0,
+     "at": 25
+    },
+    "resolved": true
+   },
+   {
+    "g": "G8",
+    "unit": "ody-vi-07-myname",
+    "key": "myname",
+    "verb": "release",
+    "shot": "DIALOGUE",
+    "aim": null,
+    "onPixels": false,
+    "ringOnTarget": null,
+    "ringOn": false,
+    "turned": true,
+    "gate": {
+     "ok": true,
+     "verb": "release",
+     "at": 31.5
+    },
+    "resolved": true
+   }
+  ],
+  "miss": {
+   "at": [
+    1477,
+    287
+   ],
+   "unit": "ody-i-07-council",
+   "missed": true
+  },
+  "offPicture": {
+   "unit": "ody-i-07-council",
+   "missed": true
+  }
  },
  "determinism": {
   "a": {
@@ -2502,7 +2729,9 @@
     "meals": 0,
     "headcount": 12
    },
-   "bytes": 98687
+   "bytes": 98687,
+   "controlsUp": true,
+   "overlayFree": true
   },
   {
    "file": "beat2-plea.png",
@@ -2545,7 +2774,9 @@
     "meals": 0,
     "headcount": 12
    },
-   "bytes": 208471
+   "bytes": 208472,
+   "controlsUp": false,
+   "overlayFree": true
   },
   {
    "file": "beat3-bowl.png",
@@ -2588,7 +2819,9 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 251022
+   "bytes": 251022,
+   "controlsUp": true,
+   "overlayFree": true
   },
   {
    "file": "beat4-auger.png",
@@ -2630,7 +2863,9 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 146269
+   "bytes": 146269,
+   "controlsUp": false,
+   "overlayFree": true
   },
   {
    "file": "beat5-ram.png",
@@ -2672,7 +2907,9 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 259363
+   "bytes": 259363,
+   "controlsUp": false,
+   "overlayFree": true
   },
   {
    "file": "beat6-curse.png",
@@ -2714,7 +2951,9 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 137816
+   "bytes": 137816,
+   "controlsUp": false,
+   "overlayFree": true
   },
   {
    "file": "feel-giant.png",
@@ -2761,7 +3000,9 @@
     "meals": 0,
     "headcount": 12
    },
-   "bytes": 354395
+   "bytes": 354395,
+   "controlsUp": false,
+   "overlayFree": true
   },
   {
    "file": "feel-blinding.png",
@@ -2803,7 +3044,9 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 237764
+   "bytes": 237764,
+   "controlsUp": false,
+   "overlayFree": true
   },
   {
    "file": "feel-sailoff.png",
@@ -2845,7 +3088,9 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 203501
+   "bytes": 203501,
+   "controlsUp": false,
+   "overlayFree": true
   }
  ],
  "errors": [],
@@ -2911,12 +3156,37 @@
   {
    "name": "the 81-unit walk completes",
    "verdict": "PASS",
-   "detail": "81 units · 0 stuck · sim 94.3s · ended true"
+   "detail": "81 units · 0 stuck · sim 269.55s · ended true"
   },
   {
    "name": "every gate resolved by its own verb",
    "verdict": "PASS",
    "detail": "8/8 — all"
+  },
+  {
+   "name": "[hit] all 8 gates resolve on a REAL click at their live shot",
+   "verdict": "PASS",
+   "detail": "G1 ok@586,584 · G2 ok@916,540 · G3 ok · G4 ok · G5 ok@921,561 · G6 ok@1054,634 · G7 ok@1039,642 · G8 ok"
+  },
+  {
+   "name": "[hit] every target click lands on the target's OWN PIXELS",
+   "verdict": "PASS",
+   "detail": "G1 OTS on-pixels · G2 GATE on-pixels · G5 GATE on-pixels · G6 GATE on-pixels · G7 GATE on-pixels"
+  },
+  {
+   "name": "[hit] the reader's ring sits ON the rendered target",
+   "verdict": "PASS",
+   "detail": "G1 ring on target (0px from aim) · G2 ring on target (0px from aim) · G5 ring on target (0px from aim) · G6 ring on target (0px from aim) · G7 ring on target (0px from aim)"
+  },
+  {
+   "name": "the walk's own target gates clicked their real coordinates",
+   "verdict": "PASS",
+   "detail": "i-07-council 518,670 (ring after 25.5s) · ii-11-sword 917,540 (ring after 0s) · v-04-greatram 959,556 (ring after 0s) · vi-01-jeer 1064,632 (ring after 0s) · vi-06-defy 1059,638 (ring after 0s)"
+  },
+  {
+   "name": "[hit] the miss-probe still misses",
+   "verdict": "PASS",
+   "detail": "corner 1477,287 -> ody-i-07-council (held) · off-picture -> ody-i-07-council"
   },
   {
    "name": "all six beats played",
@@ -2931,7 +3201,7 @@
   {
    "name": "obstacle law: no audited route crosses a ledger box",
    "verdict": "PASS",
-   "detail": "47 routes audited · 0 crossings"
+   "detail": "48 routes audited · 0 crossings"
   },
   {
    "name": "census law: <=3 crew on a leaf (4 at the lots, 4 at the oars)",
@@ -2946,7 +3216,7 @@
   {
    "name": "posture law: every rig's head pitch inside its band",
    "verdict": "PASS",
-   "detail": "ulysses 2.81° · crew-0 2.69° · crew-1 2.69° · crew-2 2.69° · crew-3 2.69° · poly-idle 16.96°"
+   "detail": "ulysses 2.81° · crew-0 2.69° · crew-1 2.69° · crew-2 2.69° · crew-3 2.69° · poly-idle 19.32°"
   },
   {
    "name": "voice: a mastered line asserted per unit",
@@ -2967,6 +3237,11 @@
    "name": "9 frames rendered through the storyteller's lens",
    "verdict": "PASS",
    "detail": "9/9 · beat1-council beat2-plea beat3-bowl beat4-auger beat5-ram beat6-curse feel-giant feel-blinding feel-sailoff"
+  },
+  {
+   "name": "C3: no shipped frame carries a reader control",
+   "verdict": "PASS",
+   "detail": "2 frames shot with a control up · 9/9 byte-identical to bare"
   },
   {
    "name": "every frame keeps its subject in frame",

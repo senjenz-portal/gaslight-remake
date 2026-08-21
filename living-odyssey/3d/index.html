@@ -95,21 +95,27 @@
   .harness #chrome{display:none;}
 
   /* ------------------------------------------------------------------ *
-   * C3 — THE PRODUCTION FRAME CARRIES NO OVERLAY.
+   * C3 — THE PRODUCTION FRAME CARRIES NO OVERLAY, amended.
    *
-   * Three things draw OVER the stage rectangle: the leader path from the
-   * margin to a speaker's head, the hold arc, and the target ring. Every one
-   * of them is a path / guide / control drawn on top of the render, and every
-   * one of them landed in the shipped beat frames. They are now DEBUG
-   * affordances: opt in with ?debug=1 and they exist, otherwise they do not
-   * render at all, and the gate proves it by re-shooting each frame with them
-   * force-hidden and asserting the two PNGs are byte-identical.
+   * Three things draw OVER the stage rectangle. The LEADER PATH from the
+   * margin to a speaker's head is a guide: debug only, ?debug=1.
+   *
+   * The HOLD ARC and the TARGET RING are not guides — they are the reader's
+   * two CONTROLS, and the book's own cue says "click the highlighted thing".
+   * Hiding them left that instruction pointing at nothing, which is half of
+   * why the ship gate read as dead. They render for the reader.
+   *
+   * The frame law is kept where it belongs — at the SHUTTER. A harness adds
+   * `noverlay` to <html> before it shoots, so a beat frame still carries no
+   * control, and the gate re-shoots with and without it to prove the two PNGs
+   * are byte-identical.
    *
    * Everything else the leaf draws (#margin, #cue, #hint, #prog, #cameo,
    * #chrome) lives OUTSIDE the stage rectangle and never touches the frame.
    * ------------------------------------------------------------------ */
-  #leader,#hold,#target{display:none;}
-  html.debug #leader,html.debug #hold,html.debug #target{display:block;}
+  #leader{display:none;}
+  html.debug #leader{display:block;}
+  html.noverlay #leader,html.noverlay #hold,html.noverlay #target{display:none !important;}
 
   #hold,#target{position:fixed;left:0;top:0;width:78px;height:78px;margin:-39px 0 0 -39px;
     z-index:6;pointer-events:none;opacity:0;transition:opacity .35s ease;}

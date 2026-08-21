@@ -28,6 +28,7 @@
  * THE BOOT GATE: [scale]. Nothing renders to the reader until the mounted
  * set's instances have been measured against world.js's size table.
  */
+import * as THREE from 'three';
 import { UNITS, BEATS, beatOf, END_CARD, SET_OF_PAGE,
          CUE_DEFAULT, FIRST_HINT, validateUnits, unitByKey } from '../../app/units.js';
 import { Margin, Cameo, Leader } from '../../app/margin.js';
@@ -187,6 +188,7 @@ async function enterUnit(i, { silent = false } = {}) {
   gateResolved = false;
   director.setHold(0);
   paintHold(0);
+  dropAim();                          /* a cut invalidates every screen fact */
   setHoldRing(u.verb === 'hold' || u.verb === 'release');
   setTargetRing(u.verb === 'target');
   if (u.verb === 'target' && u.target === 'cyclops')
@@ -295,31 +297,247 @@ function paintHold(k) {
   const arc = holdEl.querySelector('.arc');
   if (arc) arc.setAttribute('stroke-dashoffset', String(207.35 * (1 - k)));
 }
-function setTargetRing(on) {
-  targetEl.classList.toggle('on', !!on);
-  if (on) paintTarget();
-}
-/** the reader's ring rides the TARGET ITSELF, projected through the live lens */
-function paintTarget() {
-  const u = cur();
-  if (!u || !u.target || !stage.camera) return;
-  const p = director.targetWorld(u.target);
-  if (!p) return;
-  const s = projectToScreen(p);
-  targetEl.style.left = s.x + 'px';
-  targetEl.style.top = s.y + 'px';
+/* ------------------------------------------------------------------ *
+ * THE AIM — ONE MECHANISM, and every gate and the reader's ring use it.
+ *
+ * The storyteller gave every unit its own lens, and a shot is composed on the
+ * SPEAKER, not on the reader's target: at G1 the council is an OTS on Ulysses
+ * and the ship lies at the left edge of the frame. A gate hit-tested against
+ * the projection of the target's BOUNDING-BOX CENTRE therefore aimed at a
+ * point 340 px OUTSIDE the picture — the ship was on screen and unclickable,
+ * and the ring sat in the margin.
+ *
+ * So nothing here projects a mark. The question a gate asks is the only
+ * honest one — DOES THIS PIXEL SHOW THE THING? — and it is answered by a ray
+ * cast from the ACTIVE camera through the pointer into the target's own
+ * geometry. The reader's press gets that answer exactly, every time.
+ *
+ * The RING asks the same question, but it asks it eight times a second, and a
+ * ray into a skinned giant costs about two milliseconds. So the ring is aimed
+ * in two stages. STAGE ONE is free and proposes candidate pixels: a rigged
+ * body offers its BONES (they are inside it by construction), anything else
+ * is swept ray-versus-part-BOX. STAGE TWO puts those candidates to the
+ * GEOMETRY, nearest the silhouette's middle first, within a budget set by
+ * what the target IS — and the first pixel the geometry answers for is where
+ * the ring goes. On the rendered target, at a cost the frame can pay.
+ * ------------------------------------------------------------------ */
+const AIM_GRID = 9;                 /* samples across the target's screen box */
+const AIM_PERIOD = 1 / 8;           /* sim-seconds between ring repaints */
+const AIM_PARTS = 192;              /* per-mesh boxes before the sweep coarsens */
+/* what one ring repaint may spend on GEOMETRY. A ray into static set geometry
+ * costs about 20 µs and a ray into a skinned rig about two milliseconds, so
+ * the budget is set by what the target IS — deterministically, never by a
+ * clock, or two laps would not land on the same pixel. A rig also fills far
+ * more of the frame than a distant ship, so it needs far fewer tries. */
+const AIM_RAYS_STATIC = AIM_GRID * AIM_GRID + 1;
+const AIM_RAYS_SKINNED = 2;
+const ray = new THREE.Raycaster();
+const ndc2 = new THREE.Vector2();
+const boxTmp = new THREE.Box3();
+const vTmp = new THREE.Vector3();
+let aimCache = { name: '', t: -1e9, hit: null };
+let targetRing = false;
+
+const rectOf = () => stageEl.getBoundingClientRect();
+const toNdc = (clientX, clientY, r) => ({
+  x: ((clientX - r.left) / r.width) * 2 - 1,
+  y: -((((clientY - r.top) / r.height) * 2) - 1),
+});
+const toClient = (nx, ny, r) => ({
+  x: r.left + (nx * 0.5 + 0.5) * r.width,
+  y: r.top + (-ny * 0.5 + 0.5) * r.height,
+});
+const inRect = (x, y, r) => x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+
+/** THE TARGET'S SILHOUETTE, cheaply: one world box per drawn mesh under it.
+ *  A ship is a hull, a mast and a sail with sky between them; sweeping those
+ *  boxes puts the ring on the vessel instead of the air beside it, and a
+ *  ray/box test costs nothing — the reader's own press is still answered by
+ *  the geometry itself (pixelIsTarget). */
+function targetBoxes(obj) {
+  const out = [];
+  let skinned = false;
+  obj.updateWorldMatrix(true, true);
+  obj.traverseVisible((o) => {
+    if (!o.isMesh || !o.geometry) return;
+    if (o.isSkinnedMesh) skinned = true;
+    /* AN INSTANCED MESH IS NOT ITS GEOMETRY. A ship's twenty oars are one
+       InstancedMesh whose geometry box is a single oar at the origin; only
+       the mesh's own box knows where the instances went. Reading the wrong
+       one put the ship's silhouette in the water beside it. */
+    let local = null;
+    if (o.isInstancedMesh) {
+      if (!o.boundingBox) o.computeBoundingBox();
+      local = o.boundingBox;
+    }
+    if (!local) {
+      if (!o.geometry.boundingBox) o.geometry.computeBoundingBox();
+      local = o.geometry.boundingBox;
+    }
+    if (local) out.push(local.clone().applyMatrix4(o.matrixWorld));
+  });
+  if (!out.length || out.length > AIM_PARTS)
+    return { boxes: [new THREE.Box3().setFromObject(obj)], skinned };
+  return { boxes: out, skinned };
 }
 
+/** the NDC box the target's world AABB covers, clipped to the frame */
+function screenBox(obj, cam) {
+  boxTmp.setFromObject(obj);
+  if (!isFinite(boxTmp.min.x)) return null;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, behind = 0;
+  for (let i = 0; i < 8; i++) {
+    vTmp.set(i & 1 ? boxTmp.max.x : boxTmp.min.x,
+             i & 2 ? boxTmp.max.y : boxTmp.min.y,
+             i & 4 ? boxTmp.max.z : boxTmp.min.z);
+    /* a corner behind the lens has no honest NDC — project() mirrors it */
+    if (vTmp.clone().applyMatrix4(cam.matrixWorldInverse).z >= -cam.near) { behind++; continue; }
+    vTmp.project(cam);
+    x0 = Math.min(x0, vTmp.x); x1 = Math.max(x1, vTmp.x);
+    y0 = Math.min(y0, vTmp.y); y1 = Math.max(y1, vTmp.y);
+  }
+  if (behind === 8) return null;                       /* wholly behind the lens */
+  if (behind) { x0 = -1; y0 = -1; x1 = 1; y1 = 1; }    /* straddles it: sweep the frame */
+  x0 = Math.max(-1, x0); y0 = Math.max(-1, y0);
+  x1 = Math.min(1, x1); y1 = Math.min(1, y1);
+  if (x1 < x0 || y1 < y0) return null;                 /* wholly off the frame */
+  return { x0, y0, x1, y1 };
+}
+
+/** WHERE THE TARGET RENDERS: {x,y} client px on the pixels it actually covers,
+ *  or null when the live shot does not show it at all. */
+function computeAim(name) {
+  const cam = stage.camera;
+  const obj = director.targetObject(name);
+  if (!cam || !obj || !obj.visible) return null;
+  cam.updateMatrixWorld();
+  const b = screenBox(obj, cam);
+  if (!b) return null;
+  /* STAGE ONE — free: which samples fall on the thing's silhouette.
+     A RIGGED BODY IS ASKED ITS SKELETON. A giant's bind-pose box stands
+     taller than he does and holds the air between his arm and his side, so
+     its middle is his crown or the sky beside it; his BONES are inside him by
+     construction, and they cost a matrix read each. */
+  const { boxes, skinned } = targetBoxes(obj);
+  const cands = [];
+  let sx = 0, sy = 0;
+  const offer = (nx, ny) => { cands.push([nx, ny]); sx += nx; sy += ny; };
+  if (skinned) {
+    obj.traverseVisible((o) => {
+      if (!o.isSkinnedMesh || !o.skeleton) return;
+      for (const bone of o.skeleton.bones) {
+        vTmp.setFromMatrixPosition(bone.matrixWorld);
+        if (vTmp.clone().applyMatrix4(cam.matrixWorldInverse).z >= -cam.near) continue;
+        vTmp.project(cam);
+        if (Math.abs(vTmp.x) > 1 || Math.abs(vTmp.y) > 1) continue;
+        offer(vTmp.x, vTmp.y);
+      }
+    });
+  }
+  if (!cands.length) {
+    for (let j = 0; j < AIM_GRID; j++) {
+      for (let i = 0; i < AIM_GRID; i++) {
+        /* cell CENTRES, not corners: a target clipped by the frame edge is
+           aimed at just inside the picture rather than exactly on its rim */
+        const nx = b.x0 + (b.x1 - b.x0) * ((i + 0.5) / AIM_GRID);
+        const ny = b.y0 + (b.y1 - b.y0) * ((j + 0.5) / AIM_GRID);
+        ray.setFromCamera(ndc2.set(nx, ny), cam);
+        let on = false;
+        for (let k = 0; k < boxes.length && !on; k++) on = ray.ray.intersectsBox(boxes[k]);
+        if (on) offer(nx, ny);
+      }
+    }
+  }
+  /* the middle of the silhouette — and the fallback when a target is thinner
+     than the sample spacing (a drawn sword at six metres is). It is still ON
+     the frame, which the projected world centre is not required to be. */
+  const mid = cands.length ? [sx / cands.length, sy / cands.length]
+                           : [(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2];
+  /* STAGE TWO — bounded: put the middle, then its nearest neighbours, to the
+     GEOMETRY, and take the first pixel the geometry answers for */
+  const order = cands.slice().sort((p, q) =>
+    ((p[0] - mid[0]) ** 2 + (p[1] - mid[1]) ** 2) - ((q[0] - mid[0]) ** 2 + (q[1] - mid[1]) ** 2));
+  order.unshift(mid);
+  const budget = skinned ? AIM_RAYS_SKINNED : AIM_RAYS_STATIC;
+  /* a bone-picked middle is inside the body already — one ray confirms it */
+  let pick = mid, onGeometry = false;
+  for (let i = 0; i < order.length && i < budget; i++) {
+    ray.setFromCamera(ndc2.set(order[i][0], order[i][1]), cam);
+    if (ray.intersectObject(obj, true).length) { pick = order[i]; onGeometry = true; break; }
+  }
+  /* NO FICTION. If nothing proposed the target and the geometry did not
+     answer either, the live shot does not show it — and a gate must not be
+     resolvable at a pixel that shows sky. */
+  if (!cands.length && !onGeometry) return null;
+  const r = rectOf();
+  const c = toClient(pick[0], pick[1], r);
+  if (!inRect(c.x, c.y, r)) return null;
+  return { x: c.x, y: c.y, nx: +pick[0].toFixed(4), ny: +pick[1].toFixed(4),
+           covered: cands.length, swept: cands.length > 0, onGeometry };
+}
+
+/** the cached aim. One repaint per AIM_PERIOD of SIM time — a pure function
+ *  of the clock, so a lap is deterministic — and the ring the reader sees and
+ *  the reach his press is measured against are always the same number. */
+function aimAt(name) {
+  if (!name) return null;
+  if (aimCache.name !== name || Math.abs(stage.simT - aimCache.t) >= AIM_PERIOD)
+    aimCache = { name, t: stage.simT, hit: computeAim(name) };
+  return aimCache.hit;
+}
+const dropAim = () => { aimCache = { name: '', t: -1e9, hit: null }; };
+
+function setTargetRing(on) {
+  targetRing = !!on;
+  if (!targetRing) { targetEl.classList.remove('on', 'miss'); return; }
+  paintTarget();
+}
+/** the reader's ring rides the PIXELS OF THE TARGET under the live lens */
+function paintTarget() {
+  if (!targetRing) return;
+  const u = cur();
+  if (!u || !u.target) return;
+  const a = aimAt(u.target);
+  targetEl.classList.toggle('on', !!a);
+  if (!a) return;
+  targetEl.style.left = a.x + 'px';
+  targetEl.style.top = a.y + 'px';
+}
+
+/** DOES THIS PIXEL SHOW THE THING? — the strict question, no reach, no slop */
+function pixelIsTarget(clientX, clientY, name) {
+  const cam = stage.camera;
+  const obj = name ? director.targetObject(name) : null;
+  if (!cam || !obj || !obj.visible) return false;
+  const r = rectOf();
+  if (!inRect(clientX, clientY, r)) return false;
+  cam.updateMatrixWorld();
+  const p = toNdc(clientX, clientY, r);
+  ray.setFromCamera(ndc2.set(p.x, p.y), cam);
+  return ray.intersectObject(obj, true).length > 0;
+}
+
+/** THE GATE'S QUESTION: is the reader's finger on the thing itself? */
 function hitTarget(clientX, clientY) {
   const u = cur();
   if (!u || u.verb !== 'target' || !u.target) return false;
   if (!director.targetLive(u.target)) return false;
-  const p = director.targetWorld(u.target);
-  if (!p) return false;
-  const s = projectToScreen(p);
-  const r = stageEl.getBoundingClientRect();
-  const reach = Math.max(44, r.width * 0.09);
-  return Math.hypot(clientX - s.x, clientY - s.y) <= reach;
+  const r = rectOf();
+  /* THE FRAME IS THE BOARD — a press off the picture is a press on nothing */
+  if (!inRect(clientX, clientY, r)) return false;
+  if (pixelIsTarget(clientX, clientY, u.target)) return true;   /* dead on it */
+  /* THE READER'S REACH — a finger is not a pixel, and a sword at six metres
+     is thinner than one. The slop is measured from where the target RENDERS. */
+  const a = aimAt(u.target);
+  if (!a) return false;
+  return Math.hypot(clientX - a.x, clientY - a.y) <= Math.max(44, r.width * 0.09);
+}
+
+/** a miss is answered, not swallowed — the ring says "not there" */
+function flashMiss() {
+  if (!targetRing) return;
+  targetEl.classList.add('miss');
+  setTimeout(() => targetEl.classList.remove('miss'), 260);
 }
 
 function resolveGate(u) {
@@ -346,7 +564,7 @@ function pressUp(ev) {
   if (!u || ended) return;
   if (u.verb === 'target') {
     if (ev && hitTarget(ev.clientX, ev.clientY)) resolveGate(u);
-    else gateMisses++;
+    else { gateMisses++; flashMiss(); }
     return;
   }
   if (u.verb === 'hold') { holding = false; return; }
@@ -551,11 +769,54 @@ window.__book = {
   setOrbit(deg) { stage.setOrbit(deg); },
   setLean,
   hold(on) { holding = !!on; if (on) audioUnlock(); },
+  /** WHERE THE LIVE TARGET RENDERS — client px on the target's own pixels,
+   *  null when the live shot does not show it. This is what a scripted hand
+   *  clicks and what the reader's ring rides: one number, one mechanism. */
+  aim(name) {
+    const u = cur();
+    const n = name || (u && u.target);
+    if (!n) return null;
+    dropAim();
+    const a = computeAim(n);
+    if (!a) return null;
+    const r = rectOf();
+    return { ...a, rect: { left: r.left, top: r.top, width: r.width, height: r.height },
+             live: director.targetLive(n) };
+  },
+  /** the reader's ring as the page has it right now (the [hit] gate reads it) */
+  ring() {
+    const on = targetEl.classList.contains('on');
+    return { on, x: parseFloat(targetEl.style.left), y: parseFloat(targetEl.style.top),
+             shown: getComputedStyle(targetEl).display !== 'none' && on };
+  },
+  /** a press at REAL client coordinates — the whole hit path, nothing skipped */
+  clickAt(x, y) {
+    pressDown();
+    pressUp({ clientX: x, clientY: y });
+    return { unit: cur() ? cur().id : null, misses: gateMisses };
+  },
+  hitAt(x, y) { return hitTarget(x, y); },
+  /** the strict question the ring must answer yes to: does THIS PIXEL show
+   *  the target? (no reach, no slop — geometry under the live lens) */
+  onTargetAt(x, y, name) {
+    const u = cur();
+    return pixelIsTarget(x, y, name || (u && u.target));
+  },
+  /** what one ring repaint costs, measured in situ */
+  aimCostMs(n = 20) {
+    const u = cur();
+    if (!u || !u.target) return null;
+    const t0 = performance.now();
+    for (let i = 0; i < n; i++) { dropAim(); computeAim(u.target); }
+    return +((performance.now() - t0) / n).toFixed(3);
+  },
   /** resolve the live target gate the way a reader's finger would */
   tap() {
     const u = cur();
     if (!u || u.verb !== 'target') return false;
     if (!director.targetLive(u.target)) return false;
+    const a = aimAt(u.target);
+    if (!a || !hitTarget(a.x, a.y)) return false;   /* no fiction: it must be hittable */
     resolveGate(u);
     return true;
   },
