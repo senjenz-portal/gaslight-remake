@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>THE SHOT SHEET — the storyteller camera, one frame per unit</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!--
+  THE SHOT SHEET. Not the book: the CAMERA's own test page, the same way
+  sets/shore-test.html and sea/index.html are their sets' test pages. It mounts
+  a real set, stands PROXY BODIES on the marks the running book was measured at
+  (tools/ody/shots3d_marks.json), installs the unit's shot out of shots3d.json
+  and renders it through the depth-of-field pass. Proxies, not rigs, on purpose:
+  what is being judged here is FRAMING — size, angle, look-room, edge-cut, the
+  giant's tower — and a capsule of the right stature answers all of that while
+  costing nothing and colliding with no other lane's files.
+
+  ?unit=<id>   the shot to install     ?t=<sec>  where in the move to sample
+  ?nodof=1     the focus pass off      ?boxes=1  draw the subject envelopes
+-->
+<style>
+  html,body{margin:0;height:100%;background:#05070c;color:#cfd6e4;
+            font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+  #wrap{position:fixed;inset:0}
+  canvas{display:block;width:100%;height:100%}
+  #hud{position:fixed;left:10px;top:10px;padding:8px 11px;background:#0009;
+       border:1px solid #ffffff22;border-radius:6px;white-space:pre;pointer-events:none}
+  .safe{position:fixed;inset:0;pointer-events:none}
+  .safe i{position:absolute;border:1px solid #ffffff18}
+  .safe .thirds{position:absolute;inset:0}
+  .safe .thirds b{position:absolute;background:#ffffff12}
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="c"></canvas></div>
+<div id="hud">booting…</div>
+<script type="importmap">
+{ "imports": { "three": "../../../app/vendor/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { createShoreScene, SHORE_WORLD } from '../sets/shore3d.js';
+import { createSeaScene, SEA_WORLD } from '../sets/sea3d.js';
+import { createCave3D, CAVE_WORLD } from '../sets/cave3d.js';
+import { CineCam, CineDof, measureShot, subjectEnvelope } from '../cine3d.js';
+
+const QS = new URLSearchParams(location.search);
+const canvas = document.getElementById('c');
+const hud = document.getElementById('hud');
+
+/* THE PIPELINE, mirroring app3d/render3d.js (the demo's own values) so a frame
+   judged here is the frame the book will ship. */
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;      /* the DoF pass tone-maps */
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const [shots, marks] = await Promise.all([
+  fetch('../shots3d.json').then((r) => r.json()),
+  fetch('./marks.json').then((r) => r.json()),
+]);
+
+const cine = new CineCam(shots);
+const dof = new CineDof(renderer);
+dof.bypass = QS.get('nodof') === '1';
+
+const VOID_COLOUR = { cave: '#0a0806', shore: '#060910', sea: '#070b16' };
+
+/* ---------------- the sets, built once, mounted on demand ---------------- */
+const SETS = {};
+function ensure(name) {
+  if (SETS[name]) return SETS[name];
+  const api = name === 'shore' ? createShoreScene()
+    : name === 'sea' ? createSeaScene() : createCave3D();
+  const scene = new THREE.Scene();
+  scene.add(api.root);
+  const cast = new THREE.Group();
+  cast.name = 'proxy-cast';
+  scene.add(cast);
+  /* THE FRAME NEVER SHOWS THE EDGE OF THE MODEL. Every set in this book is a
+     cutaway, so a lens inside one can see past its shell — and the renderer's
+     clear colour then draws a hard navy wedge across the corner of the frame
+     that reads, correctly, as "this is a model on a table". The void gets the
+     colour of unlit rock (or of night, outdoors), so a sightline that leaves
+     the geometry lands in darkness instead of in a hole. */
+  scene.background = new THREE.Color(VOID_COLOUR[name]);
+  SETS[name] = { api, scene, cast, name };
+  return SETS[name];
+}
+
+/* ---------------- the proxy bodies ----------------
+ * A capsule of the declared stature, standing on the measured placement. The
+ * STATURE OVERRIDE is the engine's own head anchor (a man 1.62, the giant 6.4
+ * standing / 4.15 seated) — a SkinnedMesh AABB is the bind pose and does not
+ * know the character is sitting down. */
+const CROWN = {
+  ulysses: 1.75, 'crew-0': 1.75, 'crew-1': 1.75, 'crew-2': 1.75, 'crew-3': 1.75,
+  'poly-seat': 4.30, 'poly-idle': 7.00, 'poly-walk': 7.00,
+  'ram-great': 1.40, 'ewe-0': 1.00, 'ewe-1': 1.00, 'ewe-2': 1.00, 'ewe-3': 1.00,
+  'flock-0': 1.00, 'flock-1': 1.00, 'flock-2': 1.00, 'flock-3': 1.00,
+};
+/* PROXY ALBEDO IS NOT SWATCH COLOUR. A hearth in this cave is a 330-candela
+   point light three metres from where the giant sits; a capsule painted in
+   full-strength swatch values saturates there and the frame reads as a pillar
+   of light where a body should be. Real garments and skin sit around 0.2-0.35
+   reflectance, and the photo-rigs the book actually mounts carry graded
+   textures in that band — so the proxies are darkened to it, or every exposure
+   measured against them is a lie. */
+const ALBEDO = 0.42;
+const TINT = {
+  ulysses: '#c8443f', crew: '#c79552', poly: '#9fb07a',
+  ram: '#d9d2c4', ewe: '#cfc8bb', flock: '#c6bfb2', other: '#8894a8',
+};
+const kindOf = (id) => id.startsWith('ulysses') ? 'ulysses'
+  : id.startsWith('crew') ? 'crew' : id.startsWith('poly') ? 'poly'
+  : id.startsWith('ram') ? 'ram' : id.startsWith('ewe') ? 'ewe'
+  : id.startsWith('flock') ? 'flock' : 'other';
+
+function proxy(id, p, h, face) {
+  const g = new THREE.Group();
+  const r = Math.max(0.06, h * (kindOf(id) === 'poly' ? 0.15 : 0.17));
+  const bodyH = Math.max(0.05, h - 2 * r);
+  const mat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(TINT[kindOf(id)]).multiplyScalar(ALBEDO),
+    roughness: 0.86, metalness: 0.0, flatShading: true });
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(r, bodyH, 4, 10), mat);
+  body.position.y = h / 2;
+  body.castShadow = true; body.receiveShadow = true;
+  g.add(body);
+  /* a nose, so a proxy has a FACING and the look-room gate has something to
+     read — it is the only reason this thing needs a front */
+  const nose = new THREE.Mesh(new THREE.ConeGeometry(r * 0.34, r * 0.9, 8), mat);
+  nose.rotation.x = Math.PI / 2;
+  nose.position.set(0, h * 0.86, r * 0.95);
+  g.add(nose);
+  g.position.set(p[0], p[1], p[2]);
+  if (isFinite(face)) g.rotation.y = face;
+  g.userData.h = h;
+  g.name = 'proxy:' + id;
+  return g;
+}
+
+function dress(rec, unitId) {
+  for (const c of [...rec.cast.children]) rec.cast.remove(c);
+  const bodies = (marks.units[unitId] || {}).bodies || {};
+  const out = {};
+  for (const [key, b] of Object.entries(bodies)) {
+    if (!key.startsWith('actor:')) continue;
+    const id = key.slice(6);
+    const h = CROWN[id] !== undefined ? CROWN[id]
+      : Math.max(0.25, b.hi[1] - b.lo[1]);   /* CROWN mirrors the bake's table */
+    const g = proxy(id, b.p, h, b.face === null ? undefined : b.face);
+    rec.cast.add(g);
+    out[id] = g;
+  }
+  return { bodies, proxies: out };
+}
+
+/* the cave's leaf state, so a Beat IV frame is not lit like a Beat II one */
+/* the demo's own exposure (render3d.js RENDER_CONFIG) — the shot's `dof.expo`
+   is a STOP ON TOP of it, per shot, which is what a per-shot exposure is */
+const BASE_EXPO = 1.38;
+let expoOverride = null;
+
+const CAVE_STATE_OF = { 2: 'cave-shut', 3: 'cave-shut', 4: 'cave-embers', 5: 'cave-predawn' };
+
+/* ---------------- resolve: the shot's own subject, live ---------------- */
+function makeResolver(rec, staged) {
+  /* the resolver says only WHERE — how big comes from the row's frame.h */
+  return (sub) => {
+    if (!sub) return null;
+    if (sub.a) {
+      const ids = /^poly/.test(sub.a)
+        ? [sub.a, 'poly-seat', 'poly-idle', 'poly-walk'] : [sub.a];
+      for (const id of ids) {
+        const g = staged.proxies[id];
+        if (!g) continue;
+        return { p: g.position.clone(), face: g.rotation.y, id };
+      }
+      return null;
+    }
+    const key = sub.t ? 'target:' + sub.t : sub.p ? 'prop:' + sub.p : null;
+    const b = key && staged.bodies[key];
+    if (!b) return null;
+    return { p: new THREE.Vector3(b.p[0], b.p[1], b.p[2]), point: true };
+  };
+}
+
+/* ---------------- install + render one shot ---------------- */
+let cur = null;
+function install(unitId) {
+  const row = shots.units[unitId];
+  if (!row) return null;
+  const rec = ensure(row.set);
+  if (rec.name === 'cave' && rec.api.setState) {
+    rec.api.setState(CAVE_STATE_OF[row.beat] || 'cave-shut', 1);
+  }
+  const staged = dress(rec, unitId);
+  const resolve = makeResolver(rec, staged);
+  cine.cutTo(unitId, 0, resolve);
+  cur = { rec, row, resolve, staged };
+  return cur;
+}
+
+function frame(t) {
+  if (!cur) return;
+  const { rec, row, resolve } = cur;
+  const w = canvas.clientWidth || 1600, h = canvas.clientHeight || 940;
+  if (canvas.width !== w * renderer.getPixelRatio() ||
+      canvas.height !== h * renderer.getPixelRatio()) renderer.setSize(w, h, false);
+  cine.setAspect(w / h);
+  rec.api.tick(t);
+  if (rec.name === 'cave' && rec.api.applyState) rec.api.applyState(0);
+  if (rec.api.setPixelScale) {
+    const halfH = Math.max(0.05, cine.focusDist * Math.tan(cine.cam.fov * Math.PI / 360));
+    rec.api.setPixelScale(h / (2 * halfH));
+  }
+  cine.step(t, 1 / 60, resolve);
+  dof.render(rec.scene, cine.cam, {
+    focus: cine.focusDist, focal: cine.focalLength(), fstop: cine.fstop,
+    near: cine.dofNear, expo: BASE_EXPO * (expoOverride ?? (row.dof.expo || 1)),
+    tone: 1, grain: 0,
+  });
+  const m = measureShot(cine.cam, cine.subjBox, { facing: cine.subjFace });
+  const cls = cine.classOf(row.class);
+  hud.textContent =
+    `${row.unit}  ${row.class}  ${row.set}  t=${t.toFixed(1)}\n` +
+    `size ${(m.h || 0).toFixed(3)} / floor ${cls.floor}  ` +
+    `${(m.h || 0) >= cls.floor ? 'PASS' : 'UNDER'}\n` +
+    `inFrame ${(m.inFrame || 0).toFixed(2)}  cut ${m.cutSides}  ` +
+    `look ${m.lookRoom}  roll ${m.rollDeg}\n` +
+    `fov ${cine.cam.fov}  f/${cine.fstop}  focus ${cine.focusDist.toFixed(1)}m  ` +
+    `camY ${cine.cam.position.y.toFixed(2)}  move ${row.move.k}`;
+  return m;
+}
+
+const unit = QS.get('unit') || 'ody-ii-05-strangers';
+install(unit);
+let T = +(QS.get('t') || 0);
+frame(T);
+
+/* the harness's whole contract */
+window.__shot = (id, t = 0) => { install(id); return frame(t); };
+window.__at = (t) => frame(t);
+window.__metrics = () => {
+  if (!cur) return null;
+  const m = measureShot(cine.cam, cine.subjBox, { facing: cine.subjFace });
+  return { unit: cur.row.unit, cls: cur.row.class, floor: cine.classOf(cur.row.class).floor,
+           size: m.h, inFrame: m.inFrame, cutSides: m.cutSides, lookRoom: m.lookRoom,
+           lookRoomOk: m.lookRoomOk, roll: m.rollDeg, cx: m.cx, cy: m.cy,
+           camY: cine.cam.position.y, fov: cine.cam.fov, focus: cine.focusDist,
+           live: cine.subjOk, scaleRef: scaleRef(cur),
+           pos: cine.cam.position.toArray().map((v) => +v.toFixed(2)) };
+};
+/**
+ * THE VOID PROBE. How much of this frame is nothing at all — the share of
+ * pixels no geometry ever covered. Measured, not eyeballed: the background is
+ * swapped for a sentinel, the scene is drawn straight to the canvas with no
+ * focus pass and no tone map to move the value, the pixels are counted, and
+ * everything is put back. A shot inside a room owes a very small number here.
+ */
+/* THE SCALE REFERENCE. A giant is only giant beside something whose size the
+   reader already knows. His introduction has to carry a human body IN THE
+   FRAME, big enough to read — measured, not asserted. */
+function scaleRef(c) {
+  if (!c || !c.row.fg) return null;
+  const g = c.staged.proxies[c.row.fg];
+  if (!g) return { id: c.row.fg, present: false };
+  const h = g.userData.h;
+  const p = new THREE.Vector3(g.position.x, g.position.y + h / 2, g.position.z);
+  const box = new THREE.Box3().setFromCenterAndSize(p, new THREE.Vector3(h * 0.32, h, h * 0.32));
+  const m = measureShot(cine.cam, box, {});
+  const dRef = cine.cam.position.distanceTo(p);
+  const dSub = cine.cam.position.distanceTo(cine.anchor);
+  return { id: c.row.fg, present: true, size: m.ok ? +m.h.toFixed(3) : 0,
+           inFrame: m.ok ? +m.inFrame.toFixed(3) : 0,
+           nearer: +(dRef / Math.max(0.01, dSub)).toFixed(3) };
+}
+
+window.__voidFrac = () => {
+  if (!cur) return null;
+  const { rec } = cur;
+  const was = rec.scene.background;
+  rec.scene.background = new THREE.Color(1, 0, 1);
+  renderer.setRenderTarget(null);
+  renderer.render(rec.scene, cine.cam);
+  const gl = renderer.getContext();
+  const W = gl.drawingBufferWidth, H = gl.drawingBufferHeight;
+  const step = 4, cols = Math.floor(W / step), rowsN = Math.floor(H / step);
+  const buf = new Uint8Array(W * 4);
+  let hit = 0, n = 0;
+  for (let j = 0; j < rowsN; j++) {
+    gl.readPixels(0, j * step, W, 1, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+    for (let i = 0; i < cols; i++) {
+      const o = i * step * 4;
+      if (buf[o] > 200 && buf[o + 1] < 70 && buf[o + 2] > 200) hit++;
+      n++;
+    }
+  }
+  rec.scene.background = was;
+  frame(cine.t);
+  return n ? +(hit / n).toFixed(4) : null;
+};
+/**
+ * THE BLOWN-PIXEL PROBE. A frame beside a 330-candela hearth clips: at two
+ * metres the giant is a white column and the vault is paper. This counts the
+ * pixels with nothing left in them, so the per-shot stop is MEASURED down to a
+ * number rather than guessed at by eye.
+ */
+window.__blown = (thresh = 246) => {
+  const gl = renderer.getContext();
+  const W = gl.drawingBufferWidth, H = gl.drawingBufferHeight;
+  const step = 4, cols = Math.floor(W / step), rowsN = Math.floor(H / step);
+  const buf = new Uint8Array(W * 4);
+  let hit = 0, n = 0;
+  for (let j = 0; j < rowsN; j++) {
+    gl.readPixels(0, j * step, W, 1, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+    for (let i = 0; i < cols; i++) {
+      const o = i * step * 4;
+      /* LUMINANCE, not all three channels. A firelit blowout is warm — 255,
+         250, 210 — and an all-channel test scores it as perfectly exposed
+         while the giant stands there as a white column. */
+      const L = 0.2126 * buf[o] + 0.7152 * buf[o + 1] + 0.0722 * buf[o + 2];
+      if (L >= thresh) hit++;
+      n++;
+    }
+  }
+  return n ? +(hit / n).toFixed(5) : null;
+};
+window.__expo = (k) => { expoOverride = k; frame(cine.t); return k; };
+window.__ready = true;
+
+if (QS.get('spin') === '1') {
+  const t0 = performance.now();
+  const loop = () => { frame((performance.now() - t0) / 1000); requestAnimationFrame(loop); };
+  loop();
+}
+addEventListener('resize', () => frame(T));
+</script>
+</body>
+</html>

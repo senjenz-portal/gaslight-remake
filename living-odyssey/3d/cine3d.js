@@ -1,0 +1,557 @@
+/**
+ * cine3d.js — THE STORYTELLER CAMERA.
+ *
+ * THE DEFECT (owner, 2026-08-21): "the camera is weird, it does not feel like
+ * a story." The book was read through one ORTHOGRAPHIC god-view per set, at
+ * the painted plate's own elevation, with a zoom knob for a lens. That is a
+ * diorama viewer: nobody stands there, nothing is nearer than anything else,
+ * and the giant and the man who lies to him are the same distance from the eye.
+ *
+ * THIS MODULE IS THE ANSWER, in three parts.
+ *
+ * 1. THE SHOT. Every unit declares one (3d/shots3d.json, baked by
+ *    tools/ody/shots3d_bake.mjs off the contract's staging and the ledger's own
+ *    marks): {pos, lookAt, fov, move, dof}. A PerspectiveCamera stands at pos.
+ *    A DIALOGUE shot stands at 1.6 m — a person's height — and looks at whoever
+ *    is speaking; the speaker is at least 30% of the frame height, which is the
+ *    2D book's CLOSE-UP LAW translated into a real lens. For POLYPHEMUS the
+ *    camera drops below his eyeline and looks UP, on a wide lens, so that he
+ *    towers. That is not styling. That is the story.
+ *
+ * 2. THE CUT. A unit advance is a CUT — instant, no tween, the way film has
+ *    always changed shots. THE TELEPORT LAW IS HEREBY AMENDED: the law that
+ *    forbids a 1-frame position substitution binds ACTORS, not the camera; a
+ *    camera cut is the grammar, and the gate counts cuts rather than forbidding
+ *    them. Within a unit the move is continuous and eased: a speech gets a
+ *    2-6 cm/s push, a walk gets a lateral track, a heading gets a crane down
+ *    out of its one wide, a rock throw tracks the arc and WHIPS to the splash,
+ *    the blinding takes subtle handheld.
+ *
+ * 3. THE FOCUS. A depth-of-field pass focused on the shot's own subject: it
+ *    puts the reader's eye where the sentence is, and it softens the distant
+ *    low-poly into atmosphere instead of detail. Exposure is per shot too.
+ *
+ * DETERMINISM. Every move is a pure function of (simT − the cut's simT); the
+ * handheld is a sum of fixed-frequency sines, never a random. Two laps of the
+ * same walk put the camera in byte-identical places.
+ */
+import * as THREE from 'three';
+
+const D2R = Math.PI / 180;
+const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+const clamp01 = (v) => clamp(v, 0, 1);
+/* the move easing: soft in, soft out, linear through the middle */
+const ease = (k) => 0.5 - 0.5 * Math.cos(Math.PI * clamp01(k));
+const easeOut = (k) => 1 - (1 - clamp01(k)) ** 3;
+
+/* the sensor the lens arithmetic is written against — full-frame height */
+const SENSOR_H = 0.024;
+
+export const CINE_VERSION = 'cine-r1';
+
+/* ====================================================================== *
+ * THE CAMERA
+ * ====================================================================== */
+export class CineCam {
+  constructor(table) {
+    this.table = table || { units: {}, classes: {}, sets: {} };
+    this.cam = new THREE.PerspectiveCamera(35, 1600 / 940, 0.08, 900);
+    this.shot = null;                 /* the row in play */
+    this.unitId = null;
+    this.t0 = 0;                      /* the sim time of the CUT */
+    this.t = 0;
+    this.cuts = 0;
+    this.log = [];                    /* [{unit, shotOf, t}] — the gate's evidence */
+    this.anchor = new THREE.Vector3();/* the live subject, this frame */
+    this.subjBox = new THREE.Box3();
+    this.subjOk = false;
+    this.focusDist = 6;
+    this.expo = 1;
+    this.fstop = 4;
+    this.dofNear = 0.85;
+    this.shakeAmp = 0;
+    this._pos = new THREE.Vector3();
+    this._look = new THREE.Vector3();
+    this._basePos = new THREE.Vector3();
+    this._baseLook = new THREE.Vector3();
+    this._bakedAnchor = new THREE.Vector3();
+    this._tmp = new THREE.Vector3();
+    this._fwd = new THREE.Vector3();
+    this._right = new THREE.Vector3();
+    this._up = new THREE.Vector3();
+  }
+
+  rowFor(unitId) { return this.table.units[unitId] || null; }
+  classOf(name) { return this.table.classes[name] || { floor: 0, pushMax: 999 }; }
+
+  /**
+   * THE CUT. Called when the reader enters a unit. If the incoming unit runs
+   * the same shot as the outgoing one there is no cut — the move simply keeps
+   * running, which is what a held shot across two lines of the same speech is.
+   */
+  cutTo(unitId, t, resolve) {
+    const row = this.rowFor(unitId);
+    if (!row) return false;
+    const same = this.shot && this.shot.unit !== undefined &&
+      this.unitId && sameShot(this.shot, row);
+    this.unitId = unitId;
+    this.shot = row;
+    if (!same) { this.t0 = t; this.cuts++; this.log.push({ unit: unitId, t: +t.toFixed(3) }); }
+    this._install(row);
+    this.step(t, 0, resolve, true);
+    return !same;
+  }
+
+  _install(row) {
+    this._basePos.fromArray(row.pos);
+    this._baseLook.fromArray(row.lookAt);
+    this._bakedAnchor.fromArray(row.frame.anchor);
+    this.cam.fov = row.fov;
+    this.fstop = row.dof.fstop;
+    this.dofNear = row.dof.near === undefined ? 0.85 : row.dof.near;
+    this.expo = row.dof.expo === undefined ? 1 : row.dof.expo;
+    this.cam.updateProjectionMatrix();
+  }
+
+  setAspect(a) {
+    if (!(a > 0.05) || Math.abs(a - this.cam.aspect) < 1e-5) return;
+    this.cam.aspect = a;
+    this.cam.updateProjectionMatrix();
+  }
+
+  /**
+   * The frame. `resolve(subject)` hands back the LIVE body the shot is about
+   * ({p, box}) or null when the shot frames a fixed mark. The baked station is
+   * kept, and the aim keeps the composition offset the bake solved for, so the
+   * look-room survives a body that has taken two steps since.
+   */
+  step(t, dt, resolve, snap = false) {
+    this.t = t;
+    const row = this.shot;
+    if (!row) return;
+    const k = t - this.t0;
+
+    /* ---- the live subject ----
+     * THE ENVELOPE IS THE BAKED STATURE, NEVER A MEASURED BOX. A SkinnedMesh's
+     * geometry bounding box is its BIND pose: the same Ulysses measures 1.75 m
+     * standing and 3.02 m kneeling as a suppliant, and the seated giant
+     * measures 7 m while filling 4.15 m of frame. So the resolver hands back
+     * only WHERE a body is; how big it is comes from frame.h, which the bake
+     * solved the distance against. Bake, frame and gate cannot drift apart
+     * because there is one number and they all read it. */
+    let live = null;
+    try { live = resolve ? resolve(row.subject, row) : null; } catch (e) { live = null; }
+    this.subjOk = !!live;
+    const H = row.frame.h;
+    if (live) {
+      if (live.point || row.frame.point) this.anchor.copy(live.p);
+      else this.anchor.set(live.p.x, live.p.y + H / 2, live.p.z);
+      this.subjFace = live.face;
+    } else {
+      this.anchor.copy(this._bakedAnchor);
+      this.subjFace = undefined;
+    }
+    subjectEnvelope(this.subjBox, this.anchor, H, live ? (live.point || row.frame.point) : row.frame.point);
+    /* the delta the body has drifted from where the bake found it */
+    this._tmp.copy(this.anchor).sub(this._bakedAnchor);
+    /* a body may not drag the camera through a wall: a station only FOLLOWS
+       when the shot says so (a walk, a ship that sails); otherwise it stands
+       still and re-aims, which is what an operator does. */
+    this._pos.copy(this._basePos);
+    if (row.frame.follow) this._pos.add(this._tmp);
+    this._look.copy(this._baseLook).add(this._tmp);
+
+    /* ---- the move: continuous, eased, pure f(t − cut) ---- */
+    this._basis(this._pos, this._look);
+    const mv = row.move || { k: 'hold' };
+    this.shakeAmp = 0;
+    switch (mv.k) {
+      case 'push': {
+        const e = ease(k / (mv.dur || 10));
+        this._pos.addScaledVector(this._fwd, (mv.m || 0) * e);
+        break;
+      }
+      case 'track': {
+        const e = ease(k / (mv.dur || 9));
+        this._pos.addScaledVector(this._right, (mv.m || 0) * e);
+        this._look.addScaledVector(this._right, (mv.m || 0) * e);
+        break;
+      }
+      case 'crane': {
+        const e = easeOut(k / (mv.dur || 7));
+        const back = 1 - e;
+        this._pos.y += (mv.dy || 0) * back;
+        this._pos.addScaledVector(this._fwd, -(mv.dz || 0) * back);
+        this._look.y += (mv.dy || 0) * 0.30 * back;
+        break;
+      }
+      case 'tilt': {
+        const e = ease(k / (mv.dur || 8));
+        this._look.y -= (mv.dy || 0) * (1 - e);
+        break;
+      }
+      case 'orbit': {
+        const e = ease(k / (mv.dur || 9));
+        const a = (mv.deg || 0) * D2R * e;
+        const dx = this._pos.x - this.anchor.x, dz = this._pos.z - this.anchor.z;
+        const c = Math.cos(a), s = Math.sin(a);
+        this._pos.x = this.anchor.x + dx * c - dz * s;
+        this._pos.z = this.anchor.z + dx * s + dz * c;
+        break;
+      }
+      case 'whip': {
+        /* the throw: the eye rides the arc up, then the splash TAKES it */
+        const dur = mv.dur || 8, at = (mv.at || 0.6) * dur, WH = 0.42;
+        if (mv.to) {
+          if (k < at) {
+            const e = ease(k / Math.max(0.5, at));
+            this._look.y += (mv.rise === undefined ? 1.6 : mv.rise) * e;
+          } else {
+            const e = easeOut((k - at) / WH);
+            this._look.lerp(this._v(mv.to), e);
+            /* the settle: an operator overshoots and comes back */
+            if (k > at + WH) {
+              const s2 = Math.exp(-(k - at - WH) * 3.4) * 0.10 *
+                Math.sin((k - at - WH) * 11);
+              this._look.addScaledVector(this._right, s2);
+            }
+          }
+        }
+        break;
+      }
+      case 'handheld': {
+        /* subtle, breathing, and DETERMINISTIC — a sum of fixed sines. It is
+           the operator's pulse, never a random(): two laps must agree. */
+        const a = (mv.amp || 0.01) * (mv.dur ? clamp01(1.35 - k / (mv.dur * 2.4)) : 1);
+        this.shakeAmp = a;
+        this._pos.addScaledVector(this._right, a * (Math.sin(t * 5.7) * 0.6 + Math.sin(t * 13.1) * 0.4));
+        this._pos.y += a * 0.7 * (Math.sin(t * 4.3 + 1.1) * 0.6 + Math.sin(t * 9.7 + 0.3) * 0.4);
+        this._look.addScaledVector(this._right, a * 1.7 * Math.sin(t * 6.1 + 0.7));
+        this._look.y += a * 1.2 * Math.sin(t * 7.9 + 2.2);
+        break;
+      }
+      default: break;
+    }
+
+    this.cam.position.copy(this._pos);
+    /* THE HORIZON IS LEVEL BY CONSTRUCTION. lookAt() builds the basis off the
+       world up, so no move in this table can dutch the frame — the gate then
+       only has to prove that nothing else did. */
+    this.cam.up.set(0, 1, 0);
+    this.cam.lookAt(this._look);
+    this.cam.updateMatrixWorld(true);
+
+    /* the focus rides the subject, not the frame centre */
+    this.focusDist = Math.max(0.25, this.cam.position.distanceTo(this.anchor));
+    void dt; void snap;
+  }
+
+  _v(a) { return this.__v ? this.__v.fromArray(a) : (this.__v = new THREE.Vector3().fromArray(a)); }
+
+  _basis(pos, look) {
+    /* SCREEN RIGHT is cross(forward, worldUp) — get the sign wrong and every
+       look-room in the table is on the wrong side of the face. */
+    this._fwd.copy(look).sub(pos).normalize();
+    this._right.set(-this._fwd.z, 0, this._fwd.x);
+    if (this._right.lengthSq() < 1e-8) this._right.set(1, 0, 0);
+    this._right.normalize();
+    this._up.crossVectors(this._right, this._fwd).normalize();
+  }
+
+  /** the lens, in the arithmetic the DoF pass needs */
+  focalLength() { return (SENSOR_H / 2) / Math.tan(this.cam.fov * D2R / 2); }
+
+  snapshot() {
+    return {
+      unit: this.unitId,
+      cls: this.shot ? this.shot.class : null,
+      cuts: this.cuts,
+      pos: [+this.cam.position.x.toFixed(2), +this.cam.position.y.toFixed(2),
+            +this.cam.position.z.toFixed(2)],
+      fov: +this.cam.fov.toFixed(2),
+      focus: +this.focusDist.toFixed(2),
+      fstop: this.fstop,
+      shake: +this.shakeAmp.toFixed(4),
+      move: this.shot ? this.shot.move.k : null,
+      subjLive: this.subjOk,
+    };
+  }
+}
+
+/**
+ * THE SUBJECT ENVELOPE. A standing body is a column of its own stature and
+ * 0.42 of it across — near enough to a person's silhouette for framing, and
+ * exactly what the bake solved the distance against. A point subject (a gate
+ * target, a hand prop, a mark on the plan) is a cube of its declared size.
+ */
+export function subjectEnvelope(box, anchor, h, point) {
+  /* 0.32 of stature across AND deep. Depth matters: the near face of the
+     envelope is closer than the body's middle, so an over-deep box measures a
+     subject bigger than it draws — at 0.42 a seated giant five metres away
+     over-read by a quarter of the frame. */
+  const w = point ? h : h * 0.32;
+  box.min.set(anchor.x - w / 2, anchor.y - h / 2, anchor.z - w / 2);
+  box.max.set(anchor.x + w / 2, anchor.y + h / 2, anchor.z + w / 2);
+  return box;
+}
+
+function sameShot(a, b) {
+  return a.set === b.set && a.class === b.class &&
+    a.pos[0] === b.pos[0] && a.pos[1] === b.pos[1] && a.pos[2] === b.pos[2] &&
+    a.lookAt[0] === b.lookAt[0] && a.fov === b.fov;
+}
+
+/* ====================================================================== *
+ * THE FOCUS PASS
+ *
+ * A gather bokeh off the depth buffer. The circle of confusion is the real
+ * thin-lens one — CoC = A·f·|z−s| / (z·(s−f)) with A = f/N — so the shot's
+ * declared f-stop means what a lens means by it, and a 50 mm at f/2 on a
+ * speaker two metres away throws the cave wall out the way it should.
+ *
+ * WHY IT MATTERS BEYOND TASTE: these sets are low-poly reconstructions. Every
+ * facet the reader can count is a facet arguing that this is a model. Focus
+ * spends detail where the sentence is and turns the rest into air.
+ * ====================================================================== */
+export class CineDof {
+  constructor(renderer) {
+    this.renderer = renderer;
+    this.rt = null;
+    this.w = 0; this.h = 0;
+    this.bypass = false;
+    this.scene = new THREE.Scene();
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(
+      new Float32Array([-1, -1, 0, 3, -1, 0, -1, 3, 0]), 3));
+    geo.setAttribute('uv', new THREE.BufferAttribute(
+      new Float32Array([0, 0, 2, 0, 0, 2]), 2));
+    this.mat = new THREE.RawShaderMaterial({
+      uniforms: {
+        tColor: { value: null }, tDepth: { value: null },
+        uTexel: { value: new THREE.Vector2(1 / 1600, 1 / 940) },
+        uNear: { value: 0.08 }, uFar: { value: 900 },
+        uFocus: { value: 6 }, uFocal: { value: 0.035 }, uAperture: { value: 0.0125 },
+        uMaxCoC: { value: 15 }, uNearK: { value: 0.85 },
+        uExpo: { value: 1 }, uGrain: { value: 0 }, uTone: { value: 1 },
+        uSeed: { value: new THREE.Vector2(17.31, 5.77) },
+        uPxH: { value: 940 }, uOn: { value: 1 },
+      },
+      vertexShader: `precision highp float;
+        attribute vec3 position; attribute vec2 uv; varying vec2 vUv;
+        void main(){ vUv = uv; gl_Position = vec4(position, 1.0); }`,
+      fragmentShader: `precision highp float;
+        uniform sampler2D tColor; uniform sampler2D tDepth;
+        uniform vec2 uTexel; uniform float uNear; uniform float uFar;
+        uniform float uFocus; uniform float uFocal; uniform float uAperture;
+        uniform float uMaxCoC; uniform float uNearK; uniform float uExpo;
+        uniform float uGrain; uniform vec2 uSeed; uniform float uPxH;
+        uniform float uOn; uniform float uTone;
+        varying vec2 vUv;
+
+        /* ACES, the demo's own tone map. three applies its tone mapping only
+           when it renders to the DEFAULT framebuffer — every render target is
+           written raw-linear — so the pass that reads the target has to do it,
+           or the whole book ships flat and two stops dark. Same lesson the
+           plate path's soft pass learned about the sRGB encode. */
+        vec3 RRTAndODTFit(vec3 v){
+          vec3 a = v * (v + 0.0245786) - 0.000090537;
+          vec3 b = v * (0.983729 * v + 0.4329510) + 0.238081;
+          return a / b;
+        }
+        vec3 aces(vec3 c){
+          const mat3 IN = mat3(0.59719, 0.07600, 0.02840,
+                               0.35458, 0.90834, 0.13383,
+                               0.04823, 0.01566, 0.83777);
+          const mat3 OUT = mat3( 1.60475, -0.10208, -0.00327,
+                                -0.53108,  1.10813, -0.07276,
+                                -0.07367, -0.00605,  1.07602);
+          c = IN * (c / 0.6);
+          return clamp(OUT * RRTAndODTFit(c), 0.0, 1.0);
+        }
+
+        /* the RT is LINEAR (three writes the working space to every non-default
+           framebuffer); the canvas wants display sRGB, and this pass is the only
+           thing between them — the same lesson the soft pass learned the hard
+           way, two stops dark. */
+        vec3 enc(vec3 c){
+          c = max(c, vec3(0.0));
+          return mix(c * 12.92, 1.055 * pow(c, vec3(0.41666)) - 0.055,
+                     step(vec3(0.0031308), c));
+        }
+        float viewZ(vec2 uv){
+          float d = texture2D(tDepth, uv).x;
+          /* perspective window depth -> metres in front of the lens */
+          return (uNear * uFar) / ((uFar - uNear) * d - uFar) * -1.0;
+        }
+        float cocPx(float z){
+          if (z >= uFar * 0.98) return uMaxCoC;          /* the sky is at infinity */
+          float s = max(uFocus, uFocal * 1.02);
+          float c = (uAperture * uFocal * abs(z - s)) / max(0.02, z * (s - uFocal));
+          float px = c / 0.024 * uPxH;
+          /* the near field is softened LESS than the far: a foreground shoulder
+             should read as a shoulder, not as a smear across the speaker */
+          if (z < s) px *= uNearK;
+          return min(px, uMaxCoC);
+        }
+        void main(){
+          vec3 c0 = texture2D(tColor, vUv).rgb;
+          if (uOn < 0.5) {
+            vec3 g0 = c0 * uExpo;
+            vec3 o = enc(uTone > 0.5 ? aces(g0) : g0);
+            gl_FragColor = vec4(clamp(o, 0.0, 1.0), 1.0);
+            return;
+          }
+          float z0 = viewZ(vUv);
+          float r0 = cocPx(z0);
+          vec3 acc = c0; float wsum = 1.0;
+          /* 24 taps on a golden-angle spiral: two-and-a-bit rings, no banding,
+             one pass. The weight is the NEIGHBOUR's own circle: a sample only
+             lands here if its blur actually reaches this pixel, which is what
+             keeps a sharp foreground from bleeding over a soft background. */
+          const int N = 24;
+          for (int i = 0; i < N; i++) {
+            float fi = float(i) + 0.5;
+            float a = fi * 2.39996323;
+            float rad = sqrt(fi / float(N));
+            vec2 dir = vec2(cos(a), sin(a)) * rad;
+            vec2 off = dir * r0;
+            vec2 uv = vUv + off * uTexel;
+            vec3 c = texture2D(tColor, uv).rgb;
+            float rn = cocPx(viewZ(uv));
+            float d = length(off);
+            float w = clamp((rn - d) * 0.5 + 1.0, 0.02, 1.0);
+            acc += c * w; wsum += w;
+          }
+          vec3 blurred = acc / wsum;
+          float m = smoothstep(0.6, 2.4, r0);
+          vec3 rc = mix(c0, blurred, m);
+          rc *= uExpo;
+          vec3 o = enc(uTone > 0.5 ? aces(rc) : rc);
+          float rnd = fract(sin(dot(gl_FragCoord.xy + uSeed,
+                                    vec2(12.9898, 78.233))) * 43758.5453);
+          o += (rnd - 0.5) * uGrain;
+          gl_FragColor = vec4(clamp(o, 0.0, 1.0), 1.0);
+        }`,
+      depthTest: false, depthWrite: false,
+    });
+    const quad = new THREE.Mesh(geo, this.mat);
+    quad.frustumCulled = false;
+    this.scene.add(quad);
+    this.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  }
+
+  _ensure(w, h) {
+    if (this.rt && this.w === w && this.h === h) return this.rt;
+    if (this.rt) { if (this.rt.depthTexture) this.rt.depthTexture.dispose(); this.rt.dispose(); }
+    const depth = new THREE.DepthTexture(w, h);
+    depth.type = THREE.UnsignedInt248Type;
+    depth.format = THREE.DepthStencilFormat;
+    depth.minFilter = THREE.NearestFilter;
+    depth.magFilter = THREE.NearestFilter;
+    this.rt = new THREE.WebGLRenderTarget(w, h, {
+      type: THREE.HalfFloatType, colorSpace: THREE.LinearSRGBColorSpace,
+      minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,
+      samples: 4, depthBuffer: true, stencilBuffer: true, depthTexture: depth,
+    });
+    this.w = w; this.h = h;
+    this.mat.uniforms.uTexel.value.set(1 / w, 1 / h);
+    this.mat.uniforms.uPxH.value = h;
+    return this.rt;
+  }
+
+  /** one frame: the scene into a target that carries depth, then the focus */
+  render(scene, cam, opt) {
+    const sz = this.renderer.getDrawingBufferSize(this.__sz || (this.__sz = new THREE.Vector2()));
+    if (sz.x < 8 || sz.y < 8) { this.renderer.render(scene, cam); return false; }
+    const rt = this._ensure(sz.x, sz.y);
+    const u = this.mat.uniforms;
+    u.uNear.value = cam.near; u.uFar.value = cam.far;
+    u.uFocus.value = opt.focus;
+    u.uFocal.value = opt.focal;
+    u.uAperture.value = opt.focal / Math.max(0.7, opt.fstop);
+    u.uNearK.value = opt.near === undefined ? 0.85 : opt.near;
+    u.uExpo.value = opt.expo === undefined ? 1 : opt.expo;
+    u.uGrain.value = opt.grain || 0;
+    u.uTone.value = opt.tone === undefined ? 1 : opt.tone;
+    u.uMaxCoC.value = opt.maxCoC === undefined ? 15 : opt.maxCoC;
+    u.uOn.value = this.bypass ? 0 : 1;
+    u.tColor.value = rt.texture;
+    u.tDepth.value = rt.depthTexture;
+    this.renderer.setRenderTarget(rt);
+    this.renderer.render(scene, cam);
+    this.renderer.setRenderTarget(null);
+    this.renderer.render(this.scene, this.cam);
+    return true;
+  }
+}
+
+/* ====================================================================== *
+ * THE COMPOSITION GATES, measured on the frame the reader is looking at.
+ *
+ * Every one of these is a rule a camera operator would be held to, expressed
+ * as a number the harness can read:
+ *   size      the subject's share of FRAME HEIGHT >= its class floor
+ *             (the 2D close-up law, now in 3D)
+ *   edgeCut   the subject is not sliced by a frame edge — the shot is either
+ *             fully inside the frame or deliberately, wholly filling it
+ *   lookRoom  the space in front of a speaking body exceeds the space behind
+ *   level     the horizon is level: no accidental dutch
+ *   scaleRef  the giant's intro carries a human in the near ground, or his
+ *             size is a claim the frame never proves
+ * ====================================================================== */
+export function measureShot(cam, box, opt = {}) {
+  const out = { ok: false };
+  if (!box || box.isEmpty()) return out;
+  const pts = cornersOf(box);
+  let minX = 2, maxX = -2, minY = 2, maxY = -2, behind = 0;
+  const v = new THREE.Vector3();
+  for (const p of pts) {
+    v.copy(p);
+    const camSpace = v.clone().applyMatrix4(cam.matrixWorldInverse);
+    if (camSpace.z > -cam.near) behind++;
+    v.project(cam);
+    minX = Math.min(minX, v.x); maxX = Math.max(maxX, v.x);
+    minY = Math.min(minY, v.y); maxY = Math.max(maxY, v.y);
+  }
+  out.behind = behind;
+  if (behind === 8) return out;                 /* wholly behind the lens */
+  /* NDC -> a share of the frame; height is what the close-up law measures */
+  out.h = (maxY - minY) / 2;
+  out.w = (maxX - minX) / 2;
+  out.cx = (minX + maxX) / 2;
+  out.cy = (minY + maxY) / 2;
+  out.box = [+minX.toFixed(3), +minY.toFixed(3), +maxX.toFixed(3), +maxY.toFixed(3)];
+  /* EDGE-CUT: how much of the subject's own box falls outside the frame */
+  const inW = Math.max(0, Math.min(maxX, 1) - Math.max(minX, -1));
+  const inH = Math.max(0, Math.min(maxY, 1) - Math.max(minY, -1));
+  const area = Math.max(1e-6, (maxX - minX) * (maxY - minY));
+  out.inFrame = (inW * inH) / area;
+  out.cutSides = [minX < -1, maxX > 1, minY < -1, maxY > 1]
+    .reduce((n, b) => n + (b ? 1 : 0), 0);
+  /* LOOK-ROOM: the frame ahead of the body's facing beats the frame behind */
+  if (opt.facing !== undefined && isFinite(opt.facing)) {
+    const f = new THREE.Vector3(Math.sin(opt.facing), 0, Math.cos(opt.facing));
+    const r = new THREE.Vector3();
+    cam.getWorldDirection(r);
+    const right = new THREE.Vector3(-r.z, 0, r.x).normalize();
+    const side = f.dot(right);            /* +1 = the body faces frame-right */
+    out.facingSide = +side.toFixed(3);
+    const ahead = side >= 0 ? (1 - maxX) : (minX + 1);
+    const back = side >= 0 ? (minX + 1) : (1 - maxX);
+    out.lookRoom = +(ahead - back).toFixed(3);
+    out.lookRoomOk = Math.abs(side) < 0.25 ? true : out.lookRoom > -0.02;
+  } else { out.lookRoom = null; out.lookRoomOk = true; }
+  /* LEVEL: the camera's own up, in screen terms */
+  const up = new THREE.Vector3(0, 1, 0).applyQuaternion(cam.quaternion.clone().invert());
+  out.rollDeg = +(Math.atan2(up.x, up.y) / D2R).toFixed(3);
+  out.ok = true;
+  return out;
+}
+
+function cornersOf(b) {
+  const o = [];
+  for (const x of [b.min.x, b.max.x])
+    for (const y of [b.min.y, b.max.y])
+      for (const z of [b.min.z, b.max.z]) o.push(new THREE.Vector3(x, y, z));
+  return o;
+}

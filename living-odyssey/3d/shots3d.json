@@ -1,0 +1,5821 @@
+{
+ "lane": "cine-r1",
+ "created": "2026-08-21",
+ "law": "shot = {pos, lookAt, fov, move, dof}. Distance is never chosen: d = h / (2 f tan(fov/2)) — `frac` is the declared size and the class floor is the minimum share of FRAME HEIGHT the subject may occupy. Camera stations obey the PROSCENIUM LAW (inside the set camera volume, out of every ledger obstacle box). A unit advance is a CUT; within-unit moves are continuous and eased.",
+ "source": "tools/ody/shots3d_bake.mjs (this table's provenance) over 3d/lenses.json marks + app/units.js",
+ "classes": {
+  "DIALOGUE": {
+   "floor": 0.3,
+   "pushMax": 6,
+   "note": "eye-level close on the speaker"
+  },
+  "OTS": {
+   "floor": 0.3,
+   "pushMax": 6,
+   "note": "over the listener onto the speaker"
+  },
+  "GIANT": {
+   "floor": 0.42,
+   "cap": 0.96,
+   "pushMax": 8,
+   "crownPitch": 21,
+   "note": "LOW ANGLE up at Polyphemus — the lens is below him and near enough that his crown climbs the frame"
+  },
+  "NARRATION": {
+   "floor": 0.2,
+   "pushMax": 6,
+   "note": "the teller's voice over a motivated move"
+  },
+  "ACTION": {
+   "floor": 0.17,
+   "pushMax": 45,
+   "note": "the camera goes with the bodies"
+  },
+  "GATE": {
+   "floor": 0.22,
+   "cap": 0.92,
+   "pushMax": 20,
+   "note": "the reader's target, dominant, with look-room"
+  },
+  "CLOCK": {
+   "floor": 0.18,
+   "cap": 0.94,
+   "pushMax": 60,
+   "note": "the beat clock owns the move"
+  },
+  "WIDE": {
+   "floor": 0.045,
+   "pushMax": 60,
+   "note": "one per beat, at the heading"
+  },
+  "POV": {
+   "floor": 0,
+   "pushMax": 999,
+   "note": "kept: the under-fleece eye"
+  }
+ },
+ "sets": {
+  "shore": {
+   "vol": {
+    "cx": 4,
+    "cz": 8,
+    "rx": 62,
+    "rz": 40,
+    "ry": 10000,
+    "ymin": 1,
+    "ymax": 30
+   },
+   "cone": 88
+  },
+  "cave": {
+   "vol": {
+    "cx": 0.8,
+    "cy": 0,
+    "cz": -2,
+    "rx": 13.4,
+    "ry": 8.6,
+    "rz": 8.2,
+    "k": 0.78,
+    "ymin": 0.55,
+    "ymax": 6.6
+   },
+   "cone": 96
+  },
+  "sea": {
+   "vol": {
+    "cx": -8,
+    "cz": 2,
+    "rx": 52,
+    "rz": 38,
+    "ry": 10000,
+    "ymin": 1.2,
+    "ymax": 34
+   },
+   "cone": 92
+  }
+ },
+ "units": {
+  "ody-i-00-head": {
+   "unit": "ody-i-00-head",
+   "beat": 1,
+   "set": "shore",
+   "class": "WIDE",
+   "speaker": null,
+   "subject": {
+    "m": [
+     520,
+     470
+    ],
+    "h": 11,
+    "y": 2.5
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -8.489,
+    15,
+    41.84
+   ],
+   "lookAt": [
+    7.169,
+    1.642,
+    0.982
+   ],
+   "fov": 36,
+   "move": {
+    "k": "crane",
+    "dy": 9,
+    "dz": 5,
+    "dur": 7
+   },
+   "dof": {
+    "fstop": 8,
+    "focus": "subject",
+    "near": 0.55,
+    "expo": 1
+   },
+   "frame": {
+    "h": 11,
+    "point": true,
+    "fill": true,
+    "frac": 0.493,
+    "fracDesign": 0.37,
+    "inFrame": 1,
+    "cx": 0.02,
+    "cy": 0.004,
+    "floor": 0.045,
+    "crownPitch": -9,
+    "crownPitchMin": null,
+    "dist": 45.74,
+    "bearing": -21,
+    "comp": [
+     0,
+     0.06
+    ],
+    "camY": 15,
+    "follow": false,
+    "anchor": [
+     7.257,
+     2.5,
+     0.754
+    ],
+    "solved": "swung -16deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-01-bard": {
+   "unit": "ody-i-01-bard",
+   "beat": 1,
+   "set": "shore",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     500,
+     474
+    ],
+    "h": 6.2,
+    "y": 1.6
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    2.008,
+    4.6,
+    38.722
+   ],
+   "lookAt": [
+    6.988,
+    1.046,
+    1.693
+   ],
+   "fov": 33,
+   "move": {
+    "k": "push",
+    "cms": 4,
+    "dur": 10,
+    "m": 0.4
+   },
+   "dof": {
+    "fstop": 5.6,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 6.2,
+    "point": true,
+    "fill": false,
+    "frac": 0.31,
+    "fracDesign": 0.279,
+    "inFrame": 1,
+    "cx": -0.068,
+    "cy": 0.025,
+    "floor": 0.2,
+    "crownPitch": 0.2,
+    "crownPitchMin": null,
+    "dist": 37.5,
+    "bearing": -5.3,
+    "comp": [
+     -0.08,
+     0.05
+    ],
+    "camY": 4.6,
+    "follow": false,
+    "anchor": [
+     5.487,
+     1.6,
+     1.508
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-02-iamulysses": {
+   "unit": "ody-i-02-iamulysses",
+   "beat": 1,
+   "set": "shore",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -6.969,
+    1.72,
+    10.109
+   ],
+   "lookAt": [
+    -3.665,
+    0.778,
+    2.862
+   ],
+   "fov": 34,
+   "move": {
+    "k": "track",
+    "m": 1.1,
+    "dur": 9
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.5
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.38,
+    "fracDesign": 0.358,
+    "inFrame": 1,
+    "cx": -0.149,
+    "cy": 0.02,
+    "floor": 0.17,
+    "crownPitch": 0.2,
+    "crownPitchMin": null,
+    "dist": 7.99,
+    "bearing": -20,
+    "comp": [
+     -0.15,
+     0.04
+    ],
+    "camY": 1.72,
+    "follow": true,
+    "anchor": [
+     -4.248,
+     0.875,
+     2.639
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-03-troy": {
+   "unit": "ody-i-03-troy",
+   "beat": 1,
+   "set": "shore",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -5.868,
+    1.62,
+    9.065
+   ],
+   "lookAt": [
+    -3.828,
+    0.78,
+    2.756
+   ],
+   "fov": 27,
+   "move": {
+    "k": "push",
+    "cms": 3,
+    "dur": 10,
+    "m": 0.3
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.5
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.614,
+    "fracDesign": 0.547,
+    "inFrame": 1,
+    "cx": -0.164,
+    "cy": 0.036,
+    "floor": 0.2,
+    "crownPitch": 1.1,
+    "crownPitchMin": null,
+    "dist": 6.67,
+    "bearing": -14.2,
+    "comp": [
+     -0.16,
+     0.06
+    ],
+    "camY": 1.62,
+    "follow": false,
+    "anchor": [
+     -4.248,
+     0.875,
+     2.639
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-04-lawless": {
+   "unit": "ody-i-04-lawless",
+   "beat": 1,
+   "set": "shore",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     980,
+     205
+    ],
+    "h": 13,
+    "y": 6.5
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    11.635,
+    2.4,
+    10.522
+   ],
+   "lookAt": [
+    46.61,
+    6.96,
+    -49.991
+   ],
+   "fov": 15,
+   "move": {
+    "k": "push",
+    "cms": 22,
+    "dur": 10,
+    "m": 2.2
+   },
+   "dof": {
+    "fstop": 11,
+    "focus": "subject",
+    "near": 0.4,
+    "expo": 1
+   },
+   "frame": {
+    "h": 13,
+    "point": true,
+    "fill": false,
+    "frac": 0.836,
+    "fracDesign": 0.77,
+    "inFrame": 1,
+    "cx": 0.125,
+    "cy": 0.009,
+    "floor": 0.17,
+    "crownPitch": 8.6,
+    "crownPitchMin": null,
+    "dist": 70.02,
+    "bearing": -31.3,
+    "comp": [
+     0.1,
+     -0.05
+    ],
+    "camY": 2.4,
+    "follow": false,
+    "anchor": [
+     47.965,
+     6.5,
+     -49.199
+    ],
+    "solved": "swung 4deg x1 + backed off"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-05-dawn": {
+   "unit": "ody-i-05-dawn",
+   "beat": 1,
+   "set": "shore",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -4.852,
+    4.4,
+    14.071
+   ],
+   "lookAt": [
+    -3.514,
+    0.458,
+    2.806
+   ],
+   "fov": 40,
+   "move": {
+    "k": "crane",
+    "dy": 3.6,
+    "dz": 2.4,
+    "dur": 8
+   },
+   "dof": {
+    "fstop": 8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.5
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.22,
+    "fracDesign": 0.201,
+    "inFrame": 1,
+    "cx": -0.101,
+    "cy": 0.095,
+    "floor": 0.17,
+    "crownPitch": -13,
+    "crownPitchMin": null,
+    "dist": 11.98,
+    "bearing": -3,
+    "comp": [
+     -0.1,
+     0.1
+    ],
+    "camY": 4.4,
+    "follow": false,
+    "anchor": [
+     -4.248,
+     0.875,
+     2.639
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-06-smoke": {
+   "unit": "ody-i-06-smoke",
+   "beat": 1,
+   "set": "shore",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     479,
+     507
+    ],
+    "h": 1.7,
+    "y": 0.85
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    7.462,
+    1.66,
+    16.489
+   ],
+   "lookAt": [
+    4.19,
+    0.74,
+    7.493
+   ],
+   "fov": 32,
+   "move": {
+    "k": "push",
+    "cms": 3.5,
+    "dur": 10,
+    "m": 0.35
+   },
+   "dof": {
+    "fstop": 3.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.7,
+    "point": true,
+    "fill": false,
+    "frac": 0.362,
+    "fracDesign": 0.309,
+    "inFrame": 1,
+    "cx": -0.15,
+    "cy": 0.005,
+    "floor": 0.2,
+    "crownPitch": 0.2,
+    "crownPitchMin": null,
+    "dist": 9.6,
+    "bearing": 23.6,
+    "comp": [
+     -0.13,
+     0.04
+    ],
+    "camY": 1.66,
+    "follow": false,
+    "anchor": [
+     3.628,
+     0.85,
+     7.729
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-07-council": {
+   "unit": "ody-i-07-council",
+   "beat": 1,
+   "set": "shore",
+   "class": "OTS",
+   "speaker": "ULYSSES",
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": "crew-0",
+   "fg": null,
+   "pos": [
+    -4.454,
+    1.6,
+    0.863
+   ],
+   "lookAt": [
+    -5.712,
+    0.787,
+    7.058
+   ],
+   "fov": 26,
+   "move": {
+    "k": "push",
+    "cms": 2.6,
+    "dur": 10,
+    "m": 0.26
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.666,
+    "fracDesign": 0.596,
+    "inFrame": 1,
+    "cx": 0.19,
+    "cy": 0.035,
+    "floor": 0.3,
+    "crownPitch": 1.4,
+    "crownPitchMin": null,
+    "dist": 6.36,
+    "bearing": 164.7,
+    "comp": [
+     0.17,
+     0.06
+    ],
+    "camY": 1.6,
+    "follow": false,
+    "anchor": [
+     -6.124,
+     0.875,
+     6.955
+    ],
+    "solved": "UPSTAGE swung 56deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": "ship"
+   }
+  },
+  "ody-i-08-cave": {
+   "unit": "ody-i-08-cave",
+   "beat": 1,
+   "set": "shore",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     1008,
+     290
+    ],
+    "h": 9,
+    "y": 3.6
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    30.832,
+    3,
+    -0.627
+   ],
+   "lookAt": [
+    49.794,
+    3.895,
+    -33.561
+   ],
+   "fov": 22,
+   "move": {
+    "k": "push",
+    "cms": 28,
+    "dur": 10,
+    "m": 2.8
+   },
+   "dof": {
+    "fstop": 8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 9,
+    "point": true,
+    "fill": false,
+    "frac": 0.797,
+    "fracDesign": 0.609,
+    "inFrame": 1,
+    "cx": 0.09,
+    "cy": -0.03,
+    "floor": 0.17,
+    "crownPitch": 7.6,
+    "crownPitchMin": null,
+    "dist": 38,
+    "bearing": -31.1,
+    "comp": [
+     0.06,
+     -0.04
+    ],
+    "camY": 3,
+    "follow": false,
+    "anchor": [
+     50.442,
+     3.6,
+     -33.176
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-09-monster": {
+   "unit": "ody-i-09-monster",
+   "beat": 1,
+   "set": "shore",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     1050,
+     200
+    ],
+    "h": 22,
+    "y": 10
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    22.537,
+    2.2,
+    9.733
+   ],
+   "lookAt": [
+    52.805,
+    12.276,
+    -50.56
+   ],
+   "fov": 27,
+   "move": {
+    "k": "tilt",
+    "dy": 7,
+    "dur": 9
+   },
+   "dof": {
+    "fstop": 11,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 22,
+    "point": true,
+    "fill": false,
+    "frac": 0.848,
+    "fracDesign": 0.81,
+    "inFrame": 1,
+    "cx": 0.092,
+    "cy": -0.034,
+    "floor": 0.2,
+    "crownPitch": 15.5,
+    "crownPitchMin": null,
+    "dist": 68.16,
+    "bearing": -27.8,
+    "comp": [
+     0.05,
+     -0.14
+    ],
+    "camY": 2.2,
+    "follow": false,
+    "anchor": [
+     54.159,
+     10,
+     -50.141
+    ],
+    "solved": "hint + backed off"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-10-wineskin": {
+   "unit": "ody-i-10-wineskin",
+   "beat": 1,
+   "set": "shore",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     560,
+     503
+    ],
+    "h": 1.7,
+    "y": 0.85
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    7.255,
+    1.66,
+    15.607
+   ],
+   "lookAt": [
+    11.306,
+    0.725,
+    7.195
+   ],
+   "fov": 30,
+   "move": {
+    "k": "push",
+    "cms": 3.2,
+    "dur": 10,
+    "m": 0.32
+   },
+   "dof": {
+    "fstop": 3.2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.7,
+    "point": true,
+    "fill": false,
+    "frac": 0.4,
+    "fracDesign": 0.339,
+    "inFrame": 1,
+    "cx": -0.124,
+    "cy": 0.009,
+    "floor": 0.2,
+    "crownPitch": 0.2,
+    "crownPitchMin": null,
+    "dist": 9.37,
+    "bearing": -22.3,
+    "comp": [
+     -0.13,
+     0.05
+    ],
+    "camY": 1.66,
+    "follow": false,
+    "anchor": [
+     10.796,
+     0.85,
+     6.975
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-11-twentyone": {
+   "unit": "ody-i-11-twentyone",
+   "beat": 1,
+   "set": "shore",
+   "class": "DIALOGUE",
+   "speaker": null,
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    42.861,
+    1.56,
+    -17.525
+   ],
+   "lookAt": [
+    47.361,
+    0.809,
+    -21.848
+   ],
+   "fov": 24,
+   "move": {
+    "k": "push",
+    "cms": 2.4,
+    "dur": 10,
+    "m": 0.24
+   },
+   "dof": {
+    "fstop": 2.2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.742,
+    "fracDesign": 0.656,
+    "inFrame": 1,
+    "cx": -0.17,
+    "cy": 0.016,
+    "floor": 0.3,
+    "crownPitch": 1.7,
+    "crownPitchMin": null,
+    "dist": 6.27,
+    "bearing": -42.8,
+    "comp": [
+     0.16,
+     0.05
+    ],
+    "camY": 1.56,
+    "follow": false,
+    "anchor": [
+     47.1,
+     0.875,
+     -22.1
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-i-12-misgave": {
+   "unit": "ody-i-12-misgave",
+   "beat": 1,
+   "set": "shore",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     1008,
+     290
+    ],
+    "h": 9,
+    "y": 3.6
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    38.17,
+    2.4,
+    -4.513
+   ],
+   "lookAt": [
+    50.021,
+    3.998,
+    -33.34
+   ],
+   "fov": 24,
+   "move": {
+    "k": "push",
+    "cms": 5,
+    "dur": 10,
+    "m": 0.5
+   },
+   "dof": {
+    "fstop": 5.6,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 9,
+    "point": true,
+    "fill": false,
+    "frac": 0.852,
+    "fracDesign": 0.881,
+    "inFrame": 1,
+    "cx": 0.084,
+    "cy": -0.026,
+    "floor": 0.2,
+    "crownPitch": 10.4,
+    "crownPitchMin": null,
+    "dist": 31.2,
+    "bearing": -23.2,
+    "comp": [
+     0.04,
+     -0.06
+    ],
+    "camY": 2.4,
+    "follow": false,
+    "anchor": [
+     50.442,
+     3.6,
+     -33.176
+    ],
+    "solved": "hint + backed off"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-00-head": {
+   "unit": "ody-ii-00-head",
+   "beat": 2,
+   "set": "cave",
+   "class": "WIDE",
+   "speaker": null,
+   "subject": {
+    "m": [
+     700,
+     455
+    ],
+    "h": 8,
+    "y": 3
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    1.603,
+    3.2,
+    3.203
+   ],
+   "lookAt": [
+    -0.09,
+    2.85,
+    -0.268
+   ],
+   "fov": 58,
+   "move": {
+    "k": "crane",
+    "dy": 1.2,
+    "dz": 0.6,
+    "dur": 7
+   },
+   "dof": {
+    "fstop": 8,
+    "focus": "subject",
+    "near": 0.5,
+    "expo": 0.5
+   },
+   "frame": {
+    "h": 8,
+    "point": true,
+    "fill": true,
+    "frac": 9,
+    "fracDesign": 1.862,
+    "inFrame": 0,
+    "cx": 0,
+    "cy": 0,
+    "floor": 0.045,
+    "crownPitch": 44.5,
+    "crownPitchMin": null,
+    "dist": 3.88,
+    "bearing": 26,
+    "comp": [
+     0,
+     0.07
+    ],
+    "camY": 3.2,
+    "follow": false,
+    "anchor": [
+     -0.093,
+     3,
+     -0.275
+    ],
+    "solved": "swung -32deg x0.45"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-01-beg": {
+   "unit": "ody-ii-01-beg",
+   "beat": 2,
+   "set": "cave",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     640,
+     405
+    ],
+    "h": 2.7,
+    "y": 1.35
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    5.287,
+    1.7,
+    4.432
+   ],
+   "lookAt": [
+    -1.078,
+    1.269,
+    -3.395
+   ],
+   "fov": 30,
+   "move": {
+    "k": "push",
+    "cms": 3.4,
+    "dur": 10,
+    "m": 0.34
+   },
+   "dof": {
+    "fstop": 3.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.71
+   },
+   "frame": {
+    "h": 2.7,
+    "point": true,
+    "fill": false,
+    "frac": 0.643,
+    "fracDesign": 0.5,
+    "inFrame": 1,
+    "cx": -0.134,
+    "cy": 0.004,
+    "floor": 0.2,
+    "crownPitch": 5.7,
+    "crownPitchMin": null,
+    "dist": 10.08,
+    "bearing": 42.3,
+    "comp": [
+     -0.12,
+     0.03
+    ],
+    "camY": 1.7,
+    "follow": false,
+    "anchor": [
+     -1.488,
+     1.35,
+     -3.027
+    ],
+    "solved": "swung 40deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-02-present": {
+   "unit": "ody-ii-02-present",
+   "beat": 2,
+   "set": "cave",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     430,
+     432
+    ],
+    "h": 3,
+    "y": 1.5
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    3.722,
+    1.66,
+    4.74
+   ],
+   "lookAt": [
+    -5.942,
+    1.432,
+    -2.23
+   ],
+   "fov": 32,
+   "move": {
+    "k": "push",
+    "cms": 3,
+    "dur": 10,
+    "m": 0.3
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 3,
+    "point": true,
+    "fill": false,
+    "frac": 0.552,
+    "fracDesign": 0.44,
+    "inFrame": 1,
+    "cx": -0.133,
+    "cy": 0.012,
+    "floor": 0.2,
+    "crownPitch": 6.4,
+    "crownPitchMin": null,
+    "dist": 11.89,
+    "bearing": 58.1,
+    "comp": [
+     -0.14,
+     0.02
+    ],
+    "camY": 1.66,
+    "follow": false,
+    "anchor": [
+     -6.372,
+     1.5,
+     -1.541
+    ],
+    "solved": "swung 40deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-03-return": {
+   "unit": "ody-ii-03-return",
+   "beat": 2,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     933,
+     541
+    ],
+    "h": 1.8,
+    "y": 0.9
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -1.325,
+    1.35,
+    5.003
+   ],
+   "lookAt": [
+    5.286,
+    0.818,
+    4.041
+   ],
+   "fov": 34,
+   "move": {
+    "k": "push",
+    "cms": 5.5,
+    "dur": 10,
+    "m": 0.55
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.8,
+    "point": true,
+    "fill": false,
+    "frac": 0.575,
+    "fracDesign": 0.44,
+    "inFrame": 1,
+    "cx": 0.115,
+    "cy": 0.007,
+    "floor": 0.17,
+    "crownPitch": 3.9,
+    "crownPitchMin": null,
+    "dist": 6.69,
+    "bearing": -85.3,
+    "comp": [
+     0.12,
+     0.04
+    ],
+    "camY": 1.35,
+    "follow": false,
+    "anchor": [
+     5.326,
+     0.9,
+     4.457
+    ],
+    "solved": "swung -68deg x0.68"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-04-boulder": {
+   "unit": "ody-ii-04-boulder",
+   "beat": 2,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     352,
+     430
+    ],
+    "h": 4.6,
+    "y": 2.2
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    4.038,
+    1.7,
+    4.486
+   ],
+   "lookAt": [
+    -7.933,
+    2.116,
+    -2.161
+   ],
+   "fov": 34,
+   "move": {
+    "k": "push",
+    "cms": 12,
+    "dur": 10,
+    "m": 1.2
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.6,
+    "point": true,
+    "fill": false,
+    "frac": 0.804,
+    "fracDesign": 0.55,
+    "inFrame": 1,
+    "cx": -0.054,
+    "cy": 0.057,
+    "floor": 0.17,
+    "crownPitch": 11.6,
+    "crownPitchMin": null,
+    "dist": 13.69,
+    "bearing": 63.3,
+    "comp": [
+     -0.08,
+     0.02
+    ],
+    "camY": 1.7,
+    "follow": false,
+    "anchor": [
+     -8.186,
+     2.2,
+     -1.651
+    ],
+    "solved": "swung 36deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-05-strangers": {
+   "unit": "ody-ii-05-strangers",
+   "beat": 2,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": "crew-0",
+   "pos": [
+    -5.411,
+    1.27,
+    2.76
+   ],
+   "lookAt": [
+    1.564,
+    1.961,
+    0.093
+   ],
+   "fov": 50,
+   "move": {
+    "k": "push",
+    "cms": 5,
+    "dur": 10,
+    "m": 0.5
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.84
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.791,
+    "fracDesign": 0.619,
+    "inFrame": 1,
+    "cx": -0.128,
+    "cy": 0.04,
+    "floor": 0.42,
+    "crownPitch": 21.4,
+    "crownPitchMin": 21,
+    "dist": 7.48,
+    "bearing": -64.5,
+    "comp": [
+     0.1,
+     0.02
+    ],
+    "camY": 1.55,
+    "follow": false,
+    "anchor": [
+     1.302,
+     2.03,
+     -0.44
+    ],
+    "solved": "swung -96deg x1 + dropped"
+   },
+   "flags": {
+    "intro": true,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-06-plea": {
+   "unit": "ody-ii-06-plea",
+   "beat": 2,
+   "set": "cave",
+   "class": "DIALOGUE",
+   "speaker": "ULYSSES",
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": "poly-seat",
+   "fg": null,
+   "pos": [
+    1.247,
+    1.58,
+    -0.555
+   ],
+   "lookAt": [
+    3.559,
+    0.8,
+    5.296
+   ],
+   "fov": 27,
+   "move": {
+    "k": "push",
+    "cms": 2.8,
+    "dur": 10,
+    "m": 0.28
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.652,
+    "fracDesign": 0.576,
+    "inFrame": 1,
+    "cx": -0.188,
+    "cy": 0.023,
+    "floor": 0.3,
+    "crownPitch": 1.5,
+    "crownPitchMin": null,
+    "dist": 6.32,
+    "bearing": -154.4,
+    "comp": [
+     -0.17,
+     0.05
+    ],
+    "camY": 1.58,
+    "follow": false,
+    "anchor": [
+     3.959,
+     0.875,
+     5.114
+    ],
+    "solved": "UPSTAGE swung -20deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-07-pitiless": {
+   "unit": "ody-ii-07-pitiless",
+   "beat": 2,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -5.448,
+    1.1,
+    3.211
+   ],
+   "lookAt": [
+    1.684,
+    1.932,
+    0.242
+   ],
+   "fov": 46,
+   "move": {
+    "k": "push",
+    "cms": 3.4,
+    "dur": 10,
+    "m": 0.34
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.84
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.813,
+    "fracDesign": 0.659,
+    "inFrame": 1,
+    "cx": -0.167,
+    "cy": 0.059,
+    "floor": 0.42,
+    "crownPitch": 21.9,
+    "crownPitchMin": 21,
+    "dist": 7.73,
+    "bearing": -61.6,
+    "comp": [
+     0.14,
+     0.03
+    ],
+    "camY": 1.52,
+    "follow": false,
+    "anchor": [
+     1.302,
+     2.03,
+     -0.44
+    ],
+    "solved": "swung -40deg x1 + dropped"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-08-shipfast": {
+   "unit": "ody-ii-08-shipfast",
+   "beat": 2,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -5.352,
+    1.22,
+    3.236
+   ],
+   "lookAt": [
+    1.641,
+    1.938,
+    0.154
+   ],
+   "fov": 44,
+   "move": {
+    "k": "push",
+    "cms": 3,
+    "dur": 10,
+    "m": 0.3
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.84
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.863,
+    "fracDesign": 0.698,
+    "inFrame": 1,
+    "cx": -0.155,
+    "cy": 0.056,
+    "floor": 0.42,
+    "crownPitch": 21.3,
+    "crownPitchMin": 21,
+    "dist": 7.65,
+    "bearing": -61.1,
+    "comp": [
+     -0.13,
+     0.03
+    ],
+    "camY": 1.5,
+    "follow": false,
+    "anchor": [
+     1.302,
+     2.03,
+     -0.44
+    ],
+    "solved": "swung -80deg x1 + dropped"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-09-shiplie": {
+   "unit": "ody-ii-09-shiplie",
+   "beat": 2,
+   "set": "cave",
+   "class": "DIALOGUE",
+   "speaker": "ULYSSES",
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": "poly-seat",
+   "fg": null,
+   "pos": [
+    0.34,
+    1.58,
+    -3.216
+   ],
+   "lookAt": [
+    -0.734,
+    0.804,
+    2.808
+   ],
+   "fov": 26,
+   "move": {
+    "k": "push",
+    "cms": 2.6,
+    "dur": 10,
+    "m": 0.26
+   },
+   "dof": {
+    "fstop": 2.2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.71
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.69,
+    "fracDesign": 0.616,
+    "inFrame": 1,
+    "cx": -0.172,
+    "cy": 0.025,
+    "floor": 0.3,
+    "crownPitch": 1.6,
+    "crownPitchMin": null,
+    "dist": 6.15,
+    "bearing": 173.7,
+    "comp": [
+     -0.17,
+     0.05
+    ],
+    "camY": 1.58,
+    "follow": false,
+    "anchor": [
+     -0.326,
+     0.875,
+     2.861
+    ],
+    "solved": "UPSTAGE swung 0deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-10-firstmeal": {
+   "unit": "ody-ii-10-firstmeal",
+   "beat": 2,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -5.365,
+    1.45,
+    3.724
+   ],
+   "lookAt": [
+    5.236,
+    4.808,
+    4.822
+   ],
+   "fov": 44,
+   "move": {
+    "k": "handheld",
+    "amp": 0.01,
+    "dur": 6
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 7,
+    "point": false,
+    "fill": false,
+    "frac": 0.86,
+    "fracDesign": 0.778,
+    "inFrame": 1,
+    "cx": -0.133,
+    "cy": 0.037,
+    "floor": 0.17,
+    "crownPitch": 32.9,
+    "crownPitchMin": null,
+    "dist": 11.14,
+    "bearing": -91,
+    "comp": [
+     -0.12,
+     0
+    ],
+    "camY": 1.45,
+    "follow": false,
+    "anchor": [
+     5.252,
+     4.808,
+     3.903
+    ],
+    "solved": "swung -80deg x0.76"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-11-sword": {
+   "unit": "ody-ii-11-sword",
+   "beat": 2,
+   "set": "cave",
+   "class": "GATE",
+   "speaker": null,
+   "subject": {
+    "t": "sword",
+    "h": 1
+   },
+   "over": "ulysses",
+   "fg": null,
+   "pos": [
+    -5.94,
+    1.35,
+    2.055
+   ],
+   "lookAt": [
+    -0.79,
+    0.8,
+    5.565
+   ],
+   "fov": 30,
+   "move": {
+    "k": "push",
+    "cms": 5,
+    "dur": 10,
+    "m": 0.5
+   },
+   "dof": {
+    "fstop": 2.2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1,
+    "point": true,
+    "fill": false,
+    "frac": 0.369,
+    "fracDesign": 0.299,
+    "inFrame": 1,
+    "cx": -0.169,
+    "cy": -0.007,
+    "floor": 0.22,
+    "crownPitch": 0,
+    "crownPitchMin": null,
+    "dist": 6.24,
+    "bearing": -120.1,
+    "comp": [
+     -0.16,
+     0.03
+    ],
+    "camY": 1.35,
+    "follow": false,
+    "anchor": [
+     -0.558,
+     0.85,
+     5.173
+    ],
+    "solved": "UPSTAGE swung 0deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-12-shiftstone": {
+   "unit": "ody-ii-12-shiftstone",
+   "beat": 2,
+   "set": "cave",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     352,
+     430
+    ],
+    "h": 4.6,
+    "y": 2.2
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    4.956,
+    1.62,
+    4.51
+   ],
+   "lookAt": [
+    -7.888,
+    2.117,
+    -2.294
+   ],
+   "fov": 32,
+   "move": {
+    "k": "push",
+    "cms": 3,
+    "dur": 10,
+    "m": 0.3
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.6,
+    "point": true,
+    "fill": false,
+    "frac": 0.722,
+    "fracDesign": 0.552,
+    "inFrame": 1,
+    "cx": -0.073,
+    "cy": 0.055,
+    "floor": 0.2,
+    "crownPitch": 11.2,
+    "crownPitchMin": null,
+    "dist": 14.53,
+    "bearing": 64.9,
+    "comp": [
+     -0.1,
+     0.02
+    ],
+    "camY": 1.62,
+    "follow": false,
+    "anchor": [
+     -8.186,
+     2.2,
+     -1.651
+    ],
+    "solved": "swung 36deg x0.76"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-13-tillmorning": {
+   "unit": "ody-ii-13-tillmorning",
+   "beat": 2,
+   "set": "cave",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     700,
+     470
+    ],
+    "h": 3,
+    "y": 1.3
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    6.448,
+    1.9,
+    4.028
+   ],
+   "lookAt": [
+    -0.085,
+    1.192,
+    0.554
+   ],
+   "fov": 40,
+   "move": {
+    "k": "push",
+    "cms": 4,
+    "dur": 10,
+    "m": 0.4
+   },
+   "dof": {
+    "fstop": 5.6,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 3,
+    "point": true,
+    "fill": false,
+    "frac": 0.818,
+    "fracDesign": 0.664,
+    "inFrame": 1,
+    "cx": 0.043,
+    "cy": -0.023,
+    "floor": 0.2,
+    "crownPitch": 6.9,
+    "crownPitchMin": null,
+    "dist": 7.43,
+    "bearing": 62,
+    "comp": [
+     0,
+     0.04
+    ],
+    "camY": 1.9,
+    "follow": false,
+    "anchor": [
+     -0.093,
+     1.3,
+     0.55
+    ],
+    "solved": "swung -8deg x0.45 + backed off"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-00-head": {
+   "unit": "ody-iii-00-head",
+   "beat": 3,
+   "set": "cave",
+   "class": "WIDE",
+   "speaker": null,
+   "subject": {
+    "m": [
+     704,
+     460
+    ],
+    "h": 9,
+    "y": 3.4
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -6.388,
+    3.6,
+    -0.223
+   ],
+   "lookAt": [
+    -0.008,
+    3.152,
+    0
+   ],
+   "fov": 58,
+   "move": {
+    "k": "crane",
+    "dy": 1.6,
+    "dz": 0.8,
+    "dur": 7
+   },
+   "dof": {
+    "fstop": 8,
+    "focus": "subject",
+    "near": 0.5,
+    "expo": 0.71
+   },
+   "frame": {
+    "h": 9,
+    "point": true,
+    "fill": true,
+    "frac": 4.775,
+    "fracDesign": 1.269,
+    "inFrame": 0.069,
+    "cx": -0.193,
+    "cy": 0.78,
+    "floor": 0.045,
+    "crownPitch": 33.9,
+    "crownPitchMin": null,
+    "dist": 6.4,
+    "bearing": -92,
+    "comp": [
+     0,
+     0.07
+    ],
+    "camY": 3.6,
+    "follow": false,
+    "anchor": [
+     0,
+     3.4,
+     0
+    ],
+    "solved": "swung -28deg x0.68"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-01-morningmeal": {
+   "unit": "ody-iii-01-morningmeal",
+   "beat": 3,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     852,
+     470
+    ],
+    "h": 2,
+    "y": 1
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -1.13,
+    1.4,
+    4.76
+   ],
+   "lookAt": [
+    3.177,
+    0.962,
+    0.266
+   ],
+   "fov": 34,
+   "move": {
+    "k": "push",
+    "cms": 4.5,
+    "dur": 10,
+    "m": 0.45
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 2,
+    "point": true,
+    "fill": false,
+    "frac": 0.749,
+    "fracDesign": 0.525,
+    "inFrame": 1,
+    "cx": 0.134,
+    "cy": -0.035,
+    "floor": 0.17,
+    "crownPitch": 5.5,
+    "crownPitchMin": null,
+    "dist": 6.23,
+    "bearing": -47.4,
+    "comp": [
+     0.12,
+     0.02
+    ],
+    "camY": 1.4,
+    "follow": false,
+    "anchor": [
+     3.442,
+     1,
+     0.55
+    ],
+    "solved": "swung -40deg x0.76"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-02-quiverlid": {
+   "unit": "ody-iii-02-quiverlid",
+   "beat": 3,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     352,
+     430
+    ],
+    "h": 4.6,
+    "y": 2.2
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    4.046,
+    1.62,
+    4.268
+   ],
+   "lookAt": [
+    -7.89,
+    2.12,
+    -2.27
+   ],
+   "fov": 33,
+   "move": {
+    "k": "push",
+    "cms": 9,
+    "dur": 10,
+    "m": 0.9
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.6,
+    "point": true,
+    "fill": false,
+    "frac": 0.811,
+    "fracDesign": 0.571,
+    "inFrame": 1,
+    "cx": -0.073,
+    "cy": 0.062,
+    "floor": 0.17,
+    "crownPitch": 12,
+    "crownPitchMin": null,
+    "dist": 13.6,
+    "bearing": 64.2,
+    "comp": [
+     -0.1,
+     0.02
+    ],
+    "camY": 1.62,
+    "follow": false,
+    "anchor": [
+     -8.186,
+     2.2,
+     -1.651
+    ],
+    "solved": "swung 32deg x0.84"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-03-scheme": {
+   "unit": "ody-iii-03-scheme",
+   "beat": 3,
+   "set": "cave",
+   "class": "DIALOGUE",
+   "speaker": null,
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -1.477,
+    1.56,
+    4.748
+   ],
+   "lookAt": [
+    3.928,
+    0.812,
+    5.458
+   ],
+   "fov": 26,
+   "move": {
+    "k": "push",
+    "cms": 2.4,
+    "dur": 10,
+    "m": 0.24
+   },
+   "dof": {
+    "fstop": 2.2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.778,
+    "fracDesign": 0.69,
+    "inFrame": 1,
+    "cx": -0.161,
+    "cy": 0.023,
+    "floor": 0.3,
+    "crownPitch": 2,
+    "crownPitchMin": null,
+    "dist": 5.49,
+    "bearing": -93.9,
+    "comp": [
+     0.16,
+     0.05
+    ],
+    "camY": 1.56,
+    "follow": false,
+    "anchor": [
+     3.959,
+     0.875,
+     5.114
+    ],
+    "solved": "UPSTAGE swung -96deg x0.92"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-04-club": {
+   "unit": "ody-iii-04-club",
+   "beat": 3,
+   "set": "cave",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     880,
+     380
+    ],
+    "h": 5.6,
+    "y": 2.6
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -10.217,
+    1.7,
+    -0.307
+   ],
+   "lookAt": [
+    3.855,
+    2.793,
+    -5.192
+   ],
+   "fov": 36,
+   "move": {
+    "k": "push",
+    "cms": 3.6,
+    "dur": 10,
+    "m": 0.36
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 5.6,
+    "point": true,
+    "fill": false,
+    "frac": 0.783,
+    "fracDesign": 0.578,
+    "inFrame": 1,
+    "cx": 0.051,
+    "cy": 0.005,
+    "floor": 0.2,
+    "crownPitch": 14,
+    "crownPitchMin": null,
+    "dist": 14.91,
+    "bearing": -74,
+    "comp": [
+     0.1,
+     -0.04
+    ],
+    "camY": 1.7,
+    "follow": false,
+    "anchor": [
+     4.093,
+     2.6,
+     -4.402
+    ],
+    "solved": "swung -68deg x0.76"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-05-lots": {
+   "unit": "ody-iii-05-lots",
+   "beat": 3,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     713,
+     527
+    ],
+    "h": 1.8,
+    "y": 0.9
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    5.733,
+    2.35,
+    4.109
+   ],
+   "lookAt": [
+    0.237,
+    0.792,
+    3.689
+   ],
+   "fov": 36,
+   "move": {
+    "k": "orbit",
+    "deg": 9,
+    "dur": 9
+   },
+   "dof": {
+    "fstop": 3.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.5
+   },
+   "frame": {
+    "h": 1.8,
+    "point": true,
+    "fill": false,
+    "frac": 0.608,
+    "fracDesign": 0.484,
+    "inFrame": 1,
+    "cx": 0.022,
+    "cy": -0.013,
+    "floor": 0.17,
+    "crownPitch": -5.7,
+    "crownPitchMin": null,
+    "dist": 5.73,
+    "bearing": 85.6,
+    "comp": [
+     0,
+     0.06
+    ],
+    "camY": 2.35,
+    "follow": false,
+    "anchor": [
+     0.209,
+     0.9,
+     3.687
+    ],
+    "solved": "swung 88deg x0.68"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-06-return": {
+   "unit": "ody-iii-06-return",
+   "beat": 3,
+   "set": "cave",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     420,
+     434
+    ],
+    "h": 4.4,
+    "y": 2.1
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    6.339,
+    1.64,
+    4.19
+   ],
+   "lookAt": [
+    -6.267,
+    2.016,
+    -2.215
+   ],
+   "fov": 33,
+   "move": {
+    "k": "push",
+    "cms": 4,
+    "dur": 10,
+    "m": 0.4
+   },
+   "dof": {
+    "fstop": 4.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.4,
+    "point": true,
+    "fill": false,
+    "frac": 0.691,
+    "fracDesign": 0.526,
+    "inFrame": 1,
+    "cx": -0.094,
+    "cy": 0.048,
+    "floor": 0.2,
+    "crownPitch": 10.7,
+    "crownPitchMin": null,
+    "dist": 14.12,
+    "bearing": 66.5,
+    "comp": [
+     -0.12,
+     0.02
+    ],
+    "camY": 1.64,
+    "follow": false,
+    "anchor": [
+     -6.605,
+     2.1,
+     -1.431
+    ],
+    "solved": "swung 36deg x0.76"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-07-suppertwo": {
+   "unit": "ody-iii-07-suppertwo",
+   "beat": 3,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -6.508,
+    1.45,
+    3.119
+   ],
+   "lookAt": [
+    1.596,
+    2.03,
+    0.206
+   ],
+   "fov": 44,
+   "move": {
+    "k": "handheld",
+    "amp": 0.01,
+    "dur": 6
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.84
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.715,
+    "fracDesign": 0.619,
+    "inFrame": 1,
+    "cx": -0.135,
+    "cy": 0.013,
+    "floor": 0.17,
+    "crownPitch": 17.6,
+    "crownPitchMin": null,
+    "dist": 8.6,
+    "bearing": -65.5,
+    "comp": [
+     -0.12,
+     0
+    ],
+    "camY": 1.45,
+    "follow": false,
+    "anchor": [
+     1.302,
+     2.03,
+     -0.44
+    ],
+    "solved": "swung -88deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-08-lookhere": {
+   "unit": "ody-iii-08-lookhere",
+   "beat": 3,
+   "set": "cave",
+   "class": "GATE",
+   "speaker": "ULYSSES",
+   "subject": {
+    "p": "bowl",
+    "h": 0.75
+   },
+   "over": "ulysses",
+   "fg": null,
+   "pos": [
+    3.219,
+    1.32,
+    4.925
+   ],
+   "lookAt": [
+    0.395,
+    1,
+    2.586
+   ],
+   "fov": 30,
+   "move": {
+    "k": "push",
+    "cms": 4,
+    "dur": 10,
+    "m": 0.4
+   },
+   "dof": {
+    "fstop": 2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.5
+   },
+   "frame": {
+    "h": 0.75,
+    "point": true,
+    "fill": false,
+    "frac": 0.509,
+    "fracDesign": 0.381,
+    "inFrame": 1,
+    "cx": -0.165,
+    "cy": -0.032,
+    "floor": 0.22,
+    "crownPitch": 1.2,
+    "crownPitchMin": null,
+    "dist": 3.67,
+    "bearing": 54.3,
+    "comp": [
+     -0.15,
+     0.02
+    ],
+    "camY": 1.32,
+    "follow": false,
+    "anchor": [
+     0.247,
+     1.02,
+     2.789
+    ],
+    "solved": "UPSTAGE swung 96deg x0.68"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-09-besokind": {
+   "unit": "ody-iii-09-besokind",
+   "beat": 3,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    6.24,
+    1.48,
+    4.098
+   ],
+   "lookAt": [
+    1.643,
+    1.97,
+    -0.819
+   ],
+   "fov": 48,
+   "move": {
+    "k": "push",
+    "cms": 3.4,
+    "dur": 10,
+    "m": 0.34
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.59
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.944,
+    "fracDesign": 0.718,
+    "inFrame": 1,
+    "cx": -0.11,
+    "cy": 0.04,
+    "floor": 0.42,
+    "crownPitch": 21.9,
+    "crownPitchMin": 21,
+    "dist": 6.73,
+    "bearing": 47.4,
+    "comp": [
+     0.1,
+     0.02
+    ],
+    "camY": 1.48,
+    "follow": false,
+    "anchor": [
+     1.302,
+     2.03,
+     -0.44
+    ],
+    "solved": "swung 56deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-10-thrice": {
+   "unit": "ody-iii-10-thrice",
+   "beat": 3,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -5.43,
+    1.44,
+    2.749
+   ],
+   "lookAt": [
+    1.558,
+    1.998,
+    0.096
+   ],
+   "fov": 46,
+   "move": {
+    "k": "handheld",
+    "amp": 0.012,
+    "dur": 8
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.84
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.803,
+    "fracDesign": 0.678,
+    "inFrame": 1,
+    "cx": -0.129,
+    "cy": 0.025,
+    "floor": 0.17,
+    "crownPitch": 20.2,
+    "crownPitchMin": null,
+    "dist": 7.47,
+    "bearing": -64.7,
+    "comp": [
+     -0.11,
+     0.01
+    ],
+    "camY": 1.44,
+    "follow": false,
+    "anchor": [
+     1.302,
+     2.03,
+     -0.44
+    ],
+    "solved": "swung -80deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-11-noman": {
+   "unit": "ody-iii-11-noman",
+   "beat": 3,
+   "set": "cave",
+   "class": "DIALOGUE",
+   "speaker": "ULYSSES",
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": "poly-seat",
+   "fg": null,
+   "pos": [
+    0.14,
+    1.58,
+    -3.004
+   ],
+   "lookAt": [
+    -0.479,
+    0.809,
+    2.949
+   ],
+   "fov": 25,
+   "move": {
+    "k": "push",
+    "cms": 2.2,
+    "dur": 10,
+    "m": 0.22
+   },
+   "dof": {
+    "fstop": 2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.727,
+    "fracDesign": 0.655,
+    "inFrame": 1,
+    "cx": -0.175,
+    "cy": 0.025,
+    "floor": 0.3,
+    "crownPitch": 1.6,
+    "crownPitchMin": null,
+    "dist": 6.02,
+    "bearing": 177.8,
+    "comp": [
+     -0.17,
+     0.05
+    ],
+    "camY": 1.58,
+    "follow": false,
+    "anchor": [
+     -0.093,
+     0.875,
+     2.972
+    ],
+    "solved": "UPSTAGE swung 0deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-12-nomanlast": {
+   "unit": "ody-iii-12-nomanlast",
+   "beat": 3,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -5.372,
+    1.34,
+    1.783
+   ],
+   "lookAt": [
+    1.501,
+    1.97,
+    0.14
+   ],
+   "fov": 46,
+   "move": {
+    "k": "push",
+    "cms": 3,
+    "dur": 10,
+    "m": 0.3
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.84
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.89,
+    "fracDesign": 0.718,
+    "inFrame": 1,
+    "cx": -0.154,
+    "cy": 0.037,
+    "floor": 0.42,
+    "crownPitch": 22,
+    "crownPitchMin": 21,
+    "dist": 7.07,
+    "bearing": -71.6,
+    "comp": [
+     0.12,
+     0.02
+    ],
+    "camY": 1.48,
+    "follow": false,
+    "anchor": [
+     1.302,
+     2.03,
+     -0.44
+    ],
+    "solved": "swung -76deg x1 + dropped"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iii-13-neck": {
+   "unit": "ody-iii-13-neck",
+   "beat": 3,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -5.452,
+    1.15,
+    2.928
+   ],
+   "lookAt": [
+    5.202,
+    5.095,
+    3.38
+   ],
+   "fov": 48,
+   "move": {
+    "k": "crane",
+    "dy": 1.5,
+    "dz": 0.5,
+    "dur": 5
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 7,
+    "point": false,
+    "fill": false,
+    "frac": 0.755,
+    "fracDesign": 1.133,
+    "inFrame": 1,
+    "cx": 0.086,
+    "cy": -0.044,
+    "floor": 0.17,
+    "crownPitch": 33.7,
+    "crownPitchMin": null,
+    "dist": 11.35,
+    "bearing": -95.2,
+    "comp": [
+     0.06,
+     -0.06
+    ],
+    "camY": 1.15,
+    "follow": false,
+    "anchor": [
+     5.252,
+     4.808,
+     3.903
+    ],
+    "solved": "swung -44deg x0.45 + backed off"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-00-head": {
+   "unit": "ody-iv-00-head",
+   "beat": 4,
+   "set": "cave",
+   "class": "WIDE",
+   "speaker": null,
+   "subject": {
+    "m": [
+     700,
+     470
+    ],
+    "h": 7.6,
+    "y": 2.8
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -8.288,
+    2.6,
+    0.264
+   ],
+   "lookAt": [
+    -0.086,
+    2.527,
+    0.551
+   ],
+   "fov": 58,
+   "move": {
+    "k": "crane",
+    "dy": 0.9,
+    "dz": 0.4,
+    "dur": 6
+   },
+   "dof": {
+    "fstop": 8,
+    "focus": "subject",
+    "near": 0.5,
+    "expo": 1
+   },
+   "frame": {
+    "h": 7.6,
+    "point": true,
+    "fill": true,
+    "frac": 1.607,
+    "fracDesign": 0.836,
+    "inFrame": 0.622,
+    "cx": 0.004,
+    "cy": 0.113,
+    "floor": 0.045,
+    "crownPitch": 26,
+    "crownPitchMin": null,
+    "dist": 8.2,
+    "bearing": -92,
+    "comp": [
+     0,
+     0.06
+    ],
+    "camY": 2.6,
+    "follow": false,
+    "anchor": [
+     -0.093,
+     2.8,
+     0.55
+    ],
+    "solved": "swung -12deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-01-embers": {
+   "unit": "ody-iv-01-embers",
+   "beat": 4,
+   "set": "cave",
+   "class": "GATE",
+   "speaker": null,
+   "subject": {
+    "p": "fire",
+    "h": 1.5
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    4.447,
+    1.1,
+    4.597
+   ],
+   "lookAt": [
+    -1.496,
+    0.7,
+    -0.301
+   ],
+   "fov": 32,
+   "move": {
+    "k": "push",
+    "cms": 5,
+    "dur": 10,
+    "m": 0.5
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.5
+   },
+   "frame": {
+    "h": 1.5,
+    "point": true,
+    "fill": false,
+    "frac": 0.425,
+    "fracDesign": 0.34,
+    "inFrame": 1,
+    "cx": -0.103,
+    "cy": -0.029,
+    "floor": 0.22,
+    "crownPitch": 2.6,
+    "crownPitchMin": null,
+    "dist": 7.7,
+    "bearing": 53.3,
+    "comp": [
+     -0.1,
+     0
+    ],
+    "camY": 1.1,
+    "follow": false,
+    "anchor": [
+     -1.721,
+     0.7,
+     0
+    ],
+    "solved": "swung 52deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-02-glowing": {
+   "unit": "ody-iv-02-glowing",
+   "beat": 4,
+   "set": "cave",
+   "class": "GATE",
+   "speaker": null,
+   "subject": {
+    "p": "stake",
+    "h": 1.1
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    4.856,
+    1.05,
+    4.553
+   ],
+   "lookAt": [
+    -1.258,
+    1.591,
+    0.444
+   ],
+   "fov": 28,
+   "move": {
+    "k": "push",
+    "cms": 4,
+    "dur": 10,
+    "m": 0.4
+   },
+   "dof": {
+    "fstop": 2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 0.5
+   },
+   "frame": {
+    "h": 1.1,
+    "point": true,
+    "fill": false,
+    "frac": 0.354,
+    "fracDesign": 0.299,
+    "inFrame": 1,
+    "cx": -0.133,
+    "cy": 0.059,
+    "floor": 0.22,
+    "crownPitch": 8.7,
+    "crownPitchMin": null,
+    "dist": 7.38,
+    "bearing": 59.3,
+    "comp": [
+     -0.13,
+     0.02
+    ],
+    "camY": 1.05,
+    "follow": false,
+    "anchor": [
+     -1.464,
+     1.628,
+     0.795
+    ],
+    "solved": "swung 60deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-03-auger": {
+   "unit": "ody-iv-03-auger",
+   "beat": 4,
+   "set": "cave",
+   "class": "CLOCK",
+   "speaker": null,
+   "subject": {
+    "p": "stake",
+    "h": 1.1
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    6.105,
+    1.45,
+    4.318
+   ],
+   "lookAt": [
+    0.211,
+    2.38,
+    5.505
+   ],
+   "fov": 34,
+   "move": {
+    "k": "handheld",
+    "amp": 0.014,
+    "dur": 9
+   },
+   "dof": {
+    "fstop": 2.2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.1,
+    "point": true,
+    "fill": false,
+    "frac": 0.352,
+    "fracDesign": 0.296,
+    "inFrame": 1,
+    "cx": 0.097,
+    "cy": 0.054,
+    "floor": 0.18,
+    "crownPitch": 14.2,
+    "crownPitchMin": null,
+    "dist": 6.07,
+    "bearing": 98.1,
+    "comp": [
+     0.11,
+     0.02
+    ],
+    "camY": 1.45,
+    "follow": false,
+    "anchor": [
+     0.168,
+     2.417,
+     5.16
+    ],
+    "solved": "UPSTAGE swung 84deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-04-bore": {
+   "unit": "ody-iv-04-bore",
+   "beat": 4,
+   "set": "cave",
+   "class": "CLOCK",
+   "speaker": null,
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -5.393,
+    1.38,
+    3.708
+   ],
+   "lookAt": [
+    5.24,
+    5.011,
+    3.056
+   ],
+   "fov": 48,
+   "move": {
+    "k": "handheld",
+    "amp": 0.02,
+    "dur": 10
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 7,
+    "point": false,
+    "fill": false,
+    "frac": 0.766,
+    "fracDesign": 0.7,
+    "inFrame": 1,
+    "cx": 0.118,
+    "cy": 0.008,
+    "floor": 0.18,
+    "crownPitch": 33.4,
+    "crownPitchMin": null,
+    "dist": 11.22,
+    "bearing": -91.1,
+    "comp": [
+     0.1,
+     -0.02
+    ],
+    "camY": 1.38,
+    "follow": false,
+    "anchor": [
+     5.256,
+     4.916,
+     3.907
+    ],
+    "solved": "swung -40deg x0.84"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-05-hiss": {
+   "unit": "ody-iv-05-hiss",
+   "beat": 4,
+   "set": "cave",
+   "class": "CLOCK",
+   "speaker": null,
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -1.183,
+    1.3,
+    -2.959
+   ],
+   "lookAt": [
+    4.746,
+    4.901,
+    4.338
+   ],
+   "fov": 52,
+   "move": {
+    "k": "handheld",
+    "amp": 0.034,
+    "dur": 11
+   },
+   "dof": {
+    "fstop": 2.2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 7,
+    "point": false,
+    "fill": false,
+    "frac": 0.823,
+    "fracDesign": 0.991,
+    "inFrame": 1,
+    "cx": -0.098,
+    "cy": 0.039,
+    "floor": 0.18,
+    "crownPitch": 36.7,
+    "crownPitchMin": null,
+    "dist": 10.05,
+    "bearing": -136.8,
+    "comp": [
+     -0.08,
+     -0.02
+    ],
+    "camY": 1.3,
+    "follow": false,
+    "anchor": [
+     5.256,
+     4.809,
+     3.907
+    ],
+    "solved": "swung -48deg x0.6 + backed off"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": true,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-06-fright": {
+   "unit": "ody-iv-06-fright",
+   "beat": 4,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     352,
+     430
+    ],
+    "h": 4.6,
+    "y": 2.2
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    3.951,
+    1.6,
+    4.785
+   ],
+   "lookAt": [
+    -7.854,
+    2.116,
+    -2.285
+   ],
+   "fov": 34,
+   "move": {
+    "k": "handheld",
+    "amp": 0.012,
+    "dur": 7
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.6,
+    "point": true,
+    "fill": false,
+    "frac": 0.71,
+    "fracDesign": 0.547,
+    "inFrame": 1,
+    "cx": -0.075,
+    "cy": 0.057,
+    "floor": 0.17,
+    "crownPitch": 11.9,
+    "crownPitchMin": null,
+    "dist": 13.75,
+    "bearing": 62.1,
+    "comp": [
+     -0.1,
+     0.02
+    ],
+    "camY": 1.6,
+    "follow": false,
+    "anchor": [
+     -8.186,
+     2.2,
+     -1.651
+    ],
+    "solved": "swung 28deg x0.84"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-07-whatails": {
+   "unit": "ody-iv-07-whatails",
+   "beat": 4,
+   "set": "cave",
+   "class": "DIALOGUE",
+   "speaker": "A CYCLOPS",
+   "subject": {
+    "m": [
+     352,
+     424
+    ],
+    "h": 3.2,
+    "y": 1.9
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    4.912,
+    1.62,
+    4.435
+   ],
+   "lookAt": [
+    -7.752,
+    1.827,
+    -2.871
+   ],
+   "fov": 28,
+   "move": {
+    "k": "push",
+    "cms": 2.6,
+    "dur": 10,
+    "m": 0.26
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 3.2,
+    "point": true,
+    "fill": false,
+    "frac": 0.53,
+    "fracDesign": 0.44,
+    "inFrame": 1,
+    "cx": -0.149,
+    "cy": 0.034,
+    "floor": 0.3,
+    "crownPitch": 7.3,
+    "crownPitchMin": null,
+    "dist": 14.59,
+    "bearing": 63.9,
+    "comp": [
+     -0.16,
+     0.02
+    ],
+    "camY": 1.62,
+    "follow": false,
+    "anchor": [
+     -8.186,
+     1.9,
+     -1.981
+    ],
+    "solved": "swung 36deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": true,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-08-nomankilling": {
+   "unit": "ody-iv-08-nomankilling",
+   "beat": 4,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-seat"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -5.251,
+    1.2,
+    3.775
+   ],
+   "lookAt": [
+    5.175,
+    5.005,
+    4.964
+   ],
+   "fov": 50,
+   "move": {
+    "k": "push",
+    "cms": 4,
+    "dur": 10,
+    "m": 0.4
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 7,
+    "point": false,
+    "fill": false,
+    "frac": 0.774,
+    "fracDesign": 0.676,
+    "inFrame": 1,
+    "cx": -0.143,
+    "cy": -0.011,
+    "floor": 0.42,
+    "crownPitch": 34.1,
+    "crownPitchMin": 21,
+    "dist": 11.11,
+    "bearing": -90.7,
+    "comp": [
+     0.12,
+     -0.04
+    ],
+    "camY": 1.2,
+    "follow": false,
+    "anchor": [
+     5.256,
+     4.809,
+     3.907
+    ],
+    "solved": "swung -32deg x0.84"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-09-mustbeill": {
+   "unit": "ody-iv-09-mustbeill",
+   "beat": 4,
+   "set": "cave",
+   "class": "DIALOGUE",
+   "speaker": "A CYCLOPS",
+   "subject": {
+    "m": [
+     352,
+     424
+    ],
+    "h": 3.2,
+    "y": 1.9
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    4.345,
+    1.62,
+    4.15
+   ],
+   "lookAt": [
+    -7.771,
+    1.83,
+    -2.833
+   ],
+   "fov": 28,
+   "move": {
+    "k": "push",
+    "cms": 2.4,
+    "dur": 10,
+    "m": 0.24
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 3.2,
+    "point": true,
+    "fill": false,
+    "frac": 0.558,
+    "fracDesign": 0.46,
+    "inFrame": 1,
+    "cx": -0.147,
+    "cy": 0.035,
+    "floor": 0.3,
+    "crownPitch": 7.7,
+    "crownPitchMin": null,
+    "dist": 13.95,
+    "bearing": 63.9,
+    "comp": [
+     -0.16,
+     0.02
+    ],
+    "camY": 1.62,
+    "follow": false,
+    "anchor": [
+     -8.186,
+     1.9,
+     -1.981
+    ],
+    "solved": "swung 40deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": true,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-10-wentaway": {
+   "unit": "ody-iv-10-wentaway",
+   "beat": 4,
+   "set": "cave",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     352,
+     430
+    ],
+    "h": 4.6,
+    "y": 2.2
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    5.84,
+    1.6,
+    4.311
+   ],
+   "lookAt": [
+    -7.84,
+    2.113,
+    -2.474
+   ],
+   "fov": 32,
+   "move": {
+    "k": "push",
+    "cms": 3,
+    "dur": 10,
+    "m": 0.3
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.6,
+    "point": true,
+    "fill": false,
+    "frac": 0.676,
+    "fracDesign": 0.526,
+    "inFrame": 1,
+    "cx": -0.094,
+    "cy": 0.052,
+    "floor": 0.2,
+    "crownPitch": 10.8,
+    "crownPitchMin": null,
+    "dist": 15.25,
+    "bearing": 67,
+    "comp": [
+     -0.12,
+     0.02
+    ],
+    "camY": 1.6,
+    "follow": false,
+    "anchor": [
+     -8.186,
+     2.2,
+     -1.651
+    ],
+    "solved": "swung 32deg x0.76"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-11-stone": {
+   "unit": "ody-iv-11-stone",
+   "beat": 4,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     352,
+     430
+    ],
+    "h": 4.6,
+    "y": 2.2
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    4.427,
+    1.58,
+    4.051
+   ],
+   "lookAt": [
+    -7.922,
+    2.115,
+    -2.244
+   ],
+   "fov": 34,
+   "move": {
+    "k": "push",
+    "cms": 10,
+    "dur": 10,
+    "m": 1
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.6,
+    "point": true,
+    "fill": false,
+    "frac": 0.771,
+    "fracDesign": 0.543,
+    "inFrame": 1,
+    "cx": -0.061,
+    "cy": 0.062,
+    "floor": 0.17,
+    "crownPitch": 11.9,
+    "crownPitchMin": null,
+    "dist": 13.86,
+    "bearing": 65.7,
+    "comp": [
+     -0.09,
+     0.02
+    ],
+    "camY": 1.58,
+    "follow": false,
+    "anchor": [
+     -8.186,
+     2.2,
+     -1.651
+    ],
+    "solved": "swung 32deg x0.92"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-iv-12-doorway": {
+   "unit": "ody-iv-12-doorway",
+   "beat": 4,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": null,
+   "subject": {
+    "a": "poly-idle"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -8.902,
+    1.45,
+    1.497
+   ],
+   "lookAt": [
+    0.09,
+    3.403,
+    5.924
+   ],
+   "fov": 52,
+   "move": {
+    "k": "push",
+    "cms": 4,
+    "dur": 10,
+    "m": 0.4
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 7,
+    "point": false,
+    "fill": false,
+    "frac": 0.898,
+    "fracDesign": 0.705,
+    "inFrame": 1,
+    "cx": -0.093,
+    "cy": 0.052,
+    "floor": 0.42,
+    "crownPitch": 29.1,
+    "crownPitchMin": 21,
+    "dist": 10.18,
+    "bearing": -111.4,
+    "comp": [
+     0.1,
+     0.02
+    ],
+    "camY": 1.45,
+    "follow": false,
+    "anchor": [
+     0.379,
+     3.5,
+     5.13
+    ],
+    "solved": "UPSTAGE swung -56deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-00-head": {
+   "unit": "ody-v-00-head",
+   "beat": 5,
+   "set": "cave",
+   "class": "WIDE",
+   "speaker": null,
+   "subject": {
+    "m": [
+     720,
+     450
+    ],
+    "h": 9,
+    "y": 3.4
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -6.768,
+    3.6,
+    -0.8
+   ],
+   "lookAt": [
+    0.364,
+    3.123,
+    -0.551
+   ],
+   "fov": 58,
+   "move": {
+    "k": "crane",
+    "dy": 1.6,
+    "dz": 0.8,
+    "dur": 7
+   },
+   "dof": {
+    "fstop": 8,
+    "focus": "subject",
+    "near": 0.5,
+    "expo": 1
+   },
+   "frame": {
+    "h": 9,
+    "point": true,
+    "fill": true,
+    "frac": 3.288,
+    "fracDesign": 1.136,
+    "inFrame": 0.15,
+    "cx": -0.064,
+    "cy": 0.371,
+    "floor": 0.045,
+    "crownPitch": 31,
+    "crownPitchMin": null,
+    "dist": 7.15,
+    "bearing": -92,
+    "comp": [
+     0,
+     0.07
+    ],
+    "camY": 3.6,
+    "follow": false,
+    "anchor": [
+     0.372,
+     3.4,
+     -0.55
+    ],
+    "solved": "swung -32deg x0.76"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-01-puzzling": {
+   "unit": "ody-v-01-puzzling",
+   "beat": 5,
+   "set": "cave",
+   "class": "DIALOGUE",
+   "speaker": null,
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -1.19,
+    1.58,
+    4.715
+   ],
+   "lookAt": [
+    3.559,
+    0.818,
+    4.197
+   ],
+   "fov": 27,
+   "move": {
+    "k": "push",
+    "cms": 2.8,
+    "dur": 10,
+    "m": 0.28
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.871,
+    "fracDesign": 0.755,
+    "inFrame": 1,
+    "cx": 0.169,
+    "cy": 0.02,
+    "floor": 0.3,
+    "crownPitch": 2,
+    "crownPitchMin": null,
+    "dist": 4.83,
+    "bearing": -87.6,
+    "comp": [
+     -0.16,
+     0.05
+    ],
+    "camY": 1.58,
+    "follow": false,
+    "anchor": [
+     3.581,
+     0.875,
+     4.512
+    ],
+    "solved": "swung -28deg x0.76"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-02-withies": {
+   "unit": "ody-v-02-withies",
+   "beat": 5,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     900,
+     466
+    ],
+    "h": 1.6,
+    "y": 0.8
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -0.296,
+    1.2,
+    4.865
+   ],
+   "lookAt": [
+    4.29,
+    0.762,
+    0.047
+   ],
+   "fov": 32,
+   "move": {
+    "k": "push",
+    "cms": 5,
+    "dur": 10,
+    "m": 0.5
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.6,
+    "point": true,
+    "fill": false,
+    "frac": 0.555,
+    "fracDesign": 0.419,
+    "inFrame": 1,
+    "cx": 0.133,
+    "cy": -0.02,
+    "floor": 0.17,
+    "crownPitch": 3.4,
+    "crownPitchMin": null,
+    "dist": 6.65,
+    "bearing": -47,
+    "comp": [
+     0.12,
+     0.02
+    ],
+    "camY": 1.2,
+    "follow": false,
+    "anchor": [
+     4.558,
+     0.8,
+     0.33
+    ],
+    "solved": "swung -44deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-03-threetoaman": {
+   "unit": "ody-v-03-threetoaman",
+   "beat": 5,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     900,
+     466
+    ],
+    "h": 1.6,
+    "y": 0.8
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    0.111,
+    1.15,
+    5.058
+   ],
+   "lookAt": [
+    4.816,
+    0.765,
+    0.575
+   ],
+   "fov": 30,
+   "move": {
+    "k": "track",
+    "m": 0.8,
+    "dur": 8
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.6,
+    "point": true,
+    "fill": false,
+    "frac": 0.556,
+    "fracDesign": 0.459,
+    "inFrame": 1,
+    "cx": -0.123,
+    "cy": -0.018,
+    "floor": 0.17,
+    "crownPitch": 4,
+    "crownPitchMin": null,
+    "dist": 6.5,
+    "bearing": -43.2,
+    "comp": [
+     -0.12,
+     0.02
+    ],
+    "camY": 1.15,
+    "follow": false,
+    "anchor": [
+     4.558,
+     0.8,
+     0.33
+    ],
+    "solved": "swung -32deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-04-greatram": {
+   "unit": "ody-v-04-greatram",
+   "beat": 5,
+   "set": "cave",
+   "class": "GATE",
+   "speaker": null,
+   "subject": {
+    "t": "ram-great",
+    "h": 1.15
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    6.26,
+    1.05,
+    4.004
+   ],
+   "lookAt": [
+    1.016,
+    0.757,
+    4.857
+   ],
+   "fov": 30,
+   "move": {
+    "k": "push",
+    "cms": 5,
+    "dur": 10,
+    "m": 0.5
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.15,
+    "point": true,
+    "fill": false,
+    "frac": 0.518,
+    "fracDesign": 0.404,
+    "inFrame": 1,
+    "cx": -0.199,
+    "cy": 0.008,
+    "floor": 0.22,
+    "crownPitch": 3.5,
+    "crownPitchMin": null,
+    "dist": 5.31,
+    "bearing": 103.2,
+    "comp": [
+     -0.15,
+     0.03
+    ],
+    "camY": 1.05,
+    "follow": false,
+    "anchor": [
+     1.097,
+     0.8,
+     5.211
+    ],
+    "solved": "UPSTAGE swung 68deg x0.84"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-05-dawn": {
+   "unit": "ody-v-05-dawn",
+   "beat": 5,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     520,
+     440
+    ],
+    "h": 4.4,
+    "y": 1.5
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    2.769,
+    2.4,
+    1.465
+   ],
+   "lookAt": [
+    -4.121,
+    1.34,
+    -1.479
+   ],
+   "fov": 56,
+   "move": {
+    "k": "crane",
+    "dy": 1,
+    "dz": 0.4,
+    "dur": 9
+   },
+   "dof": {
+    "fstop": 5.6,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.4,
+    "point": true,
+    "fill": false,
+    "frac": 0.872,
+    "fracDesign": 0.686,
+    "inFrame": 1,
+    "cx": 0.007,
+    "cy": -0.042,
+    "floor": 0.17,
+    "crownPitch": 9.8,
+    "crownPitchMin": null,
+    "dist": 7.55,
+    "bearing": 70,
+    "comp": [
+     -0.06,
+     0.04
+    ],
+    "camY": 2.4,
+    "follow": false,
+    "anchor": [
+     -4.279,
+     1.5,
+     -1.101
+    ],
+    "solved": "hint + widened"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-06-feltbacks": {
+   "unit": "ody-v-06-feltbacks",
+   "beat": 5,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": null,
+   "subject": {
+    "a": "poly-idle"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -0.388,
+    0.65,
+    4.71
+   ],
+   "lookAt": [
+    -8.009,
+    1.95,
+    -0.127
+   ],
+   "fov": 48,
+   "move": {
+    "k": "push",
+    "cms": 3.6,
+    "dur": 10,
+    "m": 0.36
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.638,
+    "fracDesign": 0.499,
+    "inFrame": 1,
+    "cx": -0.112,
+    "cy": 0.054,
+    "floor": 0.42,
+    "crownPitch": 21.5,
+    "crownPitchMin": 21,
+    "dist": 9.09,
+    "bearing": 62.4,
+    "comp": [
+     0.11,
+     0.02
+    ],
+    "camY": 1.3,
+    "follow": false,
+    "anchor": [
+     -8.349,
+     2.03,
+     0.55
+    ],
+    "solved": "swung 32deg x1 + low-angled"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-07-lastofall": {
+   "unit": "ody-v-07-lastofall",
+   "beat": 5,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     395,
+     438
+    ],
+    "h": 1.3,
+    "y": 0.65
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -5.254,
+    1.05,
+    4.046
+   ],
+   "lookAt": [
+    -6.851,
+    0.618,
+    -1.331
+   ],
+   "fov": 32,
+   "move": {
+    "k": "push",
+    "cms": 5,
+    "dur": 10,
+    "m": 0.5
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.3,
+    "point": true,
+    "fill": false,
+    "frac": 0.526,
+    "fracDesign": 0.404,
+    "inFrame": 1,
+    "cx": -0.174,
+    "cy": -0.02,
+    "floor": 0.17,
+    "crownPitch": 2.6,
+    "crownPitchMin": null,
+    "dist": 5.61,
+    "bearing": 20.2,
+    "comp": [
+     -0.13,
+     0.02
+    ],
+    "camY": 1.05,
+    "follow": false,
+    "anchor": [
+     -7.186,
+     0.65,
+     -1.211
+    ],
+    "solved": "swung 4deg x0.84"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-08-ramspeech1": {
+   "unit": "ody-v-08-ramspeech1",
+   "beat": 5,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-idle"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -0.924,
+    0.65,
+    4.796
+   ],
+   "lookAt": [
+    -7.977,
+    1.956,
+    -0.124
+   ],
+   "fov": 47,
+   "move": {
+    "k": "push",
+    "cms": 3,
+    "dur": 10,
+    "m": 0.3
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.687,
+    "fracDesign": 0.499,
+    "inFrame": 1,
+    "cx": -0.123,
+    "cy": 0.058,
+    "floor": 0.42,
+    "crownPitch": 22.4,
+    "crownPitchMin": 21,
+    "dist": 8.66,
+    "bearing": 60.2,
+    "comp": [
+     0.12,
+     0.02
+    ],
+    "camY": 1.28,
+    "follow": false,
+    "anchor": [
+     -8.349,
+     2.03,
+     0.55
+    ],
+    "solved": "swung 36deg x1 + low-angled"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-09-ramspeech2": {
+   "unit": "ody-v-09-ramspeech2",
+   "beat": 5,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-idle"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -0.634,
+    0.65,
+    4.703
+   ],
+   "lookAt": [
+    -8.025,
+    1.956,
+    -0.076
+   ],
+   "fov": 46,
+   "move": {
+    "k": "push",
+    "cms": 2.8,
+    "dur": 10,
+    "m": 0.28
+   },
+   "dof": {
+    "fstop": 2.8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.681,
+    "fracDesign": 0.498,
+    "inFrame": 1,
+    "cx": -0.111,
+    "cy": 0.056,
+    "floor": 0.42,
+    "crownPitch": 21.9,
+    "crownPitchMin": 21,
+    "dist": 8.87,
+    "bearing": 61.7,
+    "comp": [
+     -0.11,
+     0.02
+    ],
+    "camY": 1.24,
+    "follow": false,
+    "anchor": [
+     -8.349,
+     2.03,
+     0.55
+    ],
+    "solved": "swung 52deg x1 + low-angled"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-10-ramspeech3": {
+   "unit": "ody-v-10-ramspeech3",
+   "beat": 5,
+   "set": "cave",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-idle"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -0.952,
+    0.65,
+    5.007
+   ],
+   "lookAt": [
+    -8.012,
+    1.992,
+    -0.021
+   ],
+   "fov": 48,
+   "move": {
+    "k": "push",
+    "cms": 2.6,
+    "dur": 10,
+    "m": 0.26
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.3,
+    "point": false,
+    "fill": false,
+    "frac": 0.659,
+    "fracDesign": 0.518,
+    "inFrame": 1,
+    "cx": -0.102,
+    "cy": 0.044,
+    "floor": 0.42,
+    "crownPitch": 22.2,
+    "crownPitchMin": 21,
+    "dist": 8.75,
+    "bearing": 58.9,
+    "comp": [
+     0.1,
+     0.01
+    ],
+    "camY": 1.2,
+    "follow": false,
+    "anchor": [
+     -8.349,
+     2.03,
+     0.55
+    ],
+    "solved": "swung 28deg x1 + low-angled"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-11-freed": {
+   "unit": "ody-v-11-freed",
+   "beat": 5,
+   "set": "cave",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -1.485,
+    1.55,
+    4.466
+   ],
+   "lookAt": [
+    -7.506,
+    0.795,
+    1.006
+   ],
+   "fov": 32,
+   "move": {
+    "k": "track",
+    "m": 0.9,
+    "dur": 8
+   },
+   "dof": {
+    "fstop": 3.2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.47,
+    "fracDesign": 0.438,
+    "inFrame": 1,
+    "cx": -0.139,
+    "cy": 0.019,
+    "floor": 0.17,
+    "crownPitch": 1.7,
+    "crownPitchMin": null,
+    "dist": 6.97,
+    "bearing": 64,
+    "comp": [
+     -0.14,
+     0.04
+    ],
+    "camY": 1.55,
+    "follow": true,
+    "anchor": [
+     -7.721,
+     0.875,
+     1.431
+    ],
+    "solved": "swung 48deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-v-12-aboard": {
+   "unit": "ody-v-12-aboard",
+   "beat": 5,
+   "set": "cave",
+   "class": "NARRATION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     370,
+     452
+    ],
+    "h": 3.4,
+    "y": 1.6
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    5.735,
+    1.62,
+    3.987
+   ],
+   "lookAt": [
+    -7.491,
+    1.47,
+    -1.283
+   ],
+   "fov": 34,
+   "move": {
+    "k": "push",
+    "cms": 4,
+    "dur": 10,
+    "m": 0.4
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 3.4,
+    "point": true,
+    "fill": false,
+    "frac": 0.48,
+    "fracDesign": 0.391,
+    "inFrame": 1,
+    "cx": -0.103,
+    "cy": 0.031,
+    "floor": 0.2,
+    "crownPitch": 6.7,
+    "crownPitchMin": null,
+    "dist": 14.21,
+    "bearing": 71.8,
+    "comp": [
+     -0.12,
+     0.03
+    ],
+    "camY": 1.62,
+    "follow": false,
+    "anchor": [
+     -7.767,
+     1.6,
+     -0.44
+    ],
+    "solved": "swung 44deg x0.92"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-01-jeer": {
+   "unit": "ody-vi-01-jeer",
+   "beat": 6,
+   "set": "sea",
+   "class": "GATE",
+   "speaker": null,
+   "subject": {
+    "t": "cyclops",
+    "h": 6.4
+   },
+   "over": "ulysses",
+   "fg": null,
+   "pos": [
+    -42.219,
+    3.4,
+    13.077
+   ],
+   "lookAt": [
+    11.465,
+    32.553,
+    3.492
+   ],
+   "fov": 22,
+   "move": {
+    "k": "push",
+    "cms": 16,
+    "dur": 10,
+    "m": 1.6
+   },
+   "dof": {
+    "fstop": 5.6,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 6.4,
+    "point": true,
+    "fill": false,
+    "frac": 0.39,
+    "fracDesign": 0.267,
+    "inFrame": 1,
+    "cx": 0.163,
+    "cy": -0.063,
+    "floor": 0.22,
+    "crownPitch": 29.9,
+    "crownPitchMin": null,
+    "dist": 61.74,
+    "bearing": -83.3,
+    "comp": [
+     0.16,
+     -0.08
+    ],
+    "camY": 3.4,
+    "follow": false,
+    "anchor": [
+     12.283,
+     31.7,
+     6.687
+    ],
+    "solved": "UPSTAGE swung 0deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-02-taunt": {
+   "unit": "ody-vi-02-taunt",
+   "beat": 6,
+   "set": "sea",
+   "class": "DIALOGUE",
+   "speaker": "ULYSSES",
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -16.624,
+    2.9,
+    5.936
+   ],
+   "lookAt": [
+    -13.602,
+    1.375,
+    0.391
+   ],
+   "fov": 26,
+   "move": {
+    "k": "push",
+    "cms": 2.8,
+    "dur": 10,
+    "m": 0.28
+   },
+   "dof": {
+    "fstop": 2.5,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.677,
+    "fracDesign": 0.585,
+    "inFrame": 1,
+    "cx": -0.179,
+    "cy": 0.017,
+    "floor": 0.3,
+    "crownPitch": -5.2,
+    "crownPitchMin": null,
+    "dist": 6.48,
+    "bearing": -24.7,
+    "comp": [
+     0.17,
+     0.05
+    ],
+    "camY": 2.9,
+    "follow": false,
+    "anchor": [
+     -13.989,
+     1.448,
+     0.195
+    ],
+    "solved": "swung 20deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-03-rock1": {
+   "unit": "ody-vi-03-rock1",
+   "beat": 6,
+   "set": "sea",
+   "class": "CLOCK",
+   "speaker": null,
+   "subject": {
+    "m": [
+     520,
+     470
+    ],
+    "h": 6,
+    "y": 1.4
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -21.685,
+    3,
+    20.79
+   ],
+   "lookAt": [
+    -13.394,
+    1.804,
+    0.348
+   ],
+   "fov": 34,
+   "move": {
+    "k": "whip",
+    "toPx": [
+     468,
+     505
+    ],
+    "toY": 1.2,
+    "at": 0.62,
+    "dur": 11,
+    "rise": 2.2,
+    "to": [
+     -18.583,
+     1.2,
+     5.512
+    ]
+   },
+   "dof": {
+    "fstop": 8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 6,
+    "point": true,
+    "fill": false,
+    "frac": 0.54,
+    "fracDesign": 0.445,
+    "inFrame": 1,
+    "cx": -0.075,
+    "cy": -0.107,
+    "floor": 0.18,
+    "crownPitch": 3.6,
+    "crownPitchMin": null,
+    "dist": 22.06,
+    "bearing": -19.1,
+    "comp": [
+     -0.1,
+     -0.06
+    ],
+    "camY": 3,
+    "follow": false,
+    "anchor": [
+     -14.488,
+     1.4,
+     0
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-04-twiceasfar": {
+   "unit": "ody-vi-04-twiceasfar",
+   "beat": 6,
+   "set": "sea",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     575,
+     450
+    ],
+    "h": 4.2,
+    "y": 1.6
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -16.28,
+    2.6,
+    13.177
+   ],
+   "lookAt": [
+    -9.361,
+    1.5,
+    -2.845
+   ],
+   "fov": 32,
+   "move": {
+    "k": "push",
+    "cms": 8,
+    "dur": 10,
+    "m": 0.8
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.2,
+    "point": true,
+    "fill": false,
+    "frac": 0.526,
+    "fracDesign": 0.419,
+    "inFrame": 1,
+    "cx": -0.083,
+    "cy": -0.014,
+    "floor": 0.17,
+    "crownPitch": 3.6,
+    "crownPitchMin": null,
+    "dist": 17.47,
+    "bearing": -20.6,
+    "comp": [
+     -0.1,
+     0.02
+    ],
+    "camY": 2.6,
+    "follow": false,
+    "anchor": [
+     -10.157,
+     1.6,
+     -3.15
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-05-menbeg": {
+   "unit": "ody-vi-05-menbeg",
+   "beat": 6,
+   "set": "sea",
+   "class": "DIALOGUE",
+   "speaker": "THE MEN",
+   "subject": {
+    "a": "crew-0"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -22.723,
+    2.7,
+    6.264
+   ],
+   "lookAt": [
+    -27.135,
+    1.35,
+    1.445
+   ],
+   "fov": 26,
+   "move": {
+    "k": "push",
+    "cms": 2.6,
+    "dur": 10,
+    "m": 0.26
+   },
+   "dof": {
+    "fstop": 2.2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.652,
+    "fracDesign": 0.569,
+    "inFrame": 1,
+    "cx": -0.172,
+    "cy": 0.015,
+    "floor": 0.3,
+    "crownPitch": -3.5,
+    "crownPitchMin": null,
+    "dist": 6.66,
+    "bearing": 46.2,
+    "comp": [
+     -0.16,
+     0.05
+    ],
+    "camY": 2.7,
+    "follow": false,
+    "anchor": [
+     -27.436,
+     1.425,
+     1.737
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-06-defy": {
+   "unit": "ody-vi-06-defy",
+   "beat": 6,
+   "set": "sea",
+   "class": "GATE",
+   "speaker": null,
+   "subject": {
+    "t": "cyclops",
+    "h": 6.4
+   },
+   "over": "ulysses",
+   "fg": null,
+   "pos": [
+    -42.866,
+    3.2,
+    19.914
+   ],
+   "lookAt": [
+    11.226,
+    32.5,
+    4.002
+   ],
+   "fov": 20,
+   "move": {
+    "k": "push",
+    "cms": 14,
+    "dur": 10,
+    "m": 1.4
+   },
+   "dof": {
+    "fstop": 5.6,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 6.4,
+    "point": true,
+    "fill": false,
+    "frac": 0.425,
+    "fracDesign": 0.286,
+    "inFrame": 1,
+    "cx": 0.151,
+    "cy": -0.062,
+    "floor": 0.22,
+    "crownPitch": 29.2,
+    "crownPitchMin": null,
+    "dist": 63.47,
+    "bearing": -76.5,
+    "comp": [
+     0.15,
+     -0.08
+    ],
+    "camY": 3.2,
+    "follow": false,
+    "anchor": [
+     12.283,
+     31.7,
+     6.687
+    ],
+    "solved": "UPSTAGE swung 0deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-07-myname": {
+   "unit": "ody-vi-07-myname",
+   "beat": 6,
+   "set": "sea",
+   "class": "DIALOGUE",
+   "speaker": "ULYSSES",
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -26.453,
+    2.9,
+    4.454
+   ],
+   "lookAt": [
+    -32.096,
+    1.383,
+    1.804
+   ],
+   "fov": 24,
+   "move": {
+    "k": "push",
+    "cms": 2.4,
+    "dur": 10,
+    "m": 0.24
+   },
+   "dof": {
+    "fstop": 2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.738,
+    "fracDesign": 0.643,
+    "inFrame": 1,
+    "cx": 0.19,
+    "cy": 0.015,
+    "floor": 0.3,
+    "crownPitch": -5.3,
+    "crownPitchMin": null,
+    "dist": 6.4,
+    "bearing": 61.2,
+    "comp": [
+     0.17,
+     0.05
+    ],
+    "camY": 2.9,
+    "follow": false,
+    "anchor": [
+     -31.92,
+     1.449,
+     1.451
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-08-prophecy": {
+   "unit": "ody-vi-08-prophecy",
+   "beat": 6,
+   "set": "sea",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-idle"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -32.714,
+    3.2,
+    8.571
+   ],
+   "lookAt": [
+    11.955,
+    31.404,
+    4.814
+   ],
+   "fov": 17,
+   "move": {
+    "k": "push",
+    "cms": 5.5,
+    "dur": 10,
+    "m": 0.55
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 7,
+    "point": false,
+    "fill": false,
+    "frac": 0.487,
+    "fracDesign": 0.442,
+    "inFrame": 1,
+    "cx": 0.144,
+    "cy": -0.06,
+    "floor": 0.42,
+    "crownPitch": 34.8,
+    "crownPitchMin": 21,
+    "dist": 52.93,
+    "bearing": -87.6,
+    "comp": [
+     0.14,
+     -0.06
+    ],
+    "camY": 3.2,
+    "follow": false,
+    "anchor": [
+     12.283,
+     31,
+     6.687
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-09-fatherson": {
+   "unit": "ody-vi-09-fatherson",
+   "beat": 6,
+   "set": "sea",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-idle"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -29.949,
+    3,
+    14.44
+   ],
+   "lookAt": [
+    11.763,
+    31.362,
+    5.162
+   ],
+   "fov": 16,
+   "move": {
+    "k": "push",
+    "cms": 5,
+    "dur": 10,
+    "m": 0.5
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 7,
+    "point": false,
+    "fill": false,
+    "frac": 0.546,
+    "fracDesign": 0.486,
+    "inFrame": 1,
+    "cx": 0.134,
+    "cy": -0.061,
+    "floor": 0.42,
+    "crownPitch": 36.3,
+    "crownPitchMin": 21,
+    "dist": 51.26,
+    "bearing": -79.6,
+    "comp": [
+     -0.13,
+     -0.06
+    ],
+    "camY": 3,
+    "follow": false,
+    "anchor": [
+     12.283,
+     31,
+     6.687
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-10-hades": {
+   "unit": "ody-vi-10-hades",
+   "beat": 6,
+   "set": "sea",
+   "class": "DIALOGUE",
+   "speaker": "ULYSSES",
+   "subject": {
+    "a": "ulysses"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -26.327,
+    2.9,
+    5.43
+   ],
+   "lookAt": [
+    -31.713,
+    1.439,
+    2.039
+   ],
+   "fov": 25,
+   "move": {
+    "k": "push",
+    "cms": 2.6,
+    "dur": 10,
+    "m": 0.26
+   },
+   "dof": {
+    "fstop": 2.2,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 1.75,
+    "point": false,
+    "fill": false,
+    "frac": 0.698,
+    "fracDesign": 0.606,
+    "inFrame": 1,
+    "cx": 0.187,
+    "cy": 0.014,
+    "floor": 0.3,
+    "crownPitch": -4.6,
+    "crownPitchMin": null,
+    "dist": 6.52,
+    "bearing": 54,
+    "comp": [
+     0.17,
+     0.05
+    ],
+    "camY": 2.9,
+    "follow": false,
+    "anchor": [
+     -31.48,
+     1.51,
+     1.692
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-11-curse": {
+   "unit": "ody-vi-11-curse",
+   "beat": 6,
+   "set": "sea",
+   "class": "GIANT",
+   "speaker": "POLYPHEMUS",
+   "subject": {
+    "a": "poly-idle"
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -30.596,
+    3.4,
+    6.543
+   ],
+   "lookAt": [
+    12.106,
+    31.282,
+    5.315
+   ],
+   "fov": 15,
+   "move": {
+    "k": "push",
+    "cms": 4.5,
+    "dur": 10,
+    "m": 0.45
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 7,
+    "point": false,
+    "fill": false,
+    "frac": 0.566,
+    "fracDesign": 0.521,
+    "inFrame": 1,
+    "cx": 0.126,
+    "cy": -0.054,
+    "floor": 0.42,
+    "crownPitch": 36,
+    "crownPitchMin": 21,
+    "dist": 50.99,
+    "bearing": -90.2,
+    "comp": [
+     0.12,
+     -0.05
+    ],
+    "camY": 3.4,
+    "follow": false,
+    "anchor": [
+     12.283,
+     31,
+     6.687
+    ],
+    "solved": "swung 4deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-12-heard": {
+   "unit": "ody-vi-12-heard",
+   "beat": 6,
+   "set": "sea",
+   "class": "CLOCK",
+   "speaker": null,
+   "subject": {
+    "m": [
+     540,
+     468
+    ],
+    "h": 6,
+    "y": 1.4
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -22.483,
+    3.2,
+    21.695
+   ],
+   "lookAt": [
+    -11.752,
+    1.84,
+    0.154
+   ],
+   "fov": 34,
+   "move": {
+    "k": "whip",
+    "toPx": [
+     455,
+     540
+    ],
+    "toY": 1.2,
+    "at": 0.55,
+    "dur": 6,
+    "rise": 1.8,
+    "to": [
+     -19.606,
+     1.2,
+     11.024
+    ]
+   },
+   "dof": {
+    "fstop": 8,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 6,
+    "point": true,
+    "fill": false,
+    "frac": 0.489,
+    "fracDesign": 0.408,
+    "inFrame": 1,
+    "cx": -0.083,
+    "cy": -0.106,
+    "floor": 0.18,
+    "crownPitch": 2.9,
+    "crownPitchMin": null,
+    "dist": 24.07,
+    "bearing": -23.5,
+    "comp": [
+     -0.1,
+     -0.06
+    ],
+    "camY": 3.2,
+    "follow": false,
+    "anchor": [
+     -12.913,
+     1.4,
+     -0.315
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-13-ram": {
+   "unit": "ody-vi-13-ram",
+   "beat": 6,
+   "set": "sea",
+   "class": "ACTION",
+   "speaker": null,
+   "subject": {
+    "m": [
+     575,
+     450
+    ],
+    "h": 4.2,
+    "y": 1.6
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -17.117,
+    2.8,
+    13.785
+   ],
+   "lookAt": [
+    -9.333,
+    1.443,
+    -2.8
+   ],
+   "fov": 32,
+   "move": {
+    "k": "push",
+    "cms": 9,
+    "dur": 10,
+    "m": 0.9
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85,
+    "expo": 1
+   },
+   "frame": {
+    "h": 4.2,
+    "point": true,
+    "fill": false,
+    "frac": 0.499,
+    "fracDesign": 0.399,
+    "inFrame": 1,
+    "cx": -0.087,
+    "cy": -0.007,
+    "floor": 0.17,
+    "crownPitch": 2.8,
+    "crownPitchMin": null,
+    "dist": 18.35,
+    "bearing": -22.3,
+    "comp": [
+     -0.1,
+     0.03
+    ],
+    "camY": 2.8,
+    "follow": true,
+    "anchor": [
+     -10.157,
+     1.6,
+     -3.15
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-vi-14-sailedon": {
+   "unit": "ody-vi-14-sailedon",
+   "beat": 6,
+   "set": "sea",
+   "class": "WIDE",
+   "speaker": null,
+   "subject": {
+    "m": [
+     600,
+     430
+    ],
+    "h": 8,
+    "y": 2.6
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    -20.946,
+    7.5,
+    25.217
+   ],
+   "lookAt": [
+    -7.101,
+    2.015,
+    -5.768
+   ],
+   "fov": 38,
+   "move": {
+    "k": "crane",
+    "dy": 5,
+    "dz": 4,
+    "dur": 10
+   },
+   "dof": {
+    "fstop": 11,
+    "focus": "subject",
+    "near": 0.4,
+    "expo": 1
+   },
+   "frame": {
+    "h": 8,
+    "point": true,
+    "fill": true,
+    "frac": 0.406,
+    "fracDesign": 0.338,
+    "inFrame": 1,
+    "cx": -0.046,
+    "cy": -0.005,
+    "floor": 0.045,
+    "crownPitch": -1.5,
+    "crownPitchMin": null,
+    "dist": 34.35,
+    "bearing": -22,
+    "comp": [
+     -0.06,
+     0.05
+    ],
+    "camY": 7.5,
+    "follow": true,
+    "anchor": [
+     -8.189,
+     2.6,
+     -6.299
+    ],
+    "solved": "hint"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  }
+ },
+ "warnings": [
+  "ody-ii-11-sword: gate target sword not live at bake time"
+ ],
+ "exposure": {
+  "base": 1.38,
+  "law": "dof.expo is a stop ON the book's own exposure; chosen per shot so that <= 0.6% of the frame clips (tools/ody/cine_expose.mjs)",
+  "clipMax": 0.006
+ }
+}
