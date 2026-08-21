@@ -100,6 +100,19 @@ function hash3(x, y, z, seed) {
   h ^= h >>> 15;
   return (h >>> 0) / 4294967296;
 }
+/* piecewise read of a measured plate profile: pts = [[t, value], ...] ascending in t,
+   smoothstepped between knots so a measured table becomes a continuous law */
+function ramp(t, pts) {
+  if (t <= pts[0][0]) return pts[0][1];
+  for (let i = 1; i < pts.length; i++) {
+    if (t <= pts[i][0]) {
+      const [t0, v0] = pts[i - 1], [t1, v1] = pts[i];
+      const k = (t - t0) / (t1 - t0);
+      return v0 + (v1 - v0) * (k * k * (3 - 2 * k));
+    }
+  }
+  return pts[pts.length - 1][1];
+}
 function jitterByPos(geo, seed, amp, ampY = amp) {
   const p = geo.attributes.position;
   for (let i = 0; i < p.count; i++) {
@@ -194,12 +207,17 @@ function warmPaint(geo, point, radius, warmHex, seed, { fadeY = 0, chimney = nul
 const flatMat = (opts = {}) => new THREE.MeshStandardMaterial({
   flatShading: true, metalness: 0, roughness: 0.95, ...opts });
 
-function glowTexture(inner = 'rgba(255,220,140,1)', outer = 'rgba(255,150,40,0)') {
-  const c = document.createElement('canvas'); c.width = c.height = 64;
+/* radial falloff sprite. `stops` (optional [[offset, css], ...]) replaces the two-stop
+   ramp — the moon's halo needs a steep shoulder over a long tail, not a straight line. */
+function glowTexture(inner = 'rgba(255,220,140,1)', outer = 'rgba(255,150,40,0)',
+                     stops = null, size = 64) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
   const g = c.getContext('2d');
-  const gr = g.createRadialGradient(32, 32, 2, 32, 32, 31);
-  gr.addColorStop(0, inner); gr.addColorStop(1, outer);
-  g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+  const h = size / 2;
+  const gr = g.createRadialGradient(h, h, size / 32, h, h, h - 1);
+  if (stops) for (const [o, css] of stops) gr.addColorStop(o, css);
+  else { gr.addColorStop(0, inner); gr.addColorStop(1, outer); }
+  g.fillStyle = gr; g.fillRect(0, 0, size, size);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }
@@ -310,6 +328,68 @@ function gradeFacets(geo, litHex, darkHex, seed, { litDir = [-0.55, 0.68, 0.42],
   g.computeVertexNormals();
   return g;
 }
+/* TWO-TONE CLIFF SHADING — the headland's material law, read off the plate.
+   sea.jpg samples (plate px): the moon-facing column faces are a COOL near-neutral
+   gray #7c7d7f..#818387; the faces turned to the cave mouth take a WARM rock bounce
+   #563a37 -> #7b564a -> #976e5d, hot #c47935 at the mouth; the faces turned east,
+   away from the moon, fall to a near-black navy #0e0f1a..#12131f. There is no flat
+   mid-gray in the plate and none is reachable here: a face only lightens by earning
+   it with its own normal.
+   Two axes per face: the moon's lambert (COOL) and each practical's lambert x range
+   (WARM). The plate's key is LOW and almost due WEST — its brow plateau (#47454c) is
+   markedly darker than its lit vertical faces (#7c7d7f), and its downstage-facing
+   faces (#2b2b30) darker again — so litDir lies near the horizon with almost no z,
+   and a steep gamma keeps every half-turned face out of the mid-gray. */
+function twoToneFacets(geo, {
+  coolLit, coolDark, warmDim, warmHot, glows = [],
+  litDir = [-0.97, 0.22, 0.06], seed, amount = 0.11, gamma = 2.3, eastDark = 0.9,
+}) {
+  const g = geo.index ? geo.toNonIndexed() : geo;
+  const pos = g.attributes.position, n = pos.count;
+  const col = new Float32Array(n * 3);
+  const cLit = new THREE.Color(coolLit), cDark = new THREE.Color(coolDark);
+  const wDim = new THREE.Color(warmDim), wHot = new THREE.Color(warmHot);
+  const L = new THREE.Vector3(...litDir).normalize();
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(),
+        nv = new THREE.Vector3(), ctr = new THREE.Vector3(), dir = new THREE.Vector3();
+  const cool = new THREE.Color(), warm = new THREE.Color();
+  const rnd = mulberry32(seed);
+  for (let f = 0; f < n / 3; f++) {
+    a.fromBufferAttribute(pos, f * 3); b.fromBufferAttribute(pos, f * 3 + 1);
+    c.fromBufferAttribute(pos, f * 3 + 2);
+    nv.copy(b).sub(a).cross(c.clone().sub(a)).normalize();
+    ctr.copy(a).add(b).add(c).multiplyScalar(1 / 3);
+    /* the cool axis: the moon's own lambert, shouldered so half-turned faces stay dark */
+    let k = Math.pow(THREE.MathUtils.clamp(nv.dot(L) * 0.5 + 0.5, 0, 1), gamma);
+    if (nv.x > 0.15) k *= 1 - eastDark * (nv.x - 0.15) / 0.85;
+    cool.copy(cDark).lerp(cLit, k);
+    /* the warm axis: lambert TOWARD the practical x its range — never distance alone,
+       so the east faces the mouth cannot see stay cool */
+    let w = 0;
+    for (const gl of glows) {
+      const d = ctr.distanceTo(gl.pos);
+      if (d > gl.radius) continue;
+      dir.copy(gl.pos).sub(ctr).divideScalar(Math.max(d, 1e-4));
+      let q = Math.max(0, nv.dot(dir)) * Math.pow(1 - d / gl.radius, 1.4) * (gl.gain ?? 1);
+      if (gl.fadeY > 0)
+        q *= THREE.MathUtils.clamp(1 - Math.max(0, ctr.y - gl.pos.y) / gl.fadeY, 0, 1);
+      w = Math.max(w, q);
+    }
+    w = Math.min(w * (0.72 + hash3(ctr.x, ctr.y, ctr.z, seed + 3) * 0.5), 0.94);
+    warm.copy(wDim).lerp(wHot, THREE.MathUtils.clamp(w * 1.5, 0, 1));
+    const v = 1 + (rnd() - 0.5) * 2 * amount;
+    const out = cool.lerp(warm, w).multiplyScalar(v);
+    for (let kk = 0; kk < 3; kk++) {
+      col[(f * 3 + kk) * 3] = out.r;
+      col[(f * 3 + kk) * 3 + 1] = out.g;
+      col[(f * 3 + kk) * 3 + 2] = out.b;
+    }
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  g.computeVertexNormals();
+  return g;
+}
+
 /* the succulent rosette — flat pointed lobes in two whorls, pale tips */
 function succulent(seed, s = 1) {
   const grp = new THREE.Group();
@@ -461,6 +541,30 @@ function glintPoints({ count, seed, pts: seedPts, size }) {
 /* (twinkle phase), aFoam (shore foam), aGlow (cave-glow pool).     */
 /* ================================================================ */
 const SLAB = { cx: -1.2, cz: -2.4, side: 52.4, rotY: THREE.MathUtils.degToRad(35), skirt: 2.3 };
+/* THE MOONPATH, MEASURED OFF THE PLATE. Row scan of sea.jpg every 6 px (luma > 95 —
+   the soft skirt, not just the cores; moon disc, cliff and ship masked off), taking
+   the band's largest contiguous run per row. The plate's own envelope, plan metres:
+     py 292 (Z −28.0, s .058)  x 482..563  half-width 3.19 m   centre +3.82 off the moon line
+     py 304 (Z −26.1, s .109)  x 460..551  half-width 3.58 m   centre +2.48
+     py 316 (Z −24.3, s .160)  x 435..547  half-width 4.41 m   centre +1.34
+     py 334 (Z −21.4, s .236)  x 401..526  half-width 4.92 m   centre −0.83
+     py 352 (Z −18.6, s .312)  x 433..537  half-width 4.09 m   centre +0.87
+     py 376 (Z −14.8, s .414)  x 422..553  half-width 5.16 m   centre +1.06  <- widest
+     py 388 (Z −12.9, s .465)  x 414..488  half-width 2.91 m   centre −1.81
+     py 502 (Z + 5.0, s .947)  x 440..469  half-width 1.14 m   centre −1.54
+     py 514 (Z + 6.6)          nothing — the band is DEAD here
+   So: NARROW at the moon end (~3 m), a 4–5 m plateau amidships, gone by Z +7 — never
+   the 15 m-wide sprawl a flat halfW gives, and never past the stern. Centres are
+   stored as offsets from the moon's plan line so the path stays anchored under it;
+   the plate's head sits ~4 m east of that line and the path swings west coming
+   downstage. Row-to-row dips (the gaps between shard clusters) are smoothed out —
+   these tables are the band's ENVELOPE, the shard gaps are re-cut per facet below. */
+const BAND_Z0 = -30.2, BAND_Z1 = 7.0;
+const BAND_HALF = [[0, 2.80], [0.06, 3.20], [0.11, 3.60], [0.16, 4.40], [0.24, 4.90],
+                   [0.31, 4.30], [0.41, 5.15], [0.47, 3.60], [0.60, 3.00],
+                   [0.75, 2.00], [0.92, 1.30], [1, 0]];
+const BAND_MID = [[0, 3.9], [0.06, 3.8], [0.12, 2.4], [0.20, 0.0], [0.30, 0.6],
+                  [0.40, 0.3], [0.50, -1.4], [0.70, -1.6], [0.92, -1.6], [1, -1.9]];
 function slabCorner(k) {                    /* k = 0..3 -> E,S,W,N plan corners */
   const a = THREE.MathUtils.degToRad(10 + k * 90);
   const d = SLAB.side * Math.SQRT1_2;
@@ -491,7 +595,7 @@ function buildWater({ seed, moonPlanX, glowPos, shoreline, wakeStern, wakeHeadin
   const spark = new Float32Array(pos.count);
   const foam = new Float32Array(pos.count);
   const glow = new Float32Array(pos.count);
-  const deep = new THREE.Color('#131c3a'), wine = new THREE.Color('#1e3060');
+  const deep = new THREE.Color('#0f2546'), wine = new THREE.Color('#456a8a');
   const rnd = mulberry32(seed + 7);
   const c = new THREE.Vector3();
   for (let f = 0; f < nFaces; f++) {
@@ -499,34 +603,35 @@ function buildWater({ seed, moonPlanX, glowPos, shoreline, wakeStern, wakeHeadin
     for (let k = 0; k < 3; k++)
       c.add(new THREE.Vector3(pos.getX(f * 3 + k), pos.getY(f * 3 + k), pos.getZ(f * 3 + k)));
     c.multiplyScalar(1 / 3);
-    /* wine-dark base, brightening gently toward the moon line (west) */
-    const towardMoon = THREE.MathUtils.clamp(1 - Math.abs(c.x - moonPlanX) / 30, 0, 1);
-    const tone = 0.88 + (rnd() - 0.5) * 2 * 0.20 + towardMoon * 0.14;
-    const base = deep.clone().lerp(wine, THREE.MathUtils.clamp(towardMoon * 1.2, 0, 1));
-    /* THE MOONPATH BAND: coherent, widest under the moon (upstage), scattering
-       downstage past the stern — shards arrive in 2.6 m PATCHES (quantised hash),
-       so whole facets flip together like the plate's hand-cut shards */
-    const drift = Math.sin(c.z * 0.21 + 1.3) * 1.7;
-    const dx = Math.abs(c.x - (moonPlanX + drift));
-    const t = THREE.MathUtils.clamp((c.z + 30) / 62, 0, 1);   /* 0 at moon end, 1 downstage */
-    const halfW = 7.5 - 5.2 * t;
-    const density = 1.0 - 0.85 * t;
+    /* wine-dark base lifting UPSTAGE toward the moon's horizon — the plate reads
+       #204571 at py 300 and #101f41 downstage, so the lift runs with −Z, not with x.
+       The per-facet tone jitter is the gentle swell everywhere off the path. */
+    const up = THREE.MathUtils.clamp((-c.z + 4) / 34, 0, 1);
+    const tone = 0.90 + (rnd() - 0.5) * 2 * 0.22;
+    const base = deep.clone().lerp(wine, Math.pow(up, 0.85));
+    /* THE MOONPATH BAND: the measured plate profile (BAND_HALF / BAND_MID), a tight
+       band under the moon with a SOFT smoothstep edge; coherent 1.9 m shard gaps
+       instead of per-facet confetti; capped at 1 so nothing blows to flat white. */
+    const s = (c.z - BAND_Z0) / (BAND_Z1 - BAND_Z0);
     let b = 0;
-    if (dx < halfW) {
-      const edge = 1 - dx / halfW;
-      const patch = hash3(Math.round(c.x / 2.6), 0, Math.round(c.z / 2.6), seed + 11);
-      const wobble = 0.8 + 0.5 * hash3(0, 2, Math.round(c.z / 3.1), seed + 17);
-      if (patch < density * (0.4 + 0.6 * edge) * wobble) {
-        b = (0.5 + 0.5 * edge) * (0.6 + 0.4 * hash3(c.x, 1, c.z, seed + 12));
-        /* blown-white core near the moon end */
-        if (t < 0.34 && dx < halfW * 0.6) b = Math.min(1.35, b * 1.9);
+    if (s > -0.08 && s < 1) {
+      const halfW = ramp(s, BAND_HALF);
+      const dx = Math.abs(c.x - (moonPlanX + ramp(s, BAND_MID)));
+      const head = THREE.MathUtils.clamp((c.z - (BAND_Z0 - 2.4)) / 2.4, 0, 1);
+      if (dx < halfW) {
+        /* SOFT EDGE: a shallow power feathers the flanks the way the plate's does —
+           a smoothstep here reads as a hard-shouldered stripe, not a moonpath */
+        const e = 1 - dx / halfW;
+        const soft = Math.pow(e, 0.6);
+        const grain = 0.80 + 0.30 * hash3(c.x, 1, c.z, seed + 12);
+        const gate = hash3(Math.round(c.x / 1.9), 0, Math.round(c.z / 1.9), seed + 11);
+        b = soft * grain * head * (gate < 0.10 + 0.90 * soft ? 1 : 0.07);
+      } else if (halfW > 1 && dx < halfW + 2.6 &&
+                 hash3(Math.round(c.x / 2.4), 1, Math.round(c.z / 2.4), seed + 15) < 0.04) {
+        b = 0.26 * head * (0.5 + 0.5 * hash3(c.x, 4, c.z, seed + 16)); /* the plate's few strays */
       }
-    } else if (dx < halfW * 2.3 &&
-               hash3(Math.round(c.x / 2.2), 1, Math.round(c.z / 2.2), seed + 15) < 0.06) {
-      b = 0.35 * (0.5 + 0.5 * hash3(c.x, 4, c.z, seed + 16));   /* stray outboard shards */
+      b = Math.min(b, 1);
     }
-    /* the tail thins out before the slab's south corner */
-    if (c.z > 12) b *= Math.max(0, 1 - (c.z - 12) / 14);
     /* shore foam: pale band hugging the cliff waterline segments */
     let fm = 0;
     for (const [sx, sz, r] of shoreline) {
@@ -576,6 +681,7 @@ function buildWater({ seed, moonPlanX, glowPos, shoreline, wakeStern, wakeHeadin
         uniform float uTime;
         attribute float aBand, aSpark, aFoam, aGlow;
         varying float vBand, vSpark, vFoam, vGlow;
+        varying vec3 vWPos;
         float swellY(vec2 p, float t){
           /* the seeded swell — three slow directional trains, pure f(p, t) */
           float y = 0.0;
@@ -586,22 +692,35 @@ function buildWater({ seed, moonPlanX, glowPos, shoreline, wakeStern, wakeHeadin
         }`)
       .replace('#include <begin_vertex>', `#include <begin_vertex>
         transformed.y += swellY(position.xz, uTime);
-        vBand = aBand; vSpark = aSpark; vFoam = aFoam; vGlow = aGlow;`);
+        vBand = aBand; vSpark = aSpark; vFoam = aFoam; vGlow = aGlow;
+        vWPos = (modelMatrix * vec4(transformed, 1.0)).xyz;`);
     shader.fragmentShader = shader.fragmentShader
       .replace('#include <common>', `#include <common>
         uniform float uTime, uFlick;
-        varying float vBand, vSpark, vFoam, vGlow;`)
+        varying float vBand, vSpark, vFoam, vGlow;
+        varying vec3 vWPos;`)
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
         {
-          /* the moonpath: coherent emissive band + per-facet animated sparkle */
-          float tw = 0.62 + 0.38 * sin(uTime * (0.7 + fract(vSpark) * 1.7) + vSpark * 6.2832);
-          vec3 moonCol = vec3(0.82, 0.88, 1.0);
-          totalEmissiveRadiance += moonCol * vBand * tw * 0.85;
+          /* THE MOONPATH: a coherent band whose luminance is CAPPED — the whole facet
+             breathes, it never blows to flat white the way loose confetti does. */
+          float bandE = clamp(vBand, 0.0, 1.0);
+          float tw = 0.66 + 0.34 * sin(uTime * (0.7 + fract(vSpark) * 1.7) + vSpark * 6.2832);
+          vec3 moonCol = vec3(0.84, 0.89, 1.0);
+          totalEmissiveRadiance += moonCol * bandE * tw * 0.95;
+          /* SUB-FACET TWINKLE: three incommensurate travelling waves in world plan
+             metres — isolated pinpoint glints INSIDE each facet (no lattice, no
+             dither), so the path carries the plate's fine sparkle without widening
+             it or pushing any facet past the cap */
+          float sp = sin(dot(vWPos.xz, vec2(6.1, 2.7)) + uTime * 1.7)
+                   + sin(dot(vWPos.xz, vec2(-3.3, 7.4)) + uTime * 1.2 + 2.1)
+                   + sin(dot(vWPos.xz, vec2(8.2, -5.1)) + uTime * 2.3 + 4.0);
+          float gs = pow(clamp(sp * 0.1667 + 0.5, 0.0, 1.0), 8.0);
+          totalEmissiveRadiance += moonCol * bandE * gs * 0.42;
           /* fresnel-style grazing brightening, biased toward the moon side */
           vec3 V = normalize(vViewPosition);
           float fres = pow(1.0 - abs(dot(normal, V)), 2.0);
           float moonSide = clamp(0.5 - normal.x * 1.6, 0.0, 1.0);
-          totalEmissiveRadiance += moonCol * fres * moonSide * (0.05 + vBand * 0.35);
+          totalEmissiveRadiance += moonCol * fres * moonSide * (0.035 + bandE * 0.30);
           /* shore foam + wake: pale, softly pulsing */
           float fp = 0.8 + 0.2 * sin(uTime * 1.3 + vSpark * 6.2832);
           totalEmissiveRadiance += vec3(0.62, 0.70, 0.82) * vFoam * fp * 0.34;
@@ -731,13 +850,12 @@ export function createSeaScene() {
 
   /* ===== MACRO: the moonpath twinkle glints ride the band ===== */
   {
-    const glints = glintPoints({ count: 46, seed: 93025, size: 0.3,
-      pts: (rnd, i) => {
-        const z = -26 + rnd() * 52;
-        const t = THREE.MathUtils.clamp((z + 30) / 62, 0, 1);
-        const halfW = (6.2 - 3.4 * t) * 0.8;
-        const drift = Math.sin(z * 0.21 + 1.3) * 1.7;
-        return [MOON_PLAN_X + drift + (rnd() * 2 - 1) * halfW, z];
+    /* they ride the measured band, inboard of its edge — never out on open water */
+    const glints = glintPoints({ count: 46, seed: 93025, size: 0.26,
+      pts: (rnd) => {
+        const z = BAND_Z0 + 1.5 + rnd() * (BAND_Z1 - BAND_Z0 - 3.0);
+        const s = (z - BAND_Z0) / (BAND_Z1 - BAND_Z0);
+        return [MOON_PLAN_X + ramp(s, BAND_MID) + (rnd() * 2 - 1) * ramp(s, BAND_HALF) * 0.8, z];
       } });
     track('moonpath-glints', glints);
     tickers.push((t) => { glints.material.uniforms.uTime.value = t; });
@@ -768,14 +886,31 @@ export function createSeaScene() {
     }
     const moon = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ vertexColors: true }));
     grp.add(moon);
-    const halo = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: glowTexture('rgba(215,230,255,0.38)', 'rgba(150,180,255,0)'),
+    /* THE SOFT HALO — two billboard sprites, measured off the plate's sky. Radially
+       around the plate's disc (centre 476,248, r 48.5 px) the sky reads L=70 just
+       outside the rim, L=63 at r=100 px, L=47 at r=196 px against a far-sky floor of
+       L~30: a steep shoulder over a long tail, reaching ~250 px = 19.7 m. The old
+       single sprite was 10.5 units across — a 5.25 m radius on a 3.8 m moon, i.e.
+       invisible. Inner bloom carries the shoulder, the wide one carries the tail. */
+    const bloom = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: glowTexture(null, null, [[0, 'rgba(226,238,255,0.85)'], [0.30, 'rgba(198,218,252,0.34)'],
+        [0.62, 'rgba(150,180,240,0.09)'], [1, 'rgba(120,155,225,0)']], 128),
       blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
-    halo.scale.setScalar(10.5);
-    grp.add(halo);
+    bloom.scale.setScalar(15.5);
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: glowTexture(null, null, [[0, 'rgba(200,220,255,0.55)'], [0.22, 'rgba(170,198,246,0.24)'],
+        [0.52, 'rgba(132,166,232,0.08)'], [1, 'rgba(100,138,220,0)']], 128),
+      blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+    halo.scale.setScalar(42);
+    halo.renderOrder = -1;
+    grp.add(halo, bloom);
     grp.position.copy(MOON_POS);
     track('moon', grp);
-    tickers.push((t) => { halo.material.opacity = 0.38 + 0.07 * Math.sin(2 * Math.PI * t / 9.1); });
+    tickers.push((t) => {
+      const b = 0.06 * Math.sin(2 * Math.PI * t / 9.1);
+      bloom.material.opacity = 0.52 + b;
+      halo.material.opacity = 0.30 + b * 0.6;
+    });
   }
 
   /* ===== MESO: THE HEADLAND — massif, buttress, apron, mouth, brow ===== */
@@ -788,12 +923,17 @@ export function createSeaScene() {
       notch: [Math.PI * 1.09, 0.3, 0.3],
       taper: 0.9, flare: 1.16, terrace: 0.18, jit: 0.7 });
     massifGeo.translate(20.2, 0, 3.2);
-    const massifCol = gradeFacets(massifGeo, '#8f8789', '#31344a', 93042,
-      { amount: 0.12, eastDark: 0.8 });
-    warmPaint(massifCol, GLOW_POS, 13, '#c07c42', 93043, { fadeY: 12, gain: 1.8 });
-    /* the climbing recess wash — the plate's amber chimney above the mouth */
-    warmPaint(massifCol, new THREE.Vector3(9.0, 12, 7.5), 10.5, '#b06f38', 93143,
-      { gain: 2.0 });
+    /* two-tone: cool moonlit gray on the sea side, warm bounce on the cave-glow side,
+       near-black navy on the east faces — the second glow is the plate's amber chimney
+       climbing the recess above the mouth */
+    const massifCol = twoToneFacets(massifGeo, {
+      coolLit: '#a49b91', coolDark: '#0c0e18', warmDim: '#5a3b30', warmHot: '#c47935',
+      seed: 93042, amount: 0.12,
+      glows: [{ pos: GLOW_POS, radius: 19, gain: 2.4, fadeY: 16 },
+              /* the recess wash stands DOWNSTAGE of the face it lights — a practical
+                 upstage of a downstage-facing facet has negative lambert and paints
+                 nothing, which is why the plate's amber chimney was missing */
+              { pos: new THREE.Vector3(8.5, 10, 14.5), radius: 16, gain: 2.6, fadeY: 18 }] });
     const massif = new THREE.Mesh(massifCol, flatMat({ vertexColors: true }));
     massif.castShadow = massif.receiveShadow = true;
     track('headland-massif', massif);
@@ -804,8 +944,12 @@ export function createSeaScene() {
       lobes: [[2, 0.18, 1.6], [4, 0.1, 0.4]],
       taper: 0.82, flare: 1.28, terrace: 0.24, jit: 0.5 });
     buttGeo.translate(2.8, 0, 0.4);
-    const buttCol = gradeFacets(buttGeo, '#a29da2', '#454150', 93045, { amount: 0.12 });
-    warmPaint(buttCol, GLOW_POS, 9.5, '#c08347', 93046, { fadeY: 15, gain: 1.7 });
+    const buttCol = twoToneFacets(buttGeo, {
+      /* the buttress is the plate's PALE rock: #7a7a7c even on its downstage face,
+         so it carries its own lighter pair and a shallower gamma than the massif */
+      coolLit: '#bdb3a6', coolDark: '#42404f', warmDim: '#6b4a3a', warmHot: '#bf7c42',
+      seed: 93045, amount: 0.12, eastDark: 0.8, gamma: 1.35,
+      glows: [{ pos: GLOW_POS, radius: 15, gain: 2.2, fadeY: 18 }] });
     const butt = new THREE.Mesh(buttCol, flatMat({ vertexColors: true }));
     butt.castShadow = butt.receiveShadow = true;
     track('crag-buttress', butt);
@@ -816,8 +960,10 @@ export function createSeaScene() {
       lobes: [[3, 0.18, 0.9]],
       taper: 0.8, flare: 1.32, terrace: 0.22, jit: 0.45 });
     apronGeo.translate(8.8, 0, 6.2);
-    const apronCol = gradeFacets(apronGeo, '#8b878f', '#3b3e52', 93048, { amount: 0.12, eastDark: 0.5 });
-    warmPaint(apronCol, GLOW_POS, 8.5, '#c9863f', 93049, { gain: 1.4 });
+    const apronCol = twoToneFacets(apronGeo, {
+      coolLit: '#9d938a', coolDark: '#0f1220', warmDim: '#5f3d2d', warmHot: '#cf8b3f',
+      seed: 93048, amount: 0.12, eastDark: 0.7,
+      glows: [{ pos: GLOW_POS, radius: 13, gain: 2.6 }] });
     const apron = new THREE.Mesh(apronCol, flatMat({ vertexColors: true }));
     apron.castShadow = apron.receiveShadow = true;
     track('base-apron', apron);
@@ -950,7 +1096,9 @@ export function createSeaScene() {
       m4.compose(new THREE.Vector3(x, CLIFF_TOP - 0.4 + s * 0.55, z), q,
         new THREE.Vector3(s, s * (0.8 + rnd() * 0.35), s * (0.85 + rnd() * 0.3)));
       im.setMatrixAt(placed, m4);
-      im.setColorAt(placed, col.set('#a8abb6').multiplyScalar(0.82 + rnd() * 0.32));
+      /* the brow's crown sits with the new cliff tone, not above it: the plate's
+         boulders read #48454c..#585560, cool but never the palest thing in frame */
+      im.setColorAt(placed, col.set('#6f6a63').multiplyScalar(0.80 + rnd() * 0.34));
       placed++;
     }
     im.count = placed;

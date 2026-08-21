@@ -231,3 +231,101 @@ hemi 0.95, caveGlow 95·flick).
 - **compare.jpg** — plate | render at the book framing, one sheet; verdict in
   stats.json (honest residuals stated: the plate keeps its hand-cut grain and
   richer grade).
+
+---
+
+## ROUND 2 — Fable's named defects (reviewer: Fable 5, implementor: Opus 5)
+
+Round 1 shipped and was reviewed against the bar. Three defects named; each fixed
+against a fresh measurement of the plate, nothing else touched.
+
+### W1 THE WATER — "the moonpath sprawls hot white confetti across half the sea"
+
+The plate was re-measured properly: a 6 px row scan of `sea.jpg` at luma > 95 (the
+soft skirt, not just the blown cores), moon disc / cliff / ship masked, taking the
+largest contiguous run per row. **The plate's band is narrow.**
+
+| plate py | Z (m) | s | run (px) | half-width | centre offset from the moon line |
+|---|---|---|---|---|---|
+| 292 | −28.0 | .058 | 482–563 | **3.19 m** | +3.82 |
+| 304 | −26.1 | .109 | 460–551 | 3.58 m | +2.48 |
+| 316 | −24.3 | .160 | 435–547 | 4.41 m | +1.34 |
+| 334 | −21.4 | .236 | 401–526 | 4.92 m | −0.83 |
+| 352 | −18.6 | .312 | 433–537 | 4.09 m | +0.87 |
+| 376 | −14.8 | .414 | 422–553 | **5.16 m** (widest) | +1.06 |
+| 388 | −12.9 | .465 | 414–488 | 2.91 m | −1.81 |
+| 502 | + 5.0 | .947 | 440–469 | 1.14 m | −1.54 |
+| 514 | + 6.6 | — | — | **dead** | — |
+
+Round 1 ran `halfW = 7.5 − 5.2·t` (15 m wide **at the moon end**, where the plate is
+6 m) with a stray-shard zone out to `2.3·halfW` = 17 m and a tail fading only past
+Z +26. That is the sprawl. Replaced by the measured envelope
+(`BAND_Z0/BAND_Z1`, `BAND_HALF`, `BAND_MID`, smoothstepped between knots by `ramp()`),
+so the band is narrow at the head, plateaus at 4–5 m amidships and is **gone by Z +7**.
+
+- **soft-edged** — `soft = pow(1 − dx/halfW, 0.6)`; the round-1 hard patch gate is
+  replaced by coherent 1.9 m shard gaps whose probability rises with `soft`, so the
+  spine is near-solid and the flanks feather.
+- **capped luminance** — `b` is clamped to 1 and the emissive gain is a flat
+  `bandE · tw · 0.95`; the round-1 `b × 1.9 → 1.35` blown-core multiplier is gone.
+- **sub-facet twinkle** — three incommensurate travelling waves in world plan metres
+  (`vWPos.xz`), `pow(…, 8)`, gain 0.42: isolated pinpoint glints *inside* each facet,
+  no lattice, still pure f(position, uTime).
+- **gentle swell elsewhere** — base lift re-read off the plate: it runs with **−Z**
+  (upstage, toward the moon's horizon: #204571 at py 300 → #101f41 downstage), not
+  with |x − moonX|; `deep #0f2546` → `wine #456a8a`, per-facet tone jitter ±0.22.
+  Moonpath glints re-seeded onto the measured band instead of the old law.
+
+**Result** (water window x < 660, py ≥ 290, plate | round 1 | round 2):
+bright px (L>120) 1850 | 2099 | 1388 · median band width 62 px | 42 px | 40 px ·
+max width 131 px | 122 px | 111 px · pixels above L 235 (the blown white)
+1438 | 554 | 589. Round 1's rows ran to py 526 with 38 lit rows; the plate stops at
+508 with 33; round 2 stops at 508 with 34. Water base now matches the plate within a
+few counts per channel (e.g. py 330 x 560: plate `#26517e`, render `#29517d`).
+
+### W4 CLIFF MATERIAL — "the flat mid-gray goes"
+
+New `twoToneFacets()` replaces `gradeFacets()` + `warmPaint()` on the three headland
+masses. Two axes per face: the moon's lambert (COOL) and each practical's
+**lambert × range** (WARM) — round 1 washed warmth on by *distance alone*, which
+painted the east faces too and flattened everything toward one value.
+
+Plate tones sampled for the pairs: moonlit sea-side `#7c7d7f`–`#818387`; warm bounce
+`#563a37` → `#7b564a` → `#976e5d`, hot `#c47935` at the mouth; east / away-from-moon
+`#0e0f1a`–`#12131f`. Two further reads changed the law:
+
+- the plate's key is **almost due west and low** (`litDir [-0.97, 0.22, 0.06]`,
+  `gamma 2.3`): its brow plateau `#47454c` is darker than its lit vertical faces and
+  its downstage faces darker again, so no half-turned face can reach mid-gray.
+- the recess wash must stand **downstage of the face it lights** — a practical
+  upstage of a downstage-facing facet has negative lambert and paints nothing, which
+  is why round 1's amber chimney never appeared.
+- the buttress is the plate's **pale** rock (`#7a7a7c` even on its downstage face):
+  its own lighter pair + shallower gamma 1.35, not the massif's.
+- the brow boulders were the palest thing in frame (`#7b87a9` vs the plate's
+  `#48454c`); their instance tint drops to `#6f6a63 × 0.80–1.14`.
+
+**Result** (plate | round 2): east mass py 320 x 980 `#11141e` | `#0c0e13`;
+py 380 x 1060 `#0f0f19` | `#08090e`; warm recess py 380 x 820 `#81513d` | `#654536`,
+x 860 `#976e5d` | `#764727`; buttress py 300 x 740 `#7a7a7c` | pale. Round 1 read
+`#3b4354`/`#5e606c` across that whole span — one blue-gray value.
+
+### MINOR — the moon's soft halo
+
+Round 1 had a single 10.5-unit sprite: a 5.25 m radius on a 3.8 m moon, i.e.
+invisible. The plate's sky, measured radially from the disc (centre 476,248,
+r 48.5 px): L 70 just outside the rim, 63 at r 100 px, 47 at r 196 px against a
+far-sky floor of ~30 — a steep shoulder over a long tail out to ~250 px (19.7 m).
+Two additive billboards now carry it: a 15.5-unit bloom for the shoulder and a
+42-unit halo for the tail, both on multi-stop gradients (`glowTexture(…, stops,
+size)`), breathing together on the existing 9.1 s cycle.
+
+### GATES (round 2)
+
+- **sea3d smoke: PASS** — zero console/page/request errors; determinism byte-equal;
+  posture, obstacle, scale, row (1.335 m), splash, walk/loop all green;
+  8,859 tris of 60,000; 16.55 ms avg.
+- **Turntable 0/90/180/270: no holes**; the band stays coherent from every azimuth.
+- **Story app (tools/story3d_smoke.mjs): PASS** — the 81-unit walk, all 8 gates,
+  all 8 facts (both Beat VI throws, both hull hits, sail-off, sigil); zero errors.
+- **compare.jpg** re-rendered in place at the book framing (orbit 0, sim 4.2, u 0.45).
