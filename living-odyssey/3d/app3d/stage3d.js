@@ -26,8 +26,6 @@ import { createShoreScene, createShoreIsoCamera, SHORE_WORLD } from '../sets/sho
 import { createSeaScene, SEA_WORLD } from '../sets/sea3d.js';
 import { createCave3D, CAVE_WORLD, CAVE_STATES } from '../sets/cave3d.js';
 import { buildActor } from './cast3d.js';
-import { loadPlateSet, samplePlateLight, makeContactShadow, PLATE_W, PLATE_H }
-  from './plate3d.js';
 
 const WALK_MPS = 1.1;                 /* cast.json processionSpeedMps */
 const SCURRY_MPS = 1.9;               /* the scatter-to-the-dark pace */
