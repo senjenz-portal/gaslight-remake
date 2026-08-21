@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The shore itself — the set rebuilt in native three.js</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a0e1c'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ground:#0a0e1c;
+    --cream:#efe4c8;
+    --cream-bright:#f6edd6;
+    --gold:#a8862f;
+    --gold-soft:#bda86e;
+    --note:#c9b98f;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  .wrap{max-width:1100px;margin:0 auto;padding:48px 24px 96px;}
+  h1{font-weight:normal;font-size:34px;margin:6px 0 2px;color:var(--cream-bright);}
+  .rule{width:64px;border-top:1px solid var(--gold);margin:18px 0;}
+  .lbl{font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;font-size:12px;color:var(--gold-soft);}
+  p.note{color:var(--note);font-size:15px;line-height:1.55;max-width:78ch;}
+  .tag{font-size:11px;color:#8f9dbd;letter-spacing:.08em;}
+  a{color:#d8b45a;text-decoration:none;} a:hover{text-decoration:underline;}
+  figure{margin:0;}
+  figure img{width:100%;display:block;border:1px solid #2a2417;border-radius:3px;background:#060810;}
+  figcaption{font-size:13px;color:var(--note);margin-top:7px;line-height:1.45;}
+  figcaption b{color:var(--cream-bright);font-weight:normal;}
+  #stage{width:100%;aspect-ratio:1408/768;display:block;border:1px solid #2a2417;
+    border-radius:3px;background:#060a18;}
+  .stage-cue{display:flex;justify-content:space-between;align-items:baseline;gap:18px;flex-wrap:wrap;
+    font-variant-caps:small-caps;text-transform:lowercase;letter-spacing:.19em;
+    font-size:12px;color:var(--gold-soft);margin-top:7px;}
+  .stage-cue button{font:inherit;font-variant-caps:small-caps;text-transform:lowercase;
+    letter-spacing:.19em;font-size:12px;color:var(--gold-soft);background:none;
+    border:1px solid #3a3120;border-radius:3px;padding:3px 14px;cursor:pointer;}
+  .stage-cue button:hover{color:var(--cream-bright);border-color:var(--gold);}
+  .stage-cue button[data-on="1"]{color:#0a0e1c;background:var(--gold-soft);}
+  .law{font-size:14px;color:var(--note);border-left:2px solid var(--gold);padding:2px 0 2px 14px;
+    margin:26px 0 20px;max-width:74ch;}
+  .law b{color:var(--cream-bright);font-weight:normal;}
+  .counts{margin-top:20px;font-size:13px;color:var(--note);line-height:1.9;}
+  .counts b{color:var(--cream-bright);font-weight:normal;}
+  .counts .num{color:#d8b45a;}
+  .art-row{display:grid;gap:18px;margin-top:6px;}
+  .cols-4{grid-template-columns:1fr 1fr 1fr 1fr;}
+  @media (max-width:640px){.cols-4{grid-template-columns:1fr 1fr;}}
+  footer{margin-top:80px;}
+  footer p{color:var(--note);font-size:14px;}
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "../../../app/vendor/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lbl">Pipeline Demo · Unlisted</div>
+  <h1>The shore itself — the set rebuilt in native three.js</h1>
+  <div class="rule"></div>
+  <p class="note">The second full-3D set, built exactly the way the cave was built: the goat-island
+  shore rebuilt as <b>procedural three.js geometry</b> with the img2threejs pipeline
+  <span class="tag">(spec → blockout → structure → form → material → lighting, each pass gated
+  against the plate)</span> — the two black ships beached with masts up and oars shipped to the
+  sand, the hero campfire burning the <b>cave's own particle fire</b> (now the shared module
+  <code>3d/lib/fire3d.js</code>), the black strait with a live seeded <b>moonpath shimmer</b>,
+  the mainland cliff with its cave mouth, stone wall, pens and THREE smoke columns, and the
+  goat-island crags. The floor plan is the ledger itself: 11.3&nbsp;px&nbsp;=&nbsp;1&nbsp;m off
+  ship-2, the twenty-oarer. Ulysses walks the audited beach path — around the camp ring, past
+  the stern curl, short of the oar blades — throwing a true shadow from the one shadow-casting
+  light: the blaze. <b>Day is a light-rig swap</b>: the dawn preset re-lights the same geometry.</p>
+
+  <canvas id="stage"></canvas>
+  <div class="stage-cue">
+    <span>the book's isometric framing · the walk loops the camp sand</span>
+    <span>
+      <button id="daystate" data-on="0">state: night</button>
+      <button id="orbit" data-on="0">slow orbit: off</button>
+    </span>
+  </div>
+
+  <div class="law"><b>The laws hold per set, honestly.</b> The shore derives its OWN scale —
+    the cave's 43 px/m was the cave's ewes; here ship-2's painted hull is the yardstick
+    (170 px = 15 m = 11.3 px/m) and the camp-ring ellipse gives the 28° camera. The ledger's
+    dual-scale ruling is carried: the mainland lobe is painted at its local 19.5 px/m, so the
+    build reproduces the painting and exports <code>MAINLAND_S</code> for actor mounting.
+    Deterministic throughout — one mulberry32 stream per system; fire, smoke columns and the
+    moonpath shimmer are pure functions of sim-time, so any second replays byte-identically.</div>
+
+  <div class="lbl" style="margin-bottom:10px;">the turntable — 0° / 90° / 180° / 270°, no holes</div>
+  <div class="art-row cols-4">
+    <figure><img src="shore-turn-000.png" alt="Turntable 0 - the book's framing"><figcaption><b>0°</b> — the book's frame</figcaption></figure>
+    <figure><img src="shore-turn-090.png" alt="Turntable 90 - from the mainland"><figcaption><b>90°</b> — from the mainland</figcaption></figure>
+    <figure><img src="shore-turn-180.png" alt="Turntable 180 - from the open sea"><figcaption><b>180°</b> — the open strait</figcaption></figure>
+    <figure><img src="shore-turn-270.png" alt="Turntable 270 - from the crags"><figcaption><b>270°</b> — over the crags</figcaption></figure>
+  </div>
+
+  <div style="margin-top:26px;">
+    <div class="lbl" style="margin-bottom:10px;">against the painted plate</div>
+    <figure><img src="shore-compare.jpg" alt="Side by side: painted plate vs the rebuilt 3D set">
+    <figcaption><b>left:</b> the painted night plate · <b>right:</b> this scene, default framing.
+    Same floor plan, register, palette and light logic; the painterly plate keeps its richer
+    grade and hand-drawn silhouettes. Honest gap, stated.</figcaption></figure>
+  </div>
+
+  <div class="counts" id="counts"></div>
+
+  <footer>
+    <div class="rule"></div>
+    <p class="lbl"><a href="../../demo3d/full3d/">the cave set</a> ·
+      <a href="../../">THE LIVING ODYSSEY</a> ·
+      <a href="../../../king-demo/">the exploration ladder</a></p>
+    <p>Demo only — not wired into the book. <a href="../../../">← back to the landing page</a></p>
+  </footer>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from '../../../app/vendor/loaders/GLTFLoader.js';
+import { createShoreScene, createShoreIsoCamera, SHORE_WORLD } from './shore3d.js';
+
+const canvas = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;   /* our own light rig -> filmic rolloff for the blaze */
+renderer.toneMappingExposure = 1.35;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const shore = createShoreScene();
+scene.add(shore.root);
+const camera = createShoreIsoCamera();
+
+/* ---- the actor: the rigged Ulysses on the REAL sand ---- */
+const { X, Z, PATH_PTS } = SHORE_WORLD;
+const worldPath = new THREE.CatmullRomCurve3(
+  PATH_PTS.map(([px, py]) => new THREE.Vector3(X(px), 0, Z(py))), false, 'catmullrom', 0.35);
+const PATH_LEN = worldPath.getLength();
+const WALK_SPEED = 1.4;                    /* m/s — honest at 1.75 m = 20 px */
+const FADE = 0.06, RESPAWN_HOLD = 0.9;
+
+const actor = new THREE.Group();
+actor.visible = false;
+scene.add(actor);
+
+/* posture law — the demo3d corrections, carried verbatim (owner defect fix c38ef93) */
+const CLIP_CORR = { Spine02: 4, NeckTwist01: 5, Head: 6 };
+const REST_CORR = { NeckTwist01: -3, Head: -3 };
+const FWD_BIND = new THREE.Vector3(0.166, 0, 0.986).normalize();
+const qcx = (deg) => new THREE.Quaternion()
+  .setFromAxisAngle(new THREE.Vector3(1, 0, 0), THREE.MathUtils.degToRad(deg));
+
+const fadeMats = [];
+let mixer = null, clips = [];
+new GLTFLoader().load('../../demo3d/ulysses-walk.glb', (gltf) => { try {
+  const model = gltf.scene;
+  clips = gltf.animations.map((a) => a.name);
+  const bones = {};
+  model.traverse((o) => { if (o.isBone) bones[o.name] = o; });
+  for (const [name, deg] of Object.entries(REST_CORR))
+    if (bones[name]) bones[name].quaternion.multiply(qcx(deg));
+  for (const track of (gltf.animations[0] ? gltf.animations[0].tracks : [])) {
+    const m = track.name.match(/(?:^|[/.])([A-Za-z0-9_]+)\.quaternion$/);
+    if (!m || !(m[1] in CLIP_CORR)) continue;
+    const c = qcx(CLIP_CORR[m[1]]), q = new THREE.Quaternion();
+    for (let i = 0; i < track.values.length; i += 4)
+      q.fromArray(track.values, i).multiply(c).toArray(track.values, i);
+  }
+  const headBone = bones.Head, pelvisBone = bones.Pelvis || bones.Hip;
+  const _q = new THREE.Quaternion(), _qm = new THREE.Quaternion(), _v = new THREE.Vector3();
+  const headPitchDeg = () => {
+    actor.updateMatrixWorld(true);
+    headBone.getWorldQuaternion(_q);
+    model.getWorldQuaternion(_qm).invert();
+    _q.premultiply(_qm);
+    _v.set(0, 1, 0).applyQuaternion(_q);
+    return THREE.MathUtils.radToDeg(Math.atan2(_v.dot(FWD_BIND), _v.y));
+  };
+  const H = 1.75;                          /* metres — the ledger's own actor height (20 px) */
+  const box = new THREE.Box3().setFromObject(model);
+  model.scale.setScalar(H / (box.max.y - box.min.y));
+  const b = new THREE.Box3().setFromObject(model);
+  const center = b.getCenter(new THREE.Vector3());
+  model.position.x -= center.x;
+  model.position.z -= center.z;
+  model.position.y -= b.min.y;
+  model.traverse((o) => {
+    if (o.isSkinnedMesh) { o.frustumCulled = false; o.castShadow = true; }
+    if (!o.isMesh) return;
+    for (const m of (Array.isArray(o.material) ? o.material : [o.material])) {
+      if (!m || !m.isMeshStandardMaterial) continue;
+      m.metalness = 0; m.roughness = Math.min(m.roughness, 0.9);
+      m.transparent = true; m.needsUpdate = true;
+      fadeMats.push(m);
+    }
+  });
+  actor.add(model);
+  const standingPitchDeg = +headPitchDeg().toFixed(2);
+  const pelvisFraction = +(new THREE.Vector3().setFromMatrixPosition(
+    (actor.updateMatrixWorld(true), pelvisBone.matrixWorld)).y / H).toFixed(4);
+  if (gltf.animations.length) {
+    /* grounding law: measure the bind sole BEFORE the mixer exists */
+    const feet = [];
+    model.traverse((o) => { if (o.isBone && /Foot|ToeBase/i.test(o.name)) feet.push(o); });
+    const v = new THREE.Vector3();
+    const minFootY = () => {
+      actor.updateMatrixWorld(true);
+      return Math.min(...feet.map((bn) => bn.getWorldPosition(v).y));
+    };
+    const bindFootY = feet.length ? minFootY() : 0;
+    mixer = new THREE.AnimationMixer(model);
+    mixer.clipAction(gltf.animations[0]).play();
+    if (feet.length) {
+      const dur = gltf.animations[0].duration;
+      let minY = Infinity;
+      for (let i = 0; i <= 24; i++) { mixer.setTime((i / 24) * dur); minY = Math.min(minY, minFootY()); }
+      mixer.setTime(0);
+      model.position.y += bindFootY - minY;
+    }
+  }
+  window.__rig = {
+    standingPitchDeg, pelvisFraction, clipCorr: CLIP_CORR, restCorr: REST_CORR,
+    walkPitchSamples(n = 48) {
+      if (!mixer || !gltf.animations.length) return null;
+      const dur = gltf.animations[0].duration, out = [];
+      for (let i = 0; i < n; i++) { mixer.setTime(dur * i / n); out.push(+headPitchDeg().toFixed(2)); }
+      mixer.setTime(0);
+      return out;
+    },
+  };
+  actor.visible = true;
+  window.__meshLoaded = true;
+} catch (e) { console.error('walk glb onload failed', e.message, e.stack); }
+}, undefined, (err) => console.error('walk glb load failed', err));
+
+/* ---- the walk (sim-time only) ---- */
+let simT = 0, dist = 0, hold = 0;
+let orbitOn = false, orbitBase = 0, orbitT0 = 0;
+const ORBIT_RATE = 6;                      /* deg/s — the slow orbit */
+const P = new THREE.Vector3(), TAN = new THREE.Vector3();
+
+function placeActor() {
+  const u = Math.min(dist / PATH_LEN, 1);
+  worldPath.getPointAt(u, P);
+  worldPath.getTangentAt(u, TAN);
+  actor.position.set(P.x, 0, P.z);
+  actor.rotation.y = Math.atan2(TAN.x, TAN.z);
+  const fade = Math.min(1, Math.min(u, 1 - u) / FADE);
+  for (const m of fadeMats) m.opacity = fade;
+  return u;
+}
+
+const orbitBtn = document.getElementById('orbit');
+orbitBtn.addEventListener('click', () => {
+  orbitOn = !orbitOn;
+  if (orbitOn) { orbitT0 = simT; }
+  else { orbitBase = (orbitBase + (simT - orbitT0) * ORBIT_RATE) % 360; }
+  orbitBtn.dataset.on = orbitOn ? '1' : '0';
+  orbitBtn.textContent = 'slow orbit: ' + (orbitOn ? 'on' : 'off');
+});
+const dayBtn = document.getElementById('daystate');
+let state = 'night';
+dayBtn.addEventListener('click', () => {
+  state = state === 'night' ? 'day' : 'night';
+  shore.setState(state);
+  dayBtn.dataset.on = state === 'day' ? '1' : '0';
+  dayBtn.textContent = 'state: ' + state;
+});
+
+function resize() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== Math.floor(w * renderer.getPixelRatio()) ||
+      canvas.height !== Math.floor(h * renderer.getPixelRatio())) {
+    renderer.setSize(w, h, false);
+    /* particle sizes are WORLD metres; give the shaders canvas px per metre (ortho) */
+    shore.setPixelScale((h * renderer.getPixelRatio()) / (camera.top - camera.bottom));
+  }
+}
+
+/* frame-time instrument (the smoke gate reads this) */
+const frame = { n: 0, ms: 0, worst: 0 };
+let lastT = performance.now();
+
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  resize();
+  const dt = Math.min(clock.getDelta(), 0.1);
+  simT += dt;
+  shore.tick(simT);
+  if (actor.visible || hold > 0) {
+    if (hold > 0) {
+      hold -= dt;
+      if (hold <= 0) { dist = 0; actor.visible = true; }
+    } else {
+      dist += WALK_SPEED * dt;
+      if (mixer) mixer.update(dt);
+      const u = placeActor();
+      if (u >= 1) { actor.visible = false; hold = RESPAWN_HOLD; }
+    }
+  }
+  const az = orbitOn ? (orbitBase + (simT - orbitT0) * ORBIT_RATE) % 360 : orbitBase;
+  camera.userData.setOrbit(az);
+  renderer.render(scene, camera);
+  const now = performance.now();
+  const ms = now - lastT; lastT = now;
+  if (frame.n > 5) {                      /* skip warmup frames */
+    frame.ms += ms; frame.worst = Math.max(frame.worst, ms);
+  }
+  frame.n++;
+});
+
+/* ---- counts (read from the built graph, not claimed) ---- */
+fetch('shore-stats.json').then((r) => r.json()).then((s) => {
+  const row = (l, v) => '<b>' + l + '</b> · <span class="num">' + v + '</span><br>';
+  document.getElementById('counts').innerHTML =
+    row('set geometry', shore.triangles.toLocaleString('en-US') + ' triangles · ' +
+        Object.keys(shore.parts).length + ' named parts (budget ceiling 60,000)') +
+    row('the fire', '260 flames + 80 embers + 40 smoke — the cave\'s own seeded system, shared module 3d/lib/fire3d.js') +
+    row('the smoke columns', '3 × 52 seeded smoke points off the mainland heights — position = f(sim-time)') +
+    row('the moonpath', 'per-facet seeded hash twinkle in a widening path mask — pure f(sim-time)') +
+    row('shadow budget', 'one caster: the fire point light (1024 cube shadow)') +
+    row('floor plan', 'tools/ody/ledger.json sets.shore · 11.3 px = 1 m · X=(px−438)/11.3, Z=(py−466)/(11.3·sin 28°)') +
+    row('actor', s.actor) +
+    row('laws held', s.laws) +
+    row('compare verdict', s.compareVerdict);
+  window.__statsLoaded = true;
+}).catch((e) => console.error('shore-stats.json failed', e));
+
+/* ---- verification hooks ---- */
+window.__shore3d = {
+  get simT() { return simT; },
+  get u() { return Math.min(dist / PATH_LEN, 1); },
+  get x() { return actor.position.x; },
+  get z() { return actor.position.z; },
+  get visible() { return actor.visible; },
+  get clips() { return clips; },
+  get triangles() { return shore.triangles; },
+  get parts() { return Object.keys(shore.parts); },
+  get state() { return state; },
+  get frameStats() { return { avgMs: frame.ms / Math.max(1, frame.n - 6), worstMs: frame.worst, frames: Math.max(0, frame.n - 6) }; },
+  pathPts: PATH_PTS,                       /* plate px — the path audit reads these */
+  obstacles: SHORE_WORLD.OBSTACLES,
+  setProgress(u) { dist = u * PATH_LEN; hold = 0; actor.visible = true; placeActor(); },
+  setSim(t) { simT = t; shore.tick(t); },  /* absolute, deterministic */
+  setOrbit(deg) { orbitOn = false; orbitBase = deg % 360; camera.userData.setOrbit(orbitBase); },
+  setState(s) { state = s; shore.setState(s); dayBtn.dataset.on = s === 'day' ? '1' : '0'; dayBtn.textContent = 'state: ' + s; },
+  stripMaps(on) {                          /* tier-1 silhouette evidence (map-stripped) */
+    scene.overrideMaterial = on ? new THREE.MeshBasicMaterial({ color: 0x8a8a8a }) : null;
+  },
+  fireSample(t) {                          /* determinism gate: pure f(t) by construction */
+    shore.tick(t);
+    return { flick: +shore.flick(t).toFixed(6), fireIntensity: +shore.fireLight.intensity.toFixed(3) };
+  },
+  scene, camera, renderer,
+};
+window.__sceneReady = true;
+</script>
+</body>
+</html>
