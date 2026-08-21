@@ -329,3 +329,161 @@ size)`), breathing together on the existing 9.1 s cycle.
 - **Story app (tools/story3d_smoke.mjs): PASS** — the 81-unit walk, all 8 gates,
   all 8 facts (both Beat VI throws, both hull hits, sail-off, sigil); zero errors.
 - **compare.jpg** re-rendered in place at the book framing (orbit 0, sim 4.2, u 0.45).
+
+---
+
+## ROUND 4 — Fable's named defects (reviewer: Fable 5, implementor: Opus 5)
+
+Render: `passes/pass6-exposure.png` · sheet: `compare.jpg` (re-rendered in place,
+orbit 0, sim 4.2, u 0.45). Instruments added with the round so the numbers are
+reproducible: `tools/ody/work/sea_expose.py` (value histogram + region mid-tones +
+the moon's radial profile + the MOONPATH-BRIGHTEST check) and
+`tools/ody/work/sea_band.py` (the round-2 W1 water figures, so an exposure round
+cannot silently regress them). Both measure the plate and the render resampled to
+the SAME 1408x768 compare halves.
+
+### W4b GLOBAL EXPOSURE — "several stops darker than the plate"
+
+**The measurement first.** Value histogram over the whole compare framing:
+
+| | plate | round 3 | round 4 |
+|---|---|---|---|
+| mean | 30.8 | 23.0 | **31.8** |
+| median | 18.1 | 12.5 | **18.0** |
+| p25 | 12.2 | 11.0 | 11.3 |
+| p75 | 40.6 | 17.6 | **42.1** |
+| p99 | 177.3 | 209.3 | 182.8 |
+
+Population by decile (% of frame) — the gap was the whole midtone range:
+
+| L band | plate | round 3 | round 4 |
+|---|---|---|---|
+| 0–25 | 60.70 | 81.84 | **61.31** |
+| 26–51 | 22.33 | 8.05 | **20.15** |
+| 52–77 | 11.65 | 4.58 | **11.15** |
+| 78–103 | 2.31 | 2.85 | 3.12 |
+| 104–129 | 1.16 | 0.86 | 1.52 |
+| 130–155 | 0.46 | 0.24 | 1.03 |
+| 234–259 | 0.20 | 0.12 | 0.22 |
+
+Sampled regions (mean L, and rgb — the hue mattered as much as the value):
+
+| region | plate | round 3 | round 4 |
+|---|---|---|---|
+| cliff mass | 49.8 (55,47,50) | 37.7 (38,37,43) | **52.1 (59,50,47)** |
+| cliff lit columns | 83.9 (103,77,70) | 58.3 (49,59,78) | 69.8 (67,70,78) |
+| buttress | 80.6 (85,78,83) | 60.1 (61,58,67) | 70.8 (79,68,65) |
+| brow plateau | 61.6 (63,60,67) | 37.3 (34,37,46) | 50.5 (51,50,54) |
+| east face | 20.5 (19,19,30) | 10.6 (9,10,15) | **20.7 (24,19,17)** |
+| warm recess | 80.8 (100,74,66) | 74.9 (76,73,81) | 99.4 (115,95,83) |
+| water off-path | 17.6 | 17.7 | 19.2 |
+| water upstage | 63.9 | 69.4 | 66.9 |
+| moonpath core | 171.0 | 122.5 | 150.0 |
+| moon disc | 169.1 | 216.3 | **176.8** |
+| sky (moon side) | 28.9 (21,28,56) | 12.6 (3,12,40) | **28.3 (18,28,56)** |
+| far-sky floor | 11.6 (4,10,36) | 10.7 (2,10,36) | 10.7 (2,10,36) |
+
+**Three causes, not one knob.**
+
+1. **THE MOON FILL — the largest term, and round 2 measured it against the wrong
+   floor.** The plate's frame corners read rgb (4,10,36) = L 11.6; round 2's halo
+   note claimed a "far-sky floor of L~30", which was itself inside the glow. Re-read
+   on six clean-sky rays from the disc (476,248):
+
+   | r px | 70 | 120 | 160 | 200 | 260 | 320 | 400 | 480 |
+   |---|---|---|---|---|---|---|---|---|
+   | plate | 69.6 | 61.0 | 54.3 | 48.1 | 37.9 | 29.8 | 20.9 | 14.8 |
+   | round 3 | 38.2 | 20.9 | 16.3 | 14.8 | 12.3 | 12.1 | 12.1 | 12.4 |
+   | round 4 | 75.3 | 62.2 | 55.7 | 49.1 | 39.5 | 29.9 | 18.9 | 12.4 |
+
+   The plate's wash is a shallow shoulder over a tail reaching ~480 px = 37 m — wider
+   than the whole headland. **A billboard cannot carry it.** The moon sits at z −11.8
+   while the upstage water runs to z −30, so a sprite that size is NEARER than the
+   water it covers: with the widened halo on, 3,436 px of the water window blew past
+   L 235 against the plate's 1,349; with it off, 182. Renderorder does not save it —
+   sprites are in the transparent pass, so they draw after every opaque solid.
+   **The wash moved onto the SKY DOME** as a per-fragment term: the camera is
+   ORTHOGRAPHIC, so screen distance from the moon is the world distance perpendicular
+   to the view axis (taken from the third row of `viewMatrix`, so it is correct under
+   orbit and at any pixel scale), profiled as `pow(1 − r/38 m, 1.5)`. The dome draws
+   first with depthWrite off, so the glow can be as wide as the plate's and still not
+   touch the sea. Only a 16-unit rim bloom stays at the moon.
+2. **THE CLIFF.** A near-black `coolDark` under gamma 2.3 left every half-turned facet
+   to the hemi alone, and the hemi was a saturated navy — which is why the plate's
+   warm sandstone (103,77,70) came back cold (49,59,78). The crag pairs were lifted
+   and warmed (massif `#b89c80`/`#0a0b11`, buttress `#bdad97`/`#3b3641`, apron
+   `#ad9a85`/`#161520`), the shoulder relaxed to gamma 2.0 with `eastDark` 0.95 so the
+   east faces still fall away, and the fill desaturated and raised: hemi
+   `#3c4a78`/`#20294a` @0.95 → `#7e8496`/`#332c38` @1.00, key 1.4 → 1.62 at `#d8dced`.
+   The recess practicals came DOWN (gains 2.4/2.6 → 1.15/1.25, `warmHot` `#c47935` →
+   `#a86230`) — under the lifted fill they were painting a hot wash where the plate
+   has a mid-value chimney. The water base was re-balanced under the brighter rig
+   (`#0f2546`/`#436682`, painted floor 0.26 → 0.22) so the sea did not ride up with it.
+3. **THE MOON DISC WAS THE BRIGHTEST THING IN FRAME** — L 216 against the plate's 169,
+   which inverts the plate's light story. Dropped to its own sampled tones
+   (`#939aad`/`#465069`). The moonpath now keeps the peak by the same margin the plate
+   does: **band p99 247.0 vs moon 192.0** (plate: 247.9 vs 207.3).
+
+**Not washed out**: the far-sky floor is untouched (11.6 | 10.7 | 10.7), the off-path
+water is still wine-dark (17.6 | 17.7 | 19.2), and the east face lands on the plate
+(20.5 | 10.6 | 20.7) instead of being lifted with everything else.
+
+### MINOR — sparkle scatter near the ship's stern (band coherence at its far end)
+
+The shard-gap dice are a 1.9 m lattice on a ~1.9 m facet grid, so they read as
+per-facet dice wherever the band is narrower than a few cells. Downstage of the stern
+(s 0.64…1.0) the measured envelope is only 1.3–2 m half-width, and the dice broke the
+taper into loose sparkle. Three changes, all inside the existing envelope:
+
+- a `tail` term (`smoothstep(s, 0.42, 0.85)`) that **opens** the gate to continuous over
+  the last third and **dims** by `1 − 0.5·tail` instead — the path fades the way the
+  plate's does rather than dissolving;
+- `open` is now **capped at 0.72** so the gaps cut the SPINE too (round 2 let it reach 1
+  at soft = 1, welding the core into one clipped white blob);
+- the outboard stray shards are upstage-only (`tail < 0.35` — past the stern the plate
+  has none) and the 46 twinkle glints are weighted upstage (`pow(rnd, 2.0)`), where an
+  even spread had put a third of them in the tail.
+
+Measured in the stern window (x 250–600, py 400–570), connected lit blobs at L > 110:
+
+| | plate | round 3 | round 4 |
+|---|---|---|---|
+| lit blobs | 29 | 52 | 38 |
+| loose (< 60 px) | 23 | 47 | **32** |
+| largest (the coherent tail) | 2,906 | 4,212 | 5,834 |
+
+### W1 REGRESSION GUARD (the round-2 water figures)
+
+| | plate | round 3 | round 4 |
+|---|---|---|---|
+| bright px L>120 | 11,924 | 9,502 | 13,564 |
+| blown px L>235 | 1,349 | 585 | 1,097 |
+| band width median / max | 50 / 130 | 28 / 87 | 59 / 131 |
+| lit rows / last py | 219 / 516 | 229 / 526 | 233 / 526 |
+
+The band is no longer *under* the plate's mass the way round 3 was, and its blown
+count sits just below the plate's rather than 2.5x over it (the intermediate
+sprite-halo builds of this round peaked at 3,436 — that number is what found the
+depth bug).
+
+### GATES (round 4)
+
+- **sea3d smoke (tools/sea3d_smoke.mjs): PASS** — zero console/page/request errors;
+  determinism byte-equal; posture verbatim (standing 0.04°, walk max 5.64°, pelvis
+  0.4902); obstacle law 0 hits, giant mark clear; scale measured (hull 15.056 m,
+  mast 8.800 m, actor 1.750 m, S = 12.7, brow 27.5 m); row sweep 1.335 m;
+  splashAt births live; walk advances + respawns; 8,859 tris of 60,000; 16.63 ms avg.
+- **Turntable 0/90/180/270: no holes** — and the new dome glow tracks the moon
+  correctly from every azimuth (the ortho perpendicular-distance term, not a fixed
+  world direction).
+- **Story app (tools/story3d_smoke.mjs): PASS** — the 81-unit walk on the relit set:
+  all 5 gates by their verbs, all 5 facts (tip glow, blind flare, POV, boulder at
+  dawn, both rock throws), 77 advances, 0 soft fails, postures PASS for all five
+  rigs, zero app/console/page errors, 0 failed requests.
+- **compare.jpg** re-rendered in place at the book framing.
+
+**Honest residuals (stated)**: the moonpath's mean still reads 150 against the plate's
+171 — its blown cores are broader than our facet grid can carry without clipping past
+the plate's blown-pixel count; the brow plateau reads 50.5 against 61.6; the warm
+recess is still hotter than the plate's (99.4 vs 80.8); and the plate's hand-cut facets
+remain coarser and more considered than the procedural grid.

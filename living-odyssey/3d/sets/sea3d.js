@@ -595,7 +595,7 @@ function buildWater({ seed, moonPlanX, glowPos, shoreline, wakeStern, wakeHeadin
   const spark = new Float32Array(pos.count);
   const foam = new Float32Array(pos.count);
   const glow = new Float32Array(pos.count);
-  const deep = new THREE.Color('#0f2546'), wine = new THREE.Color('#456a8a');
+  const deep = new THREE.Color('#0f2546'), wine = new THREE.Color('#436682');
   const rnd = mulberry32(seed + 7);
   const c = new THREE.Vector3();
   for (let f = 0; f < nFaces; f++) {
@@ -618,17 +618,31 @@ function buildWater({ seed, moonPlanX, glowPos, shoreline, wakeStern, wakeHeadin
       const halfW = ramp(s, BAND_HALF);
       const dx = Math.abs(c.x - (moonPlanX + ramp(s, BAND_MID)));
       const head = THREE.MathUtils.clamp((c.z - (BAND_Z0 - 2.4)) / 2.4, 0, 1);
+      /* TAIL COHERENCE (round 4 minor): the shard-gap dice are a 1.9 m lattice on a
+         ~1.9 m facet grid, so they read as per-facet dice wherever the band is
+         narrower than a few cells. Downstage of the stern the envelope is only
+         1.3-2 m half-width, and the dice broke the taper into loose sparkle. `tail`
+         rises over the last third of the run and (a) opens the gate so the narrow
+         end is CONTINUOUS, (b) dims it instead, so the path fades out the way the
+         plate's does rather than dissolving into confetti. */
+      const tail = THREE.MathUtils.smoothstep(s, 0.42, 0.85);
       if (dx < halfW) {
         /* SOFT EDGE: a shallow power feathers the flanks the way the plate's does —
            a smoothstep here reads as a hard-shouldered stripe, not a moonpath */
         const e = 1 - dx / halfW;
-        const soft = Math.pow(e, 0.6);
-        const grain = 0.80 + 0.30 * hash3(c.x, 1, c.z, seed + 12);
+        const soft = Math.pow(e, 0.65);
+        const grain = 0.55 + 0.45 * hash3(c.x, 1, c.z, seed + 12);
         const gate = hash3(Math.round(c.x / 1.9), 0, Math.round(c.z / 1.9), seed + 11);
-        b = soft * grain * head * (gate < 0.10 + 0.90 * soft ? 1 : 0.07);
-      } else if (halfW > 1 && dx < halfW + 2.6 &&
+        /* the shard gaps must cut the SPINE too: round 2 left `open` reaching 1 at
+           soft=1, which welded the core into one clipped white blob (4x the plate's
+           blown-pixel count in a third of its area). Capped, the spine reads as the
+           plate's field of bright shards over dark water. */
+        const open = Math.min(0.10 + 0.90 * soft, 0.72) * (1 - tail) + tail;
+        b = soft * grain * head * (gate < open ? 1 : 0.24) * (1 - 0.50 * tail);
+      } else if (tail < 0.35 && halfW > 1 && dx < halfW + 2.6 &&
                  hash3(Math.round(c.x / 2.4), 1, Math.round(c.z / 2.4), seed + 15) < 0.04) {
-        b = 0.26 * head * (0.5 + 0.5 * hash3(c.x, 4, c.z, seed + 16)); /* the plate's few strays */
+        /* the plate's few strays — upstage only: past the stern the plate has none */
+        b = 0.26 * head * (0.5 + 0.5 * hash3(c.x, 4, c.z, seed + 16));
       }
       b = Math.min(b, 1);
     }
@@ -706,7 +720,7 @@ function buildWater({ seed, moonPlanX, glowPos, shoreline, wakeStern, wakeHeadin
           float bandE = clamp(vBand, 0.0, 1.0);
           float tw = 0.66 + 0.34 * sin(uTime * (0.7 + fract(vSpark) * 1.7) + vSpark * 6.2832);
           vec3 moonCol = vec3(0.84, 0.89, 1.0);
-          totalEmissiveRadiance += moonCol * bandE * tw * 0.95;
+          totalEmissiveRadiance += moonCol * bandE * tw * 2.45;
           /* SUB-FACET TWINKLE: three incommensurate travelling waves in world plan
              metres — isolated pinpoint glints INSIDE each facet (no lattice, no
              dither), so the path carries the plate's fine sparkle without widening
@@ -715,7 +729,7 @@ function buildWater({ seed, moonPlanX, glowPos, shoreline, wakeStern, wakeHeadin
                    + sin(dot(vWPos.xz, vec2(-3.3, 7.4)) + uTime * 1.2 + 2.1)
                    + sin(dot(vWPos.xz, vec2(8.2, -5.1)) + uTime * 2.3 + 4.0);
           float gs = pow(clamp(sp * 0.1667 + 0.5, 0.0, 1.0), 8.0);
-          totalEmissiveRadiance += moonCol * bandE * gs * 0.42;
+          totalEmissiveRadiance += moonCol * bandE * gs * 0.32;
           /* fresnel-style grazing brightening, biased toward the moon side */
           vec3 V = normalize(vViewPosition);
           float fres = pow(1.0 - abs(dot(normal, V)), 2.0);
@@ -727,7 +741,7 @@ function buildWater({ seed, moonPlanX, glowPos, shoreline, wakeStern, wakeHeadin
           /* the cave-glow pool, flickering with the practical */
           totalEmissiveRadiance += vec3(1.0, 0.62, 0.22) * vGlow * uFlick * 0.85;
           /* the painted floor: the plate's water is never true black */
-          totalEmissiveRadiance += diffuseColor.rgb * 0.26;
+          totalEmissiveRadiance += diffuseColor.rgb * 0.22;
         }`);
   };
   const mesh = new THREE.Mesh(g, mat);
@@ -742,6 +756,9 @@ export function createSeaScene() {
   const parts = {};
   const track = (name, obj) => { obj.name = name; parts[name] = obj; root.add(obj); return obj; };
   const tickers = [];
+  let skyGlow = null;                      /* the dome's moon-wash uniforms (set below) */
+
+  const MOON_POS = new THREE.Vector3(X(474), 14, -11.8); /* projects to plate (474,242) */
 
   /* ===== MACRO: sky dome + faint stars ===== */
   {
@@ -754,8 +771,40 @@ export function createSeaScene() {
       col.set([c.r, c.g, c.b], i * 3);
     }
     g.setAttribute('color', new THREE.BufferAttribute(col, 3));
-    const sky = new THREE.Mesh(g, new THREE.MeshBasicMaterial({
-      vertexColors: true, side: THREE.BackSide, depthWrite: false }));
+    const skyMat = new THREE.MeshBasicMaterial({
+      vertexColors: true, side: THREE.BackSide, depthWrite: false });
+    /* THE MOON'S SKY GLOW lives HERE, on the dome — not on an additive billboard at
+       the moon. The moon sits at z −11.8 while the upstage water runs to z −30, so a
+       sprite big enough to carry the plate's wash (a ~37 m tail) is NEARER than the
+       water it covers and bleaches the moonpath: with it on, 3,436 px of the water
+       window blew past L 235 against the plate's 1,349; with it off, 182. The dome
+       draws first with depthWrite off, so every solid in the set occludes it and the
+       glow can be as wide as the plate's without touching the sea.
+       The camera is ORTHOGRAPHIC, so screen distance from the moon is the world-space
+       distance perpendicular to the view axis — measured in metres here (r/12.7 px),
+       which keeps the profile right at any pixel scale and under orbit. */
+    skyGlow = { uMoonPos: { value: MOON_POS }, uGain: { value: 0.075 } };
+    skyMat.onBeforeCompile = (sh) => {
+      sh.uniforms.uMoonPos = skyGlow.uMoonPos;
+      sh.uniforms.uGain = skyGlow.uGain;
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\n varying vec3 vSkyW;')
+        .replace('#include <begin_vertex>',
+          '#include <begin_vertex>\n vSkyW = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', `#include <common>
+          uniform vec3 uMoonPos; uniform float uGain; varying vec3 vSkyW;`)
+        .replace('#include <color_fragment>', `#include <color_fragment>
+          {
+            /* the camera's world-space back axis = third row of the view matrix */
+            vec3 axis = normalize(vec3(viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]));
+            vec3 d = vSkyW - uMoonPos;
+            float r = length(d - dot(d, axis) * axis);          /* metres off the moon */
+            float t = clamp(1.0 - r / 38.0, 0.0, 1.0);          /* 38 m = the plate's ~480 px tail */
+            diffuseColor.rgb += vec3(0.62, 0.76, 1.0) * uGain * pow(t, 1.5);
+          }`);
+    };
+    const sky = new THREE.Mesh(g, skyMat);
     sky.renderOrder = -10;
     track('sky', sky);
 
@@ -853,7 +902,10 @@ export function createSeaScene() {
     /* they ride the measured band, inboard of its edge — never out on open water */
     const glints = glintPoints({ count: 46, seed: 93025, size: 0.26,
       pts: (rnd) => {
-        const z = BAND_Z0 + 1.5 + rnd() * (BAND_Z1 - BAND_Z0 - 3.0);
+        /* weighted UPSTAGE: an even spread put a third of the glints in the tail
+           past the stern, where the plate has none — that scatter is what broke the
+           band's far-end coherence */
+        const z = BAND_Z0 + 1.5 + Math.pow(rnd(), 2.0) * (BAND_Z1 - BAND_Z0 - 3.0);
         const s = (z - BAND_Z0) / (BAND_Z1 - BAND_Z0);
         return [MOON_PLAN_X + ramp(s, BAND_MID) + (rnd() * 2 - 1) * ramp(s, BAND_HALF) * 0.8, z];
       } });
@@ -861,8 +913,7 @@ export function createSeaScene() {
     tickers.push((t) => { glints.material.uniforms.uTime.value = t; });
   }
 
-  /* ===== MACRO: the moon — low-poly prop ball + halo (plate: 7.5 m disc) ===== */
-  const MOON_POS = new THREE.Vector3(X(474), 14, -11.8); /* projects to plate (474,242) */
+  /* ===== MACRO: the moon — low-poly prop ball + rim bloom (plate: 7.5 m disc) ===== */
   {
     const grp = new THREE.Group();
     const mg = jitterByPos(new THREE.IcosahedronGeometry(3.8, 2), 93031, 0.14);
@@ -870,7 +921,11 @@ export function createSeaScene() {
     const geo = facetColors(mg, '#c3cbd9', 93031, 0.10);
     {
       const pos = geo.attributes.position, col = geo.attributes.color;
-      const lit = new THREE.Color('#dde1e8'), dark = new THREE.Color('#76829c');
+      /* the disc is NOT the brightest thing in the plate — its mean is rgb
+         (160,171,183) / L 169, level with the moonpath and BELOW the band's blown
+         cores. Round 2's #dde1e8 rendered L 216 and stole the frame's peak from
+         the water; these are the plate's own disc tones under the widened bloom. */
+      const lit = new THREE.Color('#939aad'), dark = new THREE.Color('#465069');
       const L = new THREE.Vector3(-0.55, 0.72, 0.42).normalize();
       const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(),
             n = new THREE.Vector3();
@@ -886,30 +941,23 @@ export function createSeaScene() {
     }
     const moon = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ vertexColors: true }));
     grp.add(moon);
-    /* THE SOFT HALO — two billboard sprites, measured off the plate's sky. Radially
-       around the plate's disc (centre 476,248, r 48.5 px) the sky reads L=70 just
-       outside the rim, L=63 at r=100 px, L=47 at r=196 px against a far-sky floor of
-       L~30: a steep shoulder over a long tail, reaching ~250 px = 19.7 m. The old
-       single sprite was 10.5 units across — a 5.25 m radius on a 3.8 m moon, i.e.
-       invisible. Inner bloom carries the shoulder, the wide one carries the tail. */
+    /* THE RIM BLOOM — only the shoulder that hugs the disc. The plate's wide sky
+       wash (L 70 at r 70 px down to L 15 at r 480 px over a true far-sky floor of
+       L~11) is carried by the SKY DOME's own glow term, which every solid occludes;
+       an additive billboard that size sits in front of the upstage water and
+       bleaches the moonpath instead of lighting the sky. */
     const bloom = new THREE.Sprite(new THREE.SpriteMaterial({
       map: glowTexture(null, null, [[0, 'rgba(226,238,255,0.85)'], [0.30, 'rgba(198,218,252,0.34)'],
         [0.62, 'rgba(150,180,240,0.09)'], [1, 'rgba(120,155,225,0)']], 128),
       blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
-    bloom.scale.setScalar(15.5);
-    const halo = new THREE.Sprite(new THREE.SpriteMaterial({
-      map: glowTexture(null, null, [[0, 'rgba(200,220,255,0.55)'], [0.22, 'rgba(170,198,246,0.24)'],
-        [0.52, 'rgba(132,166,232,0.08)'], [1, 'rgba(100,138,220,0)']], 128),
-      blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
-    halo.scale.setScalar(42);
-    halo.renderOrder = -1;
-    grp.add(halo, bloom);
+    bloom.scale.setScalar(16);
+    grp.add(bloom);
     grp.position.copy(MOON_POS);
     track('moon', grp);
     tickers.push((t) => {
       const b = 0.06 * Math.sin(2 * Math.PI * t / 9.1);
-      bloom.material.opacity = 0.52 + b;
-      halo.material.opacity = 0.30 + b * 0.6;
+      bloom.material.opacity = 0.26 + b;
+      if (skyGlow) skyGlow.uGain.value = 0.075 + b * 0.05;   /* the sky breathes with it */
     });
   }
 
@@ -927,13 +975,20 @@ export function createSeaScene() {
        near-black navy on the east faces — the second glow is the plate's amber chimney
        climbing the recess above the mouth */
     const massifCol = twoToneFacets(massifGeo, {
-      coolLit: '#a49b91', coolDark: '#0c0e18', warmDim: '#5a3b30', warmHot: '#c47935',
-      seed: 93042, amount: 0.12,
-      glows: [{ pos: GLOW_POS, radius: 19, gain: 2.4, fadeY: 16 },
+      /* W4b: the plate's cliff is PALE SANDSTONE, warm and readable — sampled at the
+         compare framing its lit columns are rgb (103,77,70) / L 84, its brow plateau
+         (63,60,67) / L 62, the mass as a whole (55,47,50) / L 50. Round 2 rendered
+         (49,59,78) / (34,37,46) / (38,37,43): a stop and a half down AND blue, because
+         the near-black coolDark plus gamma 2.3 left every half-turned facet to a cold
+         hemi fill. The pair is lifted and warmed and the shoulder relaxed; the east
+         faces still fall away (eastDark unchanged), so the mood does not wash. */
+      coolLit: '#b89c80', coolDark: '#0a0b11', warmDim: '#5c3826', warmHot: '#a86230',
+      seed: 93042, amount: 0.12, gamma: 2.0, eastDark: 0.95,
+      glows: [{ pos: GLOW_POS, radius: 19, gain: 1.15, fadeY: 16 },
               /* the recess wash stands DOWNSTAGE of the face it lights — a practical
                  upstage of a downstage-facing facet has negative lambert and paints
                  nothing, which is why the plate's amber chimney was missing */
-              { pos: new THREE.Vector3(8.5, 10, 14.5), radius: 16, gain: 2.6, fadeY: 18 }] });
+              { pos: new THREE.Vector3(8.5, 10, 14.5), radius: 16, gain: 1.25, fadeY: 18 }] });
     const massif = new THREE.Mesh(massifCol, flatMat({ vertexColors: true }));
     massif.castShadow = massif.receiveShadow = true;
     track('headland-massif', massif);
@@ -947,7 +1002,7 @@ export function createSeaScene() {
     const buttCol = twoToneFacets(buttGeo, {
       /* the buttress is the plate's PALE rock: #7a7a7c even on its downstage face,
          so it carries its own lighter pair and a shallower gamma than the massif */
-      coolLit: '#bdb3a6', coolDark: '#42404f', warmDim: '#6b4a3a', warmHot: '#bf7c42',
+      coolLit: '#bdad97', coolDark: '#3b3641', warmDim: '#7a5442', warmHot: '#bf7c42',
       seed: 93045, amount: 0.12, eastDark: 0.8, gamma: 1.35,
       glows: [{ pos: GLOW_POS, radius: 15, gain: 2.2, fadeY: 18 }] });
     const butt = new THREE.Mesh(buttCol, flatMat({ vertexColors: true }));
@@ -961,7 +1016,7 @@ export function createSeaScene() {
       taper: 0.8, flare: 1.32, terrace: 0.22, jit: 0.45 });
     apronGeo.translate(8.8, 0, 6.2);
     const apronCol = twoToneFacets(apronGeo, {
-      coolLit: '#9d938a', coolDark: '#0f1220', warmDim: '#5f3d2d', warmHot: '#cf8b3f',
+      coolLit: '#ad9a85', coolDark: '#161520', warmDim: '#6d4632', warmHot: '#cf8b3f',
       seed: 93048, amount: 0.12, eastDark: 0.7,
       glows: [{ pos: GLOW_POS, radius: 13, gain: 2.6 }] });
     const apron = new THREE.Mesh(apronCol, flatMat({ vertexColors: true }));
@@ -1124,7 +1179,7 @@ export function createSeaScene() {
   }
 
   /* ===== the cave-glow — the warm practical at the cliff base ===== */
-  const caveGlow = new THREE.PointLight('#ffb347', 95, 0, 2);
+  const caveGlow = new THREE.PointLight('#ffb347', 70, 0, 2);
   caveGlow.position.copy(GLOW_POS);
   root.add(caveGlow);
   const glowFlick = (t) =>
@@ -1462,7 +1517,7 @@ export function createSeaScene() {
   });
 
   /* ===== the night rig — the moon is THE one shadow caster ===== */
-  const moonLight = new THREE.DirectionalLight('#c8d6f2', 1.4);
+  const moonLight = new THREE.DirectionalLight('#d8dced', 1.62);
   /* the plate paints the front-left column faces PALE: the key light stands
      up-left-FRONT of the headland (the painter's moon, not the prop's azimuth) */
   moonLight.position.set(-30, 36, 34);
@@ -1476,7 +1531,12 @@ export function createSeaScene() {
   moonLight.shadow.bias = -0.003;
   root.add(moonLight, moonLight.target);
   {
-    const hemi = new THREE.HemisphereLight('#3c4a78', '#20294a', 0.95);
+    /* W4b: the fill was both too weak and too blue — every facet the key misses was
+       being painted by a saturated navy hemi, which is why the plate's warm sandstone
+       came back cold (render 49,59,78 against the plate's 103,77,70). Desaturated and
+       lifted: the sky half stays night-cool, the ground half carries the warm rock
+       bounce the plate shows on its downstage faces. */
+    const hemi = new THREE.HemisphereLight('#7e8496', '#332c38', 1.0);
     root.add(hemi);
     parts['night-rig'] = hemi;
   }
