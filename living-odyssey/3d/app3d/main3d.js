@@ -813,6 +813,30 @@ harnessOnly.__census = () => stage.census();
 harnessOnly.__ensureAll = () => stage.preloadAll();
 harnessOnly.__refs = { stage, audio, voice, margin, clock, S, UNITS };
 
+/* ---- THE SAM2 PATH's instrument: the sandwich has to be proven in pixels ---- */
+harnessOnly.__plate = {
+  census: (set) => stage.plateCensus(set),
+  state: () => { const r = stage.sets[stage.activeName]; return r && r.plate ? r.plate.stateB : null; },
+  occluders: (on) => stage.setOccluders(on !== false),
+  layerGain: (id, g) => stage.setLayerGain(id, g),
+  flat: (id, k, r, g, b) => stage.setLayerFlat(id, k, r, g, b),
+  points: (on) => stage.setLivePoints(on !== false),
+  props: (on) => stage.setKeptProps(on !== false),
+  only: (id) => stage.setOnlyLayer(id),
+  body: (px, py, w, h) => stage.probeBody(px, py, w, h),
+  nobody: () => stage.hideProbeBody(),
+  bypassGrade: (on) => stage.setGradeBypass(on !== false),
+  stand: (id, px, py, yaw) => stage.probeStand(id, px, py, yaw || 0),
+  cam: (px, py, k) => stage.probeCam(px, py, k),
+  clear: () => { for (const a of Object.values(stage.actors)) stage._off(a); return true; },
+  mount: async (set) => { await stage.ensure(set); stage.reset(); stage.mount(set); return set; },
+  draw: () => { stage.render(); return stage.renders; },
+  lightAt: (px, py) => { const r = stage.sets[stage.activeName]; if (!r) return null;
+    const v = r.toWorld(px, py, 0); stage.camState = { x: v.x, y: 0, z: v.z,
+      k: stage.camState ? stage.camState.k : 1, e: r.camBase.elev };
+    stage._plateLightStep(); return stage.lightSample; },
+};
+
 window.__state = () => ({
   ready: S.ready, t: +(clock.t - S.stall).toFixed(4), wall: +clock.t.toFixed(4),
   stall: +S.stall.toFixed(4), frame: clock.frame, harness: clock.harness,

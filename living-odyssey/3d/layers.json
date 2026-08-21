@@ -1,0 +1,849 @@
+{
+ "lane": "sam2path-r1-layers",
+ "created": "2026-08-21",
+ "generator": "tools/ody/sam2/cutlayers.py",
+ "law": "THE PLATE IS THE WORLD \u2014 every layer's RGB is a straight copy of the plate's own pixels; only alpha is synthesised (feathered 2.5 px). Each layer carries a GROUND ROW: actors whose foot row is upstage draw behind it, downstage draw in front.",
+ "feather_px": 2.5,
+ "sam2": {
+  "cave": "assets/raw/nav-sam2/20260820T154422Z",
+  "shore": "assets/raw/sam2path-r1/20260821T153745Z/shore-dense",
+  "sea": "assets/raw/sam2path-r1/20260821T153745Z/sea-dense"
+ },
+ "sets": {
+  "cave": {
+   "plate": {
+    "cave-shut": {
+     "file": "../assets/set/cave/cave-shut.jpg",
+     "sha256": "b6137386780c65249c4c2ce874364c859887b2c687a89daa0071fecf453f5f81"
+    },
+    "cave-embers": {
+     "file": "../assets/set/cave/cave-embers.jpg",
+     "sha256": "a88dd06c8f8967374d36e204cae7eded9b175b92142948e87d41a19f519918a1"
+    },
+    "cave-predawn": {
+     "file": "../assets/set/cave/cave-predawn.jpg",
+     "sha256": "a75a2af8088baa7913c309512fc3fc74c5e2b24ef3e2a049c3b40666a2cb0748"
+    },
+    "cave-dawn": {
+     "file": "../assets/set/cave/cave-dawn.jpg",
+     "sha256": "3786d632d5e050ddd77228b7fdd20a38ea2ecea6b74389c168c23c25f0937d1e"
+    },
+    "cave-open": {
+     "file": "../assets/set/cave/cave.jpg",
+     "sha256": "ee756bd0920d21e3d08b3f0682984eeb475cc30bc6d66d8b41e27949659b30e1"
+    }
+   },
+   "layers": [
+    {
+     "id": "rack-d",
+     "box": [
+      808,
+      190,
+      860,
+      273
+     ],
+     "ground": 271,
+     "area": 2931,
+     "source": [
+      "sam2:47,51,50",
+      "clip:ledger-box"
+     ],
+     "note": "rack D",
+     "files": {
+      "cave-shut": "layers/cave/rack-d-cave-shut.png",
+      "cave-embers": "layers/cave/rack-d-cave-embers.png",
+      "cave-predawn": "layers/cave/rack-d-cave-predawn.png",
+      "cave-dawn": "layers/cave/rack-d-cave-dawn.png",
+      "cave-open": "layers/cave/rack-d-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "7a9f822cdc0673cbfbf4b6791c14e760306c53750b1eb08facf53c3bac2dcdad",
+      "cave-embers": "dc370ed2caf182560954cea6a82814d3491f5db7786320202d7beb3418a3f9cd",
+      "cave-predawn": "bf3fdb41b5fba0b7f5a5681a3f4cc1917bd946be463420a01567c98499b95875",
+      "cave-dawn": "4e58042d389f1b87372468c2721b84a6632a232143e7afe215d77af98b0dbcb4",
+      "cave-open": "5b60caa302217717df2aa8046563c693dc000e66cf7f4198a400cc825c60beec"
+     },
+     "band": 0
+    },
+    {
+     "id": "rack-c",
+     "box": [
+      715,
+      172,
+      794,
+      339
+     ],
+     "ground": 337,
+     "area": 11307,
+     "source": [
+      "sam2:12",
+      "clip:ledger-box"
+     ],
+     "note": "rack C (SAM2 IoU .67)",
+     "files": {
+      "cave-shut": "layers/cave/rack-c-cave-shut.png",
+      "cave-embers": "layers/cave/rack-c-cave-embers.png",
+      "cave-predawn": "layers/cave/rack-c-cave-predawn.png",
+      "cave-dawn": "layers/cave/rack-c-cave-dawn.png",
+      "cave-open": "layers/cave/rack-c-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "4bf2821b1f1eb0078aa34f3c58b90ae519e579e97e881212001f00dffeb09fe5",
+      "cave-embers": "e2eca94a56d2d71cbeb00b00f50e6a374f89d54143c5eea830fc130fea92f854",
+      "cave-predawn": "d02ebd4b926321ff474922467b48c209e4631ac45ecb1f27df4fb8ff68d4159b",
+      "cave-dawn": "3aaa5326b8f99c2e419ea0c3b760d354ca95f4e54a0ba040643494594f385279",
+      "cave-open": "cf97d4394a8a17756fa9a7c3309a4f0c06ba47798b96ecfaab175217737e364c"
+     },
+     "band": 1
+    },
+    {
+     "id": "rack-b",
+     "box": [
+      637,
+      187,
+      712,
+      347
+     ],
+     "ground": 345,
+     "area": 10344,
+     "source": [
+      "sam2:13,27",
+      "clip:ledger-box"
+     ],
+     "note": "rack B (SAM2 IoU .65)",
+     "files": {
+      "cave-shut": "layers/cave/rack-b-cave-shut.png",
+      "cave-embers": "layers/cave/rack-b-cave-embers.png",
+      "cave-predawn": "layers/cave/rack-b-cave-predawn.png",
+      "cave-dawn": "layers/cave/rack-b-cave-dawn.png",
+      "cave-open": "layers/cave/rack-b-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "b73af7b830b38ed08b4a067efee1ad6df84920c56bdc69de61f6b334a79222c3",
+      "cave-embers": "adf9fde1f62feb9312afd0a510a8245c2a2f07da0124b6df03665f48199a90b0",
+      "cave-predawn": "b84efcff25fa45e0584e5373ff3dc5fd881ff2ca2192164908dd5bbb4a3d8549",
+      "cave-dawn": "22e674d6b1ba8cadb22c405e90190139a497f4bdd907b67d627529268e56c0d5",
+      "cave-open": "b9152f0a643e4b60b35cedc802dd3cf3a76e876713b3dff72cb4c31a5785a352"
+     },
+     "band": 2
+    },
+    {
+     "id": "rack-a",
+     "box": [
+      534,
+      253,
+      607,
+      387
+     ],
+     "ground": 385,
+     "area": 3981,
+     "source": [
+      "sam2:52,34,42,75,57",
+      "clip:ledger-box"
+     ],
+     "note": "cheese rack A, the upstage west shelf",
+     "files": {
+      "cave-shut": "layers/cave/rack-a-cave-shut.png",
+      "cave-embers": "layers/cave/rack-a-cave-embers.png",
+      "cave-predawn": "layers/cave/rack-a-cave-predawn.png",
+      "cave-dawn": "layers/cave/rack-a-cave-dawn.png",
+      "cave-open": "layers/cave/rack-a-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "d97f5823beae200723544042d947bebfa8c95b1e33b4e9e8e6fb628d2a843776",
+      "cave-embers": "2ba6cd1b054318d43cc8f74ea94dbf5b8e27e576b107bf4895a58fe4556ca682",
+      "cave-predawn": "8ecdfaa49542ec7168376f484120bc319678accdda3abaad712c437fd48fbd91",
+      "cave-dawn": "39b6dce04ecd5555f74f7ff85cd065382114d09e1cf72c23cd66b79b34caf49c",
+      "cave-open": "0b9896020f890cc7f00cd449be13d350ca5dde1877ab46d164b942c8adc4ea13"
+     },
+     "band": 3
+    },
+    {
+     "id": "mainpen-rail",
+     "box": [
+      774,
+      391,
+      857,
+      427
+     ],
+     "ground": 425,
+     "area": 1882,
+     "source": [
+      "plate-matte",
+      "front-lip>=y392"
+     ],
+     "note": "the main pen's near wicker rails",
+     "files": {
+      "cave-shut": "layers/cave/mainpen-rail-cave-shut.png",
+      "cave-embers": "layers/cave/mainpen-rail-cave-embers.png",
+      "cave-predawn": "layers/cave/mainpen-rail-cave-predawn.png",
+      "cave-dawn": "layers/cave/mainpen-rail-cave-dawn.png",
+      "cave-open": "layers/cave/mainpen-rail-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "c7f846ef04fdaf7cc5f1000407d4861f156671f172fa06f3ec06c6244ce148ed",
+      "cave-embers": "08c595fc440bf62ec06f8ca02164e62b08e9bcb55356d32b56d40d45b10a03a5",
+      "cave-predawn": "fb3190ae154cb4e51d81d8dc436084414a7ee2a93a223763b71e8c6032332104",
+      "cave-dawn": "01164adef0024d254bca06527c3c752659791535bdc84d1369c926f85464af30",
+      "cave-open": "5807df5aa71b982ff566bc8cc943ce1cab6685766a332e0458944b795ba3eb7d"
+     },
+     "band": 4
+    },
+    {
+     "id": "boulder",
+     "box": [
+      299,
+      269,
+      464,
+      429
+     ],
+     "ground": 427,
+     "area": 22108,
+     "source": [
+      "sam2:0",
+      "clip:ledger-box"
+     ],
+     "note": "the door-stone in its shut seat; the OPEN states repaint it, so this card rides the shut/embers/predawn plates only",
+     "files": {
+      "cave-shut": "layers/cave/boulder-cave-shut.png",
+      "cave-embers": "layers/cave/boulder-cave-embers.png",
+      "cave-predawn": "layers/cave/boulder-cave-predawn.png",
+      "cave-dawn": "layers/cave/boulder-cave-dawn.png",
+      "cave-open": "layers/cave/boulder-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "805523ae6f3a5b28c573d7d6e1f76f1b18450dd287182c05994e5a9e37e57f8a",
+      "cave-embers": "8cc145c70dcf78468180b2e8d298315a4458faa57641bc4d62627b4ffa14e89a",
+      "cave-predawn": "ee0ea07d6c8bd3d4f5aff71b6957c569d13079a65781776b33f3fdc226f8a308",
+      "cave-dawn": "77cdf65ca9d4f70e2db3a4a3e99b20514cc46ac382c36c578ae2f5b49fd12c59",
+      "cave-open": "8201776a0bc05104fefd3b4909abaff7587dd706cc99bf3ea983b369f360b78f"
+     },
+     "band": 5
+    },
+    {
+     "id": "bed",
+     "box": [
+      1024,
+      329,
+      1242,
+      457
+     ],
+     "ground": 455,
+     "area": 4631,
+     "source": [
+      "plate-matte"
+     ],
+     "note": "the giant's bed, downstage-east mass",
+     "files": {
+      "cave-shut": "layers/cave/bed-cave-shut.png",
+      "cave-embers": "layers/cave/bed-cave-embers.png",
+      "cave-predawn": "layers/cave/bed-cave-predawn.png",
+      "cave-dawn": "layers/cave/bed-cave-dawn.png",
+      "cave-open": "layers/cave/bed-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "328256a42035a83b3177127ef1fe6656e35a971a85caa6ec7bc2f6d1f0777bf6",
+      "cave-embers": "66e5b819e33a41f70ec21685c5ae7bbb4436bb7884b447b9b667915bbaddf741",
+      "cave-predawn": "6afee7d2dda6e6d245b2ed62459b4b3e2e483892264912b7444552b5e3d39f56",
+      "cave-dawn": "1848aabf72d99a183fbbd215d098ad2c6380743221a6ce54f42f4dc6331ac7ef",
+      "cave-open": "c22942931dbb3060cd7b71f662bba3af3200e69363b693cc10025bd7bd350772"
+     },
+     "band": 6
+    },
+    {
+     "id": "logs-right",
+     "box": [
+      1104,
+      479,
+      1143,
+      497
+     ],
+     "ground": 495,
+     "area": 335,
+     "source": [
+      "plate-matte"
+     ],
+     "note": "the east log stack",
+     "files": {
+      "cave-shut": "layers/cave/logs-right-cave-shut.png",
+      "cave-embers": "layers/cave/logs-right-cave-embers.png",
+      "cave-predawn": "layers/cave/logs-right-cave-predawn.png",
+      "cave-dawn": "layers/cave/logs-right-cave-dawn.png",
+      "cave-open": "layers/cave/logs-right-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "195f89b0e1fe816749fede470388dcab734d4972538a187d7132baf0bf1c9431",
+      "cave-embers": "957378ca084aab1e465a4a9791931dda8f6abd4c76e82fa04c577e2ab80271b9",
+      "cave-predawn": "a1bd05d308e2bab4e9f404405023425cca12e409699fb2a0096b1ed289fed830",
+      "cave-dawn": "93b1279689b839fe30e763b37c62ad988672a06754f3fe2a2a24d2d90c860bf5",
+      "cave-open": "d5dc840cd776bcce644363eecf49129615cfa4f139ca44c1289b87e9a5366a17"
+     },
+     "band": 7
+    },
+    {
+     "id": "logbundle",
+     "box": [
+      674,
+      470,
+      747,
+      499
+     ],
+     "ground": 497,
+     "area": 1243,
+     "source": [
+      "sam2:38,20",
+      "clip:ledger-box"
+     ],
+     "note": "the second wood pile right-front of the hearth",
+     "files": {
+      "cave-shut": "layers/cave/logbundle-cave-shut.png",
+      "cave-embers": "layers/cave/logbundle-cave-embers.png",
+      "cave-predawn": "layers/cave/logbundle-cave-predawn.png",
+      "cave-dawn": "layers/cave/logbundle-cave-dawn.png",
+      "cave-open": "layers/cave/logbundle-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "ec7a92ee71de6d493f09aeba4cf2900b8da6061e50c1f09ba65d99d27858dfdf",
+      "cave-embers": "33e045ff0023e301e8093364e2dfa565cf564b47b99c76d0398472da2899ad1d",
+      "cave-predawn": "50a2a2e417448ba0f9173b718c860cc86310ee3522624ee8ee56dc51c260668b",
+      "cave-dawn": "9a82f931db21c51d81059cbc58b8fc2b20fd8f7494c33b8c60c58af49dd1ab36",
+      "cave-open": "0af9627545382a435f2dc54f37d4815652d8fce2df498e21ba2bf6814c80bdb0"
+     },
+     "band": 8
+    },
+    {
+     "id": "firering-front",
+     "box": [
+      531,
+      457,
+      735,
+      507
+     ],
+     "ground": 505,
+     "area": 6992,
+     "source": [
+      "sam2:8,38",
+      "clip:ledger-box",
+      "front-lip>=y458"
+     ],
+     "note": "the fire ring's FRONT LIP \u2014 the pews-front law's origin case",
+     "files": {
+      "cave-shut": "layers/cave/firering-front-cave-shut.png",
+      "cave-embers": "layers/cave/firering-front-cave-embers.png",
+      "cave-predawn": "layers/cave/firering-front-cave-predawn.png",
+      "cave-dawn": "layers/cave/firering-front-cave-dawn.png",
+      "cave-open": "layers/cave/firering-front-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "1263fd5dd5d5417f9e7c95163ebc6883acac3cf66500fccef8e0565aa9af1ad5",
+      "cave-embers": "7cf16eb2ec56bee3cc08c9d0f223f6dea8280e9baecf70ced723469caff5f489",
+      "cave-predawn": "cbfba4f3b802bf26610fb66255c6d06d28ee8166b550502456ace5274890e467",
+      "cave-dawn": "147ab027266c33d539f57d49467df4f0a79de4616504f3ed6a4c5e962a583f2a",
+      "cave-open": "38fc96a66201bd28a16ed0a8c4441847d6f5cca48865508a85143a40606e54f3"
+     },
+     "band": 9
+    },
+    {
+     "id": "milk-tub",
+     "box": [
+      865,
+      474,
+      917,
+      520
+     ],
+     "ground": 517,
+     "area": 735,
+     "source": [
+      "plate-matte"
+     ],
+     "note": "the milking tub",
+     "files": {
+      "cave-shut": "layers/cave/milk-tub-cave-shut.png",
+      "cave-embers": "layers/cave/milk-tub-cave-embers.png",
+      "cave-predawn": "layers/cave/milk-tub-cave-predawn.png",
+      "cave-dawn": "layers/cave/milk-tub-cave-dawn.png",
+      "cave-open": "layers/cave/milk-tub-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "82119541f8234dae2b5889f03945ea6aa5e75c912afeead1b958e427326c6db1",
+      "cave-embers": "4fb181b2908bdfcba9de0f02f8d70ed2310fa677e2b221a17b16ac1c5e6d8ee6",
+      "cave-predawn": "cda621e8a3555139e83e5717386feaf2b82655dff80c610a30c132c21bed2d1f",
+      "cave-dawn": "ed0877bd9b60820402cf0ff3da9670590b3aa2d2f19ba1f504aae83746d43db5",
+      "cave-open": "39849b5dd06ac220e1168a6a32a01757894b2155f7b38ee62ddeaf58362b767a"
+     },
+     "band": 10
+    },
+    {
+     "id": "frontpen-rail",
+     "box": [
+      866,
+      469,
+      1020,
+      527
+     ],
+     "ground": 525,
+     "area": 3886,
+     "source": [
+      "sam2:9,76",
+      "clip:ledger-box",
+      "front-lip>=y470"
+     ],
+     "note": "the front pen's downstage rails \u2014 the ewes stand behind them",
+     "files": {
+      "cave-shut": "layers/cave/frontpen-rail-cave-shut.png",
+      "cave-embers": "layers/cave/frontpen-rail-cave-embers.png",
+      "cave-predawn": "layers/cave/frontpen-rail-cave-predawn.png",
+      "cave-dawn": "layers/cave/frontpen-rail-cave-dawn.png",
+      "cave-open": "layers/cave/frontpen-rail-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "b65312a6e39fedca3927e6afad66937623adb6948906f7758a63705840420620",
+      "cave-embers": "1da8021e922325fb3d438dd416e712d90081260851288c8c55423977d0b4119a",
+      "cave-predawn": "d0177232694d8ee431a46581d8a41b6ae3e218f76a89424d87fbd1f18ffdb740",
+      "cave-dawn": "ae940670a6292e9e88b3b93765576b34067f2a52c98ad97adb2ebdcca367a8b1",
+      "cave-open": "daa5ec3e7fe82f593d50d22aae0c993bfb8f2e2981544c88cbdccddf7f981755"
+     },
+     "band": 11
+    },
+    {
+     "id": "clay-bowl",
+     "box": [
+      808,
+      506,
+      862,
+      537
+     ],
+     "ground": 535,
+     "area": 843,
+     "source": [
+      "plate-matte"
+     ],
+     "note": "the clay bowl",
+     "files": {
+      "cave-shut": "layers/cave/clay-bowl-cave-shut.png",
+      "cave-embers": "layers/cave/clay-bowl-cave-embers.png",
+      "cave-predawn": "layers/cave/clay-bowl-cave-predawn.png",
+      "cave-dawn": "layers/cave/clay-bowl-cave-dawn.png",
+      "cave-open": "layers/cave/clay-bowl-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "d262d0a8fc6eced2e0d09abbb0051012ce5f2604cdcf599cf5c27aa93b0522ef",
+      "cave-embers": "46e3ae885d3423e1346364c75ac1baebfb1f8ff0a6fefb6b6589216efec1ad8b",
+      "cave-predawn": "2b321c59dc48e7ef17b2f8a0343e5feeb8b57cdf748b93c6754831746352e7b5",
+      "cave-dawn": "58de81b971c119358863178af3a796bbdaaa65f4ec11107249cb010e42045ec3",
+      "cave-open": "3b1992b0a1e6e38b250338499abfcc44bce88af2540b1cc6cba921beb30941f4"
+     },
+     "band": 12
+    },
+    {
+     "id": "woodpile",
+     "box": [
+      522,
+      498,
+      622,
+      557
+     ],
+     "ground": 555,
+     "area": 2297,
+     "source": [
+      "plate-matte"
+     ],
+     "note": "the firewood pile (SAM 2 never segmented it; the ledger box saved us)",
+     "files": {
+      "cave-shut": "layers/cave/woodpile-cave-shut.png",
+      "cave-embers": "layers/cave/woodpile-cave-embers.png",
+      "cave-predawn": "layers/cave/woodpile-cave-predawn.png",
+      "cave-dawn": "layers/cave/woodpile-cave-dawn.png",
+      "cave-open": "layers/cave/woodpile-cave-open.png"
+     },
+     "sha256": {
+      "cave-shut": "c8bb3a7f45457392b5f07f56dbcdced304dc3bf7fa4c528c9dd3eeeed93e4713",
+      "cave-embers": "55363cd3ca8c8bbf8a4f5b45bbd72df1aeebb6e7e745fde41b530f7055bd81eb",
+      "cave-predawn": "ff018a3bfb4b238114835b859d6e340ce5dbe69b249ae411ea3294b82e70172d",
+      "cave-dawn": "9489247db6e96dbcd6c179873dc9a62653e05191ac6613bfa2ced9c33ad94db2",
+      "cave-open": "7d65a540921e9d8c9c073d0ec11e5a820e6fef90a1a942ebd0ac9882db226c0a"
+     },
+     "band": 13
+    }
+   ],
+   "patches": []
+  },
+  "shore": {
+   "plate": {
+    "shore": {
+     "file": "../assets/set/shore/shore.jpg",
+     "sha256": "fed5307a4f9796c46a972a4bca334b170b2c16cd84e6ccc800a3e0ff92ac74d3"
+    },
+    "shore-day": {
+     "file": "../assets/set/shore/shore-day.jpg",
+     "sha256": "df09ab809f3391d8f58dba0156017add850ca1e94145972cd15e9fb453994caf"
+    }
+   },
+   "layers": [
+    {
+     "id": "mainland-mouth",
+     "box": [
+      982,
+      179,
+      1056,
+      263
+     ],
+     "ground": 261,
+     "area": 4091,
+     "source": [
+      "sam2:10,32",
+      "clip:ledger-box"
+     ],
+     "note": "the laurel-flanked cave mouth on the far lobe",
+     "files": {
+      "shore": "layers/shore/mainland-mouth-shore.png",
+      "shore-day": "layers/shore/mainland-mouth-shore-day.png"
+     },
+     "sha256": {
+      "shore": "0a666952bc0deca9fa496b5ff816e60bfb88f77499377151753b04c6c4105feb",
+      "shore-day": "072e3146ea9cd78b90a197561387034303e3042d7b94546c290fa17ddf416b37"
+     },
+     "band": 0
+    },
+    {
+     "id": "yard-wall",
+     "box": [
+      939,
+      286,
+      1170,
+      377
+     ],
+     "ground": 374,
+     "area": 7209,
+     "source": [
+      "sam2:25,27,26",
+      "clip:ledger-box"
+     ],
+     "note": "the mainland yard wall and pens",
+     "files": {
+      "shore": "layers/shore/yard-wall-shore.png",
+      "shore-day": "layers/shore/yard-wall-shore-day.png"
+     },
+     "sha256": {
+      "shore": "10637202452ea1dd3bf506af4dc9e83e230bd5683d1c2a237fbffa621b03aadb",
+      "shore-day": "ffd25c9e53221030681e0fd49abda091b1e63e0e456caf9294384ee78ae4b35b"
+     },
+     "band": 1
+    },
+    {
+     "id": "ship1-hull",
+     "box": [
+      429,
+      342,
+      596,
+      435
+     ],
+     "ground": 433,
+     "area": 6350,
+     "source": [
+      "sam2:22,50,52",
+      "clip:ledger-box"
+     ],
+     "note": "ship-1's painted hull and mast foot",
+     "files": {
+      "shore": "layers/shore/ship1-hull-shore.png",
+      "shore-day": "layers/shore/ship1-hull-shore-day.png"
+     },
+     "sha256": {
+      "shore": "16d34455607f308a4ca7b1911b40701fcfe6675444b5b98234239ba094575810",
+      "shore-day": "bc20156c5b528bbfc07f135cd55d66e993a018dca29ceed61d25d75a71fbd2b7"
+     },
+     "band": 2
+    },
+    {
+     "id": "ship2-hull",
+     "box": [
+      500,
+      405,
+      690,
+      495
+     ],
+     "ground": 493,
+     "area": 7696,
+     "source": [
+      "sam2:23",
+      "clip:ledger-box"
+     ],
+     "note": "ship-2's NEAR HULL \u2014 the beached twenty-oarer the council stands behind",
+     "files": {
+      "shore": "layers/shore/ship2-hull-shore.png",
+      "shore-day": "layers/shore/ship2-hull-shore-day.png"
+     },
+     "sha256": {
+      "shore": "b2dca1bd8294d1149cd6cba384cf47c48c7098c566254b9e194bc4d85f3a953b",
+      "shore-day": "b61d0287c96921847ae09740273012e5a69ab4659d0fd373b7f94737f183c967"
+     },
+     "band": 3
+    },
+    {
+     "id": "campfire-front",
+     "box": [
+      402,
+      465,
+      469,
+      503
+     ],
+     "ground": 501,
+     "area": 1014,
+     "source": [
+      "sam2:18,19,11",
+      "clip:ledger-box",
+      "front-lip>=y466"
+     ],
+     "note": "the camp ring's front stones",
+     "files": {
+      "shore": "layers/shore/campfire-front-shore.png",
+      "shore-day": "layers/shore/campfire-front-shore-day.png"
+     },
+     "sha256": {
+      "shore": "2450ca3cfec2dfa750bc6b3010a19308cc6f8ee1d99ea9906c5753c0b0ebb1c3",
+      "shore-day": "54bd608e6d7a56fedb3afb73ddbbfdad097ba3633c6f55a9dfe1796b3793be4f"
+     },
+     "band": 4
+    },
+    {
+     "id": "ship1-oars",
+     "box": [
+      573,
+      492,
+      627,
+      514
+     ],
+     "ground": 512,
+     "area": 859,
+     "source": [
+      "plate-matte"
+     ],
+     "note": "ship-1's oar blades where they meet the sand",
+     "files": {
+      "shore": "layers/shore/ship1-oars-shore.png",
+      "shore-day": "layers/shore/ship1-oars-shore-day.png"
+     },
+     "sha256": {
+      "shore": "48c89fbf7424c847ba7cc09122c57de0f46e23e163d44788b5417ee76efa4746",
+      "shore-day": "237945b5b5e5645fe2ec6c006ead9864442204fc03f1fc353c2079bc896aba31"
+     },
+     "band": 5
+    },
+    {
+     "id": "crag-left",
+     "box": [
+      150,
+      209,
+      344,
+      515
+     ],
+     "ground": 513,
+     "area": 30866,
+     "source": [
+      "sam2:36,9,4,1,6,8,17",
+      "clip:ledger-box"
+     ],
+     "note": "the west crag \u2014 the plate's near-left edge",
+     "files": {
+      "shore": "layers/shore/crag-left-shore.png",
+      "shore-day": "layers/shore/crag-left-shore-day.png"
+     },
+     "sha256": {
+      "shore": "37a099a04814e8cd5742fe5a061249c00d65eaa293f52228467c3f7eeec50a90",
+      "shore-day": "6272f4787257fc21a6a3432adfdc9df07d0678e57995a6d742c7fde0ef8e106a"
+     },
+     "band": 6
+    },
+    {
+     "id": "foredune",
+     "box": [
+      350,
+      513,
+      529,
+      592
+     ],
+     "ground": 590,
+     "area": 7859,
+     "source": [
+      "sam2:12,24,35,42,34,30",
+      "clip:ledger-box"
+     ],
+     "note": "the downstage sand ridge \u2014 the frontmost band on the beach",
+     "files": {
+      "shore": "layers/shore/foredune-shore.png",
+      "shore-day": "layers/shore/foredune-shore-day.png"
+     },
+     "sha256": {
+      "shore": "35ba229e90263d55c6129f93ab88f30ee2c6eab25f8e0013a7666fd4658a7f10",
+      "shore-day": "b1b50226cc3dfe262690b80356f0b4b512a9d6cfa3b14e193c8388d41bb2a4b1"
+     },
+     "band": 7
+    }
+   ],
+   "patches": []
+  },
+  "sea": {
+   "plate": {
+    "sea": {
+     "file": "../assets/set/sea/sea.jpg",
+     "sha256": "6c38bc900fd5a3a939443cdba3b0c7deb616e45ef39b09ef9fe9515d5636e0f4"
+    }
+   },
+   "layers": [
+    {
+     "id": "clifftop-boulders",
+     "box": [
+      849,
+      29,
+      1093,
+      172
+     ],
+     "ground": 170,
+     "area": 15167,
+     "source": [
+      "sam2:2,3,4,5,6,9,14,21,22,24",
+      "clip:ledger-box"
+     ],
+     "note": "the ammunition on the brow",
+     "files": {
+      "sea": "layers/sea/clifftop-boulders-sea.png"
+     },
+     "sha256": {
+      "sea": "1b113d2b177fd3c55d0a1dd8c08f63d38d91e378ffdf86dfd4bd9cc4aebc5e9a"
+     },
+     "band": 0
+    },
+    {
+     "id": "cliff-nose",
+     "box": [
+      658,
+      191,
+      781,
+      388
+     ],
+     "ground": 386,
+     "area": 9629,
+     "source": [
+      "sam2:8,13,15,18,27",
+      "clip:ledger-box"
+     ],
+     "note": "the headland's NEAR NOSE \u2014 the leftmost cliff edge the ship rows past",
+     "files": {
+      "sea": "layers/sea/cliff-nose-sea.png"
+     },
+     "sha256": {
+      "sea": "25b49782bffbeba6a2ce8a9bc81b8a128e0e06ef932af57ae1b27d427ec528ff"
+     },
+     "band": 1
+    },
+    {
+     "id": "crag-shelf",
+     "box": [
+      790,
+      297,
+      967,
+      467
+     ],
+     "ground": 465,
+     "area": 4782,
+     "source": [
+      "sam2:12,19,26,11,28",
+      "clip:ledger-box"
+     ],
+     "note": "the lit crag shelves over the cave mouth",
+     "files": {
+      "sea": "layers/sea/crag-shelf-sea.png"
+     },
+     "sha256": {
+      "sea": "48bafa3434d328dfd42fed4cbdbb68e1b4ce1d8f3e15f4abab3b4e916c9df0cf"
+     },
+     "band": 2
+    },
+    {
+     "id": "cavemouth",
+     "box": [
+      793,
+      482,
+      844,
+      530
+     ],
+     "ground": 528,
+     "area": 1676,
+     "source": [
+      "sam2:10",
+      "clip:ledger-box"
+     ],
+     "note": "the lit cave mouth at the cliff foot",
+     "files": {
+      "sea": "layers/sea/cavemouth-sea.png"
+     },
+     "sha256": {
+      "sea": "db82262416d434cb86737b648c5803400250dece3ef65f3926de088ca930bf6f"
+     },
+     "band": 3
+    },
+    {
+     "id": "cliff-mass",
+     "box": [
+      703,
+      149,
+      1130,
+      574
+     ],
+     "ground": 571,
+     "area": 66040,
+     "source": [
+      "plate-matte"
+     ],
+     "note": "the whole painted headland below the brow",
+     "files": {
+      "sea": "layers/sea/cliff-mass-sea.png"
+     },
+     "sha256": {
+      "sea": "e1c1e77548eb8cae28c06cc8009b4d512a1291e0033ff8daa5d6e460bbffbbd9"
+     },
+     "band": 4
+    },
+    {
+     "id": "fore-wave",
+     "box": [
+      569,
+      653,
+      629,
+      700
+     ],
+     "ground": 697,
+     "area": 1385,
+     "source": [
+      "sam2:25",
+      "clip:ledger-box"
+     ],
+     "note": "the downstage swell crest \u2014 the frontmost band on the water",
+     "files": {
+      "sea": "layers/sea/fore-wave-sea.png"
+     },
+     "sha256": {
+      "sea": "c9187b408bc79344f85ed648ed658704a929639c85e81674048a0488b266d978"
+     },
+     "band": 5
+    }
+   ],
+   "patches": [
+    {
+     "id": "ship-hole",
+     "box": [
+      470,
+      430,
+      700,
+      540
+     ],
+     "ground": 540,
+     "note": "the painted ship's water bed \u2014 faded in under the sail-off mover so the departing 3D hull leaves no painted ghost",
+     "file": "layers/sea/ship-hole.png",
+     "sha256": "4b73455ae599c52910ddbc6d3dbe1584b5d149d21adbf2f3af2cba14307682ee"
+    }
+   ]
+  }
+ }
+}

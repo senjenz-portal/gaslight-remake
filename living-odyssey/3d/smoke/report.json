@@ -1,6 +1,6 @@
 {
-  "when": "2026-08-21T15:53:20.147Z",
-  "origin": "http://127.0.0.1:54788",
+  "when": "2026-08-21T16:32:44.662Z",
+  "origin": "http://127.0.0.1:56794",
   "until": null,
   "reached": "end-card",
   "reachedIdx": 80,
@@ -21,15 +21,15 @@
     "boulderAtDawn": 0,
     "freedCrew": 3,
     "freedUlysses": 1,
-    "rock1": 153.95,
+    "rock1": 153.6,
     "shipDxAtSail": -23.53,
     "rocks": [
-      153.95,
-      163.9
+      153.6,
+      163.55
     ],
     "seaHits": [
-      155.65,
-      165.6
+      155.3,
+      165.25
     ],
     "shipDx": -28.85,
     "hesit": 0.35
@@ -50,8 +50,8 @@
       "held": false,
       "turning": false,
       "at": {
-        "x": 1264.4,
-        "y": 294.1
+        "x": 1693.8,
+        "y": 42
       }
     },
     "sword": {
@@ -63,8 +63,8 @@
       "held": false,
       "turning": false,
       "at": {
-        "x": 1035.4,
-        "y": 484.5
+        "x": 922.5,
+        "y": 650
       }
     },
     "lookhere": {
@@ -84,8 +84,8 @@
       "held": false,
       "turning": false,
       "at": {
-        "x": 1054.7,
-        "y": 451.9
+        "x": 999.6,
+        "y": 359.8
       }
     },
     "jeer": {
@@ -97,8 +97,8 @@
       "held": false,
       "turning": false,
       "at": {
-        "x": 1164.6,
-        "y": 316.6
+        "x": 1280.3,
+        "y": 325.4
       }
     },
     "defy": {
@@ -110,8 +110,8 @@
       "held": false,
       "turning": false,
       "at": {
-        "x": 1212.3,
-        "y": 199.6
+        "x": 1874.4,
+        "y": -124.6
       }
     },
     "myname": {
@@ -169,11 +169,11 @@
   "consoleErrors": [],
   "pageErrors": [],
   "consoleWarns": [
-    "[.WebGL-0x11c00514800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x1040052e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
     "THREE.WebGLShadowMap: PCFSoftShadowMap has been deprecated. Using PCFShadowMap instead.",
-    "[.WebGL-0x11c00514800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
-    "[.WebGL-0x11c00514800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
-    "[.WebGL-0x11c00514800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+    "[.WebGL-0x1040052e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x1040052e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[.WebGL-0x1040052e400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
   ],
   "requestsFailed": [],
   "voicePlays": 76,
@@ -1254,7 +1254,7 @@
       "ok": true,
       "playing": "troy",
       "before": 1,
-      "during": 0.5016,
+      "during": 0.5017,
       "after": 0.9779,
       "dB": -5.99
     },

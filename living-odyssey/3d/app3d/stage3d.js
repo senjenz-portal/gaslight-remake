@@ -26,6 +26,8 @@ import { createShoreScene, createShoreIsoCamera, SHORE_WORLD } from '../sets/sho
 import { createSeaScene, SEA_WORLD } from '../sets/sea3d.js';
 import { createCave3D, CAVE_WORLD, CAVE_STATES } from '../sets/cave3d.js';
 import { buildActor } from './cast3d.js';
+import { loadPlateSet, samplePlateLight, makeContactShadow, PLATE_W, PLATE_H }
+  from './plate3d.js';
 
 const WALK_MPS = 1.1;                 /* cast.json processionSpeedMps */
 const SCURRY_MPS = 1.9;               /* the scatter-to-the-dark pace */
@@ -150,6 +152,21 @@ class Walk {
 }
 
 export class Stage3D {
+  /* THE REGRADE LAW ON 3D LIGHTING, in two halves.
+     (1) the RIG is fixed and white — one key, one hemisphere fill, one rim, the
+         same on every set and at every mark, so a rig's rendered mean under it
+         is a CONSTANT and can be measured once;
+     (2) BODY_REF is that measured constant (the rendered mean of a body under
+         this rig, sRGB, from tools/sam2path_smoke.mjs's own body statistic),
+     so the per-actor grade is target/ref in LINEAR — exactly regrade.py's
+     "grade the cut to the plate ring at its mark", applied to an albedo
+     instead of to a painted cut. Re-measure with --calibrate. */
+  static PLATE_RIG = { key: 1.35, fill: 0.62, rim: 0.30 };
+  static BODY_REF = {
+    cave: [77, 34, 33], shore: [64, 28, 30], sea: [73, 40, 46],
+  };
+  static GRADE_CLAMP = [0.06, 14.0];   /* the fire-lit marks need 9x green */
+
   /** sea lenses anchored to the hull, not the mooring (Beat VI's travel) */
   static SHIP_LENSES = new Set(['stern', 'ship-deck', 'menbeg-close',
     'stern-rail', 'hades-twoshot', 'strait', 'homeward', 'moonpath']);
@@ -265,6 +282,16 @@ export class Stage3D {
       }
       rec.scene = new THREE.Scene();
       rec.scene.add(rec.api.root);
+      /* ---- THE SAM2 PATH: the plate becomes the world ---------------- *
+       * The diorama's scenery retires; the painting takes its place as the
+       * backdrop, its SAM2-cut foreground layers stand at their own ground
+       * rows, and only the things that MOVE stay in three dimensions. */
+      await this._plateTables();
+      rec.plate = await loadPlateSet(name, rec.world, this.plateReg, './');
+      rec.scene.add(rec.plate.group);
+      this._retireScenery(rec);
+      this._plateFrame(rec);
+      this._plateRig(rec);
       /* the corridor itself is re-audited at build — the law, not a hope */
       if (rec.corridor.length) { auditRoute(rec.corridor, rec.obstacles, name + ':corridor', this.errors); this.audits++; }
       rec.built = true;
@@ -296,10 +323,256 @@ export class Stage3D {
         a.fade = null;                  /* { t0, dur, from, to } */
         a.opacity = 1;
         a.poseEuler = null;
+        /* THE RIG'S OWN ALBEDO. BODY_REF is one rig's rendered mean under the
+           fixed white plate rig; every OTHER rig has a different albedo, so
+           grading them all by the same reference paints the giant green (owner
+           eye, round 3). Measure each rig's effective albedo — material colour
+           times the mean of its map — and normalise the grade by the ratio. */
+        a.albedo = this._rigAlbedo(a);
         this.actors[id] = a;
+        /* THE CONTACT SHADOW: the plate is a painted render with its own
+           shadows — ours only has to seat the body on the floor, so it is a
+           soft blob decal scaled off the rig's own stature, never a map. */
+        const stature = a.heightM || a.lengthM || 1.7;
+        a.shadow = makeContactShadow(Math.max(0.22, 0.30 * stature));
+        a.group.add(a.shadow);
         this.actorLayer.add(a.group);
       }
     }
+  }
+
+  /** effective albedo of a rig: mean over materials of colour x mean(map) */
+  _rigAlbedo(a) {
+    const lin = (v) => (v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+    const texMean = (t) => {
+      if (!t || !t.image || !t.image.width) return [1, 1, 1];
+      if (t.userData.__mean) return t.userData.__mean;
+      const c = document.createElement('canvas');
+      c.width = c.height = 8;
+      const g = c.getContext('2d', { willReadFrequently: true });
+      try { g.drawImage(t.image, 0, 0, 8, 8); } catch (e) { return [1, 1, 1]; }
+      const d = g.getImageData(0, 0, 8, 8).data;
+      let r = 0, gg = 0, b = 0;
+      for (let i = 0; i < d.length; i += 4) { r += d[i]; gg += d[i + 1]; b += d[i + 2]; }
+      const n = d.length / 4;
+      t.userData.__mean = [lin(r / n / 255), lin(gg / n / 255), lin(b / n / 255)];
+      return t.userData.__mean;
+    };
+    const acc = [0, 0, 0];
+    let n = 0;
+    for (const m of a.mats || []) {
+      if (!m.color) continue;
+      const t = texMean(m.map);
+      acc[0] += m.color.r * t[0];
+      acc[1] += m.color.g * t[1];
+      acc[2] += m.color.b * t[2];
+      n++;
+    }
+    if (!n) return [1, 1, 1];
+    return acc.map((v) => Math.max(1e-4, v / n));
+  }
+
+  /* ================= THE SAM2 PATH: plate, frame, light ================= */
+
+  /** the three baked tables: the cut registry, the ledger lenses, the light */
+  async _plateTables() {
+    if (this.__tables) return this.__tables;
+    this.__tables = (async () => {
+      const grab = async (u) => {
+        const r = await fetch(u, { cache: 'force-cache' });
+        if (!r.ok) throw new Error('plate table ' + u + ' -> ' + r.status);
+        return r.json();
+      };
+      const [reg, lenses, light] = await Promise.all([
+        grab('./layers.json'), grab('./lenses.json'), grab('./platelight.json')]);
+      this.plateReg = reg;
+      this.lensTable = lenses;
+      this.lightTable = light;
+      return true;
+    })();
+    return this.__tables;
+  }
+
+  /**
+   * THE PLATE IS THE WORLD. Everything the painting already draws stops being
+   * geometry: meshes and sprites retire, LIGHTS and POINT SYSTEMS stay (the
+   * fire, the embers, the spray are the plate's own life, animated), and so do
+   * the few props the story physically MOVES — a ship that sails, the rocks
+   * that fall. Nothing is deleted: the rigs, the parts registry and every act
+   * that drives them are untouched, so the story's 81 units run unchanged.
+   */
+  _retireScenery(rec) {
+    const keepAll = new Set();      /* props the story physically moves */
+    const keepPts = new Set();      /* the plate's own life, animated */
+    const tree = (set, o) => { if (o) o.traverse((c) => set.add(c)); };
+    if (rec.name === 'cave') tree(keepPts, rec.api.parts['fire-pit']);
+    if (rec.name === 'shore') tree(keepPts, rec.api.parts['blaze']);
+    if (rec.name === 'sea') {
+      tree(keepAll, rec.api.SHIP && rec.api.SHIP.group);
+      tree(keepAll, rec.api.parts['thrown-rocks']);
+      tree(keepPts, rec.api.parts['splash-pool']);
+    }
+    let hidden = 0, kept = 0, points = 0;
+    rec.api.root.traverse((o) => {
+      const drawable = o.isMesh || o.isSprite || o.isLine || o.isInstancedMesh || o.isPoints;
+      if (!drawable) return;
+      if (keepAll.has(o)) { kept++; return; }
+      /* THE VEIL LESSON: the diorama's drifting haze reads as atmosphere over
+         a dim diorama and as a GREY WASH over a painting (measured: it lifted
+         the cave's blue from 27 to 63). Only the hearth's own flame survives —
+         Beat IV needs the blaze to visibly sink — and everything else that was
+         weather goes back to being paint. */
+      if (o.isPoints && keepPts.has(o)) { points++; kept++; return; }
+      o.visible = false;
+      o.userData.retiredByPlate = true;
+      hidden++;
+    });
+    rec.keptRoots = [...keepAll].filter((o) => o.parent === rec.api.root ||
+      (o.parent && o.parent.parent === rec.api.root));
+    rec.livePoints = [];
+    rec.api.root.traverse((o) => { if (o.isPoints && o.visible) rec.livePoints.push(o); });
+    rec.retired = { hidden, kept, points };
+    return rec.retired;
+  }
+
+  /** the gate hides the kept 3D props (the hull, the falling rocks) so the
+      regrade ring measures a body against PAINT, not against another solid */
+  setKeptProps(on) {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.keptRoots) return 0;
+    for (const o of rec.keptRoots) o.visible = !!on;
+    return rec.keptRoots.length;
+  }
+
+  /** the gate silences the live particles so it measures the sandwich alone */
+  setLivePoints(on) {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.livePoints) return 0;
+    for (const p of rec.livePoints) p.visible = !!on;
+    return rec.livePoints.length;
+  }
+
+  /**
+   * THE BOOK'S FIXED FRAMING. The ledger's lensLaw says a lens is a centre in
+   * plate px at a zoom k, and the visible box is 1408/k x 768/k px. Under the
+   * set's own orthographic plan a ground point at plate (px,py) lands at screen
+   * ((px-CX)/S, -(py-CY)/S) — one uniform scale S — so that law becomes exactly
+   * halfWidth = (704/S)/k about the target toWorld(px,py). No free camera: the
+   * elevation is the set's own and never moves.
+   */
+  _plateFrame(rec) {
+    const w = rec.world;
+    rec.camBase = {
+      target: rec.toWorld(PLATE_W / 2, PLATE_H / 2, 0),
+      R: rec.camBase.R, elev: w.ELEV, halfW: (PLATE_W / 2) / w.S,
+    };
+    const table = (this.lensTable.sets[rec.name] || {}).lenses || {};
+    rec.lenses = {};
+    for (const [name, L] of Object.entries(table)) {
+      rec.lenses[name] = { at: L.at, k: L.k,
+                           v: rec.toWorld(L.at[0], L.at[1], 0) };
+    }
+    rec.toPlate = (v) => [v.x * w.S + (PLATE_W / 2 - w.X(PLATE_W / 2) * w.S),
+                          v.z * w.S * w.SIN_E + (PLATE_H / 2 - w.Z(PLATE_H / 2) * w.S * w.SIN_E)];
+    return rec.lenses;
+  }
+
+  /**
+   * THE REGRADE LAW ON 3D LIGHTING. One key + one fill per set, both driven by
+   * the plate's own ring colour where the focused body stands (platelight.json,
+   * regrade.py's annulus statistic). The painting lights the actor.
+   */
+  _plateRig(rec) {
+    const R = Stage3D.PLATE_RIG;
+    const key = new THREE.DirectionalLight('#ffffff', R.key);
+    key.position.set(-6, 9, 7);            /* the painter's own up-left-front */
+    key.target.position.set(0, 0, 0);
+    const fill = new THREE.HemisphereLight('#ffffff', '#5a5a66', R.fill);
+    const rim = new THREE.DirectionalLight('#ffffff', R.rim);
+    rim.position.set(7, 5, -6);
+    key.name = 'plate-key'; fill.name = 'plate-fill'; rim.name = 'plate-rim';
+    rec.scene.add(key, key.target, fill, rim);
+    rec.rig = { key, fill, rim };
+    /* THE PAINTED LIGHT IS ALREADY IN THE PLATE. Every diorama lamp, blaze and
+       moon is paint now, so its three.js twin must stop shining or it lights
+       the cast twice. The rigs stay (the acts drive them, and the fire's
+       flicker is read back as a SIGNAL for the key), they simply stop
+       contributing radiance. */
+    rec.dioramaLights = [];
+    rec.api.root.traverse((o) => { if (o.isLight) rec.dioramaLights.push(o); });
+    rec.fireBase = rec.api.fireLight ? (rec.api.fireLight.intensity || 330) : 0;
+    return rec.rig;
+  }
+
+  /** the actor grade: the plate ring where a body stands, over its measured ref */
+  _gradeActor(rec, a) {
+    if (!a.group.visible || a.mode === 'off') return;
+    const w = rec.world;
+    const p = a.group.getWorldPosition(this.__gv || (this.__gv = new THREE.Vector3()));
+    const px = p.x * w.S + PLATE_W / 2 - w.X(PLATE_W / 2) * w.S;
+    const py = p.z * w.S * w.SIN_E + PLATE_H / 2 - w.Z(PLATE_H / 2) * w.S * w.SIN_E;
+    const s = samplePlateLight(this.lightTable, rec.name, this.plateState(rec), px, py);
+    const ref = Stage3D.BODY_REF[rec.name] || Stage3D.BODY_REF.cave;
+    const lin = (v) => { const c = v / 255; return c <= 0.04045 ? c / 12.92
+      : Math.pow((c + 0.055) / 1.055, 2.4); };
+    const [lo, hi] = Stage3D.GRADE_CLAMP;
+    /* BODY_REF is the REFERENCE RIG's rendered mean; another rig with another
+       albedo needs the ratio of the two albedos, or its own colour rides the
+       reference's correction (the green giant) */
+    const refA = this.__refAlbedo || (this.__refAlbedo =
+      (this.actors.ulysses && this.actors.ulysses.albedo) || [1, 1, 1]);
+    const own = a.albedo || refA;
+    const g = [0, 1, 2].map((i) => Math.min(hi, Math.max(lo,
+      lin(Math.max(2, s.rgb[i])) / Math.max(1e-4, lin(ref[i])) * (refA[i] / own[i]))));
+    /* the fire's own flicker survives as a warm breath on the key side */
+    const fk = 1 + 0.10 * (this.__fireK || 0) + 0.55 * this.flareK;
+    if (!a.mats) return;
+    for (const m of a.mats) {
+      if (!m.color) continue;
+      if (!m.userData.plateBase) m.userData.plateBase = m.color.clone();
+      const b = m.userData.plateBase;
+      m.color.setRGB(b.r * g[0] * fk, b.g * g[1] * fk, b.b * g[2] * fk);
+    }
+    a.grade = g.map((v) => +v.toFixed(3));
+  }
+
+  /** the plate state a set is currently painted in */
+  plateState(rec) {
+    return rec.plate ? rec.plate.stateB : null;
+  }
+
+  /**
+   * One pass a frame: retire the painted light, then grade every body on the
+   * leaf to the plate ring it stands in. The rig stays fixed and white — all
+   * the matching happens in the albedo, where the regrade law puts it.
+   */
+  _plateLightStep() {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.rig || !this.lightTable) return;
+    /* (1) read the fire's flicker as a SIGNAL, then take the painted lamps out */
+    if (rec.dioramaLights) {
+      const fl = rec.api.fireLight;
+      this.__fireK = fl && rec.fireBase ? fl.intensity / rec.fireBase : 0;
+      for (const L of rec.dioramaLights) L.intensity = 0;
+    }
+    const R = Stage3D.PLATE_RIG;
+    rec.rig.key.intensity = R.key;
+    rec.rig.fill.intensity = R.fill;
+    rec.rig.rim.intensity = R.rim;
+    /* (2) grade each body to the ring it stands in */
+    if (!this.gradeBypass) {
+      for (const a of Object.values(this.actors)) this._gradeActor(rec, a);
+    }
+    const w = rec.world;
+    const c = this.camState || rec.camBase.target;
+    const px = c.x * w.S + PLATE_W / 2 - w.X(PLATE_W / 2) * w.S;
+    const py = c.z * w.S * w.SIN_E + PLATE_H / 2 - w.Z(PLATE_H / 2) * w.S * w.SIN_E;
+    const s = samplePlateLight(this.lightTable, rec.name, this.plateState(rec), px, py);
+    const u = this.actors.ulysses;
+    this.lightSample = { px: Math.round(px), py: Math.round(py),
+                         rgb: s.rgb.map((v) => Math.round(v)), lum: +s.lum.toFixed(1),
+                         fireK: +(this.__fireK || 0).toFixed(3),
+                         grade: u && u.grade ? u.grade : null };
   }
 
   mount(name) {
@@ -350,11 +623,13 @@ export class Stage3D {
       const ship2 = shore.api.parts['ship-2'];
       ship2.position.copy(shore.ship2Home.pos);
       ship2.rotation.y = shore.ship2Home.rotY;
+      if (shore.plate) shore.plate.setState('shore', 1);
     }
     const cave = this.sets.cave;
     if (cave && cave.built) {
       cave.api.setState('cave-shut', 1);
       cave.api.setBoulderK(1);
+      if (cave.plate) cave.plate.setState('cave-shut', 1);
     }
     const sea = this.sets.sea;
     if (sea && sea.built) {
@@ -363,6 +638,7 @@ export class Stage3D {
       sea.api.parts['night-rig'].intensity = sea.hemiBase;
       sea.api.moonLight.intensity = sea.moonBase;
       for (const r of sea.api.ROCKS) { r.period = 1e9; r.offset = -5e8; }
+      if (sea.plate) { sea.plate.setState('sea', 1); sea.plate.setPatch('ship-hole', 0); }
     }
     this._hideProps();
   }
@@ -641,16 +917,23 @@ export class Stage3D {
       if (silent) {
         rec.api.setState(name, 1);
         rec.api.setBoulderK(bTo);
+        if (rec.plate) rec.plate.setState(name, 1);
         S._boulderK = bTo;
         return;
       }
       const cur = { ...rec.api.state.cur };
+      /* THE STATE IS A DISSOLVE BETWEEN TWO PAINTINGS. The plate carries the
+         boulder shut in three states and open at dawn, so the door opening is
+         the crossfade itself — no ghost, no inpainting, the painter's own
+         pixels on both sides of it. */
+      if (rec.plate) rec.plate.setState(name, 0);
       S._mover('cave-state', 1.8, (k) => {
         const e = easeInOut(k);
         for (const key of Object.keys(want)) {
           if (key === 'boulder') continue;
           rec.api.state.cur[key] = cur[key] + (want[key] - cur[key]) * e;
         }
+        if (rec.plate) rec.plate.setState(name, e);
         if (k >= 1) rec.api.state.name = name;
       });
       if (bTo !== bFrom) {
@@ -675,7 +958,13 @@ export class Stage3D {
         const u = S.actors.ulysses;
         S._stand(u, rec.toWorld(...shoreMarks.fire), Math.PI / 2.4);
       },
-      'shore-day': (rec) => { rec.api.setState('day'); },
+      'shore-day': (rec, silent) => {
+        rec.api.setState('day');
+        if (!rec.plate) return;
+        if (silent) { rec.plate.setState('shore-day', 1); return; }
+        rec.plate.setState('shore-day', 0);
+        S._mover('shore-plate', 1.4, (k) => rec.plate.setState('shore-day', easeInOut(k)));
+      },
       'council-ulysses': (rec, silent) => {
         const u = S.actors.ulysses;
         if (u.mode === 'off') S._stand(u, rec.toWorld(...shoreMarks.fire), 0);
@@ -1155,6 +1444,12 @@ export class Stage3D {
         const to = from.clone().add(new THREE.Vector3(-9.5, 0, -5.5));
         S._mover('sail-off', 12.0, (k) => {
           ship.position.lerpVectors(from, to, easeInOut(k));
+          /* THE HOLE-PATCH LAW. The 3D hull rides ON the painted hull until it
+             leaves; the plate's own pixels can't move with it, so a DERIVED
+             water bed (cut from the plate's own rows above and below, never
+             written back into it) fades in under the departing ship exactly as
+             fast as it departs. No inpainting, no ghost. */
+          if (rec.plate) rec.plate.setPatch('ship-hole', Math.min(1, easeInOut(k) * 3.2));
         }, { silent });
       },
 
@@ -1576,13 +1871,15 @@ export class Stage3D {
     /* the sling-under POV owns the camera while it lasts (G5's 2 s drop) */
     if (this.pov && this.t < this.pov.until) return;
     const rec = this.sets[this.activeName];
-    const table = this._focusTable()[this.activeName] || {};
-    const f = table[name] || table.establishing;
-    if (!f) return;
-    /* a focus may carry its own camera ELEVATION (degrees): the cave's eye
-       close-ups duck UNDER the dome's surviving crown lip — at the default
-       25° the overhang occludes the giant's head (measured, smoke round 1) */
-    const e = f.e !== undefined ? THREE.MathUtils.degToRad(f.e) : rec.camBase.elev;
+    /* THE BOOK'S OWN LENS TABLE (tools/ody/ledger.json -> 3d/lenses.json): a
+       centre in plate px and a zoom k, nothing else. The camera IS the plate's
+       framing — same elevation always, no free camera, and k means exactly
+       what the ledger's lensLaw says (visible box 1408/k x 768/k px). */
+    const L = (rec.lenses || {})[name] || (rec.lenses || {}).establishing;
+    if (!L) return;
+    const f = { x: L.v.x, y: 0, z: L.v.z, k: L.k };
+    const e = rec.camBase.elev;
+    this.lens = { name, at: L.at, k: L.k };
     this.camWant = { x: f.x, y: f.y, z: f.z, k: f.k, e };
     /* the ship lenses FOLLOW the escape: driven back, doubled, sailed off —
        each lens keeps its authored offset from the painted mooring */
@@ -1591,16 +1888,9 @@ export class Stage3D {
       this.camWant.x += ship.position.x - rec.shipHome.pos.x;
       this.camWant.z += ship.position.z - rec.shipHome.pos.z;
     }
-    /* ROOFLESS CLOSE-UPS: the cave's eye lenses frame the giant's head, and
-       the dome's surviving crown lip stands between it and every camera
-       elevation — the close-up takes the roof out of the frame it never
-       shows (the diorama's own cutaway law, one step further). */
-    if (this.activeName === 'cave' && rec.api.parts) {
-      const on = !f.roofless;
-      const o = rec.api.parts['cave-shell-outer'], i = rec.api.parts['cave-shell-inner'];
-      if (o) o.visible = on;
-      if (i) i.visible = on;
-    }
+    /* the roofless-close-up hack is retired with the shell: on the SAM2 path
+       the cave's roof is PAINT, and paint never stood between a lens and a
+       head — the plate frames what the plate frames. */
     if (snap) {
       Object.assign(this.camState, this.camWant);
       this.applyCam();
@@ -1788,6 +2078,9 @@ export class Stage3D {
       if (this.holdK > 0.02) this.props.wine.scale.setScalar(Math.min(1, filling));
     }
     this.applyCam();
+    /* the painting lights the cast — sampled after the camera settles, so the
+       key follows the lens the way the plate's own light does */
+    this._plateLightStep();
   }
 
   render() {
@@ -1827,6 +2120,159 @@ export class Stage3D {
       shipDx: this.sets.sea && this.sets.sea.built
         ? +(this.sets.sea.api.SHIP.group.position.x - this.sets.sea.shipHome.pos.x).toFixed(2)
         : null,
+      /* ---- the SAM2 path's own evidence ---- */
+      lens: this.lens || null,
+      plateState: rec && rec.plate ? rec.plate.stateB : null,
+      plateMix: rec && rec.plate ? +rec.plate.mixK.toFixed(3) : null,
+      bands: rec && rec.plate ? rec.plate.census().length : 0,
+      retired: rec ? rec.retired || null : null,
+      light: this.lightSample || null,
     };
+  }
+
+  /** the occluder census of the mounted set — the harness's occlusion gate */
+  plateCensus(name) {
+    const rec = this.sets[name || this.activeName];
+    return rec && rec.plate ? rec.plate.census() : [];
+  }
+
+  /** plate px of a world point on the mounted set (harness + gates) */
+  plateOf(v) {
+    const rec = this.sets[this.activeName];
+    return rec && rec.toPlate ? rec.toPlate(v) : null;
+  }
+
+  /* ---------------- the occlusion instrument (harness only) ---------------- *
+   * The sandwich has to be PROVEN, not asserted: the gate walks a body from
+   * upstage of a cut to downstage of it and reads the pixels. These three
+   * hooks are the only things it needs — nothing here is used by the story. */
+
+  /** every occluder card on/off (the gate's control render) */
+  setOccluders(on) {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.plate) return 0;
+    let n = 0;
+    for (const id of Object.keys(rec.plate.layers)) {
+      const L = rec.plate.layers[id];
+      if (on) {
+        L.mesh.visible = L.mat.uniforms.uOpacity.value > 0.004;
+      } else if (L.mesh.visible) { L.mesh.visible = false; n++; }
+    }
+    return on ? Object.keys(rec.plate.layers).length : n;
+  }
+
+  /** show ONE cut card alone — cards legitimately hide each other (the milk tub
+      stands behind the pen rail), so each layer's contract is gated in isolation */
+  setOnlyLayer(id) {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.plate) return false;
+    for (const k of Object.keys(rec.plate.layers)) {
+      const L = rec.plate.layers[k];
+      L.mesh.visible = (k === id) && L.mat.uniforms.uOpacity.value > 0.004;
+    }
+    return true;
+  }
+
+  /** FLAG one cut card (gain 0 = black): its opaque pixels become measurable */
+  setLayerGain(id, gain) {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.plate) return false;
+    const L = rec.plate.layers[id];
+    if (!L) return false;
+    L.mat.uniforms.uGain.value = gain;
+    return true;
+  }
+
+  /** paint one cut card a flat known colour (alpha kept) — the alpha probe.
+      A dark cut over dark paint cannot be read from a GAIN (0 x anything is
+      still 0): it takes a colour the card does not own. */
+  setLayerFlat(id, k, r, g, b) {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.plate) return false;
+    const L = rec.plate.layers[id];
+    if (!L) return false;
+    L.mat.uniforms.uFlatK.value = k;
+    if (r !== undefined) L.mat.uniforms.uFlat.value.set(r, g, b);
+    return true;
+  }
+
+  /** turn the actor grade off, so a rig's own rendered mean can be measured */
+  setGradeBypass(on) {
+    this.gradeBypass = !!on;
+    if (on) {
+      for (const a of Object.values(this.actors)) {
+        if (!a.mats) continue;
+        for (const m of a.mats) {
+          if (!m.color) continue;
+          if (!m.userData.plateBase) m.userData.plateBase = m.color.clone();
+          m.color.copy(m.userData.plateBase);
+        }
+      }
+    }
+    return this.gradeBypass;
+  }
+
+  /** park one body on a plate mark, everyone else off the leaf */
+  probeStand(id, px, py, faceYaw = 0) {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.built) return null;
+    for (const a of Object.values(this.actors)) this._off(a);
+    const a = this.actors[id];
+    if (!a) return null;
+    this._stand(a, rec.toWorld(px, py, 0), faceYaw);
+    a.mode = 'stand';
+    this._plateLightStep();          /* grade to where he now stands */
+    return { id, at: [px, py], world: a.group.position.toArray().map((v) => +v.toFixed(3)),
+             grade: a.grade || null };
+  }
+
+  /**
+   * THE PROBE BODY. A rigged man is 20 plate px on the shore and the west crag
+   * is 300: no walk of his can ever test that cut's boundary. So the gate gets
+   * a body it can SIZE — a plain standing card, built by exactly the same
+   * arithmetic as an occluder (bottom edge on a plate row, height compensated
+   * by 1/cos e), stood at a plate row like any actor. It is an instrument: it
+   * never exists during the story.
+   */
+  probeBody(px, py, wPx, hPx) {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.built) return null;
+    const w = rec.world;
+    const COS = w.COS_E !== undefined ? w.COS_E : Math.cos(w.ELEV);
+    if (!rec.probe) {
+      rec.probe = new THREE.Mesh(new THREE.PlaneGeometry(1, 1),
+        new THREE.MeshBasicMaterial({ color: 0xff2fd0, side: THREE.DoubleSide,
+                                      toneMapped: false, depthWrite: true }));
+      rec.probe.name = 'gate-probe-body';
+      rec.scene.add(rec.probe);
+    }
+    const m = rec.probe;
+    m.visible = true;
+    const W = wPx / w.S, H = hPx / (w.S * COS);
+    m.geometry.dispose();
+    m.geometry = new THREE.PlaneGeometry(W, H);
+    const z = w.Z(py);
+    m.position.set(w.X(px), H / 2, z);
+    m.updateMatrixWorld(true);
+    return { at: [px, py], size: [wPx, hPx], z: +z.toFixed(3) };
+  }
+
+  hideProbeBody() {
+    const rec = this.sets[this.activeName];
+    if (rec && rec.probe) rec.probe.visible = false;
+    return true;
+  }
+
+  /** an instrument framing (plate px + k) — the gate's own eye, not a shot */
+  probeCam(px, py, k) {
+    const rec = this.sets[this.activeName];
+    if (!rec || !rec.built) return null;
+    const v = rec.toWorld(px, py, 0);
+    this.camWant = { x: v.x, y: 0, z: v.z, k, e: rec.camBase.elev };
+    this.camState = { ...this.camWant };
+    this.lens = { name: '(probe)', at: [px, py], k };
+    this.applyCam();
+    this._plateLightStep();
+    return { at: [px, py], k };
   }
 }

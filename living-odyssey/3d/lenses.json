@@ -1,0 +1,674 @@
+{
+ "lane": "sam2path-r1-lenses",
+ "created": "2026-08-21",
+ "law": "camera centre [x,y] at zoom k; visible box = 1408/k x 768/k landscape, 1060/k x 768/k portrait; no dead band means both margins >= 0 (sherlock F2 lesson). k=1.0 forces [704,384].",
+ "source": "tools/ody/ledger.json sets[*].lenses (byte-copied at bake)",
+ "plate": [
+  1408,
+  768
+ ],
+ "sets": {
+  "shore": {
+   "world": {
+    "pxPerM": 11.3,
+    "elevDeg": 28,
+    "CX": 438,
+    "CY": 466,
+    "halfWidthAtK1": 62.3009
+   },
+   "lenses": {
+    "establishing": {
+     "at": [
+      704,
+      384
+     ],
+     "k": 1.0,
+     "serves": [
+      "ody-i-00",
+      "ody-i-01",
+      "ody-i-05"
+     ]
+    },
+    "smoke": {
+     "at": [
+      980,
+      205
+     ],
+     "k": 1.9,
+     "serves": [
+      "ody-i-04"
+     ]
+    },
+    "council": {
+     "at": [
+      505,
+      470
+     ],
+     "k": 2.2,
+     "serves": [
+      "ody-i-06"
+     ]
+    },
+    "council-close": {
+     "at": [
+      545,
+      480
+     ],
+     "k": 8.6,
+     "serves": [
+      "ody-i-07"
+     ]
+    },
+    "camp-fire": {
+     "at": [
+      430,
+      468
+     ],
+     "k": 2.4,
+     "serves": [
+      "ody-i-02",
+      "ody-i-03"
+     ]
+    },
+    "ship-mid": {
+     "at": [
+      545,
+      488
+     ],
+     "k": 8.6,
+     "serves": [
+      "ody-i-10"
+     ]
+    },
+    "skin-close": {
+     "at": [
+      560,
+      470
+     ],
+     "k": 4.5,
+     "serves": [
+      "ody-i-11"
+     ]
+    },
+    "cavemouth-push-from": {
+     "at": [
+      850,
+      345
+     ],
+     "k": 1.6,
+     "serves": [
+      "ody-i-08"
+     ]
+    },
+    "cavemouth-push-to": {
+     "at": [
+      1008,
+      290
+     ],
+     "k": 2.6,
+     "serves": [
+      "ody-i-08",
+      "ody-i-09",
+      "ody-i-12"
+     ]
+    },
+    "crag-tilt": {
+     "at": [
+      1050,
+      165
+     ],
+     "k": 2.4,
+     "serves": [
+      "ody-i-09"
+     ]
+    }
+   },
+   "marks": {
+    "fire-ulysses": [
+     390,
+     480
+    ],
+    "council-ulysses": [
+     563,
+     499
+    ],
+    "council-crew": [
+     472,
+     507
+    ],
+    "twelve-at-ship": [
+     560,
+     503
+    ],
+    "entry-mainland": [
+     1008,
+     268
+    ],
+    "climb-path": [
+     940,
+     325
+    ]
+   }
+  },
+  "cave": {
+   "world": {
+    "pxPerM": 43.0,
+    "elevDeg": 25,
+    "CX": 704,
+    "CY": 460,
+    "halfWidthAtK1": 16.3721
+   },
+   "lenses": {
+    "establishing": {
+     "at": [
+      704,
+      384
+     ],
+     "k": 1.0,
+     "serves": [
+      "ody-ii-00",
+      "ody-ii-13",
+      "ody-iii-00",
+      "ody-v-00",
+      "ody-v-05"
+     ]
+    },
+    "racks-sweep": {
+     "at": [
+      700,
+      315
+     ],
+     "k": 2.4,
+     "serves": [
+      "ody-ii-01"
+     ]
+    },
+    "doorlight-hinge": {
+     "at": [
+      480,
+      400
+     ],
+     "k": 2.2,
+     "serves": [
+      "ody-ii-02"
+     ]
+    },
+    "mouth": {
+     "at": [
+      345,
+      340
+     ],
+     "k": 2.4,
+     "serves": [
+      "ody-ii-04",
+      "ody-iii-02",
+      "ody-iv-07",
+      "ody-iv-08",
+      "ody-iv-09",
+      "ody-iv-10",
+      "ody-iv-11"
+     ]
+    },
+    "discovery-low": {
+     "at": [
+      900,
+      430
+     ],
+     "k": 1.8,
+     "serves": [
+      "ody-ii-03"
+     ]
+    },
+    "eye-close": {
+     "at": [
+      745,
+      295
+     ],
+     "k": 2.5,
+     "serves": [
+      "ody-ii-05"
+     ]
+    },
+    "twoshot": {
+     "at": [
+      700,
+      400
+     ],
+     "k": 2.5,
+     "serves": [
+      "ody-ii-07",
+      "ody-ii-08",
+      "ody-ii-09",
+      "ody-iii-11",
+      "ody-iii-12"
+     ]
+    },
+    "meal-close": {
+     "at": [
+      780,
+      430
+     ],
+     "k": 2.5,
+     "serves": [
+      "ody-ii-10",
+      "ody-iii-01",
+      "ody-iii-07"
+     ]
+    },
+    "lash-close": {
+     "at": [
+      950,
+      505
+     ],
+     "k": 3.2,
+     "serves": [
+      "ody-v-02",
+      "ody-v-03"
+     ]
+    },
+    "sword": {
+     "at": [
+      740,
+      440
+     ],
+     "k": 3.2,
+     "serves": [
+      "ody-ii-11",
+      "ody-ii-12"
+     ]
+    },
+    "scheme-push": {
+     "at": [
+      770,
+      500
+     ],
+     "k": 3.2,
+     "serves": [
+      "ody-iii-03"
+     ]
+    },
+    "club-wide": {
+     "at": [
+      880,
+      360
+     ],
+     "k": 1.6,
+     "serves": [
+      "ody-iii-04"
+     ]
+    },
+    "lots-overhead": {
+     "at": [
+      600,
+      490
+     ],
+     "k": 2.5,
+     "serves": [
+      "ody-iii-05"
+     ]
+    },
+    "collapse": {
+     "at": [
+      770,
+      460
+     ],
+     "k": 2.2,
+     "serves": [
+      "ody-iii-13"
+     ]
+    },
+    "bowl-close": {
+     "at": [
+      690,
+      440
+     ],
+     "k": 3.4,
+     "serves": [
+      "ody-iii-08",
+      "ody-iii-10"
+     ]
+    },
+    "face-flush": {
+     "at": [
+      710,
+      380
+     ],
+     "k": 2.5,
+     "serves": [
+      "ody-iii-09"
+     ]
+    },
+    "ember-close": {
+     "at": [
+      655,
+      450
+     ],
+     "k": 3.8,
+     "serves": [
+      "ody-iv-01",
+      "ody-iv-02"
+     ]
+    },
+    "drive-tight": {
+     "at": [
+      590,
+      490
+     ],
+     "k": 3.4,
+     "serves": [
+      "ody-iv-03",
+      "ody-iv-04",
+      "ody-iv-05"
+     ]
+    },
+    "sprawl-groan": {
+     "at": [
+      720,
+      480
+     ],
+     "k": 2.5,
+     "serves": [
+      "ody-iv-08"
+     ]
+    },
+    "ram-close": {
+     "at": [
+      838,
+      425
+     ],
+     "k": 3.2,
+     "serves": [
+      "ody-v-04"
+     ]
+    },
+    "handpass-tight": {
+     "at": [
+      370,
+      400
+     ],
+     "k": 2.5,
+     "serves": [
+      "ody-v-06"
+     ]
+    },
+    "doorway-twoshot": {
+     "at": [
+      370,
+      380
+     ],
+     "k": 2.5,
+     "serves": [
+      "ody-v-07",
+      "ody-v-08",
+      "ody-v-09",
+      "ody-v-10"
+     ]
+    },
+    "freed-overshoulder": {
+     "at": [
+      430,
+      430
+     ],
+     "k": 2.35,
+     "serves": [
+      "ody-v-11"
+     ]
+    },
+    "puzzling": {
+     "at": [
+      638,
+      450
+     ],
+     "k": 1.75,
+     "serves": [
+      "ody-v-01"
+     ]
+    }
+   },
+   "marks": {
+    "entry": [
+     360,
+     450
+    ],
+    "cheese-rack": [
+     640,
+     405
+    ],
+    "huddle-far": [
+     933,
+     541
+    ],
+    "suppliant": [
+     690,
+     512
+    ],
+    "giant-seat": [
+     760,
+     452
+    ],
+    "milking": [
+     852,
+     470
+    ],
+    "sprawl-head": [
+     664,
+     546
+    ],
+    "sword-ulysses": [
+     680,
+     554
+    ],
+    "scheme": [
+     800,
+     530
+    ],
+    "lots-circle": [
+     713,
+     527
+    ],
+    "stake-hide": [
+     782,
+     496
+    ],
+    "bowl-offer": [
+     700,
+     514
+    ],
+    "ram-stand": [
+     838,
+     430
+    ],
+    "ram-at-mouth": [
+     395,
+     438
+    ],
+    "doorway-seat": [
+     345,
+     470
+    ]
+   }
+  },
+  "sea": {
+   "world": {
+    "pxPerM": 12.7,
+    "elevDeg": 30,
+    "CX": 704,
+    "CY": 470,
+    "halfWidthAtK1": 55.4331
+   },
+   "lenses": {
+    "establishing": {
+     "at": [
+      704,
+      384
+     ],
+     "k": 1.0,
+     "serves": [
+      "ody-vi-01",
+      "ody-vi-03"
+     ]
+    },
+    "gate-wide": {
+     "at": [
+      610,
+      325
+     ],
+     "k": 1.29,
+     "serves": [
+      "ody-vi-01",
+      "ody-vi-03"
+     ]
+    },
+    "stern": {
+     "at": [
+      518,
+      415
+     ],
+     "k": 10.6,
+     "serves": [
+      "ody-vi-02"
+     ]
+    },
+    "stern-rail": {
+     "at": [
+      506,
+      400
+     ],
+     "k": 12.3,
+     "serves": [
+      "ody-vi-07"
+     ]
+    },
+    "ship-deck": {
+     "at": [
+      575,
+      450
+     ],
+     "k": 2.6,
+     "serves": [
+      "ody-vi-04"
+     ]
+    },
+    "menbeg-close": {
+     "at": [
+      545,
+      433
+     ],
+     "k": 14.1,
+     "serves": [
+      "ody-vi-05"
+     ]
+    },
+    "clifftop": {
+     "at": [
+      870,
+      195
+     ],
+     "k": 3.1,
+     "serves": [
+      "ody-vi-08",
+      "ody-vi-09"
+     ]
+    },
+    "curse": {
+     "at": [
+      870,
+      180
+     ],
+     "k": 2.5,
+     "serves": [
+      "ody-vi-11"
+     ]
+    },
+    "strait": {
+     "at": [
+      585,
+      330
+     ],
+     "k": 2.0,
+     "serves": [
+      "ody-vi-12"
+     ]
+    },
+    "defy-strait": {
+     "at": [
+      640,
+      300
+     ],
+     "k": 2.25,
+     "serves": [
+      "ody-vi-06"
+     ]
+    },
+    "hades-twoshot": {
+     "at": [
+      663,
+      315
+     ],
+     "k": 2.3,
+     "serves": [
+      "ody-vi-10"
+     ]
+    },
+    "homeward": {
+     "at": [
+      575,
+      380
+     ],
+     "k": 2.6,
+     "serves": [
+      "ody-vi-13"
+     ]
+    },
+    "moonpath": {
+     "at": [
+      590,
+      340
+     ],
+     "k": 3.2,
+     "serves": [
+      "ody-vi-14"
+     ]
+    }
+   },
+   "marks": {
+    "clifftop-giant": [
+     860,
+     210
+    ],
+    "stern-ulysses": [
+     518,
+     426
+    ],
+    "stern-rail": [
+     506,
+     406
+    ],
+    "rower-1n": [
+     556,
+     444
+    ],
+    "rower-2n": [
+     586,
+     455
+    ],
+    "rower-3n": [
+     616,
+     466
+    ],
+    "rower-1f": [
+     573,
+     430
+    ],
+    "rower-2f": [
+     603,
+     441
+    ],
+    "rower-3f": [
+     633,
+     452
+    ]
+   }
+  }
+ }
+}
