@@ -30,12 +30,12 @@
   "lens": "spielberg",
   "ok": true,
   "totals": {
-   "shots": 150,
-   "subCuts": 69,
+   "shots": 151,
+   "subCuts": 70,
    "setups": 85,
-   "cuts": 142,
+   "cuts": 143,
    "holds": 2,
-   "returns": 63,
+   "returns": 64,
    "dissolves": 5
   }
  },
@@ -431,7 +431,7 @@
   {
    "beat": 2,
    "set": "cave",
-   "units": 27,
+   "units": 28,
    "setups": [
     {
      "id": "CV-EST2",
@@ -515,7 +515,7 @@
      "name": "THE HAND BENCH",
      "role": "insert",
      "note": "hand height, downstage centre: the sword at the hip, the beam in the coals",
-     "takes": 1
+     "takes": 2
     },
     {
      "id": "CV-HILT",
@@ -548,15 +548,15 @@
    ],
    "stats": {
     "setups": 16,
-    "cuts": 25,
+    "cuts": 26,
     "holds": 1,
-    "returns": 10,
+    "returns": 11,
     "dissolves": 1,
-    "shots": 27,
-    "subCuts": 13,
+    "shots": 28,
+    "subCuts": 14,
     "secs": 77.1,
-    "asl": 2.86,
-    "cutsPerSetup": 1.56
+    "asl": 2.75,
+    "cutsPerSetup": 1.63
    },
    "cut": [
     {
@@ -801,11 +801,11 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 2,
-     "size": 0.715,
-     "angle": 84.6,
+     "size": 0.636,
+     "angle": 38.2,
      "sub": 1,
      "at": 1.2,
-     "why": "the verb, whole and unbroken: clutched off the floor, carried up into the dark, held kicking, and dashed down two metres from the lens"
+     "why": "the verb, whole and unbroken and from ONE fixed place: clutched off the floor, carried up, reared back, and dashed down onto the stone — the lens does not go with him, which is the only way the stone can arrive"
     },
     {
      "unit": "ody-ii-10-firstmeal",
@@ -816,10 +816,10 @@
      "transition": "cut",
      "take": 4,
      "size": 0.889,
-     "angle": 15.2,
+     "angle": 16.6,
      "sub": 2,
-     "at": 3.6,
-     "why": "and immediately the faces — the two who are left, backed off and turned to watch, which is where the horror actually lives"
+     "at": 4.3,
+     "why": "and then the faces — cut to after the body has settled, not over it: the two who are left, backed off and turned to watch"
     },
     {
      "unit": "ody-ii-11-sword",
@@ -829,8 +829,8 @@
      "cls": "GATE",
      "transition": "cut",
      "take": 1,
-     "size": 0.264,
-     "angle": 107.4
+     "size": 0.616,
+     "angle": 103.8
     },
     {
      "unit": "ody-ii-11-sword",
@@ -840,11 +840,26 @@
      "cls": "GATE",
      "transition": "cut",
      "take": 1,
-     "size": 0.3,
-     "angle": 58.2,
+     "size": 0.958,
+     "angle": 0,
      "sub": 1,
-     "at": 2.6,
-     "why": "the decision becomes a grip — knuckles, guard, and the blade starting up out of the scabbard"
+     "at": 0.55,
+     "why": "THE DRAW, held: the fist closes on the hilt at his own hip and pulls, and the blade climbs out of the sheath inside one unbroken frame — across the lens, not down it, so the travel reads"
+    },
+    {
+     "unit": "ody-ii-11-sword",
+     "setup": "CV-OBJ",
+     "name": "THE HAND BENCH",
+     "role": "insert",
+     "cls": "GATE",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.616,
+     "angle": 3.8,
+     "sub": 2,
+     "at": 1.9,
+     "why": "the blade is up, over him, and the reader is asked for the stroke",
+     "reprise": "back out of the insert to the whole sentence — the man, the raised blade and the head it hangs over — because this is the frame the reader presses in, and a gate cannot be answered inside a hip"
     },
     {
      "unit": "ody-ii-12-shiftstone",
@@ -854,8 +869,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.989,
-     "angle": 159.1
+     "size": 0.619,
+     "angle": 69.6
     },
     {
      "unit": "ody-ii-12-shiftstone",
@@ -865,11 +880,11 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 4,
-     "size": 0.844,
-     "angle": 105.4,
+     "size": 0.342,
+     "angle": 92.5,
      "sub": 1,
-     "at": 2,
-     "why": "his eyes, doing the arithmetic that saves them — from the door side, so the man is already looking at the answer"
+     "at": 2.3,
+     "why": "his eyes, doing the arithmetic that saves them. He holds the point over the throat and then turns off it to the door, so this station — the one place on that floor that is neither the fire nor the woodpile — catches the turn coming toward the lens and hands the next shot its eyeline"
     },
     {
      "unit": "ody-ii-12-shiftstone",
@@ -880,9 +895,9 @@
      "transition": "cut",
      "take": 1,
      "size": 0.671,
-     "angle": 81.4,
+     "angle": 37.8,
      "sub": 2,
-     "at": 3.6,
+     "at": 3.85,
      "why": "and the mass that answers it, on his own eyeline: we should never be able to shift the stone"
     },
     {
@@ -893,8 +908,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.856,
-     "angle": 91.6
+     "size": 0.973,
+     "angle": 1.2
     }
    ]
   },
@@ -1500,8 +1515,8 @@
     "dissolves": 0,
     "shots": 24,
     "subCuts": 11,
-    "secs": 51.9,
-    "asl": 2.16,
+    "secs": 53.5,
+    "asl": 2.23,
     "cutsPerSetup": 1.38
    },
    "cut": [
@@ -1646,11 +1661,11 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.664,
-     "angle": 95.2,
+     "size": 0.845,
+     "angle": 14,
      "sub": 1,
      "at": 1.5,
-     "why": "and the flight, under the beam he has just flung after them — where running away actually gets the men"
+     "why": "and the flight itself, across the angle under the beam he has just flung after them — three men, left to right, where running away actually gets them"
     },
     {
      "unit": "ody-iv-07-whatails",
@@ -1661,7 +1676,7 @@
      "transition": "cut",
      "take": 1,
      "size": 0.849,
-     "angle": 37.5
+     "angle": 30.1
     },
     {
      "unit": "ody-iv-07-whatails",
@@ -2661,8 +2676,6 @@
    "ody-ii-07-pitiless": 1,
    "ody-ii-08-shipfast": 1,
    "ody-ii-09-shiplie": -1,
-   "ody-ii-11-sword": -1,
-   "ody-ii-13-tillmorning": -1,
    "ody-iii-01-morningmeal": -1,
    "ody-iii-03-scheme": -1,
    "ody-iii-07-suppertwo": 1,
@@ -6586,25 +6599,33 @@
      "reprise": null,
      "speaker": null,
      "subject": {
-      "a": "crew-2"
+      "m": [
+       830,
+       500
+      ],
+      "h": 1.9,
+      "y": 0.95
      },
      "over": null,
      "fg": null,
      "pos": [
-      -0.558,
-      2.6,
-      3.852
+      3.07,
+      1.25,
+      6.273
      ],
      "lookAt": [
-      2.933,
-      2.239,
-      1.389
+      3.371,
+      0.91,
+      2.189
      ],
-     "fov": 36,
+     "fov": 52,
      "move": {
       "k": "handheld",
-      "amp": 0.026,
-      "dur": 6
+      "amp": 0.03,
+      "dur": 6,
+      "at": 2.2,
+      "pre": 0.11,
+      "decay": 1.05
      },
      "dof": {
       "fstop": 2.2,
@@ -6614,27 +6635,27 @@
      "read": {
       "fill": 2.4,
       "rim": 5,
-      "side": -1
+      "side": 1
      },
      "frame": {
-      "h": 1.75,
-      "point": false,
+      "h": 1.9,
+      "point": true,
       "fill": false,
-      "side": -1,
+      "side": 0,
       "sideLanded": -1,
-      "stationLegal": true,
-      "stationSees": true,
-      "liveAnchor": true,
-      "frac": 0.715,
-      "fracDesign": 0.63,
+      "stationLegal": false,
+      "stationSees": false,
+      "liveAnchor": false,
+      "frac": 0.636,
+      "fracDesign": 0.477,
       "inFrame": 1,
-      "cx": -0.137,
-      "cy": 0,
+      "cx": -0.155,
+      "cy": -0.016,
       "floor": 0.17,
-      "crownPitch": 7.2,
+      "crownPitch": 9.1,
       "crownPitchMin": null,
-      "dist": 4.28,
-      "bearing": -50.7,
+      "dist": 4.09,
+      "bearing": 2,
       "comp": [
        -0.13,
        0.02
@@ -6642,11 +6663,11 @@
       "camY": 1.1,
       "follow": false,
       "anchor": [
-       2.74,
-       2.267,
-       1.15
+       2.93,
+       0.95,
+       2.201
       ],
-      "solved": "AUTHORED"
+      "solved": "AUTHORED (outside the volume)"
      },
      "flags": {
       "intro": false,
@@ -6657,9 +6678,9 @@
      },
      "t": 1.2,
      "sub": 1,
-     "why": "the verb, whole and unbroken: clutched off the floor, carried up into the dark, held kicking, and dashed down two metres from the lens",
-     "cutAngle": 84.6,
-     "cutMove": 6.22
+     "why": "the verb, whole and unbroken and from ONE fixed place: clutched off the floor, carried up, reared back, and dashed down onto the stone — the lens does not go with him, which is the only way the stone can arrive",
+     "cutAngle": 38.2,
+     "cutMove": 2.77
     },
     {
      "unit": "ody-ii-10-firstmeal",
@@ -6743,11 +6764,11 @@
       "gateTarget": null,
       "sepLost": false
      },
-     "t": 3.6,
+     "t": 4.3,
      "sub": 2,
-     "why": "and immediately the faces — the two who are left, backed off and turned to watch, which is where the horror actually lives",
-     "cutAngle": 15.2,
-     "cutMove": 2.7
+     "why": "and then the faces — cut to after the body has settled, not over it: the two who are left, backed off and turned to watch",
+     "cutAngle": 16.6,
+     "cutMove": 1.95
     }
    ],
    "cutAngle": 33.7,
@@ -6766,22 +6787,26 @@
    "reprise": null,
    "speaker": null,
    "subject": {
-    "t": "sword",
-    "h": 1
+    "m": [
+     492,
+     540
+    ],
+    "h": 1.75,
+    "y": 0.9
    },
-   "over": "ulysses",
+   "over": null,
    "fg": null,
    "pos": [
-    -6.605,
-    1.55,
-    -1.101
+    -5.442,
+    1.66,
+    -3.302
    ],
    "lookAt": [
-    1.102,
-    0.915,
-    1.841
+    -5.369,
+    0.866,
+    4.428
    ],
-   "fov": 30,
+   "fov": 25,
    "move": {
     "k": "push",
     "cms": 5,
@@ -6796,27 +6821,27 @@
    "read": {
     "fill": 2.2,
     "rim": 3.4,
-    "side": -1
+    "side": 1
    },
    "frame": {
-    "h": 1,
+    "h": 1.75,
     "point": true,
     "fill": false,
-    "side": -1,
+    "side": 0,
     "sideLanded": -1,
     "stationLegal": true,
     "stationSees": false,
     "liveAnchor": false,
-    "frac": 0.264,
-    "fracDesign": 0.226,
+    "frac": 0.616,
+    "fracDesign": 0.509,
     "inFrame": 1,
-    "cx": -0.154,
-    "cy": -0.001,
+    "cx": -0.188,
+    "cy": -0.033,
     "floor": 0.22,
-    "crownPitch": -0.6,
+    "crownPitch": 0.9,
     "crownPitchMin": null,
-    "dist": 8.25,
-    "bearing": -107,
+    "dist": 7.76,
+    "bearing": -176.2,
     "comp": [
      -0.15,
      0.02
@@ -6824,9 +6849,9 @@
     "camY": 1.15,
     "follow": false,
     "anchor": [
-     1.27,
-     0.959,
-     1.302
+     -4.93,
+     0.9,
+     4.402
     ],
     "solved": "AUTHORED (sight line blocked)"
    },
@@ -6851,27 +6876,31 @@
      "reprise": null,
      "speaker": null,
      "subject": {
-      "t": "sword",
-      "h": 0.7
+      "m": [
+       501,
+       535
+      ],
+      "h": 0.68,
+      "y": 1.05
      },
      "over": null,
      "fg": null,
      "pos": [
-      -5.791,
-      1.1,
-      7.484
+      -4.93,
+      1.05,
+      1.981
      ],
      "lookAt": [
-      1.477,
-      0.919,
-      1.539
+      -4.593,
+      1.034,
+      4.115
      ],
-     "fov": 16,
+     "fov": 28,
      "move": {
       "k": "push",
-      "cms": 6,
+      "cms": 3.4,
       "dur": 10,
-      "m": 0.6
+      "m": 0.34
      },
      "dof": {
       "fstop": 2,
@@ -6879,39 +6908,39 @@
       "near": 0.85
      },
      "read": {
-      "fill": 2.4,
-      "rim": 5.6,
-      "side": -1
+      "fill": 1.9,
+      "rim": 3.2,
+      "side": 1
      },
      "frame": {
-      "h": 0.7,
+      "h": 0.68,
       "point": true,
       "fill": false,
-      "side": -1,
-      "sideLanded": -1,
+      "side": 0,
+      "sideLanded": 1,
       "stationLegal": false,
       "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.3,
-      "fracDesign": 0.265,
+      "frac": 0.958,
+      "fracDesign": 0.632,
       "inFrame": 1,
-      "cx": -0.151,
-      "cy": 0.026,
+      "cx": 0.139,
+      "cy": 0.039,
       "floor": 0.22,
-      "crownPitch": 1.3,
+      "crownPitch": 9,
       "crownPitchMin": null,
-      "dist": 9.39,
-      "bearing": -48.8,
+      "dist": 2.16,
+      "bearing": -174.4,
       "comp": [
-       -0.14,
+       0.14,
        0.03
       ],
       "camY": 0.9,
       "follow": false,
       "anchor": [
-       1.27,
-       0.959,
-       1.302
+       -4.721,
+       1.05,
+       4.127
       ],
       "solved": "AUTHORED (outside the volume)"
      },
@@ -6922,15 +6951,109 @@
       "gateTarget": null,
       "sepLost": false
      },
-     "t": 2.6,
+     "t": 0.55,
      "sub": 1,
-     "why": "the decision becomes a grip — knuckles, guard, and the blade starting up out of the scabbard",
-     "cutAngle": 58.2,
-     "cutMove": 8.64
+     "why": "THE DRAW, held: the fist closes on the hilt at his own hip and pulls, and the blade climbs out of the sheath inside one unbroken frame — across the lens, not down it, so the travel reads",
+     "cutAngle": 0,
+     "cutMove": 5.34
+    },
+    {
+     "unit": "ody-ii-11-sword",
+     "beat": 2,
+     "set": "cave",
+     "class": "GATE",
+     "setup": "CV-OBJ",
+     "setupName": "THE HAND BENCH",
+     "setupRole": "insert",
+     "transition": "cut",
+     "hold": null,
+     "reprise": "back out of the insert to the whole sentence — the man, the raised blade and the head it hangs over — because this is the frame the reader presses in, and a gate cannot be answered inside a hip",
+     "speaker": null,
+     "subject": {
+      "m": [
+       492,
+       540
+      ],
+      "h": 1.75,
+      "y": 0.9
+     },
+     "over": null,
+     "fg": null,
+     "pos": [
+      -5.442,
+      1.66,
+      -3.302
+     ],
+     "lookAt": [
+      -5.369,
+      0.866,
+      4.428
+     ],
+     "fov": 25,
+     "move": {
+      "k": "push",
+      "cms": 5,
+      "dur": 10,
+      "m": 0.5
+     },
+     "dof": {
+      "fstop": 2.2,
+      "focus": "subject",
+      "near": 0.85
+     },
+     "read": {
+      "fill": 2.2,
+      "rim": 3.4,
+      "side": 1
+     },
+     "frame": {
+      "h": 1.75,
+      "point": true,
+      "fill": false,
+      "side": 0,
+      "sideLanded": -1,
+      "stationLegal": true,
+      "stationSees": false,
+      "liveAnchor": false,
+      "frac": 0.616,
+      "fracDesign": 0.509,
+      "inFrame": 1,
+      "cx": -0.188,
+      "cy": -0.033,
+      "floor": 0.22,
+      "crownPitch": 0.9,
+      "crownPitchMin": null,
+      "dist": 7.76,
+      "bearing": -176.2,
+      "comp": [
+       -0.15,
+       0.02
+      ],
+      "camY": 1.15,
+      "follow": false,
+      "anchor": [
+       -4.93,
+       0.9,
+       4.402
+      ],
+      "solved": "AUTHORED (sight line blocked)"
+     },
+     "flags": {
+      "intro": false,
+      "blinding": false,
+      "offstage": false,
+      "gateTarget": null,
+      "sepLost": false
+     },
+     "t": 1.9,
+     "sub": 2,
+     "why": "the blade is up, over him, and the reader is asked for the stroke",
+     "cutAngle": 3.8,
+     "cutMove": 5.34
     }
    ],
-   "cutAngle": 107.4,
-   "cutMove": 10.3
+   "cutAngle": 103.8,
+   "cutMove": 11.09
   },
   "ody-ii-12-shiftstone": {
    "unit": "ody-ii-12-shiftstone",
@@ -6949,22 +7072,22 @@
      546,
      548
     ],
-    "h": 1.7,
-    "y": 0.9
+    "h": 1.6,
+    "y": 1.45
    },
    "over": null,
    "fg": null,
    "pos": [
-    0.837,
-    1.95,
-    2.201
+    1.302,
+    2.8,
+    1.651
    ],
    "lookAt": [
-    -3.558,
-    0.96,
-    5.066
+    -3.487,
+    1.54,
+    5.172
    ],
-   "fov": 26,
+   "fov": 34,
    "move": {
     "k": "push",
     "cms": 4.5,
@@ -6982,7 +7105,7 @@
     "side": 1
    },
    "frame": {
-    "h": 1.7,
+    "h": 1.6,
     "point": true,
     "fill": false,
     "side": 0,
@@ -6990,16 +7113,16 @@
     "stationLegal": false,
     "stationSees": false,
     "liveAnchor": false,
-    "frac": 0.989,
-    "fracDesign": 0.69,
-    "inFrame": 0.875,
-    "cx": 0.103,
-    "cy": -0.259,
+    "frac": 0.619,
+    "fracDesign": 0.432,
+    "inFrame": 1,
+    "cx": 0.121,
+    "cy": -0.16,
     "floor": 0.17,
-    "crownPitch": -2.2,
+    "crownPitch": -5.3,
     "crownPitchMin": null,
-    "dist": 5.33,
-    "bearing": 120.3,
+    "dist": 6.06,
+    "bearing": 122.7,
     "comp": [
      0.12,
      -0.05
@@ -7008,7 +7131,7 @@
     "follow": false,
     "anchor": [
      -3.674,
-     0.9,
+     1.45,
      4.842
     ],
     "solved": "AUTHORED (outside the volume)"
@@ -7034,21 +7157,22 @@
      "reprise": null,
      "speaker": null,
      "subject": {
-      "a": "ulysses"
+      "hd": "ULYSSES",
+      "h": 0.42
      },
      "over": null,
      "fg": null,
      "pos": [
-      -8.698,
-      1.95,
-      0
+      -6.279,
+      1.55,
+      2.201
      ],
      "lookAt": [
-      -5.251,
-      0.817,
-      4.881
+      -5.139,
+      1.36,
+      4.778
      ],
-     "fov": 22,
+     "fov": 30,
      "move": {
       "k": "push",
       "cms": 2.4,
@@ -7066,24 +7190,24 @@
       "side": -1
      },
      "frame": {
-      "h": 1.75,
-      "point": false,
+      "h": 0.42,
+      "point": true,
       "fill": false,
       "side": -1,
       "sideLanded": -1,
       "stationLegal": true,
       "stationSees": true,
       "liveAnchor": false,
-      "frac": 0.844,
-      "fracDesign": 0.741,
+      "frac": 0.342,
+      "fracDesign": 0.278,
       "inFrame": 1,
-      "cx": -0.187,
-      "cy": 0,
+      "cx": -0.197,
+      "cy": 0.031,
       "floor": 0.3,
-      "crownPitch": -1.9,
+      "crownPitch": 1.2,
       "crownPitchMin": null,
-      "dist": 6.07,
-      "bearing": -141.5,
+      "dist": 2.82,
+      "bearing": -151.7,
       "comp": [
        -0.17,
        0.05
@@ -7091,9 +7215,9 @@
       "camY": 1.58,
       "follow": false,
       "anchor": [
-       -4.977,
-       0.875,
-       4.677
+       -4.946,
+       1.398,
+       4.676
       ],
       "solved": "AUTHORED"
      },
@@ -7104,11 +7228,11 @@
       "gateTarget": null,
       "sepLost": false
      },
-     "t": 2,
+     "t": 2.3,
      "sub": 1,
-     "why": "his eyes, doing the arithmetic that saves them — from the door side, so the man is already looking at the answer",
-     "cutAngle": 105.4,
-     "cutMove": 9.79
+     "why": "his eyes, doing the arithmetic that saves them. He holds the point over the throat and then turns off it to the door, so this station — the one place on that floor that is neither the fire nor the woodpile — catches the turn coming toward the lens and hands the next shot its eyeline",
+     "cutAngle": 92.5,
+     "cutMove": 7.7
     },
     {
      "unit": "ody-ii-12-shiftstone",
@@ -7198,15 +7322,15 @@
       "gateTarget": null,
       "sepLost": false
      },
-     "t": 3.6,
+     "t": 3.85,
      "sub": 2,
      "why": "and the mass that answers it, on his own eyeline: we should never be able to shift the stone",
-     "cutAngle": 81.4,
-     "cutMove": 14.32
+     "cutAngle": 37.8,
+     "cutMove": 11.38
     }
    ],
-   "cutAngle": 159.1,
-   "cutMove": 8.52
+   "cutAngle": 69.6,
+   "cutMove": 8.44
   },
   "ody-ii-13-tillmorning": {
    "unit": "ody-ii-13-tillmorning",
@@ -7221,26 +7345,31 @@
    "reprise": null,
    "speaker": null,
    "subject": {
-    "a": "ulysses"
+    "m": [
+     934,
+     538
+    ],
+    "h": 1.4,
+    "y": 1
    },
    "over": null,
    "fg": null,
    "pos": [
-    2.93,
-    1.55,
-    2.201
+    3,
+    1.3,
+    5.888
    ],
    "lookAt": [
-    5.264,
-    0.849,
-    3.704
+    5.527,
+    0.971,
+    4.56
    ],
-   "fov": 50,
+   "fov": 54,
    "move": {
     "k": "push",
-    "cms": 2.2,
+    "cms": 5,
     "dur": 10,
-    "m": 0.22
+    "m": 0.5
    },
    "dof": {
     "fstop": 2.5,
@@ -7250,27 +7379,27 @@
    "read": {
     "fill": 3,
     "rim": 3.6,
-    "side": -1
+    "side": 1
    },
    "frame": {
-    "h": 1.75,
-    "point": false,
+    "h": 1.4,
+    "point": true,
     "fill": false,
-    "side": -1,
+    "side": 0,
     "sideLanded": -1,
     "stationLegal": false,
-    "stationSees": false,
+    "stationSees": true,
     "liveAnchor": false,
-    "frac": 0.856,
-    "fracDesign": 0.659,
-    "inFrame": 1,
-    "cx": -0.142,
-    "cy": -0.02,
+    "frac": 0.973,
+    "fracDesign": 0.481,
+    "inFrame": 0.983,
+    "cx": -0.23,
+    "cy": -0.061,
     "floor": 0.17,
-    "crownPitch": 4.1,
+    "crownPitch": 8,
     "crownPitchMin": null,
-    "dist": 2.85,
-    "bearing": -116.7,
+    "dist": 2.86,
+    "bearing": -55.8,
     "comp": [
      -0.13,
      0.02
@@ -7278,9 +7407,9 @@
     "camY": 1.05,
     "follow": false,
     "anchor": [
-     5.402,
-     0.875,
-     3.444
+     5.349,
+     1,
+     4.292
     ],
     "solved": "AUTHORED (outside the volume)"
    },
@@ -7291,8 +7420,8 @@
     "gateTarget": null,
     "sepLost": false
    },
-   "cutAngle": 91.6,
-   "cutMove": 3.12
+   "cutAngle": 1.2,
+   "cutMove": 2.21
   },
   "ody-iii-00-head": {
    "unit": "ody-iii-00-head",
@@ -10768,22 +10897,26 @@
      "reprise": null,
      "speaker": null,
      "subject": {
-      "p": "stake",
-      "h": 1.1
+      "m": [
+       880,
+       550
+      ],
+      "h": 1.75,
+      "y": 0.9
      },
      "over": null,
      "fg": null,
      "pos": [
-      6.884,
-      1.75,
-      4.677
+      2.233,
+      1.35,
+      1.101
      ],
      "lookAt": [
-      4.767,
-      0.118,
-      0.441
+      3.835,
+      0.872,
+      5.074
      ],
-     "fov": 26,
+     "fov": 36,
      "move": {
       "k": "handheld",
       "amp": 0.02,
@@ -10795,29 +10928,29 @@
       "near": 0.85
      },
      "read": {
-      "fill": 6.2,
-      "rim": 7.4,
-      "side": -1
+      "fill": 3.6,
+      "rim": 4.6,
+      "side": 1
      },
      "frame": {
-      "h": 1.1,
+      "h": 1.75,
       "point": true,
       "fill": false,
-      "side": -1,
+      "side": 0,
       "sideLanded": -1,
-      "stationLegal": false,
+      "stationLegal": true,
       "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.664,
-      "fracDesign": 0.476,
+      "frac": 0.845,
+      "fracDesign": 0.626,
       "inFrame": 1,
-      "cx": -0.144,
-      "cy": -0.052,
+      "cx": -0.182,
+      "cy": -0.072,
       "floor": 0.17,
-      "crownPitch": -12.6,
+      "crownPitch": 5.7,
       "crownPitchMin": null,
-      "dist": 5,
-      "bearing": 29.4,
+      "dist": 4.3,
+      "bearing": -154.2,
       "comp": [
        -0.12,
        0.02
@@ -10825,11 +10958,11 @@
       "camY": 1.45,
       "follow": false,
       "anchor": [
-       4.558,
-       0.14,
-       0.55
+       4.093,
+       0.9,
+       4.953
       ],
-      "solved": "AUTHORED (outside the volume)"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -10840,9 +10973,9 @@
      },
      "t": 1.5,
      "sub": 1,
-     "why": "and the flight, under the beam he has just flung after them — where running away actually gets the men",
-     "cutAngle": 95.2,
-     "cutMove": 6.02
+     "why": "and the flight itself, across the angle under the beam he has just flung after them — three men, left to right, where running away actually gets them",
+     "cutAngle": 14,
+     "cutMove": 1.19
     }
    ],
    "cutAngle": 25.1,
@@ -11032,8 +11165,8 @@
      "cutMove": 5.67
     }
    ],
-   "cutAngle": 37.5,
-   "cutMove": 10.58
+   "cutAngle": 30.1,
+   "cutMove": 5.47
   },
   "ody-iv-08-nomankilling": {
    "unit": "ody-iv-08-nomankilling",
@@ -13425,8 +13558,8 @@
     "near": 0.85
    },
    "read": {
-    "fill": 1.05,
-    "rim": 1.15,
+    "fill": 3.4,
+    "rim": 4.4,
     "side": 1
    },
    "frame": {
@@ -16379,11 +16512,12 @@
   "ody-ii-09-shiplie: EDGE-CUT — only 86% of the subject is in frame (size 1.17)",
   "ody-ii-09-shiplie: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
   "ody-ii-10-firstmeal: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-ii-10-firstmeal: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-ii-11-sword: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-ii-11-sword#1: sub-cut at 0.55s crowds the shot before it (0s)",
   "ody-ii-11-sword: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
   "ody-ii-11-sword: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
-  "ody-ii-12-shiftstone: EDGE-CUT — only 87% of the subject is in frame (size 0.99)",
   "ody-ii-12-shiftstone: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
-  "ody-ii-13-tillmorning: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
   "ody-iv-03-auger: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
   "ody-iv-04-bore: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
   "ody-iv-05-hiss: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
