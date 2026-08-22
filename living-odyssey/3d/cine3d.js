@@ -47,7 +47,57 @@ const easeOut = (k) => 1 - (1 - clamp01(k)) ** 3;
 /* the sensor the lens arithmetic is written against — full-frame height */
 const SENSOR_H = 0.024;
 
-export const CINE_VERSION = 'cine-r3-directors-cut';
+/* each move kind's own default duration, mirrored from the switch in step():
+   the dwell grammar has to know when a shot has stopped moving */
+const MOVE_DUR = { push: 10, track: 9, crane: 7, tilt: 8, orbit: 9, whip: 8, handheld: 8 };
+
+export const CINE_VERSION = 'cine-r4-live-book';
+
+/* ====================================================================== *
+ * THE LIVE-BOOK CUT (2026-08-22). Three constants that were implicit in the
+ * offline recorder and had to be made explicit the day the LIVE PAGE became
+ * the judged artifact.
+ *
+ * 1. COC_REF_H — the frame height the depth of field was JUDGED at. The blur
+ *    ceiling and the mix band were written in DEVICE pixels against a 538 px
+ *    drawing buffer (the recorder ran at dpr 1). A Retina reader gets a
+ *    1084 px buffer for the same picture, so every ceiling-limited defocus —
+ *    OTS foreground heads, far walls, sky — rendered at HALF the judged blur
+ *    and the whole book read video-game crisp. The pass now scales both by
+ *    the buffer's own height, so the DoF is a fraction of the FRAME and
+ *    identical at dpr 1, 2 or 3. ONE RENDER PIPELINE means the reader's
+ *    picture and the captured picture must not diverge with the display.
+ *
+ * 2. DESIGN_ASPECT — the frame the director's cut was composed in. The stage
+ *    no longer letterboxes every window to it; a tall window gets a taller
+ *    picture, and the camera SOLVES the composition for the frame it is
+ *    actually being shown in (see _fitAspect).
+ *
+ * 3. DWELL_* — the reading clock the cut lists were baked against topped out
+ *    at 7 s. Real mastered lines run 7-21 s, so the back half of every spoken
+ *    unit was a locked-off dead frame. A shot may run out of MOVE; it may not
+ *    run out of LIFE.
+ * ====================================================================== */
+export const COC_REF_H = 538;
+export const DESIGN_ASPECT = 1408 / 768;
+/* the stage may narrow this far before it letterboxes again */
+export const ASPECT_MIN = 1.30;
+
+/* THE DWELL GRAMMAR. After the cut list is spent and the move has eased out,
+   the shot BREATHES (a bounded push plus a sway that never accumulates), and
+   on a long dwell the unit gently re-cycles its own coverage — never a stray
+   angle, only stations this unit already declared and the gates already
+   measured, always coming back to the HOLD frame. */
+export const DWELL = Object.freeze({
+  BREATH_IN: 2.6,      /* s — the breath eases in so the seam does not lurch */
+  PUSH_M: 0.22,        /* m — the asymptotic creep: ~1-2 cm/s, inside every
+                          class's pushMax, and it only ever GROWS the subject */
+  PUSH_TAU: 9.0,       /* s — the creep's time constant */
+  SWAY_M: 0.014,       /* m — the operator's weight on his feet */
+  HOLD_S: 10.5,        /* s — how long the hold frame is kept before coverage
+                          is re-cycled (clear of the 10 s live-dwell gate) */
+  CYCLE_S: 7.0,        /* s — one re-cycled angle's own dwell */
+});
 
 /* THE TRANSITION. A unit advance is a straight CUT — that is the grammar and
    the default. The one exception the chosen lens allows is a DISSOLVE, and only
@@ -290,6 +340,18 @@ export class CineCam {
     this.subs = [];                   /* the cut list still owed */
     this.subI = 0;
     this.dissolve = 0;                /* seconds of cross-fade still owed */
+    /* ---- the dwell grammar (live-book cut) ---- */
+    this.coverage = [];               /* every station this unit declared */
+    this.holdRow = null;              /* the composed frame the unit RESTS on */
+    this.lastCutT = 0;                /* the sim time of the last cut of any kind */
+    this.cycleI = 0;                  /* which re-cycled angle is in play */
+    this.recycles = 0;                /* dwell re-cuts taken, for the ledger */
+    this.dwellS = 0;                  /* seconds this station has been held */
+    this.breath = 0;                  /* how far into the breath the shot is */
+    this.moveDur = 0;                 /* the move's own length, for the breath */
+    this.noRecycle = false;           /* the page's word: this unit is the reader's */
+    this.dwellLog = [];               /* re-cycles, kept off the assembly's ledger */
+    this.fitYaw = 0; this.fitFov = 0; /* what the aspect solve had to do */
     this.log = [];                    /* [{unit, setup, kind, t}] — the cut ledger */
     this.anchor = new THREE.Vector3();/* the live subject, this frame */
     this.subjBox = new THREE.Box3();
@@ -341,6 +403,15 @@ export class CineCam {
     this.unitT0 = t;
     this.subs = Array.isArray(row.cuts) ? row.cuts : [];
     this.subI = 0;
+    /* THE COVERAGE OF THE UNIT — the opening station and every station its cut
+       list declares. This is the whole of what the dwell grammar is allowed to
+       show: a reader who lingers gets angles the bake solved and the gates
+       measured, never a stray insert invented at runtime. The HOLD FRAME is
+       the one the assembly RESTS on — the last station of the list. */
+    this.coverage = [row, ...this.subs];
+    this.holdRow = this.coverage[this.coverage.length - 1];
+    this.lastCutT = t;
+    this.cycleI = 0;
     if (held) {
       this.holds++;
       this.log.push({ unit: unitId, t: +t.toFixed(3), setup: row.setup, kind: 'hold', sub: 0 });
@@ -388,9 +459,71 @@ export class CineCam {
       this.log.push({ unit: this.unitId, t: +t.toFixed(3), setup: s.setup,
                       kind: 'subcut', sub: this.subI });
       this._install(s);
+      this.lastCutT = t;
       took++;
     }
     return took;
+  }
+
+  /**
+   * THE DWELL RE-CYCLE — the second architectural fix, and the one the LIVE
+   * page forced.
+   *
+   * THE DEFECT (live diagnosis, 2026-08-22): the cut lists end by t<=5.5 s and
+   * every move eases out by 7-15 s, but a reader listens to a mastered line of
+   * 7-21 s. The judges structurally never saw a frame past 7 s; the reader sees
+   * nothing else. "On ody-i-01-bard the camera is frozen from ~12 s to the
+   * click." A locked-off dead frame is not a held shot, it is a stopped film.
+   *
+   * So when a unit's cut list is spent and the reader is still there, the shot
+   * BREATHES (in step(), below) and then the unit re-cycles ITS OWN COVERAGE:
+   * the hold frame, one of the unit's other declared stations, the hold frame
+   * again. Nothing here invents an angle — every station was baked, solved
+   * against the composition gates and measured by the viewing pass, so a
+   * re-cycled frame is as gated as the frame it replaces.
+   *
+   * TWO STATIONS ARE NEVER LEFT. A GATE unit's shot carries the reader's own
+   * target (the ring is drawn where the shot puts it), and a CLOCK unit's move
+   * belongs to the beat clock. Those hold and breathe; they do not re-cut.
+   *
+   * DETERMINISM is unharmed: the trigger is a fixed offset from a fixed-step
+   * sim clock and the rotation is an index, never a random.
+   */
+  _spendDwell(t) {
+    const list = this.coverage;
+    if (!list || list.length < 2) return 0;
+    if (this.subI < this.subs.length) return 0;        /* the list is still owed */
+    const u = this.unitRow;
+    if (!u) return 0;
+    /* THE READER'S OWN SHOT IS NEVER LEFT. A gate unit's station carries the
+       target the reader has to find (the ring is drawn where THIS shot puts
+       it), a clock unit's move belongs to the beat clock, and the page tells
+       the camera when the unit is one of those (`noRecycle`). Those hold and
+       breathe; they do not re-cut. */
+    if (this.noRecycle) return 0;
+    if (u.class === 'GATE' || u.class === 'CLOCK') return 0;
+    if (u.flags && u.flags.gateTarget) return 0;
+    const due = this.cycleI === 0 ? DWELL.HOLD_S : DWELL.CYCLE_S;
+    if (t - this.lastCutT < due) return 0;
+    const others = list.filter((s) => s !== this.holdRow);
+    if (!others.length) return 0;
+    this.cycleI++;
+    /* odd beats go OUT to another declared angle, even beats come back HOME */
+    const s = (this.cycleI % 2)
+      ? others[(((this.cycleI - 1) / 2) | 0) % others.length]
+      : this.holdRow;
+    this.shot = s;
+    this.t0 = t;                       /* the station starts at its own first frame */
+    this.recycles++;
+    this.lastCutT = t;
+    /* THE CUT LEDGER IS THE ASSEMBLY'S, NOT THE READER'S. `log` is what the
+       coverage law reads — the shots the film is made of. A dwell re-cycle is
+       a projection-time event on a unit whose picture has already been played,
+       so it is kept on its own ledger and cannot move the assembly's numbers. */
+    this.dwellLog.push({ unit: this.unitId, t: +t.toFixed(3), setup: s.setup,
+                         cycle: this.cycleI });
+    this._install(s);
+    return 1;
   }
 
   _install(row) {
@@ -430,8 +563,12 @@ export class CineCam {
        council's ship gate went DEAD on the hit probe because the aim cache
        outlived the shot it was measured in. */
     this.tookCut = (this.subs && this.subI < this.subs.length) ? this._spendCuts(t) : 0;
+    this.tookCut += this._spendDwell(t);
     const row = this.shot;
     if (!row) return;
+    /* the fov is re-read every frame: the aspect solve may have widened it for
+       the frame the reader is actually being shown, and that must not stack */
+    if (this.cam.fov !== row.fov) { this.cam.fov = row.fov; this.cam.updateProjectionMatrix(); }
     const k = t - this.t0;
 
     /* ---- the live subject ----
@@ -468,6 +605,9 @@ export class CineCam {
     this._basis(this._pos, this._look);
     const mv = row.move || { k: 'hold' };
     this.shakeAmp = 0;
+    /* the move's own length — where the shot stops moving and the dwell
+       grammar has to take over (MOVE_DUR mirrors each case's own default) */
+    this.moveDur = mv.k === 'hold' ? 0 : (mv.dur || MOVE_DUR[mv.k] || 8);
     switch (mv.k) {
       case 'push': {
         const e = ease(k / (mv.dur || 10));
@@ -548,6 +688,27 @@ export class CineCam {
       default: break;
     }
 
+    /* ---- THE HOLD BREATH ----
+     * A shot may run out of MOVE; it may not run out of LIFE. Past the move's
+     * own length the station keeps a bounded creep toward the subject (an
+     * asymptote, ~1-2 cm/s, inside every class's pushMax and it only ever GROWS
+     * the subject, so no floor can be crossed) and the operator's weight on his
+     * feet (a sway that returns to zero and never accumulates). Both ease in
+     * over DWELL.BREATH_IN so the seam where the move ends is invisible, and
+     * both are pure f(t − cut): two laps breathe identically. */
+    this.dwellS = Math.max(0, k - this.moveDur);
+    this.breath = 0;
+    if (this.dwellS > 0) {
+      const g = clamp01(this.dwellS / DWELL.BREATH_IN);
+      const creep = DWELL.PUSH_M * (1 - Math.exp(-this.dwellS / DWELL.PUSH_TAU));
+      this._pos.addScaledVector(this._fwd, creep * g);
+      const s = DWELL.SWAY_M * g;
+      this._pos.addScaledVector(this._right,
+        s * (Math.sin(this.dwellS * 0.61) * 0.62 + Math.sin(this.dwellS * 0.29 + 1.7) * 0.38));
+      this._pos.y += s * 0.55 * Math.sin(this.dwellS * 0.44 + 0.9);
+      this.breath = +(creep * g).toFixed(4);
+    }
+
     this.cam.position.copy(this._pos);
     /* THE HORIZON IS LEVEL BY CONSTRUCTION. lookAt() builds the basis off the
        world up, so no move in this table can dutch the frame — the gate then
@@ -555,6 +716,9 @@ export class CineCam {
     this.cam.up.set(0, 1, 0);
     this.cam.lookAt(this._look);
     this.cam.updateMatrixWorld(true);
+    /* ...and only now, on the aim the move actually landed, is the frame the
+       reader is being shown solved for */
+    this._fitAspect(row);
 
     /* the focus rides the subject, not the frame centre */
     this.focusDist = Math.max(0.25, this.cam.position.distanceTo(this.anchor));
@@ -571,6 +735,139 @@ export class CineCam {
       this.rackK = +e.toFixed(3);
     }
     void dt; void snap;
+  }
+
+  /**
+   * THE ASPECT SOLVE — the composition is solved for the frame the reader is
+   * ACTUALLY being shown, not for the frame the bake was written in.
+   *
+   * The stage used to letterbox every window to DESIGN_ASPECT, which kept the
+   * pictures honest and threw away up to 40% of a laptop's picture area. Now
+   * the stage takes the window's own shape (down to ASPECT_MIN) and the camera
+   * does what an operator does when the format changes.
+   *
+   *   THE PAN. NDC_x = tan(theta) / (aspect · tan(fov/2)). A narrower frame
+   *   throws the same aim further out, so a subject composed on the third at
+   *   1.83 walks toward the edge at 1.30. The station is re-aimed until the
+   *   subject sits on the NDC the bake composed it on — thirds stay thirds,
+   *   look-room stays look-room, and the screen-direction axis cannot flip
+   *   because the correction never changes the sign of cx.
+   *
+   *   THE OPEN-UP. Vertical fov is left alone, so subject SIZE — the close-up
+   *   law's own measure — is untouched and no class floor can be crossed by
+   *   reshaping a window. Only if the body still will not fit the narrower
+   *   frame does the lens open, and then never past the size its class demands
+   *   nor past the width the design frame had. In practice the wides open and
+   *   the closes stay close, which is exactly the trade a DP makes.
+   *
+   * At DESIGN_ASPECT every line here is a no-op, so the captured frame and the
+   * frame this solves are the same frame.
+   */
+  _fitAspect(row) {
+    this.fitYaw = 0; this.fitFov = 0;
+    const A = this.cam.aspect, A0 = DESIGN_ASPECT;
+    if (!(A > 0.05) || Math.abs(A - A0) < 0.005) return;
+    const cs = (this.__cs || (this.__cs = new THREE.Vector3()))
+      .copy(this.anchor).applyMatrix4(this.cam.matrixWorldInverse);
+    if (cs.z > -this.cam.near) return;            /* the subject is behind the lens */
+    const p = (this.__ndc || (this.__ndc = new THREE.Vector3()))
+      .copy(this.anchor).project(this.cam);
+    if (!isFinite(p.x)) return;
+    const half = Math.tan(this.cam.fov * D2R / 2);
+    const d = Math.atan(p.x * A * half) - Math.atan(p.x * A * (A / A0) * half);
+    if (Math.abs(d) > 1e-5) {
+      const fwd = (this.__fw || (this.__fw = new THREE.Vector3()));
+      this.cam.getWorldDirection(fwd);
+      const right = (this.__rt || (this.__rt = new THREE.Vector3()))
+        .set(-fwd.z, 0, fwd.x);
+      if (right.lengthSq() > 1e-8) {
+        right.normalize();
+        const L = this._pos.distanceTo(this._look) || 1;
+        this._look.addScaledVector(right, L * Math.tan(d));
+        this.cam.lookAt(this._look);
+        this.cam.updateMatrixWorld(true);
+        this.fitYaw = +(d / D2R).toFixed(3);
+      }
+    }
+    if (A >= A0) return;
+    const m = measureShot(this.cam, this.subjBox, {});
+    if (!m.ok || !(m.h > 1e-4)) return;
+    /* how far the lens may open before the subject stops obeying its class */
+    const floor = (this.classOf(row.class).floor || 0) * 1.02;
+    const room = floor > 0 ? m.h / floor : 99;
+    let need = 1;
+    if (!row.frame.fill)
+      need = Math.max(need, Math.max(Math.abs(m.box[0]), Math.abs(m.box[2])) / 0.97);
+    /* THE READER'S TARGET IS PART OF THE COMPOSITION. A gate unit's picture has
+       a job the shot table does not describe: the thing the reader has to find
+       must be ON THE PICTURE. The council's ship already sat at the frame's
+       left edge in the design frame, so a narrower one cropped it off and the
+       ring fell back to a bounding box — measured, on the [hit] gate, the day
+       the stage stopped letterboxing. The lens opens for it too. */
+    if (this._see) {
+      const cs = (this.__cs2 || (this.__cs2 = new THREE.Vector3()))
+        .copy(this._see).applyMatrix4(this.cam.matrixWorldInverse);
+      if (cs.z < -this.cam.near) {
+        const q = (this.__ndc2 || (this.__ndc2 = new THREE.Vector3()))
+          .copy(this._see).project(this.cam);
+        if (isFinite(q.x)) need = Math.max(need, Math.abs(q.x) / 0.88,
+                                                 Math.abs(q.y) / 0.90);
+      }
+    }
+    /* THE SIZE IS NOT THE FORMAT'S TO SPEND.
+     *
+     * The first cut of this solve split the format change — half the lost width
+     * into the frame, half into the lens (Hor+ by sqrt) — on the DP's argument
+     * that a narrower frame throwing away 29% of a scope composition takes the
+     * bard's prow and the council's fleet with it. It measured wrong, and the
+     * measurement is the whole reason the rule changed: opening the lens SHRINKS
+     * THE SUBJECT, and subject size is the unit every law in this book is
+     * written in — the class floors, the escalation ladder, and the read law's
+     * separation, which is a contrast between a body's pixels and the ring of
+     * pixels around it and therefore gets worse the smaller the body is. On
+     * ody-v-09-ramspeech2/CV-BELLY the share cost 16% of the subject and the
+     * separation fell from 0.024 to 0.0045, through a law that had passed on
+     * every frame of the book.
+     *
+     * So the format may RE-AIM the camera and it may not RESIZE the subject.
+     * A reshaped window keeps every composition at the size it was judged at —
+     * the same invariance the retina law imposes on the depth of field — and
+     * the lens opens only where something would otherwise be CROPPED OFF: a
+     * body that will not fit the narrower frame, or the reader's own target.
+     * That is `need`, and nothing else may move the lens. */
+    const cap = A0 / A, give = Math.max(1, room);
+    const f = Math.max(1, Math.min(need, give, cap));
+    if (!(f > 1.001)) return;
+    /* the subject keeps the HEIGHT it was composed at: a lens that opens around
+       the frame centre pushes a standing body toward the middle and fills the
+       bottom of the picture with the floor it was standing on */
+    const cyWas = m.cy;
+    this.cam.fov = 2 * Math.atan(half * f) / D2R;
+    this.cam.updateProjectionMatrix();
+    this.fitFov = +this.cam.fov.toFixed(2);
+    const half2 = Math.tan(this.cam.fov * D2R / 2);
+    const dv = Math.atan(cyWas * half2) - Math.atan((cyWas / f) * half2);
+    if (Math.abs(dv) > 1e-5) {
+      const fwd = (this.__fw2 || (this.__fw2 = new THREE.Vector3()));
+      this.cam.getWorldDirection(fwd);
+      const right = (this.__rt2 || (this.__rt2 = new THREE.Vector3()))
+        .set(-fwd.z, 0, fwd.x);
+      if (right.lengthSq() > 1e-8) {
+        const up = (this.__up2 || (this.__up2 = new THREE.Vector3()))
+          .crossVectors(right.normalize(), fwd).normalize();
+        const L = this._pos.distanceTo(this._look) || 1;
+        /* the axis goes DOWN to put the body back UP where it was framed */
+        this._look.addScaledVector(up, -L * Math.tan(dv));
+        this.cam.lookAt(this._look);
+        this.cam.updateMatrixWorld(true);
+      }
+    }
+  }
+
+  /** the page's word on what the reader has to be able to see and click */
+  setMustSee(p) {
+    if (!p) { this._see = null; return; }
+    this._see = (this._seeV || (this._seeV = new THREE.Vector3())).copy(p);
   }
 
   _v(a) { return this.__v ? this.__v.fromArray(a) : (this.__v = new THREE.Vector3().fromArray(a)); }
@@ -610,6 +907,14 @@ export class CineCam {
       move: this.shot ? this.shot.move.k : null,
       subjLive: this.subjOk,
       rack: this.rackK || 0,
+      /* the dwell grammar's own readout */
+      dwell: +this.dwellS.toFixed(2),
+      breath: this.breath || 0,
+      recycles: this.recycles,
+      cycle: this.cycleI,
+      aspect: +this.cam.aspect.toFixed(4),
+      fitYaw: this.fitYaw || 0,
+      fitFov: this.fitFov || 0,
     };
   }
 }
@@ -676,6 +981,10 @@ export class CineDof {
         uExpo: { value: 1 }, uGrain: { value: 0 }, uTone: { value: 1 },
         uSeed: { value: new THREE.Vector2(17.31, 5.77) },
         uPxH: { value: 940 }, uOn: { value: 1 },
+        /* THE RETINA LAW: the ceiling and the mix band are authored in the
+           pixels of a COC_REF_H-tall frame; this carries them to whatever
+           buffer the reader's display actually asked for. */
+        uCoCK: { value: 1 },
       },
       vertexShader: `precision highp float;
         attribute vec3 position; attribute vec2 uv; varying vec2 vUv;
@@ -687,7 +996,7 @@ export class CineDof {
         uniform float uFocus; uniform float uFocal; uniform float uAperture;
         uniform float uMaxCoC; uniform float uNearK; uniform float uExpo;
         uniform float uGrain; uniform vec2 uSeed; uniform float uPxH;
-        uniform float uOn; uniform float uTone;
+        uniform float uOn; uniform float uTone; uniform float uCoCK;
         varying vec2 vUv;
 
         /* ACES, the demo's own tone map. three applies its tone mapping only
@@ -726,14 +1035,19 @@ export class CineDof {
           return (uNear * uFar) / ((uFar - uNear) * d - uFar) * -1.0;
         }
         float cocPx(float z){
-          if (z >= uFar * 0.98) return uMaxCoC;          /* the sky is at infinity */
+          /* the ceiling is a FRACTION OF THE FRAME, carried into this buffer's
+             own pixels — a Retina reader and a dpr-1 capture must defocus the
+             same share of the picture, or the book ships twice as sharp as it
+             was judged */
+          float cap = uMaxCoC * uCoCK;
+          if (z >= uFar * 0.98) return cap;              /* the sky is at infinity */
           float s = max(uFocus, uFocal * 1.02);
           float c = (uAperture * uFocal * abs(z - s)) / max(0.02, z * (s - uFocal));
           float px = c / 0.024 * uPxH;
           /* the near field is softened LESS than the far: a foreground shoulder
              should read as a shoulder, not as a smear across the speaker */
           if (z < s) px *= uNearK;
-          return min(px, uMaxCoC);
+          return min(px, cap);
         }
         void main(){
           vec3 c0 = texture2D(tColor, vUv).rgb;
@@ -766,7 +1080,7 @@ export class CineDof {
             acc += c * w; wsum += w;
           }
           vec3 blurred = acc / wsum;
-          float m = smoothstep(0.6, 2.4, r0);
+          float m = smoothstep(0.6 * uCoCK, 2.4 * uCoCK, r0);
           vec3 rc = mix(c0, blurred, m);
           rc *= uExpo;
           vec3 o = enc(uTone > 0.5 ? aces(rc) : rc);
@@ -786,6 +1100,26 @@ export class CineDof {
     quad.frustumCulled = false;
     this.scene.add(quad);
     this.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  }
+
+  /**
+   * THE RETINA LAW, on the record. The blur ceiling and the mix band as a
+   * SHARE OF THE FRAME HEIGHT — the only form in which they mean anything.
+   * A gate reads this at dpr 1 and dpr 2 and demands the same numbers; before
+   * the live-book cut a Retina reader got a ceiling of 0.0138 against the
+   * judged 0.0279, which is exactly half the depth of field the book was
+   * signed off with.
+   */
+  law() {
+    const u = this.mat.uniforms;
+    const h = Math.max(1, u.uPxH.value);
+    return {
+      pxH: h, refH: COC_REF_H, k: +u.uCoCK.value.toFixed(4),
+      capPx: +(u.uMaxCoC.value * u.uCoCK.value).toFixed(2),
+      capFrac: +((u.uMaxCoC.value * u.uCoCK.value) / h).toFixed(5),
+      mixLoFrac: +((0.6 * u.uCoCK.value) / h).toFixed(6),
+      mixHiFrac: +((2.4 * u.uCoCK.value) / h).toFixed(6),
+    };
   }
 
   /* the HISTORY target: the last frame that was NOT a dissolve, kept in the
@@ -819,6 +1153,10 @@ export class CineDof {
     this.w = w; this.h = h;
     this.mat.uniforms.uTexel.value.set(1 / w, 1 / h);
     this.mat.uniforms.uPxH.value = h;
+    /* THE RETINA LAW. Every blur number in this pass was authored and judged
+       against a COC_REF_H-tall drawing buffer; this is the only place the
+       display's own pixel ratio is allowed to enter the arithmetic. */
+    this.mat.uniforms.uCoCK.value = h / COC_REF_H;
     return this.rt;
   }
 

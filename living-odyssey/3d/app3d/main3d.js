@@ -40,6 +40,7 @@ import { Stage3D } from './stage3d.js';
 import { Director } from './beats3d.js';
 import { Voice3D } from './voice3d.js';
 import { mountCine } from './cine-mount.js';
+import { DESIGN_ASPECT, ASPECT_MIN } from '../cine3d.js';
 import { world, printScaleTable } from './world.js';
 
 const Q = new URLSearchParams(location.search);
@@ -91,14 +92,30 @@ const coverEl = document.getElementById('cover');
 const endEl = document.getElementById('endcard');
 const holdEl = document.getElementById('hold');
 const targetEl = document.getElementById('target');
-const ASPECT = 1408 / 768;
+/* THE FRAME THE READER GETS.
+ *
+ * The stage used to letterbox EVERY window to the frame the director's cut was
+ * composed in (1408:768). It kept the pictures honest and it threw away up to
+ * 40% of a laptop's picture area: on a 1512x945 MacBook the wrap is 1028x945
+ * and the book drew into 994x542 of it. The live page is the product, so the
+ * stage now takes the WINDOW'S OWN SHAPE, down to ASPECT_MIN, and the camera
+ * solves each composition for the frame it is actually being shown in
+ * (cine3d.js `_fitAspect`: the pan holds the subject on its baked NDC, and the
+ * lens opens only when a body will not otherwise fit — never past the size its
+ * class demands). Beyond ASPECT_MIN the letterbox comes back, because below
+ * academy the cut stops being the cut.
+ */
+const ASPECT = DESIGN_ASPECT;
+const ASPECT_FLOOR = ASPECT_MIN;
 
 function layout() {
   const w = wrapEl.clientWidth, h = wrapEl.clientHeight;
   const portrait = window.matchMedia('(max-aspect-ratio: 9/10)').matches;
   const pad = portrait ? 0 : 34;
-  let sw = Math.max(160, w - pad), sh = sw / ASPECT;
-  if (sh > h - pad) { sh = Math.max(120, h - pad); sw = sh * ASPECT; }
+  const availW = Math.max(160, w - pad), availH = Math.max(120, h - pad);
+  const a = Math.min(ASPECT, Math.max(ASPECT_FLOOR, availW / availH));
+  let sw = availW, sh = sw / a;
+  if (sh > availH) { sh = availH; sw = sh * a; }
   stageEl.style.width = Math.round(sw) + 'px';
   stageEl.style.height = Math.round(sh) + 'px';
   if (cine) cine.setAspect(sw / sh);
@@ -141,6 +158,17 @@ const unitAt = (i) => UNITS[i] || null;
 const cur = () => unitAt(idx);
 
 /* ---------------- the leaf turn ---------------- */
+/* THE PAGE-TURN SEAM. Mounting a set is asynchronous — a fetch, a parse, a
+   graph built — and the draw loop used to keep running straight through it
+   with the OUTGOING shot's lens pointed at a world that was being taken apart
+   and rebuilt. Measured on the live page (livediag seam/): the old shot's
+   metrics persisted to 413 ms and the new cut did not land until 655 ms, and
+   what filled that window at every beat head was the unlit set shell floating
+   in navy void. On the deployed site with cold GLB caches it is longer.
+   THE PROJECTOR HOLDS. `turning` stops the draw, the canvas keeps the last
+   good frame (preserveDrawingBuffer), and the incoming shot dissolves out of
+   it — so the reader sees a held frame and a transition, never the scaffold. */
+let turning = false;
 async function goToPage(p) {
   page = p;
   const set = SET_OF_PAGE[p];
@@ -155,7 +183,12 @@ async function enterUnit(i, { silent = false } = {}) {
   idx = i;
   unitT0 = stage.simT;
   director.beat = u.beat || 1;        /* cave-predawn is beat-aware (leaf 3 vs 4) */
-  if (u.page !== page || SET_OF_PAGE[u.page] !== stage.setName) await goToPage(u.page);
+  let turned = false;
+  if (u.page !== page || SET_OF_PAGE[u.page] !== stage.setName) {
+    turned = true;
+    turning = true;                   /* the projector holds the last good frame */
+    try { await goToPage(u.page); } finally { turning = false; }
+  }
 
   /* THE STAGING: the unit's own act, the rail's, the gate's replay, the seg */
   if (u.act) director.fire(u.act, silent);
@@ -169,8 +202,17 @@ async function enterUnit(i, { silent = false } = {}) {
      table was baked over an empty set, and a body is a solid thing. */
   if (cine) {
     try {
-      cine.enter(u.id);
+      /* THE DWELL GRAMMAR needs one fact only the page has: is the reader's
+         finger on this unit? A click/auto unit may re-cycle its coverage while
+         the reader listens; a unit whose verb puts a ring or an arc on a
+         particular station may not, or the target moves under the finger. */
+      cine.enter(u.id, { own: u.verb !== 'click' && u.verb !== 'auto' });
+      cine.mustSee(u.verb === 'target' && u.target
+        ? director.targetObject(u.target) : null);
       cine.step(stage.simT, 0);
+      /* the held frame is the outgoing shot's last: bring the new one out of
+         it rather than snapping onto a set the reader watched being built */
+      if (turned && !silent && cine.turn) cine.turn();
       const row = cine.cam.shot;
       director.clearStation(stage.camera, row && row.frame && row.frame.anchor);
     } catch (e) { fail('cine.enter', e); }
@@ -639,6 +681,13 @@ function step(dt) {
   try { audio.setTime(stage.simT); } catch (_) { /* the bed is optional */ }
   if (cine) {
     try {
+      /* THE READER'S TARGET IS PART OF THE FRAME. A narrower window crops the
+         sides, and the council's ship already lived on the left edge of the
+         design frame — so the aspect solve is told what the reader must be
+         able to find before it decides how the lens is set. */
+      const cu = cur();
+      cine.mustSee(cu && cu.verb === 'target' && cu.target && !gateResolved
+        ? director.targetObject(cu.target) : null);
       /* a sub-cut off the unit's own cut list is a CUT: every screen fact
          measured against the old camera dies with it */
       if (cine.step(stage.simT, dt)) dropAim();
@@ -663,6 +712,9 @@ let raf = 0;
 function frame(nowMs) {
   raf = requestAnimationFrame(frame);
   clock.pump(nowMs, step);
+  /* THE PROJECTOR HOLDS across a set mount: the canvas keeps the outgoing
+     shot's last composited frame instead of drawing the scaffold. */
+  if (turning) return;
   stage.render();
 }
 
@@ -842,6 +894,9 @@ window.__book = {
   stage, director,
 };
 window.__cine = () => (cine ? cine.metrics() : null);
+/* THE RETINA LAW's own readout: the depth of field expressed as a share of the
+   FRAME, which must be the same number at every device pixel ratio. */
+window.__dof = () => (cine && cine.dof && cine.dof.law ? cine.dof.law() : null);
 /* THE READABILITY GATE's own eye: the drawn pixels inside the subject's box */
 window.__read = () => (cine ? cine.readback() : null);
 /* THE CUT LEDGER — what the camera ACTUALLY did on this lap, so the coverage

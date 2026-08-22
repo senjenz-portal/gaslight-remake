@@ -24,6 +24,9 @@ import { CineCam, CineDof, measureShot, ReadRig, readSubjectPixels, READ_LAW, DI
 /** the void a cutaway set shows when the lens can see past its shell */
 export const VOID_COLOUR = { cave: '#0a0806', shore: '#060910', sea: '#070b16' };
 
+/* scratch for the must-see point handed to the aspect solve */
+const _see = new THREE.Vector3();
+
 export async function mountCine(stage, url = './shots3d.json') {
   const table = await (await fetch(url, { cache: 'force-cache' })).json();
   const cam = new CineCam(table);
@@ -62,6 +65,16 @@ export async function mountCine(stage, url = './shots3d.json') {
     if (rig.setName !== stage.setName) rig.setSet(stage.setName);
   };
 
+  /* THE PAGE-TURN SEAM (live-book cut). A beat head has to AWAIT the new set's
+     mount, and the draw loop kept running through the await: the reader's
+     actual frame was the old lens pointed at a half-built world — measured at
+     013-ody-ii-00-head-entry, an unlit cave shell floating in navy void where
+     the master had an interior establishing shot. The page now HOLDS THE LAST
+     GOOD FRAME across the mount (main3d stops drawing; the buffer is preserved)
+     and the new shot dissolves out of it. This fade is the camera's own
+     DISSOLVE machinery, kept on its own counter so the cut ledger — which the
+     coverage gate reads — never learns a page was turned. */
+  let turnFade = 0;
   stage.setCamera(cam.cam);
   stage.setRenderPass((scene, camera, renderer) => {
     if (!scene.background) scene.background =
@@ -72,7 +85,8 @@ export async function mountCine(stage, url = './shots3d.json') {
       tone: 1, grain: 0,
       /* THE TRANSITION. Straight cut everywhere; the five declared time
          ellipses cross-fade out of the frame the reader was just looking at. */
-      fade: cam.dissolve > 0 ? cam.dissolve / DISSOLVE_S : 0,
+      fade: Math.max(cam.dissolve > 0 ? cam.dissolve / DISSOLVE_S : 0,
+                     turnFade > 0 ? turnFade / DISSOLVE_S : 0),
     });
   });
   /* the tone map moves to the focus pass: three applies its own only when it
@@ -87,9 +101,32 @@ export async function mountCine(stage, url = './shots3d.json') {
 
   const api = {
     cam, dof, table, rig,
-    enter(unitId) { const c = cam.cutTo(unitId, stage.simT, resolve); light(); return c; },
-    step(t, dt = 1 / 60) { cam.step(t, dt, resolve); light(); return cam.tookCut || 0; },
+    /**
+     * @param {string} unitId
+     * @param {{own?:boolean}} [opt] `own: true` — the reader's finger is on
+     *   this unit (a target/hold/release/clock verb), so the dwell grammar may
+     *   breathe but may NOT re-cycle coverage: the ring is drawn where THIS
+     *   station puts it and cutting away would move the reader's target.
+     */
+    enter(unitId, opt) {
+      const c = cam.cutTo(unitId, stage.simT, resolve);
+      cam.noRecycle = !!(opt && opt.own);
+      light();
+      return c;
+    },
+    step(t, dt = 1 / 60) {
+      if (turnFade > 0) turnFade = Math.max(0, turnFade - dt);
+      cam.step(t, dt, resolve); light(); return cam.tookCut || 0;
+    },
+    /** the page turned: dissolve the new shot out of the frame that was held */
+    turn(sec = DISSOLVE_S) { turnFade = sec; },
     setAspect(a) { cam.setAspect(a); },
+    /** the reader's target, so a narrower frame may not crop away his gate */
+    mustSee(obj) {
+      if (!obj || !obj.visible) { cam.setMustSee(null); return; }
+      obj.updateWorldMatrix(true, false);
+      cam.setMustSee(obj.getWorldPosition(_see));
+    },
     snapshot() { return { ...cam.snapshot(), read: rig.report }; },
     /**
      * THE READABILITY GATE. The subject's projected box, read off the pixels
@@ -135,6 +172,13 @@ export async function mountCine(stage, url = './shots3d.json') {
         fov: cam.cam.fov, camY: cam.cam.position.y, focus: cam.focusDist,
         fstop: cam.fstop, move: row.move.k, shake: cam.shakeAmp,
         rack: cam.rackK || 0, rig: rig.report,
+        /* THE DWELL GRAMMAR, on the record. `dwell` is how long this station
+           has been past its own move; `breath` the creep it is riding;
+           `recycles` how many times the unit has re-cut its own coverage
+           because the reader stayed. A live-dwell gate reads these. */
+        aspect: +cam.cam.aspect.toFixed(4), fitYaw: cam.fitYaw || 0,
+        fitFov: cam.fitFov || 0, dwell: +(cam.dwellS || 0).toFixed(2),
+        breath: cam.breath || 0, recycles: cam.recycles || 0,
       };
       /* THE SCREEN-DIRECTION SYSTEM. In the cave the giant is ALWAYS frame
          right and the men are ALWAYS frame left, so a cut never swaps who is
