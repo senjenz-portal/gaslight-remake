@@ -103,7 +103,7 @@
      "id": "SH-SKIN",
      "name": "THE WINESKIN",
      "role": "insert",
-     "note": "the gift read as an object, at hand height — foresight, not luck",
+     "note": "the gift read as an object, close on a 35 mm and above the gunwale between",
      "takes": 1
     }
    ],
@@ -124,7 +124,8 @@
      "cls": "WIDE",
      "transition": "cut",
      "take": 1,
-     "size": 0.493
+     "size": 0.493,
+     "angle": null
     },
     {
      "unit": "ody-i-01-bard",
@@ -134,7 +135,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 1,
-     "size": 0.31
+     "size": 0.311,
+     "angle": 29.8
     },
     {
      "unit": "ody-i-02-iamulysses",
@@ -144,7 +146,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.42
+     "size": 0.42,
+     "angle": 39.2
     },
     {
      "unit": "ody-i-03-troy",
@@ -154,7 +157,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 1,
-     "size": 0.347
+     "size": 0.347,
+     "angle": 94.8
     },
     {
      "unit": "ody-i-04-lawless",
@@ -164,7 +168,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.833
+     "size": 0.892,
+     "angle": 28
     },
     {
      "unit": "ody-i-05-dawn",
@@ -174,7 +179,8 @@
      "cls": "ACTION",
      "transition": "dissolve",
      "take": 1,
-     "size": 0.22
+     "size": 0.22,
+     "angle": 79
     },
     {
      "unit": "ody-i-06-smoke",
@@ -184,7 +190,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 2,
-     "size": 0.455
+     "size": 0.455,
+     "angle": 76.8
     },
     {
      "unit": "ody-i-07-council",
@@ -194,7 +201,8 @@
      "cls": "OTS",
      "transition": "cut",
      "take": 1,
-     "size": 0.316
+     "size": 0.316,
+     "angle": 33.9
     },
     {
      "unit": "ody-i-08-cave",
@@ -204,7 +212,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 2,
-     "size": 0.799
+     "size": 0.785,
+     "angle": 28.6
     },
     {
      "unit": "ody-i-09-monster",
@@ -214,7 +223,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 1,
-     "size": 0.848
+     "size": 0.86,
+     "angle": 29.8
     },
     {
      "unit": "ody-i-10-wineskin",
@@ -224,7 +234,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 2,
-     "size": 0.403
+     "size": 0.403,
+     "angle": 98.1
     },
     {
      "unit": "ody-i-11-twentyone",
@@ -234,7 +245,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.742
+     "size": 0.715,
+     "angle": 55.6
     },
     {
      "unit": "ody-i-12-misgave",
@@ -244,7 +256,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 3,
-     "size": 0.866
+     "size": 0.868,
+     "angle": 29
     }
    ]
   },
@@ -292,7 +305,7 @@
      "id": "CV-OVER",
      "name": "OVER HIS SHOULDER, LOOKING DOWN",
      "role": "ots",
-     "note": "the reverse the giant owns: his soft bulk near, the petitioner small below",
+     "note": "the reverse the giant owns: his bulk on the near edge, the petitioner small below",
      "takes": 1
     },
     {
@@ -341,7 +354,8 @@
      "cls": "WIDE",
      "transition": "cut",
      "take": 1,
-     "size": 1.014
+     "size": 1.014,
+     "angle": null
     },
     {
      "unit": "ody-ii-01-beg",
@@ -351,7 +365,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 1,
-     "size": 0.643
+     "size": 0.689,
+     "angle": 120
     },
     {
      "unit": "ody-ii-02-present",
@@ -361,7 +376,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 1,
-     "size": 0.506
+     "size": 0.506,
+     "angle": 83.1
     },
     {
      "unit": "ody-ii-03-return",
@@ -371,7 +387,8 @@
      "cls": "ACTION",
      "transition": "dissolve",
      "take": 1,
-     "size": 0.743
+     "size": 0.8,
+     "angle": 51.1
     },
     {
      "unit": "ody-ii-04-boulder",
@@ -381,7 +398,8 @@
      "cls": "ACTION",
      "transition": "hold",
      "take": 2,
-     "size": 0.743,
+     "size": 0.8,
+     "angle": null,
      "hold": "the men never look away from the door: the frame that watched him come in is the frame the stone shuts"
     },
     {
@@ -392,7 +410,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 0.864
+     "size": 0.864,
+     "angle": 172.1
     },
     {
      "unit": "ody-ii-06-plea",
@@ -402,7 +421,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.425
+     "size": 0.355,
+     "angle": 101.1
     },
     {
      "unit": "ody-ii-07-pitiless",
@@ -412,7 +432,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 0.827
+     "size": 0.827,
+     "angle": 80.2
     },
     {
      "unit": "ody-ii-08-shipfast",
@@ -422,7 +443,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 2,
-     "size": 0.865
+     "size": 0.949,
+     "angle": 113.1
     },
     {
      "unit": "ody-ii-09-shiplie",
@@ -432,7 +454,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 2,
-     "size": 0.69
+     "size": 0.69,
+     "angle": 92.4
     },
     {
      "unit": "ody-ii-10-firstmeal",
@@ -442,7 +465,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.857
+     "size": 0.857,
+     "angle": 54.4
     },
     {
      "unit": "ody-ii-11-sword",
@@ -452,7 +476,8 @@
      "cls": "GATE",
      "transition": "cut",
      "take": 1,
-     "size": 0.371
+     "size": 0.367,
+     "angle": 89.3
     },
     {
      "unit": "ody-ii-12-shiftstone",
@@ -462,7 +487,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 3,
-     "size": 0.842
+     "size": 0.865,
+     "angle": 28.4
     },
     {
      "unit": "ody-ii-13-tillmorning",
@@ -472,7 +498,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 1,
-     "size": 0.818
+     "size": 0.818,
+     "angle": 42.6
     }
    ]
   },
@@ -569,7 +596,8 @@
      "cls": "WIDE",
      "transition": "cut",
      "take": 1,
-     "size": 1.276
+     "size": 1.276,
+     "angle": null
     },
     {
      "unit": "ody-iii-01-morningmeal",
@@ -579,7 +607,8 @@
      "cls": "ACTION",
      "transition": "dissolve",
      "take": 1,
-     "size": 0.597
+     "size": 0.814,
+     "angle": 37.9
     },
     {
      "unit": "ody-iii-02-quiverlid",
@@ -589,7 +618,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.811
+     "size": 0.928,
+     "angle": 37.7
     },
     {
      "unit": "ody-iii-03-scheme",
@@ -599,7 +629,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.72
+     "size": 0.72,
+     "angle": 52
     },
     {
      "unit": "ody-iii-04-club",
@@ -609,7 +640,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 1,
-     "size": 0.783
+     "size": 0.783,
+     "angle": 36.2
     },
     {
      "unit": "ody-iii-05-lots",
@@ -619,7 +651,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.608
+     "size": 0.606,
+     "angle": 162.4
     },
     {
      "unit": "ody-iii-06-return",
@@ -629,7 +662,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 2,
-     "size": 0.807
+     "size": 0.843,
+     "angle": 35
     },
     {
      "unit": "ody-iii-07-suppertwo",
@@ -639,7 +673,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.724
+     "size": 0.724,
+     "angle": 95.9
     },
     {
      "unit": "ody-iii-08-lookhere",
@@ -649,7 +684,8 @@
      "cls": "GATE",
      "transition": "cut",
      "take": 1,
-     "size": 0.626
+     "size": 0.626,
+     "angle": 96.6
     },
     {
      "unit": "ody-iii-09-besokind",
@@ -659,7 +695,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 0.943
+     "size": 0.943,
+     "angle": 51.7
     },
     {
      "unit": "ody-iii-10-thrice",
@@ -669,7 +706,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 2,
-     "size": 0.584
+     "size": 0.584,
+     "angle": 62.7
     },
     {
      "unit": "ody-iii-11-noman",
@@ -679,7 +717,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 2,
-     "size": 0.727
+     "size": 0.727,
+     "angle": 154
     },
     {
      "unit": "ody-iii-12-nomanlast",
@@ -689,7 +728,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 2,
-     "size": 0.909
+     "size": 0.909,
+     "angle": 86
     },
     {
      "unit": "ody-iii-13-neck",
@@ -699,7 +739,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.756
+     "size": 0.652,
+     "angle": 28
     }
    ]
   },
@@ -789,7 +830,8 @@
      "cls": "WIDE",
      "transition": "cut",
      "take": 1,
-     "size": 1.173
+     "size": 1.173,
+     "angle": null
     },
     {
      "unit": "ody-iv-01-embers",
@@ -799,7 +841,8 @@
      "cls": "GATE",
      "transition": "cut",
      "take": 1,
-     "size": 0.425
+     "size": 0.425,
+     "angle": 121.4
     },
     {
      "unit": "ody-iv-02-glowing",
@@ -809,7 +852,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.54
+     "size": 0.666,
+     "angle": 166.1
     },
     {
      "unit": "ody-iv-03-auger",
@@ -819,7 +863,8 @@
      "cls": "CLOCK",
      "transition": "cut",
      "take": 1,
-     "size": 0.365
+     "size": 0.365,
+     "angle": 156.6
     },
     {
      "unit": "ody-iv-04-bore",
@@ -829,7 +874,8 @@
      "cls": "CLOCK",
      "transition": "cut",
      "take": 1,
-     "size": 0.77
+     "size": 0.77,
+     "angle": 81.1
     },
     {
      "unit": "ody-iv-05-hiss",
@@ -839,7 +885,8 @@
      "cls": "CLOCK",
      "transition": "cut",
      "take": 1,
-     "size": 1.148
+     "size": 1.423,
+     "angle": 37.3
     },
     {
      "unit": "ody-iv-06-fright",
@@ -849,7 +896,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 2,
-     "size": 0.704
+     "size": 0.704,
+     "angle": 50.8
     },
     {
      "unit": "ody-iv-07-whatails",
@@ -859,7 +907,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.559
+     "size": 0.682,
+     "angle": 27.9
     },
     {
      "unit": "ody-iv-08-nomankilling",
@@ -869,7 +918,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 0.857
+     "size": 0.972,
+     "angle": 65.1
     },
     {
      "unit": "ody-iv-09-mustbeill",
@@ -879,7 +929,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 2,
-     "size": 0.559
+     "size": 0.686,
+     "angle": 26.6
     },
     {
      "unit": "ody-iv-10-wentaway",
@@ -889,7 +940,8 @@
      "cls": "DIALOGUE",
      "transition": "hold",
      "take": 3,
-     "size": 0.559,
+     "size": 0.686,
+     "angle": null,
      "hold": "the lamps recede past the very seams the men have not stopped staring at — a cut here would take away the thing that is going away"
     },
     {
@@ -900,7 +952,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 2,
-     "size": 0.868
+     "size": 0.868,
+     "angle": 66.7
     },
     {
      "unit": "ody-iv-12-doorway",
@@ -910,7 +963,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 9
+     "size": 9,
+     "angle": 41.5
     }
    ]
   },
@@ -1000,7 +1054,8 @@
      "cls": "WIDE",
      "transition": "cut",
      "take": 1,
-     "size": 1.622
+     "size": 1.622,
+     "angle": null
     },
     {
      "unit": "ody-v-01-puzzling",
@@ -1010,7 +1065,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.866
+     "size": 0.866,
+     "angle": 31.4
     },
     {
      "unit": "ody-v-02-withies",
@@ -1020,7 +1076,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.555
+     "size": 0.785,
+     "angle": 29.9
     },
     {
      "unit": "ody-v-03-threetoaman",
@@ -1030,7 +1087,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.574
+     "size": 0.573,
+     "angle": 27.6
     },
     {
      "unit": "ody-v-04-greatram",
@@ -1040,7 +1098,8 @@
      "cls": "GATE",
      "transition": "cut",
      "take": 2,
-     "size": 0.512
+     "size": 0.512,
+     "angle": 116.5
     },
     {
      "unit": "ody-v-05-dawn",
@@ -1050,7 +1109,8 @@
      "cls": "ACTION",
      "transition": "dissolve",
      "take": 1,
-     "size": 0.872
+     "size": 0.877,
+     "angle": 27
     },
     {
      "unit": "ody-v-06-feltbacks",
@@ -1060,7 +1120,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 2,
-     "size": 0.74
+     "size": 0.74,
+     "angle": 39.7
     },
     {
      "unit": "ody-v-07-lastofall",
@@ -1070,7 +1131,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.818
+     "size": 0.802,
+     "angle": 29.7
     },
     {
      "unit": "ody-v-08-ramspeech1",
@@ -1080,7 +1142,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 0.682
+     "size": 0.87,
+     "angle": 40.6
     },
     {
      "unit": "ody-v-09-ramspeech2",
@@ -1090,7 +1153,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 0.676
+     "size": 0.676,
+     "angle": 58.5
     },
     {
      "unit": "ody-v-10-ramspeech3",
@@ -1100,7 +1164,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 2,
-     "size": 0.654
+     "size": 0.655,
+     "angle": 50.5
     },
     {
      "unit": "ody-v-11-freed",
@@ -1110,7 +1175,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.47
+     "size": 0.47,
+     "angle": 55.3
     },
     {
      "unit": "ody-v-12-aboard",
@@ -1120,7 +1186,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 2,
-     "size": 0.676
+     "size": 0.655,
+     "angle": 30
     }
    ]
   },
@@ -1210,7 +1277,8 @@
      "cls": "GATE",
      "transition": "cut",
      "take": 1,
-     "size": 0.39
+     "size": 0.39,
+     "angle": null
     },
     {
      "unit": "ody-vi-02-taunt",
@@ -1220,7 +1288,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.553
+     "size": 0.565,
+     "angle": 44.6
     },
     {
      "unit": "ody-vi-03-rock1",
@@ -1230,7 +1299,8 @@
      "cls": "CLOCK",
      "transition": "cut",
      "take": 1,
-     "size": 0.54
+     "size": 0.55,
+     "angle": 26.9
     },
     {
      "unit": "ody-vi-04-twiceasfar",
@@ -1240,7 +1310,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.526
+     "size": 0.523,
+     "angle": 28.7
     },
     {
      "unit": "ody-vi-05-menbeg",
@@ -1250,7 +1321,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.652
+     "size": 0.645,
+     "angle": 28
     },
     {
      "unit": "ody-vi-06-defy",
@@ -1260,7 +1332,8 @@
      "cls": "GATE",
      "transition": "cut",
      "take": 2,
-     "size": 0.425,
+     "size": 0.436,
+     "angle": 26.9,
      "reprise": "the second gate is the master returning on purpose: the reader must commit the hubris inside the very frame that still holds the men begging him not to"
     },
     {
@@ -1271,7 +1344,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 2,
-     "size": 0.723
+     "size": 0.723,
+     "angle": 105.4
     },
     {
      "unit": "ody-vi-08-prophecy",
@@ -1281,7 +1355,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 0.487
+     "size": 0.512,
+     "angle": 29.8
     },
     {
      "unit": "ody-vi-09-fatherson",
@@ -1291,7 +1366,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 0.546
+     "size": 0.601,
+     "angle": 28
     },
     {
      "unit": "ody-vi-10-hades",
@@ -1301,7 +1377,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 3,
-     "size": 0.679
+     "size": 0.679,
+     "angle": 60.5
     },
     {
      "unit": "ody-vi-11-curse",
@@ -1311,7 +1388,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 2,
-     "size": 0.569
+     "size": 0.599,
+     "angle": 29.7
     },
     {
      "unit": "ody-vi-12-heard",
@@ -1321,7 +1399,8 @@
      "cls": "CLOCK",
      "transition": "cut",
      "take": 2,
-     "size": 0.488
+     "size": 0.471,
+     "angle": 29.1
     },
     {
      "unit": "ody-vi-13-ram",
@@ -1331,7 +1410,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.498
+     "size": 0.512,
+     "angle": 29.7
     },
     {
      "unit": "ody-vi-14-sailedon",
@@ -1341,7 +1421,8 @@
      "cls": "WIDE",
      "transition": "dissolve",
      "take": 1,
-     "size": 0.611
+     "size": 0.611,
+     "angle": 105.5
     }
    ]
   }
@@ -1604,7 +1685,8 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
+    "gateTarget": null,
+    "sepLost": false
    }
   },
   "ody-i-01-bard": {
@@ -1630,14 +1712,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    2.008,
+    12.4,
     4.6,
-    38.722
+    38.24
    ],
    "lookAt": [
-    6.988,
+    6.981,
     1.046,
-    1.693
+    1.272
    ],
    "fov": 33,
    "move": {
@@ -1665,16 +1747,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.31,
+    "frac": 0.311,
     "fracDesign": 0.279,
     "inFrame": 1,
-    "cx": -0.068,
-    "cy": 0.025,
+    "cx": -0.096,
+    "cy": 0.024,
     "floor": 0.2,
     "crownPitch": 0.2,
     "crownPitchMin": null,
     "dist": 37.5,
-    "bearing": -5.3,
+    "bearing": 10.7,
     "comp": [
      -0.08,
      0.05
@@ -1686,14 +1768,17 @@
      1.6,
      1.508
     ],
-    "solved": "hint"
+    "solved": "swung 16deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 29.8,
+   "cutMove": 23.61
   },
   "ody-i-02-iamulysses": {
    "unit": "ody-i-02-iamulysses",
@@ -1774,8 +1859,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 39.2,
+   "cutMove": 33.11
   },
   "ody-i-03-troy": {
    "unit": "ody-i-03-troy",
@@ -1862,8 +1950,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 94.8,
+   "cutMove": 15.07
   },
   "ody-i-04-lawless": {
    "unit": "ody-i-04-lawless",
@@ -1888,14 +1979,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    15.709,
+    44.08,
     2.4,
-    12.818
+    14.683
    ],
    "lookAt": [
-    46.56,
-    6.96,
-    -49.899
+    46.529,
+    6.921,
+    -49.259
    ],
    "fov": 15,
    "move": {
@@ -1923,16 +2014,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.833,
+    "frac": 0.892,
     "fracDesign": 0.77,
     "inFrame": 1,
-    "cx": 0.129,
-    "cy": 0.008,
+    "cx": 0.134,
+    "cy": 0,
     "floor": 0.17,
-    "crownPitch": 8.6,
+    "crownPitch": 9.4,
     "crownPitchMin": null,
-    "dist": 70.02,
-    "bearing": -27.5,
+    "dist": 64.13,
+    "bearing": -3.5,
     "comp": [
      0.1,
      -0.05
@@ -1944,14 +2035,17 @@
      6.5,
      -49.199
     ],
-    "solved": "hint + backed off"
+    "solved": "swung 24deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 28,
+   "cutMove": 36.56
   },
   "ody-i-05-dawn": {
    "unit": "ody-i-05-dawn",
@@ -2033,8 +2127,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 79,
+   "cutMove": 48.98
   },
   "ody-i-06-smoke": {
    "unit": "ody-i-06-smoke",
@@ -2121,8 +2218,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 76.8,
+   "cutMove": 12.21
   },
   "ody-i-07-council": {
    "unit": "ody-i-07-council",
@@ -2204,8 +2304,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": "ship"
-   }
+    "gateTarget": "ship",
+    "sepLost": false
+   },
+   "cutAngle": 33.9,
+   "cutMove": 9.07
   },
   "ody-i-08-cave": {
    "unit": "ody-i-08-cave",
@@ -2230,14 +2333,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    27.791,
+    37.078,
     2.4,
-    -2.665
+    2.396
    ],
    "lookAt": [
-    49.831,
+    49.733,
     3.895,
-    -33.618
+    -33.433
    ],
    "fov": 22,
    "move": {
@@ -2265,16 +2368,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.799,
+    "frac": 0.785,
     "fracDesign": 0.609,
     "inFrame": 1,
-    "cx": 0.081,
-    "cy": -0.013,
+    "cx": 0.105,
+    "cy": -0.017,
     "floor": 0.17,
     "crownPitch": 8.5,
     "crownPitchMin": null,
     "dist": 38.02,
-    "bearing": -36.6,
+    "bearing": -20.6,
     "comp": [
      0.06,
      -0.04
@@ -2286,14 +2389,17 @@
      3.6,
      -33.176
     ],
-    "solved": "hint"
+    "solved": "swung 16deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 28.6,
+   "cutMove": 33.19
   },
   "ody-i-09-monster": {
    "unit": "ody-i-09-monster",
@@ -2318,14 +2424,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    22.537,
+    3.966,
     2.2,
-    9.733
+    -4.694
    ],
    "lookAt": [
-    52.805,
+    53.03,
     12.276,
-    -50.56
+    -50.997
    ],
    "fov": 27,
    "move": {
@@ -2352,16 +2458,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.848,
+    "frac": 0.86,
     "fracDesign": 0.81,
     "inFrame": 1,
-    "cx": 0.092,
-    "cy": -0.034,
+    "cx": 0.048,
+    "cy": -0.026,
     "floor": 0.2,
     "crownPitch": 15.5,
     "crownPitchMin": null,
     "dist": 68.16,
-    "bearing": -27.8,
+    "bearing": -47.8,
     "comp": [
      0.05,
      -0.14
@@ -2373,14 +2479,17 @@
      10,
      -50.141
     ],
-    "solved": "hint + backed off"
+    "solved": "swung -20deg x1 + backed off"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 29.8,
+   "cutMove": 33.86
   },
   "ody-i-10-wineskin": {
    "unit": "ody-i-10-wineskin",
@@ -2467,8 +2576,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 98.1,
+   "cutMove": 17.49
   },
   "ody-i-11-twentyone": {
    "unit": "ody-i-11-twentyone",
@@ -2488,16 +2600,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    42.861,
-    1.56,
-    -17.525
+    47.387,
+    1.68,
+    -18.233
    ],
    "lookAt": [
-    47.361,
-    0.809,
-    -21.848
+    46.71,
+    0.804,
+    -22.056
    ],
-   "fov": 24,
+   "fov": 40,
    "move": {
     "k": "push",
     "cms": 2.4,
@@ -2510,8 +2622,8 @@
     "near": 0.85
    },
    "read": {
-    "fill": 1,
-    "rim": 1,
+    "fill": 1.8,
+    "rim": 1.7,
     "side": 1
    },
    "frame": {
@@ -2519,25 +2631,25 @@
     "point": false,
     "fill": false,
     "side": 0,
-    "sideLanded": -1,
+    "sideLanded": 1,
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.742,
-    "fracDesign": 0.656,
+    "frac": 0.715,
+    "fracDesign": 0.607,
     "inFrame": 1,
-    "cx": -0.17,
+    "cx": 0.171,
     "cy": 0.016,
     "floor": 0.3,
-    "crownPitch": 1.7,
+    "crownPitch": 1,
     "crownPitchMin": null,
-    "dist": 6.27,
-    "bearing": -42.8,
+    "dist": 3.96,
+    "bearing": 4.3,
     "comp": [
-     -0.16,
+     0.16,
      0.05
     ],
-    "camY": 1.56,
+    "camY": 1.68,
     "follow": false,
     "anchor": [
      47.1,
@@ -2550,8 +2662,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 55.6,
+   "cutMove": 53.75
   },
   "ody-i-12-misgave": {
    "unit": "ody-i-12-misgave",
@@ -2576,14 +2691,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    31.856,
+    30.155,
     2.4,
-    -8.142
+    -9.499
    ],
    "lookAt": [
-    50.071,
+    50.09,
     3.998,
-    -33.433
+    -33.458
    ],
    "fov": 24,
    "move": {
@@ -2611,16 +2726,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.866,
+    "frac": 0.868,
     "fracDesign": 0.881,
     "inFrame": 1,
-    "cx": 0.06,
-    "cy": -0.023,
+    "cx": 0.052,
+    "cy": -0.022,
     "floor": 0.2,
     "crownPitch": 10.4,
     "crownPitchMin": null,
     "dist": 31.2,
-    "bearing": -36.6,
+    "bearing": -40.6,
     "comp": [
      0.04,
      -0.06
@@ -2632,14 +2747,17 @@
      3.6,
      -33.176
     ],
-    "solved": "hint + backed off"
+    "solved": "swung -4deg x1 + backed off"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 29,
+   "cutMove": 19.33
   },
   "ody-ii-00-head": {
    "unit": "ody-ii-00-head",
@@ -2725,7 +2843,8 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
+    "gateTarget": null,
+    "sepLost": false
    }
   },
   "ody-ii-01-beg": {
@@ -2751,14 +2870,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    5.287,
+    -10.388,
     1.7,
-    4.432
+    -0.432
    ],
    "lookAt": [
-    -1.078,
-    1.269,
-    -3.395
+    -1.349,
+    1.275,
+    -2.538
    ],
    "fov": 30,
    "move": {
@@ -2786,16 +2905,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.643,
-    "fracDesign": 0.5,
+    "frac": 0.689,
+    "fracDesign": 0.543,
     "inFrame": 1,
-    "cx": -0.134,
-    "cy": 0.004,
+    "cx": -0.173,
+    "cy": 0.005,
     "floor": 0.2,
-    "crownPitch": 5.7,
+    "crownPitch": 6.2,
     "crownPitchMin": null,
-    "dist": 10.08,
-    "bearing": 42.3,
+    "dist": 9.28,
+    "bearing": -73.7,
     "comp": [
      -0.12,
      0.03
@@ -2807,14 +2926,17 @@
      1.35,
      -3.027
     ],
-    "solved": "swung 40deg x1"
+    "solved": "swung -76deg x0.92"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 120,
+   "cutMove": 17.08
   },
   "ody-ii-02-present": {
    "unit": "ody-ii-02-present",
@@ -2896,8 +3018,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 83.1,
+   "cutMove": 10.4
   },
   "ody-ii-03-return": {
    "unit": "ody-ii-03-return",
@@ -2916,20 +3041,20 @@
      352,
      430
     ],
-    "h": 4.6,
-    "y": 2.2
+    "h": 2.6,
+    "y": 1.3
    },
    "over": null,
    "fg": null,
    "pos": [
-    4.549,
+    -0.821,
     1.66,
-    4.443
+    -3.006
    ],
    "lookAt": [
-    -7.881,
-    2.116,
-    -2.295
+    -8.252,
+    1.256,
+    -2.023
    ],
    "fov": 33,
    "move": {
@@ -2944,12 +3069,12 @@
     "near": 0.85
    },
    "read": {
-    "fill": 0.95,
-    "rim": 1.05,
+    "fill": 1.9,
+    "rim": 1.9,
     "side": 1
    },
    "frame": {
-    "h": 4.6,
+    "h": 2.6,
     "point": true,
     "fill": false,
     "side": 0,
@@ -2957,16 +3082,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.743,
-    "fracDesign": 0.55,
+    "frac": 0.8,
+    "fracDesign": 0.831,
     "inFrame": 1,
-    "cx": -0.073,
-    "cy": 0.055,
+    "cx": -0.181,
+    "cy": -0.011,
     "floor": 0.17,
-    "crownPitch": 11.4,
+    "crownPitch": 7.2,
     "crownPitchMin": null,
-    "dist": 14.13,
-    "bearing": 64.4,
+    "dist": 7.5,
+    "bearing": 100.4,
     "comp": [
      -0.1,
      0.02
@@ -2975,17 +3100,20 @@
     "follow": false,
     "anchor": [
      -8.186,
-     2.2,
+     1.3,
      -1.651
     ],
-    "solved": "swung 36deg x1"
+    "solved": "swung -8deg x0.6 + backed off"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 51.1,
+   "cutMove": 7.4
   },
   "ody-ii-04-boulder": {
    "unit": "ody-ii-04-boulder",
@@ -3004,20 +3132,20 @@
      352,
      430
     ],
-    "h": 4.6,
-    "y": 2.2
+    "h": 2.6,
+    "y": 1.3
    },
    "over": null,
    "fg": null,
    "pos": [
-    4.549,
+    -0.821,
     1.66,
-    4.443
+    -3.006
    ],
    "lookAt": [
-    -7.881,
-    2.116,
-    -2.295
+    -8.252,
+    1.256,
+    -2.023
    ],
    "fov": 33,
    "move": {
@@ -3032,12 +3160,12 @@
     "near": 0.85
    },
    "read": {
-    "fill": 0.95,
-    "rim": 1.05,
+    "fill": 1.9,
+    "rim": 1.9,
     "side": 1
    },
    "frame": {
-    "h": 4.6,
+    "h": 2.6,
     "point": true,
     "fill": false,
     "side": 0,
@@ -3045,16 +3173,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.743,
-    "fracDesign": 0.55,
+    "frac": 0.8,
+    "fracDesign": 0.831,
     "inFrame": 1,
-    "cx": -0.073,
-    "cy": 0.055,
+    "cx": -0.181,
+    "cy": -0.011,
     "floor": 0.17,
-    "crownPitch": 11.4,
+    "crownPitch": 7.2,
     "crownPitchMin": null,
-    "dist": 14.13,
-    "bearing": 64.4,
+    "dist": 7.5,
+    "bearing": 100.4,
     "comp": [
      -0.1,
      0.02
@@ -3063,16 +3191,17 @@
     "follow": false,
     "anchor": [
      -8.186,
-     2.2,
+     1.3,
      -1.651
     ],
-    "solved": "swung 36deg x1"
+    "solved": "swung -8deg x0.6 + backed off"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
+    "gateTarget": null,
+    "sepLost": false
    }
   },
   "ody-ii-05-strangers": {
@@ -3155,8 +3284,11 @@
     "intro": true,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 172.1,
+   "cutMove": 10.31
   },
   "ody-ii-06-plea": {
    "unit": "ody-ii-06-plea",
@@ -3176,14 +3308,14 @@
    "over": "poly-seat",
    "fg": null,
    "pos": [
-    1.236,
+    -0.461,
     3.4,
-    -1.774
+    -2.677
    ],
    "lookAt": [
-    3.256,
-    1.011,
-    5.441
+    3.182,
+    1.039,
+    5.608
    ],
    "fov": 34,
    "move": {
@@ -3211,16 +3343,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.425,
-    "fracDesign": 0.366,
+    "frac": 0.355,
+    "fracDesign": 0.308,
     "inFrame": 1,
-    "cx": -0.205,
-    "cy": -0.082,
+    "cx": -0.2,
+    "cy": -0.081,
     "floor": 0.3,
-    "crownPitch": -12.6,
+    "crownPitch": -10.4,
     "crownPitchMin": null,
-    "dist": 7.83,
-    "bearing": -158.4,
+    "dist": 9.31,
+    "bearing": -150.4,
     "comp": [
      -0.19,
      -0.06
@@ -3232,14 +3364,17 @@
      0.875,
      5.114
     ],
-    "solved": "UPSTAGE swung -28deg x1"
+    "solved": "UPSTAGE swung -32deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 101.1,
+   "cutMove": 10.09
   },
   "ody-ii-07-pitiless": {
    "unit": "ody-ii-07-pitiless",
@@ -3321,8 +3456,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 80.2,
+   "cutMove": 8.02
   },
   "ody-ii-08-shipfast": {
    "unit": "ody-ii-08-shipfast",
@@ -3342,14 +3480,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -5.315,
+    6.812,
     1.05,
-    3.302
+    3.945
    ],
    "lookAt": [
-    1.001,
-    1.938,
-    -0.996
+    0.927,
+    1.945,
+    0.012
    ],
    "fov": 44,
    "move": {
@@ -3377,16 +3515,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.865,
-    "fracDesign": 0.694,
-    "inFrame": 1,
-    "cx": 0.121,
-    "cy": 0.064,
+    "frac": 0.949,
+    "fracDesign": 0.824,
+    "inFrame": 0.992,
+    "cx": 0.141,
+    "cy": 0.065,
     "floor": 0.42,
-    "crownPitch": 22.4,
+    "crownPitch": 24,
     "crownPitchMin": 21,
-    "dist": 7.66,
-    "bearing": -60.5,
+    "dist": 7.11,
+    "bearing": 51.5,
     "comp": [
      0.12,
      0.03
@@ -3398,14 +3536,17 @@
      2.03,
      -0.44
     ],
-    "solved": "swung -92deg x1"
+    "solved": "swung 8deg x0.84 + backed off"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 113.1,
+   "cutMove": 12.28
   },
   "ody-ii-09-shiplie": {
    "unit": "ody-ii-09-shiplie",
@@ -3487,8 +3628,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 92.4,
+   "cutMove": 9.67
   },
   "ody-ii-10-firstmeal": {
    "unit": "ody-ii-10-firstmeal",
@@ -3569,8 +3713,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 54.4,
+   "cutMove": 8.98
   },
   "ody-ii-11-sword": {
    "unit": "ody-ii-11-sword",
@@ -3591,14 +3738,14 @@
    "over": "ulysses",
    "fg": null,
    "pos": [
-    -5.94,
+    1.165,
     1.15,
-    2.055
+    -0.804
    ],
    "lookAt": [
-    -0.773,
+    -0.967,
     0.817,
-    5.54
+    5.053
    ],
    "fov": 30,
    "move": {
@@ -3626,16 +3773,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.371,
+    "frac": 0.367,
     "fracDesign": 0.3,
     "inFrame": 1,
-    "cx": -0.158,
-    "cy": -0.002,
+    "cx": -0.151,
+    "cy": 0,
     "floor": 0.22,
     "crownPitch": 1.8,
     "crownPitchMin": null,
     "dist": 6.23,
-    "bearing": -120.1,
+    "bearing": -196.1,
     "comp": [
      -0.15,
      0.02
@@ -3647,14 +3794,17 @@
      0.85,
      5.173
     ],
-    "solved": "UPSTAGE swung 0deg x1"
+    "solved": "UPSTAGE swung -76deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 89.3,
+   "cutMove": 7.95
   },
   "ody-ii-12-shiftstone": {
    "unit": "ody-ii-12-shiftstone",
@@ -3679,16 +3829,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    3.109,
+    1.361,
     1.66,
-    4.758
+    4.686
    ],
    "lookAt": [
-    -7.876,
-    2.126,
-    -2.204
+    -7.828,
+    2.123,
+    -2.197
    ],
-   "fov": 32,
+   "fov": 37,
    "move": {
     "k": "push",
     "cms": 3,
@@ -3714,16 +3864,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.842,
-    "fracDesign": 0.617,
+    "frac": 0.865,
+    "fracDesign": 0.699,
     "inFrame": 1,
-    "cx": -0.074,
-    "cy": 0.062,
+    "cx": -0.082,
+    "cy": 0.068,
     "floor": 0.2,
-    "crownPitch": 12.3,
+    "crownPitch": 13.9,
     "crownPitchMin": null,
-    "dist": 13,
-    "bearing": 60.4,
+    "dist": 11.47,
+    "bearing": 56.4,
     "comp": [
      -0.1,
      0.02
@@ -3735,14 +3885,17 @@
      2.2,
      -1.651
     ],
-    "solved": "swung 32deg x0.68"
+    "solved": "swung 28deg x0.6 + widened"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 28.4,
+   "cutMove": 5.52
   },
   "ody-ii-13-tillmorning": {
    "unit": "ody-ii-13-tillmorning",
@@ -3829,8 +3982,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 42.6,
+   "cutMove": 5.13
   },
   "ody-iii-00-head": {
    "unit": "ody-iii-00-head",
@@ -3918,7 +4074,8 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
+    "gateTarget": null,
+    "sepLost": false
    }
   },
   "ody-iii-01-morningmeal": {
@@ -3939,14 +4096,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -1.375,
+    1.368,
     1.52,
-    4.766
+    0.962
    ],
    "lookAt": [
-    4.866,
-    0.825,
-    4.817
+    4.623,
+    0.836,
+    4.637
    ],
    "fov": 30,
    "move": {
@@ -3974,16 +4131,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.597,
-    "fracDesign": 0.521,
+    "frac": 0.814,
+    "fracDesign": 0.726,
     "inFrame": 1,
-    "cx": -0.163,
-    "cy": 0.015,
+    "cx": -0.16,
+    "cy": -0.008,
     "floor": 0.17,
-    "crownPitch": 2.1,
+    "crownPitch": 2.7,
     "crownPitchMin": null,
-    "dist": 6.27,
-    "bearing": -86.8,
+    "dist": 4.95,
+    "bearing": -134.8,
     "comp": [
      -0.14,
      0.03
@@ -3995,14 +4152,17 @@
      0.875,
      4.417
     ],
-    "solved": "swung -48deg x0.84"
+    "solved": "UPSTAGE swung -92deg x0.6 + backed off"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 37.9,
+   "cutMove": 9.19
   },
   "ody-iii-02-quiverlid": {
    "unit": "ody-iii-02-quiverlid",
@@ -4027,16 +4187,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.071,
+    1.145,
     1.66,
-    4.214
+    -5.502
    ],
    "lookAt": [
-    -7.893,
+    -8.449,
     2.12,
-    -2.271
+    -2.276
    ],
-   "fov": 33,
+   "fov": 43,
    "move": {
     "k": "push",
     "cms": 9,
@@ -4062,16 +4222,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.811,
-    "fracDesign": 0.571,
+    "frac": 0.928,
+    "fracDesign": 0.768,
     "inFrame": 1,
-    "cx": -0.072,
-    "cy": 0.059,
+    "cx": -0.192,
+    "cy": 0.071,
     "floor": 0.17,
-    "crownPitch": 11.8,
+    "crownPitch": 15.7,
     "crownPitchMin": null,
-    "dist": 13.6,
-    "bearing": 64.4,
+    "dist": 10.11,
+    "bearing": 112.4,
     "comp": [
      -0.1,
      0.02
@@ -4083,14 +4243,17 @@
      2.2,
      -1.651
     ],
-    "solved": "swung 36deg x0.84"
+    "solved": "UPSTAGE swung 84deg x0.52 + at the wall"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 37.7,
+   "cutMove": 6.47
   },
   "ody-iii-03-scheme": {
    "unit": "ody-iii-03-scheme",
@@ -4172,8 +4335,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 52,
+   "cutMove": 8.7
   },
   "ody-iii-04-club": {
    "unit": "ody-iii-04-club",
@@ -4260,8 +4426,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 36.2,
+   "cutMove": 9.26
   },
   "ody-iii-05-lots": {
    "unit": "ody-iii-05-lots",
@@ -4286,12 +4455,12 @@
    "over": null,
    "fg": null,
    "pos": [
-    5.733,
+    5.739,
     2.35,
-    4.109
+    4.016
    ],
    "lookAt": [
-    0.237,
+    0.238,
     0.792,
     3.689
    ],
@@ -4320,16 +4489,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.608,
+    "frac": 0.606,
     "fracDesign": 0.484,
     "inFrame": 1,
-    "cx": 0.022,
-    "cy": -0.013,
+    "cx": 0.017,
+    "cy": -0.011,
     "floor": 0.17,
     "crownPitch": -5.7,
     "crownPitchMin": null,
     "dist": 5.73,
-    "bearing": 85.6,
+    "bearing": 86.6,
     "comp": [
      0,
      0.06
@@ -4341,14 +4510,17 @@
      0.9,
      3.687
     ],
-    "solved": "swung 88deg x0.68"
+    "solved": "swung 60deg x0.68"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 162.4,
+   "cutMove": 16.54
   },
   "ody-iii-06-return": {
    "unit": "ody-iii-06-return",
@@ -4367,20 +4539,20 @@
      420,
      434
     ],
-    "h": 4.4,
-    "y": 2.1
+    "h": 2.6,
+    "y": 1.3
    },
    "over": null,
    "fg": null,
    "pos": [
-    4.464,
+    0.326,
     1.66,
-    4.645
+    -2.808
    ],
    "lookAt": [
-    -6.3,
-    2.025,
-    -1.99
+    -6.672,
+    1.258,
+    -1.781
    ],
    "fov": 33,
    "move": {
@@ -4395,12 +4567,12 @@
     "near": 0.85
    },
    "read": {
-    "fill": 0.8,
-    "rim": 0.85,
+    "fill": 1.8,
+    "rim": 1.8,
     "side": 1
    },
    "frame": {
-    "h": 4.4,
+    "h": 2.6,
     "point": true,
     "fill": false,
     "side": 0,
@@ -4408,16 +4580,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.807,
-    "fracDesign": 0.588,
+    "frac": 0.843,
+    "fracDesign": 0.807,
     "inFrame": 1,
-    "cx": -0.075,
-    "cy": 0.054,
+    "cx": -0.186,
+    "cy": -0.016,
     "floor": 0.2,
-    "crownPitch": 11.8,
+    "crownPitch": 7.6,
     "crownPitchMin": null,
-    "dist": 12.63,
-    "bearing": 61.2,
+    "dist": 7.08,
+    "bearing": 101.2,
     "comp": [
      -0.1,
      0.02
@@ -4426,17 +4598,20 @@
     "follow": false,
     "anchor": [
      -6.605,
-     2.1,
+     1.3,
      -1.431
     ],
-    "solved": "swung 40deg x0.68"
+    "solved": "swung -8deg x0.68 + backed off"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 35,
+   "cutMove": 8.74
   },
   "ody-iii-07-suppertwo": {
    "unit": "ody-iii-07-suppertwo",
@@ -4517,8 +4692,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 95.9,
+   "cutMove": 9.21
   },
   "ody-iii-08-lookhere": {
    "unit": "ody-iii-08-lookhere",
@@ -4616,8 +4794,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 96.6,
+   "cutMove": 7.19
   },
   "ody-iii-09-besokind": {
    "unit": "ody-iii-09-besokind",
@@ -4699,8 +4880,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 51.7,
+   "cutMove": 5.44
   },
   "ody-iii-10-thrice": {
    "unit": "ody-iii-10-thrice",
@@ -4798,8 +4982,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 62.7,
+   "cutMove": 5.44
   },
   "ody-iii-11-noman": {
    "unit": "ody-iii-11-noman",
@@ -4881,8 +5068,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 154,
+   "cutMove": 8.05
   },
   "ody-iii-12-nomanlast": {
    "unit": "ody-iii-12-nomanlast",
@@ -4964,8 +5154,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 86,
+   "cutMove": 7.4
   },
   "ody-iii-13-neck": {
    "unit": "ody-iii-13-neck",
@@ -4985,14 +5178,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -5.434,
+    -5.045,
     1.15,
-    2.743
+    -4.198
    ],
    "lookAt": [
-    5.211,
-    5.095,
-    3.379
+    5.558,
+    5.158,
+    3.356
    ],
    "fov": 48,
    "move": {
@@ -5020,16 +5213,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.756,
-    "fracDesign": 1.133,
+    "frac": 0.652,
+    "fracDesign": 0.578,
     "inFrame": 1,
-    "cx": 0.09,
-    "cy": -0.042,
+    "cx": 0.071,
+    "cy": -0.014,
     "floor": 0.17,
-    "crownPitch": 33.7,
+    "crownPitch": 28.6,
     "crownPitchMin": null,
-    "dist": 11.35,
-    "bearing": -96.2,
+    "dist": 13.6,
+    "bearing": -128.2,
     "comp": [
      0.06,
      -0.06
@@ -5041,14 +5234,17 @@
      4.808,
      3.903
     ],
-    "solved": "swung -52deg x0.45 + backed off"
+    "solved": "UPSTAGE swung -96deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 28,
+   "cutMove": 6.22
   },
   "ody-iv-00-head": {
    "unit": "ody-iv-00-head",
@@ -5136,7 +5332,8 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
+    "gateTarget": null,
+    "sepLost": false
    }
   },
   "ody-iv-01-embers": {
@@ -5220,8 +5417,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 121.4,
+   "cutMove": 10.81
   },
   "ody-iv-02-glowing": {
    "unit": "ody-iv-02-glowing",
@@ -5241,14 +5441,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    5.958,
+    -7.364,
     1.05,
-    4.204
+    3.098
    ],
    "lookAt": [
-    -1.242,
-    0.838,
-    2.736
+    -1.305,
+    0.845,
+    3.472
    ],
    "fov": 28,
    "move": {
@@ -5276,16 +5476,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.54,
-    "fracDesign": 0.478,
+    "frac": 0.666,
+    "fracDesign": 0.579,
     "inFrame": 1,
-    "cx": -0.132,
-    "cy": 0.017,
+    "cx": -0.14,
+    "cy": 0.016,
     "floor": 0.17,
-    "crownPitch": 5.4,
+    "crownPitch": 6.6,
     "crownPitchMin": null,
-    "dist": 7.34,
-    "bearing": 81.6,
+    "dist": 6.06,
+    "bearing": -90.4,
     "comp": [
      -0.13,
      0.02
@@ -5297,14 +5497,17 @@
      0.875,
      3.137
     ],
-    "solved": "swung 84deg x0.92"
+    "solved": "swung -88deg x0.76"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 166.1,
+   "cutMove": 11.9
   },
   "ody-iv-03-auger": {
    "unit": "ody-iv-03-auger",
@@ -5403,8 +5606,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 156.6,
+   "cutMove": 12.59
   },
   "ody-iv-04-bore": {
    "unit": "ody-iv-04-bore",
@@ -5485,8 +5691,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 81.1,
+   "cutMove": 10.59
   },
   "ody-iv-05-hiss": {
    "unit": "ody-iv-05-hiss",
@@ -5506,14 +5715,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -1.005,
+    1.356,
     1.45,
-    4.917
+    0.767
    ],
    "lookAt": [
-    5.119,
-    4.871,
-    3.265
+    5.729,
+    4.565,
+    3.581
    ],
    "fov": 52,
    "move": {
@@ -5543,19 +5752,19 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 1.148,
-    "fracDesign": 1,
-    "inFrame": 0.871,
-    "cx": 0.11,
-    "cy": -0.042,
+    "frac": 1.423,
+    "fracDesign": 1.19,
+    "inFrame": 0.703,
+    "cx": 0.206,
+    "cy": 0.057,
     "floor": 0.18,
-    "crownPitch": 47.2,
+    "crownPitch": 53.9,
     "crownPitchMin": null,
-    "dist": 7.18,
-    "bearing": -80.8,
+    "dist": 6.03,
+    "bearing": -128.8,
     "comp": [
      0.11,
-     -0.02
+     0.1
     ],
     "camY": 1.45,
     "follow": false,
@@ -5564,14 +5773,17 @@
      4.809,
      3.907
     ],
-    "solved": "swung -48deg x0.76"
+    "solved": "UPSTAGE swung -96deg x0.6"
    },
    "flags": {
     "intro": false,
     "blinding": true,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 37.3,
+   "cutMove": 7.32
   },
   "ody-iv-06-fright": {
    "unit": "ody-iv-06-fright",
@@ -5652,8 +5864,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 50.8,
+   "cutMove": 4.68
   },
   "ody-iv-07-whatails": {
    "unit": "ody-iv-07-whatails",
@@ -5678,14 +5893,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.314,
+    3.166,
     1.66,
-    4.213
+    0.925
    ],
    "lookAt": [
-    -7.766,
-    1.83,
-    -2.83
+    -7.99,
+    1.842,
+    -2.752
    ],
    "fov": 28,
    "move": {
@@ -5713,16 +5928,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.559,
-    "fracDesign": 0.46,
+    "frac": 0.682,
+    "fracDesign": 0.548,
     "inFrame": 1,
-    "cx": -0.148,
-    "cy": 0.033,
+    "cx": -0.128,
+    "cy": 0.037,
     "floor": 0.3,
-    "crownPitch": 7.5,
+    "crownPitch": 8.9,
     "crownPitchMin": null,
-    "dist": 13.95,
-    "bearing": 63.6,
+    "dist": 11.72,
+    "bearing": 75.6,
     "comp": [
      -0.16,
      0.02
@@ -5734,14 +5949,17 @@
      1.9,
      -1.981
     ],
-    "solved": "swung 36deg x1"
+    "solved": "swung 48deg x0.84"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": true,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 27.9,
+   "cutMove": 5.53
   },
   "ody-iv-08-nomankilling": {
    "unit": "ody-iv-08-nomankilling",
@@ -5761,16 +5979,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    -1.582,
+    -1.148,
     1.05,
-    -3.143
+    5.051
    ],
    "lookAt": [
-    5.926,
-    4.992,
-    3.159
+    5.015,
+    4.959,
+    3.05
    ],
-   "fov": 50,
+   "fov": 60,
    "move": {
     "k": "push",
     "cms": 4,
@@ -5796,16 +6014,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.857,
+    "frac": 0.972,
     "fracDesign": 0.999,
-    "inFrame": 1,
-    "cx": 0.15,
-    "cy": 0.019,
+    "inFrame": 0.985,
+    "cx": 0.144,
+    "cy": -0.058,
     "floor": 0.42,
-    "crownPitch": 36.5,
+    "crownPitch": 48.1,
     "crownPitchMin": 21,
-    "dist": 10.52,
-    "bearing": -135.9,
+    "dist": 7.51,
+    "bearing": -79.9,
     "comp": [
      0.12,
      -0.04
@@ -5817,14 +6035,17 @@
      4.809,
      3.907
     ],
-    "solved": "swung -92deg x0.52 + backed off"
+    "solved": "swung -92deg x0.52 + at the wall"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 65.1,
+   "cutMove": 6
   },
   "ody-iv-09-mustbeill": {
    "unit": "ody-iv-09-mustbeill",
@@ -5849,14 +6070,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.314,
+    2.936,
     1.66,
-    4.213
+    1.71
    ],
    "lookAt": [
-    -7.766,
-    1.83,
-    -2.83
+    -7.936,
+    1.842,
+    -2.737
    ],
    "fov": 28,
    "move": {
@@ -5884,16 +6105,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.559,
-    "fracDesign": 0.46,
+    "frac": 0.686,
+    "fracDesign": 0.548,
     "inFrame": 1,
-    "cx": -0.148,
-    "cy": 0.033,
+    "cx": -0.132,
+    "cy": 0.037,
     "floor": 0.3,
-    "crownPitch": 7.5,
+    "crownPitch": 8.9,
     "crownPitchMin": null,
-    "dist": 13.95,
-    "bearing": 63.6,
+    "dist": 11.72,
+    "bearing": 71.6,
     "comp": [
      -0.16,
      0.02
@@ -5905,14 +6126,17 @@
      1.9,
      -1.981
     ],
-    "solved": "swung 36deg x1"
+    "solved": "swung 44deg x0.84"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": true,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 26.6,
+   "cutMove": 5.31
   },
   "ody-iv-10-wentaway": {
    "unit": "ody-iv-10-wentaway",
@@ -5937,14 +6161,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.314,
+    2.936,
     1.66,
-    4.213
+    1.71
    ],
    "lookAt": [
-    -7.766,
-    1.83,
-    -2.83
+    -7.936,
+    1.842,
+    -2.737
    ],
    "fov": 28,
    "move": {
@@ -5972,16 +6196,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.559,
-    "fracDesign": 0.46,
+    "frac": 0.686,
+    "fracDesign": 0.548,
     "inFrame": 1,
-    "cx": -0.148,
-    "cy": 0.033,
+    "cx": -0.132,
+    "cy": 0.037,
     "floor": 0.3,
-    "crownPitch": 7.5,
+    "crownPitch": 8.9,
     "crownPitchMin": null,
-    "dist": 13.95,
-    "bearing": 63.6,
+    "dist": 11.72,
+    "bearing": 71.6,
     "comp": [
      -0.16,
      0.02
@@ -5993,13 +6217,14 @@
      1.9,
      -1.981
     ],
-    "solved": "swung 36deg x1"
+    "solved": "swung 44deg x0.84"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": true,
-    "gateTarget": null
+    "gateTarget": null,
+    "sepLost": false
    }
   },
   "ody-iv-11-stone": {
@@ -6082,8 +6307,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 66.7,
+   "cutMove": 13.9
   },
   "ody-iv-12-doorway": {
    "unit": "ody-iv-12-doorway",
@@ -6165,8 +6393,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 41.5,
+   "cutMove": 12.58
   },
   "ody-v-00-head": {
    "unit": "ody-v-00-head",
@@ -6253,7 +6484,8 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
+    "gateTarget": null,
+    "sepLost": false
    }
   },
   "ody-v-01-puzzling": {
@@ -6336,8 +6568,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 31.4,
+   "cutMove": 3.08
   },
   "ody-v-02-withies": {
    "unit": "ody-v-02-withies",
@@ -6362,14 +6597,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -0.296,
+    2.59,
     1.2,
-    4.865
+    4.979
    ],
    "lookAt": [
-    4.29,
-    0.762,
-    0.047
+    4.284,
+    0.771,
+    0.217
    ],
    "fov": 32,
    "move": {
@@ -6397,16 +6632,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.555,
-    "fracDesign": 0.419,
+    "frac": 0.785,
+    "fracDesign": 0.551,
     "inFrame": 1,
-    "cx": 0.133,
-    "cy": -0.02,
+    "cx": 0.188,
+    "cy": -0.043,
     "floor": 0.17,
-    "crownPitch": 3.4,
+    "crownPitch": 4.5,
     "crownPitchMin": null,
-    "dist": 6.65,
-    "bearing": -47,
+    "dist": 5.06,
+    "bearing": -23,
     "comp": [
      0.12,
      0.02
@@ -6418,14 +6653,17 @@
      0.8,
      0.33
     ],
-    "solved": "swung -44deg x1"
+    "solved": "swung -20deg x0.76"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 29.9,
+   "cutMove": 3.81
   },
   "ody-v-03-threetoaman": {
    "unit": "ody-v-03-threetoaman",
@@ -6450,14 +6688,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    1.331,
+    0.164,
     0.95,
-    5.014
+    3.943
    ],
    "lookAt": [
-    4.85,
+    4.783,
     0.765,
-    0.533
+    0.605
    ],
    "fov": 34,
    "move": {
@@ -6484,16 +6722,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.574,
+    "frac": 0.573,
     "fracDesign": 0.46,
     "inFrame": 1,
-    "cx": -0.112,
+    "cx": -0.133,
     "cy": 0.002,
     "floor": 0.17,
     "crownPitch": 6.5,
     "crownPitchMin": null,
     "dist": 5.69,
-    "bearing": -34.6,
+    "bearing": -50.6,
     "comp": [
      -0.12,
      0.02
@@ -6505,14 +6743,17 @@
      0.8,
      0.33
     ],
-    "solved": "hint"
+    "solved": "swung -16deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 27.6,
+   "cutMove": 2.65
   },
   "ody-v-04-greatram": {
    "unit": "ody-v-04-greatram",
@@ -6595,8 +6836,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 116.5,
+   "cutMove": 6.17
   },
   "ody-v-05-dawn": {
    "unit": "ody-v-05-dawn",
@@ -6621,14 +6865,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    2.769,
+    2.621,
     2.4,
-    1.465
+    -1.101
    ],
    "lookAt": [
-    -4.121,
-    1.34,
-    -1.479
+    -4.26,
+    1.353,
+    -1.478
    ],
    "fov": 56,
    "move": {
@@ -6652,20 +6896,20 @@
     "point": true,
     "fill": false,
     "side": 0,
-    "sideLanded": 0,
+    "sideLanded": -1,
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.872,
-    "fracDesign": 0.686,
+    "frac": 0.877,
+    "fracDesign": 0.745,
     "inFrame": 1,
-    "cx": 0.007,
-    "cy": -0.042,
+    "cx": -0.079,
+    "cy": -0.02,
     "floor": 0.17,
-    "crownPitch": 9.8,
+    "crownPitch": 10.7,
     "crownPitchMin": null,
-    "dist": 7.55,
-    "bearing": 70,
+    "dist": 6.96,
+    "bearing": 90,
     "comp": [
      -0.06,
      0.04
@@ -6677,14 +6921,17 @@
      1.5,
      -1.101
     ],
-    "solved": "hint + widened"
+    "solved": "swung 20deg x0.92 + widened"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 27,
+   "cutMove": 6.66
   },
   "ody-v-06-feltbacks": {
    "unit": "ody-v-06-feltbacks",
@@ -6766,8 +7013,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 39.7,
+   "cutMove": 7.29
   },
   "ody-v-07-lastofall": {
    "unit": "ody-v-07-lastofall",
@@ -6787,14 +7037,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    1.189,
+    1.859,
     0.58,
-    2.419
+    2.423
    ],
    "lookAt": [
-    1.818,
+    1.819,
     0.77,
-    -0.734
+    -0.792
    ],
    "fov": 40,
    "move": {
@@ -6836,16 +7086,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.818,
+    "frac": 0.802,
     "fracDesign": 0.6,
     "inFrame": 1,
-    "cx": -0.155,
-    "cy": -0.071,
+    "cx": -0.191,
+    "cy": -0.072,
     "floor": 0.17,
     "crownPitch": 14.3,
     "crownPitchMin": null,
     "dist": 3.21,
-    "bearing": -6.3,
+    "bearing": 5.7,
     "comp": [
      -0.14,
      -0.06
@@ -6857,14 +7107,17 @@
      0.7,
      -0.767
     ],
-    "solved": "swung 36deg x1"
+    "solved": "swung 48deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 29.7,
+   "cutMove": 3.84
   },
   "ody-v-08-ramspeech1": {
    "unit": "ody-v-08-ramspeech1",
@@ -6884,14 +7137,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -0.924,
-    0.65,
-    4.796
+    -2.134,
+    1.28,
+    -3.072
    ],
    "lookAt": [
-    -8.741,
-    1.956,
-    1.212
+    -8.031,
+    1.967,
+    1.108
    ],
    "fov": 47,
    "move": {
@@ -6919,16 +7172,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.682,
-    "fracDesign": 0.499,
+    "frac": 0.87,
+    "fracDesign": 1.096,
     "inFrame": 1,
-    "cx": 0.141,
-    "cy": 0.055,
+    "cx": 0.121,
+    "cy": 0.045,
     "floor": 0.42,
-    "crownPitch": 22.4,
+    "crownPitch": 22,
     "crownPitchMin": 21,
-    "dist": 8.66,
-    "bearing": 60.2,
+    "dist": 7.23,
+    "bearing": 120.2,
     "comp": [
      0.12,
      0.02
@@ -6940,14 +7193,17 @@
      2.03,
      0.55
     ],
-    "solved": "swung 36deg x1 + low-angled"
+    "solved": "swung 12deg x0.45 + backed off"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 40.6,
+   "cutMove": 6.83
   },
   "ody-v-09-ramspeech2": {
    "unit": "ody-v-09-ramspeech2",
@@ -7029,8 +7285,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 58.5,
+   "cutMove": 7.94
   },
   "ody-v-10-ramspeech3": {
    "unit": "ody-v-10-ramspeech3",
@@ -7050,14 +7309,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -0.852,
+    -0.355,
     0.65,
-    4.838
+    -2.718
    ],
    "lookAt": [
-    -8.683,
+    -8.104,
     1.992,
-    1.122
+    1.166
    ],
    "fov": 48,
    "move": {
@@ -7085,16 +7344,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.654,
+    "frac": 0.655,
     "fracDesign": 0.518,
     "inFrame": 1,
-    "cx": 0.118,
+    "cx": 0.098,
     "cy": 0.042,
     "floor": 0.42,
     "crownPitch": 22.2,
     "crownPitchMin": 21,
     "dist": 8.75,
-    "bearing": 60.2,
+    "bearing": 112.2,
     "comp": [
      0.1,
      0.01
@@ -7106,14 +7365,17 @@
      2.03,
      0.55
     ],
-    "solved": "swung 36deg x1 + low-angled"
+    "solved": "UPSTAGE swung 84deg x1 + low-angled"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 50.5,
+   "cutMove": 7.43
   },
   "ody-v-11-freed": {
    "unit": "ody-v-11-freed",
@@ -7194,8 +7456,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 55.3,
+   "cutMove": 7.33
   },
   "ody-v-12-aboard": {
    "unit": "ody-v-12-aboard",
@@ -7220,14 +7485,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    1.16,
+    1.64,
     2.4,
-    2.809
+    0.882
    ],
    "lookAt": [
-    -7.517,
+    -7.66,
     1.496,
-    -1.103
+    -1.141
    ],
    "fov": 40,
    "move": {
@@ -7255,16 +7520,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.676,
+    "frac": 0.655,
     "fracDesign": 0.49,
     "inFrame": 1,
-    "cx": -0.09,
-    "cy": -0.03,
+    "cx": -0.095,
+    "cy": -0.021,
     "floor": 0.2,
     "crownPitch": 5.4,
     "crownPitchMin": null,
     "dist": 9.53,
-    "bearing": 70,
+    "bearing": 82,
     "comp": [
      -0.12,
      0.03
@@ -7276,14 +7541,17 @@
      1.6,
      -0.44
     ],
-    "solved": "hint"
+    "solved": "swung 12deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 30,
+   "cutMove": 4.83
   },
   "ody-vi-01-jeer": {
    "unit": "ody-vi-01-jeer",
@@ -7366,7 +7634,8 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
+    "gateTarget": null,
+    "sepLost": false
    }
   },
   "ody-vi-02-taunt": {
@@ -7387,14 +7656,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -20.349,
+    -16.316,
     2.6,
-    1.678
+    6.297
    ],
    "lookAt": [
-    -13.795,
+    -13.146,
     1.378,
-    1.082
+    0.53
    ],
    "fov": 30,
    "move": {
@@ -7422,16 +7691,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.553,
+    "frac": 0.565,
     "fracDesign": 0.492,
     "inFrame": 1,
-    "cx": -0.327,
-    "cy": 0.008,
+    "cx": -0.314,
+    "cy": -0.001,
     "floor": 0.3,
     "crownPitch": -2.4,
     "crownPitchMin": null,
     "dist": 6.63,
-    "bearing": -76.9,
+    "bearing": -20.9,
     "comp": [
      -0.3,
      0.04
@@ -7443,14 +7712,17 @@
      1.448,
      0.195
     ],
-    "solved": "swung -4deg x1"
+    "solved": "swung 52deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 44.6,
+   "cutMove": 26.79
   },
   "ody-vi-03-rock1": {
    "unit": "ody-vi-03-rock1",
@@ -7475,14 +7747,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -21.685,
+    -29.518,
     3,
-    20.79
+    16.065
    ],
    "lookAt": [
-    -13.394,
+    -13.63,
     1.804,
-    0.348
+    0.763
    ],
    "fov": 34,
    "move": {
@@ -7520,16 +7792,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.54,
+    "frac": 0.55,
     "fracDesign": 0.445,
     "inFrame": 1,
-    "cx": -0.075,
-    "cy": -0.107,
+    "cx": -0.102,
+    "cy": -0.112,
     "floor": 0.18,
     "crownPitch": 3.6,
     "crownPitchMin": null,
     "dist": 22.06,
-    "bearing": -19.1,
+    "bearing": -43.1,
     "comp": [
      -0.1,
      -0.06
@@ -7541,14 +7813,17 @@
      1.4,
      0
     ],
-    "solved": "hint"
+    "solved": "swung -24deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 26.9,
+   "cutMove": 16.43
   },
   "ody-vi-04-twiceasfar": {
    "unit": "ody-vi-04-twiceasfar",
@@ -7573,14 +7848,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -16.28,
+    -15.126,
     2.6,
-    13.177
+    13.565
    ],
    "lookAt": [
-    -9.361,
+    -9.342,
     1.5,
-    -2.845
+    -2.901
    ],
    "fov": 32,
    "move": {
@@ -7608,16 +7883,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.526,
+    "frac": 0.523,
     "fracDesign": 0.419,
     "inFrame": 1,
-    "cx": -0.083,
-    "cy": -0.014,
+    "cx": -0.08,
+    "cy": -0.013,
     "floor": 0.17,
     "crownPitch": 3.6,
     "crownPitchMin": null,
     "dist": 17.47,
-    "bearing": -20.6,
+    "bearing": -16.6,
     "comp": [
      -0.1,
      0.02
@@ -7629,14 +7904,17 @@
      1.6,
      -3.15
     ],
-    "solved": "hint"
+    "solved": "swung 4deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 28.7,
+   "cutMove": 14.61
   },
   "ody-vi-05-menbeg": {
    "unit": "ody-vi-05-menbeg",
@@ -7656,14 +7934,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -22.723,
+    -21.15,
     2.7,
-    6.264
+    3.521
    ],
    "lookAt": [
-    -27.135,
+    -27.308,
     1.35,
-    1.445
+    1.338
    ],
    "fov": 26,
    "move": {
@@ -7691,16 +7969,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.652,
+    "frac": 0.645,
     "fracDesign": 0.569,
     "inFrame": 1,
-    "cx": -0.172,
-    "cy": 0.015,
+    "cx": -0.165,
+    "cy": 0.02,
     "floor": 0.3,
     "crownPitch": -3.5,
     "crownPitchMin": null,
     "dist": 6.66,
-    "bearing": 46.2,
+    "bearing": 74.2,
     "comp": [
      -0.16,
      0.05
@@ -7712,14 +7990,17 @@
      1.425,
      1.737
     ],
-    "solved": "hint"
+    "solved": "swung 28deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 28,
+   "cutMove": 11.71
   },
   "ody-vi-06-defy": {
    "unit": "ody-vi-06-defy",
@@ -7740,14 +8021,14 @@
    "over": "ulysses",
    "fg": null,
    "pos": [
-    -42.866,
+    -40.488,
     3.4,
-    19.914
+    27.461
    ],
    "lookAt": [
-    11.229,
+    10.866,
     32.5,
-    4.005
+    4.178
    ],
    "fov": 20,
    "move": {
@@ -7775,16 +8056,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.425,
+    "frac": 0.436,
     "fracDesign": 0.286,
     "inFrame": 1,
-    "cx": 0.151,
-    "cy": -0.062,
+    "cx": 0.153,
+    "cy": -0.06,
     "floor": 0.22,
     "crownPitch": 29,
     "crownPitchMin": null,
     "dist": 63.38,
-    "bearing": -76.5,
+    "bearing": -68.5,
     "comp": [
      0.15,
      -0.08
@@ -7796,14 +8077,17 @@
      31.7,
      6.687
     ],
-    "solved": "UPSTAGE swung 0deg x1"
+    "solved": "UPSTAGE swung 8deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 26.9,
+   "cutMove": 30.78
   },
   "ody-vi-07-myname": {
    "unit": "ody-vi-07-myname",
@@ -7885,8 +8169,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 105.4,
+   "cutMove": 29.66
   },
   "ody-vi-08-prophecy": {
    "unit": "ody-vi-08-prophecy",
@@ -7906,14 +8193,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -32.714,
+    -29.356,
     3.2,
-    8.571
+    23.848
    ],
    "lookAt": [
-    11.955,
+    11.334,
     31.404,
-    4.814
+    5.039
    ],
    "fov": 17,
    "move": {
@@ -7941,16 +8228,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.487,
+    "frac": 0.512,
     "fracDesign": 0.442,
     "inFrame": 1,
-    "cx": 0.144,
-    "cy": -0.06,
+    "cx": 0.146,
+    "cy": -0.057,
     "floor": 0.42,
     "crownPitch": 34.8,
     "crownPitchMin": 21,
     "dist": 52.93,
-    "bearing": -87.6,
+    "bearing": -67.6,
     "comp": [
      0.14,
      -0.06
@@ -7962,14 +8249,17 @@
      31,
      6.687
     ],
-    "solved": "hint"
+    "solved": "swung 20deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 29.8,
+   "cutMove": 22.4
   },
   "ody-vi-09-fatherson": {
    "unit": "ody-vi-09-fatherson",
@@ -7989,14 +8279,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -29.949,
+    -12.895,
     3,
-    14.44
+    37.126
    ],
    "lookAt": [
-    11.763,
-    31.362,
-    5.162
+    10.972,
+    31.333,
+    5.909
    ],
    "fov": 16,
    "move": {
@@ -8024,16 +8314,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.546,
-    "fracDesign": 0.486,
+    "frac": 0.601,
+    "fracDesign": 0.514,
     "inFrame": 1,
-    "cx": 0.134,
-    "cy": -0.061,
+    "cx": 0.139,
+    "cy": -0.06,
     "floor": 0.42,
-    "crownPitch": 36.3,
+    "crownPitch": 38.6,
     "crownPitchMin": 21,
-    "dist": 51.26,
-    "bearing": -79.6,
+    "dist": 48.42,
+    "bearing": -39.6,
     "comp": [
      0.13,
      -0.06
@@ -8045,14 +8335,17 @@
      31,
      6.687
     ],
-    "solved": "hint"
+    "solved": "swung 40deg x0.92"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 28,
+   "cutMove": 21.15
   },
   "ody-vi-10-hades": {
    "unit": "ody-vi-10-hades",
@@ -8134,8 +8427,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 60.5,
+   "cutMove": 37.3
   },
   "ody-vi-11-curse": {
    "unit": "ody-vi-11-curse",
@@ -8155,14 +8451,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -30.559,
+    -27.361,
     3.2,
-    8.481
+    23.026
    ],
    "lookAt": [
-    12.043,
+    11.59,
     31.282,
-    5.322
+    5.486
    ],
    "fov": 15,
    "move": {
@@ -8190,16 +8486,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.569,
+    "frac": 0.599,
     "fracDesign": 0.52,
     "inFrame": 1,
-    "cx": 0.123,
-    "cy": -0.054,
+    "cx": 0.124,
+    "cy": -0.05,
     "floor": 0.42,
     "crownPitch": 36.1,
     "crownPitchMin": 21,
     "dist": 51.1,
-    "bearing": -87.6,
+    "bearing": -67.6,
     "comp": [
      0.12,
      -0.05
@@ -8211,14 +8507,17 @@
      31,
      6.687
     ],
-    "solved": "hint"
+    "solved": "swung 20deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 29.7,
+   "cutMove": 21.26
   },
   "ody-vi-12-heard": {
    "unit": "ody-vi-12-heard",
@@ -8243,14 +8542,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -22.144,
+    -14.01,
     3.2,
-    21.839
+    23.66
    ],
    "lookAt": [
-    -11.745,
+    -11.661,
     1.84,
-    0.136
+    -0.291
    ],
    "fov": 34,
    "move": {
@@ -8288,16 +8587,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.488,
+    "frac": 0.471,
     "fracDesign": 0.408,
     "inFrame": 1,
-    "cx": -0.082,
-    "cy": -0.105,
+    "cx": -0.092,
+    "cy": -0.095,
     "floor": 0.18,
     "crownPitch": 2.9,
     "crownPitchMin": null,
     "dist": 24.07,
-    "bearing": -22.6,
+    "bearing": -2.6,
     "comp": [
      -0.1,
      -0.06
@@ -8309,14 +8608,17 @@
      1.4,
      -0.315
     ],
-    "solved": "hint"
+    "solved": "swung 20deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 29.1,
+   "cutMove": 13.37
   },
   "ody-vi-13-ram": {
    "unit": "ody-vi-13-ram",
@@ -8341,14 +8643,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -10.87,
+    -4.242,
     2.4,
-    12.993
+    11.887
    ],
    "lookAt": [
-    -9.264,
+    -9.322,
     1.443,
-    -3.102
+    -3.47
    ],
    "fov": 36,
    "move": {
@@ -8376,16 +8678,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.498,
+    "frac": 0.512,
     "fracDesign": 0.4,
     "inFrame": 1,
-    "cx": -0.1,
-    "cy": 0.009,
+    "cx": -0.136,
+    "cy": 0.005,
     "floor": 0.17,
     "crownPitch": 4.6,
     "crownPitchMin": null,
     "dist": 16.18,
-    "bearing": -2.5,
+    "bearing": 21.5,
     "comp": [
      -0.1,
      0.03
@@ -8397,14 +8699,17 @@
      1.6,
      -3.15
     ],
-    "solved": "hint"
+    "solved": "swung 24deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": false
+   },
+   "cutAngle": 29.7,
+   "cutMove": 15.32
   },
   "ody-vi-14-sailedon": {
    "unit": "ody-vi-14-sailedon",
@@ -8491,8 +8796,11 @@
     "intro": false,
     "blinding": false,
     "offstage": false,
-    "gateTarget": null
-   }
+    "gateTarget": null,
+    "sepLost": true
+   },
+   "cutAngle": 105.5,
+   "cutMove": 45.96
   }
  },
  "warnings": [
