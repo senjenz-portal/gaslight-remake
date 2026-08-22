@@ -261,6 +261,32 @@ export const PROP_PLAN = {
   sea: [],
 };
 
+/* ================= ROUND 6 · THE GRIP, IN NUMBERS =================
+ * createSword authors the blade along +X FROM THE GUARD: the grip runs back to
+ * x = -0.15 and the pommel sits at -0.163, so the centre of a closed fist on
+ * that hilt is x = -0.085 of the prop's own metre. GRIP_SINK is the rest: how
+ * far past the WRIST BONE the centre of a fist is on this rig (its hand is one
+ * fingerless mitten 0.16 m long, so 0.055 buries the leather in the middle of
+ * it). GRIP_Q is the constant that lays the prop's +X down the hand's own +Y —
+ * the axis that runs out through the fingers — which is what makes the sword's
+ * whole world transform a function of one bone matrix.                       */
+const GRIP_X = 0.085;
+const GRIP_SINK = 0.055;
+const GRIP_Q = new THREE.Quaternion()
+  .setFromUnitVectors(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0));
+/** where the elbow goes: out to his right and DOWN, so no phase of the draw
+ *  puts a chicken wing in the frame */
+const HOLD_POLE = (x) => new THREE.Vector3()
+  .addScaledVector(x.R, 0.45).addScaledVector(x.U, -0.86)
+  .addScaledVector(x.F, 0.25).normalize();
+/* THE ROLL OF THE WRIST. Aiming an axis leaves the twist about it free, and a
+ * fingerless mitten seen PALM-ON reads as an open hand however deep the hilt is
+ * sunk in it — which is the second half of what Sol saw. The hand is therefore
+ * rolled to a measured angle about the blade's own line, so the camera gets the
+ * KNUCKLE side of the fist and the broad face of the blade. Chosen by sweeping
+ * it against the two shots this act is cut on (CV-VITALS and CV-ULY). */
+const GRIP_ROLL = -1.15;
+
 export class Director {
   constructor(stage, { errors = [], audio = null } = {}) {
     this.stage = stage;
@@ -521,8 +547,11 @@ export class Director {
     }
     return a.__bones;
   }
-  /** swing one bone's own +Y onto a WORLD direction */
-  _aim(a, name, dir) {
+  /** swing ONE OF A BONE'S OWN AXES onto a WORLD direction. `_aim` is this
+   *  with the bone's +Y, which is the axis the cast lane's poses are written
+   *  in; the arm solver needs the bone's CHILD LINE instead, because a bone
+   *  whose child does not sit on its +Y cannot be placed by aiming +Y. */
+  _aimAxis(a, name, localAxis, dir) {
     if (!a) return false;
     const b = this._bones(a)[name];
     if (!b || !b.parent) return false;
@@ -536,13 +565,17 @@ export class Director {
     a.__posedArms = true;
     const wq = new THREE.Quaternion();
     b.getWorldQuaternion(wq);
-    const cur = new THREE.Vector3(0, 1, 0).applyQuaternion(wq).normalize();
+    const cur = localAxis.clone().applyQuaternion(wq).normalize();
     const tgt = dir.clone().normalize();
     const del = new THREE.Quaternion().setFromUnitVectors(cur, tgt);
     const pq = new THREE.Quaternion();
     b.parent.getWorldQuaternion(pq).invert();
     b.quaternion.copy(pq).multiply(del).multiply(wq);
     return true;
+  }
+  /** swing one bone's own +Y onto a WORLD direction */
+  _aim(a, name, dir) {
+    return this._aimAxis(a, name, new THREE.Vector3(0, 1, 0), dir);
   }
   /** put every bone this director has aimed back the way the rig shipped */
   _restArms(a) {
@@ -557,6 +590,71 @@ export class Director {
     for (const [bone, dir] of Object.entries(spec))
       if (this._aim(a, bone, new THREE.Vector3(...dir))) n++;
     return n;
+  }
+  /** A BODY'S OWN THREE AXES. Right-handed, +Y up, a rig authored facing +Z:
+   *  forward is (sin y, 0, cos y) and RIGHT is forward x up = (-cos y, 0, sin y).
+   *  Every number in the sword act is written in this frame, so the act reads
+   *  the same whichever way the man happens to be standing. */
+  _frame(a) {
+    const f = a.group.rotation.y;
+    return { F: new THREE.Vector3(Math.sin(f), 0, Math.cos(f)),
+             R: new THREE.Vector3(-Math.cos(f), 0, Math.sin(f)),
+             U: new THREE.Vector3(0, 1, 0) };
+  }
+  /** a point ON HIM: r to his right, u above his own base, f in front */
+  _atBody(a, r, u, f) {
+    const x = this._frame(a);
+    return a.group.position.clone()
+      .addScaledVector(x.R, r).addScaledVector(x.U, u).addScaledVector(x.F, f);
+  }
+  /* ================= ROUND 6 · THE ARM IS SOLVED TO THE HAND =================
+   * Rounds 4 and 5 posed the arm by AIMING two bones and then wrote the
+   * sword's world position separately. Two authored tracks for one act: the
+   * hand went where the pose said and the blade went where the picture said,
+   * and — measured on the running book — they were ONE METRE AND ONE CENTIMETRE
+   * apart for the whole of the hold. Sol saw exactly that: "his hand never
+   * convincingly closes on the hilt or causes the draw."
+   *
+   * There is now ONE track, and it is the HAND's. This puts the wrist AT a
+   * world point (two-bone solve, shoulder as root, an explicit pole so the
+   * elbow reads); `_gripSword` then reads the hand's own matrix. Nothing in
+   * the book writes a sword position again.
+   * ========================================================================= */
+  _reachR(a, target, pole) {
+    const b = this._bones(a);
+    const BU = b.R_Upperarm, BF = b.R_Forearm, BH = b.R_Hand;
+    if (!BU || !BF || !BH) return false;
+    a.group.updateWorldMatrix(true, true);
+    const S = new THREE.Vector3().setFromMatrixPosition(BU.matrixWorld);
+    const E = new THREE.Vector3().setFromMatrixPosition(BF.matrixWorld);
+    const W = new THREE.Vector3().setFromMatrixPosition(BH.matrixWorld);
+    const l1 = S.distanceTo(E), l2 = E.distanceTo(W);
+    if (l1 < 1e-4 || l2 < 1e-4) return false;
+    /* A MAN CANNOT REACH FURTHER THAN HIS ARM. The target is clamped to the
+       sphere his wrist can actually visit, so an over-ambitious mark shortens
+       the gesture instead of detaching the prop from the fist. */
+    const to = target.clone().sub(S);
+    let d = to.length();
+    const dMax = (l1 + l2) * 0.995, dMin = Math.abs(l1 - l2) + 0.03;
+    if (d > dMax) { to.multiplyScalar(dMax / d); d = dMax; }
+    else if (d < dMin) { to.multiplyScalar(dMin / Math.max(d, 1e-5)); d = dMin; }
+    const axis = to.clone().normalize();
+    const cosA = Math.max(-1, Math.min(1, (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)));
+    const sinA = Math.sqrt(Math.max(0, 1 - cosA * cosA));
+    const p = pole.clone().addScaledVector(axis, -pole.dot(axis));
+    if (p.lengthSq() < 1e-6) p.set(0, -1, 0).addScaledVector(axis, axis.y);
+    p.normalize();
+    const elbow = S.clone().addScaledVector(axis, l1 * cosA).addScaledVector(p, l1 * sinA);
+    /* the bones are aimed along THEIR OWN CHILD LINE, not along +Y: this rig's
+       forearm sits 16 degrees off its bone's +Y and the wrist would land that
+       far from every mark it was given */
+    this._aimAxis(a, 'R_Upperarm', BF.position.clone().normalize(),
+      elbow.clone().sub(S).normalize());
+    a.group.updateWorldMatrix(true, true);
+    const E2 = new THREE.Vector3().setFromMatrixPosition(BF.matrixWorld);
+    this._aimAxis(a, 'R_Forearm', BH.position.clone().normalize(),
+      S.clone().add(to).sub(E2).normalize());
+    return true;
   }
   /** THE SUPPLIANT: down on one knee, arms held open, palms up at the giant.
    *  Not a caption — the shape a man makes when he is begging, held for the
@@ -948,19 +1046,41 @@ export class Director {
   }
 
   /* ================= props ================= */
-  /** where a man's sword hangs, live: his own hip, on his own facing */
-  _hipOf(a) {
+  /* ROUND 6 · WHERE THE SWORD HANGS, AND WHY IT MOVED.
+   * A scabbard 0.62 m long slung HORIZONTALLY at a man's hip (rounds 4-5) can
+   * only be drawn by pulling the hilt 0.68 m sideways — measured off this rig,
+   * that is 0.90 m from his own shoulder and his whole arm is 0.51 m. It is
+   * not a draw a body can perform, which is why the old one was not performed
+   * by a body. It now hangs the way a xiphos hangs: high on his LEFT side,
+   * mouth up under the armpit, point down and back — so the right hand crosses,
+   * closes, and pulls UP, and both ends of that pull are inside his reach
+   * (0.42 m at the hilt, 0.43 m at the top). Left side is also the side the
+   * CV-HILT insert is standing on. */
+  _sheathMouth(a) {
     if (!a || !a.group.visible) return null;
-    const f = a.group.rotation.y;
-    return new THREE.Vector3(a.group.position.x + Math.cos(f) * 0.30,
-      a.group.position.y + 0.95, a.group.position.z - Math.sin(f) * 0.30);
+    return this._atBody(a, -0.20, 0.98, 0.02);
   }
+  /** the blade's own direction while it is sheathed: down, out and back */
+  _sheathAxis(a) {
+    const x = this._frame(a);
+    return new THREE.Vector3().addScaledVector(x.R, -0.34)
+      .addScaledVector(x.U, -0.92).addScaledVector(x.F, -0.19).normalize();
+  }
+  _hipOf(a) { return this._sheathMouth(a); }
   _swordToHip() {
     const sw = this._prop('sword');
-    const p = this._hipOf(this.stage.actors.get('ulysses'));
-    if (!sw || !p) return;
+    const u = this.stage.actors.get('ulysses');
+    const p = this._sheathMouth(u);
+    if (!sw || !p || !u) return;
+    /* sheathed IS the sword sitting at the scabbard's own place: origin at the
+       mouth, blade down the sheath, hilt the only part still in the light */
     sw.position.copy(p);
-    sw.rotation.set(0, this.stage.actors.get('ulysses').group.rotation.y - 0.6, 0.1);
+    sw.quaternion.copy(this._axisQuat(this._sheathAxis(u)));
+  }
+  /** the quaternion that lays the prop's own +X down a world direction */
+  _axisQuat(dir) {
+    return new THREE.Quaternion()
+      .setFromUnitVectors(new THREE.Vector3(1, 0, 0), dir.clone().normalize());
   }
 
   /* ================= ROUND 5 · THE SCABBARD, AND THE DRAW =================
@@ -1028,12 +1148,12 @@ export class Director {
   /** where the sheath hangs: exactly where the sheathed sword hangs */
   _scabToHip() {
     const u = this.stage.actors.get('ulysses');
-    const p = this._hipOf(u);
+    const p = this._sheathMouth(u);
     const sc = this._scabbard();
     if (!p || !u) { sc.visible = false; return null; }
     sc.visible = true;
     sc.position.copy(p);
-    sc.rotation.set(0, u.group.rotation.y - 0.6, 0.1);
+    sc.quaternion.copy(this._axisQuat(this._sheathAxis(u)));
     return sc;
   }
   /** the sword rides the hip IN its sheath — both follow the man who walks */
@@ -1064,16 +1184,110 @@ export class Director {
     a.group.updateWorldMatrix(true, true);
     return b[k].getWorldPosition(new THREE.Vector3());
   }
-  /** where the point hangs when the blade is up: over the measured throat */
-  _vitalsPoint() {
-    const f = FRAMES.cave;
-    return new THREE.Vector3(f.X(CAVE_MARKS.swordVitals[0]), 1.95,
-      f.Z(CAVE_MARKS.swordVitals[1]));
+  /* ================= ROUND 6 · THE FIST IS THE ONLY THING THAT MOVES IT =====
+   * Sol, r5: "the sword floats from waist level to upright beside Odysseus and
+   * then across his torso; his hand never convincingly closes on the hilt or
+   * causes the draw ... an animated prop rather than a character decision."
+   *
+   * It was a prop, literally. Measured on the running book, the blade's world
+   * position from the end of the draw to the start of the lowering was a FIXED
+   * WORLD POINT over the giant's throat mark — 1.01 m from the right hand bone
+   * every single frame — while the arm was posed on its own separate track. The
+   * "across his torso" was the body TURNING to the door with the arm attached
+   * to it and the sword nailed to the floor of the world.
+   *
+   * From here the sword has NO track of its own. `_gripSword` writes its world
+   * transform out of the right hand's matrix and a constant offset, once per
+   * frame, and every act in the book poses the ARM. If the hand moves the sword
+   * moves; nothing else can move it.
+   *
+   * THE FIST ON A RIG WITH NO FINGERS. This cast has R_Hand and stops there —
+   * there is nothing to close. So the hilt is SUNK INTO the hand: the centre of
+   * the grip is set 0.055 m past the wrist along the hand's own axis, which
+   * puts the leather inside the mitten with the pommel just out of the bottom.
+   * Interpenetration nobody can see, against a gap Sol saw twice.
+   * ========================================================================= */
+  /** the wrist: the blade's line, plus the roll that turns the fist edge-on */
+  _wrist(a, blade) {
+    this._aim(a, 'R_Hand', blade);
+    const roll = this.gripRoll === undefined ? GRIP_ROLL : this.gripRoll;
+    if (!roll) return;
+    const b = this._bones(a).R_Hand;
+    if (!b || !b.parent) return;
+    a.group.updateWorldMatrix(true, true);
+    const wq = b.getWorldQuaternion(new THREE.Quaternion());
+    const del = new THREE.Quaternion()
+      .setFromAxisAngle(blade.clone().normalize(), roll);
+    const pq = b.parent.getWorldQuaternion(new THREE.Quaternion()).invert();
+    b.quaternion.copy(pq).multiply(del).multiply(wq);
   }
-  /** the blade's attitude when it hangs over him, edge down */
-  _vitalsQuat() {
-    return new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(-0.16, -0.97, 0.18).normalize());
+  /** the sword's world transform, READ OFF THE HAND. The only writer. */
+  _gripSword() {
+    const u = this.stage.actors.get('ulysses');
+    const sw = this._prop('sword');
+    if (!u || !sw || !u.group.visible) return false;
+    const h = this._bones(u).R_Hand;
+    if (!h) return false;
+    u.group.updateWorldMatrix(true, true);
+    const hq = h.getWorldQuaternion(new THREE.Quaternion());
+    const hp = h.getWorldPosition(new THREE.Vector3());
+    /* the blade lies along the hand's own +Y — the axis that runs out through
+       the fingers — so the sword is aimed by COCKING THE WRIST and by nothing
+       else. GRIP_Q is the constant that carries the prop's +X onto it. */
+    const along = new THREE.Vector3(0, 1, 0).applyQuaternion(hq);
+    sw.quaternion.copy(hq).multiply(GRIP_Q);
+    /* origin (the guard) = centre of the fist + the grip's own half-length, so
+       the leather lands in the palm and the pommel clears the heel of the hand */
+    sw.position.copy(hp).addScaledVector(along, GRIP_SINK + GRIP_X * (sw.scale.x || 1));
+    return true;
+  }
+  /**
+   * THE HOLD, AND THE LOWERING — ONE POSE, ONE PARAMETER. e = 1 is the blade
+   * levelled at the sleeping giant; e = 0 is the arm down and the point at the
+   * floor. Both ends are written in HIS frame and both are inside his own reach
+   * (the old hold asked his 0.51 m arm to put a hilt 1.32 m from his shoulder,
+   * which is the whole reason the prop had to be flown there instead).
+   *
+   * WHY THE HOLD IS LEVEL AND NOT RAISED. Measured on the rendered frame, not
+   * chosen: the blade was rendered twice at the same sim time, once present and
+   * once hidden, and the pixels it owns counted, for nine holds at both shots
+   * this act is cut on. The camera looks ACROSS the giant in both, so a blade
+   * held HIGH goes behind his mane — 45 px of it survived at CV-OBJ, which is
+   * why the first pass of this fix photographed an empty fist. Levelled and
+   * carried a little across his own body, 789 px survive: the whole blade.
+   */
+  _holdMark(a, e) {
+    const x = this._frame(a);
+    const t = clamp01(e);
+    const L = (lo, hi) => lo + (hi - lo) * t;
+    /* THE BLADE COMES DOWN PAST HIS SIDE, NOT DOWN HIS SHIRT. The sideways
+       half of the lowering runs on t^2, so the fist swings OUTBOARD first and
+       the blade is off his chest before it is halfway to the floor — round 5's
+       weapon "went across his torso", and a lowering that drags the edge down
+       the middle of a man reads as the same accident even when it is gripped. */
+    const s = t * t;
+    return {
+      /* the fist: down and out past his own right hip, or in front of him */
+      grip: this._atBody(a, 0.34 + (-0.08 - 0.34) * s, L(0.95, 1.50), L(0.10, 0.36)),
+      /* the blade: hanging straight down, or LEVELLED AT THE SLEEPING GIANT,
+         thirty degrees under the horizontal — the attitude the sentence names
+         ("drive it into his vitals"), and the one the frame can photograph */
+      blade: new THREE.Vector3()
+        .addScaledVector(x.U, L(-0.94, -0.5))
+        .addScaledVector(x.F, L(0.34, 0.866)).normalize(),
+    };
+  }
+  /** put the fist THERE and cock the wrist THAT way — the whole instruction */
+  _fistTo(a, grip, blade) {
+    /* the mark is the grip's CENTRE; the wrist sits one sink behind it */
+    this._reachR(a, grip.clone().addScaledVector(blade, -GRIP_SINK),
+      HOLD_POLE(this._frame(a)));
+    this._wrist(a, blade);
+  }
+  _holdPose(a, e) {
+    if (!a) return;
+    const m = this._holdMark(a, e);
+    this._fistTo(a, m.grip, m.blade);
   }
   /**
    * THE DRAW: the hand closes on the hilt at the hip, PULLS, and carries the
@@ -1082,6 +1296,14 @@ export class Director {
    * vitals") are one movement and round 4 had the last of them living in the
    * GATE, which fires whenever the reader's thumb happens to fall. The gate
    * still owns the ending: the story takes the stroke back.
+   *
+   * ROUND 6 — CAUSE, THEN EFFECT, in three phases and no fourth track:
+   *   0 → .30  the empty fist crosses to the hilt. The sword is IN THE SHEATH.
+   *      .30   CONTACT: the centre of the fist and the centre of the grip are
+   *            the same point, so the hand-off is invisible by construction.
+   *   .30 → .66 THE PULL: the fist climbs the sheath's own line and the blade
+   *            comes with it, parallel, point last — hand leads, blade follows.
+   *   .66 → 1  and the arm carries it up over him.
    */
   _drawFromHip({ silent = false, delay = 0, dur = 2.05 } = {}) {
     const sw = this._prop('sword');
@@ -1089,52 +1311,47 @@ export class Director {
     if (!sw || !u) return;
     sw.visible = true;
     const CLEAR = 0.62;                      /* how far the point has to travel */
-    const hi = this._vitalsPoint(), down = this._vitalsQuat();
     const settle = () => {
       this.swordOut = true;
       this._scabToHip();
-      sw.position.copy(hi);
-      sw.quaternion.copy(down);
+      this._holdPose(u, 1);
+      this._gripSword();
       if (sw.userData.glint) sw.userData.glint.emissiveIntensity = 4.3;
     };
     if (silent) { settle(); return; }
-    /* the sheath stops moving the instant the hand touches it: a man draws
-       against a fixed hip, and a hilt that slides while the fist is on it is
-       the tell that nothing was ever grasped */
-    this.movers = this.movers.filter((m) => m.id !== 'sword-ride');
-    const clear = new THREE.Vector3(), q1 = new THREE.Quaternion();
+    /* the hip ride is LEFT RUNNING until the fist actually arrives: it bows out
+       of its own accord the frame `swordOut` goes true, and killing it early is
+       what left the scabbard frozen at a stale yaw while the man turned */
+    let from = null;                         /* where the empty fist starts */
     const apply = (k) => {
       const sc = this._scabToHip();
       if (!sc) return;
-      const ax = this._scabAxis();
-      /* 0 → .26   the fist arrives on the hilt
-         .26 → .62 the pull: the blade climbs out, the point last
-         .62 → 1   clear of the mouth, and up over the sleeping throat */
-      const out = k < 0.26 ? 0 : k < 0.62 ? CLEAR * easeInOut((k - 0.26) / 0.36) : CLEAR;
-      const up = k < 0.62 ? 0 : easeInOut((k - 0.62) / 0.38);
-      /* the drawn hilt sits IN THE FIST when the rig has one to read */
-      clear.copy(sc.position).addScaledVector(ax, out);
-      const fist = out > 0.05 ? this._handOf(u) : null;
-      if (fist) clear.lerp(fist, Math.min(0.85, (out / CLEAR) * 0.85));
-      sw.position.lerpVectors(clear, hi, up);
-      q1.setFromEuler(new THREE.Euler(0, u.group.rotation.y - 0.6, 0.1));
-      sw.quaternion.slerpQuaternions(q1, down, up);
+      const ax = this._sheathAxis(u);
+      const mouth = this._sheathMouth(u);
+      /* the grip's centre while the sword is still in the leather */
+      const hilt = mouth.clone().addScaledVector(ax, -GRIP_X * (sw.scale.x || 1));
+      if (from === null)
+        from = this._handOf(u) || this._atBody(u, 0.30, 1.00, 0.10);
+      let grip, blade;
+      if (k < 0.30) {                        /* THE REACH — nothing is held yet */
+        grip = from.clone().lerp(hilt, easeInOut(k / 0.30));
+        blade = ax;
+        this._swordToHip();                  /* …the blade stays in the sheath */
+      } else if (k < 0.66) {                 /* THE PULL — along the sheath line */
+        const o = CLEAR * easeInOut((k - 0.30) / 0.36);
+        grip = hilt.clone().addScaledVector(ax, -o);
+        blade = ax;
+      } else {                               /* AND UP OVER HIM */
+        const r = easeInOut((k - 0.66) / 0.34);
+        const hold = this._holdMark(u, 1);   /* the same mark the gate lowers from */
+        grip = hilt.clone().addScaledVector(ax, -CLEAR).lerp(hold.grip, r);
+        blade = ax.clone().lerp(hold.blade, r).normalize();
+      }
+      /* ONE INSTRUCTION TO THE BODY. The sword is not addressed at all. */
+      this._fistTo(u, grip, blade);
+      if (k >= 0.30) { this.swordOut = true; this._gripSword(); }
       if (sw.userData.glint)
-        sw.userData.glint.emissiveIntensity = 1.2 + 3.1 * clamp01(out / CLEAR * 0.6 + up * 0.4);
-      /* THE HAND, built out of HIS axes — an arm aimed along world +X is a
-         man reaching for whatever happens to be east of him, and this rig
-         turns twice in this leaf. Down and across to his own hip, and it
-         stays on the hilt while the blade climbs. */
-      const f = u.group.rotation.y;
-      const rgt = [Math.cos(f), 0, -Math.sin(f)];
-      const fwd = [Math.sin(f), 0, Math.cos(f)];
-      const mix = (r2, uy, f2) => [rgt[0] * r2 + fwd[0] * f2, uy, rgt[2] * r2 + fwd[2] * f2];
-      const reach = clamp01(k / 0.26);
-      const o = out / CLEAR;
-      this._arms(u, {
-        R_Upperarm: mix(0.20 * reach, -0.94 + 0.40 * o + 0.44 * up, 0.14 * reach + 0.30 * o + 0.36 * up),
-        R_Forearm: mix(0.36 * reach, -0.80 + 0.86 * o + 0.62 * up, 0.30 * reach + 0.46 * o + 0.30 * up),
-      });
+        sw.userData.glint.emissiveIntensity = 1.2 + 3.1 * clamp01((k - 0.30) / 0.70);
     };
     this._mover('hilt-draw', dur, apply, { delay, onDone: settle });
   }
@@ -1917,18 +2134,6 @@ export class Director {
         sw.visible = true;
         S.movers = S.movers.filter((m) => m.id !== 'sword-ride' && m.id !== 'hilt-draw');
         S.swordOut = true;
-        /* THE ARC STARTS WHERE THE DRAWN BLADE IS, not at a frozen mark: the
-           press may land early or late and a fixed start would fly the sword
-           out of his fist. The bottom of the arc is read LIVE off the hand. */
-        const q0 = sw.quaternion.clone();
-        /* THE PLACE THE BLOW WOULD LAND, measured off the sprawl's own head
-           mark — the point hangs over the throat, edge down, which is the only
-           way "drive it into his vitals" can be a picture. */
-        const vit = caveAt(...CAVE_MARKS.swordVitals);
-        const hi = new THREE.Vector3(vit.x, 1.95, vit.z);
-        const down = new THREE.Quaternion().setFromUnitVectors(
-          new THREE.Vector3(1, 0, 0), new THREE.Vector3(-0.16, -0.97, 0.18).normalize());
-        const held = new THREE.Vector3();
         /* AND WHERE HE LOOKS WHEN HE PUTS IT DOWN. "…but I reflected that we
            should never be able to shift the stone" — the reflection has a
            DIRECTION, and it is the door. He holds the point over the throat,
@@ -1942,38 +2147,25 @@ export class Director {
         const dYaw = ((yawDoor - yaw0 + Math.PI) % (Math.PI * 2) + Math.PI * 2)
           % (Math.PI * 2) - Math.PI;
         const apply = (k) => {
-          /* THE POINT IS ALREADY OVER HIM when the press lands — the leaf's
-             own act carried it there, so the picture never depends on WHEN a
-             reader's thumb falls. What the press performs is the ending the
-             text has: the blade is HELD, and then the story TAKES IT BACK
-             (O.5) and the hand comes down. */
-          const e = k < 0.60 ? 1 : 1 - easeInOut((k - 0.60) / 0.40);
-          const sc = S._scabToHip();
-          if (sc) {
-            held.copy(S._handOf(A('ulysses')) ||
-              sc.position.clone().addScaledVector(S._scabAxis(), 0.62));
-          } else held.copy(sw.position);
-          sw.position.lerpVectors(held, hi, e);
-          sw.quaternion.slerpQuaternions(q0, down, e);
-          if (sw.userData.glint) sw.userData.glint.emissiveIntensity = 1.2 + 3.1 * e;
-          /* the arm goes with the blade — a sword over a sleeping throat is
-             held by a man, not floating above him (his axes, not the world's) */
+          /* THE BLADE IS ALREADY UP IN HIS FIST when the press lands — the
+             leaf's own act carried it there, so the picture never depends on
+             WHEN a reader's thumb falls. What the press performs is the ending
+             the text has: the blade is HELD, and then the story TAKES IT BACK
+             (O.5) and the hand comes down.
+             ROUND 6: the restraint is ONE GRIPPED HAND doing two things. He
+             turns his head and body off the throat and onto the door, and the
+             same fist lowers the blade. There is no separate sword track to
+             fight the turn any more — the hold is a function of his facing, so
+             the weapon turns WITH him instead of sweeping across his chest. */
+          const e = k < 0.46 ? 1 : 1 - easeInOut((k - 0.46) / 0.54);
           const uu = A('ulysses');
-          if (uu) {
-            /* he turns off the throat and onto the door — the reflection,
-               performed, inside the shot that is cut to his face */
-            if (!uu.walk)
-              uu.group.rotation.y = yaw0 + dYaw * easeInOut(clamp01((k - 0.55) / 0.28));
-            const f = uu.group.rotation.y;
-            const rgt = [Math.cos(f), 0, -Math.sin(f)];
-            const fwd = [Math.sin(f), 0, Math.cos(f)];
-            const mix = (r2, uy, f2) =>
-              [rgt[0] * r2 + fwd[0] * f2, uy, rgt[2] * r2 + fwd[2] * f2];
-            S._arms(uu, {
-              R_Upperarm: mix(0.18, -0.64 + 0.70 * e, 0.40 + 0.34 * e),
-              R_Forearm: mix(0.30, -0.08 + 0.82 * e, 0.62 - 0.20 * e),
-            });
-          }
+          if (!uu) return;
+          if (!uu.walk)
+            uu.group.rotation.y = yaw0 + dYaw * easeInOut(clamp01((k - 0.42) / 0.30));
+          S._scabToHip();
+          S._holdPose(uu, e);
+          S._gripSword();
+          if (sw.userData.glint) sw.userData.glint.emissiveIntensity = 1.2 + 3.1 * e;
         };
         if (silent) { apply(0); return; }
         S._mover('sword-draw', 3.6, apply);
@@ -2736,8 +2928,15 @@ export class Director {
         }
       });
     }
-    /* the sword's breathing glint at the G2 anchor */
+    /* ROUND 6 · THE LAW, ENFORCED EVERY FRAME AND NOT ONLY INSIDE THE ACTS:
+       while the blade is out of its sheath it IS the right hand's, so its
+       world transform is re-read off that bone after everything else in the
+       tick has finished moving the man. Idempotent (it is a pure function of
+       one matrix), so an act that already gripped inside its own mover pays
+       nothing. Nothing else in the book may write sw.position again. */
     const sw = this._prop('sword');
+    if (this.swordOut && sw && sw.visible) { this._scabToHip(); this._gripSword(); }
+    /* the sword's breathing glint at the G2 anchor */
     if (sw && sw.visible && sw.userData.glint && !this.movers.some((m) => m.id === 'sword-draw'))
       sw.userData.glint.emissiveIntensity = 1.2 + 0.55 * Math.sin(simT * 2.1);
   }

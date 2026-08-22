@@ -1,7 +1,7 @@
 {
  "lane": "viewing-r2",
- "when": "2026-08-22T12:45:45.971Z",
- "base": "http://127.0.0.1:53549",
+ "when": "2026-08-22T14:03:39.164Z",
+ "base": "http://127.0.0.1:51986",
  "scale": {
   "rows": [
    {
@@ -2041,8 +2041,8 @@
     "resolved": true,
     "waited": 0,
     "aim": [
-     1006,
-     532
+     973,
+     562
     ],
     "onTarget": true
    },
@@ -3571,8 +3571,8 @@
     "target": "sword",
     "shot": "GATE",
     "aim": [
-     744,
-     413
+     830,
+     477
     ],
     "onPixels": true,
     "ringOnTarget": true,
@@ -6235,9 +6235,9 @@
      "p50": 0.7441,
      "p90": 0.9636,
      "max": 1,
-     "ring": 0.5394,
-     "meanSep": 0.1212,
-     "sep": 0.4241,
+     "ring": 0.5405,
+     "meanSep": 0.1201,
+     "sep": 0.423,
      "dark": 0.0178,
      "band": "insert",
      "darkCap": 0.8,
@@ -6404,15 +6404,15 @@
       "side": 1
      },
      "px": 4623,
-     "mean": 0.5102,
-     "p10": 0.0691,
-     "p50": 0.5643,
-     "p90": 0.8893,
-     "max": 0.988,
-     "ring": 0.4524,
-     "meanSep": 0.0578,
-     "sep": 0.4369,
-     "dark": 0.051,
+     "mean": 0.5308,
+     "p10": 0.0649,
+     "p50": 0.6117,
+     "p90": 0.9162,
+     "max": 0.9854,
+     "ring": 0.4545,
+     "meanSep": 0.0763,
+     "sep": 0.4618,
+     "dark": 0.0632,
      "band": "insert",
      "darkCap": 0.8,
      "role": "insert",
@@ -6461,15 +6461,15 @@
       "side": 1
      },
      "px": 4623,
-     "mean": 0.5102,
-     "p10": 0.0691,
-     "p50": 0.5643,
-     "p90": 0.8893,
-     "max": 0.988,
-     "ring": 0.4524,
-     "meanSep": 0.0578,
-     "sep": 0.4369,
-     "dark": 0.051,
+     "mean": 0.5308,
+     "p10": 0.0649,
+     "p50": 0.6117,
+     "p90": 0.9162,
+     "max": 0.9854,
+     "ring": 0.4545,
+     "meanSep": 0.0763,
+     "sep": 0.4618,
+     "dark": 0.0632,
      "band": "insert",
      "darkCap": 0.8,
      "role": "insert",
@@ -6518,15 +6518,15 @@
       "side": 1
      },
      "px": 2652,
-     "mean": 0.4799,
+     "mean": 0.4816,
      "p10": 0.0649,
-     "p50": 0.4557,
-     "p90": 0.9366,
+     "p50": 0.4492,
+     "p90": 0.9369,
      "max": 1,
-     "ring": 0.519,
-     "meanSep": 0.0391,
+     "ring": 0.5193,
+     "meanSep": 0.0377,
      "sep": 0.4176,
-     "dark": 0.0196,
+     "dark": 0.02,
      "band": "insert",
      "darkCap": 0.8,
      "role": "insert",
@@ -6575,14 +6575,14 @@
       "side": 1
      },
      "px": 2856,
-     "mean": 0.5164,
-     "p10": 0.0649,
-     "p50": 0.5727,
-     "p90": 0.8957,
+     "mean": 0.5062,
+     "p10": 0.0646,
+     "p50": 0.5457,
+     "p90": 0.896,
      "max": 0.9885,
-     "ring": 0.3961,
-     "meanSep": 0.1203,
-     "sep": 0.4996,
+     "ring": 0.3959,
+     "meanSep": 0.1103,
+     "sep": 0.5001,
      "dark": 0.0007,
      "band": "law",
      "darkCap": 0.55,
@@ -6635,14 +6635,14 @@
       "side": -1
      },
      "px": 1015,
-     "mean": 0.5945,
+     "mean": 0.5956,
      "p10": 0.0714,
-     "p50": 0.7095,
-     "p90": 0.9141,
+     "p50": 0.694,
+     "p90": 0.9171,
      "max": 0.9605,
-     "ring": 0.4227,
-     "meanSep": 0.1718,
-     "sep": 0.4914,
+     "ring": 0.4236,
+     "meanSep": 0.172,
+     "sep": 0.4934,
      "dark": 0.0808,
      "band": "law",
      "darkCap": 0.55,
@@ -13666,7 +13666,7 @@
   {
    "name": "[hit] all 8 gates resolve on a REAL click at their live shot",
    "verdict": "PASS",
-   "detail": "G1 ok@545,550 · G2 ok@744,413 · G3 ok · G4 ok · G5 ok@921,561 · G6 ok@1054,634 · G7 ok@1040,643 · G8 ok"
+   "detail": "G1 ok@545,550 · G2 ok@830,477 · G3 ok · G4 ok · G5 ok@921,561 · G6 ok@1054,634 · G7 ok@1040,643 · G8 ok"
   },
   {
    "name": "[hit] every target click lands on the target's OWN PIXELS",
@@ -13681,7 +13681,7 @@
   {
    "name": "the walk's own target gates clicked their real coordinates",
    "verdict": "PASS",
-   "detail": "i-07-council 525,550 (ring after 23.25s) · ii-11-sword 1006,532 (ring after 0s) · v-04-greatram 924,556 (ring after 0s) · vi-01-jeer 1044,634 (ring after 0s) · vi-06-defy 1059,637 (ring after 0s)"
+   "detail": "i-07-council 525,550 (ring after 23.25s) · ii-11-sword 973,562 (ring after 0s) · v-04-greatram 924,556 (ring after 0s) · vi-01-jeer 1044,634 (ring after 0s) · vi-06-defy 1059,637 (ring after 0s)"
   },
   {
    "name": "[hit] the miss-probe still misses",
@@ -13780,5 +13780,5 @@
   }
  ],
  "green": true,
- "framesDir": "/Users/samz/Documents/gaslight-remake/shots/book3d-r5"
+ "framesDir": "/Users/samz/Documents/gaslight-remake/shots/book3d-r6"
 }
