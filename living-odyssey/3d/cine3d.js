@@ -47,7 +47,191 @@ const easeOut = (k) => 1 - (1 - clamp01(k)) ** 3;
 /* the sensor the lens arithmetic is written against — full-frame height */
 const SENSOR_H = 0.024;
 
-export const CINE_VERSION = 'cine-r1';
+export const CINE_VERSION = 'cine-r2';
+
+/* ====================================================================== *
+ * THE READABILITY LAW (Fable, round 1: "key actors render as unreadable
+ * silhouettes — dramatic light must never hide the ACTION").
+ *
+ * A set's light story is the set's own and is not touched. What is added is
+ * the thing every DP adds and no diorama has: a FILL and a RIM that belong to
+ * the SUBJECT OF THE LINE and travel with it. Both are motivated by something
+ * already in the room — the hearth's bounce off the cave floor, the cave
+ * mouth's cold sky, the moon on the water — and both are short-range point
+ * lights whose window closes a couple of subject-heights out, so the rest of
+ * the frame keeps the exposure the set lane signed off.
+ *
+ * The numbers are ILLUMINANCE AT THE SUBJECT (lux-ish, in three's physical
+ * units), not intensities: the rig solves I = E·d² for wherever it has to
+ * stand this frame, so a shot two metres out and a shot nine metres out put
+ * the same light on the face.
+ * ====================================================================== */
+export const READ_MOTIVATION = {
+  /* fill: where the room's warmth bounces from · rim: the cold way out */
+  cave:  { fill: '#ff9a52', rim: '#8fa6d8', fillE: 10.0, rimE: 26 },
+  shore: { fill: '#ffbe8e', rim: '#bfd4ff', fillE: 6.5,  rimE: 14 },
+  sea:   { fill: '#9db4de', rim: '#d6e6ff', fillE: 5.0,  rimE: 16 },
+};
+
+export class ReadRig {
+  constructor() {
+    this.group = new THREE.Group();
+    this.group.name = 'read-rig';
+    this.fill = new THREE.PointLight(0xffffff, 0, 0, 2);
+    this.rim = new THREE.PointLight(0xffffff, 0, 0, 2);
+    for (const l of [this.fill, this.rim]) {
+      l.castShadow = false;              /* ONE caster in the book: the blaze */
+      l.visible = false;
+      this.group.add(l);
+    }
+    this.setName = null;
+    this.on = true;
+    this._p = new THREE.Vector3();
+    this.report = { on: false, fillE: 0, rimE: 0 };
+  }
+
+  setSet(name) {
+    const m = READ_MOTIVATION[name] || READ_MOTIVATION.cave;
+    this.setName = name;
+    this.fill.color.set(m.fill);
+    this.rim.color.set(m.rim);
+    this._m = m;
+  }
+
+  /**
+   * Stand the two lamps for this frame. `spec` is the row's own `read` block
+   * ({fill, rim} as multipliers on the set's motivation, 0 to switch off);
+   * everything else is read off the shot that is actually on screen.
+   */
+  aim(cam, anchor, h, spec) {
+    const m = this._m || READ_MOTIVATION.cave;
+    const kF = spec && spec.fill !== undefined ? spec.fill : 1;
+    const kR = spec && spec.rim !== undefined ? spec.rim : 1;
+    if (!this.on || (kF <= 0 && kR <= 0)) {
+      this.fill.visible = this.rim.visible = false;
+      this.report = { on: false, fillE: 0, rimE: 0 };
+      return;
+    }
+    /* the camera basis, so the rig is described the way a DP describes it:
+       off-axis by so much, behind the subject by so much */
+    const fwd = this._f || (this._f = new THREE.Vector3());
+    const right = this._r || (this._r = new THREE.Vector3());
+    const up = this._u || (this._u = new THREE.Vector3());
+    fwd.copy(anchor).sub(cam.position);
+    const d = Math.max(0.6, fwd.length());
+    fwd.divideScalar(d);
+    right.set(-fwd.z, 0, fwd.x);
+    if (right.lengthSq() < 1e-8) right.set(1, 0, 0);
+    right.normalize();
+    up.crossVectors(right, fwd).normalize();
+
+    /* THE FILL stands 35 deg off the lens on the key's shadow side, a subject
+       height up, never nearer than a metre — a bounce card, not a second key */
+    const rF = clamp(Math.max(1.1, h * 0.9), 1.1, 5.0);
+    const side = (spec && spec.side) || 1;
+    this._p.copy(anchor)
+      .addScaledVector(fwd, -rF * 0.82)
+      .addScaledVector(right, rF * 0.62 * side)
+      .addScaledVector(up, rF * 0.34);
+    this.fill.position.copy(this._p);
+    const dF = Math.max(0.5, this._p.distanceTo(anchor));
+    this.fill.intensity = m.fillE * kF * dF * dF;
+    this.fill.distance = dF * 3.2;
+    this.fill.visible = kF > 0;
+
+    /* THE RIM stands BEHIND the subject and above it — the edge that makes a
+       silhouette a body. It is the one light allowed to be brighter than the
+       key, because it lands on a few centimetres of shoulder and hair. */
+    const rR = clamp(Math.max(0.9, h * 0.72), 0.9, 4.2);
+    this._p.copy(anchor)
+      .addScaledVector(fwd, rR * 0.95)
+      .addScaledVector(right, -rR * 0.85 * side)
+      .addScaledVector(up, rR * 0.95);
+    this.rim.position.copy(this._p);
+    const dR = Math.max(0.5, this._p.distanceTo(anchor));
+    this.rim.intensity = m.rimE * kR * dR * dR;
+    this.rim.distance = dR * 2.6;
+    this.rim.visible = kR > 0;
+    this.report = { on: true, fillE: +(m.fillE * kF).toFixed(2),
+                    rimE: +(m.rimE * kR).toFixed(2), side };
+  }
+}
+
+/**
+ * THE READABILITY GATE, measured on the pixels the reader is looking at.
+ *
+ * The subject's projected box is cut out of the drawn canvas and read: the
+ * brightest decile proves something on the body is LIT, the mean proves the
+ * region is not a hole, and the difference against a ring around it proves
+ * the subject SEPARATES from what is behind it. A frame that fails these is
+ * exactly Fable's defect — a key actor rendering as an unreadable silhouette.
+ */
+/* WHAT THE LAW MEASURES, and why each number is the number it is (all four
+   re-derived against the whole 81-unit sheet, tools/ody/work/logs/):
+     p90  0.30  something on the body is LIT. An unreadable silhouette's whole
+                box tops out around 0.13; a shot a reader can read a face off
+                runs 0.65-0.95.
+     mean 0.10  the region is not a HOLE.
+     sep  0.05  the lit part of the subject stands off what is behind it. It is
+                measured p90-vs-ring, NOT mean-vs-ring: a subject box is mostly
+                background, so a mean-vs-mean test failed 25 well-lit shots and
+                passed none of the two real silhouettes — it measured the plate,
+                not the body.
+     dark       how much of the box may be near-black. A WIDE is allowed most
+                of a night frame; a face is not. */
+export const READ_LAW = Object.freeze({ p90: 0.30, mean: 0.10, sep: 0.05, dark: 0.55 });
+export const READ_DARK_BY_CLASS = Object.freeze({ WIDE: 0.80, POV: 0.85 });
+
+export function readSubjectPixels(canvas, ndc, px = 160, cls = null) {
+  if (!canvas || !ndc) return null;
+  const W = canvas.width, H = canvas.height;
+  if (!(W > 8 && H > 8)) return null;
+  const s = Math.min(1, px / Math.max(W, H));
+  const w = Math.max(16, Math.round(W * s)), h = Math.max(16, Math.round(H * s));
+  const c2 = readSubjectPixels._c || (readSubjectPixels._c = document.createElement('canvas'));
+  if (c2.width !== w || c2.height !== h) { c2.width = w; c2.height = h; }
+  const ctx = c2.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(canvas, 0, 0, w, h);
+  const img = ctx.getImageData(0, 0, w, h).data;
+  const lum = (i) => (0.2126 * img[i] + 0.7152 * img[i + 1] + 0.0722 * img[i + 2]) / 255;
+  /* NDC (-1..1, y up) -> pixels */
+  const X = (n) => clamp((n + 1) / 2, 0, 1) * (w - 1);
+  const Y = (n) => clamp((1 - n) / 2, 0, 1) * (h - 1);
+  const x0 = Math.floor(X(ndc[0])), x1 = Math.ceil(X(ndc[2]));
+  const y0 = Math.floor(Y(ndc[3])), y1 = Math.ceil(Y(ndc[1]));
+  const bw = Math.max(1, x1 - x0), bh = Math.max(1, y1 - y0);
+  const inside = [], ring = [];
+  const gx = Math.round(bw * 0.45), gy = Math.round(bh * 0.30);
+  for (let y = Math.max(0, y0 - gy); y <= Math.min(h - 1, y1 + gy); y++) {
+    for (let x = Math.max(0, x0 - gx); x <= Math.min(w - 1, x1 + gx); x++) {
+      const v = lum((y * w + x) * 4);
+      if (x >= x0 && x <= x1 && y >= y0 && y <= y1) inside.push(v); else ring.push(v);
+    }
+  }
+  if (inside.length < 12) return { px: inside.length, ok: false, why: 'subject off frame' };
+  inside.sort((a, b) => a - b);
+  const q = (p) => inside[Math.min(inside.length - 1, Math.floor(p * inside.length))];
+  const mean = inside.reduce((a, b) => a + b, 0) / inside.length;
+  const rmean = ring.length ? ring.reduce((a, b) => a + b, 0) / ring.length : mean;
+  const dark = inside.filter((v) => v < 0.06).length / inside.length;
+  const out = {
+    px: inside.length, mean: +mean.toFixed(4), p10: +q(0.10).toFixed(4),
+    p50: +q(0.50).toFixed(4), p90: +q(0.90).toFixed(4), max: +inside[inside.length - 1].toFixed(4),
+    ring: +rmean.toFixed(4), meanSep: +Math.abs(mean - rmean).toFixed(4),
+    sep: +Math.abs(q(0.90) - rmean).toFixed(4), dark: +dark.toFixed(4),
+  };
+  const darkCap = (cls && READ_DARK_BY_CLASS[cls]) || READ_LAW.dark;
+  out.darkCap = darkCap;
+  out.ok = out.p90 >= READ_LAW.p90 && out.mean >= READ_LAW.mean &&
+           out.sep >= READ_LAW.sep && out.dark <= darkCap;
+  out.why = out.ok ? '' : [
+    out.p90 < READ_LAW.p90 ? `p90 ${out.p90}<${READ_LAW.p90}` : '',
+    out.mean < READ_LAW.mean ? `mean ${out.mean}<${READ_LAW.mean}` : '',
+    out.sep < READ_LAW.sep ? `sep ${out.sep}<${READ_LAW.sep}` : '',
+    out.dark > darkCap ? `dark ${out.dark}>${darkCap}` : '',
+  ].filter(Boolean).join(' · ');
+  return out;
+}
 
 /* ====================================================================== *
  * THE CAMERA
@@ -110,6 +294,11 @@ export class CineCam {
     this.fstop = row.dof.fstop;
     this.dofNear = row.dof.near === undefined ? 0.85 : row.dof.near;
     this.expo = row.dof.expo === undefined ? 1 : row.dof.expo;
+    /* THE RACK. Depth of field is meant to REVEAL, not to blur an obstruction:
+       bowl to giant, auger tip to eye, fleece to the man hidden under it. The
+       row names two world points and when the focus travels between them. */
+    this.rack = row.dof.rack || null;
+    this.read = row.read || null;
     this.cam.updateProjectionMatrix();
   }
 
@@ -221,8 +410,20 @@ export class CineCam {
       }
       case 'handheld': {
         /* subtle, breathing, and DETERMINISTIC — a sum of fixed sines. It is
-           the operator's pulse, never a random(): two laps must agree. */
-        const a = (mv.amp || 0.01) * (mv.dur ? clamp01(1.35 - k / (mv.dur * 2.4)) : 1);
+           the operator's pulse, never a random(): two laps must agree.
+           HANDHELD IS AN EVENT, NOT A TEXTURE (Sol, r1 #2): when the row names
+           an impact the operator is CONTROLLED up to it — a locked-off frame
+           with a breath in it — and breaks loose exactly at contact, then
+           settles. A shot that shakes from its first frame has told the reader
+           nothing happened. */
+        const hit = mv.at;
+        let g = 1;
+        if (hit !== undefined) {
+          const pre = mv.pre === undefined ? 0.16 : mv.pre;
+          g = k < hit ? pre
+            : pre + (1 - pre) * Math.exp(-(k - hit) / Math.max(0.4, mv.decay || 2.6));
+        }
+        const a = g * (mv.amp || 0.01) * (mv.dur ? clamp01(1.35 - k / (mv.dur * 2.4)) : 1);
         this.shakeAmp = a;
         this._pos.addScaledVector(this._right, a * (Math.sin(t * 5.7) * 0.6 + Math.sin(t * 13.1) * 0.4));
         this._pos.y += a * 0.7 * (Math.sin(t * 4.3 + 1.1) * 0.6 + Math.sin(t * 9.7 + 0.3) * 0.4);
@@ -243,10 +444,23 @@ export class CineCam {
 
     /* the focus rides the subject, not the frame centre */
     this.focusDist = Math.max(0.25, this.cam.position.distanceTo(this.anchor));
+    /* ...and the RACK moves it, decisively, between two named depths */
+    this.rackK = 0;
+    if (this.rack) {
+      const R = this.rack;
+      const at = R.at === undefined ? 2.5 : R.at;
+      const dur = Math.max(0.2, R.dur === undefined ? 0.9 : R.dur);
+      const e = easeOut(clamp01((k - at) / dur));
+      const dA = R.from ? this.cam.position.distanceTo(this._v(R.from)) : this.focusDist;
+      const dB = R.to ? this.cam.position.distanceTo(this._v2(R.to)) : this.focusDist;
+      this.focusDist = Math.max(0.25, dA + (dB - dA) * e);
+      this.rackK = +e.toFixed(3);
+    }
     void dt; void snap;
   }
 
   _v(a) { return this.__v ? this.__v.fromArray(a) : (this.__v = new THREE.Vector3().fromArray(a)); }
+  _v2(a) { return this.__v2 ? this.__v2.fromArray(a) : (this.__v2 = new THREE.Vector3().fromArray(a)); }
 
   _basis(pos, look) {
     /* SCREEN RIGHT is cross(forward, worldUp) — get the sign wrong and every
@@ -274,6 +488,7 @@ export class CineCam {
       shake: +this.shakeAmp.toFixed(4),
       move: this.shot ? this.shot.move.k : null,
       subjLive: this.subjOk,
+      rack: this.rackK || 0,
     };
   }
 }

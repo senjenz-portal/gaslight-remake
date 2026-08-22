@@ -1,7 +1,7 @@
 {
- "lane": "assembly-book3d-r1",
- "when": "2026-08-21T23:24:59.538Z",
- "base": "http://127.0.0.1:57434",
+ "lane": "viewing-r2",
+ "when": "2026-08-22T02:35:51.118Z",
+ "base": "http://127.0.0.1:65278",
  "scale": {
   "rows": [
    {
@@ -565,7 +565,7 @@
     "id": "ody-i-08-cave",
     "verb": "click",
     "how": "click",
-    "t": 46.5,
+    "t": 48.25,
     "next": "ody-i-09-monster",
     "set": "shore",
     "beat": 1,
@@ -585,7 +585,7 @@
     "id": "ody-i-09-monster",
     "verb": "click",
     "how": "click",
-    "t": 49.5,
+    "t": 51.25,
     "next": "ody-i-10-wineskin",
     "set": "shore",
     "beat": 1,
@@ -605,7 +605,7 @@
     "id": "ody-i-10-wineskin",
     "verb": "click",
     "how": "click",
-    "t": 52.5,
+    "t": 54.25,
     "next": "ody-i-11-twentyone",
     "set": "shore",
     "beat": 1,
@@ -625,7 +625,7 @@
     "id": "ody-i-11-twentyone",
     "verb": "click",
     "how": "click",
-    "t": 55.5,
+    "t": 57.25,
     "next": "ody-i-12-misgave",
     "set": "shore",
     "beat": 1,
@@ -645,7 +645,7 @@
     "id": "ody-i-12-misgave",
     "verb": "click",
     "how": "click",
-    "t": 58.5,
+    "t": 60.25,
     "next": "ody-ii-00-head",
     "set": "shore",
     "beat": 1,
@@ -665,7 +665,7 @@
     "id": "ody-ii-00-head",
     "verb": "click",
     "how": "click",
-    "t": 61.5,
+    "t": 63.25,
     "next": "ody-ii-01-beg",
     "set": "cave",
     "beat": 2,
@@ -685,7 +685,7 @@
     "id": "ody-ii-01-beg",
     "verb": "click",
     "how": "click",
-    "t": 64.5,
+    "t": 66.25,
     "next": "ody-ii-02-present",
     "set": "cave",
     "beat": 2,
@@ -705,7 +705,7 @@
     "id": "ody-ii-02-present",
     "verb": "click",
     "how": "click",
-    "t": 67.5,
+    "t": 69.25,
     "next": "ody-ii-03-return",
     "set": "cave",
     "beat": 2,
@@ -725,7 +725,7 @@
     "id": "ody-ii-03-return",
     "verb": "click",
     "how": "click",
-    "t": 70.5,
+    "t": 72.25,
     "next": "ody-ii-04-boulder",
     "set": "cave",
     "beat": 2,
@@ -745,7 +745,7 @@
     "id": "ody-ii-04-boulder",
     "verb": "click",
     "how": "click",
-    "t": 73.5,
+    "t": 75.25,
     "next": "ody-ii-05-strangers",
     "set": "cave",
     "beat": 2,
@@ -765,7 +765,7 @@
     "id": "ody-ii-05-strangers",
     "verb": "click",
     "how": "click",
-    "t": 76.5,
+    "t": 78.25,
     "next": "ody-ii-06-plea",
     "set": "cave",
     "beat": 2,
@@ -785,7 +785,7 @@
     "id": "ody-ii-06-plea",
     "verb": "click",
     "how": "click",
-    "t": 79.5,
+    "t": 81.25,
     "next": "ody-ii-07-pitiless",
     "set": "cave",
     "beat": 2,
@@ -805,7 +805,7 @@
     "id": "ody-ii-07-pitiless",
     "verb": "click",
     "how": "click",
-    "t": 82.5,
+    "t": 84.25,
     "next": "ody-ii-08-shipfast",
     "set": "cave",
     "beat": 2,
@@ -825,7 +825,7 @@
     "id": "ody-ii-08-shipfast",
     "verb": "click",
     "how": "click",
-    "t": 85.5,
+    "t": 87.25,
     "next": "ody-ii-09-shiplie",
     "set": "cave",
     "beat": 2,
@@ -845,7 +845,7 @@
     "id": "ody-ii-09-shiplie",
     "verb": "click",
     "how": "click",
-    "t": 88.5,
+    "t": 90.25,
     "next": "ody-ii-10-firstmeal",
     "set": "cave",
     "beat": 2,
@@ -865,7 +865,7 @@
     "id": "ody-ii-10-firstmeal",
     "verb": "click",
     "how": "click",
-    "t": 91.5,
+    "t": 93.25,
     "next": "ody-ii-11-sword",
     "set": "cave",
     "beat": 2,
@@ -885,7 +885,7 @@
     "id": "ody-ii-11-sword",
     "verb": "target",
     "how": "target",
-    "t": 94.5,
+    "t": 96.25,
     "next": "ody-ii-12-shiftstone",
     "set": "cave",
     "beat": 2,
@@ -905,7 +905,7 @@
     "id": "ody-ii-12-shiftstone",
     "verb": "click",
     "how": "click",
-    "t": 94.5,
+    "t": 96.25,
     "next": "ody-ii-13-tillmorning",
     "set": "cave",
     "beat": 2,
@@ -925,7 +925,7 @@
     "id": "ody-ii-13-tillmorning",
     "verb": "click",
     "how": "click",
-    "t": 97.5,
+    "t": 99.25,
     "next": "ody-iii-00-head",
     "set": "cave",
     "beat": 2,
@@ -945,7 +945,7 @@
     "id": "ody-iii-00-head",
     "verb": "click",
     "how": "click",
-    "t": 100.5,
+    "t": 102.25,
     "next": "ody-iii-01-morningmeal",
     "set": "cave",
     "beat": 3,
@@ -965,7 +965,7 @@
     "id": "ody-iii-01-morningmeal",
     "verb": "click",
     "how": "click",
-    "t": 103.5,
+    "t": 105.25,
     "next": "ody-iii-02-quiverlid",
     "set": "cave",
     "beat": 3,
@@ -985,7 +985,7 @@
     "id": "ody-iii-02-quiverlid",
     "verb": "click",
     "how": "click",
-    "t": 106.5,
+    "t": 108.25,
     "next": "ody-iii-03-scheme",
     "set": "cave",
     "beat": 3,
@@ -1005,7 +1005,7 @@
     "id": "ody-iii-03-scheme",
     "verb": "click",
     "how": "click",
-    "t": 109.5,
+    "t": 111.25,
     "next": "ody-iii-04-club",
     "set": "cave",
     "beat": 3,
@@ -1025,7 +1025,7 @@
     "id": "ody-iii-04-club",
     "verb": "click",
     "how": "click",
-    "t": 112.5,
+    "t": 114.25,
     "next": "ody-iii-05-lots",
     "set": "cave",
     "beat": 3,
@@ -1045,7 +1045,7 @@
     "id": "ody-iii-05-lots",
     "verb": "click",
     "how": "click",
-    "t": 115.5,
+    "t": 117.25,
     "next": "ody-iii-06-return",
     "set": "cave",
     "beat": 3,
@@ -1065,7 +1065,7 @@
     "id": "ody-iii-06-return",
     "verb": "click",
     "how": "click",
-    "t": 118.5,
+    "t": 120.25,
     "next": "ody-iii-07-suppertwo",
     "set": "cave",
     "beat": 3,
@@ -1085,7 +1085,7 @@
     "id": "ody-iii-07-suppertwo",
     "verb": "click",
     "how": "click",
-    "t": 121.5,
+    "t": 123.25,
     "next": "ody-iii-08-lookhere",
     "set": "cave",
     "beat": 3,
@@ -1105,7 +1105,7 @@
     "id": "ody-iii-08-lookhere",
     "verb": "release",
     "how": "release",
-    "t": 124.5,
+    "t": 126.25,
     "next": "ody-iii-09-besokind",
     "set": "cave",
     "beat": 3,
@@ -1125,7 +1125,7 @@
     "id": "ody-iii-09-besokind",
     "verb": "auto",
     "how": "auto",
-    "t": 127.9,
+    "t": 129.65,
     "next": "ody-iii-10-thrice",
     "set": "cave",
     "beat": 3,
@@ -1145,7 +1145,7 @@
     "id": "ody-iii-10-thrice",
     "verb": "auto",
     "how": "auto",
-    "t": 136.9,
+    "t": 138.65,
     "next": "ody-iii-11-noman",
     "set": "cave",
     "beat": 3,
@@ -1165,7 +1165,7 @@
     "id": "ody-iii-11-noman",
     "verb": "click",
     "how": "click",
-    "t": 144.9,
+    "t": 146.65,
     "next": "ody-iii-12-nomanlast",
     "set": "cave",
     "beat": 3,
@@ -1185,7 +1185,7 @@
     "id": "ody-iii-12-nomanlast",
     "verb": "click",
     "how": "click",
-    "t": 147.9,
+    "t": 149.65,
     "next": "ody-iii-13-neck",
     "set": "cave",
     "beat": 3,
@@ -1205,7 +1205,7 @@
     "id": "ody-iii-13-neck",
     "verb": "auto",
     "how": "auto",
-    "t": 150.9,
+    "t": 152.65,
     "next": "ody-iv-00-head",
     "set": "cave",
     "beat": 3,
@@ -1225,7 +1225,7 @@
     "id": "ody-iv-00-head",
     "verb": "auto",
     "how": "auto",
-    "t": 157.4,
+    "t": 159.15,
     "next": "ody-iv-01-embers",
     "set": "cave",
     "beat": 4,
@@ -1245,7 +1245,7 @@
     "id": "ody-iv-01-embers",
     "verb": "hold",
     "how": "hold",
-    "t": 160.9,
+    "t": 162.65,
     "next": "ody-iv-02-glowing",
     "set": "cave",
     "beat": 4,
@@ -1265,7 +1265,7 @@
     "id": "ody-iv-02-glowing",
     "verb": "auto",
     "how": "auto",
-    "t": 164.15,
+    "t": 165.9,
     "next": "ody-iv-03-auger",
     "set": "cave",
     "beat": 4,
@@ -1285,7 +1285,7 @@
     "id": "ody-iv-03-auger",
     "verb": "clock",
     "how": "clock",
-    "t": 167.65,
+    "t": 169.4,
     "next": "ody-iv-04-bore",
     "set": "cave",
     "beat": 4,
@@ -1305,7 +1305,7 @@
     "id": "ody-iv-04-bore",
     "verb": "clock",
     "how": "clock",
-    "t": 168.15,
+    "t": 169.9,
     "next": "ody-iv-05-hiss",
     "set": "cave",
     "beat": 4,
@@ -1325,7 +1325,7 @@
     "id": "ody-iv-05-hiss",
     "verb": "clock",
     "how": "clock",
-    "t": 171.4,
+    "t": 173.15,
     "next": "ody-iv-06-fright",
     "set": "cave",
     "beat": 4,
@@ -1345,7 +1345,7 @@
     "id": "ody-iv-06-fright",
     "verb": "clock",
     "how": "clock",
-    "t": 174.4,
+    "t": 176.15,
     "next": "ody-iv-07-whatails",
     "set": "cave",
     "beat": 4,
@@ -1365,7 +1365,7 @@
     "id": "ody-iv-07-whatails",
     "verb": "click",
     "how": "click",
-    "t": 176.65,
+    "t": 178.4,
     "next": "ody-iv-08-nomankilling",
     "set": "cave",
     "beat": 4,
@@ -1385,7 +1385,7 @@
     "id": "ody-iv-08-nomankilling",
     "verb": "click",
     "how": "click",
-    "t": 179.65,
+    "t": 181.4,
     "next": "ody-iv-09-mustbeill",
     "set": "cave",
     "beat": 4,
@@ -1405,7 +1405,7 @@
     "id": "ody-iv-09-mustbeill",
     "verb": "click",
     "how": "click",
-    "t": 182.65,
+    "t": 184.4,
     "next": "ody-iv-10-wentaway",
     "set": "cave",
     "beat": 4,
@@ -1425,7 +1425,7 @@
     "id": "ody-iv-10-wentaway",
     "verb": "click",
     "how": "click",
-    "t": 185.65,
+    "t": 187.4,
     "next": "ody-iv-11-stone",
     "set": "cave",
     "beat": 4,
@@ -1445,7 +1445,7 @@
     "id": "ody-iv-11-stone",
     "verb": "click",
     "how": "click",
-    "t": 188.65,
+    "t": 190.4,
     "next": "ody-iv-12-doorway",
     "set": "cave",
     "beat": 4,
@@ -1465,7 +1465,7 @@
     "id": "ody-iv-12-doorway",
     "verb": "click",
     "how": "click",
-    "t": 191.65,
+    "t": 193.4,
     "next": "ody-v-00-head",
     "set": "cave",
     "beat": 4,
@@ -1485,7 +1485,7 @@
     "id": "ody-v-00-head",
     "verb": "auto",
     "how": "auto",
-    "t": 194.65,
+    "t": 196.4,
     "next": "ody-v-01-puzzling",
     "set": "cave",
     "beat": 5,
@@ -1505,7 +1505,7 @@
     "id": "ody-v-01-puzzling",
     "verb": "click",
     "how": "click",
-    "t": 198.15,
+    "t": 199.9,
     "next": "ody-v-02-withies",
     "set": "cave",
     "beat": 5,
@@ -1525,7 +1525,7 @@
     "id": "ody-v-02-withies",
     "verb": "click",
     "how": "click",
-    "t": 201.15,
+    "t": 202.9,
     "next": "ody-v-03-threetoaman",
     "set": "cave",
     "beat": 5,
@@ -1545,7 +1545,7 @@
     "id": "ody-v-03-threetoaman",
     "verb": "click",
     "how": "click",
-    "t": 204.15,
+    "t": 205.9,
     "next": "ody-v-04-greatram",
     "set": "cave",
     "beat": 5,
@@ -1565,7 +1565,7 @@
     "id": "ody-v-04-greatram",
     "verb": "target",
     "how": "target",
-    "t": 207.15,
+    "t": 208.9,
     "next": "ody-v-05-dawn",
     "set": "cave",
     "beat": 5,
@@ -1585,7 +1585,7 @@
     "id": "ody-v-05-dawn",
     "verb": "click",
     "how": "click",
-    "t": 207.15,
+    "t": 208.9,
     "next": "ody-v-06-feltbacks",
     "set": "cave",
     "beat": 5,
@@ -1605,7 +1605,7 @@
     "id": "ody-v-06-feltbacks",
     "verb": "click",
     "how": "click",
-    "t": 210.15,
+    "t": 211.9,
     "next": "ody-v-07-lastofall",
     "set": "cave",
     "beat": 5,
@@ -1625,7 +1625,7 @@
     "id": "ody-v-07-lastofall",
     "verb": "click",
     "how": "click",
-    "t": 213.15,
+    "t": 214.9,
     "next": "ody-v-08-ramspeech1",
     "set": "cave",
     "beat": 5,
@@ -1645,7 +1645,7 @@
     "id": "ody-v-08-ramspeech1",
     "verb": "click",
     "how": "click",
-    "t": 216.15,
+    "t": 217.9,
     "next": "ody-v-09-ramspeech2",
     "set": "cave",
     "beat": 5,
@@ -1665,7 +1665,7 @@
     "id": "ody-v-09-ramspeech2",
     "verb": "click",
     "how": "click",
-    "t": 219.15,
+    "t": 220.9,
     "next": "ody-v-10-ramspeech3",
     "set": "cave",
     "beat": 5,
@@ -1685,7 +1685,7 @@
     "id": "ody-v-10-ramspeech3",
     "verb": "click",
     "how": "click",
-    "t": 222.15,
+    "t": 223.9,
     "next": "ody-v-11-freed",
     "set": "cave",
     "beat": 5,
@@ -1705,7 +1705,7 @@
     "id": "ody-v-11-freed",
     "verb": "click",
     "how": "click",
-    "t": 225.15,
+    "t": 226.9,
     "next": "ody-v-12-aboard",
     "set": "cave",
     "beat": 5,
@@ -1725,7 +1725,7 @@
     "id": "ody-v-12-aboard",
     "verb": "click",
     "how": "click",
-    "t": 228.15,
+    "t": 229.9,
     "next": "ody-vi-01-jeer",
     "set": "cave",
     "beat": 5,
@@ -1745,7 +1745,7 @@
     "id": "ody-vi-01-jeer",
     "verb": "target",
     "how": "target",
-    "t": 231.15,
+    "t": 232.9,
     "next": "ody-vi-02-taunt",
     "set": "sea",
     "beat": 6,
@@ -1765,7 +1765,7 @@
     "id": "ody-vi-02-taunt",
     "verb": "auto",
     "how": "auto",
-    "t": 231.15,
+    "t": 232.9,
     "next": "ody-vi-03-rock1",
     "set": "sea",
     "beat": 6,
@@ -1785,7 +1785,7 @@
     "id": "ody-vi-03-rock1",
     "verb": "clock",
     "how": "clock",
-    "t": 237.15,
+    "t": 238.9,
     "next": "ody-vi-04-twiceasfar",
     "set": "sea",
     "beat": 6,
@@ -1805,7 +1805,7 @@
     "id": "ody-vi-04-twiceasfar",
     "verb": "click",
     "how": "click",
-    "t": 239.9,
+    "t": 241.65,
     "next": "ody-vi-05-menbeg",
     "set": "sea",
     "beat": 6,
@@ -1825,7 +1825,7 @@
     "id": "ody-vi-05-menbeg",
     "verb": "click",
     "how": "click",
-    "t": 242.9,
+    "t": 244.65,
     "next": "ody-vi-06-defy",
     "set": "sea",
     "beat": 6,
@@ -1845,7 +1845,7 @@
     "id": "ody-vi-06-defy",
     "verb": "target",
     "how": "target",
-    "t": 245.9,
+    "t": 247.65,
     "next": "ody-vi-07-myname",
     "set": "sea",
     "beat": 6,
@@ -1865,7 +1865,7 @@
     "id": "ody-vi-07-myname",
     "verb": "release",
     "how": "release",
-    "t": 245.9,
+    "t": 247.65,
     "next": "ody-vi-08-prophecy",
     "set": "sea",
     "beat": 6,
@@ -1885,7 +1885,7 @@
     "id": "ody-vi-08-prophecy",
     "verb": "click",
     "how": "click",
-    "t": 249.3,
+    "t": 251.05,
     "next": "ody-vi-09-fatherson",
     "set": "sea",
     "beat": 6,
@@ -1905,7 +1905,7 @@
     "id": "ody-vi-09-fatherson",
     "verb": "click",
     "how": "click",
-    "t": 252.3,
+    "t": 254.05,
     "next": "ody-vi-10-hades",
     "set": "sea",
     "beat": 6,
@@ -1925,7 +1925,7 @@
     "id": "ody-vi-10-hades",
     "verb": "click",
     "how": "click",
-    "t": 255.3,
+    "t": 257.05,
     "next": "ody-vi-11-curse",
     "set": "sea",
     "beat": 6,
@@ -1945,7 +1945,7 @@
     "id": "ody-vi-11-curse",
     "verb": "click",
     "how": "click",
-    "t": 258.3,
+    "t": 260.05,
     "next": "ody-vi-12-heard",
     "set": "sea",
     "beat": 6,
@@ -1965,7 +1965,7 @@
     "id": "ody-vi-12-heard",
     "verb": "clock",
     "how": "clock",
-    "t": 261.3,
+    "t": 263.05,
     "next": "ody-vi-13-ram",
     "set": "sea",
     "beat": 6,
@@ -1985,7 +1985,7 @@
     "id": "ody-vi-13-ram",
     "verb": "click",
     "how": "click",
-    "t": 263.55,
+    "t": 265.3,
     "next": "ody-vi-14-sailedon",
     "set": "sea",
     "beat": 6,
@@ -2005,7 +2005,7 @@
     "id": "ody-vi-14-sailedon",
     "verb": "click",
     "how": "click",
-    "t": 266.55,
+    "t": 268.3,
     "next": "ody-vi-14-sailedon",
     "set": "sea",
     "beat": 6,
@@ -2028,10 +2028,10 @@
     "verb": "target",
     "live": true,
     "resolved": true,
-    "waited": 25.5,
+    "waited": 27.25,
     "aim": [
-     518,
-     670
+     525,
+     550
     ],
     "onTarget": true
    },
@@ -2072,7 +2072,7 @@
     "waited": 0,
     "aim": [
      1064,
-     632
+     633
     ],
     "onTarget": true
    },
@@ -2093,7 +2093,7 @@
    }
   },
   "ended": true,
-  "simT": 269.55,
+  "simT": 271.3,
   "visited": 81,
   "guard": 81
  },
@@ -2103,50 +2103,50 @@
    "verb": "target",
    "target": "ship",
    "misses": 0,
-   "at": 46.5
+   "at": 48.25
   },
   "sword": {
    "ok": true,
    "verb": "target",
    "target": "sword",
    "misses": 0,
-   "at": 94.5
+   "at": 96.25
   },
   "lookhere": {
    "ok": true,
    "verb": "release",
-   "at": 127.9
+   "at": 129.65
   },
   "embers": {
    "ok": true,
    "verb": "hold",
-   "at": 163.917
+   "at": 165.667
   },
   "greatram": {
    "ok": true,
    "verb": "target",
    "target": "ram-great",
    "misses": 0,
-   "at": 207.15
+   "at": 208.9
   },
   "jeer": {
    "ok": true,
    "verb": "target",
    "target": "cyclops",
    "misses": 0,
-   "at": 231.15
+   "at": 232.9
   },
   "defy": {
    "ok": true,
    "verb": "target",
    "target": "cyclops",
    "misses": 0,
-   "at": 245.9
+   "at": 247.65
   },
   "myname": {
    "ok": true,
    "verb": "release",
-   "at": 249.3
+   "at": 251.05
   }
  },
  "routes": [
@@ -2350,42 +2350,42 @@
   "cached": 0,
   "log": [
    {
-    "t": 245.9,
+    "t": 247.65,
     "key": "myname",
     "dur": 11.2
    },
    {
-    "t": 249.3,
+    "t": 251.05,
     "key": "prophecy",
     "dur": 24.4
    },
    {
-    "t": 252.3,
+    "t": 254.05,
     "key": "fatherson",
     "dur": 31.92
    },
    {
-    "t": 255.3,
+    "t": 257.05,
     "key": "hades",
     "dur": 8.8
    },
    {
-    "t": 258.3,
+    "t": 260.05,
     "key": "curse",
     "dur": 19.76
    },
    {
-    "t": 261.3,
+    "t": 263.05,
     "key": "heard",
     "dur": 3.36
    },
    {
-    "t": 263.517,
+    "t": 265.267,
     "key": "ram",
     "dur": 17.92
    },
    {
-    "t": 266.55,
+    "t": 268.3,
     "key": "sailedon",
     "dur": 13.52
    }
@@ -2397,7 +2397,7 @@
   "crew-1": 2.69,
   "crew-2": 2.69,
   "crew-3": 2.69,
-  "poly-idle": 19.32
+  "poly-idle": 18.18
  },
  "director": {
   "set": "sea",
@@ -2451,8 +2451,8 @@
     "target": "ship",
     "shot": "OTS",
     "aim": [
-     586,
-     584
+     545,
+     550
     ],
     "onPixels": true,
     "ringOnTarget": true,
@@ -2687,6 +2687,4455 @@
   },
   "identical": true
  },
+ "escalation": {
+  "rungs": [
+   {
+    "unit": "ody-ii-00-head",
+    "camY": 1.55,
+    "fov": 56,
+    "dist": 7.69
+   },
+   {
+    "unit": "ody-iii-00-head",
+    "camY": 1.25,
+    "fov": 50,
+    "dist": 6.67
+   },
+   {
+    "unit": "ody-iv-00-head",
+    "camY": 0.95,
+    "fov": 46,
+    "dist": 5.45
+   }
+  ],
+  "ok": true,
+  "turn": {
+   "unit": "ody-v-00-head",
+   "anchorX": -8.279,
+   "camX": 1.6,
+   "faces": "mouth"
+  }
+ },
+ "viewing": {
+  "rows": [
+   {
+    "unit": "ody-i-00-head",
+    "set": "shore",
+    "cls": "WIDE",
+    "cine": {
+     "size": 0.48131455574759896,
+     "inFrame": 1,
+     "cx": 0.01584741601126541,
+     "cy": -0.06357040789177115,
+     "rig": {
+      "on": true,
+      "fillE": 1.95,
+      "rimE": 5.6,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-00-head",
+     "cls": "WIDE",
+     "box": [
+      -0.237,
+      -0.545,
+      0.268,
+      0.418
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 1.95,
+      "rimE": 5.6,
+      "side": 1
+     },
+     "px": 1806,
+     "mean": 0.6172,
+     "p10": 0.1671,
+     "p50": 0.6631,
+     "p90": 0.9093,
+     "max": 1,
+     "ring": 0.3645,
+     "meanSep": 0.2527,
+     "sep": 0.5448,
+     "dark": 0.0155,
+     "darkCap": 0.8,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-01-bard",
+    "set": "shore",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.306930064074309,
+     "inFrame": 1,
+     "cx": -0.0629977003538979,
+     "cy": 0.024504482410606654,
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-01-bard",
+     "cls": "NARRATION",
+     "box": [
+      -0.231,
+      -0.282,
+      0.105,
+      0.331
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "px": 812,
+     "mean": 0.4633,
+     "p10": 0.0776,
+     "p50": 0.3757,
+     "p90": 0.9338,
+     "max": 0.9823,
+     "ring": 0.326,
+     "meanSep": 0.1374,
+     "sep": 0.6078,
+     "dark": 0.0493,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-02-iamulysses",
+    "set": "shore",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.37423561831697644,
+     "inFrame": 1,
+     "cx": -0.15785432457891505,
+     "cy": 0.025793803442895946,
+     "rig": {
+      "on": true,
+      "fillE": 6.17,
+      "rimE": 14.7,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-02-iamulysses",
+     "cls": "ACTION",
+     "box": [
+      -0.24,
+      -0.348,
+      -0.075,
+      0.4
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 6.17,
+      "rimE": 14.7,
+      "side": 1
+     },
+     "px": 510,
+     "mean": 0.5987,
+     "p10": 0.2623,
+     "p50": 0.6017,
+     "p90": 0.9547,
+     "max": 0.9677,
+     "ring": 0.5818,
+     "meanSep": 0.0169,
+     "sep": 0.3729,
+     "dark": 0.0118,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-03-troy",
+    "set": "shore",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.5759671550924887,
+     "inFrame": 1,
+     "cx": -0.14797181794297515,
+     "cy": 0.041676382714434856,
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-03-troy",
+     "cls": "NARRATION",
+     "box": [
+      -0.267,
+      -0.534,
+      -0.029,
+      0.618
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "px": 1071,
+     "mean": 0.5858,
+     "p10": 0.2217,
+     "p50": 0.6081,
+     "p90": 0.952,
+     "max": 0.9604,
+     "ring": 0.5657,
+     "meanSep": 0.02,
+     "sep": 0.3863,
+     "dark": 0.0168,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-04-lawless",
+    "set": "shore",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.8075119483543625,
+     "inFrame": 1,
+     "cx": 0.11188429167916061,
+     "cy": 0.009291546502631864,
+     "rig": {
+      "on": true,
+      "fillE": 6.17,
+      "rimE": 14.7,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-04-lawless",
+     "cls": "ACTION",
+     "box": [
+      -0.422,
+      -0.798,
+      0.646,
+      0.817
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 6.17,
+      "rimE": 14.7,
+      "side": 1
+     },
+     "px": 6264,
+     "mean": 0.2316,
+     "p10": 0.0271,
+     "p50": 0.1347,
+     "p90": 0.4819,
+     "max": 0.8288,
+     "ring": 0.1634,
+     "meanSep": 0.0682,
+     "sep": 0.3185,
+     "dark": 0.1365,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-05-dawn",
+    "set": "shore",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.18358575778739222,
+     "inFrame": 1,
+     "cx": -0.08139881885744585,
+     "cy": -0.01713089719006937,
+     "rig": {
+      "on": true,
+      "fillE": 6.17,
+      "rimE": 14.7,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-05-dawn",
+     "cls": "ACTION",
+     "box": [
+      -0.116,
+      -0.201,
+      -0.047,
+      0.166
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 6.17,
+      "rimE": 14.7,
+      "side": 1
+     },
+     "px": 126,
+     "mean": 0.7093,
+     "p10": 0.2866,
+     "p50": 0.7549,
+     "p90": 0.9496,
+     "max": 0.9678,
+     "ring": 0.7398,
+     "meanSep": 0.0305,
+     "sep": 0.2097,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-06-smoke",
+    "set": "shore",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.3483883016858085,
+     "inFrame": 1,
+     "cx": -0.1343550584693346,
+     "cy": 0.00434946890985019,
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-06-smoke",
+     "cls": "NARRATION",
+     "box": [
+      -0.36,
+      -0.344,
+      0.092,
+      0.353
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "px": 1216,
+     "mean": 0.5826,
+     "p10": 0.1605,
+     "p50": 0.6276,
+     "p90": 0.9015,
+     "max": 0.9969,
+     "ring": 0.6793,
+     "meanSep": 0.0967,
+     "sep": 0.2222,
+     "dark": 0.028,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-07-council",
+    "set": "shore",
+    "cls": "OTS",
+    "cine": {
+     "size": 0.46279385475148394,
+     "inFrame": 1,
+     "cx": -0.28420921490168183,
+     "cy": -0.04540903842284752,
+     "rig": {
+      "on": true,
+      "fillE": 6.5,
+      "rimE": 13.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-07-council",
+     "cls": "OTS",
+     "box": [
+      -0.372,
+      -0.508,
+      -0.196,
+      0.417
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 6.5,
+      "rimE": 13.3,
+      "side": 1
+     },
+     "px": 656,
+     "mean": 0.5855,
+     "p10": 0.1304,
+     "p50": 0.6505,
+     "p90": 0.9316,
+     "max": 0.9571,
+     "ring": 0.8276,
+     "meanSep": 0.2422,
+     "sep": 0.104,
+     "dark": 0.0274,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-08-cave",
+    "set": "shore",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.7306620188128854,
+     "inFrame": 1,
+     "cx": 0.07629490515730647,
+     "cy": -0.026801430172186225,
+     "rig": {
+      "on": true,
+      "fillE": 6.17,
+      "rimE": 14.7,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-08-cave",
+     "cls": "ACTION",
+     "box": [
+      -0.384,
+      -0.757,
+      0.537,
+      0.704
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 6.17,
+      "rimE": 14.7,
+      "side": 1
+     },
+     "px": 4940,
+     "mean": 0.2625,
+     "p10": 0.0045,
+     "p50": 0.1599,
+     "p90": 0.7301,
+     "max": 0.944,
+     "ring": 0.4818,
+     "meanSep": 0.2193,
+     "sep": 0.2484,
+     "dark": 0.2302,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-09-monster",
+    "set": "shore",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.8546787058917406,
+     "inFrame": 0.8635453508230515,
+     "cx": 0.08364450994588138,
+     "cy": 0.378571060051191,
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-09-monster",
+     "cls": "NARRATION",
+     "box": [
+      -0.42,
+      -0.476,
+      0.587,
+      1.233
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "px": 5330,
+     "mean": 0.4431,
+     "p10": 0.0643,
+     "p50": 0.2968,
+     "p90": 0.8046,
+     "max": 0.8607,
+     "ring": 0.7078,
+     "meanSep": 0.2647,
+     "sep": 0.0968,
+     "dark": 0.0936,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-10-wineskin",
+    "set": "shore",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.38505757402260643,
+     "inFrame": 1,
+     "cx": -0.11177810620459945,
+     "cy": 0.008083258936159049,
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-10-wineskin",
+     "cls": "NARRATION",
+     "box": [
+      -0.357,
+      -0.377,
+      0.133,
+      0.393
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "px": 1435,
+     "mean": 0.7573,
+     "p10": 0.534,
+     "p50": 0.811,
+     "p90": 0.9179,
+     "max": 0.9532,
+     "ring": 0.6633,
+     "meanSep": 0.094,
+     "sep": 0.2546,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-11-twentyone",
+    "set": "shore",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.6984165920709733,
+     "inFrame": 1,
+     "cx": -0.15168127278320254,
+     "cy": 0.025800180090595037,
+     "rig": {
+      "on": true,
+      "fillE": 6.5,
+      "rimE": 14,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-11-twentyone",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.317,
+      -0.673,
+      0.014,
+      0.724
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 6.5,
+      "rimE": 14,
+      "side": 1
+     },
+     "px": 1736,
+     "mean": 0.3057,
+     "p10": 0.0374,
+     "p50": 0.2298,
+     "p90": 0.8143,
+     "max": 0.9159,
+     "ring": 0.4012,
+     "meanSep": 0.0955,
+     "sep": 0.4132,
+     "dark": 0.2563,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-i-12-misgave",
+    "set": "shore",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.8359069989873082,
+     "inFrame": 1,
+     "cx": 0.07652512926905397,
+     "cy": -0.025684699038217518,
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-i-12-misgave",
+     "cls": "NARRATION",
+     "box": [
+      -0.417,
+      -0.862,
+      0.57,
+      0.81
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5.2,
+      "rimE": 11.9,
+      "side": 1
+     },
+     "px": 5920,
+     "mean": 0.2571,
+     "p10": 0.0045,
+     "p50": 0.1446,
+     "p90": 0.7002,
+     "max": 0.9639,
+     "ring": 0.3876,
+     "meanSep": 0.1305,
+     "sep": 0.3125,
+     "dark": 0.2039,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-00-head",
+    "set": "cave",
+    "cls": "WIDE",
+    "cine": {
+     "size": 1.0134903596173692,
+     "inFrame": 0.9021793829421827,
+     "cx": 0.008038052018106895,
+     "cy": 0.18479014510247105,
+     "rig": {
+      "on": true,
+      "fillE": 3,
+      "rimE": 10.4,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-00-head",
+     "cls": "WIDE",
+     "box": [
+      -0.459,
+      -0.829,
+      0.475,
+      1.198
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 3,
+      "rimE": 10.4,
+      "side": 1
+     },
+     "px": 6080,
+     "mean": 0.5975,
+     "p10": 0.1749,
+     "p50": 0.626,
+     "p90": 0.9234,
+     "max": 0.9806,
+     "ring": 0.4229,
+     "meanSep": 0.1747,
+     "sep": 0.5005,
+     "dark": 0.0484,
+     "darkCap": 0.8,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-01-beg",
+    "set": "cave",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.617741424169985,
+     "inFrame": 1,
+     "cx": -0.11980514606364895,
+     "cy": 0.003781530305503489,
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-01-beg",
+     "cls": "NARRATION",
+     "box": [
+      -0.509,
+      -0.614,
+      0.27,
+      0.622
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "px": 3465,
+     "mean": 0.7904,
+     "p10": 0.5678,
+     "p50": 0.8508,
+     "p90": 0.9359,
+     "max": 0.9634,
+     "ring": 0.5413,
+     "meanSep": 0.2491,
+     "sep": 0.3946,
+     "dark": 0.0061,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-02-present",
+    "set": "cave",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.536477857377105,
+     "inFrame": 1,
+     "cx": -0.12093601203895002,
+     "cy": 0.011196358641764992,
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-02-present",
+     "cls": "NARRATION",
+     "box": [
+      -0.455,
+      -0.525,
+      0.213,
+      0.548
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "px": 2640,
+     "mean": 0.7239,
+     "p10": 0.5166,
+     "p50": 0.7272,
+     "p90": 0.911,
+     "max": 0.9674,
+     "ring": 0.696,
+     "meanSep": 0.0279,
+     "sep": 0.215,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-03-return",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.5218560312966236,
+     "inFrame": 1,
+     "cx": 0.09682062850559997,
+     "cy": 0.006129875053585865,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-03-return",
+     "cls": "ACTION",
+     "box": [
+      -0.185,
+      -0.516,
+      0.379,
+      0.528
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 2209,
+     "mean": 0.5493,
+     "p10": 0.2204,
+     "p50": 0.6194,
+     "p90": 0.8127,
+     "max": 0.8747,
+     "ring": 0.4837,
+     "meanSep": 0.0656,
+     "sep": 0.329,
+     "dark": 0.0009,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-04-boulder",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.7175097085354885,
+     "inFrame": 1,
+     "cx": -0.047968924293732035,
+     "cy": 0.05133761380947249,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-04-boulder",
+     "cls": "ACTION",
+     "box": [
+      -0.457,
+      -0.666,
+      0.361,
+      0.769
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 4288,
+     "mean": 0.7045,
+     "p10": 0.4839,
+     "p50": 0.6955,
+     "p90": 0.9289,
+     "max": 0.9989,
+     "ring": 0.5138,
+     "meanSep": 0.1907,
+     "sep": 0.4151,
+     "dark": 0.0259,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-05-strangers",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.7548643365420654,
+     "inFrame": 1,
+     "cx": 0.10131241496844956,
+     "cy": -0.03243578519347612,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-05-strangers",
+     "cls": "GIANT",
+     "box": [
+      -0.07,
+      -0.787,
+      0.273,
+      0.722
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 2010,
+     "mean": 0.2804,
+     "p10": 0.0008,
+     "p50": 0.1437,
+     "p90": 0.7629,
+     "max": 0.9637,
+     "ring": 0.5119,
+     "meanSep": 0.2315,
+     "sep": 0.251,
+     "dark": 0.4294,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-06-plea",
+    "set": "cave",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.385737333608727,
+     "inFrame": 1,
+     "cx": -0.1768389085847407,
+     "cy": -0.05973822536507942,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-06-plea",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.268,
+      -0.445,
+      -0.086,
+      0.326
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": -1
+     },
+     "px": 576,
+     "mean": 0.7263,
+     "p10": 0.5975,
+     "p50": 0.7408,
+     "p90": 0.8345,
+     "max": 0.8449,
+     "ring": 0.5785,
+     "meanSep": 0.1478,
+     "sep": 0.256,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-07-pitiless",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.7478186041059816,
+     "inFrame": 1,
+     "cx": 0.13024651853027044,
+     "cy": 0.047813828907176226,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-07-pitiless",
+     "cls": "GIANT",
+     "box": [
+      -0.032,
+      -0.7,
+      0.292,
+      0.796
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 1876,
+     "mean": 0.7551,
+     "p10": 0.5795,
+     "p50": 0.7819,
+     "p90": 0.901,
+     "max": 0.9403,
+     "ring": 0.6527,
+     "meanSep": 0.1023,
+     "sep": 0.2483,
+     "dark": 0.0005,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-08-shipfast",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.7959513998722608,
+     "inFrame": 1,
+     "cx": 0.11990498978863773,
+     "cy": 0.04577934853154708,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-08-shipfast",
+     "cls": "GIANT",
+     "box": [
+      -0.052,
+      -0.75,
+      0.291,
+      0.842
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 2059,
+     "mean": 0.7941,
+     "p10": 0.6194,
+     "p50": 0.8363,
+     "p90": 0.9299,
+     "max": 0.9576,
+     "ring": 0.7134,
+     "meanSep": 0.0807,
+     "sep": 0.2165,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-09-shiplie",
+    "set": "cave",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.6486682904320211,
+     "inFrame": 1,
+     "cx": -0.15631016955808943,
+     "cy": 0.032566195911392926,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-09-shiplie",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.279,
+      -0.616,
+      -0.034,
+      0.681
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": -1
+     },
+     "px": 1218,
+     "mean": 0.6495,
+     "p10": 0.3055,
+     "p50": 0.6871,
+     "p90": 0.8987,
+     "max": 0.9544,
+     "ring": 0.5205,
+     "meanSep": 0.129,
+     "sep": 0.3782,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-10-firstmeal",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 1.310891074016157,
+     "inFrame": 0.7628398879369247,
+     "cx": 0.1511242077391497,
+     "cy": -0.020060536250694705,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-10-firstmeal",
+     "cls": "ACTION",
+     "box": [
+      -0.125,
+      -1.331,
+      0.427,
+      1.291
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 4002,
+     "mean": 0.6497,
+     "p10": 0.3779,
+     "p50": 0.7123,
+     "p90": 0.8359,
+     "max": 0.9667,
+     "ring": 0.5525,
+     "meanSep": 0.0972,
+     "sep": 0.2834,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-11-sword",
+    "set": "cave",
+    "cls": "GATE",
+    "cine": {
+     "size": 0.3349504478001143,
+     "inFrame": 1,
+     "cx": -0.14371420949330105,
+     "cy": 0.0025135970703897836,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 28.6,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-11-sword",
+     "cls": "GATE",
+     "box": [
+      -0.366,
+      -0.332,
+      0.079,
+      0.337
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 28.6,
+      "side": -1
+     },
+     "px": 1147,
+     "mean": 0.7584,
+     "p10": 0.6724,
+     "p50": 0.7744,
+     "p90": 0.8418,
+     "max": 0.9876,
+     "ring": 0.6385,
+     "meanSep": 0.1199,
+     "sep": 0.2032,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-12-shiftstone",
+    "set": "cave",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.7038876443921924,
+     "inFrame": 1,
+     "cx": -0.06652572825124592,
+     "cy": 0.053500808203993666,
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-12-shiftstone",
+     "cls": "NARRATION",
+     "box": [
+      -0.473,
+      -0.65,
+      0.34,
+      0.757
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "px": 4154,
+     "mean": 0.6476,
+     "p10": 0.4069,
+     "p50": 0.6573,
+     "p90": 0.9008,
+     "max": 0.9585,
+     "ring": 0.4039,
+     "meanSep": 0.2437,
+     "sep": 0.4969,
+     "dark": 0.0433,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-ii-13-tillmorning",
+    "set": "cave",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.7608709033751981,
+     "inFrame": 1,
+     "cx": 0.03579136966872162,
+     "cy": -0.02310305362477766,
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-ii-13-tillmorning",
+     "cls": "NARRATION",
+     "box": [
+      -0.386,
+      -0.784,
+      0.458,
+      0.738
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "px": 4623,
+     "mean": 0.5962,
+     "p10": 0.1457,
+     "p50": 0.6812,
+     "p90": 0.8912,
+     "max": 0.9731,
+     "ring": 0.3857,
+     "meanSep": 0.2105,
+     "sep": 0.5055,
+     "dark": 0.0718,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-00-head",
+    "set": "cave",
+    "cls": "WIDE",
+    "cine": {
+     "size": 1.0117573375332531,
+     "inFrame": 0.9142431074144257,
+     "cx": -0.035537411468829466,
+     "cy": 0.1617729931017587,
+     "rig": {
+      "on": true,
+      "fillE": 3,
+      "rimE": 10.4,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-00-head",
+     "cls": "WIDE",
+     "box": [
+      -0.514,
+      -0.85,
+      0.443,
+      1.174
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 3,
+      "rimE": 10.4,
+      "side": 1
+     },
+     "px": 6318,
+     "mean": 0.4385,
+     "p10": 0.2279,
+     "p50": 0.4308,
+     "p90": 0.6897,
+     "max": 0.9627,
+     "ring": 0.4086,
+     "meanSep": 0.0299,
+     "sep": 0.2811,
+     "dark": 0.0152,
+     "darkCap": 0.8,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-01-morningmeal",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.6824615297960697,
+     "inFrame": 1,
+     "cx": 0.11516323280812524,
+     "cy": -0.03300881604648992,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-01-morningmeal",
+     "cls": "ACTION",
+     "box": [
+      -0.298,
+      -0.715,
+      0.528,
+      0.649
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 4080,
+     "mean": 0.5248,
+     "p10": 0.0977,
+     "p50": 0.5451,
+     "p90": 0.8337,
+     "max": 0.9955,
+     "ring": 0.5008,
+     "meanSep": 0.024,
+     "sep": 0.3329,
+     "dark": 0.0593,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-02-quiverlid",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.745059394184904,
+     "inFrame": 1,
+     "cx": -0.06516079797764271,
+     "cy": 0.05751714079772857,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-02-quiverlid",
+     "cls": "ACTION",
+     "box": [
+      -0.489,
+      -0.688,
+      0.358,
+      0.803
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 4554,
+     "mean": 0.6721,
+     "p10": 0.4398,
+     "p50": 0.6744,
+     "p90": 0.9078,
+     "max": 0.9654,
+     "ring": 0.5237,
+     "meanSep": 0.1484,
+     "sep": 0.3841,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-03-scheme",
+    "set": "cave",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.6098541014590371,
+     "inFrame": 1,
+     "cx": -0.12517739233981967,
+     "cy": 0.029714050604934095,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-03-scheme",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.234,
+      -0.58,
+      -0.016,
+      0.64
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": -1
+     },
+     "px": 1080,
+     "mean": 0.4901,
+     "p10": 0.1722,
+     "p50": 0.451,
+     "p90": 0.8147,
+     "max": 0.9019,
+     "ring": 0.5633,
+     "meanSep": 0.0731,
+     "sep": 0.2514,
+     "dark": 0.0287,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-04-club",
+    "set": "cave",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.7596974138797625,
+     "inFrame": 1,
+     "cx": 0.04712674733022024,
+     "cy": 0.005499679118749379,
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-04-club",
+     "cls": "NARRATION",
+     "box": [
+      -0.356,
+      -0.754,
+      0.45,
+      0.765
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "px": 4422,
+     "mean": 0.2913,
+     "p10": 0.0008,
+     "p50": 0.2872,
+     "p90": 0.6218,
+     "max": 0.9587,
+     "ring": 0.3374,
+     "meanSep": 0.0461,
+     "sep": 0.2843,
+     "dark": 0.4916,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-05-lots",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.609905112631507,
+     "inFrame": 1,
+     "cx": 0.02329334647157466,
+     "cy": -0.01398432424387619,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-05-lots",
+     "cls": "ACTION",
+     "box": [
+      -0.302,
+      -0.624,
+      0.349,
+      0.596
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 2916,
+     "mean": 0.5939,
+     "p10": 0.0994,
+     "p50": 0.7277,
+     "p90": 0.8667,
+     "max": 0.9768,
+     "ring": 0.4651,
+     "meanSep": 0.1288,
+     "sep": 0.4017,
+     "dark": 0.0538,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-06-return",
+    "set": "cave",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.6679208448335878,
+     "inFrame": 1,
+     "cx": -0.08566235705910555,
+     "cy": 0.04631935696240802,
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-06-return",
+     "cls": "NARRATION",
+     "box": [
+      -0.469,
+      -0.622,
+      0.297,
+      0.714
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "px": 3717,
+     "mean": 0.7098,
+     "p10": 0.4583,
+     "p50": 0.7477,
+     "p90": 0.8968,
+     "max": 0.9605,
+     "ring": 0.4585,
+     "meanSep": 0.2513,
+     "sep": 0.4383,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-07-suppertwo",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.6947370108200717,
+     "inFrame": 1,
+     "cx": 0.10831579245919207,
+     "cy": 0.012192229787033326,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-07-suppertwo",
+     "cls": "ACTION",
+     "box": [
+      -0.038,
+      -0.683,
+      0.255,
+      0.707
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 1550,
+     "mean": 0.7711,
+     "p10": 0.5771,
+     "p50": 0.8541,
+     "p90": 0.9117,
+     "max": 0.9543,
+     "ring": 0.6662,
+     "meanSep": 0.1049,
+     "sep": 0.2455,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-08-lookhere",
+    "set": "cave",
+    "cls": "GATE",
+    "cine": {
+     "size": 0.3839891683398659,
+     "inFrame": 1,
+     "cx": -0.1658108064726862,
+     "cy": -0.2765674693968952,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 28.6,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-08-lookhere",
+     "cls": "GATE",
+     "box": [
+      -0.376,
+      -0.661,
+      0.045,
+      0.107
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 28.6,
+      "side": -1
+     },
+     "px": 1260,
+     "mean": 0.4224,
+     "p10": 0.0017,
+     "p50": 0.3778,
+     "p90": 0.8668,
+     "max": 0.9837,
+     "ring": 0.6392,
+     "meanSep": 0.2168,
+     "sep": 0.2276,
+     "dark": 0.3325,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-09-besokind",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.8405033393724695,
+     "inFrame": 1,
+     "cx": 0.09854226492917521,
+     "cy": 0.029332355897377427,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-09-besokind",
+     "cls": "GIANT",
+     "box": [
+      -0.084,
+      -0.811,
+      0.282,
+      0.87
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 2294,
+     "mean": 0.3258,
+     "p10": 0.0003,
+     "p50": 0.22,
+     "p90": 0.78,
+     "max": 0.9725,
+     "ring": 0.541,
+     "meanSep": 0.2153,
+     "sep": 0.239,
+     "dark": 0.398,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-10-thrice",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.7748283257468833,
+     "inFrame": 1,
+     "cx": 0.09595265362145727,
+     "cy": 0.023978212485617323,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-10-thrice",
+     "cls": "ACTION",
+     "box": [
+      -0.066,
+      -0.751,
+      0.258,
+      0.799
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 1932,
+     "mean": 0.7505,
+     "p10": 0.565,
+     "p50": 0.7958,
+     "p90": 0.904,
+     "max": 0.9627,
+     "ring": 0.7285,
+     "meanSep": 0.0219,
+     "sep": 0.1754,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-11-noman",
+    "set": "cave",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.6885823568989811,
+     "inFrame": 1,
+     "cx": -0.15682939146799538,
+     "cy": 0.032550739260320205,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-11-noman",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.281,
+      -0.656,
+      -0.033,
+      0.721
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": -1
+     },
+     "px": 1302,
+     "mean": 0.6944,
+     "p10": 0.3402,
+     "p50": 0.7332,
+     "p90": 0.9432,
+     "max": 0.9868,
+     "ring": 0.561,
+     "meanSep": 0.1334,
+     "sep": 0.3822,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-12-nomanlast",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.8230958857348611,
+     "inFrame": 1,
+     "cx": 0.10611118363303947,
+     "cy": 0.03025312061755847,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-12-nomanlast",
+     "cls": "GIANT",
+     "box": [
+      -0.059,
+      -0.793,
+      0.271,
+      0.853
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 2117,
+     "mean": 0.7693,
+     "p10": 0.6121,
+     "p50": 0.8164,
+     "p90": 0.9095,
+     "max": 0.9553,
+     "ring": 0.7465,
+     "meanSep": 0.0228,
+     "sep": 0.163,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iii-13-neck",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 1.1599587060684033,
+     "inFrame": 0.8430177953378333,
+     "cx": 0.09251329205516674,
+     "cy": -0.20422704392298108,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iii-13-neck",
+     "cls": "ACTION",
+     "box": [
+      -0.163,
+      -1.364,
+      0.348,
+      0.956
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 3698,
+     "mean": 0.3307,
+     "p10": 0.0151,
+     "p50": 0.2148,
+     "p90": 0.7517,
+     "max": 0.9147,
+     "ring": 0.1562,
+     "meanSep": 0.1744,
+     "sep": 0.5954,
+     "dark": 0.321,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-00-head",
+    "set": "cave",
+    "cls": "WIDE",
+    "cine": {
+     "size": 0.9617494203898159,
+     "inFrame": 0.9381398832617273,
+     "cx": 0.0010554492622745215,
+     "cy": 0.15723844244674445,
+     "rig": {
+      "on": true,
+      "fillE": 3,
+      "rimE": 10.4,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-00-head",
+     "cls": "WIDE",
+     "box": [
+      -0.498,
+      -0.805,
+      0.5,
+      1.119
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 3,
+      "rimE": 10.4,
+      "side": 1
+     },
+     "px": 6478,
+     "mean": 0.4552,
+     "p10": 0.2769,
+     "p50": 0.4234,
+     "p90": 0.7582,
+     "max": 0.9574,
+     "ring": 0.4536,
+     "meanSep": 0.0016,
+     "sep": 0.3046,
+     "dark": 0.0176,
+     "darkCap": 0.8,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-01-embers",
+    "set": "cave",
+    "cls": "GATE",
+    "cine": {
+     "size": 0.3885331715549473,
+     "inFrame": 1,
+     "cx": -0.0883038132911781,
+     "cy": 0.013041916550417976,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 28.6,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-01-embers",
+     "cls": "GATE",
+     "box": [
+      -0.345,
+      -0.375,
+      0.169,
+      0.402
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 28.6,
+      "side": -1
+     },
+     "px": 1512,
+     "mean": 0.7111,
+     "p10": 0.5319,
+     "p50": 0.77,
+     "p90": 0.8548,
+     "max": 0.9621,
+     "ring": 0.4915,
+     "meanSep": 0.2196,
+     "sep": 0.3633,
+     "dark": 0.0007,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-02-glowing",
+    "set": "cave",
+    "cls": "GATE",
+    "cine": {
+     "size": 0.3832725445962453,
+     "inFrame": 1,
+     "cx": -0.12516496460918955,
+     "cy": 0.022808348844929605,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 28.6,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-02-glowing",
+     "cls": "GATE",
+     "box": [
+      -0.362,
+      -0.36,
+      0.111,
+      0.406
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 28.6,
+      "side": -1
+     },
+     "px": 1400,
+     "mean": 0.4107,
+     "p10": 0.0164,
+     "p50": 0.411,
+     "p90": 0.8172,
+     "max": 0.9283,
+     "ring": 0.3466,
+     "meanSep": 0.0641,
+     "sep": 0.4706,
+     "dark": 0.2171,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-03-auger",
+    "set": "cave",
+    "cls": "CLOCK",
+    "cine": {
+     "size": 0.2662759586152891,
+     "inFrame": 1,
+     "cx": -0.1283794949675906,
+     "cy": 0.07597256656269295,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 11.5,
+      "rimE": 32.5,
+      "side": -1
+     },
+     "rack": 1
+    },
+    "read": {
+     "unit": "ody-iv-03-auger",
+     "cls": "CLOCK",
+     "box": [
+      -0.279,
+      -0.19,
+      0.023,
+      0.342
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 11.5,
+      "rimE": 32.5,
+      "side": -1
+     },
+     "px": 650,
+     "mean": 0.3053,
+     "p10": 0.0673,
+     "p50": 0.2406,
+     "p90": 0.6642,
+     "max": 0.9458,
+     "ring": 0.1394,
+     "meanSep": 0.1659,
+     "sep": 0.5248,
+     "dark": 0.0908,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-04-bore",
+    "set": "cave",
+    "cls": "CLOCK",
+    "cine": {
+     "size": 1.1042436206387258,
+     "inFrame": 0.9055972625149256,
+     "cx": 0.17546638249395344,
+     "cy": -0.08117555746696925,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-04-bore",
+     "cls": "CLOCK",
+     "box": [
+      -0.078,
+      -1.185,
+      0.429,
+      1.023
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 3654,
+     "mean": 0.3759,
+     "p10": 0.0694,
+     "p50": 0.3797,
+     "p90": 0.7592,
+     "max": 0.8896,
+     "ring": 0.318,
+     "meanSep": 0.0579,
+     "sep": 0.4412,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-05-hiss",
+    "set": "cave",
+    "cls": "CLOCK",
+    "cine": {
+     "size": 2.004725704063258,
+     "inFrame": 0.43759141627584813,
+     "cx": 0.29885464290640557,
+     "cy": -0.743273740004053,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 12,
+      "rimE": 33.8,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-05-hiss",
+     "cls": "CLOCK",
+     "box": [
+      -0.643,
+      -2.814,
+      1.247,
+      1.265
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 12,
+      "rimE": 33.8,
+      "side": 1
+     },
+     "px": 11484,
+     "mean": 0.3283,
+     "p10": 0.007,
+     "p50": 0.3463,
+     "p90": 0.5922,
+     "max": 0.8798,
+     "ring": 0.5073,
+     "meanSep": 0.179,
+     "sep": 0.0849,
+     "dark": 0.1711,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-06-fright",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.7099849976114458,
+     "inFrame": 1,
+     "cx": -0.06730811821266486,
+     "cy": 0.05946640259208902,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-06-fright",
+     "cls": "ACTION",
+     "box": [
+      -0.476,
+      -0.651,
+      0.341,
+      0.769
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 4221,
+     "mean": 0.4622,
+     "p10": 0.0159,
+     "p50": 0.535,
+     "p90": 0.9068,
+     "max": 0.9651,
+     "ring": 0.3864,
+     "meanSep": 0.0758,
+     "sep": 0.5204,
+     "dark": 0.295,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-07-whatails",
+    "set": "cave",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.5193879808048305,
+     "inFrame": 1,
+     "cx": -0.13583876542909593,
+     "cy": 0.03310938012379874,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-07-whatails",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.46,
+      -0.486,
+      0.188,
+      0.552
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": 1
+     },
+     "px": 2484,
+     "mean": 0.535,
+     "p10": 0.0159,
+     "p50": 0.6192,
+     "p90": 0.8901,
+     "max": 0.9803,
+     "ring": 0.2705,
+     "meanSep": 0.2645,
+     "sep": 0.6196,
+     "dark": 0.2122,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-08-nomankilling",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 1.0666384933007125,
+     "inFrame": 0.9157884555751381,
+     "cx": 0.21047554092506687,
+     "cy": -0.11300805642700895,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-08-nomankilling",
+     "cls": "GIANT",
+     "box": [
+      -0.043,
+      -1.18,
+      0.464,
+      0.954
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 3612,
+     "mean": 0.3889,
+     "p10": 0.0694,
+     "p50": 0.41,
+     "p90": 0.7836,
+     "max": 0.9031,
+     "ring": 0.3655,
+     "meanSep": 0.0234,
+     "sep": 0.4181,
+     "dark": 0.0061,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-09-mustbeill",
+    "set": "cave",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.5473576288384499,
+     "inFrame": 1,
+     "cx": -0.13470645572034798,
+     "cy": 0.034393971494425246,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-09-mustbeill",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.473,
+      -0.513,
+      0.204,
+      0.582
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": 1
+     },
+     "px": 2800,
+     "mean": 0.66,
+     "p10": 0.0151,
+     "p50": 0.7271,
+     "p90": 0.942,
+     "max": 0.9997,
+     "ring": 0.4855,
+     "meanSep": 0.1745,
+     "sep": 0.4565,
+     "dark": 0.1164,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-10-wentaway",
+    "set": "cave",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.6607347384615467,
+     "inFrame": 1,
+     "cx": -0.08587162362084885,
+     "cy": 0.051098974787175955,
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-10-wentaway",
+     "cls": "NARRATION",
+     "box": [
+      -0.468,
+      -0.61,
+      0.296,
+      0.712
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "px": 3717,
+     "mean": 0.6325,
+     "p10": 0.3323,
+     "p50": 0.6422,
+     "p90": 0.9011,
+     "max": 0.9666,
+     "ring": 0.3711,
+     "meanSep": 0.2614,
+     "sep": 0.5299,
+     "dark": 0.0312,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-11-stone",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.8089253420836554,
+     "inFrame": 1,
+     "cx": 0.09650953752197189,
+     "cy": 0.040714791250485605,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 18,
+      "rimE": 46.8,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-11-stone",
+     "cls": "ACTION",
+     "box": [
+      -0.082,
+      -0.768,
+      0.275,
+      0.85
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 18,
+      "rimE": 46.8,
+      "side": 1
+     },
+     "px": 2232,
+     "mean": 0.5768,
+     "p10": 0.071,
+     "p50": 0.7135,
+     "p90": 0.8695,
+     "max": 0.9545,
+     "ring": 0.477,
+     "meanSep": 0.0998,
+     "sep": 0.3926,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-iv-12-doorway",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.8512543076560015,
+     "inFrame": 1,
+     "cx": -0.011366386878213494,
+     "cy": -0.005566797173251592,
+     "side": -1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-iv-12-doorway",
+     "cls": "GIANT",
+     "box": [
+      -0.197,
+      -0.857,
+      0.174,
+      0.846
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 2400,
+     "mean": 0.5628,
+     "p10": 0.2373,
+     "p50": 0.6036,
+     "p90": 0.8187,
+     "max": 0.9566,
+     "ring": 0.5291,
+     "meanSep": 0.0337,
+     "sep": 0.2896,
+     "dark": 0.0196,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-00-head",
+    "set": "cave",
+    "cls": "WIDE",
+    "cine": {
+     "size": 1.5523965897768088,
+     "inFrame": 0.6441652903551998,
+     "cx": 0.05684800482788532,
+     "cy": 0.006188008267705936,
+     "rig": {
+      "on": true,
+      "fillE": 3.5,
+      "rimE": 19.5,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-00-head",
+     "cls": "WIDE",
+     "box": [
+      -0.63,
+      -1.546,
+      0.744,
+      1.559
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 3.5,
+      "rimE": 19.5,
+      "side": 1
+     },
+     "px": 9657,
+     "mean": 0.6236,
+     "p10": 0.3749,
+     "p50": 0.6543,
+     "p90": 0.8185,
+     "max": 0.9492,
+     "ring": 0.4872,
+     "meanSep": 0.1363,
+     "sep": 0.3313,
+     "dark": 0.0012,
+     "darkCap": 0.8,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-01-puzzling",
+    "set": "cave",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.7978889428202649,
+     "inFrame": 1,
+     "cx": -0.15999573206769546,
+     "cy": 0.03281952227528334,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-01-puzzling",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.306,
+      -0.765,
+      -0.014,
+      0.831
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 26,
+      "side": -1
+     },
+     "px": 1750,
+     "mean": 0.5536,
+     "p10": 0.2267,
+     "p50": 0.5726,
+     "p90": 0.8235,
+     "max": 0.9618,
+     "ring": 0.5969,
+     "meanSep": 0.0434,
+     "sep": 0.2266,
+     "dark": 0.0149,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-02-withies",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.5074678089589892,
+     "inFrame": 1,
+     "cx": 0.11430236040722953,
+     "cy": -0.019126788426453517,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-02-withies",
+     "cls": "ACTION",
+     "box": [
+      -0.214,
+      -0.527,
+      0.443,
+      0.488
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 2430,
+     "mean": 0.4263,
+     "p10": 0.1619,
+     "p50": 0.2828,
+     "p90": 0.8528,
+     "max": 0.9857,
+     "ring": 0.4231,
+     "meanSep": 0.0032,
+     "sep": 0.4297,
+     "dark": 0.0103,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-03-threetoaman",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.5557526841591292,
+     "inFrame": 1,
+     "cx": -0.13796972428934515,
+     "cy": -0.01806763875786993,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-03-threetoaman",
+     "cls": "ACTION",
+     "box": [
+      -0.496,
+      -0.574,
+      0.22,
+      0.538
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 2900,
+     "mean": 0.3874,
+     "p10": 0.14,
+     "p50": 0.2384,
+     "p90": 0.8314,
+     "max": 0.9849,
+     "ring": 0.3927,
+     "meanSep": 0.0052,
+     "sep": 0.4388,
+     "dark": 0.0117,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-04-greatram",
+    "set": "cave",
+    "cls": "GATE",
+    "cine": {
+     "size": 0.661256328873405,
+     "inFrame": 1,
+     "cx": -0.23221535438186997,
+     "cy": -0.005899720286739074,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 28.6,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-04-greatram",
+     "cls": "GATE",
+     "box": [
+      -0.623,
+      -0.667,
+      0.159,
+      0.655
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10,
+      "rimE": 28.6,
+      "side": -1
+     },
+     "px": 3835,
+     "mean": 0.203,
+     "p10": 0.0226,
+     "p50": 0.0819,
+     "p90": 0.5245,
+     "max": 0.9726,
+     "ring": 0.1,
+     "meanSep": 0.1031,
+     "sep": 0.4245,
+     "dark": 0.3145,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-05-dawn",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.7984745942799409,
+     "inFrame": 1,
+     "cx": 0.004536937822629428,
+     "cy": -0.1407721099101435,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-05-dawn",
+     "cls": "ACTION",
+     "box": [
+      -0.395,
+      -0.939,
+      0.404,
+      0.658
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": 1
+     },
+     "px": 4615,
+     "mean": 0.8077,
+     "p10": 0.5308,
+     "p50": 0.8735,
+     "p90": 0.935,
+     "max": 0.9927,
+     "ring": 0.5876,
+     "meanSep": 0.2201,
+     "sep": 0.3474,
+     "dark": 0.0037,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-06-feltbacks",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.5856024058009061,
+     "inFrame": 1,
+     "cx": 0.11138708826443983,
+     "cy": 0.0382065731959369,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-06-feltbacks",
+     "cls": "GIANT",
+     "box": [
+      -0.02,
+      -0.547,
+      0.243,
+      0.624
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 1196,
+     "mean": 0.5469,
+     "p10": 0.201,
+     "p50": 0.5823,
+     "p90": 0.819,
+     "max": 0.9463,
+     "ring": 0.5818,
+     "meanSep": 0.0349,
+     "sep": 0.2372,
+     "dark": 0.0276,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-07-lastofall",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.6626383786893311,
+     "inFrame": 1,
+     "cx": -0.1262298180729768,
+     "cy": -0.05968114887228676,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 24,
+      "rimE": 57.2,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-07-lastofall",
+     "cls": "ACTION",
+     "box": [
+      -0.246,
+      -0.722,
+      -0.007,
+      0.603
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 24,
+      "rimE": 57.2,
+      "side": -1
+     },
+     "px": 1239,
+     "mean": 0.5386,
+     "p10": 0.0372,
+     "p50": 0.6734,
+     "p90": 0.9279,
+     "max": 0.9699,
+     "ring": 0.5846,
+     "meanSep": 0.0459,
+     "sep": 0.3433,
+     "dark": 0.2026,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-08-ramspeech1",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.632473191151934,
+     "inFrame": 1,
+     "cx": 0.12162760890294111,
+     "cy": 0.03980312678555642,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-08-ramspeech1",
+     "cls": "GIANT",
+     "box": [
+      -0.021,
+      -0.593,
+      0.265,
+      0.672
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 1400,
+     "mean": 0.506,
+     "p10": 0.119,
+     "p50": 0.532,
+     "p90": 0.7746,
+     "max": 0.9426,
+     "ring": 0.4836,
+     "meanSep": 0.0223,
+     "sep": 0.291,
+     "dark": 0.075,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-09-ramspeech2",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.6304607020028743,
+     "inFrame": 1,
+     "cx": 0.11178312489855241,
+     "cy": 0.03915492124758152,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-09-ramspeech2",
+     "cls": "GIANT",
+     "box": [
+      -0.03,
+      -0.591,
+      0.253,
+      0.67
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 1344,
+     "mean": 0.5446,
+     "p10": 0.2255,
+     "p50": 0.5748,
+     "p90": 0.8153,
+     "max": 0.9463,
+     "ring": 0.577,
+     "meanSep": 0.0323,
+     "sep": 0.2384,
+     "dark": 0.032,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-10-ramspeech3",
+    "set": "cave",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.6112998423822867,
+     "inFrame": 1,
+     "cx": 0.10168220893275365,
+     "cy": 0.028243350967147363,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-10-ramspeech3",
+     "cls": "GIANT",
+     "box": [
+      -0.037,
+      -0.583,
+      0.241,
+      0.64
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 10.5,
+      "rimE": 29.9,
+      "side": 1
+     },
+     "px": 1320,
+     "mean": 0.4431,
+     "p10": 0,
+     "p50": 0.5115,
+     "p90": 0.7596,
+     "max": 0.9359,
+     "ring": 0.4143,
+     "meanSep": 0.0289,
+     "sep": 0.3453,
+     "dark": 0.2159,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-11-freed",
+    "set": "cave",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.4620054626427266,
+     "inFrame": 1,
+     "cx": -0.15359738498340797,
+     "cy": 0.025474888134899287,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-11-freed",
+     "cls": "ACTION",
+     "box": [
+      -0.258,
+      -0.437,
+      -0.049,
+      0.487
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 9.5,
+      "rimE": 27.3,
+      "side": -1
+     },
+     "px": 779,
+     "mean": 0.5638,
+     "p10": 0.2799,
+     "p50": 0.6006,
+     "p90": 0.773,
+     "max": 0.898,
+     "ring": 0.6207,
+     "meanSep": 0.0569,
+     "sep": 0.1523,
+     "dark": 0.0398,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-v-12-aboard",
+    "set": "cave",
+    "cls": "NARRATION",
+    "cine": {
+     "size": 0.4654091987850182,
+     "inFrame": 1,
+     "cx": -0.0934412610726318,
+     "cy": 0.029754310190492433,
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-v-12-aboard",
+     "cls": "NARRATION",
+     "box": [
+      -0.366,
+      -0.436,
+      0.179,
+      0.495
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 8,
+      "rimE": 22.1,
+      "side": 1
+     },
+     "px": 1890,
+     "mean": 0.6903,
+     "p10": 0.4967,
+     "p50": 0.7029,
+     "p90": 0.8786,
+     "max": 0.9772,
+     "ring": 0.5892,
+     "meanSep": 0.1011,
+     "sep": 0.2894,
+     "dark": 0,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-01-jeer",
+    "set": "sea",
+    "cls": "GATE",
+    "cine": {
+     "size": 0.37866584848406015,
+     "inFrame": 1,
+     "cx": 0.1454011440029274,
+     "cy": -0.06098322734164299,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 17.6,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-01-jeer",
+     "cls": "GATE",
+     "box": [
+      -0.02,
+      -0.44,
+      0.311,
+      0.318
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 17.6,
+      "side": 1
+     },
+     "px": 986,
+     "mean": 0.1835,
+     "p10": 0.0657,
+     "p50": 0.1243,
+     "p90": 0.4805,
+     "max": 0.8535,
+     "ring": 0.1942,
+     "meanSep": 0.0107,
+     "sep": 0.2863,
+     "dark": 0.0142,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-02-taunt",
+    "set": "sea",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.5216031326226911,
+     "inFrame": 1,
+     "cx": -0.28693602894747716,
+     "cy": 0.01628752604734407,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 16,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-02-taunt",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.4,
+      -0.505,
+      -0.174,
+      0.538
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 16,
+      "side": -1
+     },
+     "px": 940,
+     "mean": 0.2689,
+     "p10": 0.1276,
+     "p50": 0.267,
+     "p90": 0.3565,
+     "max": 0.9616,
+     "ring": 0.3007,
+     "meanSep": 0.0318,
+     "sep": 0.0558,
+     "dark": 0.0213,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-03-rock1",
+    "set": "sea",
+    "cls": "CLOCK",
+    "cine": {
+     "size": 0.5402313796175668,
+     "inFrame": 1,
+     "cx": -0.06967606146812413,
+     "cy": -0.15046694222441503,
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 18.4,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-03-rock1",
+     "cls": "CLOCK",
+     "box": [
+      -0.383,
+      -0.691,
+      0.244,
+      0.39
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 18.4,
+      "side": 1
+     },
+     "px": 2448,
+     "mean": 0.4129,
+     "p10": 0.1551,
+     "p50": 0.3668,
+     "p90": 0.7477,
+     "max": 0.9482,
+     "ring": 0.2854,
+     "meanSep": 0.1275,
+     "sep": 0.4623,
+     "dark": 0.0065,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-04-twiceasfar",
+    "set": "sea",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.4991133981731906,
+     "inFrame": 1,
+     "cx": -0.07491057668054983,
+     "cy": -0.013619596214074992,
+     "rig": {
+      "on": true,
+      "fillE": 4.75,
+      "rimE": 16.8,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-04-twiceasfar",
+     "cls": "ACTION",
+     "box": [
+      -0.374,
+      -0.513,
+      0.225,
+      0.485
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 4.75,
+      "rimE": 16.8,
+      "side": 1
+     },
+     "px": 2250,
+     "mean": 0.2891,
+     "p10": 0.1511,
+     "p50": 0.2793,
+     "p90": 0.4441,
+     "max": 0.697,
+     "ring": 0.2186,
+     "meanSep": 0.0704,
+     "sep": 0.2255,
+     "dark": 0.0013,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-05-menbeg",
+    "set": "sea",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.5577287277307496,
+     "inFrame": 1,
+     "cx": -0.13815351974990067,
+     "cy": 0.033000965417242845,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 16,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-05-menbeg",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.269,
+      -0.525,
+      -0.007,
+      0.591
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 16,
+      "side": -1
+     },
+     "px": 1100,
+     "mean": 0.3378,
+     "p10": 0.0623,
+     "p50": 0.2456,
+     "p90": 0.7479,
+     "max": 0.8575,
+     "ring": 0.3208,
+     "meanSep": 0.0171,
+     "sep": 0.4271,
+     "dark": 0.0936,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-06-defy",
+    "set": "sea",
+    "cls": "GATE",
+    "cine": {
+     "size": 0.4153901011174115,
+     "inFrame": 1,
+     "cx": 0.13601797454304063,
+     "cy": -0.06029754745548918,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 17.6,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-06-defy",
+     "cls": "GATE",
+     "box": [
+      -0.056,
+      -0.476,
+      0.328,
+      0.355
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 17.6,
+      "side": 1
+     },
+     "px": 1216,
+     "mean": 0.1604,
+     "p10": 0.0627,
+     "p50": 0.0918,
+     "p90": 0.401,
+     "max": 0.8504,
+     "ring": 0.1901,
+     "meanSep": 0.0297,
+     "sep": 0.2109,
+     "dark": 0.0115,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-07-myname",
+    "set": "sea",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.8335179788872844,
+     "inFrame": 1,
+     "cx": -0.1948305616932036,
+     "cy": 0.02385210721515274,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 16,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-07-myname",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.39,
+      -0.81,
+      0,
+      0.857
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 16,
+      "side": -1
+     },
+     "px": 2409,
+     "mean": 0.4625,
+     "p10": 0.0735,
+     "p50": 0.4256,
+     "p90": 0.8783,
+     "max": 0.97,
+     "ring": 0.4891,
+     "meanSep": 0.0266,
+     "sep": 0.3892,
+     "dark": 0.0776,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-08-prophecy",
+    "set": "sea",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.4575701502924702,
+     "inFrame": 1,
+     "cx": 0.1324442179502882,
+     "cy": -0.062007758989801876,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 5.25,
+      "rimE": 18.4,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-08-prophecy",
+     "cls": "GIANT",
+     "box": [
+      0.046,
+      -0.52,
+      0.219,
+      0.396
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5.25,
+      "rimE": 18.4,
+      "side": 1
+     },
+     "px": 630,
+     "mean": 0.3355,
+     "p10": 0.1125,
+     "p50": 0.2991,
+     "p90": 0.6528,
+     "max": 0.8162,
+     "ring": 0.2955,
+     "meanSep": 0.04,
+     "sep": 0.3574,
+     "dark": 0.0397,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-09-fatherson",
+    "set": "sea",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.5089572544922066,
+     "inFrame": 1,
+     "cx": 0.1239328625975902,
+     "cy": -0.06364384361954797,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 5.25,
+      "rimE": 18.4,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-09-fatherson",
+     "cls": "GIANT",
+     "box": [
+      0.02,
+      -0.573,
+      0.228,
+      0.445
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5.25,
+      "rimE": 18.4,
+      "side": 1
+     },
+     "px": 828,
+     "mean": 0.3725,
+     "p10": 0.089,
+     "p50": 0.3862,
+     "p90": 0.666,
+     "max": 0.8591,
+     "ring": 0.2849,
+     "meanSep": 0.0876,
+     "sep": 0.3812,
+     "dark": 0.0411,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-10-hades",
+    "set": "sea",
+    "cls": "DIALOGUE",
+    "cine": {
+     "size": 0.7722838370911755,
+     "inFrame": 1,
+     "cx": -0.1921787563484636,
+     "cy": 0.023391024307182262,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 16,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-10-hades",
+     "cls": "DIALOGUE",
+     "box": [
+      -0.376,
+      -0.749,
+      -0.008,
+      0.796
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 16,
+      "side": -1
+     },
+     "px": 2139,
+     "mean": 0.4178,
+     "p10": 0.0825,
+     "p50": 0.3344,
+     "p90": 0.8388,
+     "max": 0.9658,
+     "ring": 0.3439,
+     "meanSep": 0.0738,
+     "sep": 0.4949,
+     "dark": 0.0589,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-11-curse",
+    "set": "sea",
+    "cls": "GIANT",
+    "cine": {
+     "size": 0.5318830553001821,
+     "inFrame": 1,
+     "cx": 0.11518255515597742,
+     "cy": -0.05631233449357323,
+     "side": 1,
+     "wantSide": 1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 5.25,
+      "rimE": 18.4,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-11-curse",
+     "cls": "GIANT",
+     "box": [
+      0.018,
+      -0.588,
+      0.212,
+      0.476
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5.25,
+      "rimE": 18.4,
+      "side": 1
+     },
+     "px": 864,
+     "mean": 0.3719,
+     "p10": 0.1139,
+     "p50": 0.3954,
+     "p90": 0.631,
+     "max": 0.8921,
+     "ring": 0.3005,
+     "meanSep": 0.0714,
+     "sep": 0.3305,
+     "dark": 0.0648,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-12-heard",
+    "set": "sea",
+    "cls": "CLOCK",
+    "cine": {
+     "size": 0.49034737522255323,
+     "inFrame": 1,
+     "cx": -0.07643100863575028,
+     "cy": -0.22488232888252746,
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 18.4,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-12-heard",
+     "cls": "CLOCK",
+     "box": [
+      -0.372,
+      -0.715,
+      0.219,
+      0.265
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 5,
+      "rimE": 18.4,
+      "side": 1
+     },
+     "px": 2156,
+     "mean": 0.4155,
+     "p10": 0.1509,
+     "p50": 0.3612,
+     "p90": 0.7769,
+     "max": 0.9365,
+     "ring": 0.2319,
+     "meanSep": 0.1836,
+     "sep": 0.5451,
+     "dark": 0.0009,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-13-ram",
+    "set": "sea",
+    "cls": "ACTION",
+    "cine": {
+     "size": 0.4715847310727116,
+     "inFrame": 1,
+     "cx": -0.07791920572961025,
+     "cy": -0.007035090305943931,
+     "rig": {
+      "on": true,
+      "fillE": 4.75,
+      "rimE": 16.8,
+      "side": 1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-13-ram",
+     "cls": "ACTION",
+     "box": [
+      -0.367,
+      -0.479,
+      0.211,
+      0.465
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 4.75,
+      "rimE": 16.8,
+      "side": 1
+     },
+     "px": 2016,
+     "mean": 0.3926,
+     "p10": 0.1708,
+     "p50": 0.2907,
+     "p90": 0.7673,
+     "max": 0.8796,
+     "ring": 0.2703,
+     "meanSep": 0.1223,
+     "sep": 0.497,
+     "dark": 0.003,
+     "darkCap": 0.55,
+     "ok": true,
+     "why": ""
+    }
+   },
+   {
+    "unit": "ody-vi-14-sailedon",
+    "set": "sea",
+    "cls": "WIDE",
+    "cine": {
+     "size": 0.5863336983905185,
+     "inFrame": 0.9339720411080888,
+     "cx": -0.2990442652509554,
+     "cy": -0.4910951362780243,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
+     "rig": {
+      "on": true,
+      "fillE": 1.5,
+      "rimE": 6.4,
+      "side": -1
+     },
+     "rack": 0
+    },
+    "read": {
+     "unit": "ody-vi-14-sailedon",
+     "cls": "WIDE",
+     "box": [
+      -0.604,
+      -1.077,
+      0.006,
+      0.095
+     ],
+     "law": {
+      "p90": 0.3,
+      "mean": 0.1,
+      "sep": 0.05,
+      "dark": 0.55
+     },
+     "rig": {
+      "on": true,
+      "fillE": 1.5,
+      "rimE": 6.4,
+      "side": -1
+     },
+     "px": 2450,
+     "mean": 0.1461,
+     "p10": 0.0393,
+     "p50": 0.0478,
+     "p90": 0.366,
+     "max": 0.9535,
+     "ring": 0.115,
+     "meanSep": 0.0312,
+     "sep": 0.251,
+     "dark": 0.611,
+     "darkCap": 0.8,
+     "ok": true,
+     "why": ""
+    }
+   }
+  ]
+ },
  "frames": [
   {
    "file": "beat1-council.png",
@@ -2699,24 +7148,66 @@
     "cls": "OTS",
     "set": "shore",
     "floor": 0.3,
-    "size": 0.23902641753353893,
+    "size": 0.47878381404879317,
     "inFrame": 1,
     "cutSides": 0,
     "fill": false,
-    "lookRoom": 0.012,
-    "lookRoomOk": true,
+    "lookRoom": -0.588,
+    "lookRoomOk": false,
     "roll": 0,
-    "cx": 0.0058539635356107365,
-    "cy": 0.014401467122816591,
+    "cx": -0.29379979338653006,
+    "cy": -0.04676164003894451,
     "live": true,
     "cuts": 8,
-    "fov": 26,
-    "camY": 1.5886582107140166,
-    "focus": 16.19569096038153,
+    "fov": 32,
+    "camY": 1.5967769632668127,
+    "focus": 6.707419797153154,
     "fstop": 2.5,
     "move": "push",
     "shake": 0,
+    "rack": 0,
+    "rig": {
+     "on": true,
+     "fillE": 6.5,
+     "rimE": 13.3,
+     "side": 1
+    },
     "overOnScreen": true
+   },
+   "read": {
+    "unit": "ody-i-07-council",
+    "cls": "OTS",
+    "box": [
+     -0.385,
+     -0.526,
+     -0.202,
+     0.432
+    ],
+    "law": {
+     "p90": 0.3,
+     "mean": 0.1,
+     "sep": 0.05,
+     "dark": 0.55
+    },
+    "rig": {
+     "on": true,
+     "fillE": 6.5,
+     "rimE": 13.3,
+     "side": 1
+    },
+    "px": 731,
+    "mean": 0.5982,
+    "p10": 0.1397,
+    "p50": 0.6975,
+    "p90": 0.9319,
+    "max": 0.9571,
+    "ring": 0.8283,
+    "meanSep": 0.2301,
+    "sep": 0.1036,
+    "dark": 0.0287,
+    "darkCap": 0.55,
+    "ok": true,
+    "why": ""
    },
    "census": {
     "crew": 3,
@@ -2729,7 +7220,7 @@
     "meals": 0,
     "headcount": 12
    },
-   "bytes": 98687,
+   "bytes": 138877,
    "controlsUp": true,
    "overlayFree": true
   },
@@ -2744,24 +7235,70 @@
     "cls": "DIALOGUE",
     "set": "cave",
     "floor": 0.3,
-    "size": 0.8918759243976637,
+    "size": 0.5142080016969898,
     "inFrame": 1,
     "cutSides": 0,
     "fill": false,
-    "lookRoom": 0.314,
+    "lookRoom": 0.336,
     "lookRoomOk": true,
     "roll": 0,
-    "cx": -0.1570356758583142,
-    "cy": -0.002485462209454392,
+    "cx": -0.16780016936027864,
+    "cy": -0.17510107207967282,
     "live": true,
     "cuts": 20,
-    "fov": 27,
-    "camY": 2.0532326848301135,
-    "focus": 4.4044707742007345,
+    "fov": 34,
+    "camY": 3.3032683361642157,
+    "focus": 6.050187177535605,
     "fstop": 2.5,
     "move": "push",
     "shake": 0,
+    "rack": 0,
+    "rig": {
+     "on": true,
+     "fillE": 10,
+     "rimE": 26,
+     "side": -1
+    },
+    "wantSide": -1,
+    "side": -1,
+    "sideOk": true,
+    "facingSide": 0.501,
     "overOnScreen": true
+   },
+   "read": {
+    "unit": "ody-ii-06-plea",
+    "cls": "DIALOGUE",
+    "box": [
+     -0.278,
+     -0.689,
+     -0.058,
+     0.339
+    ],
+    "law": {
+     "p90": 0.3,
+     "mean": 0.1,
+     "sep": 0.05,
+     "dark": 0.55
+    },
+    "rig": {
+     "on": true,
+     "fillE": 10,
+     "rimE": 26,
+     "side": -1
+    },
+    "px": 874,
+    "mean": 0.6748,
+    "p10": 0.2566,
+    "p50": 0.7761,
+    "p90": 0.8982,
+    "max": 0.9287,
+    "ring": 0.5759,
+    "meanSep": 0.0989,
+    "sep": 0.3222,
+    "dark": 0,
+    "darkCap": 0.55,
+    "ok": true,
+    "why": ""
    },
    "census": {
     "crew": 3,
@@ -2774,7 +7311,7 @@
     "meals": 0,
     "headcount": 12
    },
-   "bytes": 208472,
+   "bytes": 203556,
    "controlsUp": false,
    "overlayFree": true
   },
@@ -2789,24 +7326,70 @@
     "cls": "GATE",
     "set": "cave",
     "floor": 0.22,
-    "size": 0.44606440045946627,
+    "size": 0.4210696844073367,
     "inFrame": 1,
     "cutSides": 0,
     "fill": false,
-    "lookRoom": -0.248,
-    "lookRoomOk": false,
+    "lookRoom": -0.365,
+    "lookRoomOk": true,
     "roll": 0,
-    "cx": -0.1239725961023052,
-    "cy": -0.03447539269742972,
+    "cx": -0.18266338067330168,
+    "cy": -0.3054843872495434,
     "live": true,
     "cuts": 36,
-    "fov": 30,
-    "camY": 1.2569241326996659,
-    "focus": 4.153555426950646,
+    "fov": 46,
+    "camY": 1.006955420728013,
+    "focus": 6.028777485760713,
     "fstop": 2,
     "move": "push",
     "shake": 0,
+    "rack": 1,
+    "rig": {
+     "on": true,
+     "fillE": 10,
+     "rimE": 28.6,
+     "side": -1
+    },
+    "wantSide": -1,
+    "side": -1,
+    "sideOk": true,
+    "facingSide": -0.195,
     "overOnScreen": true
+   },
+   "read": {
+    "unit": "ody-iii-08-lookhere",
+    "cls": "GATE",
+    "box": [
+     -0.414,
+     -0.727,
+     0.048,
+     0.116
+    ],
+    "law": {
+     "p90": 0.3,
+     "mean": 0.1,
+     "sep": 0.05,
+     "dark": 0.55
+    },
+    "rig": {
+     "on": true,
+     "fillE": 10,
+     "rimE": 28.6,
+     "side": -1
+    },
+    "px": 1482,
+    "mean": 0.4281,
+    "p10": 0.0017,
+    "p50": 0.3986,
+    "p90": 0.8681,
+    "max": 0.9837,
+    "ring": 0.6397,
+    "meanSep": 0.2116,
+    "sep": 0.2284,
+    "dark": 0.309,
+    "darkCap": 0.55,
+    "ok": true,
+    "why": ""
    },
    "census": {
     "crew": 0,
@@ -2819,7 +7402,7 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 251022,
+   "bytes": 349034,
    "controlsUp": true,
    "overlayFree": true
   },
@@ -2834,23 +7417,69 @@
     "cls": "CLOCK",
     "set": "cave",
     "floor": 0.18,
-    "size": 0.2682684648660691,
+    "size": 0.2693362561489212,
     "inFrame": 1,
     "cutSides": 0,
     "fill": false,
-    "lookRoom": 0.148,
-    "lookRoomOk": true,
+    "lookRoom": -0.25,
+    "lookRoomOk": false,
     "roll": 0,
-    "cx": 0.07391360785531961,
-    "cy": 0.026641328269305264,
+    "cx": -0.12482826948915085,
+    "cy": 0.06899775502677999,
     "live": true,
     "cuts": 45,
-    "fov": 34,
-    "camY": 1.452286757187302,
-    "focus": 7.400320840828274,
+    "fov": 40,
+    "camY": 0.9507584124156632,
+    "focus": 2.7318945401978643,
     "fstop": 2.2,
     "move": "handheld",
-    "shake": 0.014
+    "shake": 0.004643157515036329,
+    "rack": 1,
+    "rig": {
+     "on": true,
+     "fillE": 11.5,
+     "rimE": 32.5,
+     "side": -1
+    },
+    "wantSide": -1,
+    "side": -1,
+    "sideOk": true,
+    "facingSide": -0.983
+   },
+   "read": {
+    "unit": "ody-iv-03-auger",
+    "cls": "CLOCK",
+    "box": [
+     -0.286,
+     -0.2,
+     0.037,
+     0.338
+    ],
+    "law": {
+     "p90": 0.3,
+     "mean": 0.1,
+     "sep": 0.05,
+     "dark": 0.55
+    },
+    "rig": {
+     "on": true,
+     "fillE": 11.5,
+     "rimE": 32.5,
+     "side": -1
+    },
+    "px": 700,
+    "mean": 0.2694,
+    "p10": 0.0078,
+    "p50": 0.1269,
+    "p90": 0.6663,
+    "max": 0.9682,
+    "ring": 0.0939,
+    "meanSep": 0.1754,
+    "sep": 0.5723,
+    "dark": 0.1871,
+    "darkCap": 0.55,
+    "ok": true,
+    "why": ""
    },
    "census": {
     "crew": 1,
@@ -2863,7 +7492,7 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 146269,
+   "bytes": 212949,
    "controlsUp": false,
    "overlayFree": true
   },
@@ -2878,23 +7507,69 @@
     "cls": "ACTION",
     "set": "cave",
     "floor": 0.17,
-    "size": 0.5133317878473774,
+    "size": 0.758479911753702,
     "inFrame": 1,
     "cutSides": 0,
     "fill": false,
-    "lookRoom": null,
-    "lookRoomOk": true,
+    "lookRoom": -0.284,
+    "lookRoomOk": false,
     "roll": 0,
-    "cx": -0.15749109266718592,
-    "cy": -0.01926778832597717,
-    "live": false,
+    "cx": -0.1420287446590229,
+    "cy": -0.06985950363051446,
+    "live": true,
     "cuts": 62,
-    "fov": 32,
-    "camY": 1.0195186349878929,
-    "focus": 5.218955762555415,
+    "fov": 40,
+    "camY": 0.6034169346752122,
+    "focus": 3.601492222411387,
     "fstop": 2.5,
     "move": "push",
-    "shake": 0
+    "shake": 0,
+    "rack": 1,
+    "rig": {
+     "on": true,
+     "fillE": 24,
+     "rimE": 57.2,
+     "side": -1
+    },
+    "wantSide": -1,
+    "side": -1,
+    "sideOk": true,
+    "facingSide": -0.976
+   },
+   "read": {
+    "unit": "ody-v-07-lastofall",
+    "cls": "ACTION",
+    "box": [
+     -0.276,
+     -0.828,
+     -0.008,
+     0.689
+    ],
+    "law": {
+     "p90": 0.3,
+     "mean": 0.1,
+     "sep": 0.05,
+     "dark": 0.55
+    },
+    "rig": {
+     "on": true,
+     "fillE": 24,
+     "rimE": 57.2,
+     "side": -1
+    },
+    "px": 1541,
+    "mean": 0.8853,
+    "p10": 0.8438,
+    "p50": 0.8932,
+    "p90": 0.9202,
+    "max": 0.9311,
+    "ring": 0.8916,
+    "meanSep": 0.0062,
+    "sep": 0.0286,
+    "dark": 0,
+    "darkCap": 0.55,
+    "ok": false,
+    "why": "sep 0.0286<0.05"
    },
    "census": {
     "crew": 0,
@@ -2907,7 +7582,7 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 259363,
+   "bytes": 154114,
    "controlsUp": false,
    "overlayFree": true
   },
@@ -2938,7 +7613,53 @@
     "focus": 50.890003534656636,
     "fstop": 4,
     "move": "push",
-    "shake": 0
+    "shake": 0,
+    "rack": 0,
+    "rig": {
+     "on": true,
+     "fillE": 5.25,
+     "rimE": 18.4,
+     "side": 1
+    },
+    "wantSide": 1,
+    "side": 1,
+    "sideOk": true,
+    "facingSide": -0.197
+   },
+   "read": {
+    "unit": "ody-vi-11-curse",
+    "cls": "GIANT",
+    "box": [
+     0.018,
+     -0.589,
+     0.213,
+     0.476
+    ],
+    "law": {
+     "p90": 0.3,
+     "mean": 0.1,
+     "sep": 0.05,
+     "dark": 0.55
+    },
+    "rig": {
+     "on": true,
+     "fillE": 5.25,
+     "rimE": 18.4,
+     "side": 1
+    },
+    "px": 864,
+    "mean": 0.359,
+    "p10": 0.0574,
+    "p50": 0.3441,
+    "p90": 0.6473,
+    "max": 0.9226,
+    "ring": 0.2927,
+    "meanSep": 0.0663,
+    "sep": 0.3546,
+    "dark": 0.1007,
+    "darkCap": 0.55,
+    "ok": true,
+    "why": ""
    },
    "census": {
     "crew": 4,
@@ -2951,7 +7672,7 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 137816,
+   "bytes": 174174,
    "controlsUp": false,
    "overlayFree": true
   },
@@ -2966,28 +7687,74 @@
     "cls": "GIANT",
     "set": "cave",
     "floor": 0.42,
-    "size": 0.717022201886972,
+    "size": 0.7730978960614607,
     "inFrame": 1,
     "cutSides": 0,
     "fill": false,
-    "lookRoom": 0.213,
+    "lookRoom": -0.207,
     "lookRoomOk": true,
     "roll": 0,
-    "cx": -0.10625283272496311,
-    "cy": 0.02995756612025602,
+    "cx": 0.10358406398852918,
+    "cy": -0.0342558774765393,
     "live": true,
     "cuts": 19,
     "fov": 50,
-    "camY": 1.2859161046111351,
-    "focus": 7.3036294845382645,
+    "camY": 1.0770898115026968,
+    "focus": 6.882589767409452,
     "fstop": 2.8,
     "move": "push",
     "shake": 0,
-    "scaleRef": {
-     "id": "crew-0",
-     "ratio": 1.486
+    "rack": 0,
+    "rig": {
+     "on": true,
+     "fillE": 10.5,
+     "rimE": 29.9,
+     "side": 1
     },
-    "scaleRefOk": false
+    "wantSide": 1,
+    "side": 1,
+    "sideOk": true,
+    "facingSide": 0.141,
+    "scaleRef": {
+     "id": "ulysses",
+     "ratio": 0.217
+    },
+    "scaleRefOk": true
+   },
+   "read": {
+    "unit": "ody-ii-05-strangers",
+    "cls": "GIANT",
+    "box": [
+     -0.072,
+     -0.807,
+     0.279,
+     0.739
+    ],
+    "law": {
+     "p90": 0.3,
+     "mean": 0.1,
+     "sep": 0.05,
+     "dark": 0.55
+    },
+    "rig": {
+     "on": true,
+     "fillE": 10.5,
+     "rimE": 29.9,
+     "side": 1
+    },
+    "px": 2040,
+    "mean": 0.2748,
+    "p10": 0.0008,
+    "p50": 0.1228,
+    "p90": 0.7635,
+    "max": 0.9484,
+    "ring": 0.5103,
+    "meanSep": 0.2355,
+    "sep": 0.2532,
+    "dark": 0.4368,
+    "darkCap": 0.55,
+    "ok": true,
+    "why": ""
    },
    "census": {
     "crew": 3,
@@ -3000,7 +7767,7 @@
     "meals": 0,
     "headcount": 12
    },
-   "bytes": 354395,
+   "bytes": 392608,
    "controlsUp": false,
    "overlayFree": true
   },
@@ -3015,23 +7782,69 @@
     "cls": "CLOCK",
     "set": "cave",
     "floor": 0.18,
-    "size": 0.933365555088409,
-    "inFrame": 1,
-    "cutSides": 0,
-    "fill": false,
-    "lookRoom": 0.267,
-    "lookRoomOk": true,
+    "size": 1.9039546599692176,
+    "inFrame": 0.463924277543351,
+    "cutSides": 3,
+    "fill": true,
+    "lookRoom": -0.61,
+    "lookRoomOk": false,
     "roll": 0,
-    "cx": -0.13338224501775425,
-    "cy": -0.006864771752103593,
+    "cx": 0.3048183857914635,
+    "cy": -0.6690415268745143,
     "live": true,
     "cuts": 47,
     "fov": 52,
-    "camY": 1.3307918058891066,
-    "focus": 8.321358798921027,
+    "camY": 1.4939636599606447,
+    "focus": 4.57244705478401,
     "fstop": 2.2,
     "move": "handheld",
-    "shake": 0.034
+    "shake": 0.005600000000000001,
+    "rack": 0,
+    "rig": {
+     "on": true,
+     "fillE": 12,
+     "rimE": 33.8,
+     "side": 1
+    },
+    "wantSide": 1,
+    "side": 1,
+    "sideOk": true,
+    "facingSide": 0.86
+   },
+   "read": {
+    "unit": "ody-iv-05-hiss",
+    "cls": "CLOCK",
+    "box": [
+     -0.671,
+     -2.783,
+     1.278,
+     1.264
+    ],
+    "law": {
+     "p90": 0.3,
+     "mean": 0.1,
+     "sep": 0.05,
+     "dark": 0.55
+    },
+    "rig": {
+     "on": true,
+     "fillE": 12,
+     "rimE": 33.8,
+     "side": 1
+    },
+    "px": 11658,
+    "mean": 0.2828,
+    "p10": 0.0176,
+    "p50": 0.253,
+    "p90": 0.6199,
+    "max": 0.8779,
+    "ring": 0.5045,
+    "meanSep": 0.2217,
+    "sep": 0.1154,
+    "dark": 0.1376,
+    "darkCap": 0.55,
+    "ok": true,
+    "why": ""
    },
    "census": {
     "crew": 1,
@@ -3044,7 +7857,7 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 237764,
+   "bytes": 188285,
    "controlsUp": false,
    "overlayFree": true
   },
@@ -3059,23 +7872,69 @@
     "cls": "WIDE",
     "set": "sea",
     "floor": 0.045,
-    "size": 0.40591804465969483,
-    "inFrame": 1,
-    "cutSides": 0,
+    "size": 0.6081079025776407,
+    "inFrame": 0.916584975751974,
+    "cutSides": 1,
     "fill": true,
     "lookRoom": null,
     "lookRoomOk": true,
     "roll": 0,
-    "cx": -0.042136069331007164,
-    "cy": -0.012290355198195824,
+    "cx": -0.3140550061389103,
+    "cy": -0.4933427683002197,
     "live": false,
     "cuts": 81,
-    "fov": 38,
-    "camY": 7.860844854306867,
-    "focus": 34.65420278827906,
+    "fov": 54,
+    "camY": 9.1302610562429,
+    "focus": 20.730447374787204,
     "fstop": 11,
     "move": "crane",
-    "shake": 0
+    "shake": 0,
+    "rack": 0,
+    "rig": {
+     "on": true,
+     "fillE": 1.5,
+     "rimE": 6.4,
+     "side": -1
+    },
+    "wantSide": -1,
+    "side": -1,
+    "sideOk": true,
+    "facingSide": null
+   },
+   "read": {
+    "unit": "ody-vi-14-sailedon",
+    "cls": "WIDE",
+    "box": [
+     -0.634,
+     -1.101,
+     0.006,
+     0.115
+    ],
+    "law": {
+     "p90": 0.3,
+     "mean": 0.1,
+     "sep": 0.05,
+     "dark": 0.55
+    },
+    "rig": {
+     "on": true,
+     "fillE": 1.5,
+     "rimE": 6.4,
+     "side": -1
+    },
+    "px": 2548,
+    "mean": 0.195,
+    "p10": 0.0396,
+    "p50": 0.0893,
+    "p90": 0.5285,
+    "max": 0.9681,
+    "ring": 0.1161,
+    "meanSep": 0.0789,
+    "sep": 0.4125,
+    "dark": 0.4349,
+    "darkCap": 0.8,
+    "ok": true,
+    "why": ""
    },
    "census": {
     "crew": 4,
@@ -3088,7 +7947,7 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 203501,
+   "bytes": 247565,
    "controlsUp": false,
    "overlayFree": true
   }
@@ -3156,7 +8015,7 @@
   {
    "name": "the 81-unit walk completes",
    "verdict": "PASS",
-   "detail": "81 units · 0 stuck · sim 269.55s · ended true"
+   "detail": "81 units · 0 stuck · sim 271.3s · ended true"
   },
   {
    "name": "every gate resolved by its own verb",
@@ -3166,7 +8025,7 @@
   {
    "name": "[hit] all 8 gates resolve on a REAL click at their live shot",
    "verdict": "PASS",
-   "detail": "G1 ok@586,584 · G2 ok@916,540 · G3 ok · G4 ok · G5 ok@921,561 · G6 ok@1054,634 · G7 ok@1039,642 · G8 ok"
+   "detail": "G1 ok@545,550 · G2 ok@916,540 · G3 ok · G4 ok · G5 ok@921,561 · G6 ok@1054,634 · G7 ok@1039,642 · G8 ok"
   },
   {
    "name": "[hit] every target click lands on the target's OWN PIXELS",
@@ -3181,7 +8040,7 @@
   {
    "name": "the walk's own target gates clicked their real coordinates",
    "verdict": "PASS",
-   "detail": "i-07-council 518,670 (ring after 25.5s) · ii-11-sword 917,540 (ring after 0s) · v-04-greatram 959,556 (ring after 0s) · vi-01-jeer 1064,632 (ring after 0s) · vi-06-defy 1059,638 (ring after 0s)"
+   "detail": "i-07-council 525,550 (ring after 27.25s) · ii-11-sword 917,540 (ring after 0s) · v-04-greatram 959,556 (ring after 0s) · vi-01-jeer 1064,633 (ring after 0s) · vi-06-defy 1059,638 (ring after 0s)"
   },
   {
    "name": "[hit] the miss-probe still misses",
@@ -3216,7 +8075,7 @@
   {
    "name": "posture law: every rig's head pitch inside its band",
    "verdict": "PASS",
-   "detail": "ulysses 2.81° · crew-0 2.69° · crew-1 2.69° · crew-2 2.69° · crew-3 2.69° · poly-idle 19.32°"
+   "detail": "ulysses 2.81° · crew-0 2.69° · crew-1 2.69° · crew-2 2.69° · crew-3 2.69° · poly-idle 18.18°"
   },
   {
    "name": "voice: a mastered line asserted per unit",
@@ -3244,11 +8103,41 @@
    "detail": "2 frames shot with a control up · 9/9 byte-identical to bare"
   },
   {
-   "name": "every frame keeps its subject in frame",
+   "name": "every frame keeps its subject in frame (a fill shot fills it)",
    "verdict": "PASS",
-   "detail": "beat1-council OTS 0.24 · beat2-plea DIALOGUE 0.89 · beat3-bowl GATE 0.45 · beat4-auger CLOCK 0.27 · beat5-ram ACTION 0.51 · beat6-curse GIANT 0.53 · feel-giant GIANT 0.72 · feel-blinding CLOCK 0.93 · feel-sailoff WIDE 0.41"
+   "detail": "beat1-council OTS 0.48 in 1.00 · beat2-plea DIALOGUE 0.51 in 1.00 · beat3-bowl GATE 0.42 in 1.00 · beat4-auger CLOCK 0.27 in 1.00 · beat5-ram ACTION 0.76 in 1.00 · beat6-curse GIANT 0.53 in 1.00 · feel-giant GIANT 0.77 in 1.00 · feel-blinding CLOCK 1.90 FILL · feel-sailoff WIDE 0.61 FILL"
+  },
+  {
+   "name": "[view] every unit in the shot table was entered and measured",
+   "verdict": "PASS",
+   "detail": "81/81 units measured"
+  },
+  {
+   "name": "[read] the subject of every line reads on the drawn pixels",
+   "verdict": "PASS",
+   "detail": "81 shots inside the law (p90>=0.30 · mean>=0.10 · sep>=0.045 · dark<=0.55)"
+  },
+  {
+   "name": "[read] the subject rig travels with the line",
+   "verdict": "PASS",
+   "detail": "81/81 shots carry a motivated fill + rim"
+  },
+  {
+   "name": "[side] every pinned shot lands on the axis it was baked to",
+   "verdict": "PASS",
+   "detail": "41 pinned shots on-axis (cave: giant right / men left · sea: island right / ship left)"
+  },
+  {
+   "name": "[escalation] the cave headings are a ladder, not one neutral master",
+   "verdict": "PASS",
+   "detail": "ii y1.55/7.69m -> iii y1.25/6.67m -> iv y0.95/5.45m · V turns to the mouth"
+  },
+  {
+   "name": "[rack] the reveal shots carry a focus pull",
+   "verdict": "PASS",
+   "detail": "81 shots report a rack position"
   }
  ],
  "green": true,
- "framesDir": "/Users/samz/Documents/gaslight-remake/shots/book3d-r1"
+ "framesDir": "/Users/samz/Documents/gaslight-remake/shots/book3d-r2"
 }

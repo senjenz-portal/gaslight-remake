@@ -641,7 +641,7 @@ function step(dt) {
     try { cine.step(stage.simT, dt); } catch (e) { fail('cine.step', e); }
     /* the two moments the DIRECTOR takes the frame back: the blinding shake
        and the under-fleece eye. Everything else is the shot table's. */
-    director.driveCamera(stage.camera, stage.simT, cine.cam.anchor);
+    director.driveCamera(stage.camera, stage.simT, cine.cam.anchor, !!cine.cam.shot);
   }
   stepVerb(dt);
   if (DEBUG) {
@@ -838,6 +838,8 @@ window.__book = {
   stage, director,
 };
 window.__cine = () => (cine ? cine.metrics() : null);
+/* THE READABILITY GATE's own eye: the drawn pixels inside the subject's box */
+window.__read = () => (cine ? cine.readback() : null);
 window.__errors = () => errors.slice();
 
 boot().catch((e) => fail('boot', e));

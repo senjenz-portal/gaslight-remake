@@ -19,7 +19,7 @@
  * lines of one speech is.
  */
 import * as THREE from 'three';
-import { CineCam, CineDof, measureShot } from '../cine3d.js';
+import { CineCam, CineDof, measureShot, ReadRig, readSubjectPixels, READ_LAW } from '../cine3d.js';
 
 /** the void a cutaway set shows when the lens can see past its shell */
 export const VOID_COLOUR = { cave: '#0a0806', shore: '#060910', sea: '#070b16' };
@@ -51,6 +51,17 @@ export async function mountCine(stage, url = './shots3d.json') {
     return r ? { p: r.p, face: r.face, point: true } : null;
   };
 
+  /* THE READABILITY RIG. Two motivated lamps that belong to the SUBJECT OF THE
+     LINE and travel with it — the answer to Fable's round-1 defect. The set's
+     own light story is untouched; these are short-range and die a couple of
+     subject-heights out. Re-parented on every set turn because unmount() takes
+     the whole scene graph the set was mounted into. */
+  const rig = new ReadRig();
+  const attach = () => {
+    if (rig.group.parent !== stage.scene) stage.scene.add(rig.group);
+    if (rig.setName !== stage.setName) rig.setSet(stage.setName);
+  };
+
   stage.setCamera(cam.cam);
   stage.setRenderPass((scene, camera, renderer) => {
     if (!scene.background) scene.background =
@@ -66,12 +77,37 @@ export async function mountCine(stage, url = './shots3d.json') {
   stage.renderer.toneMappingExposure = stage.renderer.toneMappingExposure || 1.38;
   stage.renderer.toneMapping = THREE.NoToneMapping;
 
+  const light = () => {
+    attach();
+    rig.aim(cam.cam, cam.anchor, (cam.shot && cam.shot.frame.h) || 1.75, cam.read);
+  };
+
   const api = {
-    cam, dof, table,
-    enter(unitId) { return cam.cutTo(unitId, stage.simT, resolve); },
-    step(t, dt = 1 / 60) { cam.step(t, dt, resolve); },
+    cam, dof, table, rig,
+    enter(unitId) { const c = cam.cutTo(unitId, stage.simT, resolve); light(); return c; },
+    step(t, dt = 1 / 60) { cam.step(t, dt, resolve); light(); },
     setAspect(a) { cam.setAspect(a); },
-    snapshot() { return cam.snapshot(); },
+    snapshot() { return { ...cam.snapshot(), read: rig.report }; },
+    /**
+     * THE READABILITY GATE. The subject's projected box, read off the pixels
+     * the reader is looking at: is anything on this body actually LIT, and
+     * does it separate from what is behind it?
+     */
+    readback() {
+      const m = measureShot(cam.cam, cam.subjBox, {});
+      if (!m.ok) return { ok: false, why: 'no subject box' };
+      /* THE FRAME MUST BE DRAWN IN THIS TURN. A WebGL canvas hands drawImage a
+         STALE surface once the compositor has taken the frame — measured, not
+         guessed: the same cave shot read a flat 0.068 band before this line and
+         a real 0.34-mean picture after it (tools/ody/_readprobe.mjs). The book
+         renders with preserveDrawingBuffer, so one synchronous re-render puts
+         the pixels the reader is looking at back under the sampler. */
+      stage.render();
+      const r = readSubjectPixels(stage.canvas, m.box, 160, cam.shot && cam.shot.class);
+      if (!r) return { ok: false, why: 'no canvas' };
+      return { unit: cam.unitId, cls: cam.shot && cam.shot.class, box: m.box,
+               law: READ_LAW, rig: rig.report, ...r };
+    },
     /** the composition gates' whole reading of the frame on screen */
     metrics() {
       const row = cam.shot;
@@ -85,7 +121,18 @@ export async function mountCine(stage, url = './shots3d.json') {
         cx: m.cx, cy: m.cy, live: cam.subjOk, cuts: cam.cuts,
         fov: cam.cam.fov, camY: cam.cam.position.y, focus: cam.focusDist,
         fstop: cam.fstop, move: row.move.k, shake: cam.shakeAmp,
+        rack: cam.rackK || 0, rig: rig.report,
       };
+      /* THE SCREEN-DIRECTION SYSTEM. In the cave the giant is ALWAYS frame
+         right and the men are ALWAYS frame left, so a cut never swaps who is
+         where and the eyelines answer each other across every cut. The row
+         carries the side it was baked to; this reports the side it landed on. */
+      if (row.frame.side) {
+        out.wantSide = row.frame.side;
+        out.side = m.cx === 0 ? 0 : (m.cx > 0 ? 1 : -1);
+        out.sideOk = Math.abs(m.cx) < 0.03 || out.side === row.frame.side;
+        out.facingSide = m.facingSide === undefined ? null : m.facingSide;
+      }
       /* THE SCALE REFERENCE: a giant is only giant beside something known */
       if (row.fg) {
         const fg = resolve({ a: row.fg });

@@ -1,6 +1,81 @@
 {
- "lane": "cine-r1",
- "created": "2026-08-21",
+ "lane": "cine-r2",
+ "escalation": {
+  "rungs": [
+   {
+    "unit": "ody-ii-00-head",
+    "camY": 1.55,
+    "fov": 56,
+    "dist": 7.69
+   },
+   {
+    "unit": "ody-iii-00-head",
+    "camY": 1.25,
+    "fov": 50,
+    "dist": 6.67
+   },
+   {
+    "unit": "ody-iv-00-head",
+    "camY": 0.95,
+    "fov": 46,
+    "dist": 5.45
+   }
+  ],
+  "ok": true,
+  "turn": {
+   "unit": "ody-v-00-head",
+   "anchorX": -8.279,
+   "camX": 1.6,
+   "faces": "mouth"
+  }
+ },
+ "axis": {
+  "law": "IN THE CAVE THE GIANT IS FRAME RIGHT AND THE MEN ARE FRAME LEFT; at sea the island is frame RIGHT and the ship frame LEFT — the direction she is leaving in.",
+  "sides": {
+   "ody-ii-05-strangers": 1,
+   "ody-ii-06-plea": -1,
+   "ody-ii-07-pitiless": 1,
+   "ody-ii-08-shipfast": 1,
+   "ody-ii-09-shiplie": -1,
+   "ody-ii-10-firstmeal": 1,
+   "ody-ii-11-sword": -1,
+   "ody-iii-03-scheme": -1,
+   "ody-iii-07-suppertwo": 1,
+   "ody-iii-08-lookhere": -1,
+   "ody-iii-09-besokind": 1,
+   "ody-iii-10-thrice": 1,
+   "ody-iii-11-noman": -1,
+   "ody-iii-12-nomanlast": 1,
+   "ody-iii-13-neck": 1,
+   "ody-iv-01-embers": -1,
+   "ody-iv-02-glowing": -1,
+   "ody-iv-03-auger": -1,
+   "ody-iv-04-bore": 1,
+   "ody-iv-05-hiss": 1,
+   "ody-iv-08-nomankilling": 1,
+   "ody-iv-11-stone": 1,
+   "ody-iv-12-doorway": 1,
+   "ody-v-01-puzzling": -1,
+   "ody-v-04-greatram": -1,
+   "ody-v-06-feltbacks": 1,
+   "ody-v-07-lastofall": -1,
+   "ody-v-08-ramspeech1": 1,
+   "ody-v-09-ramspeech2": 1,
+   "ody-v-10-ramspeech3": 1,
+   "ody-v-11-freed": -1,
+   "ody-vi-01-jeer": 1,
+   "ody-vi-02-taunt": -1,
+   "ody-vi-05-menbeg": -1,
+   "ody-vi-06-defy": 1,
+   "ody-vi-07-myname": -1,
+   "ody-vi-08-prophecy": 1,
+   "ody-vi-09-fatherson": 1,
+   "ody-vi-10-hades": -1,
+   "ody-vi-11-curse": 1,
+   "ody-vi-14-sailedon": -1
+  }
+ },
+ "created": "2026-08-22",
  "law": "shot = {pos, lookAt, fov, move, dof}. Distance is never chosen: d = h / (2 f tan(fov/2)) — `frac` is the declared size and the class floor is the minimum share of FRAME HEIGHT the subject may occupy. Camera stations obey the PROSCENIUM LAW (inside the set camera volume, out of every ledger obstacle box). A unit advance is a CUT; within-unit moves are continuous and eased.",
  "source": "tools/ody/shots3d_bake.mjs (this table's provenance) over 3d/lenses.json marks + app/units.js",
  "classes": {
@@ -131,13 +206,22 @@
    "dof": {
     "fstop": 8,
     "focus": "subject",
-    "near": 0.55,
-    "expo": 1
+    "near": 0.55
+   },
+   "read": {
+    "fill": 0.3,
+    "rim": 0.4,
+    "side": 1
    },
    "frame": {
     "h": 11,
     "point": true,
     "fill": true,
+    "side": 0,
+    "sideLanded": 0,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.493,
     "fracDesign": 0.37,
     "inFrame": 1,
@@ -204,13 +288,22 @@
    "dof": {
     "fstop": 5.6,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 6.2,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.31,
     "fracDesign": 0.279,
     "inFrame": 1,
@@ -271,13 +364,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.5
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.38,
     "fracDesign": 0.358,
     "inFrame": 1,
@@ -339,13 +441,22 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.5
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.614,
     "fracDesign": 0.547,
     "inFrame": 1,
@@ -412,13 +523,22 @@
    "dof": {
     "fstop": 11,
     "focus": "subject",
-    "near": 0.4,
-    "expo": 1
+    "near": 0.4
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 13,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.836,
     "fracDesign": 0.77,
     "inFrame": 1,
@@ -480,13 +600,22 @@
    "dof": {
     "fstop": 8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.5
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.22,
     "fracDesign": 0.201,
     "inFrame": 1,
@@ -553,13 +682,22 @@
    "dof": {
     "fstop": 3.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 1.7,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.362,
     "fracDesign": 0.309,
     "inFrame": 1,
@@ -602,16 +740,16 @@
    "over": "crew-0",
    "fg": null,
    "pos": [
-    -4.454,
-    1.6,
-    0.863
+    4.182,
+    1.62,
+    6.745
    ],
    "lookAt": [
-    -5.712,
-    0.787,
-    7.058
+    -6.108,
+    0.934,
+    7.964
    ],
-   "fov": 26,
+   "fov": 32,
    "move": {
     "k": "push",
     "cms": 2.6,
@@ -621,35 +759,44 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 0.95,
+    "side": 1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
-    "frac": 0.666,
-    "fracDesign": 0.596,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.316,
+    "fracDesign": 0.295,
     "inFrame": 1,
-    "cx": 0.19,
-    "cy": 0.035,
+    "cx": 0.204,
+    "cy": -0.032,
     "floor": 0.3,
-    "crownPitch": 1.4,
+    "crownPitch": 0.7,
     "crownPitchMin": null,
-    "dist": 6.36,
-    "bearing": 164.7,
+    "dist": 10.34,
+    "bearing": 91.2,
     "comp": [
-     0.17,
-     0.06
+     0.2,
+     -0.02
     ],
-    "camY": 1.6,
+    "camY": 1.62,
     "follow": false,
     "anchor": [
      -6.124,
      0.875,
      6.955
     ],
-    "solved": "UPSTAGE swung 56deg x1"
+    "solved": "UPSTAGE swung 0deg x1"
    },
    "flags": {
     "intro": false,
@@ -694,13 +841,22 @@
    "dof": {
     "fstop": 8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 9,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.797,
     "fracDesign": 0.609,
     "inFrame": 1,
@@ -766,13 +922,22 @@
    "dof": {
     "fstop": 11,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 22,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.848,
     "fracDesign": 0.81,
     "inFrame": 1,
@@ -839,13 +1004,22 @@
    "dof": {
     "fstop": 3.2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 1.7,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.4,
     "fracDesign": 0.339,
     "inFrame": 1,
@@ -907,13 +1081,22 @@
    "dof": {
     "fstop": 2.2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": 1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.742,
     "fracDesign": 0.656,
     "inFrame": 1,
@@ -925,7 +1108,7 @@
     "dist": 6.27,
     "bearing": -42.8,
     "comp": [
-     0.16,
+     -0.16,
      0.05
     ],
     "camY": 1.56,
@@ -980,13 +1163,22 @@
    "dof": {
     "fstop": 5.6,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 9,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.852,
     "fracDesign": 0.881,
     "inFrame": 1,
@@ -1028,60 +1220,68 @@
      700,
      455
     ],
-    "h": 8,
-    "y": 3
+    "h": 4.8,
+    "y": 2.7
    },
    "over": null,
    "fg": null,
    "pos": [
-    1.603,
-    3.2,
-    3.203
+    6.056,
+    1.55,
+    4.192
    ],
    "lookAt": [
-    -0.09,
-    2.85,
-    -0.268
+    -0.113,
+    2.538,
+    -0.29
    ],
-   "fov": 58,
+   "fov": 56,
    "move": {
-    "k": "crane",
-    "dy": 1.2,
-    "dz": 0.6,
-    "dur": 7
+    "k": "track",
+    "m": 1.9,
+    "dur": 8
    },
    "dof": {
     "fstop": 8,
     "focus": "subject",
-    "near": 0.5,
-    "expo": 0.5
+    "near": 0.5
+   },
+   "read": {
+    "fill": 0.3,
+    "rim": 0.4,
+    "side": 1
    },
    "frame": {
-    "h": 8,
+    "h": 4.8,
     "point": true,
     "fill": true,
-    "frac": 9,
-    "fracDesign": 1.862,
-    "inFrame": 0,
-    "cx": 0,
-    "cy": 0,
+    "side": 0,
+    "sideLanded": 0,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 1.014,
+    "fracDesign": 0.587,
+    "inFrame": 0.902,
+    "cx": 0.036,
+    "cy": 0.185,
     "floor": 0.045,
-    "crownPitch": 44.5,
+    "crownPitch": 25,
     "crownPitchMin": null,
-    "dist": 3.88,
-    "bearing": 26,
+    "dist": 7.69,
+    "bearing": 54,
     "comp": [
      0,
-     0.07
+     0.04
     ],
-    "camY": 3.2,
+    "camY": 1.55,
     "follow": false,
     "anchor": [
      -0.093,
-     3,
+     2.7,
      -0.275
     ],
-    "solved": "swung -32deg x0.45"
+    "solved": "swung -4deg x1"
    },
    "flags": {
     "intro": false,
@@ -1126,13 +1326,22 @@
    "dof": {
     "fstop": 3.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.71
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 2.7,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.643,
     "fracDesign": 0.5,
     "inFrame": 1,
@@ -1199,13 +1408,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 3,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.552,
     "fracDesign": 0.44,
     "inFrame": 1,
@@ -1272,13 +1490,22 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 1.8,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.575,
     "fracDesign": 0.44,
     "inFrame": 1,
@@ -1345,13 +1572,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 4.6,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.804,
     "fracDesign": 0.55,
     "inFrame": 1,
@@ -1392,16 +1628,16 @@
     "a": "poly-seat"
    },
    "over": null,
-   "fg": "crew-0",
+   "fg": "ulysses",
    "pos": [
-    -5.411,
-    1.27,
-    2.76
+    6.452,
+    1.05,
+    4.281
    ],
    "lookAt": [
-    1.564,
-    1.961,
-    0.093
+    0.937,
+    2.16,
+    -0.015
    ],
    "fov": 50,
    "move": {
@@ -1413,35 +1649,44 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.84
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.791,
-    "fracDesign": 0.619,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.864,
+    "fracDesign": 0.654,
     "inFrame": 1,
-    "cx": -0.128,
-    "cy": 0.04,
+    "cx": 0.12,
+    "cy": -0.025,
     "floor": 0.42,
-    "crownPitch": 21.4,
+    "crownPitch": 24.1,
     "crownPitchMin": 21,
-    "dist": 7.48,
-    "bearing": -64.5,
+    "dist": 7.05,
+    "bearing": 47.5,
     "comp": [
      0.1,
-     0.02
+     -0.04
     ],
-    "camY": 1.55,
+    "camY": 1.05,
     "follow": false,
     "anchor": [
      1.302,
      2.03,
      -0.44
     ],
-    "solved": "swung -96deg x1 + dropped"
+    "solved": "swung 16deg x1"
    },
    "flags": {
     "intro": true,
@@ -1462,16 +1707,16 @@
    "over": "poly-seat",
    "fg": null,
    "pos": [
-    1.247,
-    1.58,
-    -0.555
+    1.236,
+    3.4,
+    -1.774
    ],
    "lookAt": [
-    3.559,
-    0.8,
-    5.296
+    3.256,
+    1.011,
+    5.441
    ],
-   "fov": 27,
+   "fov": 34,
    "move": {
     "k": "push",
     "cms": 2.8,
@@ -1481,35 +1726,44 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": -1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
-    "frac": 0.652,
-    "fracDesign": 0.576,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.425,
+    "fracDesign": 0.366,
     "inFrame": 1,
-    "cx": -0.188,
-    "cy": 0.023,
+    "cx": -0.205,
+    "cy": -0.082,
     "floor": 0.3,
-    "crownPitch": 1.5,
+    "crownPitch": -12.6,
     "crownPitchMin": null,
-    "dist": 6.32,
-    "bearing": -154.4,
+    "dist": 7.83,
+    "bearing": -158.4,
     "comp": [
-     -0.17,
-     0.05
+     -0.19,
+     -0.06
     ],
-    "camY": 1.58,
+    "camY": 3.4,
     "follow": false,
     "anchor": [
      3.959,
      0.875,
      5.114
     ],
-    "solved": "UPSTAGE swung -20deg x1"
+    "solved": "UPSTAGE swung -28deg x1"
    },
    "flags": {
     "intro": false,
@@ -1535,9 +1789,9 @@
     3.211
    ],
    "lookAt": [
-    1.684,
+    0.94,
     1.932,
-    0.242
+    -1.133
    ],
    "fov": 46,
    "move": {
@@ -1549,18 +1803,27 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.84
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.813,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.823,
     "fracDesign": 0.659,
     "inFrame": 1,
-    "cx": -0.167,
-    "cy": 0.059,
+    "cx": 0.143,
+    "cy": 0.062,
     "floor": 0.42,
     "crownPitch": 21.9,
     "crownPitchMin": 21,
@@ -1603,9 +1866,9 @@
     3.236
    ],
    "lookAt": [
-    1.641,
+    0.98,
     1.938,
-    0.154
+    -1.043
    ],
    "fov": 44,
    "move": {
@@ -1617,25 +1880,34 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.84
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.863,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.871,
     "fracDesign": 0.698,
     "inFrame": 1,
-    "cx": -0.155,
-    "cy": 0.056,
+    "cx": 0.13,
+    "cy": 0.059,
     "floor": 0.42,
     "crownPitch": 21.3,
     "crownPitchMin": 21,
     "dist": 7.65,
     "bearing": -61.1,
     "comp": [
-     -0.13,
+     0.13,
      0.03
     ],
     "camY": 1.5,
@@ -1685,13 +1957,22 @@
    "dof": {
     "fstop": 2.2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.71
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": -1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.69,
     "fracDesign": 0.616,
     "inFrame": 1,
@@ -1739,9 +2020,9 @@
     3.724
    ],
    "lookAt": [
-    5.236,
+    5.268,
     4.808,
-    4.822
+    2.984
    ],
    "fov": 44,
    "move": {
@@ -1752,25 +2033,34 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 7,
     "point": false,
     "fill": false,
-    "frac": 0.86,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.857,
     "fracDesign": 0.778,
     "inFrame": 1,
-    "cx": -0.133,
-    "cy": 0.037,
+    "cx": 0.14,
+    "cy": 0.034,
     "floor": 0.17,
     "crownPitch": 32.9,
     "crownPitchMin": null,
     "dist": 11.14,
     "bearing": -91,
     "comp": [
-     -0.12,
+     0.12,
      0
     ],
     "camY": 1.45,
@@ -1821,13 +2111,22 @@
    "dof": {
     "fstop": 2.2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1.1,
+    "side": -1
    },
    "frame": {
     "h": 1,
     "point": true,
     "fill": false,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.369,
     "fracDesign": 0.299,
     "inFrame": 1,
@@ -1894,13 +2193,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 4.6,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.722,
     "fracDesign": 0.552,
     "inFrame": 1,
@@ -1967,13 +2275,22 @@
    "dof": {
     "fstop": 5.6,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 3,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.818,
     "fracDesign": 0.664,
     "inFrame": 1,
@@ -2012,63 +2329,73 @@
    "speaker": null,
    "subject": {
     "m": [
-     704,
-     460
+     640,
+     468
     ],
-    "h": 9,
-    "y": 3.4
+    "h": 3.9,
+    "y": 2.2
    },
    "over": null,
    "fg": null,
    "pos": [
-    -6.388,
-    3.6,
-    -0.223
+    -7.608,
+    1.25,
+    2.913
    ],
    "lookAt": [
-    -0.008,
-    3.152,
-    0
+    -1.555,
+    2.108,
+    0.239
    ],
-   "fov": 58,
+   "fov": 50,
    "move": {
-    "k": "crane",
-    "dy": 1.6,
-    "dz": 0.8,
-    "dur": 7
+    "k": "push",
+    "cms": 9,
+    "dur": 10,
+    "m": 0.9
    },
    "dof": {
     "fstop": 8,
     "focus": "subject",
     "near": 0.5,
-    "expo": 0.71
+    "expo": 0.88
+   },
+   "read": {
+    "fill": 0.3,
+    "rim": 0.4,
+    "side": 1
    },
    "frame": {
-    "h": 9,
+    "h": 3.9,
     "point": true,
     "fill": true,
-    "frac": 4.775,
-    "fracDesign": 1.269,
-    "inFrame": 0.069,
-    "cx": -0.193,
-    "cy": 0.78,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 1.276,
+    "fracDesign": 0.627,
+    "inFrame": 0.784,
+    "cx": -0.059,
+    "cy": 0.184,
     "floor": 0.045,
-    "crownPitch": 33.9,
+    "crownPitch": 23.7,
     "crownPitchMin": null,
-    "dist": 6.4,
-    "bearing": -92,
+    "dist": 6.67,
+    "bearing": -68,
     "comp": [
-     0,
-     0.07
+     0.04,
+     0.03
     ],
-    "camY": 3.6,
+    "camY": 1.25,
     "follow": false,
     "anchor": [
-     0,
-     3.4,
-     0
+     -1.488,
+     2.2,
+     0.44
     ],
-    "solved": "swung -28deg x0.68"
+    "solved": "swung -4deg x1"
    },
    "flags": {
     "intro": false,
@@ -2113,13 +2440,22 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 2,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.749,
     "fracDesign": 0.525,
     "inFrame": 1,
@@ -2186,13 +2522,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 4.6,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.811,
     "fracDesign": 0.571,
     "inFrame": 1,
@@ -2254,13 +2599,22 @@
    "dof": {
     "fstop": 2.2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": -1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.778,
     "fracDesign": 0.69,
     "inFrame": 1,
@@ -2272,7 +2626,7 @@
     "dist": 5.49,
     "bearing": -93.9,
     "comp": [
-     0.16,
+     -0.16,
      0.05
     ],
     "camY": 1.56,
@@ -2327,13 +2681,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 5.6,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.783,
     "fracDesign": 0.578,
     "inFrame": 1,
@@ -2399,13 +2762,22 @@
    "dof": {
     "fstop": 3.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.5
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 1.8,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 0,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.608,
     "fracDesign": 0.484,
     "inFrame": 1,
@@ -2472,13 +2844,22 @@
    "dof": {
     "fstop": 4.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 4.4,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.691,
     "fracDesign": 0.526,
     "inFrame": 1,
@@ -2526,9 +2907,9 @@
     3.119
    ],
    "lookAt": [
-    1.596,
+    1.008,
     2.03,
-    0.206
+    -1.086
    ],
    "fov": 44,
    "move": {
@@ -2539,25 +2920,34 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.84
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.715,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.722,
     "fracDesign": 0.619,
     "inFrame": 1,
-    "cx": -0.135,
-    "cy": 0.013,
+    "cx": 0.114,
+    "cy": 0.015,
     "floor": 0.17,
     "crownPitch": 17.6,
     "crownPitchMin": null,
     "dist": 8.6,
     "bearing": -65.5,
     "comp": [
-     -0.12,
+     0.12,
      0
     ],
     "camY": 1.45,
@@ -2589,16 +2979,16 @@
    "over": "ulysses",
    "fg": null,
    "pos": [
-    3.219,
-    1.32,
-    4.925
+    0.8,
+    1.05,
+    5
    ],
    "lookAt": [
-    0.395,
-    1,
-    2.586
+    0.566,
+    1.31,
+    2.705
    ],
-   "fov": 30,
+   "fov": 46,
    "move": {
     "k": "push",
     "cms": 4,
@@ -2609,34 +2999,58 @@
     "fstop": 2,
     "focus": "subject",
     "near": 0.85,
-    "expo": 0.5
+    "expo": 0.86,
+    "rack": {
+     "from": [
+      0.247,
+      1.02,
+      2.789
+     ],
+     "to": [
+      1.302,
+      4.03,
+      -0.44
+     ],
+     "at": 2.6,
+     "dur": 1
+    }
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1.1,
+    "side": -1
    },
    "frame": {
     "h": 0.75,
     "point": true,
     "fill": false,
-    "frac": 0.509,
-    "fracDesign": 0.381,
-    "inFrame": 1,
-    "cx": -0.165,
-    "cy": -0.032,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": true,
+    "stationSees": true,
+    "liveAnchor": false,
+    "frac": 0.626,
+    "fracDesign": 0.388,
+    "inFrame": 0.973,
+    "cx": -0.32,
+    "cy": -0.408,
     "floor": 0.22,
-    "crownPitch": 1.2,
+    "crownPitch": 8.6,
     "crownPitchMin": null,
-    "dist": 3.67,
-    "bearing": 54.3,
+    "dist": 2.28,
+    "bearing": 14,
     "comp": [
-     -0.15,
-     0.02
+     -0.2,
+     -0.3
     ],
-    "camY": 1.32,
+    "camY": 1.05,
     "follow": false,
     "anchor": [
      0.247,
      1.02,
      2.789
     ],
-    "solved": "UPSTAGE swung 96deg x0.68"
+    "solved": "AUTHORED"
    },
    "flags": {
     "intro": false,
@@ -2662,9 +3076,9 @@
     4.098
    ],
    "lookAt": [
-    1.643,
+    0.953,
     1.97,
-    -0.819
+    -0.068
    ],
    "fov": 48,
    "move": {
@@ -2676,18 +3090,27 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.59
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.944,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.942,
     "fracDesign": 0.718,
     "inFrame": 1,
-    "cx": -0.11,
-    "cy": 0.04,
+    "cx": 0.114,
+    "cy": 0.039,
     "floor": 0.42,
     "crownPitch": 21.9,
     "crownPitchMin": 21,
@@ -2730,9 +3153,9 @@
     2.749
    ],
    "lookAt": [
-    1.558,
+    1.05,
     1.998,
-    0.096
+    -0.978
    ],
    "fov": 46,
    "move": {
@@ -2743,25 +3166,34 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.84
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.803,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.812,
     "fracDesign": 0.678,
     "inFrame": 1,
-    "cx": -0.129,
-    "cy": 0.025,
+    "cx": 0.102,
+    "cy": 0.027,
     "floor": 0.17,
     "crownPitch": 20.2,
     "crownPitchMin": null,
     "dist": 7.47,
     "bearing": -64.7,
     "comp": [
-     -0.11,
+     0.11,
      0.01
     ],
     "camY": 1.44,
@@ -2811,13 +3243,22 @@
    "dof": {
     "fstop": 2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": -1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.727,
     "fracDesign": 0.655,
     "inFrame": 1,
@@ -2865,9 +3306,9 @@
     1.783
    ],
    "lookAt": [
-    1.501,
+    1.114,
     1.97,
-    0.14
+    -1.023
    ],
    "fov": 46,
    "move": {
@@ -2879,18 +3320,27 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.84
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.89,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.906,
     "fracDesign": 0.718,
     "inFrame": 1,
-    "cx": -0.154,
-    "cy": 0.037,
+    "cx": 0.112,
+    "cy": 0.041,
     "floor": 0.42,
     "crownPitch": 22,
     "crownPitchMin": 21,
@@ -2947,13 +3397,22 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 7,
     "point": false,
     "fill": false,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.755,
     "fracDesign": 1.133,
     "inFrame": 1,
@@ -2992,63 +3451,73 @@
    "speaker": null,
    "subject": {
     "m": [
-     700,
-     470
+     676,
+     474
     ],
-    "h": 7.6,
-    "y": 2.8
+    "h": 3,
+    "y": 1.65
    },
    "over": null,
    "fg": null,
    "pos": [
-    -8.288,
-    2.6,
-    0.264
+    -5.969,
+    0.95,
+    1.708
    ],
    "lookAt": [
-    -0.086,
-    2.527,
-    0.551
+    -0.671,
+    1.535,
+    0.574
    ],
-   "fov": 58,
+   "fov": 46,
    "move": {
-    "k": "crane",
-    "dy": 0.9,
-    "dz": 0.4,
-    "dur": 6
+    "k": "push",
+    "cms": 7,
+    "dur": 10,
+    "m": 0.7
    },
    "dof": {
     "fstop": 8,
     "focus": "subject",
     "near": 0.5,
-    "expo": 1
+    "expo": 0.9
+   },
+   "read": {
+    "fill": 0.3,
+    "rim": 0.4,
+    "side": 1
    },
    "frame": {
-    "h": 7.6,
+    "h": 3,
     "point": true,
     "fill": true,
-    "frac": 1.607,
-    "fracDesign": 0.836,
-    "inFrame": 0.622,
-    "cx": 0.004,
-    "cy": 0.113,
+    "side": 0,
+    "sideLanded": 0,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 1.173,
+    "fracDesign": 0.649,
+    "inFrame": 0.849,
+    "cx": 0.013,
+    "cy": 0.18,
     "floor": 0.045,
-    "crownPitch": 26,
+    "crownPitch": 22.2,
     "crownPitchMin": null,
-    "dist": 8.2,
-    "bearing": -92,
+    "dist": 5.45,
+    "bearing": -80,
     "comp": [
-     0,
-     0.06
+     0.05,
+     0.05
     ],
-    "camY": 2.6,
+    "camY": 0.95,
     "follow": false,
     "anchor": [
-     -0.093,
-     2.8,
-     0.55
+     -0.651,
+     1.65,
+     0.77
     ],
-    "solved": "swung -12deg x1"
+    "solved": "hint"
    },
    "flags": {
     "intro": false,
@@ -3089,13 +3558,22 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.5
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1.1,
+    "side": -1
    },
    "frame": {
     "h": 1.5,
     "point": true,
     "fill": false,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.425,
     "fracDesign": 0.34,
     "inFrame": 1,
@@ -3158,13 +3636,22 @@
    "dof": {
     "fstop": 2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 0.5
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1.1,
+    "side": -1
    },
    "frame": {
     "h": 1.1,
     "point": true,
     "fill": false,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.354,
     "fracDesign": 0.299,
     "inFrame": 1,
@@ -3208,46 +3695,72 @@
    "over": null,
    "fg": null,
    "pos": [
-    6.105,
-    1.45,
-    4.318
+    5.155,
+    0.95,
+    4.453
    ],
    "lookAt": [
-    0.211,
-    2.38,
-    5.505
+    0.068,
+    2.307,
+    4.682
    ],
-   "fov": 34,
+   "fov": 40,
    "move": {
     "k": "handheld",
-    "amp": 0.014,
-    "dur": 9
+    "amp": 0.02,
+    "dur": 9,
+    "at": 0.3,
+    "pre": 0.16,
+    "decay": 1.1
    },
    "dof": {
     "fstop": 2.2,
     "focus": "subject",
     "near": 0.85,
-    "expo": 1
+    "rack": {
+     "from": [
+      0.168,
+      2.417,
+      5.16
+     ],
+     "to": [
+      2.656,
+      1.909,
+      3.907
+     ],
+     "at": 0.12,
+     "dur": 0.3
+    }
+   },
+   "read": {
+    "fill": 1.15,
+    "rim": 1.25,
+    "side": -1
    },
    "frame": {
     "h": 1.1,
     "point": true,
     "fill": false,
-    "frac": 0.352,
-    "fracDesign": 0.296,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.365,
+    "fracDesign": 0.288,
     "inFrame": 1,
-    "cx": 0.097,
-    "cy": 0.054,
+    "cx": -0.173,
+    "cy": 0.095,
     "floor": 0.18,
-    "crownPitch": 14.2,
+    "crownPitch": 21.8,
     "crownPitchMin": null,
-    "dist": 6.07,
+    "dist": 5.25,
     "bearing": 98.1,
     "comp": [
-     0.11,
-     0.02
+     -0.15,
+     0.06
     ],
-    "camY": 1.45,
+    "camY": 0.95,
     "follow": false,
     "anchor": [
      0.168,
@@ -3293,13 +3806,22 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 7,
     "point": false,
     "fill": false,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.766,
     "fracDesign": 0.7,
     "inFrame": 1,
@@ -3342,53 +3864,65 @@
    "over": null,
    "fg": null,
    "pos": [
-    -1.183,
-    1.3,
-    -2.959
+    -1.005,
+    1.45,
+    4.917
    ],
    "lookAt": [
-    4.746,
-    4.901,
-    4.338
+    5.119,
+    4.871,
+    3.265
    ],
    "fov": 52,
    "move": {
     "k": "handheld",
-    "amp": 0.034,
-    "dur": 11
+    "amp": 0.04,
+    "dur": 11,
+    "at": 1.15,
+    "pre": 0.14,
+    "decay": 3
    },
    "dof": {
     "fstop": 2.2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.2,
+    "rim": 1.3,
+    "side": 1
    },
    "frame": {
     "h": 7,
     "point": false,
-    "fill": false,
-    "frac": 0.823,
-    "fracDesign": 0.991,
-    "inFrame": 1,
-    "cx": -0.098,
-    "cy": 0.039,
+    "fill": true,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 1.148,
+    "fracDesign": 1,
+    "inFrame": 0.871,
+    "cx": 0.11,
+    "cy": -0.042,
     "floor": 0.18,
-    "crownPitch": 36.7,
+    "crownPitch": 47.2,
     "crownPitchMin": null,
-    "dist": 10.05,
-    "bearing": -136.8,
+    "dist": 7.18,
+    "bearing": -80.8,
     "comp": [
-     -0.08,
+     0.11,
      -0.02
     ],
-    "camY": 1.3,
+    "camY": 1.45,
     "follow": false,
     "anchor": [
      5.256,
      4.809,
      3.907
     ],
-    "solved": "swung -48deg x0.6 + backed off"
+    "solved": "swung -48deg x0.76"
    },
    "flags": {
     "intro": false,
@@ -3432,13 +3966,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 4.6,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.71,
     "fracDesign": 0.547,
     "inFrame": 1,
@@ -3505,13 +4048,22 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": 1
    },
    "frame": {
     "h": 3.2,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.53,
     "fracDesign": 0.44,
     "inFrame": 1,
@@ -3559,9 +4111,9 @@
     3.775
    ],
    "lookAt": [
-    5.175,
+    5.202,
     5.005,
-    4.964
+    2.848
    ],
    "fov": 50,
    "move": {
@@ -3573,18 +4125,27 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 7,
     "point": false,
     "fill": false,
-    "frac": 0.774,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.772,
     "fracDesign": 0.676,
     "inFrame": 1,
-    "cx": -0.143,
-    "cy": -0.011,
+    "cx": 0.148,
+    "cy": -0.013,
     "floor": 0.42,
     "crownPitch": 34.1,
     "crownPitchMin": 21,
@@ -3646,13 +4207,22 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": 1
    },
    "frame": {
     "h": 3.2,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.558,
     "fracDesign": 0.46,
     "inFrame": 1,
@@ -3719,13 +4289,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 4.6,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.676,
     "fracDesign": 0.526,
     "inFrame": 1,
@@ -3763,26 +4342,21 @@
    "class": "ACTION",
    "speaker": null,
    "subject": {
-    "m": [
-     352,
-     430
-    ],
-    "h": 4.6,
-    "y": 2.2
+    "a": "poly-seat"
    },
    "over": null,
    "fg": null,
    "pos": [
-    4.427,
+    -10.504,
     1.58,
-    4.051
+    -1.804
    ],
    "lookAt": [
-    -7.922,
-    2.115,
-    -2.244
+    2.987,
+    3.402,
+    4.669
    ],
-   "fov": 34,
+   "fov": 36.5,
    "move": {
     "k": "push",
     "cms": 10,
@@ -3792,35 +4366,44 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.8,
+    "rim": 1.8,
+    "side": 1
    },
    "frame": {
-    "h": 4.6,
-    "point": true,
+    "h": 7,
+    "point": false,
     "fill": false,
-    "frac": 0.771,
-    "fracDesign": 0.543,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": true,
+    "frac": 0.87,
+    "fracDesign": 0.76,
     "inFrame": 1,
-    "cx": -0.061,
-    "cy": 0.062,
+    "cx": 0.113,
+    "cy": 0.055,
     "floor": 0.17,
-    "crownPitch": 11.9,
+    "crownPitch": 19.9,
     "crownPitchMin": null,
-    "dist": 13.86,
-    "bearing": 65.7,
+    "dist": 15.06,
+    "bearing": -118.5,
     "comp": [
-     -0.09,
+     0.09,
      0.02
     ],
     "camY": 1.58,
     "follow": false,
     "anchor": [
-     -8.186,
-     2.2,
-     -1.651
+     2.613,
+     3.5,
+     5.331
     ],
-    "solved": "swung 32deg x0.92"
+    "solved": "UPSTAGE swung -56deg x0.6 + widened"
    },
    "flags": {
     "intro": false,
@@ -3841,45 +4424,54 @@
    "over": null,
    "fg": null,
    "pos": [
-    -8.902,
+    0.26,
     1.45,
-    1.497
+    4.72
    ],
    "lookAt": [
-    0.09,
-    3.403,
-    5.924
+    0.568,
+    3.508,
+    5.033
    ],
    "fov": 52,
    "move": {
     "k": "push",
-    "cms": 4,
+    "cms": 3.2,
     "dur": 10,
-    "m": 0.4
+    "m": 0.32
    },
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 7,
     "point": false,
     "fill": false,
-    "frac": 0.898,
-    "fracDesign": 0.705,
-    "inFrame": 1,
-    "cx": -0.093,
-    "cy": 0.052,
+    "side": 1,
+    "sideLanded": 0,
+    "stationLegal": true,
+    "stationSees": true,
+    "liveAnchor": true,
+    "frac": 9,
+    "fracDesign": 3.427,
+    "inFrame": 0,
+    "cx": 0,
+    "cy": 0,
     "floor": 0.42,
-    "crownPitch": 29.1,
+    "crownPitch": 85.6,
     "crownPitchMin": 21,
-    "dist": 10.18,
-    "bearing": -111.4,
+    "dist": 2.09,
+    "bearing": -163.8,
     "comp": [
-     0.1,
-     0.02
+     0.12,
+     -0.04
     ],
     "camY": 1.45,
     "follow": false,
@@ -3888,7 +4480,7 @@
      3.5,
      5.13
     ],
-    "solved": "UPSTAGE swung -56deg x1"
+    "solved": "AUTHORED"
    },
    "flags": {
     "intro": false,
@@ -3905,63 +4497,72 @@
    "speaker": null,
    "subject": {
     "m": [
-     720,
-     450
+     348,
+     332
     ],
     "h": 9,
-    "y": 3.4
+    "y": 2.6
    },
    "over": null,
    "fg": null,
    "pos": [
-    -6.768,
-    3.6,
-    -0.8
+    1.6,
+    1.8,
+    3.4
    ],
    "lookAt": [
-    0.364,
-    3.123,
-    -0.551
+    -8.651,
+    2.501,
+    -6.7
    ],
-   "fov": 58,
+   "fov": 38,
    "move": {
     "k": "crane",
-    "dy": 1.6,
+    "dy": 1.1,
     "dz": 0.8,
-    "dur": 7
+    "dur": 8
    },
    "dof": {
     "fstop": 8,
     "focus": "subject",
-    "near": 0.5,
-    "expo": 1
+    "near": 0.5
+   },
+   "read": {
+    "fill": 0.35,
+    "rim": 0.75,
+    "side": 1
    },
    "frame": {
     "h": 9,
     "point": true,
     "fill": true,
-    "frac": 3.288,
-    "fracDesign": 1.136,
-    "inFrame": 0.15,
-    "cx": -0.064,
-    "cy": 0.371,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": true,
+    "stationSees": false,
+    "liveAnchor": false,
+    "frac": 1.622,
+    "fracDesign": 0.908,
+    "inFrame": 0.616,
+    "cx": 0.063,
+    "cy": 0.104,
     "floor": 0.045,
-    "crownPitch": 31,
+    "crownPitch": 20.2,
     "crownPitchMin": null,
-    "dist": 7.15,
-    "bearing": -92,
+    "dist": 14.4,
+    "bearing": 43.4,
     "comp": [
-     0,
-     0.07
+     0.06,
+     0.02
     ],
-    "camY": 3.6,
+    "camY": 1.8,
     "follow": false,
     "anchor": [
-     0.372,
-     3.4,
-     -0.55
+     -8.279,
+     2.6,
+     -7.044
     ],
-    "solved": "swung -32deg x0.76"
+    "solved": "AUTHORED (sight line blocked)"
    },
    "flags": {
     "intro": false,
@@ -3987,9 +4588,9 @@
     4.715
    ],
    "lookAt": [
-    3.559,
+    3.586,
     0.818,
-    4.197
+    4.828
    ],
    "fov": 27,
    "move": {
@@ -4001,18 +4602,27 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": -1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
-    "frac": 0.871,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.865,
     "fracDesign": 0.755,
     "inFrame": 1,
-    "cx": 0.169,
-    "cy": 0.02,
+    "cx": -0.187,
+    "cy": 0.024,
     "floor": 0.3,
     "crownPitch": 2,
     "crownPitchMin": null,
@@ -4074,13 +4684,22 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 1.6,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.555,
     "fracDesign": 0.419,
     "inFrame": 1,
@@ -4146,13 +4765,22 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 1.6,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.556,
     "fracDesign": 0.459,
     "inFrame": 1,
@@ -4215,13 +4843,22 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1.1,
+    "side": -1
    },
    "frame": {
     "h": 1.15,
     "point": true,
     "fill": false,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.518,
     "fracDesign": 0.404,
     "inFrame": 1,
@@ -4288,13 +4925,22 @@
    "dof": {
     "fstop": 5.6,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 4.4,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": 0,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.872,
     "fracDesign": 0.686,
     "inFrame": 1,
@@ -4342,9 +4988,9 @@
     4.71
    ],
    "lookAt": [
-    -8.009,
+    -8.711,
     1.95,
-    -0.127
+    1.216
    ],
    "fov": 48,
    "move": {
@@ -4356,18 +5002,27 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.638,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.633,
     "fracDesign": 0.499,
     "inFrame": 1,
-    "cx": -0.112,
-    "cy": 0.054,
+    "cx": 0.13,
+    "cy": 0.051,
     "floor": 0.42,
     "crownPitch": 21.5,
     "crownPitchMin": 21,
@@ -4400,26 +5055,21 @@
    "class": "ACTION",
    "speaker": null,
    "subject": {
-    "m": [
-     395,
-     438
-    ],
-    "h": 1.3,
-    "y": 0.65
+    "a": "ram-great"
    },
    "over": null,
    "fg": null,
    "pos": [
-    -5.254,
-    1.05,
-    4.046
+    1.189,
+    0.58,
+    2.419
    ],
    "lookAt": [
-    -6.851,
-    0.618,
-    -1.331
+    1.818,
+    0.77,
+    -0.734
    ],
-   "fov": 32,
+   "fov": 40,
    "move": {
     "k": "push",
     "cms": 5,
@@ -4430,34 +5080,57 @@
     "fstop": 2.5,
     "focus": "subject",
     "near": 0.85,
-    "expo": 1
+    "rack": {
+     "from": [
+      -8.349,
+      -0.12,
+      0.55
+     ],
+     "to": [
+      1.542,
+      0,
+      -0.767
+     ],
+     "at": 2.2,
+     "dur": 0.9
+    }
+   },
+   "read": {
+    "fill": 2.4,
+    "rim": 2.2,
+    "side": -1
    },
    "frame": {
-    "h": 1.3,
-    "point": true,
+    "h": 1.4,
+    "point": false,
     "fill": false,
-    "frac": 0.526,
-    "fracDesign": 0.404,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.818,
+    "fracDesign": 0.6,
     "inFrame": 1,
-    "cx": -0.174,
-    "cy": -0.02,
+    "cx": -0.155,
+    "cy": -0.071,
     "floor": 0.17,
-    "crownPitch": 2.6,
+    "crownPitch": 14.3,
     "crownPitchMin": null,
-    "dist": 5.61,
-    "bearing": 20.2,
+    "dist": 3.21,
+    "bearing": -6.3,
     "comp": [
-     -0.13,
-     0.02
+     -0.14,
+     -0.06
     ],
-    "camY": 1.05,
-    "follow": false,
+    "camY": 0.58,
+    "follow": true,
     "anchor": [
-     -7.186,
-     0.65,
-     -1.211
+     1.542,
+     0.7,
+     -0.767
     ],
-    "solved": "swung 4deg x0.84"
+    "solved": "swung 36deg x1"
    },
    "flags": {
     "intro": false,
@@ -4483,9 +5156,9 @@
     4.796
    ],
    "lookAt": [
-    -7.977,
+    -8.741,
     1.956,
-    -0.124
+    1.212
    ],
    "fov": 47,
    "move": {
@@ -4497,18 +5170,27 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.687,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.682,
     "fracDesign": 0.499,
     "inFrame": 1,
-    "cx": -0.123,
-    "cy": 0.058,
+    "cx": 0.141,
+    "cy": 0.055,
     "floor": 0.42,
     "crownPitch": 22.4,
     "crownPitchMin": 21,
@@ -4551,9 +5233,9 @@
     4.703
    ],
    "lookAt": [
-    -8.025,
+    -8.693,
     1.956,
-    -0.076
+    1.165
    ],
    "fov": 46,
    "move": {
@@ -4565,25 +5247,34 @@
    "dof": {
     "fstop": 2.8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.681,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.676,
     "fracDesign": 0.498,
     "inFrame": 1,
-    "cx": -0.111,
-    "cy": 0.056,
+    "cx": 0.129,
+    "cy": 0.053,
     "floor": 0.42,
     "crownPitch": 21.9,
     "crownPitchMin": 21,
     "dist": 8.87,
     "bearing": 61.7,
     "comp": [
-     -0.11,
+     0.11,
      0.02
     ],
     "camY": 1.24,
@@ -4619,9 +5310,9 @@
     5.007
    ],
    "lookAt": [
-    -8.012,
+    -8.696,
     1.992,
-    -0.021
+    1.115
    ],
    "fov": 48,
    "move": {
@@ -4633,18 +5324,27 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 4.3,
     "point": false,
     "fill": false,
-    "frac": 0.659,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.655,
     "fracDesign": 0.518,
     "inFrame": 1,
-    "cx": -0.102,
-    "cy": 0.044,
+    "cx": 0.117,
+    "cy": 0.042,
     "floor": 0.42,
     "crownPitch": 22.2,
     "crownPitchMin": 21,
@@ -4700,13 +5400,22 @@
    "dof": {
     "fstop": 3.2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": -1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.47,
     "fracDesign": 0.438,
     "inFrame": 1,
@@ -4773,13 +5482,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.8,
+    "rim": 0.85,
+    "side": 1
    },
    "frame": {
     "h": 3.4,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.48,
     "fracDesign": 0.391,
     "inFrame": 1,
@@ -4842,13 +5560,22 @@
    "dof": {
     "fstop": 5.6,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1.1,
+    "side": 1
    },
    "frame": {
     "h": 6.4,
     "point": true,
     "fill": false,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.39,
     "fracDesign": 0.267,
     "inFrame": 1,
@@ -4891,16 +5618,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    -16.624,
-    2.9,
-    5.936
+    -20.349,
+    2.6,
+    1.678
    ],
    "lookAt": [
-    -13.602,
-    1.375,
-    0.391
+    -13.795,
+    1.378,
+    1.082
    ],
-   "fov": 26,
+   "fov": 30,
    "move": {
     "k": "push",
     "cms": 2.8,
@@ -4910,35 +5637,44 @@
    "dof": {
     "fstop": 2.5,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": -1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
-    "frac": 0.677,
-    "fracDesign": 0.585,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.553,
+    "fracDesign": 0.492,
     "inFrame": 1,
-    "cx": -0.179,
-    "cy": 0.017,
+    "cx": -0.327,
+    "cy": 0.008,
     "floor": 0.3,
-    "crownPitch": -5.2,
+    "crownPitch": -2.4,
     "crownPitchMin": null,
-    "dist": 6.48,
-    "bearing": -24.7,
+    "dist": 6.63,
+    "bearing": -76.9,
     "comp": [
-     0.17,
-     0.05
+     -0.3,
+     0.04
     ],
-    "camY": 2.9,
+    "camY": 2.6,
     "follow": false,
     "anchor": [
      -13.989,
      1.448,
      0.195
     ],
-    "solved": "swung 20deg x1"
+    "solved": "swung -4deg x1"
    },
    "flags": {
     "intro": false,
@@ -4993,13 +5729,22 @@
    "dof": {
     "fstop": 8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 6,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.54,
     "fracDesign": 0.445,
     "inFrame": 1,
@@ -5066,13 +5811,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 4.2,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.526,
     "fracDesign": 0.419,
     "inFrame": 1,
@@ -5134,13 +5888,22 @@
    "dof": {
     "fstop": 2.2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": -1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.652,
     "fracDesign": 0.569,
     "inFrame": 1,
@@ -5203,13 +5966,22 @@
    "dof": {
     "fstop": 5.6,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1.1,
+    "side": 1
    },
    "frame": {
     "h": 6.4,
     "point": true,
     "fill": false,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.425,
     "fracDesign": 0.286,
     "inFrame": 1,
@@ -5257,9 +6029,9 @@
     4.454
    ],
    "lookAt": [
-    -32.096,
+    -31.717,
     1.383,
-    1.804
+    1.113
    ],
    "fov": 24,
    "move": {
@@ -5271,25 +6043,34 @@
    "dof": {
     "fstop": 2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": -1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
-    "frac": 0.738,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.741,
     "fracDesign": 0.643,
     "inFrame": 1,
-    "cx": 0.19,
-    "cy": 0.015,
+    "cx": -0.179,
+    "cy": 0.013,
     "floor": 0.3,
     "crownPitch": -5.3,
     "crownPitchMin": null,
     "dist": 6.4,
     "bearing": 61.2,
     "comp": [
-     0.17,
+     -0.17,
      0.05
     ],
     "camY": 2.9,
@@ -5339,13 +6120,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 7,
     "point": false,
     "fill": false,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.487,
     "fracDesign": 0.442,
     "inFrame": 1,
@@ -5407,13 +6197,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 7,
     "point": false,
     "fill": false,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.546,
     "fracDesign": 0.486,
     "inFrame": 1,
@@ -5425,7 +6224,7 @@
     "dist": 51.26,
     "bearing": -79.6,
     "comp": [
-     -0.13,
+     0.13,
      -0.06
     ],
     "camY": 3,
@@ -5461,9 +6260,9 @@
     5.43
    ],
    "lookAt": [
-    -31.713,
+    -31.222,
     1.439,
-    2.039
+    1.363
    ],
    "fov": 25,
    "move": {
@@ -5475,25 +6274,34 @@
    "dof": {
     "fstop": 2.2,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1,
+    "side": -1
    },
    "frame": {
     "h": 1.75,
     "point": false,
     "fill": false,
-    "frac": 0.698,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.699,
     "fracDesign": 0.606,
     "inFrame": 1,
-    "cx": 0.187,
-    "cy": 0.014,
+    "cx": -0.182,
+    "cy": 0.013,
     "floor": 0.3,
     "crownPitch": -4.6,
     "crownPitchMin": null,
     "dist": 6.52,
     "bearing": 54,
     "comp": [
-     0.17,
+     -0.17,
      0.05
     ],
     "camY": 2.9,
@@ -5543,13 +6351,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1.05,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 7,
     "point": false,
     "fill": false,
+    "side": 1,
+    "sideLanded": 1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.566,
     "fracDesign": 0.521,
     "inFrame": 1,
@@ -5626,13 +6443,22 @@
    "dof": {
     "fstop": 8,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 1,
+    "rim": 1.15,
+    "side": 1
    },
    "frame": {
     "h": 6,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.489,
     "fracDesign": 0.408,
     "inFrame": 1,
@@ -5699,13 +6525,22 @@
    "dof": {
     "fstop": 4,
     "focus": "subject",
-    "near": 0.85,
-    "expo": 1
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
    },
    "frame": {
     "h": 4.2,
     "point": true,
     "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
     "frac": 0.499,
     "fracDesign": 0.399,
     "inFrame": 1,
@@ -5744,8 +6579,8 @@
    "speaker": null,
    "subject": {
     "m": [
-     600,
-     430
+     205,
+     489
     ],
     "h": 8,
     "y": 2.6
@@ -5753,54 +6588,63 @@
    "over": null,
    "fg": null,
    "pos": [
-    -20.946,
-    7.5,
-    25.217
+    -49,
+    9,
+    20
    ],
    "lookAt": [
-    -7.101,
-    2.015,
-    -5.768
+    -33.53,
+    5.594,
+    5.154
    ],
-   "fov": 38,
+   "fov": 54,
    "move": {
     "k": "crane",
-    "dy": 5,
-    "dz": 4,
+    "dy": 1.8,
+    "dz": 1.5,
     "dur": 10
    },
    "dof": {
     "fstop": 11,
     "focus": "subject",
-    "near": 0.4,
-    "expo": 1
+    "near": 0.4
+   },
+   "read": {
+    "fill": 0.3,
+    "rim": 0.4,
+    "side": -1
    },
    "frame": {
     "h": 8,
     "point": true,
     "fill": true,
-    "frac": 0.406,
-    "fracDesign": 0.338,
-    "inFrame": 1,
-    "cx": -0.046,
-    "cy": -0.005,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": true,
+    "stationSees": true,
+    "liveAnchor": false,
+    "frac": 0.611,
+    "fracDesign": 0.381,
+    "inFrame": 0.915,
+    "cx": -0.34,
+    "cy": -0.494,
     "floor": 0.045,
-    "crownPitch": -1.5,
+    "crownPitch": -7,
     "crownPitchMin": null,
-    "dist": 34.35,
-    "bearing": -22,
+    "dist": 20.6,
+    "bearing": -29.7,
     "comp": [
-     -0.06,
-     0.05
+     -0.34,
+     -0.3
     ],
-    "camY": 7.5,
+    "camY": 9,
     "follow": true,
     "anchor": [
-     -8.189,
+     -39.291,
      2.6,
-     -6.299
+     2.992
     ],
-    "solved": "hint"
+    "solved": "AUTHORED"
    },
    "flags": {
     "intro": false,
@@ -5812,10 +6656,5 @@
  },
  "warnings": [
   "ody-ii-11-sword: gate target sword not live at bake time"
- ],
- "exposure": {
-  "base": 1.38,
-  "law": "dof.expo is a stop ON the book's own exposure; chosen per shot so that <= 0.6% of the frame clips (tools/ody/cine_expose.mjs)",
-  "clipMax": 0.006
- }
+ ]
 }

@@ -1528,9 +1528,20 @@ export class Director {
   /** THE SHAKE + THE POV — the two moments the director takes the camera back
    *  from the storyteller. Applied after cine.step so the shot table still
    *  owns every other frame. Returns true if the camera was overridden. */
-  driveCamera(cam, simT, aimLive = null) {
+  /**
+   * @param {boolean} shotOwned  a storyteller shot is on this unit, so the
+   *   FRAME IS THE SHOT TABLE'S. The director keeps only the two moments the
+   *   story genuinely takes the camera back — the blinding shake and the
+   *   under-fleece POV — and its own legacy set-back (`station`/`swing`, from
+   *   the days of the one orthographic god-view) is not applied on top. Two
+   *   authors on one camera is how the blinding ended up with the lens three
+   *   and a half metres behind its authored station and a metre under the cave
+   *   floor (measured: campos [0.4,1.45,4.6] -> [-0.86,-1.73,5.64], the giant
+   *   at 2.9x frame height with 11% of him in shot).
+   */
+  driveCamera(cam, simT, aimLive = null, shotOwned = false) {
     let touched = false;
-    if ((this.swing || this.station > 0) && !this.pov) {
+    if ((this.swing || this.station > 0) && !this.pov && !shotOwned) {
       if (this.swing) {
         cam.position.add(this.swing.offset);
         /* re-aim at the storyteller's OWN LIVE ANCHOR, never at a point frozen
