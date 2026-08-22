@@ -967,3 +967,25 @@ a unit, and are worth recording because none of them is about cutting.
    the aim cache — the pixel the reader's finger and ring both ride — outlived
    the camera it was measured against. `cine.step()` now returns how many cuts
    it took and `main3d` drops the aim on any of them.
+
+## R2.7 · THE ROUND-2 JUDGMENT ARTIFACTS
+
+`shots/directors-cut-r2/`, recorded through the book's own fixed-step clock at
+the words-based reading pace, every unit answered by the verb it declares.
+
+| scene | file | length | shots | of which sub-cuts | setups | **ASL** | r1 ASL |
+|---|---|---:|---:|---:|---:|---:|---:|
+| I · THE TALE BEGUN | `beat1-the-tale-begun.mp4` | 92.3 s | 24 | 10 | 13 | **3.84 s** | 7.58 s |
+| II · THE CAVE | `beat2-the-cave.mp4` | 75.5 s | 25 | 10 | 16 | **3.02 s** | 6.74 s |
+| III · NOBODY | `beat3-nobody.mp4` | 79.0 s | 27 | 12 | 18 | **2.93 s** | 6.28 s |
+| IV · THE STAKE | `beat4-the-stake.mp4` | 51.8 s | 24 | 10 | 16 | **2.16 s** | 4.48 s |
+| V · THE RAMS | `beat5-the-rams.mp4` | 74.9 s | 24 | 10 | 13 | **3.12 s** | 5.95 s |
+| VI · THE TAUNT | `beat6-the-taunt.mp4` | 76.8 s | 26 | 12 | 12 | **2.96 s** | 5.47 s |
+
+Every recording clean — zero console errors, every gate answered by its own
+verb, the two holds held, the five dissolves the only thing that is not a
+straight cut. Each shot count includes the one frame past the scene, into the
+first shot of the next, so the page turn is in shot too.
+
+The whole book: **81 units, 146 shots, 65 of them taken inside a unit.** Round
+one's six scenes ran 13-15 shots each on a 6.96-second pulse.
