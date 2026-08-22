@@ -1,7 +1,7 @@
 {
  "lane": "viewing-r2",
- "when": "2026-08-22T20:11:53.454Z",
- "base": "http://127.0.0.1:58871",
+ "when": "2026-08-22T21:39:05.490Z",
+ "base": "http://127.0.0.1:58555",
  "scale": {
   "rows": [
    {
@@ -510,12 +510,12 @@
     "set": "shore",
     "beat": 1,
     "census": {
-     "crew": 0,
+     "crew": 3,
      "ulysses": 1,
      "giant": 0,
      "rams": 0,
      "sheep": 0,
-     "humanoids": 1,
+     "humanoids": 4,
      "cap": 3,
      "meals": 0,
      "headcount": 12
@@ -565,7 +565,7 @@
     "id": "ody-i-08-cave",
     "verb": "click",
     "how": "click",
-    "t": 60.5,
+    "t": 54.75,
     "next": "ody-i-09-monster",
     "set": "shore",
     "beat": 1,
@@ -585,7 +585,7 @@
     "id": "ody-i-09-monster",
     "verb": "click",
     "how": "click",
-    "t": 65.4,
+    "t": 59.65,
     "next": "ody-i-10-wineskin",
     "set": "shore",
     "beat": 1,
@@ -605,7 +605,7 @@
     "id": "ody-i-10-wineskin",
     "verb": "click",
     "how": "click",
-    "t": 72.4,
+    "t": 66.65,
     "next": "ody-i-11-twentyone",
     "set": "shore",
     "beat": 1,
@@ -625,7 +625,7 @@
     "id": "ody-i-11-twentyone",
     "verb": "click",
     "how": "click",
-    "t": 79.4,
+    "t": 73.65,
     "next": "ody-i-12-misgave",
     "set": "shore",
     "beat": 1,
@@ -645,7 +645,7 @@
     "id": "ody-i-12-misgave",
     "verb": "click",
     "how": "click",
-    "t": 84.87,
+    "t": 79.12,
     "next": "ody-ii-00-head",
     "set": "shore",
     "beat": 1,
@@ -665,7 +665,7 @@
     "id": "ody-ii-00-head",
     "verb": "click",
     "how": "click",
-    "t": 91.87,
+    "t": 86.12,
     "next": "ody-ii-01-beg",
     "set": "cave",
     "beat": 2,
@@ -685,7 +685,7 @@
     "id": "ody-ii-01-beg",
     "verb": "click",
     "how": "click",
-    "t": 94.07,
+    "t": 88.32,
     "next": "ody-ii-02-present",
     "set": "cave",
     "beat": 2,
@@ -705,7 +705,7 @@
     "id": "ody-ii-02-present",
     "verb": "click",
     "how": "click",
-    "t": 100.97,
+    "t": 95.22,
     "next": "ody-ii-03-return",
     "set": "cave",
     "beat": 2,
@@ -725,7 +725,7 @@
     "id": "ody-ii-03-return",
     "verb": "click",
     "how": "click",
-    "t": 107.97,
+    "t": 102.22,
     "next": "ody-ii-04-boulder",
     "set": "cave",
     "beat": 2,
@@ -745,7 +745,7 @@
     "id": "ody-ii-04-boulder",
     "verb": "click",
     "how": "click",
-    "t": 114.97,
+    "t": 109.22,
     "next": "ody-ii-05-strangers",
     "set": "cave",
     "beat": 2,
@@ -765,7 +765,7 @@
     "id": "ody-ii-05-strangers",
     "verb": "click",
     "how": "click",
-    "t": 119.02,
+    "t": 113.27,
     "next": "ody-ii-06-plea",
     "set": "cave",
     "beat": 2,
@@ -785,7 +785,7 @@
     "id": "ody-ii-06-plea",
     "verb": "click",
     "how": "click",
-    "t": 124.35,
+    "t": 118.6,
     "next": "ody-ii-07-pitiless",
     "set": "cave",
     "beat": 2,
@@ -805,7 +805,7 @@
     "id": "ody-ii-07-pitiless",
     "verb": "click",
     "how": "click",
-    "t": 131.35,
+    "t": 125.6,
     "next": "ody-ii-08-shipfast",
     "set": "cave",
     "beat": 2,
@@ -825,7 +825,7 @@
     "id": "ody-ii-08-shipfast",
     "verb": "click",
     "how": "click",
-    "t": 138.35,
+    "t": 132.6,
     "next": "ody-ii-09-shiplie",
     "set": "cave",
     "beat": 2,
@@ -845,7 +845,7 @@
     "id": "ody-ii-09-shiplie",
     "verb": "click",
     "how": "click",
-    "t": 143.25,
+    "t": 137.5,
     "next": "ody-ii-10-firstmeal",
     "set": "cave",
     "beat": 2,
@@ -865,7 +865,7 @@
     "id": "ody-ii-10-firstmeal",
     "verb": "click",
     "how": "click",
-    "t": 150,
+    "t": 144.25,
     "next": "ody-ii-11-sword",
     "set": "cave",
     "beat": 2,
@@ -885,7 +885,7 @@
     "id": "ody-ii-11-sword",
     "verb": "target",
     "how": "target",
-    "t": 155.33,
+    "t": 149.58,
     "next": "ody-ii-12-shiftstone",
     "set": "cave",
     "beat": 2,
@@ -905,7 +905,7 @@
     "id": "ody-ii-12-shiftstone",
     "verb": "click",
     "how": "click",
-    "t": 155.33,
+    "t": 149.58,
     "next": "ody-ii-13-tillmorning",
     "set": "cave",
     "beat": 2,
@@ -925,7 +925,7 @@
     "id": "ody-ii-13-tillmorning",
     "verb": "click",
     "how": "click",
-    "t": 160.95,
+    "t": 155.2,
     "next": "ody-iii-00-head",
     "set": "cave",
     "beat": 2,
@@ -945,7 +945,7 @@
     "id": "ody-iii-00-head",
     "verb": "click",
     "how": "click",
-    "t": 163.55,
+    "t": 157.8,
     "next": "ody-iii-01-morningmeal",
     "set": "cave",
     "beat": 3,
@@ -965,7 +965,7 @@
     "id": "ody-iii-01-morningmeal",
     "verb": "click",
     "how": "click",
-    "t": 165.75,
+    "t": 160,
     "next": "ody-iii-02-quiverlid",
     "set": "cave",
     "beat": 3,
@@ -985,7 +985,7 @@
     "id": "ody-iii-02-quiverlid",
     "verb": "click",
     "how": "click",
-    "t": 170.8,
+    "t": 165.05,
     "next": "ody-iii-03-scheme",
     "set": "cave",
     "beat": 3,
@@ -1005,7 +1005,7 @@
     "id": "ody-iii-03-scheme",
     "verb": "click",
     "how": "click",
-    "t": 174.98,
+    "t": 169.23,
     "next": "ody-iii-04-club",
     "set": "cave",
     "beat": 3,
@@ -1025,7 +1025,7 @@
     "id": "ody-iii-04-club",
     "verb": "click",
     "how": "click",
-    "t": 178.32,
+    "t": 172.57,
     "next": "ody-iii-05-lots",
     "set": "cave",
     "beat": 3,
@@ -1045,7 +1045,7 @@
     "id": "ody-iii-05-lots",
     "verb": "click",
     "how": "click",
-    "t": 185.32,
+    "t": 179.57,
     "next": "ody-iii-06-return",
     "set": "cave",
     "beat": 3,
@@ -1065,7 +1065,7 @@
     "id": "ody-iii-06-return",
     "verb": "click",
     "how": "click",
-    "t": 192.32,
+    "t": 186.57,
     "next": "ody-iii-07-suppertwo",
     "set": "cave",
     "beat": 3,
@@ -1085,7 +1085,7 @@
     "id": "ody-iii-07-suppertwo",
     "verb": "click",
     "how": "click",
-    "t": 199.32,
+    "t": 193.57,
     "next": "ody-iii-08-lookhere",
     "set": "cave",
     "beat": 3,
@@ -1105,7 +1105,7 @@
     "id": "ody-iii-08-lookhere",
     "verb": "release",
     "how": "release",
-    "t": 204.5,
+    "t": 198.75,
     "next": "ody-iii-09-besokind",
     "set": "cave",
     "beat": 3,
@@ -1125,7 +1125,7 @@
     "id": "ody-iii-09-besokind",
     "verb": "auto",
     "how": "auto",
-    "t": 207.9,
+    "t": 202.15,
     "next": "ody-iii-10-thrice",
     "set": "cave",
     "beat": 3,
@@ -1145,7 +1145,7 @@
     "id": "ody-iii-10-thrice",
     "verb": "auto",
     "how": "auto",
-    "t": 216.9,
+    "t": 211.15,
     "next": "ody-iii-11-noman",
     "set": "cave",
     "beat": 3,
@@ -1165,7 +1165,7 @@
     "id": "ody-iii-11-noman",
     "verb": "click",
     "how": "click",
-    "t": 224.9,
+    "t": 219.15,
     "next": "ody-iii-12-nomanlast",
     "set": "cave",
     "beat": 3,
@@ -1185,7 +1185,7 @@
     "id": "ody-iii-12-nomanlast",
     "verb": "click",
     "how": "click",
-    "t": 231.08,
+    "t": 225.33,
     "next": "ody-iii-13-neck",
     "set": "cave",
     "beat": 3,
@@ -1205,7 +1205,7 @@
     "id": "ody-iii-13-neck",
     "verb": "auto",
     "how": "auto",
-    "t": 235.7,
+    "t": 229.95,
     "next": "ody-iv-00-head",
     "set": "cave",
     "beat": 3,
@@ -1225,7 +1225,7 @@
     "id": "ody-iv-00-head",
     "verb": "auto",
     "how": "auto",
-    "t": 242.2,
+    "t": 236.45,
     "next": "ody-iv-01-embers",
     "set": "cave",
     "beat": 4,
@@ -1245,7 +1245,7 @@
     "id": "ody-iv-01-embers",
     "verb": "hold",
     "how": "hold",
-    "t": 245.7,
+    "t": 239.95,
     "next": "ody-iv-02-glowing",
     "set": "cave",
     "beat": 4,
@@ -1265,7 +1265,7 @@
     "id": "ody-iv-02-glowing",
     "verb": "auto",
     "how": "auto",
-    "t": 248.95,
+    "t": 243.2,
     "next": "ody-iv-03-auger",
     "set": "cave",
     "beat": 4,
@@ -1285,7 +1285,7 @@
     "id": "ody-iv-03-auger",
     "verb": "clock",
     "how": "clock",
-    "t": 252.45,
+    "t": 246.7,
     "next": "ody-iv-04-bore",
     "set": "cave",
     "beat": 4,
@@ -1305,7 +1305,7 @@
     "id": "ody-iv-04-bore",
     "verb": "clock",
     "how": "clock",
-    "t": 255.45,
+    "t": 249.7,
     "next": "ody-iv-05-hiss",
     "set": "cave",
     "beat": 4,
@@ -1325,7 +1325,7 @@
     "id": "ody-iv-05-hiss",
     "verb": "clock",
     "how": "clock",
-    "t": 258.45,
+    "t": 252.7,
     "next": "ody-iv-06-fright",
     "set": "cave",
     "beat": 4,
@@ -1345,7 +1345,7 @@
     "id": "ody-iv-06-fright",
     "verb": "clock",
     "how": "clock",
-    "t": 261.45,
+    "t": 255.7,
     "next": "ody-iv-07-whatails",
     "set": "cave",
     "beat": 4,
@@ -1365,7 +1365,7 @@
     "id": "ody-iv-07-whatails",
     "verb": "click",
     "how": "click",
-    "t": 265.2,
+    "t": 259.45,
     "next": "ody-iv-08-nomankilling",
     "set": "cave",
     "beat": 4,
@@ -1385,7 +1385,7 @@
     "id": "ody-iv-08-nomankilling",
     "verb": "click",
     "how": "click",
-    "t": 272.2,
+    "t": 266.45,
     "next": "ody-iv-09-mustbeill",
     "set": "cave",
     "beat": 4,
@@ -1405,7 +1405,7 @@
     "id": "ody-iv-09-mustbeill",
     "verb": "click",
     "how": "click",
-    "t": 274.95,
+    "t": 269.2,
     "next": "ody-iv-10-wentaway",
     "set": "cave",
     "beat": 4,
@@ -1425,7 +1425,7 @@
     "id": "ody-iv-10-wentaway",
     "verb": "click",
     "how": "click",
-    "t": 280.28,
+    "t": 274.53,
     "next": "ody-iv-11-stone",
     "set": "cave",
     "beat": 4,
@@ -1445,7 +1445,7 @@
     "id": "ody-iv-11-stone",
     "verb": "click",
     "how": "click",
-    "t": 283.33,
+    "t": 277.58,
     "next": "ody-iv-12-doorway",
     "set": "cave",
     "beat": 4,
@@ -1465,7 +1465,7 @@
     "id": "ody-iv-12-doorway",
     "verb": "click",
     "how": "click",
-    "t": 287.95,
+    "t": 282.2,
     "next": "ody-v-00-head",
     "set": "cave",
     "beat": 4,
@@ -1485,7 +1485,7 @@
     "id": "ody-v-00-head",
     "verb": "auto",
     "how": "auto",
-    "t": 293.55,
+    "t": 287.8,
     "next": "ody-v-01-puzzling",
     "set": "cave",
     "beat": 5,
@@ -1505,7 +1505,7 @@
     "id": "ody-v-01-puzzling",
     "verb": "click",
     "how": "click",
-    "t": 297.05,
+    "t": 291.3,
     "next": "ody-v-02-withies",
     "set": "cave",
     "beat": 5,
@@ -1525,7 +1525,7 @@
     "id": "ody-v-02-withies",
     "verb": "click",
     "how": "click",
-    "t": 303.95,
+    "t": 298.2,
     "next": "ody-v-03-threetoaman",
     "set": "cave",
     "beat": 5,
@@ -1545,7 +1545,7 @@
     "id": "ody-v-03-threetoaman",
     "verb": "click",
     "how": "click",
-    "t": 310.95,
+    "t": 305.2,
     "next": "ody-v-04-greatram",
     "set": "cave",
     "beat": 5,
@@ -1565,7 +1565,7 @@
     "id": "ody-v-04-greatram",
     "verb": "target",
     "how": "target",
-    "t": 316,
+    "t": 310.25,
     "next": "ody-v-05-dawn",
     "set": "cave",
     "beat": 5,
@@ -1585,7 +1585,7 @@
     "id": "ody-v-05-dawn",
     "verb": "click",
     "how": "click",
-    "t": 316,
+    "t": 310.25,
     "next": "ody-v-06-feltbacks",
     "set": "cave",
     "beat": 5,
@@ -1605,7 +1605,7 @@
     "id": "ody-v-06-feltbacks",
     "verb": "click",
     "how": "click",
-    "t": 323,
+    "t": 317.25,
     "next": "ody-v-07-lastofall",
     "set": "cave",
     "beat": 5,
@@ -1625,7 +1625,7 @@
     "id": "ody-v-07-lastofall",
     "verb": "click",
     "how": "click",
-    "t": 328.75,
+    "t": 323,
     "next": "ody-v-08-ramspeech1",
     "set": "cave",
     "beat": 5,
@@ -1645,7 +1645,7 @@
     "id": "ody-v-08-ramspeech1",
     "verb": "click",
     "how": "click",
-    "t": 333.65,
+    "t": 327.9,
     "next": "ody-v-09-ramspeech2",
     "set": "cave",
     "beat": 5,
@@ -1665,7 +1665,7 @@
     "id": "ody-v-09-ramspeech2",
     "verb": "click",
     "how": "click",
-    "t": 340.65,
+    "t": 334.9,
     "next": "ody-v-10-ramspeech3",
     "set": "cave",
     "beat": 5,
@@ -1685,7 +1685,7 @@
     "id": "ody-v-10-ramspeech3",
     "verb": "click",
     "how": "click",
-    "t": 347.13,
+    "t": 341.38,
     "next": "ody-v-11-freed",
     "set": "cave",
     "beat": 5,
@@ -1705,7 +1705,7 @@
     "id": "ody-v-11-freed",
     "verb": "click",
     "how": "click",
-    "t": 354.13,
+    "t": 348.38,
     "next": "ody-v-12-aboard",
     "set": "cave",
     "beat": 5,
@@ -1725,7 +1725,7 @@
     "id": "ody-v-12-aboard",
     "verb": "click",
     "how": "click",
-    "t": 359.88,
+    "t": 354.13,
     "next": "ody-vi-01-jeer",
     "set": "cave",
     "beat": 5,
@@ -1745,7 +1745,7 @@
     "id": "ody-vi-01-jeer",
     "verb": "target",
     "how": "target",
-    "t": 365.35,
+    "t": 359.6,
     "next": "ody-vi-02-taunt",
     "set": "sea",
     "beat": 6,
@@ -1765,7 +1765,7 @@
     "id": "ody-vi-02-taunt",
     "verb": "auto",
     "how": "auto",
-    "t": 365.35,
+    "t": 359.6,
     "next": "ody-vi-03-rock1",
     "set": "sea",
     "beat": 6,
@@ -1785,7 +1785,7 @@
     "id": "ody-vi-03-rock1",
     "verb": "clock",
     "how": "clock",
-    "t": 371.6,
+    "t": 365.85,
     "next": "ody-vi-04-twiceasfar",
     "set": "sea",
     "beat": 6,
@@ -1805,7 +1805,7 @@
     "id": "ody-vi-04-twiceasfar",
     "verb": "click",
     "how": "click",
-    "t": 377.35,
+    "t": 371.6,
     "next": "ody-vi-05-menbeg",
     "set": "sea",
     "beat": 6,
@@ -1825,7 +1825,7 @@
     "id": "ody-vi-05-menbeg",
     "verb": "click",
     "how": "click",
-    "t": 382.68,
+    "t": 376.93,
     "next": "ody-vi-06-defy",
     "set": "sea",
     "beat": 6,
@@ -1845,7 +1845,7 @@
     "id": "ody-vi-06-defy",
     "verb": "target",
     "how": "target",
-    "t": 389.68,
+    "t": 383.93,
     "next": "ody-vi-07-myname",
     "set": "sea",
     "beat": 6,
@@ -1865,7 +1865,7 @@
     "id": "ody-vi-07-myname",
     "verb": "release",
     "how": "release",
-    "t": 389.68,
+    "t": 383.93,
     "next": "ody-vi-08-prophecy",
     "set": "sea",
     "beat": 6,
@@ -1885,7 +1885,7 @@
     "id": "ody-vi-08-prophecy",
     "verb": "click",
     "how": "click",
-    "t": 393.08,
+    "t": 387.33,
     "next": "ody-vi-09-fatherson",
     "set": "sea",
     "beat": 6,
@@ -1905,7 +1905,7 @@
     "id": "ody-vi-09-fatherson",
     "verb": "click",
     "how": "click",
-    "t": 400.08,
+    "t": 394.33,
     "next": "ody-vi-10-hades",
     "set": "sea",
     "beat": 6,
@@ -1925,7 +1925,7 @@
     "id": "ody-vi-10-hades",
     "verb": "click",
     "how": "click",
-    "t": 407.08,
+    "t": 401.33,
     "next": "ody-vi-11-curse",
     "set": "sea",
     "beat": 6,
@@ -1945,7 +1945,7 @@
     "id": "ody-vi-11-curse",
     "verb": "click",
     "how": "click",
-    "t": 413.13,
+    "t": 407.38,
     "next": "ody-vi-12-heard",
     "set": "sea",
     "beat": 6,
@@ -1965,7 +1965,7 @@
     "id": "ody-vi-12-heard",
     "verb": "clock",
     "how": "clock",
-    "t": 420.13,
+    "t": 414.38,
     "next": "ody-vi-13-ram",
     "set": "sea",
     "beat": 6,
@@ -1985,7 +1985,7 @@
     "id": "ody-vi-13-ram",
     "verb": "click",
     "how": "click",
-    "t": 422.38,
+    "t": 416.63,
     "next": "ody-vi-14-sailedon",
     "set": "sea",
     "beat": 6,
@@ -2005,7 +2005,7 @@
     "id": "ody-vi-14-sailedon",
     "verb": "click",
     "how": "click",
-    "t": 429.38,
+    "t": 423.63,
     "next": "ody-vi-14-sailedon",
     "set": "sea",
     "beat": 6,
@@ -2028,9 +2028,9 @@
     "verb": "target",
     "live": true,
     "resolved": true,
-    "waited": 22.75,
+    "waited": 17,
     "aim": [
-     552,
+     548,
      550
     ],
     "onTarget": true
@@ -2071,8 +2071,8 @@
     "resolved": true,
     "waited": 0,
     "aim": [
-     1035,
-     670
+     1064,
+     666
     ],
     "onTarget": true
    },
@@ -2082,8 +2082,8 @@
     "resolved": true,
     "waited": 0,
     "aim": [
-     1059,
-     674
+     1056,
+     675
     ],
     "onTarget": true
    },
@@ -2093,7 +2093,7 @@
    }
   },
   "ended": true,
-  "simT": 435.85,
+  "simT": 430.1,
   "visited": 81,
   "guard": 81
  },
@@ -2103,50 +2103,50 @@
    "verb": "target",
    "target": "ship",
    "misses": 0,
-   "at": 60.5
+   "at": 54.75
   },
   "sword": {
    "ok": true,
    "verb": "target",
    "target": "sword",
    "misses": 0,
-   "at": 155.333
+   "at": 149.583
   },
   "lookhere": {
    "ok": true,
    "verb": "release",
-   "at": 207.9
+   "at": 202.15
   },
   "embers": {
    "ok": true,
    "verb": "hold",
-   "at": 248.717
+   "at": 242.967
   },
   "greatram": {
    "ok": true,
    "verb": "target",
    "target": "ram-great",
    "misses": 0,
-   "at": 316
+   "at": 310.25
   },
   "jeer": {
    "ok": true,
    "verb": "target",
    "target": "cyclops",
    "misses": 0,
-   "at": 365.35
+   "at": 359.6
   },
   "defy": {
    "ok": true,
    "verb": "target",
    "target": "cyclops",
    "misses": 0,
-   "at": 389.683
+   "at": 383.933
   },
   "myname": {
    "ok": true,
    "verb": "release",
-   "at": 393.083
+   "at": 387.333
   }
  },
  "cuts": {
@@ -2247,952 +2247,952 @@
    },
    {
     "unit": "ody-i-08-cave",
-    "t": 60.5,
+    "t": 54.75,
     "setup": "SH-KEEL",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-i-08-cave",
-    "t": 63.117,
+    "t": 57.367,
     "setup": "SH-STRAIT",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-i-09-monster",
-    "t": 65.4,
+    "t": 59.65,
     "setup": "SH-CRAG",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-i-09-monster",
-    "t": 69.617,
+    "t": 63.867,
     "setup": "SH-STRAIT",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-i-10-wineskin",
-    "t": 72.4,
+    "t": 66.65,
     "setup": "SH-TELLER",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-i-10-wineskin",
-    "t": 74.817,
+    "t": 69.067,
     "setup": "SH-SHIP",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-i-10-wineskin",
-    "t": 76.617,
+    "t": 70.867,
     "setup": "SH-CAMP",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-i-11-twentyone",
-    "t": 79.4,
+    "t": 73.65,
     "setup": "SH-SKIN",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-i-12-misgave",
-    "t": 84.867,
+    "t": 79.117,
     "setup": "SH-STRAIT",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-i-12-misgave",
-    "t": 87.683,
+    "t": 81.933,
     "setup": "SH-SKIN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-i-12-misgave",
-    "t": 90.083,
+    "t": 84.333,
     "setup": "SH-COUNCIL",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-ii-00-head",
-    "t": 91.867,
+    "t": 86.117,
     "setup": "CV-EST2",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-01-beg",
-    "t": 94.067,
+    "t": 88.317,
     "setup": "CV-RACKS",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-01-beg",
-    "t": 97.883,
+    "t": 92.133,
     "setup": "CV-GRIP",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-ii-02-present",
-    "t": 100.967,
+    "t": 95.217,
     "setup": "CV-ULY",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-02-present",
-    "t": 105.183,
+    "t": 99.433,
     "setup": "CV-MEN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-ii-03-return",
-    "t": 107.967,
+    "t": 102.217,
     "setup": "CV-DOOR",
     "kind": "dissolve",
     "sub": 0
    },
    {
     "unit": "ody-ii-03-return",
-    "t": 110.033,
+    "t": 104.283,
     "setup": "CV-LOAD",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-ii-03-return",
-    "t": 111.833,
+    "t": 106.083,
     "setup": "CV-MEN",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-ii-03-return",
-    "t": 113.433,
+    "t": 107.683,
     "setup": "CV-DOOR",
     "kind": "subcut",
     "sub": 3
    },
    {
     "unit": "ody-ii-04-boulder",
-    "t": 114.967,
+    "t": 109.217,
     "setup": "CV-DOOR",
     "kind": "hold",
     "sub": 0
    },
    {
     "unit": "ody-ii-05-strangers",
-    "t": 119.017,
+    "t": 113.267,
     "setup": "CV-GIANT-E",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-06-plea",
-    "t": 124.35,
+    "t": 118.6,
     "setup": "CV-OVER",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-06-plea",
-    "t": 128.35,
+    "t": 122.617,
     "setup": "CV-ULY",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-ii-07-pitiless",
-    "t": 131.35,
+    "t": 125.6,
     "setup": "CV-GIANT-W",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-07-pitiless",
-    "t": 135.55,
+    "t": 129.8,
     "setup": "CV-MEN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-ii-08-shipfast",
-    "t": 138.35,
+    "t": 132.6,
     "setup": "CV-GIANT-E",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-09-shiplie",
-    "t": 143.25,
+    "t": 137.5,
     "setup": "CV-ULY",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-09-shiplie",
-    "t": 147.05,
+    "t": 141.3,
     "setup": "CV-OVER",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-ii-10-firstmeal",
-    "t": 150,
+    "t": 144.25,
     "setup": "CV-FIRE",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-10-firstmeal",
-    "t": 151.2,
+    "t": 145.45,
     "setup": "CV-GRIP",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-ii-10-firstmeal",
-    "t": 154.3,
+    "t": 148.55,
     "setup": "CV-MEN",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-ii-11-sword",
-    "t": 155.333,
+    "t": 149.583,
     "setup": "CV-OBJ",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-12-shiftstone",
-    "t": 155.333,
+    "t": 149.583,
     "setup": "CV-VITALS",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-ii-12-shiftstone",
-    "t": 157.633,
+    "t": 151.883,
     "setup": "CV-ULY",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-ii-12-shiftstone",
-    "t": 159.183,
+    "t": 153.433,
     "setup": "CV-STONE",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-ii-13-tillmorning",
-    "t": 160.95,
+    "t": 155.2,
     "setup": "CV-FIVEFACES",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-00-head",
-    "t": 163.55,
+    "t": 157.8,
     "setup": "CV-EST3",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-01-morningmeal",
-    "t": 165.75,
+    "t": 160,
     "setup": "CV-MEN",
     "kind": "dissolve",
     "sub": 0
    },
    {
     "unit": "ody-iii-01-morningmeal",
-    "t": 168.55,
+    "t": 162.8,
     "setup": "CV-GRIP",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iii-02-quiverlid",
-    "t": 170.8,
+    "t": 165.05,
     "setup": "CV-DOOR",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-02-quiverlid",
-    "t": 173.2,
+    "t": 167.45,
     "setup": "CV-STONE",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iii-03-scheme",
-    "t": 174.983,
+    "t": 169.233,
     "setup": "CV-ULY",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-04-club",
-    "t": 178.317,
+    "t": 172.567,
     "setup": "CV-CLUB",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-04-club",
-    "t": 181.317,
+    "t": 175.567,
     "setup": "CV-HANDS",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iii-04-club",
-    "t": 183.317,
+    "t": 177.567,
     "setup": "CV-POINT",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-iii-05-lots",
-    "t": 185.317,
+    "t": 179.567,
     "setup": "CV-LOTS",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-05-lots",
-    "t": 188.717,
+    "t": 182.967,
     "setup": "CV-OBJ",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iii-06-return",
-    "t": 192.317,
+    "t": 186.567,
     "setup": "CV-DOOR",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-06-return",
-    "t": 195.717,
+    "t": 189.967,
     "setup": "CV-STONE",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iii-07-suppertwo",
-    "t": 199.317,
+    "t": 193.567,
     "setup": "CV-FIRE",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-07-suppertwo",
-    "t": 201.917,
+    "t": 196.167,
     "setup": "CV-MEN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iii-08-lookhere",
-    "t": 204.5,
+    "t": 198.75,
     "setup": "CV-BOWL",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-09-besokind",
-    "t": 207.9,
+    "t": 202.15,
     "setup": "CV-GIANT-W",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-09-besokind",
-    "t": 210.7,
+    "t": 204.95,
     "setup": "CV-OBJ",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iii-10-thrice",
-    "t": 216.9,
+    "t": 211.15,
     "setup": "CV-BOWL",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-10-thrice",
-    "t": 218.9,
+    "t": 213.15,
     "setup": "CV-POUR",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iii-10-thrice",
-    "t": 220.7,
+    "t": 214.95,
     "setup": "CV-OBJ",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-iii-11-noman",
-    "t": 224.9,
+    "t": 219.15,
     "setup": "CV-ULY",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-11-noman",
-    "t": 228.7,
+    "t": 222.95,
     "setup": "CV-GIANT-E",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iii-12-nomanlast",
-    "t": 231.083,
+    "t": 225.333,
     "setup": "CV-GIANT-W",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-13-neck",
-    "t": 235.7,
+    "t": 229.95,
     "setup": "CV-COLLAPSE",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iii-13-neck",
-    "t": 237.5,
+    "t": 231.75,
     "setup": "CV-ULY",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iv-00-head",
-    "t": 242.2,
+    "t": 236.45,
     "setup": "CV-EST4",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-01-embers",
-    "t": 245.6,
+    "t": 239.85,
     "setup": "CV-OBJ",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-01-embers",
-    "t": 247.4,
+    "t": 241.65,
     "setup": "CV-POINT",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iv-02-glowing",
-    "t": 248.717,
+    "t": 242.967,
     "setup": "CV-MEN",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-03-auger",
-    "t": 252.317,
+    "t": 246.567,
     "setup": "CV-AUGER",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-03-auger",
-    "t": 253.817,
+    "t": 248.067,
     "setup": "CV-GIANT-W",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iv-04-bore",
-    "t": 255.317,
+    "t": 249.567,
     "setup": "CV-HANDS",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-04-bore",
-    "t": 256.933,
+    "t": 251.167,
     "setup": "CV-GIANT-W",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iv-05-hiss",
-    "t": 258.417,
+    "t": 252.667,
     "setup": "CV-BLIND",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-05-hiss",
-    "t": 259.933,
+    "t": 254.167,
     "setup": "CV-GIANT-W",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iv-06-fright",
-    "t": 261.217,
+    "t": 255.467,
     "setup": "CV-GIANT-E",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-06-fright",
-    "t": 262.733,
+    "t": 256.983,
     "setup": "CV-FLEE",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iv-07-whatails",
-    "t": 265.017,
+    "t": 259.267,
     "setup": "CV-DOOR",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-07-whatails",
-    "t": 268.833,
+    "t": 263.083,
     "setup": "CV-SEAM",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iv-08-nomankilling",
-    "t": 272.2,
+    "t": 266.45,
     "setup": "CV-GIANT-E",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-08-nomankilling",
-    "t": 274.017,
+    "t": 268.267,
     "setup": "CV-FIVEFACES",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iv-09-mustbeill",
-    "t": 274.95,
+    "t": 269.2,
     "setup": "CV-DOOR",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-10-wentaway",
-    "t": 280.283,
+    "t": 274.533,
     "setup": "CV-DOOR",
     "kind": "hold",
     "sub": 0
    },
    {
     "unit": "ody-iv-11-stone",
-    "t": 283.333,
+    "t": 277.583,
     "setup": "CV-STONE",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-11-stone",
-    "t": 284.95,
+    "t": 279.2,
     "setup": "CV-GIANT-W",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iv-11-stone",
-    "t": 286.35,
+    "t": 280.6,
     "setup": "CV-DAWNMOUTH",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-iv-12-doorway",
-    "t": 287.95,
+    "t": 282.2,
     "setup": "CV-SEATED",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-iv-12-doorway",
-    "t": 290.167,
+    "t": 284.417,
     "setup": "CV-FIVEFACES",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-iv-12-doorway",
-    "t": 291.667,
+    "t": 285.917,
     "setup": "CV-SEATED",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-v-00-head",
-    "t": 293.55,
+    "t": 287.8,
     "setup": "CV-EST5",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-01-puzzling",
-    "t": 296.967,
+    "t": 291.217,
     "setup": "CV-ULY",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-01-puzzling",
-    "t": 300.783,
+    "t": 295.033,
     "setup": "CV-HANDPASS",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-v-02-withies",
-    "t": 303.95,
+    "t": 298.2,
     "setup": "CV-WITHIES",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-02-withies",
-    "t": 307.767,
+    "t": 302.017,
     "setup": "CV-WOOL",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-v-03-threetoaman",
-    "t": 310.95,
+    "t": 305.2,
     "setup": "CV-HANDPASS",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-03-threetoaman",
-    "t": 313.767,
+    "t": 308.017,
     "setup": "CV-BELLY",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-v-04-greatram",
-    "t": 316,
+    "t": 310.25,
     "setup": "CV-WITHIES",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-05-dawn",
-    "t": 316,
+    "t": 310.25,
     "setup": "CV-DAWNMOUTH",
     "kind": "dissolve",
     "sub": 0
    },
    {
     "unit": "ody-v-05-dawn",
-    "t": 320.017,
+    "t": 314.267,
     "setup": "CV-GATEWAY",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-v-06-feltbacks",
-    "t": 323,
+    "t": 317.25,
     "setup": "CV-HANDPASS",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-06-feltbacks",
-    "t": 325.617,
+    "t": 319.867,
     "setup": "CV-BELLY",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-v-06-feltbacks",
-    "t": 327.417,
+    "t": 321.667,
     "setup": "CV-RAMSPEECH",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-v-07-lastofall",
-    "t": 328.75,
+    "t": 323,
     "setup": "CV-WOOL",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-07-lastofall",
-    "t": 331.367,
+    "t": 325.617,
     "setup": "CV-BELLY",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-v-08-ramspeech1",
-    "t": 333.65,
+    "t": 327.9,
     "setup": "CV-RAMSPEECH",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-09-ramspeech2",
-    "t": 340.65,
+    "t": 334.9,
     "setup": "CV-TWOSHOT",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-09-ramspeech2",
-    "t": 343.267,
+    "t": 337.517,
     "setup": "CV-BELLY",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-v-10-ramspeech3",
-    "t": 347.133,
+    "t": 341.383,
     "setup": "CV-RAMSPEECH",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-11-freed",
-    "t": 354.133,
+    "t": 348.383,
     "setup": "CV-OUT",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-11-freed",
-    "t": 357.15,
+    "t": 351.4,
     "setup": "CV-GATEWAY",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-v-12-aboard",
-    "t": 359.883,
+    "t": 354.133,
     "setup": "CV-DAWNMOUTH",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-v-12-aboard",
-    "t": 363.3,
+    "t": 357.55,
     "setup": "CV-AFTER",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-01-jeer",
-    "t": 365.35,
+    "t": 359.6,
     "setup": "SEA-EST",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-02-taunt",
-    "t": 365.35,
+    "t": 359.6,
     "setup": "SEA-STERN",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-02-taunt",
-    "t": 368.367,
+    "t": 362.617,
     "setup": "SEA-DOWN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-03-rock1",
-    "t": 371.367,
+    "t": 365.617,
     "setup": "SEA-GRIP",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-03-rock1",
-    "t": 372.783,
+    "t": 367.033,
     "setup": "SEA-MEN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-03-rock1",
-    "t": 374.183,
+    "t": 368.433,
     "setup": "SEA-ROCK",
     "kind": "subcut",
     "sub": 2
    },
    {
     "unit": "ody-vi-03-rock1",
-    "t": 376.383,
+    "t": 370.633,
     "setup": "SEA-DECK",
     "kind": "subcut",
     "sub": 3
    },
    {
     "unit": "ody-vi-04-twiceasfar",
-    "t": 377.35,
+    "t": 371.6,
     "setup": "SEA-OAR",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-04-twiceasfar",
-    "t": 380.367,
+    "t": 374.617,
     "setup": "SEA-DECK",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-05-menbeg",
-    "t": 382.683,
+    "t": 376.933,
     "setup": "SEA-MEN",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-05-menbeg",
-    "t": 386.7,
+    "t": 380.95,
     "setup": "SEA-STERN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-06-defy",
-    "t": 389.683,
+    "t": 383.933,
     "setup": "SEA-EST",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-07-myname",
-    "t": 389.683,
+    "t": 383.933,
     "setup": "SEA-STERN",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-07-myname",
-    "t": 392.9,
+    "t": 387.15,
     "setup": "SEA-DOWN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-08-prophecy",
-    "t": 393.083,
+    "t": 387.333,
     "setup": "SEA-CLIFF",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-08-prophecy",
-    "t": 397.1,
+    "t": 391.35,
     "setup": "SEA-MEN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-09-fatherson",
-    "t": 400.083,
+    "t": 394.333,
     "setup": "SEA-HAND",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-09-fatherson",
-    "t": 404.3,
+    "t": 398.55,
     "setup": "SEA-DECK",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-10-hades",
-    "t": 407.083,
+    "t": 401.333,
     "setup": "SEA-STERN",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-11-curse",
-    "t": 413.133,
+    "t": 407.383,
     "setup": "SEA-CLIFF",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-11-curse",
-    "t": 417.15,
+    "t": 411.4,
     "setup": "SEA-DOWN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-12-heard",
-    "t": 420.133,
+    "t": 414.383,
     "setup": "SEA-ROCK",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-12-heard",
-    "t": 421.35,
+    "t": 415.6,
     "setup": "SEA-DECK",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-13-ram",
-    "t": 422.35,
+    "t": 416.6,
     "setup": "SEA-ALTAR",
     "kind": "cut",
     "sub": 0
    },
    {
     "unit": "ody-vi-13-ram",
-    "t": 426.367,
+    "t": 420.617,
     "setup": "SEA-MEN",
     "kind": "subcut",
     "sub": 1
    },
    {
     "unit": "ody-vi-14-sailedon",
-    "t": 429.383,
+    "t": 423.633,
     "setup": "SEA-OFF",
     "kind": "dissolve",
     "sub": 0
@@ -3447,42 +3447,42 @@
   "cached": 0,
   "log": [
    {
-    "t": 389.683,
+    "t": 383.933,
     "key": "myname",
     "dur": 11.2
    },
    {
-    "t": 393.083,
+    "t": 387.333,
     "key": "prophecy",
     "dur": 24.4
    },
    {
-    "t": 400.083,
+    "t": 394.333,
     "key": "fatherson",
     "dur": 31.92
    },
    {
-    "t": 407.083,
+    "t": 401.333,
     "key": "hades",
     "dur": 8.8
    },
    {
-    "t": 413.133,
+    "t": 407.383,
     "key": "curse",
     "dur": 19.76
    },
    {
-    "t": 420.133,
+    "t": 414.383,
     "key": "heard",
     "dur": 3.36
    },
    {
-    "t": 422.35,
+    "t": 416.6,
     "key": "ram",
     "dur": 17.92
    },
    {
-    "t": 429.383,
+    "t": 423.633,
     "key": "sailedon",
     "dur": 13.52
    }
@@ -3494,7 +3494,7 @@
   "crew-1": 2.69,
   "crew-2": 2.69,
   "crew-3": 2.69,
-  "poly-idle": 19
+  "poly-idle": 18.76
  },
  "director": {
   "set": "sea",
@@ -3517,7 +3517,7 @@
    "sail-off"
   ],
   "walking": [],
-  "acts": 81,
+  "acts": 82,
   "audits": 56,
   "routeHits": [],
   "swordLive": false,
@@ -4219,10 +4219,10 @@
     "set": "shore",
     "cls": "ACTION",
     "cine": {
-     "size": 0.19780679029944287,
+     "size": 0.2004622265724014,
      "inFrame": 1,
-     "cx": -0.08812844575728954,
-     "cy": -0.017636231120556498,
+     "cx": -0.08952284691484275,
+     "cy": -0.0064931188993447575,
      "rig": {
       "on": true,
       "fillE": 6.17,
@@ -4235,10 +4235,10 @@
      "unit": "ody-i-05-dawn",
      "cls": "ACTION",
      "box": [
-      -0.139,
-      -0.215,
-      -0.037,
-      0.18
+      -0.143,
+      -0.207,
+      -0.036,
+      0.194
      ],
      "law": {
       "p90": 0.3,
@@ -4253,15 +4253,15 @@
       "side": 1
      },
      "px": 260,
-     "mean": 0.7007,
-     "p10": 0.2673,
-     "p50": 0.7717,
-     "p90": 0.9496,
-     "max": 0.965,
-     "ring": 0.7458,
-     "meanSep": 0.0451,
-     "sep": 0.2037,
-     "dark": 0.0038,
+     "mean": 0.6532,
+     "p10": 0.1626,
+     "p50": 0.7819,
+     "p90": 0.9313,
+     "max": 0.9577,
+     "ring": 0.6536,
+     "meanSep": 0.0004,
+     "sep": 0.2777,
+     "dark": 0.0192,
      "band": "law",
      "darkCap": 0.55,
      "role": "reestablish",
@@ -12702,6 +12702,7 @@
     "fitFov": 0,
     "fitSee": 0,
     "fitHold": 39.64,
+    "fitFloor": 0,
     "dwell": 0,
     "breath": 0,
     "recycles": 0,
@@ -12807,6 +12808,7 @@
     "fitFov": 0,
     "fitSee": 0,
     "fitHold": 0,
+    "fitFloor": 0,
     "dwell": 0,
     "breath": 0,
     "recycles": 0,
@@ -12915,6 +12917,7 @@
     "fitFov": 0,
     "fitSee": 0,
     "fitHold": 26.65,
+    "fitFloor": 0,
     "dwell": 0,
     "breath": 0,
     "recycles": 0,
@@ -13023,6 +13026,7 @@
     "fitFov": 0,
     "fitSee": 0,
     "fitHold": 0,
+    "fitFloor": 0,
     "dwell": 0,
     "breath": 0,
     "recycles": 0,
@@ -13131,6 +13135,7 @@
     "fitFov": 0,
     "fitSee": 0,
     "fitHold": 39.28,
+    "fitFloor": 0,
     "dwell": 0,
     "breath": 0,
     "recycles": 0,
@@ -13239,6 +13244,7 @@
     "fitFov": 0,
     "fitSee": 0,
     "fitHold": 0,
+    "fitFloor": 0,
     "dwell": 0,
     "breath": 0,
     "recycles": 0,
@@ -13347,6 +13353,7 @@
     "fitFov": 0,
     "fitSee": 0,
     "fitHold": 0,
+    "fitFloor": 0,
     "dwell": 0,
     "breath": 0,
     "recycles": 0,
@@ -13460,6 +13467,7 @@
     "fitFov": 0,
     "fitSee": 0,
     "fitHold": 0,
+    "fitFloor": 0,
     "dwell": 0,
     "breath": 0,
     "recycles": 0
@@ -13564,6 +13572,7 @@
     "fitFov": 58.54,
     "fitSee": 0,
     "fitHold": 0,
+    "fitFloor": 0,
     "dwell": 0,
     "breath": 0,
     "recycles": 0,
@@ -13688,7 +13697,7 @@
   {
    "name": "the 81-unit walk completes",
    "verdict": "PASS",
-   "detail": "81 units · 0 stuck · sim 435.85s · ended true"
+   "detail": "81 units · 0 stuck · sim 430.1s · ended true"
   },
   {
    "name": "every gate resolved by its own verb",
@@ -13753,7 +13762,7 @@
   {
    "name": "the walk's own target gates clicked their real coordinates",
    "verdict": "PASS",
-   "detail": "i-07-council 552,550 (ring after 22.75s) · ii-11-sword 994,567 (ring after 0s) · v-04-greatram 903,560 (ring after 0s) · vi-01-jeer 1035,670 (ring after 0s) · vi-06-defy 1059,674 (ring after 0s)"
+   "detail": "i-07-council 548,550 (ring after 17s) · ii-11-sword 994,567 (ring after 0s) · v-04-greatram 903,560 (ring after 0s) · vi-01-jeer 1064,666 (ring after 0s) · vi-06-defy 1056,675 (ring after 0s)"
   },
   {
    "name": "[hit] the miss-probe still misses",
@@ -13788,7 +13797,7 @@
   {
    "name": "posture law: every rig's head pitch inside its band",
    "verdict": "PASS",
-   "detail": "ulysses 2.81° · crew-0 2.69° · crew-1 2.69° · crew-2 2.69° · crew-3 2.69° · poly-idle 19°"
+   "detail": "ulysses 2.81° · crew-0 2.69° · crew-1 2.69° · crew-2 2.69° · crew-3 2.69° · poly-idle 18.76°"
   },
   {
    "name": "voice: a mastered line asserted per unit",

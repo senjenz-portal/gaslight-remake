@@ -1566,8 +1566,27 @@ export class Director {
       'council-ulysses': (silent) => {
         const u = A('ulysses');
         if (u.mode === 'off') S._stand(u, shoreAt(...SHORE_MARKS.fire), 0);
-        S._walkRoute(u, SHORE_MARKS.fire, SHORE_MARKS.council,
-          { silent, label: 'shore:fire->council' });
+        /* THE CROSSING IS OWED TO THE FRAME THAT NEEDS IT (live-book cut).
+         *
+         * This is the audited corridor around the campfire — about half a
+         * minute of walking — and it used to be started by the leaf whose line
+         * ENDS with "next morning I called a council", a nineteen-second
+         * sentence. So at the reader's own pace he was still crossing the sand
+         * a dozen seconds into the council itself, the OTS rode his drift all
+         * fifteen metres of it, and the FLEET the margin tells the reader to
+         * click was swung behind the camera: measured on the live page, the
+         * ring was dark for the first 12.4 s of a 13.9 s line and up for 24%
+         * of the wait. The rail now starts him a leaf earlier (dawn), which
+         * gives the corridor the two lines it actually takes, and the act is
+         * IDEMPOTENT so the leaf that used to own it can still fire it and
+         * find the work already under way. Nothing is teleported and no pace
+         * is changed: he simply leaves in time to arrive. */
+        const mark = shoreAt(...SHORE_MARKS.council);
+        const near = u.group.position.distanceToSquared(mark) < 1.6 * 1.6;
+        if (!u.walk && !near)
+          S._walkRoute(u, SHORE_MARKS.fire, SHORE_MARKS.council,
+            { silent, label: 'shore:fire->council' });
+        else if (silent) S._stand(u, mark, u.face);
         /* THE ARC IS THE LEDGER'S ARC, NOT A DICE ROLL: three of the twelve in
            the audited sand pocket between the day goat and the stern curl. */
         const [cmx, cmy] = SHORE_MARKS.councilCrew;

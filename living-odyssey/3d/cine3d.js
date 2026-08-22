@@ -372,6 +372,7 @@ export class CineCam {
     this.fitYaw = 0; this.fitFov = 0; /* what the aspect solve had to do */
     this.fitSee = 0;                  /* ...and what the reader's gate had to */
     this.fitHold = 0; this.holdFovD = 0;  /* ...and what the drifting world did */
+    this.fitFloor = 0;                /* ...and what the class floor took back */
     this.seeFovD = 0; this.seeSnap = true;
     this.seeLookD = new THREE.Vector3();
     this._seeBox = null; this._see = null;
@@ -827,6 +828,19 @@ export class CineCam {
     /* ...and last of all, the frame is asked whether the reader can still find
        the thing it is telling him to click */
     this._keepMustSee(row, dt);
+    /* THE FLOOR IS THE FLOOR, and it gets the last word.
+     *
+     * Three things may open this lens now — the composition hold against a
+     * drifted world, the aspect fit for a reshaped window, and the correction
+     * that keeps the reader's gate on the picture — and each one bounds itself
+     * against the subject's class floor using the lens IT was handed. Three
+     * bounded openings can still compound past the floor: measured at the
+     * design frame, ody-i-07-council came in at 0.278 of frame height against
+     * an OTS floor of 0.300. So after every correction has had its say the
+     * subject is measured once more, and if he is under his class the lens is
+     * pulled back until he is not. A close-up law that any downstream solve can
+     * spend is not a law. */
+    this._holdFloor(row);
     /* a cut lands whole: the frame after it is eased, not snapped */
     this.seeSnap = false;
 
@@ -1121,7 +1135,20 @@ export class CineCam {
         x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x);
         y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y);
       }
-      if (!front) return null;                        /* behind the lens: unreachable */
+      /* BEHIND THE LENS IS THE WORST CASE, NOT THE BEST. The first cut of this
+         returned "no answer" for a target the shot had swung completely past,
+         and the caller read no-answer as nothing-owed and relaxed — so the one
+         frame in the book that had actually LOST its gate was the one frame the
+         correction never ran on, and the council's ring lit three and a half
+         seconds later than before the fix. A target behind the camera scores
+         below zero and carries the direction to turn. */
+      if (!front) {
+        const c = (this.__bc || (this.__bc = new THREE.Vector3()));
+        b.getCenter(c).applyMatrix4(this.cam.matrixWorldInverse);
+        const s = c.x >= 0 ? 1 : -1;
+        return { x0: -2 * s, x1: 2 * s, y0: -2, y1: 2, share: -1,
+                 cx: 2 * s, cy: 0, behind: true };
+      }
       /* SEEN means a usable share of the box is inside the safe frame — the
          ring needs pixels, not a corner clipping the rim */
       const w = x1 - x0, h = y1 - y0;
@@ -1156,7 +1183,7 @@ export class CineCam {
       this.cam.lookAt(this._look); this.cam.updateMatrixWorld(true);
     };
     let m = bad();
-    if (!m || m.share >= SEE_SHARE) {
+    if (m && m.share >= SEE_SHARE) {
       /* THE CORRECTION IS NOT DROPPED BECAUSE IT WORKED. `bad()` has just
          measured the picture WITH last frame's correction in it, so "the gate
          is on frame" may be true only BECAUSE of the correction — relaxing on
@@ -1167,7 +1194,7 @@ export class CineCam {
       const hadLook = (this.__hl || (this.__hl = new THREE.Vector3())).copy(this.seeLookD);
       put(0, null);
       const m0 = bad();
-      if (!m0 || m0.share >= SEE_SHARE) { settle(); return; }
+      if (m0 && m0.share >= SEE_SHARE) { settle(); return; }
       put(hadFov, hadLook);
       settle();
       return;
@@ -1206,13 +1233,13 @@ export class CineCam {
       }
       put(this.seeFovD, bestF ? back.copy(this._drift).multiplyScalar(-bestF) : null);
       m = bad();
-      if (!m || m.share >= SEE_SHARE) { settle(); return; }
+      if (m && m.share >= SEE_SHARE) { settle(); return; }
     }
 
     /* ---- 1. OPEN. The cheapest correction: the frame grows around what it
        already has, nothing moves, and the cost is subject size, which the
        class floor bounds exactly. ---- */
-    for (let i = 0; i < 3 && m && m.share < SEE_SHARE; i++) {
+    for (let i = 0; i < 3 && m && m.share < SEE_SHARE && !m.behind; i++) {
       const reach = Math.max(Math.abs(m.x0), Math.abs(m.x1),
                              Math.abs(m.y0), Math.abs(m.y1));
       const f = clamp(reach / SEE_SAFE, 1.02, 1.6);
@@ -1223,7 +1250,7 @@ export class CineCam {
       if (!ok()) { this.cam.fov = fovWas; this.cam.updateProjectionMatrix(); break; }
       m = bad();
     }
-    if (!m || m.share >= SEE_SHARE) { settle(); return; }
+    if (m && m.share >= SEE_SHARE) { settle(); return; }
 
     /* ---- 2. PAN. The operator turns his head. The aim moves toward the
        target only as far as the shot's own composition survives; the swing
@@ -1265,13 +1292,29 @@ export class CineCam {
        and a swing that both passed the subject's own gates), and if it gained
        none the station is left exactly as the table composed it. The ring then
        stays dark and the gate reports it, which is the truth. */
-    if (m && m.share < SEE_SHARE && this.cam.fov === fov0 &&
+    if ((!m || m.share < SEE_SHARE) && this.cam.fov === fov0 &&
         this._look.distanceToSquared(look0) < 1e-10) {
       this._look.copy(lookBase); this.cam.fov = fovBase;
       this.cam.updateProjectionMatrix();
       this.cam.lookAt(this._look); this.cam.updateMatrixWorld(true);
     }
     settle();
+  }
+
+  /** THE CLASS FLOOR, enforced on the lens every correction has finished with */
+  _holdFloor(row) {
+    this.fitFloor = 0;
+    if (!row || !row.frame || row.frame.fill) return;
+    const floor = this.classOf(row.class).floor || 0;
+    if (!(floor > 0)) return;
+    const m = measureShot(this.cam, this.subjBox, {});
+    if (!m.ok || !(m.h > 1e-4) || m.h >= floor) return;
+    const half = Math.tan(this.cam.fov * D2R / 2);
+    const fov = 2 * Math.atan(half * (m.h / (floor * 1.02))) / D2R;
+    if (!(fov > 5) || fov >= this.cam.fov - 1e-3) return;
+    this.cam.fov = fov;
+    this.cam.updateProjectionMatrix();
+    this.fitFloor = +fov.toFixed(2);
   }
 
   /** the subject's NDC x under the live lens — the screen-direction axis */
@@ -1327,6 +1370,7 @@ export class CineCam {
       fitFov: this.fitFov || 0,
       fitSee: this.fitSee || 0,
       fitHold: this.fitHold || 0,
+      fitFloor: this.fitFloor || 0,
     };
   }
 }

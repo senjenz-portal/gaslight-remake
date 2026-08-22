@@ -66,6 +66,12 @@ addEventListener('unhandledrejection', (e) =>
  * changed, so the rail re-asserts the seat on every unit the ledger puts him
  * at the mark (the call is idempotent — same rig, same mark, same yaw). */
 const EXTRA_ACTS = {
+  /* BEAT I — the council crossing is a half-minute of audited corridor and the
+     leaf that used to own it speaks for nineteen seconds, so at reader pace the
+     gate shot opened on a man still walking and a fleet behind the camera. He
+     leaves a leaf early; `council-ulysses` is idempotent and the smoke leaf
+     still fires it, finding the work already under way. */
+  dawn1: ['council-ulysses'],
   pitiless: ['giant-seat'], shipfast: ['giant-seat'], suppertwo: ['giant-seat'],
   lookhere: ['giant-seat'], besokind: ['giant-seat'], thrice: ['giant-seat'],
   embers: ['stake-to-embers'],       /* BEAT IV — the stake's four moves */

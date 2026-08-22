@@ -197,7 +197,7 @@ export async function mountCine(stage, url = './shots3d.json') {
            because the reader stayed. A live-dwell gate reads these. */
         aspect: +cam.cam.aspect.toFixed(4), fitYaw: cam.fitYaw || 0,
         fitFov: cam.fitFov || 0, fitSee: cam.fitSee || 0,
-        fitHold: cam.fitHold || 0,
+        fitHold: cam.fitHold || 0, fitFloor: cam.fitFloor || 0,
         dwell: +(cam.dwellS || 0).toFixed(2),
         breath: cam.breath || 0, recycles: cam.recycles || 0,
       };
