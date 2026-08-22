@@ -24,6 +24,7 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
+import { mixScene, muxAudio } from './_scenesound.mjs';
 
 const ARGS = process.argv.slice(2);
 const argOf = (k, d) => { const i = ARGS.indexOf(k); return i >= 0 ? ARGS[i + 1] : d; };
@@ -106,6 +107,12 @@ for (const u of UNITS) {
 }
 const dwellOf = (id) => DWELL[id] === undefined ? 5.0 : DWELL[id];
 
+/* THE BOOK'S MIX, read out of the book — never re-invented here. */
+const AUDIO_MOD = await import(pathToFileURL(
+  path.join(ROOT, 'living-odyssey', 'app', 'audio.js')).href);
+const VOICE_MOD = await import(pathToFileURL(
+  path.join(ROOT, 'living-odyssey', 'app', 'voice.js')).href);
+
 const browser = await chromium.launch({ headless: true,
   args: ['--enable-gpu', '--use-angle=metal', '--ignore-gpu-blocklist', '--mute-audio'] });
 
@@ -143,6 +150,9 @@ for (const beat of BEATS) {
   let tOnUnit = 0, holding = false, n = 0, sub = 0;
   const cuts = [{ f: 0, unit: cur, setup: (TABLE.units[cur] || {}).setup || null,
                   kind: 'open' }];
+  /* THE FRAME CLOCK, kept — the sim time of every frame shot, so a sound the
+     book asked for at sim t lands on the frame that was drawn at sim t */
+  const frameAt = [];
   console.log(`[beat ${beat}] ${S.name} — recording from ${cur} · clip ${clip.width}x${clip.height}`);
 
   for (; n < N; n++) {
@@ -166,7 +176,7 @@ for (const beat of BEATS) {
       else if (verb === 'clock' && a.tOn >= a.clockCap) { await B.advance(); act = 'clock-cap'; }
       B.run(a.dt);
       const c = window.__cine();
-      return { unit: B.unit, verb, act, held: nowHeld, ended: B.ended,
+      return { unit: B.unit, verb, act, held: nowHeld, ended: B.ended, simT: B.simT,
                setup: c ? c.setup : null, cls: c ? c.cls : null,
                transition: c ? c.transition : null, hold: c ? c.hold : null,
                sub: c ? c.sub : 0, subCuts: c ? c.subCuts : 0,
@@ -202,6 +212,7 @@ for (const beat of BEATS) {
       if (sc) cuts.push({ f: n, t: +(n / FPS).toFixed(2), unit: st.unit, sub,
                           setup: sc.setup, kind: 'subcut', why: sc.why || null });
     }
+    frameAt.push(st.simT);
     await page.screenshot({ path: path.join(FRAMES, `f${String(n).padStart(5, '0')}.jpg`),
                             clip, type: 'jpeg', quality: 92 });
     if (n % 240 === 0)
@@ -210,6 +221,8 @@ for (const beat of BEATS) {
     if (beatOf[st.unit] && beatOf[st.unit] !== beat) { n++; break; }
   }
 
+  /* THE SOUND LEDGER, taken before the page is closed */
+  const snd = await page.evaluate(() => (window.__audio ? window.__audio() : null));
   await page.close();
   const secs = +(n / FPS).toFixed(2);
   const setups = [...new Set(cuts.map((c) => c.setup).filter(Boolean))];
@@ -221,6 +234,9 @@ for (const beat of BEATS) {
     holds: cuts.filter((c) => c.kind === 'hold').length,
     dissolves: cuts.filter((c) => c.kind === 'dissolve').length,
     errors: errors.slice(0, 5), ledger: cuts,
+    sound: snd ? { beds: snd.cues.filter((c) => c.kind === 'bed').length,
+                   cues: snd.cues.filter((c) => c.kind === 'cue').length,
+                   lines: snd.voice.length } : null,
     mp4: path.join(OUTDIR, `${S.slug}.mp4`) };
   console.log(`[beat ${beat}] ${secs}s · ${cuts.length} shots (ASL ${rec.asl}s) · ${setups.length} setups · ` +
     `${rec.cuts} cuts / ${rec.subCuts} sub-cuts / ${rec.holds} holds / ${rec.dissolves} dissolves · ` +
@@ -233,6 +249,37 @@ for (const beat of BEATS) {
       '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18',
       '-movflags', '+faststart', rec.mp4], { stdio: ['ignore', 'ignore', 'inherit'] });
     console.log(`[beat ${beat}] encoded ${rec.mp4}`);
+
+    /* THE TRACK. A judgment made on a silent file is a judgment of half the
+       work — round 3's verdict said so in its last line. The picture is drawn
+       from the book's clock, so the sound is laid on the book's clock too. */
+    if (snd && (snd.cues.length || snd.voice.length)) {
+      const wav = path.join(OUTDIR, `${S.slug}.wav`);
+      const mixed = await mixScene({
+        log: snd.cues, voice: snd.voice, frameAt, fps: FPS,
+        root: path.join(ROOT, 'living-odyssey'), out: wav,
+        files: AUDIO_MOD.AUDIO_FILES, gain: AUDIO_MOD.AUDIO_GAIN,
+        vmap: VOICE_MOD.VOICE, duckDb: AUDIO_MOD.AUDIO_DUCK_DB });
+      if (mixed.ok) {
+        await muxAudio(rec.mp4, wav);
+        await rm(wav, { force: true });
+        rec.audio = { beds: mixed.beds, cues: mixed.cues, voice: mixed.voice,
+                      jlCuts: mixed.jlCuts, jlBoundaries: mixed.jlBoundaries,
+                      jlWhy: mixed.jlWhy, dur: +mixed.dur.toFixed(2),
+                      missing: mixed.missing };
+        /* THE REMIX MANIFEST. Round 5's verdict asks two questions of the
+           track that a waveform cannot answer — did the impact land on the
+           impact FRAME, and does each spoken phrase finish across the cut —
+           so what the mixer laid, and where, is written next to the film. */
+        rec.soundLedger = mixed.ledger;
+        console.log(`[beat ${beat}] SOUND laid: ${mixed.beds} bed segments · ` +
+          `${mixed.cues} cues · ${mixed.voice} lines · ` +
+          `${mixed.jlCuts} J/L-cuts of ${mixed.jlBoundaries} boundaries ` +
+          `(${Object.entries(mixed.jlWhy).map(([k, v]) => `${k} ${v}`).join(', ')}) · ` +
+          `${mixed.dur.toFixed(1)}s` +
+          (mixed.missing.length ? ` · MISSING ${mixed.missing.join(',')}` : ''));
+      } else console.log(`[beat ${beat}] SOUND: ${mixed.why}`);
+    } else console.log(`[beat ${beat}] SOUND: the lap asked for nothing`);
   }
   await rm(FRAMES, { recursive: true, force: true });
   manifest.push(rec);
