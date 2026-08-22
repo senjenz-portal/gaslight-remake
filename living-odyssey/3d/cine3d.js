@@ -47,7 +47,14 @@ const easeOut = (k) => 1 - (1 - clamp01(k)) ** 3;
 /* the sensor the lens arithmetic is written against — full-frame height */
 const SENSOR_H = 0.024;
 
-export const CINE_VERSION = 'cine-r2';
+export const CINE_VERSION = 'cine-r3-directors-cut';
+
+/* THE TRANSITION. A unit advance is a straight CUT — that is the grammar and
+   the default. The one exception the chosen lens allows is a DISSOLVE, and only
+   for a TIME ELLIPSIS: five in the book, every one of them a night that has
+   become a morning. It is played on the composited frame, 240 ms, so nothing in
+   the scene graph has to know a transition happened. */
+export const DISSOLVE_S = 0.24;
 
 /* ====================================================================== *
  * THE READABILITY LAW (Fable, round 1: "key actors render as unreadable
@@ -245,7 +252,9 @@ export class CineCam {
     this.t0 = 0;                      /* the sim time of the CUT */
     this.t = 0;
     this.cuts = 0;
-    this.log = [];                    /* [{unit, shotOf, t}] — the gate's evidence */
+    this.holds = 0;                   /* declared holds — the shot still running */
+    this.dissolve = 0;                /* seconds of cross-fade still owed */
+    this.log = [];                    /* [{unit, setup, kind, t}] — the cut ledger */
     this.anchor = new THREE.Vector3();/* the live subject, this frame */
     this.subjBox = new THREE.Box3();
     this.subjOk = false;
@@ -269,21 +278,38 @@ export class CineCam {
   classOf(name) { return this.table.classes[name] || { floor: 0, pushMax: 999 }; }
 
   /**
-   * THE CUT. Called when the reader enters a unit. If the incoming unit runs
-   * the same shot as the outgoing one there is no cut — the move simply keeps
-   * running, which is what a held shot across two lines of the same speech is.
+   * THE CUT. Called when the reader enters a unit.
+   *
+   * THE COVERAGE LAW, at runtime. The table names each row's SETUP — the angle
+   * on the action. A unit advance that changes the setup is a CUT: the move
+   * clock restarts, because a new shot starts at its own first frame. A unit
+   * advance that does NOT change the setup is a HOLD — the same shot still
+   * running — and the clock is left alone, which is the only thing that makes a
+   * hold look like a hold instead of a jump back to the top of a move.
+   *
+   * The table is gated at bake time so a hold can only happen where a row
+   * declared a reason; this reads the declaration rather than re-deciding it.
    */
   cutTo(unitId, t, resolve) {
     const row = this.rowFor(unitId);
     if (!row) return false;
-    const same = this.shot && this.shot.unit !== undefined &&
-      this.unitId && sameShot(this.shot, row);
+    const prev = this.shot;
+    const held = !!(prev && this.unitId && sameSetup(prev, row));
     this.unitId = unitId;
     this.shot = row;
-    if (!same) { this.t0 = t; this.cuts++; this.log.push({ unit: unitId, t: +t.toFixed(3) }); }
+    if (held) {
+      this.holds++;
+      this.log.push({ unit: unitId, t: +t.toFixed(3), setup: row.setup, kind: 'hold' });
+    } else {
+      this.t0 = t;
+      this.cuts++;
+      const kind = row.transition === 'dissolve' ? 'dissolve' : 'cut';
+      if (kind === 'dissolve' && prev) this.dissolve = DISSOLVE_S;
+      this.log.push({ unit: unitId, t: +t.toFixed(3), setup: row.setup, kind });
+    }
     this._install(row);
     this.step(t, 0, resolve, true);
-    return !same;
+    return !held;
   }
 
   _install(row) {
@@ -316,6 +342,7 @@ export class CineCam {
    */
   step(t, dt, resolve, snap = false) {
     this.t = t;
+    if (this.dissolve > 0) this.dissolve = Math.max(0, this.dissolve - (dt || 0));
     const row = this.shot;
     if (!row) return;
     const k = t - this.t0;
@@ -479,7 +506,11 @@ export class CineCam {
     return {
       unit: this.unitId,
       cls: this.shot ? this.shot.class : null,
+      setup: this.shot ? (this.shot.setup || null) : null,
+      transition: this.shot ? (this.shot.transition || 'cut') : null,
       cuts: this.cuts,
+      holds: this.holds,
+      fade: +(this.dissolve / DISSOLVE_S).toFixed(3),
       pos: [+this.cam.position.x.toFixed(2), +this.cam.position.y.toFixed(2),
             +this.cam.position.z.toFixed(2)],
       fov: +this.cam.fov.toFixed(2),
@@ -510,7 +541,11 @@ export function subjectEnvelope(box, anchor, h, point) {
   return box;
 }
 
-function sameShot(a, b) {
+/* TWO ROWS ARE THE SAME SHOT WHEN THEY ARE THE SAME SETUP. The table's `setup`
+   is the authority; a table old enough not to carry one falls back to the
+   geometry, so this module keeps working against either. */
+function sameSetup(a, b) {
+  if (a.setup && b.setup) return a.set === b.set && a.setup === b.setup;
   return a.set === b.set && a.class === b.class &&
     a.pos[0] === b.pos[0] && a.pos[1] === b.pos[1] && a.pos[2] === b.pos[2] &&
     a.lookAt[0] === b.lookAt[0] && a.fov === b.fov;
@@ -542,7 +577,8 @@ export class CineDof {
       new Float32Array([0, 0, 2, 0, 0, 2]), 2));
     this.mat = new THREE.RawShaderMaterial({
       uniforms: {
-        tColor: { value: null }, tDepth: { value: null },
+        tColor: { value: null }, tDepth: { value: null }, tPrev: { value: null },
+        uFade: { value: 0 },
         uTexel: { value: new THREE.Vector2(1 / 1600, 1 / 940) },
         uNear: { value: 0.08 }, uFar: { value: 900 },
         uFocus: { value: 6 }, uFocal: { value: 0.035 }, uAperture: { value: 0.0125 },
@@ -555,7 +591,8 @@ export class CineDof {
         attribute vec3 position; attribute vec2 uv; varying vec2 vUv;
         void main(){ vUv = uv; gl_Position = vec4(position, 1.0); }`,
       fragmentShader: `precision highp float;
-        uniform sampler2D tColor; uniform sampler2D tDepth;
+        uniform sampler2D tColor; uniform sampler2D tDepth; uniform sampler2D tPrev;
+        uniform float uFade;
         uniform vec2 uTexel; uniform float uNear; uniform float uFar;
         uniform float uFocus; uniform float uFocal; uniform float uAperture;
         uniform float uMaxCoC; uniform float uNearK; uniform float uExpo;
@@ -613,6 +650,7 @@ export class CineDof {
           if (uOn < 0.5) {
             vec3 g0 = c0 * uExpo;
             vec3 o = enc(uTone > 0.5 ? aces(g0) : g0);
+            if (uFade > 0.0) o = mix(o, texture2D(tPrev, vUv).rgb, uFade);
             gl_FragColor = vec4(clamp(o, 0.0, 1.0), 1.0);
             return;
           }
@@ -645,6 +683,11 @@ export class CineDof {
           float rnd = fract(sin(dot(gl_FragCoord.xy + uSeed,
                                     vec2(12.9898, 78.233))) * 43758.5453);
           o += (rnd - 0.5) * uGrain;
+          /* THE DISSOLVE. The outgoing shot's last composited frame, held in
+             the history target, mixed over the incoming one for 240 ms. It is
+             done here and nowhere else: the scene graph, the actors and the
+             clock never learn that a transition is happening. */
+          if (uFade > 0.0) o = mix(o, texture2D(tPrev, vUv).rgb, uFade);
           gl_FragColor = vec4(clamp(o, 0.0, 1.0), 1.0);
         }`,
       depthTest: false, depthWrite: false,
@@ -653,6 +696,21 @@ export class CineDof {
     quad.frustumCulled = false;
     this.scene.add(quad);
     this.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  }
+
+  /* the HISTORY target: the last frame that was NOT a dissolve, kept in the
+     display-encoded form the composite writes, so a cross-fade mixes exactly
+     the two pictures a viewer would have seen */
+  _hist(w, h) {
+    if (this.hist && this.hw === w && this.hh === h) return this.hist;
+    if (this.hist) this.hist.dispose();
+    this.hist = new THREE.WebGLRenderTarget(w, h, {
+      type: THREE.UnsignedByteType, colorSpace: THREE.NoColorSpace,
+      minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,
+      depthBuffer: false, stencilBuffer: false,
+    });
+    this.hw = w; this.hh = h;
+    return this.hist;
   }
 
   _ensure(w, h) {
@@ -694,6 +752,22 @@ export class CineDof {
     u.tDepth.value = rt.depthTexture;
     this.renderer.setRenderTarget(rt);
     this.renderer.render(scene, cam);
+    /* the fade the shot asked for, unless a gate is reading the pixels — a
+       measurement must never be taken of a frame that is half of two shots */
+    const fade = this.forceNoFade ? 0
+      : Math.max(0, Math.min(1, opt.fade === undefined ? 0 : opt.fade));
+    const hist = this._hist(sz.x, sz.y);
+    if (fade <= 0) {
+      /* keep the history current: the same composite, with nothing mixed in.
+         tPrev is pointed away from `hist` for this pass — a sampler may not
+         read the target it is being drawn into. */
+      u.uFade.value = 0;
+      u.tPrev.value = rt.texture;
+      this.renderer.setRenderTarget(hist);
+      this.renderer.render(this.scene, this.cam);
+    }
+    u.uFade.value = fade;
+    u.tPrev.value = hist.texture;
     this.renderer.setRenderTarget(null);
     this.renderer.render(this.scene, this.cam);
     return true;

@@ -1,7 +1,7 @@
 {
  "lane": "viewing-r2",
- "when": "2026-08-22T02:43:31.843Z",
- "base": "https://senjenz-portal.github.io/gaslight-remake",
+ "when": "2026-08-22T05:02:37.919Z",
+ "base": "http://127.0.0.1:59549",
  "scale": {
   "rows": [
    {
@@ -2041,8 +2041,8 @@
     "resolved": true,
     "waited": 0,
     "aim": [
-     917,
-     540
+     923,
+     543
     ],
     "onTarget": true
    },
@@ -2061,7 +2061,7 @@
     "waited": 0,
     "aim": [
      959,
-     556
+     557
     ],
     "onTarget": true
    },
@@ -2148,6 +2148,517 @@
    "verb": "release",
    "at": 251.05
   }
+ },
+ "cuts": {
+  "cuts": 79,
+  "holds": 3,
+  "log": [
+   {
+    "unit": "ody-i-00-head",
+    "t": 0,
+    "setup": "SH-EST",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-00-head",
+    "t": 0,
+    "setup": "SH-EST",
+    "kind": "hold"
+   },
+   {
+    "unit": "ody-i-01-bard",
+    "t": 3,
+    "setup": "SH-FLEET",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-02-iamulysses",
+    "t": 6,
+    "setup": "SH-TELLER",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-03-troy",
+    "t": 9,
+    "setup": "SH-CAMP",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-04-lawless",
+    "t": 12,
+    "setup": "SH-STRAIT",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-05-dawn",
+    "t": 15,
+    "setup": "SH-ISLAND",
+    "kind": "dissolve"
+   },
+   {
+    "unit": "ody-i-06-smoke",
+    "t": 18,
+    "setup": "SH-CAMP",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-07-council",
+    "t": 21,
+    "setup": "SH-COUNCIL",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-08-cave",
+    "t": 48.25,
+    "setup": "SH-STRAIT",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-09-monster",
+    "t": 51.25,
+    "setup": "SH-CRAG",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-10-wineskin",
+    "t": 54.25,
+    "setup": "SH-TELLER",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-11-twentyone",
+    "t": 57.25,
+    "setup": "SH-SKIN",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-i-12-misgave",
+    "t": 60.25,
+    "setup": "SH-STRAIT",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-00-head",
+    "t": 63.25,
+    "setup": "CV-EST2",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-01-beg",
+    "t": 66.25,
+    "setup": "CV-RACKS",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-02-present",
+    "t": 69.25,
+    "setup": "CV-ULY",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-03-return",
+    "t": 72.25,
+    "setup": "CV-DOOR",
+    "kind": "dissolve"
+   },
+   {
+    "unit": "ody-ii-04-boulder",
+    "t": 75.25,
+    "setup": "CV-DOOR",
+    "kind": "hold"
+   },
+   {
+    "unit": "ody-ii-05-strangers",
+    "t": 78.25,
+    "setup": "CV-GIANT-E",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-06-plea",
+    "t": 81.25,
+    "setup": "CV-OVER",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-07-pitiless",
+    "t": 84.25,
+    "setup": "CV-GIANT-W",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-08-shipfast",
+    "t": 87.25,
+    "setup": "CV-GIANT-E",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-09-shiplie",
+    "t": 90.25,
+    "setup": "CV-ULY",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-10-firstmeal",
+    "t": 93.25,
+    "setup": "CV-FIRE",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-11-sword",
+    "t": 96.25,
+    "setup": "CV-OBJ",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-12-shiftstone",
+    "t": 96.25,
+    "setup": "CV-DOOR",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-ii-13-tillmorning",
+    "t": 99.25,
+    "setup": "CV-AFTER",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-00-head",
+    "t": 102.25,
+    "setup": "CV-EST3",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-01-morningmeal",
+    "t": 105.25,
+    "setup": "CV-MEN",
+    "kind": "dissolve"
+   },
+   {
+    "unit": "ody-iii-02-quiverlid",
+    "t": 108.25,
+    "setup": "CV-DOOR",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-03-scheme",
+    "t": 111.25,
+    "setup": "CV-ULY",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-04-club",
+    "t": 114.25,
+    "setup": "CV-CLUB",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-05-lots",
+    "t": 117.25,
+    "setup": "CV-LOTS",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-06-return",
+    "t": 120.25,
+    "setup": "CV-DOOR",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-07-suppertwo",
+    "t": 123.25,
+    "setup": "CV-FIRE",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-08-lookhere",
+    "t": 126.25,
+    "setup": "CV-BOWL",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-09-besokind",
+    "t": 129.65,
+    "setup": "CV-GIANT-W",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-10-thrice",
+    "t": 138.65,
+    "setup": "CV-BOWL",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-11-noman",
+    "t": 146.65,
+    "setup": "CV-ULY",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-12-nomanlast",
+    "t": 149.65,
+    "setup": "CV-GIANT-W",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iii-13-neck",
+    "t": 152.65,
+    "setup": "CV-COLLAPSE",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-00-head",
+    "t": 159.15,
+    "setup": "CV-EST4",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-01-embers",
+    "t": 162.55,
+    "setup": "CV-OBJ",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-02-glowing",
+    "t": 165.667,
+    "setup": "CV-FIVEFACES",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-03-auger",
+    "t": 169.267,
+    "setup": "CV-AUGER",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-04-bore",
+    "t": 169.867,
+    "setup": "CV-GIANT-W",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-05-hiss",
+    "t": 173.067,
+    "setup": "CV-BLIND",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-06-fright",
+    "t": 176.067,
+    "setup": "CV-FIVEFACES",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-07-whatails",
+    "t": 178.267,
+    "setup": "CV-DOOR",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-08-nomankilling",
+    "t": 181.4,
+    "setup": "CV-GIANT-E",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-09-mustbeill",
+    "t": 184.4,
+    "setup": "CV-DOOR",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-10-wentaway",
+    "t": 187.4,
+    "setup": "CV-DOOR",
+    "kind": "hold"
+   },
+   {
+    "unit": "ody-iv-11-stone",
+    "t": 190.4,
+    "setup": "CV-GIANT-W",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-iv-12-doorway",
+    "t": 193.4,
+    "setup": "CV-SEATED",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-00-head",
+    "t": 196.4,
+    "setup": "CV-EST5",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-01-puzzling",
+    "t": 199.8,
+    "setup": "CV-ULY",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-02-withies",
+    "t": 202.9,
+    "setup": "CV-WITHIES",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-03-threetoaman",
+    "t": 205.9,
+    "setup": "CV-HANDPASS",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-04-greatram",
+    "t": 208.9,
+    "setup": "CV-WITHIES",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-05-dawn",
+    "t": 208.9,
+    "setup": "CV-DAWNMOUTH",
+    "kind": "dissolve"
+   },
+   {
+    "unit": "ody-v-06-feltbacks",
+    "t": 211.9,
+    "setup": "CV-HANDPASS",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-07-lastofall",
+    "t": 214.9,
+    "setup": "CV-BELLY",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-08-ramspeech1",
+    "t": 217.9,
+    "setup": "CV-RAMSPEECH",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-09-ramspeech2",
+    "t": 220.9,
+    "setup": "CV-TWOSHOT",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-10-ramspeech3",
+    "t": 223.9,
+    "setup": "CV-RAMSPEECH",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-11-freed",
+    "t": 226.9,
+    "setup": "CV-OUT",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-v-12-aboard",
+    "t": 229.9,
+    "setup": "CV-DAWNMOUTH",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-01-jeer",
+    "t": 232.9,
+    "setup": "SEA-EST",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-02-taunt",
+    "t": 232.9,
+    "setup": "SEA-STERN",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-03-rock1",
+    "t": 238.9,
+    "setup": "SEA-ROCK",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-04-twiceasfar",
+    "t": 241.5,
+    "setup": "SEA-DECK",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-05-menbeg",
+    "t": 244.65,
+    "setup": "SEA-MEN",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-06-defy",
+    "t": 247.65,
+    "setup": "SEA-EST",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-07-myname",
+    "t": 247.65,
+    "setup": "SEA-STERN",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-08-prophecy",
+    "t": 251.05,
+    "setup": "SEA-CLIFF",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-09-fatherson",
+    "t": 254.05,
+    "setup": "SEA-HAND",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-10-hades",
+    "t": 257.05,
+    "setup": "SEA-STERN",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-11-curse",
+    "t": 260.05,
+    "setup": "SEA-CLIFF",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-12-heard",
+    "t": 263.05,
+    "setup": "SEA-ROCK",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-13-ram",
+    "t": 265.267,
+    "setup": "SEA-ALTAR",
+    "kind": "cut"
+   },
+   {
+    "unit": "ody-vi-14-sailedon",
+    "t": 268.3,
+    "setup": "SEA-OFF",
+    "kind": "dissolve"
+   }
+  ],
+  "coverage": {
+   "law": "a scene is an edited sequence: establish once, then alternate; the angle changes between consecutive units unless a hold is declared, and a hold is the same shot still running.",
+   "lens": "spielberg",
+   "ok": true,
+   "totals": {
+    "setups": 56,
+    "cuts": 73,
+    "holds": 2,
+    "returns": 23,
+    "dissolves": 5
+   }
+  },
+  "lens": "spielberg"
  },
  "routes": [
   {
@@ -2476,8 +2987,8 @@
     "target": "sword",
     "shot": "GATE",
     "aim": [
-     916,
-     540
+     923,
+     543
     ],
     "onPixels": true,
     "ringOnTarget": true,
@@ -2829,10 +3340,10 @@
     "set": "shore",
     "cls": "ACTION",
     "cine": {
-     "size": 0.37423561831697644,
+     "size": 0.4144471806963109,
      "inFrame": 1,
-     "cx": -0.15785432457891505,
-     "cy": 0.025793803442895946,
+     "cx": -0.15929456237826464,
+     "cy": 0.038314639177978144,
      "rig": {
       "on": true,
       "fillE": 6.17,
@@ -2845,10 +3356,10 @@
      "unit": "ody-i-02-iamulysses",
      "cls": "ACTION",
      "box": [
-      -0.24,
-      -0.348,
-      -0.075,
-      0.4
+      -0.245,
+      -0.376,
+      -0.073,
+      0.453
      ],
      "law": {
       "p90": 0.3,
@@ -2862,16 +3373,16 @@
       "rimE": 14.7,
       "side": 1
      },
-     "px": 510,
-     "mean": 0.5987,
-     "p10": 0.2623,
-     "p50": 0.6017,
-     "p90": 0.9547,
-     "max": 0.9677,
-     "ring": 0.5818,
-     "meanSep": 0.0169,
-     "sep": 0.3729,
-     "dark": 0.0118,
+     "px": 570,
+     "mean": 0.5684,
+     "p10": 0.2357,
+     "p50": 0.5426,
+     "p90": 0.9455,
+     "max": 0.9641,
+     "ring": 0.5689,
+     "meanSep": 0.0006,
+     "sep": 0.3766,
+     "dark": 0.0193,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -2882,10 +3393,10 @@
     "set": "shore",
     "cls": "NARRATION",
     "cine": {
-     "size": 0.5759671550924887,
+     "size": 0.33582974897427886,
      "inFrame": 1,
-     "cx": -0.14797181794297515,
-     "cy": 0.041676382714434856,
+     "cx": -0.13337064359766956,
+     "cy": 0.0063573089824278395,
      "rig": {
       "on": true,
       "fillE": 5.2,
@@ -2898,10 +3409,10 @@
      "unit": "ody-i-03-troy",
      "cls": "NARRATION",
      "box": [
-      -0.267,
-      -0.534,
-      -0.029,
-      0.618
+      -0.352,
+      -0.329,
+      0.085,
+      0.342
      ],
      "law": {
       "p90": 0.3,
@@ -2915,16 +3426,16 @@
       "rimE": 11.9,
       "side": 1
      },
-     "px": 1071,
-     "mean": 0.5858,
-     "p10": 0.2217,
-     "p50": 0.6081,
-     "p90": 0.952,
-     "max": 0.9604,
-     "ring": 0.5657,
-     "meanSep": 0.02,
-     "sep": 0.3863,
-     "dark": 0.0168,
+     "px": 1147,
+     "mean": 0.6417,
+     "p10": 0.1112,
+     "p50": 0.8035,
+     "p90": 0.9494,
+     "max": 0.9877,
+     "ring": 0.6247,
+     "meanSep": 0.017,
+     "sep": 0.3247,
+     "dark": 0.0541,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -2935,10 +3446,10 @@
     "set": "shore",
     "cls": "ACTION",
     "cine": {
-     "size": 0.8075119483543625,
+     "size": 0.8051604254086673,
      "inFrame": 1,
-     "cx": 0.11188429167916061,
-     "cy": 0.009291546502631864,
+     "cx": 0.11600424313903077,
+     "cy": 0.007838106406340029,
      "rig": {
       "on": true,
       "fillE": 6.17,
@@ -2951,10 +3462,10 @@
      "unit": "ody-i-04-lawless",
      "cls": "ACTION",
      "box": [
-      -0.422,
-      -0.798,
-      0.646,
-      0.817
+      -0.408,
+      -0.797,
+      0.64,
+      0.813
      ],
      "law": {
       "p90": 0.3,
@@ -2968,16 +3479,16 @@
       "rimE": 14.7,
       "side": 1
      },
-     "px": 6264,
-     "mean": 0.2316,
-     "p10": 0.0271,
-     "p50": 0.1347,
-     "p90": 0.4819,
-     "max": 0.8288,
-     "ring": 0.1634,
-     "meanSep": 0.0682,
-     "sep": 0.3185,
-     "dark": 0.1365,
+     "px": 6035,
+     "mean": 0.2649,
+     "p10": 0.0243,
+     "p50": 0.238,
+     "p90": 0.5309,
+     "max": 0.8513,
+     "ring": 0.194,
+     "meanSep": 0.0709,
+     "sep": 0.3369,
+     "dark": 0.1751,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -3041,10 +3552,10 @@
     "set": "shore",
     "cls": "NARRATION",
     "cine": {
-     "size": 0.3483883016858085,
+     "size": 0.4340362541666805,
      "inFrame": 1,
-     "cx": -0.1343550584693346,
-     "cy": 0.00434946890985019,
+     "cx": -0.13939517464428555,
+     "cy": -0.010280153320197605,
      "rig": {
       "on": true,
       "fillE": 5.2,
@@ -3057,10 +3568,10 @@
      "unit": "ody-i-06-smoke",
      "cls": "NARRATION",
      "box": [
-      -0.36,
-      -0.344,
-      0.092,
-      0.353
+      -0.417,
+      -0.444,
+      0.138,
+      0.424
      ],
      "law": {
       "p90": 0.3,
@@ -3074,16 +3585,16 @@
       "rimE": 11.9,
       "side": 1
      },
-     "px": 1216,
-     "mean": 0.5826,
-     "p10": 0.1605,
-     "p50": 0.6276,
-     "p90": 0.9015,
-     "max": 0.9969,
-     "ring": 0.6793,
-     "meanSep": 0.0967,
-     "sep": 0.2222,
-     "dark": 0.028,
+     "px": 1840,
+     "mean": 0.6016,
+     "p10": 0.1704,
+     "p50": 0.7045,
+     "p90": 0.9035,
+     "max": 0.9997,
+     "ring": 0.6844,
+     "meanSep": 0.0828,
+     "sep": 0.2192,
+     "dark": 0.0245,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -3147,10 +3658,10 @@
     "set": "shore",
     "cls": "ACTION",
     "cine": {
-     "size": 0.7306620188128854,
+     "size": 0.7328983379876111,
      "inFrame": 1,
-     "cx": 0.07629490515730647,
-     "cy": -0.026801430172186225,
+     "cx": 0.06936291026416322,
+     "cy": -0.011901770756871155,
      "rig": {
       "on": true,
       "fillE": 6.17,
@@ -3163,10 +3674,10 @@
      "unit": "ody-i-08-cave",
      "cls": "ACTION",
      "box": [
-      -0.384,
-      -0.757,
-      0.537,
-      0.704
+      -0.4,
+      -0.745,
+      0.539,
+      0.721
      ],
      "law": {
       "p90": 0.3,
@@ -3180,16 +3691,16 @@
       "rimE": 14.7,
       "side": 1
      },
-     "px": 4940,
-     "mean": 0.2625,
+     "px": 5082,
+     "mean": 0.2802,
      "p10": 0.0045,
-     "p50": 0.1599,
-     "p90": 0.7301,
-     "max": 0.944,
-     "ring": 0.4818,
-     "meanSep": 0.2193,
-     "sep": 0.2484,
-     "dark": 0.2302,
+     "p50": 0.2067,
+     "p90": 0.7241,
+     "max": 0.892,
+     "ring": 0.4891,
+     "meanSep": 0.2089,
+     "sep": 0.235,
+     "dark": 0.2141,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -3253,10 +3764,10 @@
     "set": "shore",
     "cls": "NARRATION",
     "cine": {
-     "size": 0.38505757402260643,
+     "size": 0.38774348112778917,
      "inFrame": 1,
-     "cx": -0.11177810620459945,
-     "cy": 0.008083258936159049,
+     "cx": -0.12820426413411118,
+     "cy": 0.008079946794740056,
      "rig": {
       "on": true,
       "fillE": 5.2,
@@ -3269,10 +3780,10 @@
      "unit": "ody-i-10-wineskin",
      "cls": "NARRATION",
      "box": [
-      -0.357,
-      -0.377,
-      0.133,
-      0.393
+      -0.392,
+      -0.38,
+      0.136,
+      0.396
      ],
      "law": {
       "p90": 0.3,
@@ -3286,16 +3797,16 @@
       "rimE": 11.9,
       "side": 1
      },
-     "px": 1435,
-     "mean": 0.7573,
-     "p10": 0.534,
-     "p50": 0.811,
-     "p90": 0.9179,
+     "px": 1584,
+     "mean": 0.6459,
+     "p10": 0.1594,
+     "p50": 0.7283,
+     "p90": 0.9198,
      "max": 0.9532,
-     "ring": 0.6633,
-     "meanSep": 0.094,
-     "sep": 0.2546,
-     "dark": 0,
+     "ring": 0.5722,
+     "meanSep": 0.0737,
+     "sep": 0.3477,
+     "dark": 0.0398,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -3359,10 +3870,10 @@
     "set": "shore",
     "cls": "NARRATION",
     "cine": {
-     "size": 0.8359069989873082,
+     "size": 0.8495863309500811,
      "inFrame": 1,
-     "cx": 0.07652512926905397,
-     "cy": -0.025684699038217518,
+     "cx": 0.05469568013477316,
+     "cy": -0.022278920684252135,
      "rig": {
       "on": true,
       "fillE": 5.2,
@@ -3375,10 +3886,10 @@
      "unit": "ody-i-12-misgave",
      "cls": "NARRATION",
      "box": [
-      -0.417,
-      -0.862,
-      0.57,
-      0.81
+      -0.468,
+      -0.872,
+      0.578,
+      0.827
      ],
      "law": {
       "p90": 0.3,
@@ -3392,16 +3903,16 @@
       "rimE": 11.9,
       "side": 1
      },
-     "px": 5920,
-     "mean": 0.2571,
+     "px": 6375,
+     "mean": 0.251,
      "p10": 0.0045,
-     "p50": 0.1446,
-     "p90": 0.7002,
-     "max": 0.9639,
-     "ring": 0.3876,
-     "meanSep": 0.1305,
-     "sep": 0.3125,
-     "dark": 0.2039,
+     "p50": 0.1743,
+     "p90": 0.6719,
+     "max": 0.9294,
+     "ring": 0.4363,
+     "meanSep": 0.1853,
+     "sep": 0.2356,
+     "dark": 0.2386,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -3518,15 +4029,18 @@
     "set": "cave",
     "cls": "NARRATION",
     "cine": {
-     "size": 0.536477857377105,
+     "size": 0.47793300303229336,
      "inFrame": 1,
-     "cx": -0.12093601203895002,
-     "cy": 0.011196358641764992,
+     "cx": -0.16329834182402547,
+     "cy": 0.03835191945754354,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
      "rig": {
       "on": true,
       "fillE": 8,
       "rimE": 22.1,
-      "side": 1
+      "side": -1
      },
      "rack": 0
     },
@@ -3534,10 +4048,10 @@
      "unit": "ody-ii-02-present",
      "cls": "NARRATION",
      "box": [
-      -0.455,
-      -0.525,
-      0.213,
-      0.548
+      -0.257,
+      -0.44,
+      -0.07,
+      0.516
      ],
      "law": {
       "p90": 0.3,
@@ -3549,17 +4063,17 @@
       "on": true,
       "fillE": 8,
       "rimE": 22.1,
-      "side": 1
+      "side": -1
      },
-     "px": 2640,
-     "mean": 0.7239,
-     "p10": 0.5166,
-     "p50": 0.7272,
-     "p90": 0.911,
-     "max": 0.9674,
-     "ring": 0.696,
-     "meanSep": 0.0279,
-     "sep": 0.215,
+     "px": 688,
+     "mean": 0.9212,
+     "p10": 0.8728,
+     "p50": 0.9323,
+     "p90": 0.9553,
+     "max": 0.9677,
+     "ring": 0.8647,
+     "meanSep": 0.0565,
+     "sep": 0.0906,
      "dark": 0,
      "darkCap": 0.55,
      "ok": true,
@@ -3571,10 +4085,10 @@
     "set": "cave",
     "cls": "ACTION",
     "cine": {
-     "size": 0.5218560312966236,
+     "size": 0.707758536822571,
      "inFrame": 1,
-     "cx": 0.09682062850559997,
-     "cy": 0.006129875053585865,
+     "cx": -0.06678396998771755,
+     "cy": 0.052419883015148716,
      "rig": {
       "on": true,
       "fillE": 9.5,
@@ -3587,10 +4101,10 @@
      "unit": "ody-ii-03-return",
      "cls": "ACTION",
      "box": [
-      -0.185,
-      -0.516,
-      0.379,
-      0.528
+      -0.473,
+      -0.655,
+      0.339,
+      0.76
      ],
      "law": {
       "p90": 0.3,
@@ -3604,16 +4118,16 @@
       "rimE": 27.3,
       "side": 1
      },
-     "px": 2209,
-     "mean": 0.5493,
-     "p10": 0.2204,
-     "p50": 0.6194,
-     "p90": 0.8127,
-     "max": 0.8747,
-     "ring": 0.4837,
-     "meanSep": 0.0656,
-     "sep": 0.329,
-     "dark": 0.0009,
+     "px": 4221,
+     "mean": 0.7187,
+     "p10": 0.4779,
+     "p50": 0.7426,
+     "p90": 0.9173,
+     "max": 0.9663,
+     "ring": 0.5986,
+     "meanSep": 0.1201,
+     "sep": 0.3187,
+     "dark": 0,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -3624,10 +4138,10 @@
     "set": "cave",
     "cls": "ACTION",
     "cine": {
-     "size": 0.7175097085354885,
+     "size": 0.707758536822571,
      "inFrame": 1,
-     "cx": -0.047968924293732035,
-     "cy": 0.05133761380947249,
+     "cx": -0.06678396998771755,
+     "cy": 0.052419883015148716,
      "rig": {
       "on": true,
       "fillE": 9.5,
@@ -3640,10 +4154,10 @@
      "unit": "ody-ii-04-boulder",
      "cls": "ACTION",
      "box": [
-      -0.457,
-      -0.666,
-      0.361,
-      0.769
+      -0.473,
+      -0.655,
+      0.339,
+      0.76
      ],
      "law": {
       "p90": 0.3,
@@ -3657,16 +4171,16 @@
       "rimE": 27.3,
       "side": 1
      },
-     "px": 4288,
-     "mean": 0.7045,
-     "p10": 0.4839,
-     "p50": 0.6955,
-     "p90": 0.9289,
-     "max": 0.9989,
-     "ring": 0.5138,
-     "meanSep": 0.1907,
-     "sep": 0.4151,
-     "dark": 0.0259,
+     "px": 4221,
+     "mean": 0.667,
+     "p10": 0.4392,
+     "p50": 0.6659,
+     "p90": 0.9199,
+     "max": 0.9913,
+     "ring": 0.4654,
+     "meanSep": 0.2017,
+     "sep": 0.4545,
+     "dark": 0.0668,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -3789,10 +4303,10 @@
     "set": "cave",
     "cls": "GIANT",
     "cine": {
-     "size": 0.7478186041059816,
+     "size": 0.7509290473729305,
      "inFrame": 1,
-     "cx": 0.13024651853027044,
-     "cy": 0.047813828907176226,
+     "cx": 0.1297688482089957,
+     "cy": 0.04590528577484365,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -3809,9 +4323,9 @@
      "cls": "GIANT",
      "box": [
       -0.032,
-      -0.7,
-      0.292,
-      0.796
+      -0.705,
+      0.291,
+      0.797
      ],
      "law": {
       "p90": 0.3,
@@ -3826,15 +4340,15 @@
       "side": 1
      },
      "px": 1876,
-     "mean": 0.7551,
-     "p10": 0.5795,
-     "p50": 0.7819,
-     "p90": 0.901,
-     "max": 0.9403,
-     "ring": 0.6527,
-     "meanSep": 0.1023,
-     "sep": 0.2483,
-     "dark": 0.0005,
+     "mean": 0.755,
+     "p10": 0.5762,
+     "p50": 0.7862,
+     "p90": 0.9019,
+     "max": 0.9442,
+     "ring": 0.6719,
+     "meanSep": 0.0831,
+     "sep": 0.23,
+     "dark": 0,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -3845,10 +4359,10 @@
     "set": "cave",
     "cls": "GIANT",
     "cine": {
-     "size": 0.7959513998722608,
+     "size": 0.7906197444912035,
      "inFrame": 1,
-     "cx": 0.11990498978863773,
-     "cy": 0.04577934853154708,
+     "cx": 0.11101097170354654,
+     "cy": 0.04817424769274059,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -3864,10 +4378,10 @@
      "unit": "ody-ii-08-shipfast",
      "cls": "GIANT",
      "box": [
-      -0.052,
-      -0.75,
-      0.291,
-      0.842
+      -0.061,
+      -0.742,
+      0.283,
+      0.839
      ],
      "law": {
       "p90": 0.3,
@@ -3881,16 +4395,16 @@
       "rimE": 29.9,
       "side": 1
      },
-     "px": 2059,
-     "mean": 0.7941,
-     "p10": 0.6194,
-     "p50": 0.8363,
-     "p90": 0.9299,
-     "max": 0.9576,
-     "ring": 0.7134,
-     "meanSep": 0.0807,
-     "sep": 0.2165,
-     "dark": 0,
+     "px": 2030,
+     "mean": 0.7936,
+     "p10": 0.6289,
+     "p50": 0.8192,
+     "p90": 0.927,
+     "max": 0.9582,
+     "ring": 0.6823,
+     "meanSep": 0.1113,
+     "sep": 0.2447,
+     "dark": 0.001,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -4013,10 +4527,10 @@
     "set": "cave",
     "cls": "GATE",
     "cine": {
-     "size": 0.3349504478001143,
+     "size": 0.33602574657535,
      "inFrame": 1,
-     "cx": -0.14371420949330105,
-     "cy": 0.0025135970703897836,
+     "cx": -0.13349159114453288,
+     "cy": 0.006423012230542868,
      "side": -1,
      "wantSide": -1,
      "sideOk": true,
@@ -4032,10 +4546,10 @@
      "unit": "ody-ii-11-sword",
      "cls": "GATE",
      "box": [
-      -0.366,
-      -0.332,
-      0.079,
-      0.337
+      -0.356,
+      -0.33,
+      0.089,
+      0.342
      ],
      "law": {
       "p90": 0.3,
@@ -4050,15 +4564,15 @@
       "side": -1
      },
      "px": 1147,
-     "mean": 0.7584,
-     "p10": 0.6724,
-     "p50": 0.7744,
-     "p90": 0.8418,
-     "max": 0.9876,
-     "ring": 0.6385,
-     "meanSep": 0.1199,
-     "sep": 0.2032,
-     "dark": 0,
+     "mean": 0.7438,
+     "p10": 0.6256,
+     "p50": 0.7722,
+     "p90": 0.835,
+     "max": 0.9871,
+     "ring": 0.6228,
+     "meanSep": 0.121,
+     "sep": 0.2122,
+     "dark": 0.0009,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -4069,10 +4583,10 @@
     "set": "cave",
     "cls": "NARRATION",
     "cine": {
-     "size": 0.7038876443921924,
+     "size": 0.8181309229623072,
      "inFrame": 1,
-     "cx": -0.06652572825124592,
-     "cy": 0.053500808203993666,
+     "cx": -0.0678416784475975,
+     "cy": 0.060371983350974934,
      "rig": {
       "on": true,
       "fillE": 8,
@@ -4085,10 +4599,10 @@
      "unit": "ody-ii-12-shiftstone",
      "cls": "NARRATION",
      "box": [
-      -0.473,
-      -0.65,
-      0.34,
-      0.757
+      -0.533,
+      -0.758,
+      0.397,
+      0.879
      ],
      "law": {
       "p90": 0.3,
@@ -4102,16 +4616,16 @@
       "rimE": 22.1,
       "side": 1
      },
-     "px": 4154,
-     "mean": 0.6476,
-     "p10": 0.4069,
-     "p50": 0.6573,
-     "p90": 0.9008,
-     "max": 0.9585,
-     "ring": 0.4039,
-     "meanSep": 0.2437,
-     "sep": 0.4969,
-     "dark": 0.0433,
+     "px": 5472,
+     "mean": 0.2982,
+     "p10": 0.0095,
+     "p50": 0.0608,
+     "p90": 0.8738,
+     "max": 0.9578,
+     "ring": 0.4337,
+     "meanSep": 0.1355,
+     "sep": 0.4401,
+     "dark": 0.4984,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -4228,15 +4742,18 @@
     "set": "cave",
     "cls": "ACTION",
     "cine": {
-     "size": 0.6824615297960697,
+     "size": 0.5461600030827992,
      "inFrame": 1,
-     "cx": 0.11516323280812524,
-     "cy": -0.03300881604648992,
+     "cx": -0.13677975039606688,
+     "cy": 0.019067457674715627,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
      "rig": {
       "on": true,
       "fillE": 9.5,
       "rimE": 27.3,
-      "side": 1
+      "side": -1
      },
      "rack": 0
     },
@@ -4244,10 +4761,10 @@
      "unit": "ody-iii-01-morningmeal",
      "cls": "ACTION",
      "box": [
-      -0.298,
-      -0.715,
-      0.528,
-      0.649
+      -0.236,
+      -0.527,
+      -0.038,
+      0.565
      ],
      "law": {
       "p90": 0.3,
@@ -4259,18 +4776,18 @@
       "on": true,
       "fillE": 9.5,
       "rimE": 27.3,
-      "side": 1
+      "side": -1
      },
-     "px": 4080,
-     "mean": 0.5248,
-     "p10": 0.0977,
-     "p50": 0.5451,
-     "p90": 0.8337,
-     "max": 0.9955,
-     "ring": 0.5008,
-     "meanSep": 0.024,
-     "sep": 0.3329,
-     "dark": 0.0593,
+     "px": 882,
+     "mean": 0.5903,
+     "p10": 0.1676,
+     "p50": 0.7314,
+     "p90": 0.8506,
+     "max": 0.9408,
+     "ring": 0.5033,
+     "meanSep": 0.087,
+     "sep": 0.3473,
+     "dark": 0.0023,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -4281,10 +4798,10 @@
     "set": "cave",
     "cls": "ACTION",
     "cine": {
-     "size": 0.745059394184904,
+     "size": 0.7451066128356263,
      "inFrame": 1,
-     "cx": -0.06516079797764271,
-     "cy": 0.05751714079772857,
+     "cx": -0.06470118999594632,
+     "cy": 0.05494759127368826,
      "rig": {
       "on": true,
       "fillE": 9.5,
@@ -4297,10 +4814,10 @@
      "unit": "ody-iii-02-quiverlid",
      "cls": "ACTION",
      "box": [
-      -0.489,
-      -0.688,
+      -0.487,
+      -0.69,
       0.358,
-      0.803
+      0.8
      ],
      "law": {
       "p90": 0.3,
@@ -4315,14 +4832,14 @@
       "side": 1
      },
      "px": 4554,
-     "mean": 0.6721,
-     "p10": 0.4398,
-     "p50": 0.6744,
-     "p90": 0.9078,
+     "mean": 0.6736,
+     "p10": 0.4437,
+     "p50": 0.6745,
+     "p90": 0.9075,
      "max": 0.9654,
-     "ring": 0.5237,
-     "meanSep": 0.1484,
-     "sep": 0.3841,
+     "ring": 0.5282,
+     "meanSep": 0.1454,
+     "sep": 0.3794,
      "dark": 0,
      "darkCap": 0.55,
      "ok": true,
@@ -4334,10 +4851,10 @@
     "set": "cave",
     "cls": "DIALOGUE",
     "cine": {
-     "size": 0.6098541014590371,
+     "size": 0.5828494099455657,
      "inFrame": 1,
-     "cx": -0.12517739233981967,
-     "cy": 0.029714050604934095,
+     "cx": -0.1367092328700545,
+     "cy": 0.028038413806356133,
      "side": -1,
      "wantSide": -1,
      "sideOk": true,
@@ -4353,10 +4870,10 @@
      "unit": "ody-iii-03-scheme",
      "cls": "DIALOGUE",
      "box": [
-      -0.234,
-      -0.58,
-      -0.016,
-      0.64
+      -0.261,
+      -0.555,
+      -0.012,
+      0.611
      ],
      "law": {
       "p90": 0.3,
@@ -4370,16 +4887,16 @@
       "rimE": 26,
       "side": -1
      },
-     "px": 1080,
-     "mean": 0.4901,
-     "p10": 0.1722,
-     "p50": 0.451,
-     "p90": 0.8147,
-     "max": 0.9019,
-     "ring": 0.5633,
-     "meanSep": 0.0731,
-     "sep": 0.2514,
-     "dark": 0.0287,
+     "px": 1144,
+     "mean": 0.5199,
+     "p10": 0.1728,
+     "p50": 0.4772,
+     "p90": 0.8158,
+     "max": 0.9322,
+     "ring": 0.5367,
+     "meanSep": 0.0168,
+     "sep": 0.2792,
+     "dark": 0.0087,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -4496,10 +5013,10 @@
     "set": "cave",
     "cls": "NARRATION",
     "cine": {
-     "size": 0.6679208448335878,
+     "size": 0.7755921364235826,
      "inFrame": 1,
-     "cx": -0.08566235705910555,
-     "cy": 0.04631935696240802,
+     "cx": -0.06820324668431887,
+     "cy": 0.0524696552981172,
      "rig": {
       "on": true,
       "fillE": 8,
@@ -4512,10 +5029,10 @@
      "unit": "ody-iii-06-return",
      "cls": "NARRATION",
      "box": [
-      -0.469,
-      -0.622,
-      0.297,
-      0.714
+      -0.509,
+      -0.723,
+      0.373,
+      0.828
      ],
      "law": {
       "p90": 0.3,
@@ -4529,16 +5046,16 @@
       "rimE": 22.1,
       "side": 1
      },
-     "px": 3717,
-     "mean": 0.7098,
-     "p10": 0.4583,
-     "p50": 0.7477,
-     "p90": 0.8968,
-     "max": 0.9605,
-     "ring": 0.4585,
-     "meanSep": 0.2513,
-     "sep": 0.4383,
-     "dark": 0,
+     "px": 4968,
+     "mean": 0.69,
+     "p10": 0.4365,
+     "p50": 0.7209,
+     "p90": 0.894,
+     "max": 0.9994,
+     "ring": 0.4785,
+     "meanSep": 0.2115,
+     "sep": 0.4155,
+     "dark": 0.0002,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -4549,10 +5066,10 @@
     "set": "cave",
     "cls": "ACTION",
     "cine": {
-     "size": 0.6947370108200717,
+     "size": 0.6961725190080104,
      "inFrame": 1,
-     "cx": 0.10831579245919207,
-     "cy": 0.012192229787033326,
+     "cx": 0.1093891302238069,
+     "cy": 0.012521898058325598,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -4568,10 +5085,10 @@
      "unit": "ody-iii-07-suppertwo",
      "cls": "ACTION",
      "box": [
-      -0.038,
-      -0.683,
-      0.255,
-      0.707
+      -0.04,
+      -0.684,
+      0.259,
+      0.709
      ],
      "law": {
       "p90": 0.3,
@@ -4585,15 +5102,15 @@
       "rimE": 27.3,
       "side": 1
      },
-     "px": 1550,
-     "mean": 0.7711,
-     "p10": 0.5771,
-     "p50": 0.8541,
-     "p90": 0.9117,
-     "max": 0.9543,
-     "ring": 0.6662,
-     "meanSep": 0.1049,
-     "sep": 0.2455,
+     "px": 1612,
+     "mean": 0.7718,
+     "p10": 0.5709,
+     "p50": 0.8509,
+     "p90": 0.9106,
+     "max": 0.9497,
+     "ring": 0.656,
+     "meanSep": 0.1158,
+     "sep": 0.2545,
      "dark": 0,
      "darkCap": 0.55,
      "ok": true,
@@ -4661,10 +5178,10 @@
     "set": "cave",
     "cls": "GIANT",
     "cine": {
-     "size": 0.8405033393724695,
+     "size": 0.8412158826324077,
      "inFrame": 1,
-     "cx": 0.09854226492917521,
-     "cy": 0.029332355897377427,
+     "cx": 0.09795873179005368,
+     "cy": 0.029133796167347625,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -4680,9 +5197,9 @@
      "unit": "ody-iii-09-besokind",
      "cls": "GIANT",
      "box": [
-      -0.084,
-      -0.811,
-      0.282,
+      -0.085,
+      -0.812,
+      0.281,
       0.87
      ],
      "law": {
@@ -4698,15 +5215,15 @@
       "side": 1
      },
      "px": 2294,
-     "mean": 0.3258,
+     "mean": 0.3334,
      "p10": 0.0003,
-     "p50": 0.22,
-     "p90": 0.78,
+     "p50": 0.2413,
+     "p90": 0.7899,
      "max": 0.9725,
-     "ring": 0.541,
-     "meanSep": 0.2153,
-     "sep": 0.239,
-     "dark": 0.398,
+     "ring": 0.5305,
+     "meanSep": 0.1972,
+     "sep": 0.2593,
+     "dark": 0.3906,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -4717,18 +5234,18 @@
     "set": "cave",
     "cls": "ACTION",
     "cine": {
-     "size": 0.7748283257468833,
+     "size": 0.37881025208320673,
      "inFrame": 1,
-     "cx": 0.09595265362145727,
-     "cy": 0.023978212485617323,
-     "side": 1,
-     "wantSide": 1,
+     "cx": -0.1609677978807157,
+     "cy": -0.2698575668537794,
+     "side": -1,
+     "wantSide": -1,
      "sideOk": true,
      "rig": {
       "on": true,
       "fillE": 9.5,
       "rimE": 27.3,
-      "side": 1
+      "side": -1
      },
      "rack": 0
     },
@@ -4736,10 +5253,10 @@
      "unit": "ody-iii-10-thrice",
      "cls": "ACTION",
      "box": [
-      -0.066,
-      -0.751,
-      0.258,
-      0.799
+      -0.372,
+      -0.649,
+      0.05,
+      0.109
      ],
      "law": {
       "p90": 0.3,
@@ -4751,18 +5268,18 @@
       "on": true,
       "fillE": 9.5,
       "rimE": 27.3,
-      "side": 1
+      "side": -1
      },
-     "px": 1932,
-     "mean": 0.7505,
-     "p10": 0.565,
-     "p50": 0.7958,
-     "p90": 0.904,
-     "max": 0.9627,
-     "ring": 0.7285,
-     "meanSep": 0.0219,
-     "sep": 0.1754,
-     "dark": 0,
+     "px": 1224,
+     "mean": 0.3921,
+     "p10": 0.0011,
+     "p50": 0.2648,
+     "p90": 0.8505,
+     "max": 0.9826,
+     "ring": 0.609,
+     "meanSep": 0.2169,
+     "sep": 0.2415,
+     "dark": 0.3546,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -4829,10 +5346,10 @@
     "set": "cave",
     "cls": "GIANT",
     "cine": {
-     "size": 0.8230958857348611,
+     "size": 0.8251962993983191,
      "inFrame": 1,
-     "cx": 0.10611118363303947,
-     "cy": 0.03025312061755847,
+     "cx": 0.10664797517266396,
+     "cy": 0.030428672519004718,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -4848,10 +5365,10 @@
      "unit": "ody-iii-12-nomanlast",
      "cls": "GIANT",
      "box": [
-      -0.059,
-      -0.793,
-      0.271,
-      0.853
+      -0.061,
+      -0.795,
+      0.274,
+      0.856
      ],
      "law": {
       "p90": 0.3,
@@ -4866,14 +5383,14 @@
       "side": 1
      },
      "px": 2117,
-     "mean": 0.7693,
-     "p10": 0.6121,
-     "p50": 0.8164,
-     "p90": 0.9095,
-     "max": 0.9553,
-     "ring": 0.7465,
-     "meanSep": 0.0228,
-     "sep": 0.163,
+     "mean": 0.7666,
+     "p10": 0.6053,
+     "p50": 0.8089,
+     "p90": 0.9065,
+     "max": 0.9542,
+     "ring": 0.7521,
+     "meanSep": 0.0145,
+     "sep": 0.1544,
      "dark": 0,
      "darkCap": 0.55,
      "ok": true,
@@ -4885,10 +5402,10 @@
     "set": "cave",
     "cls": "ACTION",
     "cine": {
-     "size": 1.1599587060684033,
-     "inFrame": 0.8430177953378333,
-     "cx": 0.09251329205516674,
-     "cy": -0.20422704392298108,
+     "size": 1.160535643367155,
+     "inFrame": 0.8411097707547349,
+     "cx": 0.09841414289855892,
+     "cy": -0.20825990547666184,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -4904,10 +5421,10 @@
      "unit": "ody-iii-13-neck",
      "cls": "ACTION",
      "box": [
-      -0.163,
-      -1.364,
-      0.348,
-      0.956
+      -0.159,
+      -1.369,
+      0.356,
+      0.952
      ],
      "law": {
       "p90": 0.3,
@@ -4921,16 +5438,16 @@
       "rimE": 27.3,
       "side": 1
      },
-     "px": 3698,
-     "mean": 0.3307,
-     "p10": 0.0151,
-     "p50": 0.2148,
-     "p90": 0.7517,
-     "max": 0.9147,
-     "ring": 0.1562,
-     "meanSep": 0.1744,
-     "sep": 0.5954,
-     "dark": 0.321,
+     "px": 3655,
+     "mean": 0.2632,
+     "p10": 0.0131,
+     "p50": 0.0758,
+     "p90": 0.7316,
+     "max": 0.9076,
+     "ring": 0.1734,
+     "meanSep": 0.0898,
+     "sep": 0.5582,
+     "dark": 0.4137,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -4994,10 +5511,10 @@
     "set": "cave",
     "cls": "GATE",
     "cine": {
-     "size": 0.3885331715549473,
+     "size": 0.3886525055277644,
      "inFrame": 1,
-     "cx": -0.0883038132911781,
-     "cy": 0.013041916550417976,
+     "cx": -0.08828035465780387,
+     "cy": 0.009786345753674847,
      "side": -1,
      "wantSide": -1,
      "sideOk": true,
@@ -5014,9 +5531,9 @@
      "cls": "GATE",
      "box": [
       -0.345,
-      -0.375,
+      -0.379,
       0.169,
-      0.402
+      0.398
      ],
      "law": {
       "p90": 0.3,
@@ -5031,15 +5548,15 @@
       "side": -1
      },
      "px": 1512,
-     "mean": 0.7111,
-     "p10": 0.5319,
-     "p50": 0.77,
-     "p90": 0.8548,
-     "max": 0.9621,
-     "ring": 0.4915,
-     "meanSep": 0.2196,
-     "sep": 0.3633,
-     "dark": 0.0007,
+     "mean": 0.7134,
+     "p10": 0.5393,
+     "p50": 0.7678,
+     "p90": 0.8559,
+     "max": 0.9624,
+     "ring": 0.4974,
+     "meanSep": 0.216,
+     "sep": 0.3585,
+     "dark": 0.0013,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -5048,31 +5565,31 @@
    {
     "unit": "ody-iv-02-glowing",
     "set": "cave",
-    "cls": "GATE",
+    "cls": "ACTION",
     "cine": {
-     "size": 0.3832725445962453,
+     "size": 0.503049212836132,
      "inFrame": 1,
-     "cx": -0.12516496460918955,
-     "cy": 0.022808348844929605,
+     "cx": -0.1187771660551269,
+     "cy": 0.017257595031890477,
      "side": -1,
      "wantSide": -1,
      "sideOk": true,
      "rig": {
       "on": true,
-      "fillE": 10,
-      "rimE": 28.6,
+      "fillE": 9.5,
+      "rimE": 27.3,
       "side": -1
      },
      "rack": 0
     },
     "read": {
      "unit": "ody-iv-02-glowing",
-     "cls": "GATE",
+     "cls": "ACTION",
      "box": [
-      -0.362,
-      -0.36,
-      0.111,
-      0.406
+      -0.215,
+      -0.486,
+      -0.023,
+      0.52
      ],
      "law": {
       "p90": 0.3,
@@ -5082,20 +5599,20 @@
      },
      "rig": {
       "on": true,
-      "fillE": 10,
-      "rimE": 28.6,
+      "fillE": 9.5,
+      "rimE": 27.3,
       "side": -1
      },
-     "px": 1400,
-     "mean": 0.4107,
+     "px": 765,
+     "mean": 0.4299,
      "p10": 0.0164,
-     "p50": 0.411,
-     "p90": 0.8172,
-     "max": 0.9283,
-     "ring": 0.3466,
-     "meanSep": 0.0641,
-     "sep": 0.4706,
-     "dark": 0.2171,
+     "p50": 0.4186,
+     "p90": 0.8855,
+     "max": 0.9511,
+     "ring": 0.3356,
+     "meanSep": 0.0943,
+     "sep": 0.5499,
+     "dark": 0.2248,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -5162,10 +5679,10 @@
     "set": "cave",
     "cls": "CLOCK",
     "cine": {
-     "size": 1.1042436206387258,
-     "inFrame": 0.9055972625149256,
-     "cx": 0.17546638249395344,
-     "cy": -0.08117555746696925,
+     "size": 1.1165418448068034,
+     "inFrame": 0.8956225014325649,
+     "cx": 0.1775230691347038,
+     "cy": -0.08402780939778332,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -5181,10 +5698,10 @@
      "unit": "ody-iv-04-bore",
      "cls": "CLOCK",
      "box": [
-      -0.078,
-      -1.185,
-      0.429,
-      1.023
+      -0.076,
+      -1.201,
+      0.431,
+      1.033
      ],
      "law": {
       "p90": 0.3,
@@ -5199,14 +5716,14 @@
       "side": 1
      },
      "px": 3654,
-     "mean": 0.3759,
+     "mean": 0.372,
      "p10": 0.0694,
-     "p50": 0.3797,
-     "p90": 0.7592,
-     "max": 0.8896,
-     "ring": 0.318,
-     "meanSep": 0.0579,
-     "sep": 0.4412,
+     "p50": 0.3719,
+     "p90": 0.7494,
+     "max": 0.8905,
+     "ring": 0.3133,
+     "meanSep": 0.0587,
+     "sep": 0.4361,
      "dark": 0,
      "darkCap": 0.55,
      "ok": true,
@@ -5274,15 +5791,18 @@
     "set": "cave",
     "cls": "ACTION",
     "cine": {
-     "size": 0.7099849976114458,
-     "inFrame": 1,
-     "cx": -0.06730811821266486,
-     "cy": 0.05946640259208902,
+     "size": 59.20239481026847,
+     "inFrame": 0.0020012480228553163,
+     "cx": -4.398190065518291,
+     "cy": 45.68101788649837,
+     "side": -1,
+     "wantSide": -1,
+     "sideOk": true,
      "rig": {
       "on": true,
       "fillE": 9.5,
       "rimE": 27.3,
-      "side": 1
+      "side": -1
      },
      "rack": 0
     },
@@ -5290,10 +5810,10 @@
      "unit": "ody-iv-06-fright",
      "cls": "ACTION",
      "box": [
-      -0.476,
-      -0.651,
-      0.341,
-      0.769
+      -12.839,
+      -13.521,
+      4.042,
+      104.883
      ],
      "law": {
       "p90": 0.3,
@@ -5305,18 +5825,18 @@
       "on": true,
       "fillE": 9.5,
       "rimE": 27.3,
-      "side": 1
+      "side": -1
      },
-     "px": 4221,
-     "mean": 0.4622,
-     "p10": 0.0159,
-     "p50": 0.535,
-     "p90": 0.9068,
-     "max": 0.9651,
-     "ring": 0.3864,
-     "meanSep": 0.0758,
-     "sep": 0.5204,
-     "dark": 0.295,
+     "px": 13920,
+     "mean": 0.6316,
+     "p10": 0.2619,
+     "p50": 0.7161,
+     "p90": 0.9408,
+     "max": 0.9779,
+     "ring": 0.6316,
+     "meanSep": 0,
+     "sep": 0.3092,
+     "dark": 0.0037,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -5327,10 +5847,10 @@
     "set": "cave",
     "cls": "DIALOGUE",
     "cine": {
-     "size": 0.5193879808048305,
+     "size": 0.5476260064431409,
      "inFrame": 1,
-     "cx": -0.13583876542909593,
-     "cy": 0.03310938012379874,
+     "cx": -0.13486135604714095,
+     "cy": 0.032427263376422655,
      "rig": {
       "on": true,
       "fillE": 10,
@@ -5343,10 +5863,10 @@
      "unit": "ody-iv-07-whatails",
      "cls": "DIALOGUE",
      "box": [
-      -0.46,
-      -0.486,
-      0.188,
-      0.552
+      -0.474,
+      -0.515,
+      0.204,
+      0.58
      ],
      "law": {
       "p90": 0.3,
@@ -5360,16 +5880,16 @@
       "rimE": 26,
       "side": 1
      },
-     "px": 2484,
-     "mean": 0.535,
-     "p10": 0.0159,
-     "p50": 0.6192,
-     "p90": 0.8901,
-     "max": 0.9803,
-     "ring": 0.2705,
-     "meanSep": 0.2645,
-     "sep": 0.6196,
-     "dark": 0.2122,
+     "px": 2744,
+     "mean": 0.6636,
+     "p10": 0.0167,
+     "p50": 0.7293,
+     "p90": 0.9432,
+     "max": 0.9997,
+     "ring": 0.4935,
+     "meanSep": 0.1701,
+     "sep": 0.4497,
+     "dark": 0.1108,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -5380,10 +5900,10 @@
     "set": "cave",
     "cls": "GIANT",
     "cine": {
-     "size": 1.0666384933007125,
-     "inFrame": 0.9157884555751381,
-     "cx": 0.21047554092506687,
-     "cy": -0.11300805642700895,
+     "size": 0.995441455909917,
+     "inFrame": 0.955858352817781,
+     "cx": 0.15234101074371642,
+     "cy": -0.09243939516474281,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -5399,10 +5919,10 @@
      "unit": "ody-iv-08-nomankilling",
      "cls": "GIANT",
      "box": [
-      -0.043,
-      -1.18,
-      0.464,
-      0.954
+      -0.102,
+      -1.088,
+      0.406,
+      0.903
      ],
      "law": {
       "p90": 0.3,
@@ -5416,16 +5936,16 @@
       "rimE": 29.9,
       "side": 1
      },
-     "px": 3612,
-     "mean": 0.3889,
-     "p10": 0.0694,
-     "p50": 0.41,
-     "p90": 0.7836,
-     "max": 0.9031,
-     "ring": 0.3655,
-     "meanSep": 0.0234,
-     "sep": 0.4181,
-     "dark": 0.0061,
+     "px": 3486,
+     "mean": 0.4622,
+     "p10": 0.2445,
+     "p50": 0.3583,
+     "p90": 0.805,
+     "max": 0.9104,
+     "ring": 0.5003,
+     "meanSep": 0.0381,
+     "sep": 0.3047,
+     "dark": 0,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -5436,10 +5956,10 @@
     "set": "cave",
     "cls": "DIALOGUE",
     "cine": {
-     "size": 0.5473576288384499,
+     "size": 0.5476260064431409,
      "inFrame": 1,
-     "cx": -0.13470645572034798,
-     "cy": 0.034393971494425246,
+     "cx": -0.13486135604714095,
+     "cy": 0.032427263376422655,
      "rig": {
       "on": true,
       "fillE": 10,
@@ -5452,10 +5972,10 @@
      "unit": "ody-iv-09-mustbeill",
      "cls": "DIALOGUE",
      "box": [
-      -0.473,
-      -0.513,
+      -0.474,
+      -0.515,
       0.204,
-      0.582
+      0.58
      ],
      "law": {
       "p90": 0.3,
@@ -5469,16 +5989,16 @@
       "rimE": 26,
       "side": 1
      },
-     "px": 2800,
-     "mean": 0.66,
+     "px": 2744,
+     "mean": 0.6433,
      "p10": 0.0151,
-     "p50": 0.7271,
-     "p90": 0.942,
+     "p50": 0.7237,
+     "p90": 0.9432,
      "max": 0.9997,
-     "ring": 0.4855,
-     "meanSep": 0.1745,
-     "sep": 0.4565,
-     "dark": 0.1164,
+     "ring": 0.4789,
+     "meanSep": 0.1644,
+     "sep": 0.4643,
+     "dark": 0.1454,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -5487,28 +6007,28 @@
    {
     "unit": "ody-iv-10-wentaway",
     "set": "cave",
-    "cls": "NARRATION",
+    "cls": "DIALOGUE",
     "cine": {
-     "size": 0.6607347384615467,
+     "size": 0.5476260064431409,
      "inFrame": 1,
-     "cx": -0.08587162362084885,
-     "cy": 0.051098974787175955,
+     "cx": -0.13486135604714095,
+     "cy": 0.032427263376422655,
      "rig": {
       "on": true,
-      "fillE": 8,
-      "rimE": 22.1,
+      "fillE": 10,
+      "rimE": 26,
       "side": 1
      },
      "rack": 0
     },
     "read": {
      "unit": "ody-iv-10-wentaway",
-     "cls": "NARRATION",
+     "cls": "DIALOGUE",
      "box": [
-      -0.468,
-      -0.61,
-      0.296,
-      0.712
+      -0.474,
+      -0.515,
+      0.204,
+      0.58
      ],
      "law": {
       "p90": 0.3,
@@ -5518,20 +6038,20 @@
      },
      "rig": {
       "on": true,
-      "fillE": 8,
-      "rimE": 22.1,
+      "fillE": 10,
+      "rimE": 26,
       "side": 1
      },
-     "px": 3717,
-     "mean": 0.6325,
-     "p10": 0.3323,
-     "p50": 0.6422,
-     "p90": 0.9011,
-     "max": 0.9666,
-     "ring": 0.3711,
-     "meanSep": 0.2614,
-     "sep": 0.5299,
-     "dark": 0.0312,
+     "px": 2744,
+     "mean": 0.6425,
+     "p10": 0.0176,
+     "p50": 0.6909,
+     "p90": 0.9398,
+     "max": 0.9997,
+     "ring": 0.4748,
+     "meanSep": 0.1677,
+     "sep": 0.465,
+     "dark": 0.1075,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -5542,10 +6062,10 @@
     "set": "cave",
     "cls": "ACTION",
     "cine": {
-     "size": 0.8089253420836554,
+     "size": 0.8074006930252314,
      "inFrame": 1,
-     "cx": 0.09650953752197189,
-     "cy": 0.040714791250485605,
+     "cx": 0.0966844810789339,
+     "cy": 0.04148472546808091,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -5561,10 +6081,10 @@
      "unit": "ody-iv-11-stone",
      "cls": "ACTION",
      "box": [
-      -0.082,
-      -0.768,
+      -0.081,
+      -0.766,
       0.275,
-      0.85
+      0.849
      ],
      "law": {
       "p90": 0.3,
@@ -5578,15 +6098,15 @@
       "rimE": 46.8,
       "side": 1
      },
-     "px": 2232,
-     "mean": 0.5768,
+     "px": 2130,
+     "mean": 0.5701,
      "p10": 0.071,
-     "p50": 0.7135,
-     "p90": 0.8695,
-     "max": 0.9545,
-     "ring": 0.477,
-     "meanSep": 0.0998,
-     "sep": 0.3926,
+     "p50": 0.709,
+     "p90": 0.866,
+     "max": 0.9542,
+     "ring": 0.4801,
+     "meanSep": 0.09,
+     "sep": 0.3858,
      "dark": 0,
      "darkCap": 0.55,
      "ok": true,
@@ -5707,10 +6227,10 @@
     "set": "cave",
     "cls": "DIALOGUE",
     "cine": {
-     "size": 0.7978889428202649,
+     "size": 0.798550638572544,
      "inFrame": 1,
-     "cx": -0.15999573206769546,
-     "cy": 0.03281952227528334,
+     "cx": -0.16830456585367973,
+     "cy": 0.0321227276115828,
      "side": -1,
      "wantSide": -1,
      "sideOk": true,
@@ -5726,9 +6246,9 @@
      "unit": "ody-v-01-puzzling",
      "cls": "DIALOGUE",
      "box": [
-      -0.306,
-      -0.765,
-      -0.014,
+      -0.314,
+      -0.766,
+      -0.022,
       0.831
      ],
      "law": {
@@ -5744,15 +6264,15 @@
       "side": -1
      },
      "px": 1750,
-     "mean": 0.5536,
-     "p10": 0.2267,
-     "p50": 0.5726,
-     "p90": 0.8235,
-     "max": 0.9618,
-     "ring": 0.5969,
-     "meanSep": 0.0434,
-     "sep": 0.2266,
-     "dark": 0.0149,
+     "mean": 0.5545,
+     "p10": 0.2142,
+     "p50": 0.5676,
+     "p90": 0.8287,
+     "max": 0.9652,
+     "ring": 0.5951,
+     "meanSep": 0.0406,
+     "sep": 0.2336,
+     "dark": 0.0137,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -5816,10 +6336,10 @@
     "set": "cave",
     "cls": "ACTION",
     "cine": {
-     "size": 0.5557526841591292,
+     "size": 0.5740318923761278,
      "inFrame": 1,
-     "cx": -0.13796972428934515,
-     "cy": -0.01806763875786993,
+     "cx": -0.12781099906278326,
+     "cy": 0.0017322609401569378,
      "rig": {
       "on": true,
       "fillE": 9.5,
@@ -5832,10 +6352,10 @@
      "unit": "ody-v-03-threetoaman",
      "cls": "ACTION",
      "box": [
-      -0.496,
-      -0.574,
-      0.22,
-      0.538
+      -0.479,
+      -0.572,
+      0.224,
+      0.576
      ],
      "law": {
       "p90": 0.3,
@@ -5849,16 +6369,16 @@
       "rimE": 27.3,
       "side": 1
      },
-     "px": 2900,
-     "mean": 0.3874,
-     "p10": 0.14,
-     "p50": 0.2384,
-     "p90": 0.8314,
-     "max": 0.9849,
-     "ring": 0.3927,
-     "meanSep": 0.0052,
-     "sep": 0.4388,
-     "dark": 0.0117,
+     "px": 2958,
+     "mean": 0.3281,
+     "p10": 0.1268,
+     "p50": 0.2274,
+     "p90": 0.7949,
+     "max": 0.9818,
+     "ring": 0.3329,
+     "meanSep": 0.0048,
+     "sep": 0.462,
+     "dark": 0.023,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -5869,10 +6389,10 @@
     "set": "cave",
     "cls": "GATE",
     "cine": {
-     "size": 0.661256328873405,
+     "size": 0.6542959419205048,
      "inFrame": 1,
-     "cx": -0.23221535438186997,
-     "cy": -0.005899720286739074,
+     "cx": -0.2389237624645617,
+     "cy": -0.02805197655678565,
      "side": -1,
      "wantSide": -1,
      "sideOk": true,
@@ -5888,10 +6408,10 @@
      "unit": "ody-v-04-greatram",
      "cls": "GATE",
      "box": [
-      -0.623,
-      -0.667,
-      0.159,
-      0.655
+      -0.62,
+      -0.682,
+      0.142,
+      0.626
      ],
      "law": {
       "p90": 0.3,
@@ -5905,16 +6425,16 @@
       "rimE": 28.6,
       "side": -1
      },
-     "px": 3835,
-     "mean": 0.203,
-     "p10": 0.0226,
-     "p50": 0.0819,
-     "p90": 0.5245,
-     "max": 0.9726,
-     "ring": 0.1,
-     "meanSep": 0.1031,
-     "sep": 0.4245,
-     "dark": 0.3145,
+     "px": 3596,
+     "mean": 0.3445,
+     "p10": 0.0372,
+     "p50": 0.2153,
+     "p90": 0.8738,
+     "max": 0.9762,
+     "ring": 0.1625,
+     "meanSep": 0.182,
+     "sep": 0.7113,
+     "dark": 0.1549,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -5978,10 +6498,10 @@
     "set": "cave",
     "cls": "GIANT",
     "cine": {
-     "size": 0.5856024058009061,
+     "size": 0.6805377889757034,
      "inFrame": 1,
-     "cx": 0.11138708826443983,
-     "cy": 0.0382065731959369,
+     "cx": 0.11188257084722456,
+     "cy": 0.04094320031412635,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -5997,10 +6517,10 @@
      "unit": "ody-v-06-feltbacks",
      "cls": "GIANT",
      "box": [
-      -0.02,
-      -0.547,
-      0.243,
-      0.624
+      -0.043,
+      -0.64,
+      0.266,
+      0.721
      ],
      "law": {
       "p90": 0.3,
@@ -6014,16 +6534,16 @@
       "rimE": 29.9,
       "side": 1
      },
-     "px": 1196,
-     "mean": 0.5469,
-     "p10": 0.201,
-     "p50": 0.5823,
-     "p90": 0.819,
-     "max": 0.9463,
-     "ring": 0.5818,
-     "meanSep": 0.0349,
-     "sep": 0.2372,
-     "dark": 0.0276,
+     "px": 1586,
+     "mean": 0.4457,
+     "p10": 0.0011,
+     "p50": 0.521,
+     "p90": 0.7626,
+     "max": 0.9359,
+     "ring": 0.4226,
+     "meanSep": 0.0232,
+     "sep": 0.3401,
+     "dark": 0.2163,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -6202,10 +6722,10 @@
     "set": "cave",
     "cls": "GIANT",
     "cine": {
-     "size": 0.6112998423822867,
+     "size": 0.6107039191832273,
      "inFrame": 1,
-     "cx": 0.10168220893275365,
-     "cy": 0.028243350967147363,
+     "cx": 0.10188199302920807,
+     "cy": 0.027931813885454126,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -6221,10 +6741,10 @@
      "unit": "ody-v-10-ramspeech3",
      "cls": "GIANT",
      "box": [
-      -0.037,
+      -0.036,
       -0.583,
-      0.241,
-      0.64
+      0.24,
+      0.639
      ],
      "law": {
       "p90": 0.3,
@@ -6239,15 +6759,15 @@
       "side": 1
      },
      "px": 1320,
-     "mean": 0.4431,
-     "p10": 0,
-     "p50": 0.5115,
-     "p90": 0.7596,
-     "max": 0.9359,
-     "ring": 0.4143,
-     "meanSep": 0.0289,
-     "sep": 0.3453,
-     "dark": 0.2159,
+     "mean": 0.5084,
+     "p10": 0.1092,
+     "p50": 0.5342,
+     "p90": 0.7845,
+     "max": 0.9426,
+     "ring": 0.4838,
+     "meanSep": 0.0246,
+     "sep": 0.3007,
+     "dark": 0.0788,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -6314,10 +6834,10 @@
     "set": "cave",
     "cls": "NARRATION",
     "cine": {
-     "size": 0.4654091987850182,
+     "size": 0.6412832659701719,
      "inFrame": 1,
-     "cx": -0.0934412610726318,
-     "cy": 0.029754310190492433,
+     "cx": -0.08153697051066744,
+     "cy": -0.028736620829485193,
      "rig": {
       "on": true,
       "fillE": 8,
@@ -6330,10 +6850,10 @@
      "unit": "ody-v-12-aboard",
      "cls": "NARRATION",
      "box": [
-      -0.366,
       -0.436,
-      0.179,
-      0.495
+      -0.67,
+      0.273,
+      0.613
      ],
      "law": {
       "p90": 0.3,
@@ -6347,15 +6867,15 @@
       "rimE": 22.1,
       "side": 1
      },
-     "px": 1890,
-     "mean": 0.6903,
-     "p10": 0.4967,
-     "p50": 0.7029,
-     "p90": 0.8786,
-     "max": 0.9772,
-     "ring": 0.5892,
-     "meanSep": 0.1011,
-     "sep": 0.2894,
+     "px": 3363,
+     "mean": 0.6914,
+     "p10": 0.4981,
+     "p50": 0.7141,
+     "p90": 0.8648,
+     "max": 0.9845,
+     "ring": 0.6328,
+     "meanSep": 0.0586,
+     "sep": 0.232,
      "dark": 0,
      "darkCap": 0.55,
      "ok": true,
@@ -6641,10 +7161,10 @@
     "set": "sea",
     "cls": "GATE",
     "cine": {
-     "size": 0.4153901011174115,
+     "size": 0.41552189132405304,
      "inFrame": 1,
-     "cx": 0.13601797454304063,
-     "cy": -0.06029754745548918,
+     "cx": 0.1360048040837527,
+     "cy": -0.06026059428699207,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -6678,15 +7198,15 @@
       "side": 1
      },
      "px": 1216,
-     "mean": 0.1604,
+     "mean": 0.16,
      "p10": 0.0627,
-     "p50": 0.0918,
-     "p90": 0.401,
-     "max": 0.8504,
+     "p50": 0.0909,
+     "p90": 0.3971,
+     "max": 0.8533,
      "ring": 0.1901,
-     "meanSep": 0.0297,
-     "sep": 0.2109,
-     "dark": 0.0115,
+     "meanSep": 0.03,
+     "sep": 0.207,
+     "dark": 0.0123,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -6697,10 +7217,10 @@
     "set": "sea",
     "cls": "DIALOGUE",
     "cine": {
-     "size": 0.8335179788872844,
+     "size": 0.8301335929611526,
      "inFrame": 1,
-     "cx": -0.1948305616932036,
-     "cy": 0.02385210721515274,
+     "cx": -0.19497993055052926,
+     "cy": 0.03995699432967764,
      "side": -1,
      "wantSide": -1,
      "sideOk": true,
@@ -6716,10 +7236,10 @@
      "unit": "ody-vi-07-myname",
      "cls": "DIALOGUE",
      "box": [
-      -0.39,
-      -0.81,
-      0,
-      0.857
+      -0.348,
+      -0.79,
+      -0.042,
+      0.87
      ],
      "law": {
       "p90": 0.3,
@@ -6733,16 +7253,16 @@
       "rimE": 16,
       "side": -1
      },
-     "px": 2409,
-     "mean": 0.4625,
-     "p10": 0.0735,
-     "p50": 0.4256,
-     "p90": 0.8783,
-     "max": 0.97,
-     "ring": 0.4891,
-     "meanSep": 0.0266,
-     "sep": 0.3892,
-     "dark": 0.0776,
+     "px": 1971,
+     "mean": 0.3374,
+     "p10": 0.0702,
+     "p50": 0.2366,
+     "p90": 0.8097,
+     "max": 0.9117,
+     "ring": 0.3086,
+     "meanSep": 0.0288,
+     "sep": 0.5011,
+     "dark": 0.0791,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -6865,10 +7385,10 @@
     "set": "sea",
     "cls": "DIALOGUE",
     "cine": {
-     "size": 0.7722838370911755,
+     "size": 0.7728914180196943,
      "inFrame": 1,
-     "cx": -0.1921787563484636,
-     "cy": 0.023391024307182262,
+     "cx": -0.1962306637785917,
+     "cy": 0.04244766671590483,
      "side": -1,
      "wantSide": -1,
      "sideOk": true,
@@ -6884,10 +7404,10 @@
      "unit": "ody-vi-10-hades",
      "cls": "DIALOGUE",
      "box": [
-      -0.376,
-      -0.749,
-      -0.008,
-      0.796
+      -0.339,
+      -0.73,
+      -0.053,
+      0.815
      ],
      "law": {
       "p90": 0.3,
@@ -6901,16 +7421,16 @@
       "rimE": 16,
       "side": -1
      },
-     "px": 2139,
-     "mean": 0.4178,
-     "p10": 0.0825,
-     "p50": 0.3344,
-     "p90": 0.8388,
-     "max": 0.9658,
-     "ring": 0.3439,
-     "meanSep": 0.0738,
-     "sep": 0.4949,
-     "dark": 0.0589,
+     "px": 1725,
+     "mean": 0.2727,
+     "p10": 0.0464,
+     "p50": 0.1552,
+     "p90": 0.7785,
+     "max": 0.9731,
+     "ring": 0.2977,
+     "meanSep": 0.0249,
+     "sep": 0.4809,
+     "dark": 0.1652,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -6921,10 +7441,10 @@
     "set": "sea",
     "cls": "GIANT",
     "cine": {
-     "size": 0.5318830553001821,
+     "size": 0.5341711486370286,
      "inFrame": 1,
-     "cx": 0.11518255515597742,
-     "cy": -0.05631233449357323,
+     "cx": 0.11401162517258562,
+     "cy": -0.05599283650072656,
      "side": 1,
      "wantSide": 1,
      "sideOk": true,
@@ -6940,10 +7460,10 @@
      "unit": "ody-vi-11-curse",
      "cls": "GIANT",
      "box": [
-      0.018,
-      -0.588,
-      0.212,
-      0.476
+      0.014,
+      -0.59,
+      0.214,
+      0.478
      ],
      "law": {
       "p90": 0.3,
@@ -6958,15 +7478,15 @@
       "side": 1
      },
      "px": 864,
-     "mean": 0.3719,
-     "p10": 0.1139,
-     "p50": 0.3954,
-     "p90": 0.631,
-     "max": 0.8921,
-     "ring": 0.3005,
-     "meanSep": 0.0714,
-     "sep": 0.3305,
-     "dark": 0.0648,
+     "mean": 0.3829,
+     "p10": 0.1114,
+     "p50": 0.4097,
+     "p90": 0.6431,
+     "max": 0.9263,
+     "ring": 0.3059,
+     "meanSep": 0.077,
+     "sep": 0.3372,
+     "dark": 0.0579,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -6977,10 +7497,10 @@
     "set": "sea",
     "cls": "CLOCK",
     "cine": {
-     "size": 0.49034737522255323,
+     "size": 0.48983663886085527,
      "inFrame": 1,
-     "cx": -0.07643100863575028,
-     "cy": -0.22488232888252746,
+     "cx": -0.07576513316882609,
+     "cy": -0.224577367858622,
      "rig": {
       "on": true,
       "fillE": 5,
@@ -6993,9 +7513,9 @@
      "unit": "ody-vi-12-heard",
      "cls": "CLOCK",
      "box": [
-      -0.372,
-      -0.715,
-      0.219,
+      -0.37,
+      -0.714,
+      0.218,
       0.265
      ],
      "law": {
@@ -7010,16 +7530,16 @@
       "rimE": 18.4,
       "side": 1
      },
-     "px": 2156,
-     "mean": 0.4155,
-     "p10": 0.1509,
-     "p50": 0.3612,
-     "p90": 0.7769,
+     "px": 2112,
+     "mean": 0.4165,
+     "p10": 0.1511,
+     "p50": 0.3614,
+     "p90": 0.7738,
      "max": 0.9365,
-     "ring": 0.2319,
-     "meanSep": 0.1836,
-     "sep": 0.5451,
-     "dark": 0.0009,
+     "ring": 0.236,
+     "meanSep": 0.1804,
+     "sep": 0.5377,
+     "dark": 0.0005,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -7030,10 +7550,10 @@
     "set": "sea",
     "cls": "ACTION",
     "cine": {
-     "size": 0.4715847310727116,
+     "size": 0.467487807891425,
      "inFrame": 1,
-     "cx": -0.07791920572961025,
-     "cy": -0.007035090305943931,
+     "cx": -0.08661984861168982,
+     "cy": 0.008342721963449706,
      "rig": {
       "on": true,
       "fillE": 4.75,
@@ -7046,10 +7566,10 @@
      "unit": "ody-vi-13-ram",
      "cls": "ACTION",
      "box": [
-      -0.367,
-      -0.479,
-      0.211,
-      0.465
+      -0.341,
+      -0.459,
+      0.167,
+      0.476
      ],
      "law": {
       "p90": 0.3,
@@ -7063,16 +7583,16 @@
       "rimE": 16.8,
       "side": 1
      },
-     "px": 2016,
-     "mean": 0.3926,
-     "p10": 0.1708,
-     "p50": 0.2907,
-     "p90": 0.7673,
-     "max": 0.8796,
-     "ring": 0.2703,
-     "meanSep": 0.1223,
-     "sep": 0.497,
-     "dark": 0.003,
+     "px": 1764,
+     "mean": 0.3818,
+     "p10": 0.1825,
+     "p50": 0.2722,
+     "p90": 0.7431,
+     "max": 0.8712,
+     "ring": 0.2781,
+     "meanSep": 0.1037,
+     "sep": 0.465,
+     "dark": 0.0034,
      "darkCap": 0.55,
      "ok": true,
      "why": ""
@@ -7159,6 +7679,10 @@
     "cy": -0.04676164003894451,
     "live": true,
     "cuts": 8,
+    "holds": 1,
+    "setup": "SH-COUNCIL",
+    "transition": "cut",
+    "hold": null,
     "fov": 32,
     "camY": 1.5967769632668127,
     "focus": 6.707419797153154,
@@ -7245,7 +7769,11 @@
     "cx": -0.16780016936027864,
     "cy": -0.17510107207967282,
     "live": true,
-    "cuts": 20,
+    "cuts": 19,
+    "holds": 2,
+    "setup": "CV-OVER",
+    "transition": "cut",
+    "hold": null,
     "fov": 34,
     "camY": 3.3032683361642157,
     "focus": 6.050187177535605,
@@ -7336,7 +7864,11 @@
     "cx": -0.18266338067330168,
     "cy": -0.3054843872495434,
     "live": true,
-    "cuts": 36,
+    "cuts": 35,
+    "holds": 2,
+    "setup": "CV-BOWL",
+    "transition": "cut",
+    "hold": null,
     "fov": 46,
     "camY": 1.006955420728013,
     "focus": 6.028777485760713,
@@ -7427,7 +7959,11 @@
     "cx": -0.12482826948915085,
     "cy": 0.06899775502677999,
     "live": true,
-    "cuts": 45,
+    "cuts": 44,
+    "holds": 2,
+    "setup": "CV-AUGER",
+    "transition": "cut",
+    "hold": null,
     "fov": 40,
     "camY": 0.9507584124156632,
     "focus": 2.7318945401978643,
@@ -7517,7 +8053,11 @@
     "cx": -0.1420287446590229,
     "cy": -0.06985950363051446,
     "live": true,
-    "cuts": 62,
+    "cuts": 60,
+    "holds": 3,
+    "setup": "CV-BELLY",
+    "transition": "cut",
+    "hold": null,
     "fov": 40,
     "camY": 0.6034169346752122,
     "focus": 3.601492222411387,
@@ -7597,20 +8137,24 @@
     "cls": "GIANT",
     "set": "sea",
     "floor": 0.42,
-    "size": 0.5326859011112575,
+    "size": 0.5349756441700113,
     "inFrame": 1,
     "cutSides": 0,
     "fill": false,
-    "lookRoom": 0.231,
+    "lookRoom": 0.228,
     "lookRoomOk": true,
     "roll": 0,
-    "cx": 0.1153653428125789,
-    "cy": -0.0564121063341943,
+    "cx": 0.1141861415180303,
+    "cy": -0.0560914971762167,
     "live": true,
-    "cuts": 78,
+    "cuts": 76,
+    "holds": 3,
+    "setup": "SEA-CLIFF",
+    "transition": "cut",
+    "hold": null,
     "fov": 15,
-    "camY": 3.4570818687434706,
-    "focus": 50.890003534656636,
+    "camY": 3.2573687154480413,
+    "focus": 50.9988000605398,
     "fstop": 4,
     "move": "push",
     "shake": 0,
@@ -7624,16 +8168,16 @@
     "wantSide": 1,
     "side": 1,
     "sideOk": true,
-    "facingSide": -0.197
+    "facingSide": -0.242
    },
    "read": {
     "unit": "ody-vi-11-curse",
     "cls": "GIANT",
     "box": [
-     0.018,
-     -0.589,
-     0.213,
-     0.476
+     0.014,
+     -0.591,
+     0.214,
+     0.479
     ],
     "law": {
      "p90": 0.3,
@@ -7648,15 +8192,15 @@
      "side": 1
     },
     "px": 864,
-    "mean": 0.359,
-    "p10": 0.0574,
-    "p50": 0.3441,
-    "p90": 0.6473,
-    "max": 0.9226,
-    "ring": 0.2927,
-    "meanSep": 0.0663,
-    "sep": 0.3546,
-    "dark": 0.1007,
+    "mean": 0.3675,
+    "p10": 0.0695,
+    "p50": 0.3629,
+    "p90": 0.6537,
+    "max": 0.9224,
+    "ring": 0.301,
+    "meanSep": 0.0665,
+    "sep": 0.3527,
+    "dark": 0.0903,
     "darkCap": 0.55,
     "ok": true,
     "why": ""
@@ -7672,7 +8216,7 @@
     "meals": 3,
     "headcount": 6
    },
-   "bytes": 174174,
+   "bytes": 187310,
    "controlsUp": false,
    "overlayFree": true
   },
@@ -7697,7 +8241,11 @@
     "cx": 0.10358406398852918,
     "cy": -0.0342558774765393,
     "live": true,
-    "cuts": 19,
+    "cuts": 18,
+    "holds": 2,
+    "setup": "CV-GIANT-E",
+    "transition": "cut",
+    "hold": null,
     "fov": 50,
     "camY": 1.0770898115026968,
     "focus": 6.882589767409452,
@@ -7792,7 +8340,11 @@
     "cx": 0.3048183857914635,
     "cy": -0.6690415268745143,
     "live": true,
-    "cuts": 47,
+    "cuts": 46,
+    "holds": 2,
+    "setup": "CV-BLIND",
+    "transition": "cut",
+    "hold": null,
     "fov": 52,
     "camY": 1.4939636599606447,
     "focus": 4.57244705478401,
@@ -7882,7 +8434,11 @@
     "cx": -0.3140550061389103,
     "cy": -0.4933427683002197,
     "live": false,
-    "cuts": 81,
+    "cuts": 79,
+    "holds": 3,
+    "setup": "SEA-OFF",
+    "transition": "dissolve",
+    "hold": null,
     "fov": 54,
     "camY": 9.1302610562429,
     "focus": 20.730447374787204,
@@ -8023,9 +8579,39 @@
    "detail": "8/8 — all"
   },
   {
+   "name": "[coverage] the angle changes between consecutive units (holds declared)",
+   "verdict": "PASS",
+   "detail": "81 shots played · 79 cuts · 3 holds · no undeclared repeat"
+  },
+  {
+   "name": "[coverage] every declared hold is the same shot still running",
+   "verdict": "PASS",
+   "detail": "ody-ii-04-boulder (CV-DOOR) · ody-iv-10-wentaway (CV-DOOR) — same station, same lens, clock not restarted"
+  },
+  {
+   "name": "[coverage] one establishing setup per scene, used once (a reprise says why)",
+   "verdict": "PASS",
+   "detail": "1:SH-EST · 2:CV-EST2 · 3:CV-EST3 · 4:CV-EST4 · 5:CV-EST5 · 6:SEA-EST"
+  },
+  {
+   "name": "[coverage] every scene RETURNS to angles the reader already knows",
+   "verdict": "PASS",
+   "detail": "1: 9 setups / 12 cuts / 4 returns / 0 holds · 2: 10 setups / 12 cuts / 3 returns / 1 holds · 3: 10 setups / 13 cuts / 4 returns / 0 holds · 4: 9 setups / 11 cuts / 3 returns / 1 holds · 5: 9 setups / 12 cuts / 4 returns / 0 holds · 6: 9 setups / 13 cuts / 5 returns / 0 holds"
+  },
+  {
+   "name": "[coverage] straight cuts throughout; the declared dissolves are time ellipses only",
+   "verdict": "PASS",
+   "detail": "5/5 played — ody-i-05-dawn, ody-ii-03-return, ody-iii-01-morningmeal, ody-v-05-dawn, ody-vi-14-sailedon"
+  },
+  {
+   "name": "[coverage] the lens is declared and one lens only",
+   "verdict": "PASS",
+   "detail": "spielberg · {\"setups\":56,\"cuts\":73,\"holds\":2,\"returns\":23,\"dissolves\":5}"
+  },
+  {
    "name": "[hit] all 8 gates resolve on a REAL click at their live shot",
    "verdict": "PASS",
-   "detail": "G1 ok@545,550 · G2 ok@916,540 · G3 ok · G4 ok · G5 ok@921,561 · G6 ok@1054,634 · G7 ok@1039,642 · G8 ok"
+   "detail": "G1 ok@545,550 · G2 ok@923,543 · G3 ok · G4 ok · G5 ok@921,561 · G6 ok@1054,634 · G7 ok@1039,642 · G8 ok"
   },
   {
    "name": "[hit] every target click lands on the target's OWN PIXELS",
@@ -8040,7 +8626,7 @@
   {
    "name": "the walk's own target gates clicked their real coordinates",
    "verdict": "PASS",
-   "detail": "i-07-council 525,550 (ring after 27.25s) · ii-11-sword 917,540 (ring after 0s) · v-04-greatram 959,556 (ring after 0s) · vi-01-jeer 1064,633 (ring after 0s) · vi-06-defy 1059,638 (ring after 0s)"
+   "detail": "i-07-council 525,550 (ring after 27.25s) · ii-11-sword 923,543 (ring after 0s) · v-04-greatram 959,557 (ring after 0s) · vi-01-jeer 1064,633 (ring after 0s) · vi-06-defy 1059,638 (ring after 0s)"
   },
   {
    "name": "[hit] the miss-probe still misses",
@@ -8125,7 +8711,7 @@
   {
    "name": "[side] every pinned shot lands on the axis it was baked to",
    "verdict": "PASS",
-   "detail": "41 pinned shots on-axis (cave: giant right / men left · sea: island right / ship left)"
+   "detail": "44 pinned shots on-axis (cave: giant right / men left · sea: island right / ship left)"
   },
   {
    "name": "[escalation] the cave headings are a ladder, not one neutral master",
@@ -8139,5 +8725,5 @@
   }
  ],
  "green": true,
- "framesDir": "/Users/samz/Documents/gaslight-remake/shots/book3d-r2-live"
+ "framesDir": "/Users/samz/Documents/gaslight-remake/shots/book3d-r2"
 }

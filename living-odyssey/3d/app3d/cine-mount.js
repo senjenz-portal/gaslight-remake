@@ -19,7 +19,7 @@
  * lines of one speech is.
  */
 import * as THREE from 'three';
-import { CineCam, CineDof, measureShot, ReadRig, readSubjectPixels, READ_LAW } from '../cine3d.js';
+import { CineCam, CineDof, measureShot, ReadRig, readSubjectPixels, READ_LAW, DISSOLVE_S } from '../cine3d.js';
 
 /** the void a cutaway set shows when the lens can see past its shell */
 export const VOID_COLOUR = { cave: '#0a0806', shore: '#060910', sea: '#070b16' };
@@ -70,6 +70,9 @@ export async function mountCine(stage, url = './shots3d.json') {
       focus: cam.focusDist, focal: cam.focalLength(), fstop: cam.fstop,
       near: cam.dofNear, expo: (renderer.toneMappingExposure || 1) * (cam.expo || 1),
       tone: 1, grain: 0,
+      /* THE TRANSITION. Straight cut everywhere; the five declared time
+         ellipses cross-fade out of the frame the reader was just looking at. */
+      fade: cam.dissolve > 0 ? cam.dissolve / DISSOLVE_S : 0,
     });
   });
   /* the tone map moves to the focus pass: three applies its own only when it
@@ -102,7 +105,9 @@ export async function mountCine(stage, url = './shots3d.json') {
          a real 0.34-mean picture after it (tools/ody/_readprobe.mjs). The book
          renders with preserveDrawingBuffer, so one synchronous re-render puts
          the pixels the reader is looking at back under the sampler. */
+      dof.forceNoFade = true;
       stage.render();
+      dof.forceNoFade = false;
       const r = readSubjectPixels(stage.canvas, m.box, 160, cam.shot && cam.shot.class);
       if (!r) return { ok: false, why: 'no canvas' };
       return { unit: cam.unitId, cls: cam.shot && cam.shot.class, box: m.box,
@@ -118,7 +123,9 @@ export async function mountCine(stage, url = './shots3d.json') {
         unit: row.unit, cls: row.class, set: row.set, floor: cls.floor,
         size: m.h, inFrame: m.inFrame, cutSides: m.cutSides, fill: !!row.frame.fill,
         lookRoom: m.lookRoom, lookRoomOk: m.lookRoomOk, roll: m.rollDeg,
-        cx: m.cx, cy: m.cy, live: cam.subjOk, cuts: cam.cuts,
+        cx: m.cx, cy: m.cy, live: cam.subjOk, cuts: cam.cuts, holds: cam.holds,
+        setup: row.setup || null, transition: row.transition || 'cut',
+        hold: row.hold || null,
         fov: cam.cam.fov, camY: cam.cam.position.y, focus: cam.focusDist,
         fstop: cam.fstop, move: row.move.k, shake: cam.shakeAmp,
         rack: cam.rackK || 0, rig: rig.report,

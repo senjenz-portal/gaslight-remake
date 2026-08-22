@@ -840,6 +840,12 @@ window.__book = {
 window.__cine = () => (cine ? cine.metrics() : null);
 /* THE READABILITY GATE's own eye: the drawn pixels inside the subject's box */
 window.__read = () => (cine ? cine.readback() : null);
+/* THE CUT LEDGER — what the camera ACTUALLY did on this lap, so the coverage
+   law is proved against a reading and not against the table that asked for it */
+window.__cuts = () => (cine ? {
+  cuts: cine.cam.cuts, holds: cine.cam.holds, log: cine.cam.log.slice(),
+  coverage: cine.table.coverage || null, lens: (cine.table.lens || {}).id || null,
+} : null);
 window.__errors = () => errors.slice();
 
 boot().catch((e) => fail('boot', e));

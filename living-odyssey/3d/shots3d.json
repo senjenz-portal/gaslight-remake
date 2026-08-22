@@ -1,5 +1,1351 @@
 {
- "lane": "cine-r2",
+ "lane": "cine-r3-directors-cut",
+ "lens": {
+  "id": "spielberg",
+  "why": "the only lens in the reference set whose editing default IS classical coverage — master + reverse + reaction + insert, cut on the reaction rather than the reveal — which is the thing this book was missing; and its scale grammar (the threat shot from a child's eye height with a human in the near ground) and its firelit palette (amber key, grey-blue-green shadow, one visible hard shaft through haze) are already the cave's own light story.",
+  "defaults": {
+   "lensKitMm": [
+    21,
+    35,
+    50,
+    135
+   ],
+   "keyRatio": "3:1 warm / 8:1 threat",
+   "aslSeconds": "3-7 action / 5-9 emotional",
+   "transitions": [
+    "hard cut",
+    "match cut",
+    "dissolve"
+   ],
+   "avoid": [
+    "dutch angle",
+    "unmotivated handheld",
+    "orbit around subject",
+    "snap zoom"
+   ]
+  }
+ },
+ "coverage": {
+  "law": "a scene is an edited sequence: establish once, then alternate; the angle changes between consecutive units unless a hold is declared, and a hold is the same shot still running.",
+  "lens": "spielberg",
+  "ok": true,
+  "totals": {
+   "setups": 56,
+   "cuts": 73,
+   "holds": 2,
+   "returns": 23,
+   "dissolves": 5
+  }
+ },
+ "sequences": [
+  {
+   "beat": 1,
+   "set": "shore",
+   "units": 13,
+   "setups": [
+    {
+     "id": "SH-EST",
+     "name": "THE BLACK STRAIT",
+     "role": "establishing",
+     "note": "the night master, craning down out of the weather onto the fleet",
+     "takes": 1
+    },
+    {
+     "id": "SH-FLEET",
+     "name": "THE FLEET IN MIST",
+     "role": "wide",
+     "note": "ships ghosting in at four metres — the tale's voice has a place to come from",
+     "takes": 1
+    },
+    {
+     "id": "SH-TELLER",
+     "name": "THE TELLER",
+     "role": "single",
+     "note": "Ulysses at a man's eye from the west of the camp, look-room to the strait",
+     "takes": 2
+    },
+    {
+     "id": "SH-CAMP",
+     "name": "THE CAMP FIRE",
+     "role": "reaction",
+     "note": "the men at the embers from the seaward side — the faces that will turn",
+     "takes": 2
+    },
+    {
+     "id": "SH-STRAIT",
+     "name": "ACROSS THE STRAIT",
+     "role": "reveal",
+     "note": "the long lens on the far mainland: the smoke, then the mouth, then the climb",
+     "takes": 3
+    },
+    {
+     "id": "SH-ISLAND",
+     "name": "THE GOAT ISLAND",
+     "role": "reestablish",
+     "note": "the day state — a time cut, not a repeat of the night master",
+     "takes": 1
+    },
+    {
+     "id": "SH-COUNCIL",
+     "name": "THE COUNCIL, OVER THE SHOULDER",
+     "role": "ots",
+     "note": "a stride behind the listener; the speaker on the third, the ship in his look-room",
+     "takes": 1
+    },
+    {
+     "id": "SH-CRAG",
+     "name": "THE CRAG",
+     "role": "reveal",
+     "note": "the empty mouth held, then the lens tilts the cliff up into the sky",
+     "takes": 1
+    },
+    {
+     "id": "SH-SKIN",
+     "name": "THE WINESKIN",
+     "role": "insert",
+     "note": "the gift read as an object, at hand height — foresight, not luck",
+     "takes": 1
+    }
+   ],
+   "stats": {
+    "setups": 9,
+    "cuts": 12,
+    "holds": 0,
+    "returns": 4,
+    "dissolves": 1,
+    "cutsPerSetup": 1.33
+   },
+   "cut": [
+    {
+     "unit": "ody-i-00-head",
+     "setup": "SH-EST",
+     "name": "THE BLACK STRAIT",
+     "role": "establishing",
+     "cls": "WIDE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.493
+    },
+    {
+     "unit": "ody-i-01-bard",
+     "setup": "SH-FLEET",
+     "name": "THE FLEET IN MIST",
+     "role": "wide",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.31
+    },
+    {
+     "unit": "ody-i-02-iamulysses",
+     "setup": "SH-TELLER",
+     "name": "THE TELLER",
+     "role": "single",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.42
+    },
+    {
+     "unit": "ody-i-03-troy",
+     "setup": "SH-CAMP",
+     "name": "THE CAMP FIRE",
+     "role": "reaction",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.347
+    },
+    {
+     "unit": "ody-i-04-lawless",
+     "setup": "SH-STRAIT",
+     "name": "ACROSS THE STRAIT",
+     "role": "reveal",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.833
+    },
+    {
+     "unit": "ody-i-05-dawn",
+     "setup": "SH-ISLAND",
+     "name": "THE GOAT ISLAND",
+     "role": "reestablish",
+     "cls": "ACTION",
+     "transition": "dissolve",
+     "take": 1,
+     "size": 0.22
+    },
+    {
+     "unit": "ody-i-06-smoke",
+     "setup": "SH-CAMP",
+     "name": "THE CAMP FIRE",
+     "role": "reaction",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.455
+    },
+    {
+     "unit": "ody-i-07-council",
+     "setup": "SH-COUNCIL",
+     "name": "THE COUNCIL, OVER THE SHOULDER",
+     "role": "ots",
+     "cls": "OTS",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.316
+    },
+    {
+     "unit": "ody-i-08-cave",
+     "setup": "SH-STRAIT",
+     "name": "ACROSS THE STRAIT",
+     "role": "reveal",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.799
+    },
+    {
+     "unit": "ody-i-09-monster",
+     "setup": "SH-CRAG",
+     "name": "THE CRAG",
+     "role": "reveal",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.848
+    },
+    {
+     "unit": "ody-i-10-wineskin",
+     "setup": "SH-TELLER",
+     "name": "THE TELLER",
+     "role": "single",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.403
+    },
+    {
+     "unit": "ody-i-11-twentyone",
+     "setup": "SH-SKIN",
+     "name": "THE WINESKIN",
+     "role": "insert",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.742
+    },
+    {
+     "unit": "ody-i-12-misgave",
+     "setup": "SH-STRAIT",
+     "name": "ACROSS THE STRAIT",
+     "role": "reveal",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 3,
+     "size": 0.866
+    }
+   ]
+  },
+  {
+   "beat": 2,
+   "set": "cave",
+   "units": 14,
+   "setups": [
+    {
+     "id": "CV-EST2",
+     "name": "THE ROOM, LOW AND EXPLORATORY",
+     "role": "establishing",
+     "note": "rung 1: the height of a man who has just walked in, drifting to find the room",
+     "takes": 1
+    },
+    {
+     "id": "CV-RACKS",
+     "name": "THE CHEESE RACKS",
+     "role": "geography",
+     "note": "the wealth that walks them in, swept from the men's side",
+     "takes": 1
+    },
+    {
+     "id": "CV-ULY",
+     "name": "ULYSSES, A MAN'S EYE",
+     "role": "single",
+     "note": "the clean reverse onto the man; from the lie on it carries the giant's shoulder",
+     "takes": 2
+    },
+    {
+     "id": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "note": "the mouth seen from the men's hiding place — the shot the stone shuts",
+     "takes": 3
+    },
+    {
+     "id": "CV-GIANT-E",
+     "name": "THE GIANT, FROM HIS FEET (east)",
+     "role": "giant",
+     "note": "the scale angle: a waist-high lens east of the fire with a man at his feet",
+     "takes": 2
+    },
+    {
+     "id": "CV-OVER",
+     "name": "OVER HIS SHOULDER, LOOKING DOWN",
+     "role": "ots",
+     "note": "the reverse the giant owns: his soft bulk near, the petitioner small below",
+     "takes": 1
+    },
+    {
+     "id": "CV-GIANT-W",
+     "name": "THE GIANT, FROM THE WEST",
+     "role": "giant",
+     "note": "the answering low angle from the mouth side — the eye unblinking",
+     "takes": 1
+    },
+    {
+     "id": "CV-FIRE",
+     "name": "THE FIRE — THE SEIZE IN SHADOW",
+     "role": "action",
+     "note": "the horror staged against the blaze and never printed; the same angle all three meals",
+     "takes": 1
+    },
+    {
+     "id": "CV-OBJ",
+     "name": "THE HAND BENCH",
+     "role": "insert",
+     "note": "hand height, downstage centre: the sword at the hip, the beam in the coals",
+     "takes": 1
+    },
+    {
+     "id": "CV-AFTER",
+     "name": "THE AFTERMATH",
+     "role": "aftermath",
+     "note": "not the establishing shot: a night station, small shapes against the stone",
+     "takes": 1
+    }
+   ],
+   "stats": {
+    "setups": 10,
+    "cuts": 12,
+    "holds": 1,
+    "returns": 3,
+    "dissolves": 1,
+    "cutsPerSetup": 1.2
+   },
+   "cut": [
+    {
+     "unit": "ody-ii-00-head",
+     "setup": "CV-EST2",
+     "name": "THE ROOM, LOW AND EXPLORATORY",
+     "role": "establishing",
+     "cls": "WIDE",
+     "transition": "cut",
+     "take": 1,
+     "size": 1.014
+    },
+    {
+     "unit": "ody-ii-01-beg",
+     "setup": "CV-RACKS",
+     "name": "THE CHEESE RACKS",
+     "role": "geography",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.643
+    },
+    {
+     "unit": "ody-ii-02-present",
+     "setup": "CV-ULY",
+     "name": "ULYSSES, A MAN'S EYE",
+     "role": "single",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.506
+    },
+    {
+     "unit": "ody-ii-03-return",
+     "setup": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "cls": "ACTION",
+     "transition": "dissolve",
+     "take": 1,
+     "size": 0.743
+    },
+    {
+     "unit": "ody-ii-04-boulder",
+     "setup": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "cls": "ACTION",
+     "transition": "hold",
+     "take": 2,
+     "size": 0.743,
+     "hold": "the men never look away from the door: the frame that watched him come in is the frame the stone shuts"
+    },
+    {
+     "unit": "ody-ii-05-strangers",
+     "setup": "CV-GIANT-E",
+     "name": "THE GIANT, FROM HIS FEET (east)",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.864
+    },
+    {
+     "unit": "ody-ii-06-plea",
+     "setup": "CV-OVER",
+     "name": "OVER HIS SHOULDER, LOOKING DOWN",
+     "role": "ots",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.425
+    },
+    {
+     "unit": "ody-ii-07-pitiless",
+     "setup": "CV-GIANT-W",
+     "name": "THE GIANT, FROM THE WEST",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.827
+    },
+    {
+     "unit": "ody-ii-08-shipfast",
+     "setup": "CV-GIANT-E",
+     "name": "THE GIANT, FROM HIS FEET (east)",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.865
+    },
+    {
+     "unit": "ody-ii-09-shiplie",
+     "setup": "CV-ULY",
+     "name": "ULYSSES, A MAN'S EYE",
+     "role": "single",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.69
+    },
+    {
+     "unit": "ody-ii-10-firstmeal",
+     "setup": "CV-FIRE",
+     "name": "THE FIRE — THE SEIZE IN SHADOW",
+     "role": "action",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.857
+    },
+    {
+     "unit": "ody-ii-11-sword",
+     "setup": "CV-OBJ",
+     "name": "THE HAND BENCH",
+     "role": "insert",
+     "cls": "GATE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.371
+    },
+    {
+     "unit": "ody-ii-12-shiftstone",
+     "setup": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 3,
+     "size": 0.842
+    },
+    {
+     "unit": "ody-ii-13-tillmorning",
+     "setup": "CV-AFTER",
+     "name": "THE AFTERMATH",
+     "role": "aftermath",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.818
+    }
+   ]
+  },
+  {
+   "beat": 3,
+   "set": "cave",
+   "units": 14,
+   "setups": [
+    {
+     "id": "CV-EST3",
+     "name": "THE FIRE, TIGHTER",
+     "role": "establishing",
+     "note": "rung 2: the conspiracy is hatched at the blaze, printed down so flame keeps detail",
+     "takes": 1
+    },
+    {
+     "id": "CV-MEN",
+     "name": "THE MEN WATCHING",
+     "role": "reaction",
+     "note": "the faces that see it — by the second meal the reader knows what they are looking at",
+     "takes": 1
+    },
+    {
+     "id": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "note": "the mouth seen from the men's hiding place — the shot the stone shuts",
+     "takes": 2
+    },
+    {
+     "id": "CV-ULY",
+     "name": "ULYSSES, A MAN'S EYE",
+     "role": "single",
+     "note": "the clean reverse onto the man; from the lie on it carries the giant's shoulder",
+     "takes": 2
+    },
+    {
+     "id": "CV-CLUB",
+     "name": "THE CLUB",
+     "role": "reveal",
+     "note": "the searching pan finds it; the mast-scale is delivered by figures beside it",
+     "takes": 1
+    },
+    {
+     "id": "CV-LOTS",
+     "name": "THE CIRCLE, FROM ABOVE",
+     "role": "action",
+     "note": "the one overhead in the book — a lot is drawn in a ring and read from over it",
+     "takes": 1
+    },
+    {
+     "id": "CV-FIRE",
+     "name": "THE FIRE — THE SEIZE IN SHADOW",
+     "role": "action",
+     "note": "the horror staged against the blaze and never printed; the same angle all three meals",
+     "takes": 1
+    },
+    {
+     "id": "CV-BOWL",
+     "name": "THE BOWL, LOWER FOREGROUND",
+     "role": "insert",
+     "note": "the ivy-wood bowl held into the bottom of the frame, the rack doing the reveal",
+     "takes": 2
+    },
+    {
+     "id": "CV-GIANT-W",
+     "name": "THE GIANT, FROM THE WEST",
+     "role": "giant",
+     "note": "the answering low angle from the mouth side — the eye unblinking",
+     "takes": 2
+    },
+    {
+     "id": "CV-COLLAPSE",
+     "name": "THE COLLAPSE",
+     "role": "aftermath",
+     "note": "low, craning as the body settles; the shot the next beat is standing in",
+     "takes": 1
+    }
+   ],
+   "stats": {
+    "setups": 10,
+    "cuts": 13,
+    "holds": 0,
+    "returns": 4,
+    "dissolves": 1,
+    "cutsPerSetup": 1.3
+   },
+   "cut": [
+    {
+     "unit": "ody-iii-00-head",
+     "setup": "CV-EST3",
+     "name": "THE FIRE, TIGHTER",
+     "role": "establishing",
+     "cls": "WIDE",
+     "transition": "cut",
+     "take": 1,
+     "size": 1.276
+    },
+    {
+     "unit": "ody-iii-01-morningmeal",
+     "setup": "CV-MEN",
+     "name": "THE MEN WATCHING",
+     "role": "reaction",
+     "cls": "ACTION",
+     "transition": "dissolve",
+     "take": 1,
+     "size": 0.597
+    },
+    {
+     "unit": "ody-iii-02-quiverlid",
+     "setup": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.811
+    },
+    {
+     "unit": "ody-iii-03-scheme",
+     "setup": "CV-ULY",
+     "name": "ULYSSES, A MAN'S EYE",
+     "role": "single",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.72
+    },
+    {
+     "unit": "ody-iii-04-club",
+     "setup": "CV-CLUB",
+     "name": "THE CLUB",
+     "role": "reveal",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.783
+    },
+    {
+     "unit": "ody-iii-05-lots",
+     "setup": "CV-LOTS",
+     "name": "THE CIRCLE, FROM ABOVE",
+     "role": "action",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.608
+    },
+    {
+     "unit": "ody-iii-06-return",
+     "setup": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.807
+    },
+    {
+     "unit": "ody-iii-07-suppertwo",
+     "setup": "CV-FIRE",
+     "name": "THE FIRE — THE SEIZE IN SHADOW",
+     "role": "action",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.724
+    },
+    {
+     "unit": "ody-iii-08-lookhere",
+     "setup": "CV-BOWL",
+     "name": "THE BOWL, LOWER FOREGROUND",
+     "role": "insert",
+     "cls": "GATE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.626
+    },
+    {
+     "unit": "ody-iii-09-besokind",
+     "setup": "CV-GIANT-W",
+     "name": "THE GIANT, FROM THE WEST",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.943
+    },
+    {
+     "unit": "ody-iii-10-thrice",
+     "setup": "CV-BOWL",
+     "name": "THE BOWL, LOWER FOREGROUND",
+     "role": "insert",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.584
+    },
+    {
+     "unit": "ody-iii-11-noman",
+     "setup": "CV-ULY",
+     "name": "ULYSSES, A MAN'S EYE",
+     "role": "single",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.727
+    },
+    {
+     "unit": "ody-iii-12-nomanlast",
+     "setup": "CV-GIANT-W",
+     "name": "THE GIANT, FROM THE WEST",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.909
+    },
+    {
+     "unit": "ody-iii-13-neck",
+     "setup": "CV-COLLAPSE",
+     "name": "THE COLLAPSE",
+     "role": "aftermath",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.756
+    }
+   ]
+  },
+  {
+   "beat": 4,
+   "set": "cave",
+   "units": 13,
+   "setups": [
+    {
+     "id": "CV-EST4",
+     "name": "THE FLOOR",
+     "role": "establishing",
+     "note": "rung 3: the room has stopped being a room and become ground to work on",
+     "takes": 1
+    },
+    {
+     "id": "CV-OBJ",
+     "name": "THE HAND BENCH",
+     "role": "insert",
+     "note": "hand height, downstage centre: the sword at the hip, the beam in the coals",
+     "takes": 1
+    },
+    {
+     "id": "CV-FIVEFACES",
+     "name": "FIVE FACES, LIT FROM BELOW",
+     "role": "reaction",
+     "note": "the drawn point is the lamp; the faces arrive before the weapon does",
+     "takes": 2
+    },
+    {
+     "id": "CV-AUGER",
+     "name": "ALONG THE BEAM, FROM THE FLOOR",
+     "role": "action",
+     "note": "the shaft enters the lower corner on the men's hands, the eye sits opposite",
+     "takes": 1
+    },
+    {
+     "id": "CV-GIANT-W",
+     "name": "THE GIANT, FROM THE WEST",
+     "role": "giant",
+     "note": "the answering low angle from the mouth side — the eye unblinking",
+     "takes": 2
+    },
+    {
+     "id": "CV-BLIND",
+     "name": "AT ATTACKER HEIGHT — THE BLINDING",
+     "role": "action",
+     "note": "he fills the vertical frame; the operator is locked off until contact",
+     "takes": 1
+    },
+    {
+     "id": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "note": "the mouth seen from the men's hiding place — the shot the stone shuts",
+     "takes": 3
+    },
+    {
+     "id": "CV-GIANT-E",
+     "name": "THE GIANT, FROM HIS FEET (east)",
+     "role": "giant",
+     "note": "the scale angle: a waist-high lens east of the fire with a man at his feet",
+     "takes": 1
+    },
+    {
+     "id": "CV-SEATED",
+     "name": "SEATED IN THE MOUTH",
+     "role": "tableau",
+     "note": "the door is open and utterly barred; a slow push out of the cave's dark",
+     "takes": 1
+    }
+   ],
+   "stats": {
+    "setups": 9,
+    "cuts": 11,
+    "holds": 1,
+    "returns": 3,
+    "dissolves": 0,
+    "cutsPerSetup": 1.22
+   },
+   "cut": [
+    {
+     "unit": "ody-iv-00-head",
+     "setup": "CV-EST4",
+     "name": "THE FLOOR",
+     "role": "establishing",
+     "cls": "WIDE",
+     "transition": "cut",
+     "take": 1,
+     "size": 1.173
+    },
+    {
+     "unit": "ody-iv-01-embers",
+     "setup": "CV-OBJ",
+     "name": "THE HAND BENCH",
+     "role": "insert",
+     "cls": "GATE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.425
+    },
+    {
+     "unit": "ody-iv-02-glowing",
+     "setup": "CV-FIVEFACES",
+     "name": "FIVE FACES, LIT FROM BELOW",
+     "role": "reaction",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.54
+    },
+    {
+     "unit": "ody-iv-03-auger",
+     "setup": "CV-AUGER",
+     "name": "ALONG THE BEAM, FROM THE FLOOR",
+     "role": "action",
+     "cls": "CLOCK",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.365
+    },
+    {
+     "unit": "ody-iv-04-bore",
+     "setup": "CV-GIANT-W",
+     "name": "THE GIANT, FROM THE WEST",
+     "role": "giant",
+     "cls": "CLOCK",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.77
+    },
+    {
+     "unit": "ody-iv-05-hiss",
+     "setup": "CV-BLIND",
+     "name": "AT ATTACKER HEIGHT — THE BLINDING",
+     "role": "action",
+     "cls": "CLOCK",
+     "transition": "cut",
+     "take": 1,
+     "size": 1.148
+    },
+    {
+     "unit": "ody-iv-06-fright",
+     "setup": "CV-FIVEFACES",
+     "name": "FIVE FACES, LIT FROM BELOW",
+     "role": "reaction",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.704
+    },
+    {
+     "unit": "ody-iv-07-whatails",
+     "setup": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.559
+    },
+    {
+     "unit": "ody-iv-08-nomankilling",
+     "setup": "CV-GIANT-E",
+     "name": "THE GIANT, FROM HIS FEET (east)",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.857
+    },
+    {
+     "unit": "ody-iv-09-mustbeill",
+     "setup": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.559
+    },
+    {
+     "unit": "ody-iv-10-wentaway",
+     "setup": "CV-DOOR",
+     "name": "THE DOOR, FROM THE DARK",
+     "role": "geography",
+     "cls": "DIALOGUE",
+     "transition": "hold",
+     "take": 3,
+     "size": 0.559,
+     "hold": "the lamps recede past the very seams the men have not stopped staring at — a cut here would take away the thing that is going away"
+    },
+    {
+     "unit": "ody-iv-11-stone",
+     "setup": "CV-GIANT-W",
+     "name": "THE GIANT, FROM THE WEST",
+     "role": "giant",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.868
+    },
+    {
+     "unit": "ody-iv-12-doorway",
+     "setup": "CV-SEATED",
+     "name": "SEATED IN THE MOUTH",
+     "role": "tableau",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 1,
+     "size": 9
+    }
+   ]
+  },
+  {
+   "beat": 5,
+   "set": "cave",
+   "units": 13,
+   "setups": [
+    {
+     "id": "CV-EST5",
+     "name": "THE TURN — FACING THE MOUTH",
+     "role": "establishing",
+     "note": "rung 4: the ladder breaks and the camera turns round; the way out is the subject",
+     "takes": 1
+    },
+    {
+     "id": "CV-ULY",
+     "name": "ULYSSES, A MAN'S EYE",
+     "role": "single",
+     "note": "the clean reverse onto the man; from the lie on it carries the giant's shoulder",
+     "takes": 1
+    },
+    {
+     "id": "CV-WITHIES",
+     "name": "HANDS AND FLEECE",
+     "role": "insert",
+     "note": "the lashing, noiseless, kept under his breathing",
+     "takes": 2
+    },
+    {
+     "id": "CV-HANDPASS",
+     "name": "THE HAND OVER THE WOOL",
+     "role": "action",
+     "note": "low and close on the flock's side: the palm strokes the fleece that hides a man",
+     "takes": 2
+    },
+    {
+     "id": "CV-DAWNMOUTH",
+     "name": "THE LIGHT PAST HIM",
+     "role": "reestablish",
+     "note": "dawn breaks through the mouth past the seated giant; the light is the goal",
+     "takes": 2
+    },
+    {
+     "id": "CV-BELLY",
+     "name": "UNDER THE BELLY",
+     "role": "pov",
+     "note": "the belly line roofs the frame; the rack finds the man, not the obstruction",
+     "takes": 1
+    },
+    {
+     "id": "CV-RAMSPEECH",
+     "name": "THE BLIND MAN SPEAKING DOWN",
+     "role": "giant",
+     "note": "gentle for the first time in the chapter, and talking to the wrong animal",
+     "takes": 2
+    },
+    {
+     "id": "CV-TWOSHOT",
+     "name": "THE RUINED FACE AND THE WOOL",
+     "role": "two-shot",
+     "note": "profile: his face above, the fists in the fleece below, one arm's length apart",
+     "takes": 1
+    },
+    {
+     "id": "CV-OUT",
+     "name": "BACK AT THE MOUTH",
+     "role": "aftermath",
+     "note": "over the shoulder into open dawn, the giant still seated and small now",
+     "takes": 1
+    }
+   ],
+   "stats": {
+    "setups": 9,
+    "cuts": 12,
+    "holds": 0,
+    "returns": 4,
+    "dissolves": 1,
+    "cutsPerSetup": 1.33
+   },
+   "cut": [
+    {
+     "unit": "ody-v-00-head",
+     "setup": "CV-EST5",
+     "name": "THE TURN — FACING THE MOUTH",
+     "role": "establishing",
+     "cls": "WIDE",
+     "transition": "cut",
+     "take": 1,
+     "size": 1.622
+    },
+    {
+     "unit": "ody-v-01-puzzling",
+     "setup": "CV-ULY",
+     "name": "ULYSSES, A MAN'S EYE",
+     "role": "single",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.866
+    },
+    {
+     "unit": "ody-v-02-withies",
+     "setup": "CV-WITHIES",
+     "name": "HANDS AND FLEECE",
+     "role": "insert",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.555
+    },
+    {
+     "unit": "ody-v-03-threetoaman",
+     "setup": "CV-HANDPASS",
+     "name": "THE HAND OVER THE WOOL",
+     "role": "action",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.574
+    },
+    {
+     "unit": "ody-v-04-greatram",
+     "setup": "CV-WITHIES",
+     "name": "HANDS AND FLEECE",
+     "role": "insert",
+     "cls": "GATE",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.512
+    },
+    {
+     "unit": "ody-v-05-dawn",
+     "setup": "CV-DAWNMOUTH",
+     "name": "THE LIGHT PAST HIM",
+     "role": "reestablish",
+     "cls": "ACTION",
+     "transition": "dissolve",
+     "take": 1,
+     "size": 0.872
+    },
+    {
+     "unit": "ody-v-06-feltbacks",
+     "setup": "CV-HANDPASS",
+     "name": "THE HAND OVER THE WOOL",
+     "role": "action",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.74
+    },
+    {
+     "unit": "ody-v-07-lastofall",
+     "setup": "CV-BELLY",
+     "name": "UNDER THE BELLY",
+     "role": "pov",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.818
+    },
+    {
+     "unit": "ody-v-08-ramspeech1",
+     "setup": "CV-RAMSPEECH",
+     "name": "THE BLIND MAN SPEAKING DOWN",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.682
+    },
+    {
+     "unit": "ody-v-09-ramspeech2",
+     "setup": "CV-TWOSHOT",
+     "name": "THE RUINED FACE AND THE WOOL",
+     "role": "two-shot",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.676
+    },
+    {
+     "unit": "ody-v-10-ramspeech3",
+     "setup": "CV-RAMSPEECH",
+     "name": "THE BLIND MAN SPEAKING DOWN",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.654
+    },
+    {
+     "unit": "ody-v-11-freed",
+     "setup": "CV-OUT",
+     "name": "BACK AT THE MOUTH",
+     "role": "aftermath",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.47
+    },
+    {
+     "unit": "ody-v-12-aboard",
+     "setup": "CV-DAWNMOUTH",
+     "name": "THE LIGHT PAST HIM",
+     "role": "reestablish",
+     "cls": "NARRATION",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.676
+    }
+   ]
+  },
+  {
+   "beat": 6,
+   "set": "sea",
+   "units": 14,
+   "setups": [
+    {
+     "id": "SEA-EST",
+     "name": "THE TWO PLANES",
+     "role": "establishing",
+     "note": "ship frame left, island and its blinded figure frame right — the axis, declared once",
+     "takes": 2
+    },
+    {
+     "id": "SEA-STERN",
+     "name": "AT THE STERN",
+     "role": "single",
+     "note": "off the seaward quarter, so the island sits in the look-room he shouts into",
+     "takes": 3
+    },
+    {
+     "id": "SEA-ROCK",
+     "name": "THE THROW",
+     "role": "action",
+     "note": "the eye rides the arc and the splash takes it; the settle is the operator's",
+     "takes": 2
+    },
+    {
+     "id": "SEA-DECK",
+     "name": "THE DECK",
+     "role": "geography",
+     "note": "the ship's three-quarter interior; oars trailing, the hush before the plea",
+     "takes": 1
+    },
+    {
+     "id": "SEA-MEN",
+     "name": "THE ROWERS",
+     "role": "reaction",
+     "note": "faces up at him, one hand on his arm — the plea the reader will click over",
+     "takes": 1
+    },
+    {
+     "id": "SEA-CLIFF",
+     "name": "THE CLIFF CLOSE",
+     "role": "giant",
+     "note": "the long lens past the ship: the prophecy, and the arms lifted to the firmament",
+     "takes": 2
+    },
+    {
+     "id": "SEA-HAND",
+     "name": "THE BECKONING HAND",
+     "role": "giant",
+     "note": "a step round and a step lower as the tone turns wheedling: come here, then",
+     "takes": 1
+    },
+    {
+     "id": "SEA-ALTAR",
+     "name": "THE DRIFTWOOD ALTAR",
+     "role": "aftermath",
+     "note": "the thigh-fire smoke rising straight into a sky that gives no sign",
+     "takes": 1
+    },
+    {
+     "id": "SEA-OFF",
+     "name": "THE SAIL-OFF",
+     "role": "aftermath",
+     "note": "the ship frame left with open water ahead and the island shrinking behind",
+     "takes": 1
+    }
+   ],
+   "stats": {
+    "setups": 9,
+    "cuts": 13,
+    "holds": 0,
+    "returns": 5,
+    "dissolves": 1,
+    "cutsPerSetup": 1.44
+   },
+   "cut": [
+    {
+     "unit": "ody-vi-01-jeer",
+     "setup": "SEA-EST",
+     "name": "THE TWO PLANES",
+     "role": "establishing",
+     "cls": "GATE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.39
+    },
+    {
+     "unit": "ody-vi-02-taunt",
+     "setup": "SEA-STERN",
+     "name": "AT THE STERN",
+     "role": "single",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.553
+    },
+    {
+     "unit": "ody-vi-03-rock1",
+     "setup": "SEA-ROCK",
+     "name": "THE THROW",
+     "role": "action",
+     "cls": "CLOCK",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.54
+    },
+    {
+     "unit": "ody-vi-04-twiceasfar",
+     "setup": "SEA-DECK",
+     "name": "THE DECK",
+     "role": "geography",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.526
+    },
+    {
+     "unit": "ody-vi-05-menbeg",
+     "setup": "SEA-MEN",
+     "name": "THE ROWERS",
+     "role": "reaction",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.652
+    },
+    {
+     "unit": "ody-vi-06-defy",
+     "setup": "SEA-EST",
+     "name": "THE TWO PLANES",
+     "role": "establishing",
+     "cls": "GATE",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.425,
+     "reprise": "the second gate is the master returning on purpose: the reader must commit the hubris inside the very frame that still holds the men begging him not to"
+    },
+    {
+     "unit": "ody-vi-07-myname",
+     "setup": "SEA-STERN",
+     "name": "AT THE STERN",
+     "role": "single",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.723
+    },
+    {
+     "unit": "ody-vi-08-prophecy",
+     "setup": "SEA-CLIFF",
+     "name": "THE CLIFF CLOSE",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.487
+    },
+    {
+     "unit": "ody-vi-09-fatherson",
+     "setup": "SEA-HAND",
+     "name": "THE BECKONING HAND",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.546
+    },
+    {
+     "unit": "ody-vi-10-hades",
+     "setup": "SEA-STERN",
+     "name": "AT THE STERN",
+     "role": "single",
+     "cls": "DIALOGUE",
+     "transition": "cut",
+     "take": 3,
+     "size": 0.679
+    },
+    {
+     "unit": "ody-vi-11-curse",
+     "setup": "SEA-CLIFF",
+     "name": "THE CLIFF CLOSE",
+     "role": "giant",
+     "cls": "GIANT",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.569
+    },
+    {
+     "unit": "ody-vi-12-heard",
+     "setup": "SEA-ROCK",
+     "name": "THE THROW",
+     "role": "action",
+     "cls": "CLOCK",
+     "transition": "cut",
+     "take": 2,
+     "size": 0.488
+    },
+    {
+     "unit": "ody-vi-13-ram",
+     "setup": "SEA-ALTAR",
+     "name": "THE DRIFTWOOD ALTAR",
+     "role": "aftermath",
+     "cls": "ACTION",
+     "transition": "cut",
+     "take": 1,
+     "size": 0.498
+    },
+    {
+     "unit": "ody-vi-14-sailedon",
+     "setup": "SEA-OFF",
+     "name": "THE SAIL-OFF",
+     "role": "aftermath",
+     "cls": "WIDE",
+     "transition": "dissolve",
+     "take": 1,
+     "size": 0.611
+    }
+   ]
+  }
+ ],
  "escalation": {
   "rungs": [
    {
@@ -32,6 +1378,7 @@
  "axis": {
   "law": "IN THE CAVE THE GIANT IS FRAME RIGHT AND THE MEN ARE FRAME LEFT; at sea the island is frame RIGHT and the ship frame LEFT — the direction she is leaving in.",
   "sides": {
+   "ody-ii-02-present": -1,
    "ody-ii-05-strangers": 1,
    "ody-ii-06-plea": -1,
    "ody-ii-07-pitiless": 1,
@@ -39,11 +1386,12 @@
    "ody-ii-09-shiplie": -1,
    "ody-ii-10-firstmeal": 1,
    "ody-ii-11-sword": -1,
+   "ody-iii-01-morningmeal": -1,
    "ody-iii-03-scheme": -1,
    "ody-iii-07-suppertwo": 1,
    "ody-iii-08-lookhere": -1,
    "ody-iii-09-besokind": 1,
-   "ody-iii-10-thrice": 1,
+   "ody-iii-10-thrice": -1,
    "ody-iii-11-noman": -1,
    "ody-iii-12-nomanlast": 1,
    "ody-iii-13-neck": 1,
@@ -52,6 +1400,7 @@
    "ody-iv-03-auger": -1,
    "ody-iv-04-bore": 1,
    "ody-iv-05-hiss": 1,
+   "ody-iv-06-fright": -1,
    "ody-iv-08-nomankilling": 1,
    "ody-iv-11-stone": 1,
    "ody-iv-12-doorway": 1,
@@ -175,6 +1524,12 @@
    "beat": 1,
    "set": "shore",
    "class": "WIDE",
+   "setup": "SH-EST",
+   "setupName": "THE BLACK STRAIT",
+   "setupRole": "establishing",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -257,6 +1612,12 @@
    "beat": 1,
    "set": "shore",
    "class": "NARRATION",
+   "setup": "SH-FLEET",
+   "setupName": "THE FLEET IN MIST",
+   "setupRole": "wide",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -339,6 +1700,12 @@
    "beat": 1,
    "set": "shore",
    "class": "ACTION",
+   "setup": "SH-TELLER",
+   "setupName": "THE TELLER",
+   "setupRole": "single",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "ulysses"
@@ -346,23 +1713,23 @@
    "over": null,
    "fg": null,
    "pos": [
-    -6.969,
-    1.72,
-    10.109
+    -6.393,
+    1.62,
+    11.146
    ],
    "lookAt": [
-    -3.665,
-    0.778,
-    2.862
+    -3.707,
+    0.766,
+    2.785
    ],
-   "fov": 34,
+   "fov": 28,
    "move": {
     "k": "track",
     "m": 1.1,
     "dur": 9
    },
    "dof": {
-    "fstop": 4,
+    "fstop": 2.8,
     "focus": "subject",
     "near": 0.85
    },
@@ -380,21 +1747,21 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.38,
-    "fracDesign": 0.358,
+    "frac": 0.42,
+    "fracDesign": 0.399,
     "inFrame": 1,
-    "cx": -0.149,
-    "cy": 0.02,
+    "cx": -0.148,
+    "cy": 0.034,
     "floor": 0.17,
-    "crownPitch": 0.2,
+    "crownPitch": 0.8,
     "crownPitchMin": null,
-    "dist": 7.99,
-    "bearing": -20,
+    "dist": 8.81,
+    "bearing": -14.2,
     "comp": [
      -0.15,
-     0.04
+     0.05
     ],
-    "camY": 1.72,
+    "camY": 1.62,
     "follow": true,
     "anchor": [
      -4.248,
@@ -415,23 +1782,34 @@
    "beat": 1,
    "set": "shore",
    "class": "NARRATION",
+   "setup": "SH-CAMP",
+   "setupName": "THE CAMP FIRE",
+   "setupRole": "reaction",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
-    "a": "ulysses"
+    "m": [
+     479,
+     507
+    ],
+    "h": 1.7,
+    "y": 0.85
    },
    "over": null,
    "fg": null,
    "pos": [
-    -5.868,
-    1.62,
-    9.065
+    7.589,
+    1.66,
+    16.781
    ],
    "lookAt": [
-    -3.828,
-    0.78,
-    2.756
+    4.208,
+    0.737,
+    7.485
    ],
-   "fov": 27,
+   "fov": 32,
    "move": {
     "k": "push",
     "cms": 3,
@@ -439,7 +1817,7 @@
     "m": 0.3
    },
    "dof": {
-    "fstop": 2.8,
+    "fstop": 3.5,
     "focus": "subject",
     "near": 0.85
    },
@@ -449,34 +1827,34 @@
     "side": 1
    },
    "frame": {
-    "h": 1.75,
-    "point": false,
+    "h": 1.7,
+    "point": true,
     "fill": false,
     "side": 0,
     "sideLanded": -1,
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.614,
-    "fracDesign": 0.547,
+    "frac": 0.347,
+    "fracDesign": 0.299,
     "inFrame": 1,
-    "cx": -0.164,
-    "cy": 0.036,
+    "cx": -0.148,
+    "cy": 0.007,
     "floor": 0.2,
-    "crownPitch": 1.1,
+    "crownPitch": 0.2,
     "crownPitchMin": null,
-    "dist": 6.67,
-    "bearing": -14.2,
+    "dist": 9.91,
+    "bearing": 23.6,
     "comp": [
-     -0.16,
-     0.06
+     -0.13,
+     0.04
     ],
-    "camY": 1.62,
+    "camY": 1.66,
     "follow": false,
     "anchor": [
-     -4.248,
-     0.875,
-     2.639
+     3.628,
+     0.85,
+     7.729
     ],
     "solved": "hint"
    },
@@ -492,6 +1870,12 @@
    "beat": 1,
    "set": "shore",
    "class": "ACTION",
+   "setup": "SH-STRAIT",
+   "setupName": "ACROSS THE STRAIT",
+   "setupRole": "reveal",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -504,14 +1888,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    11.635,
+    15.709,
     2.4,
-    10.522
+    12.818
    ],
    "lookAt": [
-    46.61,
+    46.56,
     6.96,
-    -49.991
+    -49.899
    ],
    "fov": 15,
    "move": {
@@ -539,16 +1923,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.836,
+    "frac": 0.833,
     "fracDesign": 0.77,
     "inFrame": 1,
-    "cx": 0.125,
-    "cy": 0.009,
+    "cx": 0.129,
+    "cy": 0.008,
     "floor": 0.17,
     "crownPitch": 8.6,
     "crownPitchMin": null,
     "dist": 70.02,
-    "bearing": -31.3,
+    "bearing": -27.5,
     "comp": [
      0.1,
      -0.05
@@ -560,7 +1944,7 @@
      6.5,
      -49.199
     ],
-    "solved": "swung 4deg x1 + backed off"
+    "solved": "hint + backed off"
    },
    "flags": {
     "intro": false,
@@ -574,6 +1958,12 @@
    "beat": 1,
    "set": "shore",
    "class": "ACTION",
+   "setup": "SH-ISLAND",
+   "setupName": "THE GOAT ISLAND",
+   "setupRole": "reestablish",
+   "transition": "dissolve",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "ulysses"
@@ -651,6 +2041,12 @@
    "beat": 1,
    "set": "shore",
    "class": "NARRATION",
+   "setup": "SH-CAMP",
+   "setupName": "THE CAMP FIRE",
+   "setupRole": "reaction",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -663,16 +2059,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    7.462,
+    6.975,
     1.66,
-    16.489
+    15.376
    ],
    "lookAt": [
-    4.19,
-    0.74,
-    7.493
+    4.087,
+    0.761,
+    7.537
    ],
-   "fov": 32,
+   "fov": 30,
    "move": {
     "k": "push",
     "cms": 3.5,
@@ -698,15 +2094,15 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.362,
-    "fracDesign": 0.309,
+    "frac": 0.455,
+    "fracDesign": 0.378,
     "inFrame": 1,
-    "cx": -0.15,
-    "cy": 0.005,
+    "cx": -0.157,
+    "cy": -0.01,
     "floor": 0.2,
-    "crownPitch": 0.2,
+    "crownPitch": 0.3,
     "crownPitchMin": null,
-    "dist": 9.6,
+    "dist": 8.39,
     "bearing": 23.6,
     "comp": [
      -0.13,
@@ -733,6 +2129,12 @@
    "beat": 1,
    "set": "shore",
    "class": "OTS",
+   "setup": "SH-COUNCIL",
+   "setupName": "THE COUNCIL, OVER THE SHOULDER",
+   "setupRole": "ots",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "ULYSSES",
    "subject": {
     "a": "ulysses"
@@ -810,6 +2212,12 @@
    "beat": 1,
    "set": "shore",
    "class": "ACTION",
+   "setup": "SH-STRAIT",
+   "setupName": "ACROSS THE STRAIT",
+   "setupRole": "reveal",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -822,14 +2230,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    30.832,
-    3,
-    -0.627
+    27.791,
+    2.4,
+    -2.665
    ],
    "lookAt": [
-    49.794,
+    49.831,
     3.895,
-    -33.561
+    -33.618
    ],
    "fov": 22,
    "move": {
@@ -841,7 +2249,7 @@
    "dof": {
     "fstop": 8,
     "focus": "subject",
-    "near": 0.85
+    "near": 0.45
    },
    "read": {
     "fill": 0.95,
@@ -857,21 +2265,21 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.797,
+    "frac": 0.799,
     "fracDesign": 0.609,
     "inFrame": 1,
-    "cx": 0.09,
-    "cy": -0.03,
+    "cx": 0.081,
+    "cy": -0.013,
     "floor": 0.17,
-    "crownPitch": 7.6,
+    "crownPitch": 8.5,
     "crownPitchMin": null,
-    "dist": 38,
-    "bearing": -31.1,
+    "dist": 38.02,
+    "bearing": -36.6,
     "comp": [
      0.06,
      -0.04
     ],
-    "camY": 3,
+    "camY": 2.4,
     "follow": false,
     "anchor": [
      50.442,
@@ -892,6 +2300,12 @@
    "beat": 1,
    "set": "shore",
    "class": "NARRATION",
+   "setup": "SH-CRAG",
+   "setupName": "THE CRAG",
+   "setupRole": "reveal",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -973,6 +2387,12 @@
    "beat": 1,
    "set": "shore",
    "class": "NARRATION",
+   "setup": "SH-TELLER",
+   "setupName": "THE TELLER",
+   "setupRole": "single",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -985,14 +2405,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    7.255,
-    1.66,
-    15.607
+    3.49,
+    1.62,
+    12.777
    ],
    "lookAt": [
-    11.306,
+    11.134,
     0.725,
-    7.195
+    7.416
    ],
    "fov": 30,
    "move": {
@@ -1020,21 +2440,21 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.4,
+    "frac": 0.403,
     "fracDesign": 0.339,
     "inFrame": 1,
-    "cx": -0.124,
+    "cx": -0.143,
     "cy": 0.009,
     "floor": 0.2,
-    "crownPitch": 0.2,
+    "crownPitch": 0.5,
     "crownPitchMin": null,
-    "dist": 9.37,
-    "bearing": -22.3,
+    "dist": 9.36,
+    "bearing": -51.5,
     "comp": [
      -0.13,
      0.05
     ],
-    "camY": 1.66,
+    "camY": 1.62,
     "follow": false,
     "anchor": [
      10.796,
@@ -1055,6 +2475,12 @@
    "beat": 1,
    "set": "shore",
    "class": "DIALOGUE",
+   "setup": "SH-SKIN",
+   "setupName": "THE WINESKIN",
+   "setupRole": "insert",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "ulysses"
@@ -1132,6 +2558,12 @@
    "beat": 1,
    "set": "shore",
    "class": "NARRATION",
+   "setup": "SH-STRAIT",
+   "setupName": "ACROSS THE STRAIT",
+   "setupRole": "reveal",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -1144,14 +2576,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    38.17,
+    31.856,
     2.4,
-    -4.513
+    -8.142
    ],
    "lookAt": [
-    50.021,
+    50.071,
     3.998,
-    -33.34
+    -33.433
    ],
    "fov": 24,
    "move": {
@@ -1163,7 +2595,7 @@
    "dof": {
     "fstop": 5.6,
     "focus": "subject",
-    "near": 0.85
+    "near": 0.45
    },
    "read": {
     "fill": 0.8,
@@ -1179,16 +2611,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.852,
+    "frac": 0.866,
     "fracDesign": 0.881,
     "inFrame": 1,
-    "cx": 0.084,
-    "cy": -0.026,
+    "cx": 0.06,
+    "cy": -0.023,
     "floor": 0.2,
     "crownPitch": 10.4,
     "crownPitchMin": null,
     "dist": 31.2,
-    "bearing": -23.2,
+    "bearing": -36.6,
     "comp": [
      0.04,
      -0.06
@@ -1214,6 +2646,12 @@
    "beat": 2,
    "set": "cave",
    "class": "WIDE",
+   "setup": "CV-EST2",
+   "setupName": "THE ROOM, LOW AND EXPLORATORY",
+   "setupRole": "establishing",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -1295,6 +2733,12 @@
    "beat": 2,
    "set": "cave",
    "class": "NARRATION",
+   "setup": "CV-RACKS",
+   "setupName": "THE CHEESE RACKS",
+   "setupRole": "geography",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -1377,28 +2821,29 @@
    "beat": 2,
    "set": "cave",
    "class": "NARRATION",
+   "setup": "CV-ULY",
+   "setupName": "ULYSSES, A MAN'S EYE",
+   "setupRole": "single",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
-    "m": [
-     430,
-     432
-    ],
-    "h": 3,
-    "y": 1.5
+    "a": "ulysses"
    },
    "over": null,
    "fg": null,
    "pos": [
-    3.722,
-    1.66,
-    4.74
+    -1.172,
+    1.58,
+    4.385
    ],
    "lookAt": [
-    -5.942,
-    1.432,
-    -2.23
+    -1.637,
+    0.78,
+    -2.711
    ],
-   "fov": 32,
+   "fov": 30,
    "move": {
     "k": "push",
     "cms": 3,
@@ -1406,46 +2851,46 @@
     "m": 0.3
    },
    "dof": {
-    "fstop": 4,
+    "fstop": 2.8,
     "focus": "subject",
     "near": 0.85
    },
    "read": {
     "fill": 0.8,
     "rim": 0.85,
-    "side": 1
+    "side": -1
    },
    "frame": {
-    "h": 3,
-    "point": true,
+    "h": 1.75,
+    "point": false,
     "fill": false,
-    "side": 0,
+    "side": -1,
     "sideLanded": -1,
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.552,
-    "fracDesign": 0.44,
+    "frac": 0.506,
+    "fracDesign": 0.458,
     "inFrame": 1,
-    "cx": -0.133,
-    "cy": 0.012,
+    "cx": -0.187,
+    "cy": 0.035,
     "floor": 0.2,
-    "crownPitch": 6.4,
+    "crownPitch": 1.4,
     "crownPitchMin": null,
-    "dist": 11.89,
-    "bearing": 58.1,
+    "dist": 7.13,
+    "bearing": 8.2,
     "comp": [
-     -0.14,
-     0.02
+     -0.17,
+     0.05
     ],
-    "camY": 1.66,
+    "camY": 1.58,
     "follow": false,
     "anchor": [
-     -6.372,
-     1.5,
-     -1.541
+     -2.186,
+     0.875,
+     -2.641
     ],
-    "solved": "swung 40deg x1"
+    "solved": "swung 8deg x1"
    },
    "flags": {
     "intro": false,
@@ -1459,88 +2904,12 @@
    "beat": 2,
    "set": "cave",
    "class": "ACTION",
-   "speaker": null,
-   "subject": {
-    "m": [
-     933,
-     541
-    ],
-    "h": 1.8,
-    "y": 0.9
-   },
-   "over": null,
-   "fg": null,
-   "pos": [
-    -1.325,
-    1.35,
-    5.003
-   ],
-   "lookAt": [
-    5.286,
-    0.818,
-    4.041
-   ],
-   "fov": 34,
-   "move": {
-    "k": "push",
-    "cms": 5.5,
-    "dur": 10,
-    "m": 0.55
-   },
-   "dof": {
-    "fstop": 2.8,
-    "focus": "subject",
-    "near": 0.85
-   },
-   "read": {
-    "fill": 0.95,
-    "rim": 1.05,
-    "side": 1
-   },
-   "frame": {
-    "h": 1.8,
-    "point": true,
-    "fill": false,
-    "side": 0,
-    "sideLanded": 1,
-    "stationLegal": null,
-    "stationSees": null,
-    "liveAnchor": false,
-    "frac": 0.575,
-    "fracDesign": 0.44,
-    "inFrame": 1,
-    "cx": 0.115,
-    "cy": 0.007,
-    "floor": 0.17,
-    "crownPitch": 3.9,
-    "crownPitchMin": null,
-    "dist": 6.69,
-    "bearing": -85.3,
-    "comp": [
-     0.12,
-     0.04
-    ],
-    "camY": 1.35,
-    "follow": false,
-    "anchor": [
-     5.326,
-     0.9,
-     4.457
-    ],
-    "solved": "swung -68deg x0.68"
-   },
-   "flags": {
-    "intro": false,
-    "blinding": false,
-    "offstage": false,
-    "gateTarget": null
-   }
-  },
-  "ody-ii-04-boulder": {
-   "unit": "ody-ii-04-boulder",
-   "beat": 2,
-   "set": "cave",
-   "class": "ACTION",
+   "setup": "CV-DOOR",
+   "setupName": "THE DOOR, FROM THE DARK",
+   "setupRole": "geography",
+   "transition": "dissolve",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -1553,21 +2922,21 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.038,
-    1.7,
-    4.486
+    4.549,
+    1.66,
+    4.443
    ],
    "lookAt": [
-    -7.933,
+    -7.881,
     2.116,
-    -2.161
+    -2.295
    ],
-   "fov": 34,
+   "fov": 33,
    "move": {
     "k": "push",
-    "cms": 12,
+    "cms": 5.5,
     "dur": 10,
-    "m": 1.2
+    "m": 0.55
    },
    "dof": {
     "fstop": 4,
@@ -1588,21 +2957,109 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.804,
+    "frac": 0.743,
     "fracDesign": 0.55,
     "inFrame": 1,
-    "cx": -0.054,
-    "cy": 0.057,
+    "cx": -0.073,
+    "cy": 0.055,
     "floor": 0.17,
-    "crownPitch": 11.6,
+    "crownPitch": 11.4,
     "crownPitchMin": null,
-    "dist": 13.69,
-    "bearing": 63.3,
+    "dist": 14.13,
+    "bearing": 64.4,
     "comp": [
-     -0.08,
+     -0.1,
      0.02
     ],
-    "camY": 1.7,
+    "camY": 1.66,
+    "follow": false,
+    "anchor": [
+     -8.186,
+     2.2,
+     -1.651
+    ],
+    "solved": "swung 36deg x1"
+   },
+   "flags": {
+    "intro": false,
+    "blinding": false,
+    "offstage": false,
+    "gateTarget": null
+   }
+  },
+  "ody-ii-04-boulder": {
+   "unit": "ody-ii-04-boulder",
+   "beat": 2,
+   "set": "cave",
+   "class": "ACTION",
+   "setup": "CV-DOOR",
+   "setupName": "THE DOOR, FROM THE DARK",
+   "setupRole": "geography",
+   "transition": "hold",
+   "hold": "the men never look away from the door: the frame that watched him come in is the frame the stone shuts",
+   "reprise": null,
+   "speaker": null,
+   "subject": {
+    "m": [
+     352,
+     430
+    ],
+    "h": 4.6,
+    "y": 2.2
+   },
+   "over": null,
+   "fg": null,
+   "pos": [
+    4.549,
+    1.66,
+    4.443
+   ],
+   "lookAt": [
+    -7.881,
+    2.116,
+    -2.295
+   ],
+   "fov": 33,
+   "move": {
+    "k": "push",
+    "cms": 5.5,
+    "dur": 10,
+    "m": 0.55
+   },
+   "dof": {
+    "fstop": 4,
+    "focus": "subject",
+    "near": 0.85
+   },
+   "read": {
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": 1
+   },
+   "frame": {
+    "h": 4.6,
+    "point": true,
+    "fill": false,
+    "side": 0,
+    "sideLanded": -1,
+    "stationLegal": null,
+    "stationSees": null,
+    "liveAnchor": false,
+    "frac": 0.743,
+    "fracDesign": 0.55,
+    "inFrame": 1,
+    "cx": -0.073,
+    "cy": 0.055,
+    "floor": 0.17,
+    "crownPitch": 11.4,
+    "crownPitchMin": null,
+    "dist": 14.13,
+    "bearing": 64.4,
+    "comp": [
+     -0.1,
+     0.02
+    ],
+    "camY": 1.66,
     "follow": false,
     "anchor": [
      -8.186,
@@ -1623,6 +3080,12 @@
    "beat": 2,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-GIANT-E",
+   "setupName": "THE GIANT, FROM HIS FEET (east)",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-seat"
@@ -1700,6 +3163,12 @@
    "beat": 2,
    "set": "cave",
    "class": "DIALOGUE",
+   "setup": "CV-OVER",
+   "setupName": "OVER HIS SHOULDER, LOOKING DOWN",
+   "setupRole": "ots",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "ULYSSES",
    "subject": {
     "a": "ulysses"
@@ -1777,6 +3246,12 @@
    "beat": 2,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-GIANT-W",
+   "setupName": "THE GIANT, FROM THE WEST",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-seat"
@@ -1785,13 +3260,13 @@
    "fg": null,
    "pos": [
     -5.448,
-    1.1,
+    1.22,
     3.211
    ],
    "lookAt": [
     0.94,
     1.932,
-    -1.133
+    -1.132
    ],
    "fov": 46,
    "move": {
@@ -1819,21 +3294,21 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.823,
-    "fracDesign": 0.659,
+    "frac": 0.827,
+    "fracDesign": 0.658,
     "inFrame": 1,
-    "cx": 0.143,
-    "cy": 0.062,
+    "cx": 0.142,
+    "cy": 0.059,
     "floor": 0.42,
-    "crownPitch": 21.9,
+    "crownPitch": 21.1,
     "crownPitchMin": 21,
-    "dist": 7.73,
+    "dist": 7.72,
     "bearing": -61.6,
     "comp": [
      0.14,
      0.03
     ],
-    "camY": 1.52,
+    "camY": 1.5,
     "follow": false,
     "anchor": [
      1.302,
@@ -1854,6 +3329,12 @@
    "beat": 2,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-GIANT-E",
+   "setupName": "THE GIANT, FROM HIS FEET (east)",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-seat"
@@ -1861,14 +3342,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -5.352,
-    1.22,
-    3.236
+    -5.315,
+    1.05,
+    3.302
    ],
    "lookAt": [
-    0.98,
+    1.001,
     1.938,
-    -1.043
+    -0.996
    ],
    "fov": 44,
    "move": {
@@ -1896,28 +3377,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.871,
-    "fracDesign": 0.698,
+    "frac": 0.865,
+    "fracDesign": 0.694,
     "inFrame": 1,
-    "cx": 0.13,
-    "cy": 0.059,
+    "cx": 0.121,
+    "cy": 0.064,
     "floor": 0.42,
-    "crownPitch": 21.3,
+    "crownPitch": 22.4,
     "crownPitchMin": 21,
-    "dist": 7.65,
-    "bearing": -61.1,
+    "dist": 7.66,
+    "bearing": -60.5,
     "comp": [
-     0.13,
+     0.12,
      0.03
     ],
-    "camY": 1.5,
+    "camY": 1.05,
     "follow": false,
     "anchor": [
      1.302,
      2.03,
      -0.44
     ],
-    "solved": "swung -80deg x1 + dropped"
+    "solved": "swung -92deg x1"
    },
    "flags": {
     "intro": false,
@@ -1931,6 +3412,12 @@
    "beat": 2,
    "set": "cave",
    "class": "DIALOGUE",
+   "setup": "CV-ULY",
+   "setupName": "ULYSSES, A MAN'S EYE",
+   "setupRole": "single",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "ULYSSES",
    "subject": {
     "a": "ulysses"
@@ -2008,6 +3495,12 @@
    "beat": 2,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-FIRE",
+   "setupName": "THE FIRE — THE SEIZE IN SHADOW",
+   "setupRole": "action",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "poly-seat"
@@ -2084,6 +3577,12 @@
    "beat": 2,
    "set": "cave",
    "class": "GATE",
+   "setup": "CV-OBJ",
+   "setupName": "THE HAND BENCH",
+   "setupRole": "insert",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "t": "sword",
@@ -2093,13 +3592,13 @@
    "fg": null,
    "pos": [
     -5.94,
-    1.35,
+    1.15,
     2.055
    ],
    "lookAt": [
-    -0.79,
-    0.8,
-    5.565
+    -0.773,
+    0.817,
+    5.54
    ],
    "fov": 30,
    "move": {
@@ -2127,21 +3626,21 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.369,
-    "fracDesign": 0.299,
+    "frac": 0.371,
+    "fracDesign": 0.3,
     "inFrame": 1,
-    "cx": -0.169,
-    "cy": -0.007,
+    "cx": -0.158,
+    "cy": -0.002,
     "floor": 0.22,
-    "crownPitch": 0,
+    "crownPitch": 1.8,
     "crownPitchMin": null,
-    "dist": 6.24,
+    "dist": 6.23,
     "bearing": -120.1,
     "comp": [
-     -0.16,
-     0.03
+     -0.15,
+     0.02
     ],
-    "camY": 1.35,
+    "camY": 1.15,
     "follow": false,
     "anchor": [
      -0.558,
@@ -2162,6 +3661,12 @@
    "beat": 2,
    "set": "cave",
    "class": "NARRATION",
+   "setup": "CV-DOOR",
+   "setupName": "THE DOOR, FROM THE DARK",
+   "setupRole": "geography",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -2174,14 +3679,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.956,
-    1.62,
-    4.51
+    3.109,
+    1.66,
+    4.758
    ],
    "lookAt": [
-    -7.888,
-    2.117,
-    -2.294
+    -7.876,
+    2.126,
+    -2.204
    ],
    "fov": 32,
    "move": {
@@ -2209,28 +3714,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.722,
-    "fracDesign": 0.552,
+    "frac": 0.842,
+    "fracDesign": 0.617,
     "inFrame": 1,
-    "cx": -0.073,
-    "cy": 0.055,
+    "cx": -0.074,
+    "cy": 0.062,
     "floor": 0.2,
-    "crownPitch": 11.2,
+    "crownPitch": 12.3,
     "crownPitchMin": null,
-    "dist": 14.53,
-    "bearing": 64.9,
+    "dist": 13,
+    "bearing": 60.4,
     "comp": [
      -0.1,
      0.02
     ],
-    "camY": 1.62,
+    "camY": 1.66,
     "follow": false,
     "anchor": [
      -8.186,
      2.2,
      -1.651
     ],
-    "solved": "swung 36deg x0.76"
+    "solved": "swung 32deg x0.68"
    },
    "flags": {
     "intro": false,
@@ -2244,6 +3749,12 @@
    "beat": 2,
    "set": "cave",
    "class": "NARRATION",
+   "setup": "CV-AFTER",
+   "setupName": "THE AFTERMATH",
+   "setupRole": "aftermath",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -2326,6 +3837,12 @@
    "beat": 3,
    "set": "cave",
    "class": "WIDE",
+   "setup": "CV-EST3",
+   "setupName": "THE FIRE, TIGHTER",
+   "setupRole": "establishing",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -2409,28 +3926,29 @@
    "beat": 3,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-MEN",
+   "setupName": "THE MEN WATCHING",
+   "setupRole": "reaction",
+   "transition": "dissolve",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
-    "m": [
-     852,
-     470
-    ],
-    "h": 2,
-    "y": 1
+    "a": "crew-0"
    },
    "over": null,
    "fg": null,
    "pos": [
-    -1.13,
-    1.4,
-    4.76
+    -1.375,
+    1.52,
+    4.766
    ],
    "lookAt": [
-    3.177,
-    0.962,
-    0.266
+    4.866,
+    0.825,
+    4.817
    ],
-   "fov": 34,
+   "fov": 30,
    "move": {
     "k": "push",
     "cms": 4.5,
@@ -2438,46 +3956,46 @@
     "m": 0.45
    },
    "dof": {
-    "fstop": 2.8,
+    "fstop": 2.5,
     "focus": "subject",
     "near": 0.85
    },
    "read": {
     "fill": 0.95,
     "rim": 1.05,
-    "side": 1
+    "side": -1
    },
    "frame": {
-    "h": 2,
-    "point": true,
+    "h": 1.75,
+    "point": false,
     "fill": false,
-    "side": 0,
-    "sideLanded": 1,
+    "side": -1,
+    "sideLanded": -1,
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.749,
-    "fracDesign": 0.525,
+    "frac": 0.597,
+    "fracDesign": 0.521,
     "inFrame": 1,
-    "cx": 0.134,
-    "cy": -0.035,
+    "cx": -0.163,
+    "cy": 0.015,
     "floor": 0.17,
-    "crownPitch": 5.5,
+    "crownPitch": 2.1,
     "crownPitchMin": null,
-    "dist": 6.23,
-    "bearing": -47.4,
+    "dist": 6.27,
+    "bearing": -86.8,
     "comp": [
-     0.12,
-     0.02
+     -0.14,
+     0.03
     ],
-    "camY": 1.4,
+    "camY": 1.52,
     "follow": false,
     "anchor": [
-     3.442,
-     1,
-     0.55
+     4.849,
+     0.875,
+     4.417
     ],
-    "solved": "swung -40deg x0.76"
+    "solved": "swung -48deg x0.84"
    },
    "flags": {
     "intro": false,
@@ -2491,6 +4009,12 @@
    "beat": 3,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-DOOR",
+   "setupName": "THE DOOR, FROM THE DARK",
+   "setupRole": "geography",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -2503,14 +4027,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.046,
-    1.62,
-    4.268
+    4.071,
+    1.66,
+    4.214
    ],
    "lookAt": [
-    -7.89,
+    -7.893,
     2.12,
-    -2.27
+    -2.271
    ],
    "fov": 33,
    "move": {
@@ -2541,25 +4065,25 @@
     "frac": 0.811,
     "fracDesign": 0.571,
     "inFrame": 1,
-    "cx": -0.073,
-    "cy": 0.062,
+    "cx": -0.072,
+    "cy": 0.059,
     "floor": 0.17,
-    "crownPitch": 12,
+    "crownPitch": 11.8,
     "crownPitchMin": null,
     "dist": 13.6,
-    "bearing": 64.2,
+    "bearing": 64.4,
     "comp": [
      -0.1,
      0.02
     ],
-    "camY": 1.62,
+    "camY": 1.66,
     "follow": false,
     "anchor": [
      -8.186,
      2.2,
      -1.651
     ],
-    "solved": "swung 32deg x0.84"
+    "solved": "swung 36deg x0.84"
    },
    "flags": {
     "intro": false,
@@ -2573,6 +4097,12 @@
    "beat": 3,
    "set": "cave",
    "class": "DIALOGUE",
+   "setup": "CV-ULY",
+   "setupName": "ULYSSES, A MAN'S EYE",
+   "setupRole": "single",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "ulysses"
@@ -2580,14 +4110,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -1.477,
-    1.56,
-    4.748
+    -1.486,
+    1.58,
+    2.786
    ],
    "lookAt": [
-    3.928,
-    0.812,
-    5.458
+    3.795,
+    0.807,
+    5.477
    ],
    "fov": 26,
    "move": {
@@ -2615,28 +4145,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.778,
-    "fracDesign": 0.69,
+    "frac": 0.72,
+    "fracDesign": 0.636,
     "inFrame": 1,
-    "cx": -0.161,
-    "cy": 0.023,
+    "cx": -0.175,
+    "cy": 0.017,
     "floor": 0.3,
-    "crownPitch": 2,
+    "crownPitch": 1.6,
     "crownPitchMin": null,
-    "dist": 5.49,
-    "bearing": -93.9,
+    "dist": 5.96,
+    "bearing": -113.1,
     "comp": [
-     -0.16,
+     -0.17,
      0.05
     ],
-    "camY": 1.56,
+    "camY": 1.58,
     "follow": false,
     "anchor": [
      3.959,
      0.875,
      5.114
     ],
-    "solved": "UPSTAGE swung -96deg x0.92"
+    "solved": "UPSTAGE swung -60deg x1"
    },
    "flags": {
     "intro": false,
@@ -2650,6 +4180,12 @@
    "beat": 3,
    "set": "cave",
    "class": "NARRATION",
+   "setup": "CV-CLUB",
+   "setupName": "THE CLUB",
+   "setupRole": "reveal",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -2732,6 +4268,12 @@
    "beat": 3,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-LOTS",
+   "setupName": "THE CIRCLE, FROM ABOVE",
+   "setupRole": "action",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -2813,6 +4355,12 @@
    "beat": 3,
    "set": "cave",
    "class": "NARRATION",
+   "setup": "CV-DOOR",
+   "setupName": "THE DOOR, FROM THE DARK",
+   "setupRole": "geography",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -2825,14 +4373,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    6.339,
-    1.64,
-    4.19
+    4.464,
+    1.66,
+    4.645
    ],
    "lookAt": [
-    -6.267,
-    2.016,
-    -2.215
+    -6.3,
+    2.025,
+    -1.99
    ],
    "fov": 33,
    "move": {
@@ -2842,7 +4390,7 @@
     "m": 0.4
    },
    "dof": {
-    "fstop": 4.5,
+    "fstop": 4,
     "focus": "subject",
     "near": 0.85
    },
@@ -2860,28 +4408,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.691,
-    "fracDesign": 0.526,
+    "frac": 0.807,
+    "fracDesign": 0.588,
     "inFrame": 1,
-    "cx": -0.094,
-    "cy": 0.048,
+    "cx": -0.075,
+    "cy": 0.054,
     "floor": 0.2,
-    "crownPitch": 10.7,
+    "crownPitch": 11.8,
     "crownPitchMin": null,
-    "dist": 14.12,
-    "bearing": 66.5,
+    "dist": 12.63,
+    "bearing": 61.2,
     "comp": [
-     -0.12,
+     -0.1,
      0.02
     ],
-    "camY": 1.64,
+    "camY": 1.66,
     "follow": false,
     "anchor": [
      -6.605,
      2.1,
      -1.431
     ],
-    "solved": "swung 36deg x0.76"
+    "solved": "swung 40deg x0.68"
    },
    "flags": {
     "intro": false,
@@ -2895,6 +4443,12 @@
    "beat": 3,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-FIRE",
+   "setupName": "THE FIRE — THE SEIZE IN SHADOW",
+   "setupRole": "action",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "poly-seat"
@@ -2902,14 +4456,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -6.508,
+    -6.252,
     1.45,
-    3.119
+    3.634
    ],
    "lookAt": [
-    1.008,
+    0.965,
     2.03,
-    -1.086
+    -1.065
    ],
    "fov": 44,
    "move": {
@@ -2936,16 +4490,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.722,
+    "frac": 0.724,
     "fracDesign": 0.619,
     "inFrame": 1,
-    "cx": 0.114,
+    "cx": 0.115,
     "cy": 0.015,
     "floor": 0.17,
     "crownPitch": 17.6,
     "crownPitchMin": null,
     "dist": 8.6,
-    "bearing": -65.5,
+    "bearing": -61.7,
     "comp": [
      0.12,
      0
@@ -2957,7 +4511,7 @@
      2.03,
      -0.44
     ],
-    "solved": "swung -88deg x1"
+    "solved": "swung -84deg x1"
    },
    "flags": {
     "intro": false,
@@ -2971,6 +4525,12 @@
    "beat": 3,
    "set": "cave",
    "class": "GATE",
+   "setup": "CV-BOWL",
+   "setupName": "THE BOWL, LOWER FOREGROUND",
+   "setupRole": "insert",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "ULYSSES",
    "subject": {
     "p": "bowl",
@@ -3064,6 +4624,12 @@
    "beat": 3,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-GIANT-W",
+   "setupName": "THE GIANT, FROM THE WEST",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-seat"
@@ -3071,14 +4637,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    6.24,
-    1.48,
-    4.098
+    6.159,
+    1.5,
+    4.185
    ],
    "lookAt": [
-    0.953,
+    0.947,
     1.97,
-    -0.068
+    -0.074
    ],
    "fov": 48,
    "move": {
@@ -3106,28 +4672,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.942,
+    "frac": 0.943,
     "fracDesign": 0.718,
     "inFrame": 1,
-    "cx": 0.114,
+    "cx": 0.113,
     "cy": 0.039,
     "floor": 0.42,
-    "crownPitch": 21.9,
+    "crownPitch": 21.8,
     "crownPitchMin": 21,
     "dist": 6.73,
-    "bearing": 47.4,
+    "bearing": 46.4,
     "comp": [
      0.1,
      0.02
     ],
-    "camY": 1.48,
+    "camY": 1.5,
     "follow": false,
     "anchor": [
      1.302,
      2.03,
      -0.44
     ],
-    "solved": "swung 56deg x1"
+    "solved": "swung 68deg x1"
    },
    "flags": {
     "intro": false,
@@ -3141,69 +4707,92 @@
    "beat": 3,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-BOWL",
+   "setupName": "THE BOWL, LOWER FOREGROUND",
+   "setupRole": "insert",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
-    "a": "poly-seat"
+    "p": "bowl",
+    "h": 0.75
    },
-   "over": null,
+   "over": "ulysses",
    "fg": null,
    "pos": [
-    -5.43,
-    1.44,
-    2.749
+    0.8,
+    1.05,
+    5
    ],
    "lookAt": [
-    1.05,
-    1.998,
-    -0.978
+    0.566,
+    1.31,
+    2.705
    ],
    "fov": 46,
    "move": {
-    "k": "handheld",
-    "amp": 0.012,
-    "dur": 8
+    "k": "push",
+    "cms": 3,
+    "dur": 10,
+    "m": 0.3
    },
    "dof": {
-    "fstop": 2.8,
+    "fstop": 2,
     "focus": "subject",
-    "near": 0.85
+    "near": 0.85,
+    "expo": 0.86,
+    "rack": {
+     "from": [
+      1.302,
+      4.03,
+      -0.44
+     ],
+     "to": [
+      0.247,
+      1.02,
+      2.789
+     ],
+     "at": 1.6,
+     "dur": 0.9
+    }
    },
    "read": {
     "fill": 0.95,
     "rim": 1.05,
-    "side": 1
+    "side": -1
    },
    "frame": {
-    "h": 4.3,
-    "point": false,
+    "h": 0.75,
+    "point": true,
     "fill": false,
-    "side": 1,
-    "sideLanded": 1,
-    "stationLegal": null,
-    "stationSees": null,
+    "side": -1,
+    "sideLanded": -1,
+    "stationLegal": true,
+    "stationSees": true,
     "liveAnchor": false,
-    "frac": 0.812,
-    "fracDesign": 0.678,
+    "frac": 0.584,
+    "fracDesign": 0.388,
     "inFrame": 1,
-    "cx": 0.102,
-    "cy": 0.027,
+    "cx": -0.299,
+    "cy": -0.38,
     "floor": 0.17,
-    "crownPitch": 20.2,
+    "crownPitch": 8.6,
     "crownPitchMin": null,
-    "dist": 7.47,
-    "bearing": -64.7,
+    "dist": 2.28,
+    "bearing": 14,
     "comp": [
-     0.11,
-     0.01
+     -0.2,
+     -0.3
     ],
-    "camY": 1.44,
+    "camY": 1.05,
     "follow": false,
     "anchor": [
-     1.302,
-     2.03,
-     -0.44
+     0.247,
+     1.02,
+     2.789
     ],
-    "solved": "swung -80deg x1"
+    "solved": "AUTHORED"
    },
    "flags": {
     "intro": false,
@@ -3217,6 +4806,12 @@
    "beat": 3,
    "set": "cave",
    "class": "DIALOGUE",
+   "setup": "CV-ULY",
+   "setupName": "ULYSSES, A MAN'S EYE",
+   "setupRole": "single",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "ULYSSES",
    "subject": {
     "a": "ulysses"
@@ -3294,6 +4889,12 @@
    "beat": 3,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-GIANT-W",
+   "setupName": "THE GIANT, FROM THE WEST",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-seat"
@@ -3301,14 +4902,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -5.372,
-    1.34,
-    1.783
+    -5.291,
+    1.36,
+    2.013
    ],
    "lookAt": [
-    1.114,
+    1.094,
     1.97,
-    -1.023
+    -1.016
    ],
    "fov": 46,
    "move": {
@@ -3336,28 +4937,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.906,
+    "frac": 0.909,
     "fracDesign": 0.718,
     "inFrame": 1,
-    "cx": 0.112,
+    "cx": 0.113,
     "cy": 0.041,
     "floor": 0.42,
-    "crownPitch": 22,
+    "crownPitch": 21.8,
     "crownPitchMin": 21,
     "dist": 7.07,
-    "bearing": -71.6,
+    "bearing": -69.6,
     "comp": [
      0.12,
      0.02
     ],
-    "camY": 1.48,
+    "camY": 1.5,
     "follow": false,
     "anchor": [
      1.302,
      2.03,
      -0.44
     ],
-    "solved": "swung -76deg x1 + dropped"
+    "solved": "swung -48deg x1 + dropped"
    },
    "flags": {
     "intro": false,
@@ -3371,6 +4972,12 @@
    "beat": 3,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-COLLAPSE",
+   "setupName": "THE COLLAPSE",
+   "setupRole": "aftermath",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "poly-seat"
@@ -3378,14 +4985,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -5.452,
+    -5.434,
     1.15,
-    2.928
+    2.743
    ],
    "lookAt": [
-    5.202,
+    5.211,
     5.095,
-    3.38
+    3.379
    ],
    "fov": 48,
    "move": {
@@ -3413,16 +5020,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.755,
+    "frac": 0.756,
     "fracDesign": 1.133,
     "inFrame": 1,
-    "cx": 0.086,
-    "cy": -0.044,
+    "cx": 0.09,
+    "cy": -0.042,
     "floor": 0.17,
     "crownPitch": 33.7,
     "crownPitchMin": null,
     "dist": 11.35,
-    "bearing": -95.2,
+    "bearing": -96.2,
     "comp": [
      0.06,
      -0.06
@@ -3434,7 +5041,7 @@
      4.808,
      3.903
     ],
-    "solved": "swung -44deg x0.45 + backed off"
+    "solved": "swung -52deg x0.45 + backed off"
    },
    "flags": {
     "intro": false,
@@ -3448,6 +5055,12 @@
    "beat": 4,
    "set": "cave",
    "class": "WIDE",
+   "setup": "CV-EST4",
+   "setupName": "THE FLOOR",
+   "setupRole": "establishing",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -3531,6 +5144,12 @@
    "beat": 4,
    "set": "cave",
    "class": "GATE",
+   "setup": "CV-OBJ",
+   "setupName": "THE HAND BENCH",
+   "setupRole": "insert",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "p": "fire",
@@ -3539,9 +5158,9 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.447,
-    1.1,
-    4.597
+    4.444,
+    1.15,
+    4.602
    ],
    "lookAt": [
     -1.496,
@@ -3575,20 +5194,20 @@
     "stationSees": null,
     "liveAnchor": false,
     "frac": 0.425,
-    "fracDesign": 0.34,
+    "fracDesign": 0.339,
     "inFrame": 1,
     "cx": -0.103,
-    "cy": -0.029,
+    "cy": -0.033,
     "floor": 0.22,
-    "crownPitch": 2.6,
+    "crownPitch": 2.2,
     "crownPitchMin": null,
-    "dist": 7.7,
+    "dist": 7.71,
     "bearing": 53.3,
     "comp": [
      -0.1,
      0
     ],
-    "camY": 1.1,
+    "camY": 1.15,
     "follow": false,
     "anchor": [
      -1.721,
@@ -3608,23 +5227,28 @@
    "unit": "ody-iv-02-glowing",
    "beat": 4,
    "set": "cave",
-   "class": "GATE",
+   "class": "ACTION",
+   "setup": "CV-FIVEFACES",
+   "setupName": "FIVE FACES, LIT FROM BELOW",
+   "setupRole": "reaction",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
-    "p": "stake",
-    "h": 1.1
+    "a": "ulysses"
    },
    "over": null,
    "fg": null,
    "pos": [
-    4.856,
+    5.958,
     1.05,
-    4.553
+    4.204
    ],
    "lookAt": [
-    -1.258,
-    1.591,
-    0.444
+    -1.242,
+    0.838,
+    2.736
    ],
    "fov": 28,
    "move": {
@@ -3639,29 +5263,29 @@
     "near": 0.85
    },
    "read": {
-    "fill": 1,
-    "rim": 1.1,
+    "fill": 0.95,
+    "rim": 1.05,
     "side": -1
    },
    "frame": {
-    "h": 1.1,
-    "point": true,
+    "h": 1.75,
+    "point": false,
     "fill": false,
     "side": -1,
     "sideLanded": -1,
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.354,
-    "fracDesign": 0.299,
+    "frac": 0.54,
+    "fracDesign": 0.478,
     "inFrame": 1,
-    "cx": -0.133,
-    "cy": 0.059,
-    "floor": 0.22,
-    "crownPitch": 8.7,
+    "cx": -0.132,
+    "cy": 0.017,
+    "floor": 0.17,
+    "crownPitch": 5.4,
     "crownPitchMin": null,
-    "dist": 7.38,
-    "bearing": 59.3,
+    "dist": 7.34,
+    "bearing": 81.6,
     "comp": [
      -0.13,
      0.02
@@ -3669,11 +5293,11 @@
     "camY": 1.05,
     "follow": false,
     "anchor": [
-     -1.464,
-     1.628,
-     0.795
+     -1.302,
+     0.875,
+     3.137
     ],
-    "solved": "swung 60deg x1"
+    "solved": "swung 84deg x0.92"
    },
    "flags": {
     "intro": false,
@@ -3687,6 +5311,12 @@
    "beat": 4,
    "set": "cave",
    "class": "CLOCK",
+   "setup": "CV-AUGER",
+   "setupName": "ALONG THE BEAM, FROM THE FLOOR",
+   "setupRole": "action",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "p": "stake",
@@ -3781,6 +5411,12 @@
    "beat": 4,
    "set": "cave",
    "class": "CLOCK",
+   "setup": "CV-GIANT-W",
+   "setupName": "THE GIANT, FROM THE WEST",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "poly-seat"
@@ -3788,14 +5424,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -5.393,
-    1.38,
-    3.708
+    -5.391,
+    1.5,
+    3.618
    ],
    "lookAt": [
-    5.24,
+    5.249,
     5.011,
-    3.056
+    3.059
    ],
    "fov": 48,
    "move": {
@@ -3822,28 +5458,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.766,
-    "fracDesign": 0.7,
+    "frac": 0.77,
+    "fracDesign": 0.703,
     "inFrame": 1,
-    "cx": 0.118,
-    "cy": 0.008,
+    "cx": 0.119,
+    "cy": 0.007,
     "floor": 0.18,
-    "crownPitch": 33.4,
+    "crownPitch": 33,
     "crownPitchMin": null,
-    "dist": 11.22,
-    "bearing": -91.1,
+    "dist": 11.18,
+    "bearing": -91.6,
     "comp": [
      0.1,
      -0.02
     ],
-    "camY": 1.38,
+    "camY": 1.5,
     "follow": false,
     "anchor": [
      5.256,
      4.916,
      3.907
     ],
-    "solved": "swung -40deg x0.84"
+    "solved": "swung -32deg x0.84"
    },
    "flags": {
     "intro": false,
@@ -3857,6 +5493,12 @@
    "beat": 4,
    "set": "cave",
    "class": "CLOCK",
+   "setup": "CV-BLIND",
+   "setupName": "AT ATTACKER HEIGHT — THE BLINDING",
+   "setupRole": "action",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "poly-seat"
@@ -3936,74 +5578,75 @@
    "beat": 4,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-FIVEFACES",
+   "setupName": "FIVE FACES, LIT FROM BELOW",
+   "setupRole": "reaction",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
-    "m": [
-     352,
-     430
-    ],
-    "h": 4.6,
-    "y": 2.2
+    "a": "ulysses"
    },
    "over": null,
    "fg": null,
    "pos": [
-    3.951,
-    1.6,
-    4.785
+    -0.442,
+    1.05,
+    5.066
    ],
    "lookAt": [
-    -7.854,
-    2.116,
-    -2.285
+    4.93,
+    0.848,
+    5.234
    ],
-   "fov": 34,
+   "fov": 28,
    "move": {
     "k": "handheld",
     "amp": 0.012,
     "dur": 7
    },
    "dof": {
-    "fstop": 4,
+    "fstop": 2,
     "focus": "subject",
     "near": 0.85
    },
    "read": {
     "fill": 0.95,
     "rim": 1.05,
-    "side": 1
+    "side": -1
    },
    "frame": {
-    "h": 4.6,
-    "point": true,
+    "h": 1.75,
+    "point": false,
     "fill": false,
-    "side": 0,
+    "side": -1,
     "sideLanded": -1,
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.71,
-    "fracDesign": 0.547,
+    "frac": 0.704,
+    "fracDesign": 0.653,
     "inFrame": 1,
-    "cx": -0.075,
-    "cy": 0.057,
+    "cx": -0.135,
+    "cy": 0.014,
     "floor": 0.17,
-    "crownPitch": 11.9,
+    "crownPitch": 7.4,
     "crownPitchMin": null,
-    "dist": 13.75,
-    "bearing": 62.1,
+    "dist": 5.37,
+    "bearing": -88.6,
     "comp": [
-     -0.1,
+     -0.13,
      0.02
     ],
-    "camY": 1.6,
+    "camY": 1.05,
     "follow": false,
     "anchor": [
-     -8.186,
-     2.2,
-     -1.651
+     4.924,
+     0.875,
+     4.938
     ],
-    "solved": "swung 28deg x0.84"
+    "solved": "swung -36deg x0.52"
    },
    "flags": {
     "intro": false,
@@ -4017,6 +5660,12 @@
    "beat": 4,
    "set": "cave",
    "class": "DIALOGUE",
+   "setup": "CV-DOOR",
+   "setupName": "THE DOOR, FROM THE DARK",
+   "setupRole": "geography",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "A CYCLOPS",
    "subject": {
     "m": [
@@ -4029,14 +5678,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.912,
-    1.62,
-    4.435
+    4.314,
+    1.66,
+    4.213
    ],
    "lookAt": [
-    -7.752,
-    1.827,
-    -2.871
+    -7.766,
+    1.83,
+    -2.83
    ],
    "fov": 28,
    "move": {
@@ -4064,21 +5713,21 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.53,
-    "fracDesign": 0.44,
+    "frac": 0.559,
+    "fracDesign": 0.46,
     "inFrame": 1,
-    "cx": -0.149,
-    "cy": 0.034,
+    "cx": -0.148,
+    "cy": 0.033,
     "floor": 0.3,
-    "crownPitch": 7.3,
+    "crownPitch": 7.5,
     "crownPitchMin": null,
-    "dist": 14.59,
-    "bearing": 63.9,
+    "dist": 13.95,
+    "bearing": 63.6,
     "comp": [
      -0.16,
      0.02
     ],
-    "camY": 1.62,
+    "camY": 1.66,
     "follow": false,
     "anchor": [
      -8.186,
@@ -4099,6 +5748,12 @@
    "beat": 4,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-GIANT-E",
+   "setupName": "THE GIANT, FROM HIS FEET (east)",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-seat"
@@ -4106,14 +5761,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -5.251,
-    1.2,
-    3.775
+    -1.582,
+    1.05,
+    -3.143
    ],
    "lookAt": [
-    5.202,
-    5.005,
-    2.848
+    5.926,
+    4.992,
+    3.159
    ],
    "fov": 50,
    "move": {
@@ -4141,28 +5796,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.772,
-    "fracDesign": 0.676,
+    "frac": 0.857,
+    "fracDesign": 0.999,
     "inFrame": 1,
-    "cx": 0.148,
-    "cy": -0.013,
+    "cx": 0.15,
+    "cy": 0.019,
     "floor": 0.42,
-    "crownPitch": 34.1,
+    "crownPitch": 36.5,
     "crownPitchMin": 21,
-    "dist": 11.11,
-    "bearing": -90.7,
+    "dist": 10.52,
+    "bearing": -135.9,
     "comp": [
      0.12,
      -0.04
     ],
-    "camY": 1.2,
+    "camY": 1.05,
     "follow": false,
     "anchor": [
      5.256,
      4.809,
      3.907
     ],
-    "solved": "swung -32deg x0.84"
+    "solved": "swung -92deg x0.52 + backed off"
    },
    "flags": {
     "intro": false,
@@ -4176,6 +5831,12 @@
    "beat": 4,
    "set": "cave",
    "class": "DIALOGUE",
+   "setup": "CV-DOOR",
+   "setupName": "THE DOOR, FROM THE DARK",
+   "setupRole": "geography",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "A CYCLOPS",
    "subject": {
     "m": [
@@ -4188,21 +5849,21 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.345,
-    1.62,
-    4.15
+    4.314,
+    1.66,
+    4.213
    ],
    "lookAt": [
-    -7.771,
+    -7.766,
     1.83,
-    -2.833
+    -2.83
    ],
    "fov": 28,
    "move": {
     "k": "push",
-    "cms": 2.4,
+    "cms": 2.6,
     "dur": 10,
-    "m": 0.24
+    "m": 0.26
    },
    "dof": {
     "fstop": 2.8,
@@ -4223,28 +5884,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.558,
+    "frac": 0.559,
     "fracDesign": 0.46,
     "inFrame": 1,
-    "cx": -0.147,
-    "cy": 0.035,
+    "cx": -0.148,
+    "cy": 0.033,
     "floor": 0.3,
-    "crownPitch": 7.7,
+    "crownPitch": 7.5,
     "crownPitchMin": null,
     "dist": 13.95,
-    "bearing": 63.9,
+    "bearing": 63.6,
     "comp": [
      -0.16,
      0.02
     ],
-    "camY": 1.62,
+    "camY": 1.66,
     "follow": false,
     "anchor": [
      -8.186,
      1.9,
      -1.981
     ],
-    "solved": "swung 40deg x1"
+    "solved": "swung 36deg x1"
    },
    "flags": {
     "intro": false,
@@ -4257,47 +5918,53 @@
    "unit": "ody-iv-10-wentaway",
    "beat": 4,
    "set": "cave",
-   "class": "NARRATION",
+   "class": "DIALOGUE",
+   "setup": "CV-DOOR",
+   "setupName": "THE DOOR, FROM THE DARK",
+   "setupRole": "geography",
+   "transition": "hold",
+   "hold": "the lamps recede past the very seams the men have not stopped staring at — a cut here would take away the thing that is going away",
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
      352,
-     430
+     424
     ],
-    "h": 4.6,
-    "y": 2.2
+    "h": 3.2,
+    "y": 1.9
    },
    "over": null,
    "fg": null,
    "pos": [
-    5.84,
-    1.6,
-    4.311
+    4.314,
+    1.66,
+    4.213
    ],
    "lookAt": [
-    -7.84,
-    2.113,
-    -2.474
+    -7.766,
+    1.83,
+    -2.83
    ],
-   "fov": 32,
+   "fov": 28,
    "move": {
     "k": "push",
-    "cms": 3,
+    "cms": 2.6,
     "dur": 10,
-    "m": 0.3
+    "m": 0.26
    },
    "dof": {
-    "fstop": 4,
+    "fstop": 2.8,
     "focus": "subject",
     "near": 0.85
    },
    "read": {
-    "fill": 0.8,
-    "rim": 0.85,
+    "fill": 1,
+    "rim": 1,
     "side": 1
    },
    "frame": {
-    "h": 4.6,
+    "h": 3.2,
     "point": true,
     "fill": false,
     "side": 0,
@@ -4305,33 +5972,33 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.676,
-    "fracDesign": 0.526,
+    "frac": 0.559,
+    "fracDesign": 0.46,
     "inFrame": 1,
-    "cx": -0.094,
-    "cy": 0.052,
-    "floor": 0.2,
-    "crownPitch": 10.8,
+    "cx": -0.148,
+    "cy": 0.033,
+    "floor": 0.3,
+    "crownPitch": 7.5,
     "crownPitchMin": null,
-    "dist": 15.25,
-    "bearing": 67,
+    "dist": 13.95,
+    "bearing": 63.6,
     "comp": [
-     -0.12,
+     -0.16,
      0.02
     ],
-    "camY": 1.6,
+    "camY": 1.66,
     "follow": false,
     "anchor": [
      -8.186,
-     2.2,
-     -1.651
+     1.9,
+     -1.981
     ],
-    "solved": "swung 32deg x0.76"
+    "solved": "swung 36deg x1"
    },
    "flags": {
     "intro": false,
     "blinding": false,
-    "offstage": false,
+    "offstage": true,
     "gateTarget": null
    }
   },
@@ -4340,6 +6007,12 @@
    "beat": 4,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-GIANT-W",
+   "setupName": "THE GIANT, FROM THE WEST",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "poly-seat"
@@ -4347,14 +6020,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -10.504,
-    1.58,
-    -1.804
+    -10.521,
+    1.5,
+    -1.772
    ],
    "lookAt": [
     2.987,
     3.402,
-    4.669
+    4.668
    ],
    "fov": 36.5,
    "move": {
@@ -4382,28 +6055,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": true,
-    "frac": 0.87,
+    "frac": 0.868,
     "fracDesign": 0.76,
     "inFrame": 1,
     "cx": 0.113,
-    "cy": 0.055,
+    "cy": 0.056,
     "floor": 0.17,
-    "crownPitch": 19.9,
+    "crownPitch": 20.2,
     "crownPitchMin": null,
-    "dist": 15.06,
-    "bearing": -118.5,
+    "dist": 15.07,
+    "bearing": -118.4,
     "comp": [
      0.09,
      0.02
     ],
-    "camY": 1.58,
+    "camY": 1.5,
     "follow": false,
     "anchor": [
      2.613,
      3.5,
      5.331
     ],
-    "solved": "UPSTAGE swung -56deg x0.6 + widened"
+    "solved": "UPSTAGE swung -60deg x0.6 + widened"
    },
    "flags": {
     "intro": false,
@@ -4417,6 +6090,12 @@
    "beat": 4,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-SEATED",
+   "setupName": "SEATED IN THE MOUTH",
+   "setupRole": "tableau",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "poly-idle"
@@ -4494,6 +6173,12 @@
    "beat": 5,
    "set": "cave",
    "class": "WIDE",
+   "setup": "CV-EST5",
+   "setupName": "THE TURN — FACING THE MOUTH",
+   "setupRole": "establishing",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -4576,6 +6261,12 @@
    "beat": 5,
    "set": "cave",
    "class": "DIALOGUE",
+   "setup": "CV-ULY",
+   "setupName": "ULYSSES, A MAN'S EYE",
+   "setupRole": "single",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "ulysses"
@@ -4583,14 +6274,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -1.19,
+    -1.191,
     1.58,
-    4.715
+    4.689
    ],
    "lookAt": [
-    3.586,
+    3.585,
     0.818,
-    4.828
+    4.847
    ],
    "fov": 27,
    "move": {
@@ -4618,18 +6309,18 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.865,
+    "frac": 0.866,
     "fracDesign": 0.755,
     "inFrame": 1,
-    "cx": -0.187,
-    "cy": 0.024,
+    "cx": -0.197,
+    "cy": 0.023,
     "floor": 0.3,
     "crownPitch": 2,
     "crownPitchMin": null,
     "dist": 4.83,
-    "bearing": -87.6,
+    "bearing": -87.9,
     "comp": [
-     -0.16,
+     -0.17,
      0.05
     ],
     "camY": 1.58,
@@ -4639,7 +6330,7 @@
      0.875,
      4.512
     ],
-    "solved": "swung -28deg x0.76"
+    "solved": "swung -40deg x0.76"
    },
    "flags": {
     "intro": false,
@@ -4653,6 +6344,12 @@
    "beat": 5,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-WITHIES",
+   "setupName": "HANDS AND FLEECE",
+   "setupRole": "insert",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -4735,6 +6432,12 @@
    "beat": 5,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-HANDPASS",
+   "setupName": "THE HAND OVER THE WOOL",
+   "setupRole": "action",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -4747,16 +6450,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    0.111,
-    1.15,
-    5.058
+    1.331,
+    0.95,
+    5.014
    ],
    "lookAt": [
-    4.816,
+    4.85,
     0.765,
-    0.575
+    0.533
    ],
-   "fov": 30,
+   "fov": 34,
    "move": {
     "k": "track",
     "m": 0.8,
@@ -4781,28 +6484,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.556,
-    "fracDesign": 0.459,
+    "frac": 0.574,
+    "fracDesign": 0.46,
     "inFrame": 1,
-    "cx": -0.123,
-    "cy": -0.018,
+    "cx": -0.112,
+    "cy": 0.002,
     "floor": 0.17,
-    "crownPitch": 4,
+    "crownPitch": 6.5,
     "crownPitchMin": null,
-    "dist": 6.5,
-    "bearing": -43.2,
+    "dist": 5.69,
+    "bearing": -34.6,
     "comp": [
      -0.12,
      0.02
     ],
-    "camY": 1.15,
+    "camY": 0.95,
     "follow": false,
     "anchor": [
      4.558,
      0.8,
      0.33
     ],
-    "solved": "swung -32deg x1"
+    "solved": "hint"
    },
    "flags": {
     "intro": false,
@@ -4816,6 +6519,12 @@
    "beat": 5,
    "set": "cave",
    "class": "GATE",
+   "setup": "CV-WITHIES",
+   "setupName": "HANDS AND FLEECE",
+   "setupRole": "insert",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "t": "ram-great",
@@ -4824,14 +6533,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    6.26,
-    1.05,
-    4.004
+    6.32,
+    1.2,
+    4.302
    ],
    "lookAt": [
-    1.016,
+    1.038,
     0.757,
-    4.857
+    4.852
    ],
    "fov": 30,
    "move": {
@@ -4859,28 +6568,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.518,
+    "frac": 0.512,
     "fracDesign": 0.404,
     "inFrame": 1,
-    "cx": -0.199,
-    "cy": 0.008,
+    "cx": -0.201,
+    "cy": -0.005,
     "floor": 0.22,
-    "crownPitch": 3.5,
+    "crownPitch": 1.9,
     "crownPitchMin": null,
-    "dist": 5.31,
-    "bearing": 103.2,
+    "dist": 5.32,
+    "bearing": 99.9,
     "comp": [
      -0.15,
      0.03
     ],
-    "camY": 1.05,
+    "camY": 1.2,
     "follow": false,
     "anchor": [
      1.097,
      0.8,
      5.211
     ],
-    "solved": "UPSTAGE swung 68deg x0.84"
+    "solved": "UPSTAGE swung 64deg x0.84"
    },
    "flags": {
     "intro": false,
@@ -4894,6 +6603,12 @@
    "beat": 5,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-DAWNMOUTH",
+   "setupName": "THE LIGHT PAST HIM",
+   "setupRole": "reestablish",
+   "transition": "dissolve",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -4976,6 +6691,12 @@
    "beat": 5,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-HANDPASS",
+   "setupName": "THE HAND OVER THE WOOL",
+   "setupRole": "action",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "poly-idle"
@@ -4983,16 +6704,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    -0.388,
+    -1.018,
     0.65,
-    4.71
+    4.971
    ],
    "lookAt": [
-    -8.711,
-    1.95,
-    1.216
+    -8.697,
+    1.961,
+    1.106
    ],
-   "fov": 48,
+   "fov": 44,
    "move": {
     "k": "push",
     "cms": 3.6,
@@ -5000,7 +6721,7 @@
     "m": 0.36
    },
    "dof": {
-    "fstop": 2.8,
+    "fstop": 2.6,
     "focus": "subject",
     "near": 0.85
    },
@@ -5018,28 +6739,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.633,
-    "fracDesign": 0.499,
+    "frac": 0.74,
+    "fracDesign": 0.497,
     "inFrame": 1,
-    "cx": 0.13,
-    "cy": 0.051,
+    "cx": 0.131,
+    "cy": 0.057,
     "floor": 0.42,
-    "crownPitch": 21.5,
+    "crownPitch": 22.4,
     "crownPitchMin": 21,
-    "dist": 9.09,
-    "bearing": 62.4,
+    "dist": 8.67,
+    "bearing": 58.9,
     "comp": [
      0.11,
      0.02
     ],
-    "camY": 1.3,
+    "camY": 0.95,
     "follow": false,
     "anchor": [
      -8.349,
      2.03,
      0.55
     ],
-    "solved": "swung 32deg x1 + low-angled"
+    "solved": "swung 36deg x1 + low-angled"
    },
    "flags": {
     "intro": false,
@@ -5053,6 +6774,12 @@
    "beat": 5,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-BELLY",
+   "setupName": "UNDER THE BELLY",
+   "setupRole": "pov",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "ram-great"
@@ -5144,6 +6871,12 @@
    "beat": 5,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-RAMSPEECH",
+   "setupName": "THE BLIND MAN SPEAKING DOWN",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-idle"
@@ -5221,6 +6954,12 @@
    "beat": 5,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-TWOSHOT",
+   "setupName": "THE RUINED FACE AND THE WOOL",
+   "setupRole": "two-shot",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-idle"
@@ -5298,6 +7037,12 @@
    "beat": 5,
    "set": "cave",
    "class": "GIANT",
+   "setup": "CV-RAMSPEECH",
+   "setupName": "THE BLIND MAN SPEAKING DOWN",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-idle"
@@ -5305,14 +7050,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -0.952,
+    -0.852,
     0.65,
-    5.007
+    4.838
    ],
    "lookAt": [
-    -8.696,
+    -8.683,
     1.992,
-    1.115
+    1.122
    ],
    "fov": 48,
    "move": {
@@ -5340,28 +7085,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.655,
+    "frac": 0.654,
     "fracDesign": 0.518,
     "inFrame": 1,
-    "cx": 0.117,
+    "cx": 0.118,
     "cy": 0.042,
     "floor": 0.42,
     "crownPitch": 22.2,
     "crownPitchMin": 21,
     "dist": 8.75,
-    "bearing": 58.9,
+    "bearing": 60.2,
     "comp": [
      0.1,
      0.01
     ],
-    "camY": 1.2,
+    "camY": 1.28,
     "follow": false,
     "anchor": [
      -8.349,
      2.03,
      0.55
     ],
-    "solved": "swung 28deg x1 + low-angled"
+    "solved": "swung 36deg x1 + low-angled"
    },
    "flags": {
     "intro": false,
@@ -5375,6 +7120,12 @@
    "beat": 5,
    "set": "cave",
    "class": "ACTION",
+   "setup": "CV-OUT",
+   "setupName": "BACK AT THE MOUTH",
+   "setupRole": "aftermath",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "a": "ulysses"
@@ -5451,6 +7202,12 @@
    "beat": 5,
    "set": "cave",
    "class": "NARRATION",
+   "setup": "CV-DAWNMOUTH",
+   "setupName": "THE LIGHT PAST HIM",
+   "setupRole": "reestablish",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -5463,16 +7220,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    5.735,
-    1.62,
-    3.987
+    1.16,
+    2.4,
+    2.809
    ],
    "lookAt": [
-    -7.491,
-    1.47,
-    -1.283
+    -7.517,
+    1.496,
+    -1.103
    ],
-   "fov": 34,
+   "fov": 40,
    "move": {
     "k": "push",
     "cms": 4,
@@ -5498,28 +7255,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.48,
-    "fracDesign": 0.391,
+    "frac": 0.676,
+    "fracDesign": 0.49,
     "inFrame": 1,
-    "cx": -0.103,
-    "cy": 0.031,
+    "cx": -0.09,
+    "cy": -0.03,
     "floor": 0.2,
-    "crownPitch": 6.7,
+    "crownPitch": 5.4,
     "crownPitchMin": null,
-    "dist": 14.21,
-    "bearing": 71.8,
+    "dist": 9.53,
+    "bearing": 70,
     "comp": [
      -0.12,
      0.03
     ],
-    "camY": 1.62,
+    "camY": 2.4,
     "follow": false,
     "anchor": [
      -7.767,
      1.6,
      -0.44
     ],
-    "solved": "swung 44deg x0.92"
+    "solved": "hint"
    },
    "flags": {
     "intro": false,
@@ -5533,6 +7290,12 @@
    "beat": 6,
    "set": "sea",
    "class": "GATE",
+   "setup": "SEA-EST",
+   "setupName": "THE TWO PLANES",
+   "setupRole": "establishing",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "t": "cyclops",
@@ -5611,6 +7374,12 @@
    "beat": 6,
    "set": "sea",
    "class": "DIALOGUE",
+   "setup": "SEA-STERN",
+   "setupName": "AT THE STERN",
+   "setupRole": "single",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "ULYSSES",
    "subject": {
     "a": "ulysses"
@@ -5688,6 +7457,12 @@
    "beat": 6,
    "set": "sea",
    "class": "CLOCK",
+   "setup": "SEA-ROCK",
+   "setupName": "THE THROW",
+   "setupRole": "action",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -5780,6 +7555,12 @@
    "beat": 6,
    "set": "sea",
    "class": "ACTION",
+   "setup": "SEA-DECK",
+   "setupName": "THE DECK",
+   "setupRole": "geography",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -5862,6 +7643,12 @@
    "beat": 6,
    "set": "sea",
    "class": "DIALOGUE",
+   "setup": "SEA-MEN",
+   "setupName": "THE ROWERS",
+   "setupRole": "reaction",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "THE MEN",
    "subject": {
     "a": "crew-0"
@@ -5939,6 +7726,12 @@
    "beat": 6,
    "set": "sea",
    "class": "GATE",
+   "setup": "SEA-EST",
+   "setupName": "THE TWO PLANES",
+   "setupRole": "establishing",
+   "transition": "cut",
+   "hold": null,
+   "reprise": "the second gate is the master returning on purpose: the reader must commit the hubris inside the very frame that still holds the men begging him not to",
    "speaker": null,
    "subject": {
     "t": "cyclops",
@@ -5948,13 +7741,13 @@
    "fg": null,
    "pos": [
     -42.866,
-    3.2,
+    3.4,
     19.914
    ],
    "lookAt": [
-    11.226,
+    11.229,
     32.5,
-    4.002
+    4.005
    ],
    "fov": 20,
    "move": {
@@ -5988,15 +7781,15 @@
     "cx": 0.151,
     "cy": -0.062,
     "floor": 0.22,
-    "crownPitch": 29.2,
+    "crownPitch": 29,
     "crownPitchMin": null,
-    "dist": 63.47,
+    "dist": 63.38,
     "bearing": -76.5,
     "comp": [
      0.15,
      -0.08
     ],
-    "camY": 3.2,
+    "camY": 3.4,
     "follow": false,
     "anchor": [
      12.283,
@@ -6017,6 +7810,12 @@
    "beat": 6,
    "set": "sea",
    "class": "DIALOGUE",
+   "setup": "SEA-STERN",
+   "setupName": "AT THE STERN",
+   "setupRole": "single",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "ULYSSES",
    "subject": {
     "a": "ulysses"
@@ -6024,14 +7823,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -26.453,
-    2.9,
-    4.454
+    -25.691,
+    2.6,
+    1.763
    ],
    "lookAt": [
-    -31.717,
+    -31.888,
     1.383,
-    1.113
+    1.062
    ],
    "fov": 24,
    "move": {
@@ -6059,21 +7858,21 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.741,
-    "fracDesign": 0.643,
+    "frac": 0.723,
+    "fracDesign": 0.649,
     "inFrame": 1,
-    "cx": -0.179,
-    "cy": 0.013,
+    "cx": -0.175,
+    "cy": 0.021,
     "floor": 0.3,
-    "crownPitch": -5.3,
+    "crownPitch": -2.5,
     "crownPitchMin": null,
-    "dist": 6.4,
-    "bearing": 61.2,
+    "dist": 6.34,
+    "bearing": 87.1,
     "comp": [
      -0.17,
      0.05
     ],
-    "camY": 2.9,
+    "camY": 2.6,
     "follow": false,
     "anchor": [
      -31.92,
@@ -6094,6 +7893,12 @@
    "beat": 6,
    "set": "sea",
    "class": "GIANT",
+   "setup": "SEA-CLIFF",
+   "setupName": "THE CLIFF CLOSE",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-idle"
@@ -6171,6 +7976,12 @@
    "beat": 6,
    "set": "sea",
    "class": "GIANT",
+   "setup": "SEA-HAND",
+   "setupName": "THE BECKONING HAND",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-idle"
@@ -6248,6 +8059,12 @@
    "beat": 6,
    "set": "sea",
    "class": "DIALOGUE",
+   "setup": "SEA-STERN",
+   "setupName": "AT THE STERN",
+   "setupRole": "single",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "ULYSSES",
    "subject": {
     "a": "ulysses"
@@ -6255,14 +8072,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -26.327,
-    2.9,
-    5.43
+    -25.117,
+    2.6,
+    1.889
    ],
    "lookAt": [
-    -31.222,
+    -31.455,
     1.439,
-    1.363
+    1.278
    ],
    "fov": 25,
    "move": {
@@ -6290,21 +8107,21 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.699,
-    "fracDesign": 0.606,
+    "frac": 0.679,
+    "fracDesign": 0.611,
     "inFrame": 1,
-    "cx": -0.182,
-    "cy": 0.013,
+    "cx": -0.178,
+    "cy": 0.023,
     "floor": 0.3,
-    "crownPitch": -4.6,
+    "crownPitch": -1.9,
     "crownPitchMin": null,
-    "dist": 6.52,
-    "bearing": 54,
+    "dist": 6.46,
+    "bearing": 88.2,
     "comp": [
      -0.17,
      0.05
     ],
-    "camY": 2.9,
+    "camY": 2.6,
     "follow": false,
     "anchor": [
      -31.48,
@@ -6325,6 +8142,12 @@
    "beat": 6,
    "set": "sea",
    "class": "GIANT",
+   "setup": "SEA-CLIFF",
+   "setupName": "THE CLIFF CLOSE",
+   "setupRole": "giant",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
     "a": "poly-idle"
@@ -6332,14 +8155,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -30.596,
-    3.4,
-    6.543
+    -30.559,
+    3.2,
+    8.481
    ],
    "lookAt": [
-    12.106,
+    12.043,
     31.282,
-    5.315
+    5.322
    ],
    "fov": 15,
    "move": {
@@ -6367,28 +8190,28 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.566,
-    "fracDesign": 0.521,
+    "frac": 0.569,
+    "fracDesign": 0.52,
     "inFrame": 1,
-    "cx": 0.126,
+    "cx": 0.123,
     "cy": -0.054,
     "floor": 0.42,
-    "crownPitch": 36,
+    "crownPitch": 36.1,
     "crownPitchMin": 21,
-    "dist": 50.99,
-    "bearing": -90.2,
+    "dist": 51.1,
+    "bearing": -87.6,
     "comp": [
      0.12,
      -0.05
     ],
-    "camY": 3.4,
+    "camY": 3.2,
     "follow": false,
     "anchor": [
      12.283,
      31,
      6.687
     ],
-    "solved": "swung 4deg x1"
+    "solved": "hint"
    },
    "flags": {
     "intro": false,
@@ -6402,6 +8225,12 @@
    "beat": 6,
    "set": "sea",
    "class": "CLOCK",
+   "setup": "SEA-ROCK",
+   "setupName": "THE THROW",
+   "setupRole": "action",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -6414,14 +8243,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -22.483,
+    -22.144,
     3.2,
-    21.695
+    21.839
    ],
    "lookAt": [
-    -11.752,
+    -11.745,
     1.84,
-    0.154
+    0.136
    ],
    "fov": 34,
    "move": {
@@ -6459,16 +8288,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.489,
+    "frac": 0.488,
     "fracDesign": 0.408,
     "inFrame": 1,
-    "cx": -0.083,
-    "cy": -0.106,
+    "cx": -0.082,
+    "cy": -0.105,
     "floor": 0.18,
     "crownPitch": 2.9,
     "crownPitchMin": null,
     "dist": 24.07,
-    "bearing": -23.5,
+    "bearing": -22.6,
     "comp": [
      -0.1,
      -0.06
@@ -6494,6 +8323,12 @@
    "beat": 6,
    "set": "sea",
    "class": "ACTION",
+   "setup": "SEA-ALTAR",
+   "setupName": "THE DRIFTWOOD ALTAR",
+   "setupRole": "aftermath",
+   "transition": "cut",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
@@ -6506,16 +8341,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    -17.117,
-    2.8,
-    13.785
+    -10.87,
+    2.4,
+    12.993
    ],
    "lookAt": [
-    -9.333,
+    -9.264,
     1.443,
-    -2.8
+    -3.102
    ],
-   "fov": 32,
+   "fov": 36,
    "move": {
     "k": "push",
     "cms": 9,
@@ -6541,21 +8376,21 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.499,
-    "fracDesign": 0.399,
+    "frac": 0.498,
+    "fracDesign": 0.4,
     "inFrame": 1,
-    "cx": -0.087,
-    "cy": -0.007,
+    "cx": -0.1,
+    "cy": 0.009,
     "floor": 0.17,
-    "crownPitch": 2.8,
+    "crownPitch": 4.6,
     "crownPitchMin": null,
-    "dist": 18.35,
-    "bearing": -22.3,
+    "dist": 16.18,
+    "bearing": -2.5,
     "comp": [
      -0.1,
      0.03
     ],
-    "camY": 2.8,
+    "camY": 2.4,
     "follow": true,
     "anchor": [
      -10.157,
@@ -6576,6 +8411,12 @@
    "beat": 6,
    "set": "sea",
    "class": "WIDE",
+   "setup": "SEA-OFF",
+   "setupName": "THE SAIL-OFF",
+   "setupRole": "aftermath",
+   "transition": "dissolve",
+   "hold": null,
+   "reprise": null,
    "speaker": null,
    "subject": {
     "m": [
