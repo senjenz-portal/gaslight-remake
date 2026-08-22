@@ -93,6 +93,10 @@ export const SEE_TAU = 0.42;         /* s — the operator's own hand on the cor
 export const HOLD_BAND = [0.86, 1.22];
 export const HOLD_ZOOM = [0.70, 1.45];
 export const HOLD_TAU = 0.55;        /* s */
+/* THE FOLLOW GIVE-BACK. The fractions of the subject's drift the aim will
+   offer back, in order, to bring the reader's gate onto the picture — each one
+   measured against the subject's own gates before it is kept. */
+export const FOLLOW_GIVE = [0.25, 0.5, 0.75, 1.0];
 /* the stage may narrow this far before it letterboxes again */
 export const ASPECT_MIN = 1.30;
 
@@ -671,6 +675,29 @@ export class CineCam {
     subjectEnvelope(this.subjBox, this.anchor, H, live ? (live.point || row.frame.point) : row.frame.point);
     /* the delta the body has drifted from where the bake found it */
     this._tmp.copy(this.anchor).sub(this._bakedAnchor);
+    /* THE FOLLOW IS A FOLLOW, NOT A LEASH-LESS PAN (live-book cut, CLASS 2).
+     *
+     * The re-aim exists so a body that shifts his weight, takes a step, turns
+     * on his mark stays composed where the bake put him. It was UNBOUNDED, and
+     * at reader pace bodies do not shift a step — they walk the length of the
+     * set inside one spoken line. Measured on ody-i-07-council: Ulysses walks
+     * the audited corridor from the fire to his council mark, the aim rides
+     * every metre of it, and by t8 the OTS is pointed inland at rocks and sand
+     * with the FLEET — the thing the margin is telling the reader to click —
+     * swung completely out of the picture. The ring went dark for nine seconds
+     * because the shot had stopped being the shot.
+     *
+     * THE LEASH IS A CORRECTION, NOT A CLAMP. Clamping the follow outright was
+     * tried and measured: on the council the subject is not merely off his mark
+     * at that moment, he is on the far side of the camera, and a station that
+     * refuses to look at him photographs an empty beach — eight laws went red
+     * in one run, including the shipped beat frame. A shot may not lose its
+     * subject to save its background. So the drift is kept whole here, and
+     * `_keepMustSee` is allowed to GIVE SOME OF IT BACK when the reader's gate
+     * has been carried off the picture — one bounded step at a time, each one
+     * measured against the subject's own gates and undone if it fails them.
+     * The unwind can therefore never do what the clamp did. */
+    this._drift = (this._driftV || (this._driftV = new THREE.Vector3())).copy(this._tmp);
     /* a body may not drag the camera through a wall: a station only FOLLOWS
        when the shot says so (a walk, a ship that sails); otherwise it stands
        still and re-aims, which is what an operator does. */
@@ -1122,12 +1149,26 @@ export class CineCam {
       this.cam.lookAt(this._look); this.cam.updateMatrixWorld(true);
       this.fitSee = this.seeFovD ? +this.cam.fov.toFixed(2) : 0;
     };
+    const put = (dFov, dLook) => {
+      this.cam.fov = clamp(fovBase + dFov, 1, SEE_FOV_MAX);
+      this.cam.updateProjectionMatrix();
+      this._look.copy(lookBase); if (dLook) this._look.add(dLook);
+      this.cam.lookAt(this._look); this.cam.updateMatrixWorld(true);
+    };
     let m = bad();
     if (!m || m.share >= SEE_SHARE) {
-      /* nothing is owed: the lens relaxes back to the station's own frame */
-      this._look.copy(lookBase); this.cam.fov = fovBase;
-      this.cam.updateProjectionMatrix();
-      this.cam.lookAt(this._look); this.cam.updateMatrixWorld(true);
+      /* THE CORRECTION IS NOT DROPPED BECAUSE IT WORKED. `bad()` has just
+         measured the picture WITH last frame's correction in it, so "the gate
+         is on frame" may be true only BECAUSE of the correction — relaxing on
+         that answer would drop it, need it again next frame, and shake the lens
+         at 60 Hz. The station's own frame is asked separately, and the
+         correction is only let go when the SHOT no longer needs it. */
+      const hadFov = this.seeFovD;
+      const hadLook = (this.__hl || (this.__hl = new THREE.Vector3())).copy(this.seeLookD);
+      put(0, null);
+      const m0 = bad();
+      if (!m0 || m0.share >= SEE_SHARE) { settle(); return; }
+      put(hadFov, hadLook);
       settle();
       return;
     }
@@ -1143,6 +1184,30 @@ export class CineCam {
       return s.inFrame === undefined || s.inFrame >= 0.92;
     };
     const half = () => Math.tan(this.cam.fov * D2R / 2);
+
+    /* ---- 0. GIVE BACK THE FOLLOW. The aim rides the subject's drift from his
+       baked mark so that a body who shifts stays composed; when he WALKS, that
+       ride is what carries the reader's gate off the picture — on the council,
+       fifteen metres of it, until the fleet the margin is telling him to click
+       is behind the camera. So the first thing offered back is the ride: the
+       aim returns toward the station's own framing in bounded steps, and every
+       step is measured against the subject and undone the moment he stops
+       obeying his own gates. Nothing else can reach a target that is off the
+       frame entirely, and nothing here can lose the subject. ---- */
+    if (this._drift && this._drift.lengthSq() > 0.04 && !row.frame.follow) {
+      const back = (this.__bk || (this.__bk = new THREE.Vector3()));
+      let bestF = 0, bestShare = m ? m.share : 0;
+      for (const f of FOLLOW_GIVE) {
+        put(this.seeFovD, back.copy(this._drift).multiplyScalar(-f));
+        const mm = bad();
+        if (!ok() || !mm) continue;
+        if (mm.share > bestShare + 1e-4) { bestF = f; bestShare = mm.share; }
+        if (bestShare >= SEE_SHARE) break;
+      }
+      put(this.seeFovD, bestF ? back.copy(this._drift).multiplyScalar(-bestF) : null);
+      m = bad();
+      if (!m || m.share >= SEE_SHARE) { settle(); return; }
+    }
 
     /* ---- 1. OPEN. The cheapest correction: the frame grows around what it
        already has, nothing moves, and the cost is subject size, which the
