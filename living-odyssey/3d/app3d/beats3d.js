@@ -52,6 +52,8 @@ const CREW_POOL = Math.max(CREW_CAP, LOTS_CAP, ROWER_CAP);
 
 const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const easeInOut = (k) => 0.5 - 0.5 * Math.cos(Math.PI * clamp01(k));
+/* a thing thrown down does not ease out of the throw: it arrives and stops */
+const easeOutCubic = (k) => 1 - Math.pow(1 - clamp01(k), 3);
 
 function mulberry32(seed) {
   let a = seed >>> 0;
@@ -147,11 +149,38 @@ const SHORE_MARKS = {
 };
 const CAVE_MARKS = {
   entry: [360, 450], cheeseRack: [640, 405], huddle: [933, 541],
-  suppliant: [690, 512], giantSeat: [760, 452], sword: [680, 554],
+  suppliant: [690, 512], giantSeat: [760, 452], sword: [490, 545],
   scheme: [800, 530], lots: [713, 527], stakeHide: [782, 496],
   bowlOffer: [700, 514], sprawlHead: [664, 546], ramStand: [838, 430],
   ramAtMouth: [395, 438], doorwaySeat: [345, 470], mouth: [355, 438],
   pens: [900, 545],
+  /* ROUND 4 · the marks the RENDERED VERBS need.
+     THE SWORD MARK MOVED, and it had to. It stood at (680,554): world
+     (-0.56, 5.17), which is (a) two metres OUTSIDE the cave's camera volume,
+     so no legal station can stand downstage of him, and (b) straddling the
+     sprawl's own audited box — measured, every reverse the solver found on
+     that mark looked THROUGH nine metres of sleeping giant, which is exactly
+     what round 3's verdict saw ("total obstruction"). (490,545) puts him at
+     the giant's CROWN, west of the head bone, on open floor a hand clear of
+     the firewood box, with the door behind him: the blade can reach the
+     throat, his face has a legal reverse, and his eyeline to the stone is the
+     cut that follows it. */
+  /* THE OBSTACLE LAW APPLIES TO A GIANT TOO. (600,468) is inside the hearth's
+     own ledger box, so the walk that carries the load in crossed the fire —
+     the audit caught it. He stops south of the blaze and throws the load past
+     it, onto the wood that is already there. */
+  woodCarry: [700, 520],      /* where the load comes off his shoulder */
+  woodDrop: [604, 528],       /* …and where it hits the floor */
+  seizeGrab: [860, 500],      /* the man is dragged to the edge of his reach */
+  seizeAloft: [820, 480],     /* …lifted here, clear of every body */
+  seizeDash: [855, 512],      /* …and dashed down two metres from the lens */
+  swordVitals: [546, 548],    /* the throat the point is held over */
+  sobHuddle: [928, 536],      /* the survivors, at the end of the night */
+  /* WHERE THE PLUCKED BEAM LANDS. It comes down among the men who are running
+     from him, which is both the truer image and the only light that end of the
+     cave has at this minute — the [read] law measured the flight at dark 0.56
+     against a cap of 0.55 with the beam thrown into the far corner. */
+  stakeFlung: [880, 528],
 };
 /* the shore's mainland lobe is FORCED PERSPECTIVE — its own px/m (19.5 against
    the beach's 11.3). A body standing on it wears the lobe's scale, which is the
@@ -352,6 +381,7 @@ export class Director {
   }
   _stand(a, world, face = 0, local = 1) {
     if (!a) return;
+    this._restArms(a);
     a.mode = 'stand';
     a.group.visible = true;
     a.group.rotation.set(0, face, 0);
@@ -410,6 +440,7 @@ export class Director {
       this._stand(a, last, Math.atan2(last.x - prev.x, last.z - prev.z));
       return;
     }
+    this._restArms(a);
     a.mode = 'walk';
     a.group.visible = true;
     a.fade = null; a.opacity = 1; a.setFade(1);
@@ -434,6 +465,221 @@ export class Director {
       console.error(msg);
     }
     return hits;
+  }
+
+  /* ================= ROUND 4 · THE POSE VOCABULARY =================
+   * Sol's round-3 verdict on Beat II was not about the camera: "the rendered
+   * verbs still do not land … visible nouns are not yet unmistakable
+   * behaviour." A cut list cannot photograph an action that the scene graph
+   * never performs, and up to here the book could only PARK a body at a mark
+   * or WALK it to another one. Four verbs in this chapter are neither: a man
+   * holds his arms open, a man is lifted off the floor, a giant spreads his
+   * hands across a doorway, a giant throws a load down.
+   *
+   * The cast lane already proved the mechanism — the seated giant is a bind
+   * pose plus AIMED bones (point a bone's own +Y down a world direction),
+   * because this rig family's arm frames sit 45 deg off every world axis. All
+   * that was missing was the same tool at STORY time. It is idempotent (the
+   * aim is absolute, not incremental), it is silent-safe, and a rig without
+   * the bone simply does not get the note.
+   * ================================================================= */
+  _bones(a) {
+    if (!a.__bones) {
+      const b = {};
+      a.group.traverse((o) => { if (o.isBone) b[o.name] = o; });
+      a.__bones = b;
+    }
+    return a.__bones;
+  }
+  /** swing one bone's own +Y onto a WORLD direction */
+  _aim(a, name, dir) {
+    if (!a) return false;
+    const b = this._bones(a)[name];
+    if (!b || !b.parent) return false;
+    a.group.updateWorldMatrix(true, true);
+    /* AN AIMED BONE IS PERMANENT. Measured: the suppliant's open arms were
+       still open eleven leaves later — he crossed the cave, drew a sword and
+       sobbed till morning with both hands held out, because nothing ever put
+       the rig back. The bind value is kept the first time a bone is touched
+       and `_restArms` is what a walk or a fresh mark calls to undo it. */
+    if (!b.userData.__q0) b.userData.__q0 = b.quaternion.clone();
+    a.__posedArms = true;
+    const wq = new THREE.Quaternion();
+    b.getWorldQuaternion(wq);
+    const cur = new THREE.Vector3(0, 1, 0).applyQuaternion(wq).normalize();
+    const tgt = dir.clone().normalize();
+    const del = new THREE.Quaternion().setFromUnitVectors(cur, tgt);
+    const pq = new THREE.Quaternion();
+    b.parent.getWorldQuaternion(pq).invert();
+    b.quaternion.copy(pq).multiply(del).multiply(wq);
+    return true;
+  }
+  /** put every bone this director has aimed back the way the rig shipped */
+  _restArms(a) {
+    if (!a || !a.__posedArms) return;
+    for (const b of Object.values(this._bones(a)))
+      if (b.userData.__q0) { b.quaternion.copy(b.userData.__q0); b.userData.__q0 = null; }
+    a.__posedArms = false;
+  }
+  /** a whole limb in one call, from the actor's own facing */
+  _arms(a, spec) {
+    let n = 0;
+    for (const [bone, dir] of Object.entries(spec))
+      if (this._aim(a, bone, new THREE.Vector3(...dir))) n++;
+    return n;
+  }
+  /** THE SUPPLIANT: down on one knee, arms held open, palms up at the giant.
+   *  Not a caption — the shape a man makes when he is begging, held for the
+   *  whole of the plea so any lens on him photographs the plea. */
+  _kneelOpen(a, faceDir, { silent = false, dur = 0.9 } = {}) {
+    if (!a) return;
+    /* the arms are aimed in WORLD directions, so they are built out of HIS
+       axes — a plea aimed down +Z would be a man appealing to the wall */
+    const fwd = faceDir.clone().setY(0).normalize();
+    const rgt = new THREE.Vector3(fwd.z, 0, -fwd.x);
+    const up = new THREE.Vector3(0, 1, 0);
+    const mix = (r, u, f) => rgt.clone().multiplyScalar(r)
+      .addScaledVector(up, u).addScaledVector(fwd, f).toArray();
+    const face = Math.atan2(fwd.x, fwd.z);
+    const drop = 0.46, lean = 0.17;
+    const at = a.group.position.clone();
+    a.mode = 'pose'; a.walk = null; a.group.visible = true;
+    const apply = (k) => {
+      const e = easeInOut(k);
+      a.group.position.set(at.x, -drop * e, at.z);
+      a.group.rotation.set(lean * e, face, 0);
+      /* the arms open as he goes down: upper arms out and forward, forearms
+         lifted so the palms turn up — the classic supplication */
+      const s = 0.35 + 0.65 * e;
+      this._arms(a, {
+        L_Upperarm: mix(0.80 * s, -0.30, 0.52), R_Upperarm: mix(-0.80 * s, -0.30, 0.52),
+        L_Forearm: mix(0.62 * s, 0.62 * s, 0.48), R_Forearm: mix(-0.62 * s, 0.62 * s, 0.48),
+      });
+    };
+    this._mover('kneel-' + a.id, dur, apply, { silent, owner: a.id });
+    if (silent) apply(1);
+  }
+  /** THE SEAT'S OWN ARMS, restored. An aimed bone is a lasting edit to the
+   *  rig, so any act that borrows the giant's arm (the reach, the spread
+   *  hands at the door) has to be undone the next time he sits down to work —
+   *  otherwise Beat III photographs a giant milking with his arm still out
+   *  over a man who was eaten in Beat II. These are the cast lane's own
+   *  numbers, turned into HIS frame by the yaw he is sitting at. */
+  _seatArms(g, face) {
+    if (!g) return;
+    const R = new THREE.Matrix4().makeRotationY(face);
+    const SEAT_ARMS = {
+      L_Upperarm: [0.34, -0.72, 0.61], R_Upperarm: [-0.34, -0.72, 0.61],
+      L_Forearm: [0.16, -0.30, -0.94], R_Forearm: [-0.16, -0.30, -0.94],
+    };
+    for (const [b, d] of Object.entries(SEAT_ARMS))
+      this._aim(g, b, new THREE.Vector3(...d).applyMatrix4(R));
+  }
+
+  /* THE FIREWOOD. "He brought in with him a huge load of dry firewood" — the
+   * line the reader hears over round 3's picture of an EMPTY DOORWAY. The load
+   * is authored here rather than in PROP_PLAN because it is not a hand prop
+   * with a ledger metre; it is set dressing that exists for nine seconds, is
+   * carried in a giant's arms, and then is floor. */
+  _wood() {
+    if (!this._woodGrp) {
+      const g = new THREE.Group();
+      g.name = 'firewood-load';
+      const bark = new THREE.MeshStandardMaterial({ color: 0x4a3524, roughness: 0.95,
+        metalness: 0, flatShading: true });
+      const end = new THREE.MeshStandardMaterial({ color: 0x8a6a45, roughness: 0.9,
+        metalness: 0, flatShading: true });
+      const rnd = mulberry32(71071);
+      for (let i = 0; i < 11; i++) {
+        const L = 2.2 + rnd() * 1.5, r = 0.10 + rnd() * 0.07;
+        const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 0.86, L, 7),
+          [bark, end, end]);
+        m.rotation.set(Math.PI / 2 + (rnd() - 0.5) * 0.22, (rnd() - 0.5) * 0.5,
+          (rnd() - 0.5) * 0.3);
+        m.position.set((rnd() - 0.5) * 0.9, 0.14 + (i % 4) * 0.19, (rnd() - 0.5) * 0.7);
+        m.castShadow = true; m.receiveShadow = true;
+        m.userData.rest = m.position.clone();
+        m.userData.spin = new THREE.Vector3(rnd() - 0.5, rnd() - 0.5, rnd() - 0.5);
+        g.add(m);
+      }
+      this._woodGrp = g;
+    }
+    if (this._woodGrp.parent !== this.stage.scene) this.stage.scene.add(this._woodGrp);
+    return this._woodGrp;
+  }
+  _woodAt(p, y = 0, roll = 0) {
+    const g = this._wood();
+    g.visible = true;
+    g.position.set(p.x, y, p.z);
+    g.rotation.set(0, roll, 0);
+    return g;
+  }
+  /** the load hits the floor and the sticks BURST apart — the crash */
+  _woodCrash(silent = false, delay = 0) {
+    const g = this._wood();
+    const sticks = g.children;
+    const rnd = mulberry32(71073);
+    const scatter = sticks.map(() => ({
+      dx: (rnd() - 0.5) * 2.6, dz: (rnd() - 0.5) * 1.9, ry: (rnd() - 0.5) * 2.4,
+    }));
+    const apply = (k) => {
+      const e = easeOutCubic(clamp01(k));
+      const fall = 1 - Math.pow(1 - clamp01(k * 1.7), 2);
+      g.position.y = 1.85 * (1 - fall);
+      sticks.forEach((m, i) => {
+        const r = m.userData.rest, s = scatter[i];
+        m.position.set(r.x + s.dx * e, r.y * (1 - e) + 0.09 * e, r.z + s.dz * e);
+        m.rotation.z = (m.userData.spin.z) + s.ry * e;
+        m.rotation.x = Math.PI / 2 + m.userData.spin.x * 0.2 * (1 - e);
+      });
+    };
+    if (silent) { apply(1); return; }
+    this._mover('wood-crash', 1.1, apply, { delay });
+    if (this.audio) this.audio.cue('crash', { delay: delay + 0.06 });
+  }
+  _woodOff() { if (this._woodGrp) this._woodGrp.visible = false; }
+
+  /* THE OPENED DOOR'S OWN LIGHT. Round 3's slit was "too dark and brief to
+   * land": the boulder rolled off a hole that had nothing behind it. The
+   * night outside is now a real source — a cold pre-dawn wedge standing in the
+   * aperture, plus the lamp that throws it across the floor — so the opening
+   * READS as an opening, and the giant who sits down in it reads as a door
+   * being blocked. */
+  _slit() {
+    if (!this._slitGrp) {
+      const g = new THREE.Group();
+      g.name = 'door-slit';
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1),
+        new THREE.MeshBasicMaterial({ color: 0x9fc4e8, transparent: true, opacity: 0,
+          depthWrite: false, toneMapped: false, side: THREE.DoubleSide }));
+      /* stood in the mouth's own aperture, facing into the room */
+      m.position.set(-7.95, 2.35, -1.15);
+      m.scale.set(2.4, 5.2, 1);
+      m.rotation.y = Math.PI / 2 + 0.10;
+      g.add(m);
+      const L = new THREE.PointLight(0xbcd8f5, 0, 30, 2);
+      L.position.set(-6.6, 2.6, -1.15);
+      g.add(L);
+      this._slitGrp = g; this._slitBar = m; this._slitLight = L;
+    }
+    if (this._slitGrp.parent !== this.stage.scene) this.stage.scene.add(this._slitGrp);
+    return this._slitGrp;
+  }
+  _slitAt(k, w = 1) {
+    this._slit();
+    this._slitBar.material.opacity = clamp01(k) * 0.95;
+    this._slitBar.scale.x = Math.max(0.25, w);
+    this._slitBar.visible = this._slitBar.material.opacity > 0.005;
+    this._slitLight.intensity = clamp01(k) * 62;
+    this.slitK = clamp01(k);
+  }
+  _slitTo(k, w, dur, { silent = false, delay = 0 } = {}) {
+    const k0 = this.slitK || 0, w0 = this._slitBar ? this._slitBar.scale.x : 0.25;
+    this._mover('slit', dur, (x) => {
+      const e = easeInOut(x);
+      this._slitAt(k0 + (k - k0) * e, w0 + (w - w0) * e);
+    }, { silent, delay });
+    this.slitK = k;
   }
 
   _cluster(world, n, seed, spread = 0.9) {
@@ -562,6 +808,7 @@ export class Director {
     /* HE SITS IN THE FLOOR, not on it — a 0.12 m sink lets the floor cut the
        silhouette instead of leaving a lit edge all round his rump. */
     this._stand(g, new THREE.Vector3(f.X(px[0]), -0.12, f.Z(px[1])), face);
+    this._seatArms(g, face);       /* whatever the last act did with his arms */
     return g;
   }
 
@@ -597,6 +844,20 @@ export class Director {
   }
 
   /* ================= props ================= */
+  /** where a man's sword hangs, live: his own hip, on his own facing */
+  _hipOf(a) {
+    if (!a || !a.group.visible) return null;
+    const f = a.group.rotation.y;
+    return new THREE.Vector3(a.group.position.x + Math.cos(f) * 0.30,
+      a.group.position.y + 0.95, a.group.position.z - Math.sin(f) * 0.30);
+  }
+  _swordToHip() {
+    const sw = this._prop('sword');
+    const p = this._hipOf(this.stage.actors.get('ulysses'));
+    if (!sw || !p) return;
+    sw.position.copy(p);
+    sw.rotation.set(0, this.stage.actors.get('ulysses').group.rotation.y - 0.6, 0.1);
+  }
   _prop(id) { return this.stage.props.get(id); }
   _propHome(id) {
     const g = this._prop(id);
@@ -866,9 +1127,150 @@ export class Director {
       /* ---------- BEATS II–V · THE CAVE ---------- */
       /* the leaf's own park puts the party in the mouth for the heading wide;
          this act owns the HOUR and clears what the last read left lying about */
-      'cave-dawn': (silent) => { S._grade('cave-dawn', silent); S._clearSpill(); S._seamsAt(0); },
+      'cave-dawn': (silent) => {
+        S._grade('cave-dawn', silent); S._clearSpill(); S._seamsAt(0);
+        S._slitAt(0); S._woodOff();     /* the hour owns what the last read left */
+      },
       'cave-shut': (silent) => S._grade('cave-shut', silent),
       'cave-embers': (silent) => { S._grade('cave-embers', silent); S._giantSprawl(silent); },
+      /* ================= ROUND 4 · THE FIRST MEAL =================
+         Sol: "the dramatic climax still fails as action: giant → isolated man
+         → static reaction. There is no readable clutch, lift, impact, or
+         consequence." He was right down to the scene graph: the leaf's act was
+         `cave-embers`, which grades the hour and lays the giant down — the
+         seize was a WORD. Measured at 1.0 s into the shot, round 3's frame had
+         the giant ALREADY SPRAWLING while the line said he was killing a man.
+         The verb is now performed, as one continuous arc on one man, so a
+         single lens can hold all of it:
+             reach · clutch · LIFT off the floor · aloft, kicking · dashed down
+         and the sprawl is pushed to the far side of it, where the text puts
+         it. The object of the verb — the man — is visible the whole way.   */
+      'first-meal': (silent) => {
+        S._grade('cave-embers', silent);
+        const crew = S._aliveCrew();
+        const victim = crew[crew.length - 1] || crew[0];
+        const rest = crew.filter((c) => c !== victim);
+        if (silent) {
+          /* a replayed lap must land where a read lap left it: the man is
+             taken, the giant is down. No mover, no fiction. */
+          if (victim) S._off(victim);
+          S.meals = Math.max(S.meals, 1);
+          S._giantSprawl(true);
+          return;
+        }
+        const g = S._giantOn();
+        const grab = caveAt(...CAVE_MARKS.seizeGrab);
+        const aloft = caveAt(...CAVE_MARKS.seizeAloft);
+        const dash = caveAt(...CAVE_MARKS.seizeDash);
+        /* THE REACH — he turns on them and comes forward. AIMING THE ARM WAS
+           TRIED AND MEASURED: a limb on a seven-metre rig fills any lens close
+           enough to see the man it is reaching for, and every frame of round
+           4's first pass came back as one white forearm. The lunge is carried
+           by the WHOLE BODY instead — the yaw swings at them, the mass grows —
+           and the verb is read off the man, which is where it belongs. */
+        if (g) {
+          const f0 = g.face, s0 = g.baseScale * g.local;
+          const face = Math.atan2(grab.x - g.group.position.x, grab.z - g.group.position.z);
+          S._mover('reach', 1.45, (k) => {
+            const e = easeInOut(k);
+            g.group.rotation.y = f0 + (face - f0) * 0.62 * e;
+            g.model.scale.setScalar(s0 * (1 + 0.055 * Math.sin(Math.PI * clamp01(k))));
+          }, { owner: g.id });
+        }
+        if (victim) {
+          const from = victim.group.position.clone();
+          victim.walk = null; victim.mode = 'pose'; victim.group.visible = true;
+          const q0 = victim.group.quaternion.clone();
+          const flail = new THREE.Quaternion();
+          S._mover('seize', 3.35, (k) => {
+            const t = k * 3.35;
+            let p, y, roll;
+            if (t < 1.05) {                       /* DRAGGED to the hand */
+              const e = easeInOut(t / 1.05);
+              p = from.clone().lerp(grab, e); y = 0; roll = 0.10 * e;
+            } else if (t < 1.45) {                /* CLUTCHED — held, jerked */
+              p = grab.clone(); y = 0.16 * easeInOut((t - 1.05) / 0.40);
+              roll = 0.10 + 0.22 * easeInOut((t - 1.05) / 0.40);
+            } else if (t < 2.55) {                /* LIFTED clean off the floor */
+              const e = easeInOut((t - 1.45) / 1.10);
+              p = grab.clone().lerp(aloft, e); y = 0.16 + 1.29 * e;
+              roll = 0.32 + 0.62 * e;
+            } else if (t < 2.90) {                /* ALOFT, kicking */
+              p = aloft.clone(); y = 1.45 + 0.05 * Math.sin((t - 2.55) * 26);
+              roll = 0.94 + 0.10 * Math.sin((t - 2.55) * 21);
+            } else {                              /* DASHED to the ground */
+              const e = easeOutCubic((t - 2.90) / 0.45);
+              p = aloft.clone().lerp(dash, e); y = 1.45 * (1 - e * e) + 0.10 * e;
+              roll = 0.94 + (Math.PI / 2 - 0.94) * e;
+            }
+            victim.group.position.set(p.x, y, p.z);
+            flail.setFromAxisAngle(new THREE.Vector3(0, 0, 1), roll);
+            victim.group.quaternion.copy(q0).multiply(flail);
+          }, { owner: victim.id });
+          /* THE CONSEQUENCE: the impact is heard, the room jumps, and the man
+             is gone — the crowd law's own arithmetic, performed. */
+          S._mover('dash-shake', 0.01, () => {
+            S.shake = { t0: S.t, amp: 0.26, dur: 0.9 };
+            if (S.audio) S.audio.cue('boulder-boom', { gain: 0.85 });
+          }, { delay: 3.30 });
+          S._mover('meal-done', 0.01, () => {
+            S._off(victim); S.meals = Math.max(S.meals, 1);
+          }, { delay: 4.05 });
+        }
+        /* the two who are left back away and TURN TO WATCH — the faces the
+           reaction shot is cut to have to be facing the thing */
+        rest.forEach((c, i) => {
+          const p = c.group.position.clone();
+          const away = p.clone().sub(grab).setY(0).normalize().multiplyScalar(0.85);
+          const to = p.clone().add(away);
+          const face = Math.atan2(grab.x - to.x, grab.z - to.z);
+          c.walk = null;
+          S._mover('recoil-' + c.id, 0.9, (k) => {
+            const e = easeInOut(k);
+            c.group.position.lerpVectors(p, to, e);
+            c.group.rotation.set(0, face, 0);
+          }, { delay: 1.35 + 0.12 * i, owner: c.id });
+        });
+        /* …and only THEN does he lie down, which is the order the text has */
+        S._mover('meal-sprawl', 0.01, () => S._giantSprawl(false), { delay: 3.5 });
+        /* AND ULYSSES CROSSES UNDER IT. The sword leaf is a GATE: the reader's
+           press lands three seconds in and ends the leaf, so a six-metre walk
+           started there arrives after the shot it was framed for. He leaves
+           while the giant is lying down — which is also when a man would. */
+        S._mover('to-the-sword', 0.01, () => {
+          const u2 = A('ulysses');
+          /* a fast reader may already be on the sword leaf, which starts the
+             same crossing: two of them would teleport him back to the fire */
+          if (!u2 || u2.walk ||
+              u2.group.position.distanceTo(caveAt(...CAVE_MARKS.sword)) < 1.2) return;
+          S._walkRoute(u2, [734, 500], CAVE_MARKS.sword,
+            { speed: 2.8, label: 'cave:lie->sword' });
+          const sw = S._prop('sword');
+          if (sw) { sw.visible = true; S._mover('sword-ride', 7.5, () => S._swordToHip()); }
+        }, { delay: 1.6 });
+      },
+      /* THE END OF THE NIGHT IS THE SURVIVORS' FACES. Round 3 closed Beat II
+         on CV-AFTER — measured: 6 % of the frame had a body in it and nothing
+         was visible at all. "So we stayed sobbing and sighing where we were"
+         is a line about PEOPLE. */
+      'sob-till-morning': (silent) => {
+        const men = S._aliveCrew();
+        const spots = S._cluster(caveAt(...CAVE_MARKS.sobHuddle), men.length + 1, 71081, 0.92);
+        const west = caveAt(...CAVE_MARKS.mouth);
+        men.forEach((c, i) => {
+          const p = spots[i + 1];
+          S._stand(c, p, Math.atan2(west.x - p.x, west.z - p.z));
+          if (!silent) S._arms(c, { L_Upperarm: [0.16, -0.94, 0.30], R_Upperarm: [-0.16, -0.94, 0.30] });
+        });
+        const u = A('ulysses');
+        if (u) {
+          const p = spots[0];
+          S._stand(u, p, Math.atan2(west.x - p.x, west.z - p.z));
+        }
+        const sw = S._prop('sword');
+        if (sw) sw.visible = false;
+        S.swordLive = false;
+      },
       'cave-predawn': (silent) => {
         S._grade('cave-predawn', silent);
         if (S.beat >= 5) {
@@ -921,26 +1323,97 @@ export class Director {
           [648 + i * 15, 404], { silent, delay: 0.18 * i, label: 'cave:for-the-door' }));
         S._stand(A('ulysses'), caveAt(586, 410), 1.62);
       },
-      'huddle-far': (silent) => {                  /* the scatter to the far dark */
-        S._dropCheeses(silent);                    /* the wheels hit the floor */
+      /* ================= ROUND 4 · THE RETURN =================
+         "When he came, he brought in with him a huge load of dry firewood…
+         which he flung down with such a noise that we were frightened."
+         Round 3 photographed that line as an EMPTY DOORWAY — measured: zero
+         bodies on screen at 2.6 s and at 5.0 s of the shot. The act was called
+         `huddle-far` and all it did was run the men into the dark, which is
+         the REACTION to an event that never happened. Four things happen here
+         now, in order, so that each of them can be a shot:
+           the giant walks in under the load · the load is flung down and the
+           sticks burst apart · the men bolt and their stolen cheeses hit the
+           floor · the flock comes in behind him.                            */
+      'giant-return': (silent) => {
+        const g = S._giant('walk');
+        if (g) {
+          if (silent) {
+            S._stand(g, caveAt(...CAVE_MARKS.woodCarry), -1.1);
+          } else {
+            S._stand(g, caveAt(...CAVE_MARKS.mouth), -1.25);
+            S._walkRoute(g, CAVE_MARKS.mouth, CAVE_MARKS.woodCarry,
+              { speed: GIANT_MPS * 0.62, label: 'cave:return' });
+          }
+        }
+        /* THE LOAD RIDES HIM IN. It is carried on the shoulder while he walks
+           (a mover that reads his own position each tick — no parenting, so a
+           re-seek can never leave a bundle inside a body), and it comes off at
+           the mark. */
+        const drop = caveAt(...CAVE_MARKS.woodDrop);
+        if (silent) {
+          S._woodAt(drop, 0, 0.6); S._woodCrash(true);
+        } else {
+          S._woodAt(caveAt(...CAVE_MARKS.mouth), 3.05, 0.35);
+          S._mover('wood-carry', 2.5, () => {
+            const w = S._wood();
+            if (g && g.group.visible) {
+              w.position.set(g.group.position.x + 0.55, 3.05, g.group.position.z + 0.35);
+              w.rotation.y = g.group.rotation.y + 0.4;
+            }
+          });
+          /* …and then it is FLUNG DOWN: the group falls, the sticks burst */
+          S._mover('wood-place', 0.01, () => {
+            const w = S._wood();
+            w.position.set(drop.x, 1.85, drop.z);
+          }, { delay: 2.5 });
+          S._woodCrash(false, 2.52);
+        }
+        /* THE MEN BOLT — and the wheels they stole hit the floor with them */
+        S._dropCheeses(silent);
         const rnd = mulberry32(71051);
         S._aliveCrew().forEach((c, i) => {
           const tx = CAVE_MARKS.huddle[0] + (rnd() - 0.5) * 56;
           const ty = CAVE_MARKS.huddle[1] + (rnd() - 0.5) * 18;
           S._walkRoute(c, [604 + (i % 4) * 24, 396 + (i % 3) * 6], [tx, ty],
-            { speed: SCURRY_MPS, silent, delay: 0.15 * i, label: 'cave:scatter' });
+            { speed: SCURRY_MPS, silent, delay: silent ? 0 : 2.6 + 0.14 * i,
+              label: 'cave:scatter' });
         });
         S._walkRoute(A('ulysses'), [610, 412], CAVE_MARKS.huddle,
-          { speed: SCURRY_MPS, silent, label: 'cave:scatter-u' });
+          { speed: SCURRY_MPS, silent, delay: silent ? 0 : 2.7, label: 'cave:scatter-u' });
+        /* THE FLOCK COMES IN BEHIND HIM — "he drove all the ewes inside" */
+        [[985, 548], [1022, 556], [1058, 544], [948, 562]].forEach(([px, py], i) => {
+          const e = A('ewe-' + i);
+          if (!e) return;
+          if (silent) { S._stand(e, caveAt(px, py), -1.9 + 0.2 * i); return; }
+          S._stand(e, caveAt(372, 446 + i * 6), -1.5);
+          S._walkRoute(e, [372, 446 + i * 6], [px, py],
+            { speed: 1.35, delay: 3.1 + 0.5 * i, label: 'cave:flock-in' });
+        });
       },
-      'giant-seat': () => { S._seatGiant(); },
+      'giant-seat': () => { S._woodOff(); S._seatGiant(); },
       suppliant: (silent) => {
         /* HE HAS TO ARRIVE INSIDE HIS OWN LINE. At walking pace the kneel took
            longer than the plea, so the reverse angle was cut on a man still
            four metres upstage of the mark it was framed for, and the giant ate
-           the frame. A suppliant crosses a floor faster than that. */
-        S._walkRoute(A('ulysses'), CAVE_MARKS.huddle, CAVE_MARKS.suppliant,
+           the frame. A suppliant crosses a floor faster than that.
+           ROUND 4: and then he DOES THE THING. Sol: "Ulysses never delivers a
+           legible supplicant action — no held open arms or arrival at the
+           knees." He now arrives, goes down, and holds his arms open for the
+           whole of the plea, so any lens pointed at him photographs a man
+           begging rather than a man standing. */
+        const to = CAVE_MARKS.suppliant;
+        S._walkRoute(A('ulysses'), CAVE_MARKS.huddle, to,
           { speed: 1.75, silent, label: 'cave:huddle->suppliant' });
+        const u = A('ulysses');
+        const at = caveAt(...to);
+        const face = caveAt(...CAVE_MARKS.giantSeat).sub(at);
+        if (silent) { S._stand(u, at, Math.atan2(face.x, face.z)); S._kneelOpen(u, face, { silent: true }); return; }
+        /* the kneel is armed for the moment the walk lands, not for a guess:
+           the route is ~2.0 m at 1.75 m/s, so it is his own arrival time */
+        S._mover('suppliant-land', 0.01, () => {
+          if (u) { u.walk = null; u.group.position.copy(at); }
+          S._kneelOpen(u, face, { dur: 0.85 });
+        }, { delay: 1.35 });
       },
       /* PHASE 2 OF THE STANDOFF (Sol II #2). A shot/reverse that never changes
          the distance between two bodies is coverage; the relation has to move.
@@ -951,25 +1424,61 @@ export class Director {
         S._walkRoute(A('ulysses'), CAVE_MARKS.suppliant, [734, 500],
           { silent, label: 'cave:suppliant->lie' });
       },
+      /* ================= ROUND 4 · THE SWORD SENTENCE =================
+         hilt → blade at the vitals → his eyes → the stone. Round 3 could not
+         render it because the mark it was played on lay across the sprawl and
+         outside the camera volume; the sentence existed only in the cut list.
+         He now crosses to the giant's CROWN (CAVE_MARKS.sword), which is open
+         floor with the door behind it, and the blade he draws is held over the
+         measured throat — so the second image in the sentence is an object at
+         a place on a body, not a torso.                                     */
       'sword-ulysses': (silent) => {
-        S._walkRoute(A('ulysses'), [734, 500], CAVE_MARKS.sword,
-          { silent, label: 'cave:lie->sword' });
+        const u = A('ulysses');
+        /* the crossing was launched by the meal, under the giant lying down;
+           this leaf only guarantees the arrival (and a silent replay takes it
+           whole, because a replay has no seconds to walk in) */
+        const walking = u && u.walk;
+        const near = u && u.group.position.distanceTo(caveAt(...CAVE_MARKS.sword)) < 1.2;
+        if (silent || (!walking && !near))
+          S._walkRoute(u, [734, 500], CAVE_MARKS.sword,
+            { speed: 2.6, silent, label: 'cave:lie->sword' });
         const sw = S._prop('sword');
-        if (sw) sw.visible = true;
+        if (sw) {
+          sw.visible = true;
+          if (silent) S._swordToHip();
+          else S._mover('sword-ride', 5.6, () => S._swordToHip());
+        }
         S.swordLive = true;
       },
       swordDraw: (silent) => {                     /* G2 resolves — and REFUSES */
         const sw = S._prop('sword');
         if (!sw) return;
         sw.visible = true;
-        const y0 = sw.position.y, rz0 = sw.rotation.z;
-        S._mover('sword-draw', 1.6, (k) => {
-          /* the draw STOPS mid-air and the story takes the blade back (O.5) */
-          const lift = k < 0.45 ? easeInOut(k / 0.45) : 1 - easeInOut((k - 0.62) / 0.38) * (k > 0.62 ? 1 : 0);
-          sw.position.y = y0 + Math.max(0, lift) * 0.52;
-          sw.rotation.z = rz0 - Math.max(0, lift) * 0.9;
-          if (sw.userData.glint) sw.userData.glint.emissiveIntensity = 1.2 + 2.4 * Math.max(0, lift);
-        }, { silent });
+        S.movers = S.movers.filter((m) => m.id !== 'sword-ride');
+        /* THE ARC STARTS WHERE HIS HAND IS, NOT WHERE IT WAS. If the gate is
+           pressed while he is still crossing the floor, a frozen start point
+           would fly the blade out of his fist; the hip is therefore read LIVE
+           at the bottom of the arc and only the top of it is a fixed mark. */
+        const q0 = sw.quaternion.clone();
+        /* THE PLACE THE BLOW WOULD LAND, measured off the sprawl's own head
+           mark — the point hangs over the throat, edge down, which is the only
+           way "drive it into his vitals" can be a picture. */
+        const vit = caveAt(...CAVE_MARKS.swordVitals);
+        const hi = new THREE.Vector3(vit.x, 1.95, vit.z);
+        const down = new THREE.Quaternion().setFromUnitVectors(
+          new THREE.Vector3(1, 0, 0), new THREE.Vector3(-0.16, -0.97, 0.18).normalize());
+        const apply = (k) => {
+          /* out of the scabbard, over him — and then the story TAKES IT BACK
+             (O.5): the arc stops at the vitals and returns to the hip. */
+          const e = k < 0.42 ? easeInOut(k / 0.42)
+            : k < 0.74 ? 1 : 1 - easeInOut((k - 0.74) / 0.26);
+          const hip = S._hipOf(A('ulysses')) || sw.position.clone();
+          sw.position.lerpVectors(hip, hi, e);
+          sw.quaternion.slerpQuaternions(q0, down, e);
+          if (sw.userData.glint) sw.userData.glint.emissiveIntensity = 1.2 + 3.1 * e;
+        };
+        if (silent) { apply(0); return; }
+        S._mover('sword-draw', 3.6, apply);
       },
       milking: () => { S._seatGiant(); },
       scheme: (silent) => {
@@ -1084,7 +1593,7 @@ export class Director {
         S._mover('blind-flare', 2.8, (k) => {
           S.flareK = k < 0.22 ? (k / 0.22) * 1.15 : 1.15 * (1 - (k - 0.22) / 0.78);
         }, { silent });
-        S._mover('tip-cool', 3.0, (k) => { S.tipGlow = 1 - 0.8 * easeInOut(k); }, { silent });
+        S._mover('tip-cool', 3.0, (k) => { S.tipGlow = 1 - 0.62 * easeInOut(k); }, { silent });
         const g = A('poly-idle');
         if (g && g.mode === 'pose' && !silent) {
           const gp = g.group.position.clone(), gq = g.group.quaternion.clone();
@@ -1096,17 +1605,46 @@ export class Director {
             g.group.quaternion.copy(gq).multiply(qz);
           }, { owner: g.id });
         }
-        S._moveProp('stake', caveAt(700, 541, 0.16),
-          new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0),
-            new THREE.Vector3(1, 0.06, 0.15).normalize()), 0.8, { silent, delay: 0.5 });
+        /* ROUND 4: the beam STAYS IN THE EYE. Round 3 dropped it to the floor
+           half a second after contact, which spent the pluck off screen and
+           left Sol's "abrupt ellipse" at 20.8-23.0 s: wounded giant, then a
+           sealed stone, with the two verbs the text spends there — he plucks
+           it out, he flings it from him — never happening. It comes out in
+           `fright-pluck`, where the shot list can watch it. */
       },
-      'fright-scatter': (silent) => {
+      /* ================= ROUND 4 · THE PLUCK AND THE HURL ================= */
+      'fright-pluck': (silent) => {
+        const st = S._prop('stake');
+        const eye = caveAt(573, 557, 1.45);
+        const butt = caveAt(710, 552, 1.55);
+        const away = caveAt(...CAVE_MARKS.stakeFlung, 0.14);
+        const flat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0),
+          new THREE.Vector3(1, 0.05, 0.2).normalize());
+        if (st && !silent) {
+          const p0 = st.position.clone(), q0 = st.quaternion.clone();
+          const out = butt.clone().lerp(eye, -0.18);     /* torn back out of him */
+          S._mover('stake-pluck', 0.55, (k) => {
+            st.position.lerpVectors(p0, out, easeOutCubic(k));
+          });
+          /* …and FLUNG: an arc across the room, and a clatter where it lands */
+          S._mover('stake-hurl', 0.85, (k) => {
+            const e = easeOutCubic(k);
+            st.position.lerpVectors(out, away, e);
+            st.position.y = out.y + Math.sin(Math.PI * clamp01(k)) * 1.35
+              - (out.y - away.y) * e;
+            st.quaternion.slerpQuaternions(q0, flat, e);
+          }, { delay: 0.58 });
+          if (S.audio) S.audio.cue('clatter', { delay: 1.36 });
+        } else if (st) {
+          st.position.copy(away); st.quaternion.copy(flat);
+        }
+        /* THE MEN FLEE — and they do it under the flung beam, not after it */
         S._walkRoute(A('ulysses'), [684, 537], CAVE_MARKS.huddle,
           { speed: SCURRY_MPS, silent, label: 'cave:fright-u' });
         S._aliveCrew().forEach((c, i) => {
           S._walkRoute(c, [700 + i * 8, 539 + (i % 2) * 6],
             [903 + (i % 2) * 20, 535 + (i % 3) * 7],
-            { speed: SCURRY_MPS, silent, delay: 0.12 * i, label: 'cave:fright-crew' });
+            { speed: SCURRY_MPS, silent, delay: 0.10 * i, label: 'cave:fright-crew' });
         });
       },
       /* THE NEIGHBOURS, MADE VISIBLE (Sol IV #2). They cannot be photographed —
@@ -1144,6 +1682,14 @@ export class Director {
       boulderOpen: (silent) => {
         S._boulderTo(0, { silent });
         S._seamsAt(0);
+        /* THE NIGHT COMES IN WITH THE STONE (Sol IV: "the opening slit is too
+           dark and brief to land cleanly"). Round 3 rolled the boulder off a
+           hole with nothing behind it, so the one image the escape depends on
+           — that there IS a way out — was a slightly less black rectangle. The
+           aperture is now a source: a cold pre-dawn wedge that widens with the
+           stone and throws real light back down the floor. */
+        if (silent) S._slitAt(1, 1.5);
+        else { S._slitAt(0.05, 0.5); S._slitTo(1, 2.4, 1.6, { delay: 0.35 }); }
         /* the blind grope: he rolls to his feet among the sheep and feels his
            way down the audited lane to the door he can no longer see */
         if (silent) { S._seatGiant(CAVE_MARKS.doorwaySeat, 2.1); return; }
@@ -1181,11 +1727,23 @@ export class Director {
         S._aliveCrew().forEach((c, i) => S._stand(c, c.group.position.clone(), -1.62 + 0.12 * i));
         const u = A('ulysses');
         if (u) S._stand(u, u.group.position.clone(), -1.55);
-        if (!silent && groping && groping.mode === 'walk') {
-          const seat = caveAt(...CAVE_MARKS.doorwaySeat);
-          if (groping.group.position.distanceTo(seat) > 1.4) return;  /* still going */
-        }
-        S._seatGiant(CAVE_MARKS.doorwaySeat, 2.1);
+        /* if he is still two strides out he ARRIVES — the grope is drama, but
+           the closing geometry is the point of the leaf and a reader who has
+           turned to it is owed the picture */
+        if (groping) { groping.walk = null; S.movers = S.movers.filter((m) => m.owner !== groping.id); }
+        const g = S._seatGiant(CAVE_MARKS.doorwaySeat, 2.1);
+        /* BOTH HANDS SPREAD ACROSS THE OPENING (Sol IV: "the giant reads as
+           kneeling beside the boulder, not unmistakably seated across the only
+           exit with both hands spread"). The seat pose folds his forearms back
+           over his lap — correct at the hearth, wrong here, where the whole
+           point of the image is that he has felt for the edges of the door and
+           is holding them. The arms are re-aimed OUT along the aperture. */
+        if (g) S._arms(g, {
+          L_Upperarm: [0.30, -0.46, 0.84], R_Upperarm: [0.30, -0.46, -0.84],
+          L_Forearm: [-0.16, -0.34, 0.93], R_Forearm: [-0.16, -0.34, -0.93],
+        });
+        /* he is a silhouette in it, so the opening has to still be lit */
+        S._slitAt(1, 2.4);
       },
 
       /* ---------- BEAT V · THE RAMS ---------- */
@@ -1371,18 +1929,21 @@ export class Director {
         });
         break;
       }
-      case 'return': {                             /* POLYPHEMUS in under the load */
-        if (set !== 'cave') break;
-        const w = this._giant('walk');
-        if (w) {
-          this._stand(w, caveAt(340, 436), 1.2);
-          this._walkRoute(w, [340, 436], CAVE_MARKS.giantSeat,
-            { speed: GIANT_MPS, silent, label: 'cave:giant-enter' });
-        }
-        break;
-      }
+      /* ROUND 4 · THE ACT OWNS THE RETURN NOW. This seg walked the giant
+         straight to his seat, which ran AFTER the act (a unit fires act then
+         seg) and so overwrote the walk that carries the firewood in — the load
+         rode a man who was going somewhere else. `giant-return` performs the
+         whole entrance; the seg stands down. */
+      case 'return': break;
       case 'milking': break;
-      case 'seize': {                              /* O.6 — identical, three times */
+      /* ROUND 4 · AND THE ACT OWNS THE SEIZE. Measured on the live book: this
+         seg faded crew-1 and crew-2 out over 1.4 s from the instant the leaf
+         opened — so the man the clutch was built to lift was at 5 % opacity by
+         the time the camera cut to him, and gone by 1.8 s. That is the whole
+         reason round 3's climax had "no readable clutch, lift, impact". The
+         men are taken by `first-meal`, in vision, one arc, one lens. */
+      case 'seize': break;
+      case 'seize-legacy': {
         this.meals = Math.min(3, this.meals + 1);
         const taken = this._onStageCrew().slice(-2);
         for (const c of taken) this._fade(c, 0, 1.4, silent);

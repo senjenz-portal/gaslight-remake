@@ -203,7 +203,7 @@ export const UNITS = [
     text: 'When he came, he brought in with him a huge load of dry firewood to light the fire for his supper, and this he flung with such a noise on to the floor of his cave that we hid ourselves for fear at the far end of the cavern.',
     speaker: '', verb: 'click', seg: 'return', segDur: 7.0, segHold: true,
     focus: 'discovery-low', page: 2, beat: 2, set: 'cave', clear: true,
-    sfx: 'crash', act: 'huddle-far', cameo: 'polyphemus',
+    sfx: 'footfalls', act: 'giant-return', cameo: 'polyphemus',
     cap: 'Polyphemus · the Cyclops' },
 
   /* 2.4 — the boulder-shut pantomime precedes the text (K6) — a state swap under the
@@ -261,7 +261,7 @@ export const UNITS = [
     text: 'The cruel wretch vouchsafed me not one word of answer… Then he tore them limb from limb and supped upon them. He gobbled them up like a lion in the wilderness…',
     speaker: '', verb: 'click', seg: 'seize', segDur: 6.0, segHold: true,
     focus: 'meal-close', page: 2, beat: 2, set: 'cave', clear: true,
-    sfx: 'seize', act: 'cave-embers', fact: 'O.6' },
+    sfx: 'seize', act: 'first-meal', fact: 'O.6' },
 
   /* 2.11 — GATE G2 — the glint at the hip; the reader performs the fatal instinct so the
      text can refuse it (O.5 setup); the promised snore-bed (K14) is UNDER the gate
@@ -288,7 +288,7 @@ export const UNITS = [
   { id: 'ody-ii-13-tillmorning', key: 'tillmorning',
     text: 'So we stayed sobbing and sighing where we were till morning came.',
     speaker: '', verb: 'click', endsBeat: true, focus: 'establishing', page: 2,
-    beat: 2, set: 'cave', clear: true, sfx: 'sob' },
+    beat: 2, set: 'cave', clear: true, sfx: 'sob', act: 'sob-till-morning' },
 
   /* ================= BEAT III · NOBODY — SET cave · leaf 3 (SHARED with Beat IV) ================= */
 
@@ -473,7 +473,7 @@ export const UNITS = [
    */
   { id: 'ody-iv-06-fright', key: 'fright',
     text: '"We ran away in a fright… shouting as he did so to the other Cyclopes who lived on the bleak headlands near him; so they gathered from all quarters round his cave when they heard him crying, and asked what was the matter with him."',
-    speaker: '', verb: 'clock', at: 14.7, focus: 'mouth', page: 3, beat: 4,
+    speaker: '', verb: 'clock', at: 16.3, focus: 'mouth', page: 3, beat: 4,
     set: 'cave', clear: true, sfx: 'clatter', act: 'seams-gather' },
 
   /* 4.7 — voices from BEYOND the stone — voice-only card, first appearance; O.10 opens.

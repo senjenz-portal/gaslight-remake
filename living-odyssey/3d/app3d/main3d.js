@@ -71,7 +71,7 @@ const EXTRA_ACTS = {
   glowing: ['stake-draw'],
   auger: ['stake-drive'],
   hiss: ['blind-hiss'],
-  fright: ['fright-scatter'],
+  fright: ['fright-pluck'],          /* …and the beam comes back out of him */
   threetoaman: ['trios-under'],      /* BEAT V — under the fleeces */
   dawn5: ['flock-stream'],
   rock1: ['rock-one'],               /* BEAT VI — the two rocks */
@@ -852,5 +852,20 @@ window.__cuts = () => (cine ? {
   coverage: cine.table.coverage || null, lens: (cine.table.lens || {}).id || null,
 } : null);
 window.__errors = () => errors.slice();
+/* THE SOUND LEDGER — every bed change, every cue and every spoken line the lap
+   asked for, in the SIM CLOCK the picture is drawn in. Round 3's judgment was
+   picture-only because the recorder screenshots frames and a screenshot has no
+   sound: the book's audio graph runs in a muted, gesture-locked context that a
+   headless lap can never render to a file. So the recorder does not TRY to
+   record the speakers — it reads what the book asked for and re-mixes it
+   offline against the same frame clock (tools/ody/cine_scene_videos.mjs).
+   Determinism law: this is the same log the muted lap produces, so the track
+   under the picture is the book's own sound and not a second authoring. */
+window.__audio = () => ({
+  cues: audio.log.slice(),                 /* {t, kind:'bed'|'cue', id} */
+  voice: voice.log.slice(),                /* {t, key, dur} */
+  ducks: audio.ducks.slice(),
+  bed: audio.bedId, muted: audio.muted, ok: audio.ok,
+});
 
 boot().catch((e) => fail('boot', e));

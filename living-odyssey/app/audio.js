@@ -282,4 +282,7 @@ export class AudioManager {
   }
 }
 
-export { FILES as AUDIO_FILES, BEDS };
+/* GAIN and DUCK_DB are exported for ONE reason: the offline scene mixer
+   (tools/ody/cine_scene_videos.mjs) re-plays this manager's own log into a
+   file, and it has to use the book's mix, not a second one. */
+export { FILES as AUDIO_FILES, BEDS, GAIN as AUDIO_GAIN, DUCK_DB as AUDIO_DUCK_DB };
