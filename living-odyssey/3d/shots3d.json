@@ -30,12 +30,12 @@
   "lens": "spielberg",
   "ok": true,
   "totals": {
-   "shots": 146,
-   "subCuts": 65,
+   "shots": 147,
+   "subCuts": 66,
    "setups": 83,
-   "cuts": 138,
+   "cuts": 139,
    "holds": 2,
-   "returns": 61,
+   "returns": 62,
    "dissolves": 5
   }
  },
@@ -448,10 +448,10 @@
      "takes": 1
     },
     {
-     "id": "CV-FIRE",
-     "name": "THE FIRE — THE SEIZE IN SHADOW",
-     "role": "action",
-     "note": "the horror staged against the blaze and never printed; the same angle all three meals",
+     "id": "CV-GRIP",
+     "name": "THE HAND THAT TAKES THEM",
+     "role": "insert",
+     "note": "the reach itself, low and close east of the blaze — the shot the seize never had",
      "takes": 2
     },
     {
@@ -497,10 +497,10 @@
      "takes": 1
     },
     {
-     "id": "CV-GRIP",
-     "name": "THE HAND THAT TAKES THEM",
-     "role": "insert",
-     "note": "the reach itself, low and close east of the blaze — the shot the seize never had",
+     "id": "CV-FIRE",
+     "name": "THE FIRE — THE SEIZE IN SHADOW",
+     "role": "action",
+     "note": "the horror staged against the blaze and never printed; the same angle all three meals",
      "takes": 1
     },
     {
@@ -568,35 +568,35 @@
      "setup": "CV-RACKS",
      "name": "THE CHEESE RACKS",
      "role": "geography",
-     "cls": "NARRATION",
+     "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.689,
-     "angle": 120
+     "size": 0.903,
+     "angle": 6
     },
     {
      "unit": "ody-ii-01-beg",
-     "setup": "CV-FIRE",
-     "name": "THE FIRE — THE SEIZE IN SHADOW",
-     "role": "action",
-     "cls": "NARRATION",
+     "setup": "CV-GRIP",
+     "name": "THE HAND THAT TAKES THEM",
+     "role": "insert",
+     "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.63,
-     "angle": 134.6,
+     "size": 1.837,
+     "angle": 1.5,
      "sub": 1,
      "at": 3.8,
-     "why": "the hearth the wealth is stacked around, planted on the angle all three meals will use"
+     "why": "the theft itself — a wheel of the giant's cheese in a man's arms, on the same insert angle his hand will take the men on"
     },
     {
      "unit": "ody-ii-02-present",
      "setup": "CV-ULY",
      "name": "ULYSSES, A MAN'S EYE",
      "role": "single",
-     "cls": "NARRATION",
+     "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.506,
+     "size": 0.78,
      "angle": 26.8
     },
     {
@@ -604,14 +604,14 @@
      "setup": "CV-MEN",
      "name": "THE MEN WATCHING",
      "role": "reaction",
-     "cls": "NARRATION",
+     "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.489,
-     "angle": 33.7,
+     "size": 0.761,
+     "angle": 51.2,
      "sub": 1,
      "at": 4.2,
-     "why": "the men who told him to take the cheeses and go — \"I would not listen to them\" needs a them"
+     "why": "the men he would not listen to, stopped a stride short of the daylight with the cheeses still in their arms"
     },
     {
      "unit": "ody-ii-03-return",
@@ -621,8 +621,8 @@
      "cls": "ACTION",
      "transition": "dissolve",
      "take": 1,
-     "size": 0.684,
-     "angle": 27.5
+     "size": 0.858,
+     "angle": 26.4
     },
     {
      "unit": "ody-ii-04-boulder",
@@ -632,7 +632,7 @@
      "cls": "ACTION",
      "transition": "hold",
      "take": 2,
-     "size": 0.684,
+     "size": 0.858,
      "angle": null,
      "hold": "the men never look away from the door: the frame that watched him come in is the frame the stone shuts"
     },
@@ -645,7 +645,7 @@
      "transition": "cut",
      "take": 1,
      "size": 0.864,
-     "angle": 78.3
+     "angle": 177.4
     },
     {
      "unit": "ody-ii-06-plea",
@@ -655,8 +655,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.355,
-     "angle": 101.1
+     "size": 0.375,
+     "angle": 80.3
     },
     {
      "unit": "ody-ii-06-plea",
@@ -666,11 +666,11 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 2,
-     "size": 0.697,
-     "angle": 49.3,
+     "size": 0.854,
+     "angle": 71.2,
      "sub": 1,
      "at": 4,
-     "why": "the clean reverse the over-shoulder is asking for: his own face, at his own height. IT FOLLOWS: the suppliant is still walking to his knees when this cuts, and a locked station four metres from a surveyed mark measured him at 2.9x the frame"
+     "why": "the clean reverse the over-shoulder is asking for: his own face, at his own height. AUTHORED: at 1.25 m behind a seated giant the \"over-shoulder\" was 99 % blurred flesh, and the swing that fixed it in round 2 put the reverse where the suppliant was not"
     },
     {
      "unit": "ody-ii-07-pitiless",
@@ -681,7 +681,7 @@
      "transition": "cut",
      "take": 1,
      "size": 0.827,
-     "angle": 28.5
+     "angle": 68
     },
     {
      "unit": "ody-ii-07-pitiless",
@@ -691,11 +691,11 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 2,
-     "size": 0.667,
-     "angle": 38,
+     "size": 0.799,
+     "angle": 0.4,
      "sub": 1,
      "at": 4.2,
-     "why": "the men hearing that no god of theirs is coming"
+     "why": "the men hearing that no god of theirs is coming — AUTHORED, because the solver answered this reaction from 0.5 m inside the giant and photographed his hip"
     },
     {
      "unit": "ody-ii-08-shipfast",
@@ -705,8 +705,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 2,
-     "size": 0.865,
-     "angle": 65.5
+     "size": 0.895,
+     "angle": 67.2
     },
     {
      "unit": "ody-ii-09-shiplie",
@@ -716,8 +716,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 3,
-     "size": 0.69,
-     "angle": 101.3
+     "size": 0.937,
+     "angle": 147
     },
     {
      "unit": "ody-ii-09-shiplie",
@@ -727,11 +727,11 @@
      "cls": "OTS",
      "transition": "cut",
      "take": 2,
-     "size": 0.482,
-     "angle": 28,
+     "size": 1.427,
+     "angle": 68.6,
      "sub": 1,
      "at": 3.8,
-     "why": "from over his shoulder: the size of the man who is lying to him"
+     "why": "phase two closes: from just behind the man who has walked in, the size of the thing he is lying to"
     },
     {
      "unit": "ody-ii-10-firstmeal",
@@ -740,9 +740,9 @@
      "role": "action",
      "cls": "ACTION",
      "transition": "cut",
-     "take": 2,
-     "size": 0.857,
-     "angle": 40.5
+     "take": 1,
+     "size": 1.532,
+     "angle": 161.7
     },
     {
      "unit": "ody-ii-10-firstmeal",
@@ -751,12 +751,12 @@
      "role": "insert",
      "cls": "ACTION",
      "transition": "cut",
-     "take": 1,
-     "size": 0.833,
-     "angle": 9.3,
+     "take": 2,
+     "size": 1.556,
+     "angle": 113.2,
      "sub": 1,
      "at": 2.2,
-     "why": "the reach itself — the hand insert"
+     "why": "phase three — the reach itself, taken at the men's own end of it"
     },
     {
      "unit": "ody-ii-10-firstmeal",
@@ -766,11 +766,11 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 3,
-     "size": 0.487,
-     "angle": 53,
+     "size": 0.722,
+     "angle": 35.6,
      "sub": 2,
      "at": 3.8,
-     "why": "and immediately the faces, which is where the horror actually lives"
+     "why": "and immediately the faces, which is where the horror actually lives — the FACES, not a distant Ulysses at a seventh of the frame with the giant's back across him"
     },
     {
      "unit": "ody-ii-11-sword",
@@ -780,8 +780,8 @@
      "cls": "GATE",
      "transition": "cut",
      "take": 1,
-     "size": 0.371,
-     "angle": 141.5
+     "size": 0.367,
+     "angle": 56.4
     },
     {
      "unit": "ody-ii-11-sword",
@@ -791,8 +791,8 @@
      "cls": "GATE",
      "transition": "cut",
      "take": 1,
-     "size": 0.828,
-     "angle": 24.8,
+     "size": 0.925,
+     "angle": 78.8,
      "sub": 1,
      "at": 2.4,
      "why": "the decision becomes a grip — knuckles, guard, the blaze behind them"
@@ -805,8 +805,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 0.828,
-     "angle": 27.7
+     "size": 0.821,
+     "angle": 100.8
     },
     {
      "unit": "ody-ii-12-shiftstone",
@@ -816,11 +816,11 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 4,
-     "size": 0.669,
-     "angle": 44.9,
+     "size": 1.036,
+     "angle": 131.7,
      "sub": 1,
      "at": 2.2,
-     "why": "his eyes, doing the arithmetic that saves them"
+     "why": "his eyes, doing the arithmetic that saves them — AUTHORED, because the sprawl is nine metres of body across the whole south-west and the solved reverse looked straight through it"
     },
     {
      "unit": "ody-ii-12-shiftstone",
@@ -830,8 +830,8 @@
      "cls": "NARRATION",
      "transition": "cut",
      "take": 1,
-     "size": 0.671,
-     "angle": 46.2,
+     "size": 0.898,
+     "angle": 28.2,
      "sub": 2,
      "at": 4,
      "why": "and the mass that answers it: we should never be able to shift the stone"
@@ -845,7 +845,7 @@
      "transition": "cut",
      "take": 1,
      "size": 0.818,
-     "angle": 11.8
+     "angle": 60.5
     }
    ]
   },
@@ -1328,7 +1328,7 @@
   {
    "beat": 4,
    "set": "cave",
-   "units": 23,
+   "units": 24,
    "setups": [
     {
      "id": "CV-EST4",
@@ -1370,7 +1370,7 @@
      "name": "THE GIANT, FROM THE WEST",
      "role": "giant",
      "note": "the answering low angle from the mouth side — the eye unblinking",
-     "takes": 3
+     "takes": 4
     },
     {
      "id": "CV-HANDS",
@@ -1387,11 +1387,11 @@
      "takes": 1
     },
     {
-     "id": "CV-FIVEFACES",
-     "name": "FIVE FACES, LIT FROM BELOW",
-     "role": "reaction",
-     "note": "the drawn point is the lamp; the faces arrive before the weapon does",
-     "takes": 3
+     "id": "CV-GIANT-E",
+     "name": "THE GIANT, FROM HIS FEET (east)",
+     "role": "giant",
+     "note": "the scale angle: a waist-high lens east of the fire with a man at his feet",
+     "takes": 2
     },
     {
      "id": "CV-STONE",
@@ -1415,11 +1415,11 @@
      "takes": 1
     },
     {
-     "id": "CV-GIANT-E",
-     "name": "THE GIANT, FROM HIS FEET (east)",
-     "role": "giant",
-     "note": "the scale angle: a waist-high lens east of the fire with a man at his feet",
-     "takes": 1
+     "id": "CV-FIVEFACES",
+     "name": "FIVE FACES, LIT FROM BELOW",
+     "role": "reaction",
+     "note": "the drawn point is the lamp; the faces arrive before the weapon does",
+     "takes": 2
     },
     {
      "id": "CV-DAWNMOUTH",
@@ -1438,15 +1438,15 @@
    ],
    "stats": {
     "setups": 15,
-    "cuts": 21,
+    "cuts": 22,
     "holds": 1,
-    "returns": 7,
+    "returns": 8,
     "dissolves": 0,
-    "shots": 23,
-    "subCuts": 10,
+    "shots": 24,
+    "subCuts": 11,
     "secs": 51.9,
-    "asl": 2.25,
-    "cutsPerSetup": 1.4
+    "asl": 2.16,
+    "cutsPerSetup": 1.47
    },
    "cut": [
     {
@@ -1504,8 +1504,8 @@
      "cls": "CLOCK",
      "transition": "cut",
      "take": 1,
-     "size": 0.365,
-     "angle": 0.8
+     "size": 0.382,
+     "angle": 33.7
     },
     {
      "unit": "ody-iv-03-auger",
@@ -1515,8 +1515,8 @@
      "cls": "CLOCK",
      "transition": "cut",
      "take": 1,
-     "size": 0.813,
-     "angle": 81.1,
+     "size": 0.591,
+     "angle": 1.6,
      "sub": 1,
      "at": 1.5,
      "why": "the eye it is going into — one travel direction, kept across every cut"
@@ -1529,8 +1529,8 @@
      "cls": "CLOCK",
      "transition": "cut",
      "take": 1,
-     "size": 0.511,
-     "angle": 159.3
+     "size": 0.459,
+     "angle": 3.4
     },
     {
      "unit": "ody-iv-04-bore",
@@ -1540,8 +1540,8 @@
      "cls": "CLOCK",
      "transition": "cut",
      "take": 2,
-     "size": 0.77,
-     "angle": 55.2,
+     "size": 0.509,
+     "angle": 0.1,
      "sub": 1,
      "at": 1.6,
      "why": "the twisting hands, then what the twisting is doing to him"
@@ -1554,19 +1554,33 @@
      "cls": "CLOCK",
      "transition": "cut",
      "take": 1,
-     "size": 1.423,
-     "angle": 37.3
+     "size": 0.84,
+     "angle": 2.9
+    },
+    {
+     "unit": "ody-iv-05-hiss",
+     "setup": "CV-GIANT-W",
+     "name": "THE GIANT, FROM THE WEST",
+     "role": "giant",
+     "cls": "CLOCK",
+     "transition": "cut",
+     "take": 3,
+     "size": 0.71,
+     "angle": 47.3,
+     "sub": 1,
+     "at": 1.5,
+     "why": "the consequence, whole: seven metres of him off the floor, from a lens on the floor"
     },
     {
      "unit": "ody-iv-06-fright",
-     "setup": "CV-FIVEFACES",
-     "name": "FIVE FACES, LIT FROM BELOW",
-     "role": "reaction",
+     "setup": "CV-GIANT-E",
+     "name": "THE GIANT, FROM HIS FEET (east)",
+     "role": "giant",
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.704,
-     "angle": 50.8
+     "size": 4.49,
+     "angle": 25.1
     },
     {
      "unit": "ody-iv-06-fright",
@@ -1576,11 +1590,11 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.883,
-     "angle": 27.1,
+     "size": 0.885,
+     "angle": 38.2,
      "sub": 1,
-     "at": 1.4,
-     "why": "and where running away actually gets them: a shut stone"
+     "at": 1.3,
+     "why": "the shouting that fetches them, and then where running away actually gets the men: a shut stone — which by this second has the neighbours' first lamps in its cracks"
     },
     {
      "unit": "ody-iv-07-whatails",
@@ -1590,8 +1604,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.822,
-     "angle": 26.9
+     "size": 0.559,
+     "angle": 42.6
     },
     {
      "unit": "ody-iv-07-whatails",
@@ -1601,11 +1615,11 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 1,
-     "size": 0.73,
-     "angle": 26.3,
+     "size": 1.044,
+     "angle": 7,
      "sub": 1,
      "at": 3.8,
-     "why": "the only way the neighbours exist on screen: lamps crossing the cracks"
+     "why": "the only way the neighbours exist on screen: lamps crossing the cracks — and in round 3 there ARE lamps (the director's seam rig), which is why five shots of a shut rock were inert"
     },
     {
      "unit": "ody-iv-08-nomankilling",
@@ -1614,9 +1628,9 @@
      "role": "giant",
      "cls": "GIANT",
      "transition": "cut",
-     "take": 1,
-     "size": 0.972,
-     "angle": 61.2
+     "take": 2,
+     "size": 0.944,
+     "angle": 3.1
     },
     {
      "unit": "ody-iv-08-nomankilling",
@@ -1625,9 +1639,9 @@
      "role": "reaction",
      "cls": "ACTION",
      "transition": "cut",
-     "take": 2,
-     "size": 0.394,
-     "angle": 53.7,
+     "take": 1,
+     "size": 0.968,
+     "angle": 50.1,
      "sub": 1,
      "at": 1.8,
      "why": "the silent reaction of the men who hear the joke land"
@@ -1640,8 +1654,8 @@
      "cls": "DIALOGUE",
      "transition": "cut",
      "take": 2,
-     "size": 0.559,
-     "angle": 33.9
+     "size": 0.85,
+     "angle": 29.5
     },
     {
      "unit": "ody-iv-10-wentaway",
@@ -1651,7 +1665,7 @@
      "cls": "DIALOGUE",
      "transition": "hold",
      "take": 3,
-     "size": 0.559,
+     "size": 0.85,
      "angle": null,
      "hold": "the lamps recede past the very seams the men have not stopped staring at — a cut here would take away the thing that is going away"
     },
@@ -1663,8 +1677,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 2,
-     "size": 0.938,
-     "angle": 43.3
+     "size": 0.703,
+     "angle": 29.5
     },
     {
      "unit": "ody-iv-11-stone",
@@ -1673,12 +1687,12 @@
      "role": "giant",
      "cls": "ACTION",
      "transition": "cut",
-     "take": 3,
-     "size": 0.868,
-     "angle": 53.4,
+     "take": 4,
+     "size": 9,
+     "angle": 133.5,
      "sub": 1,
      "at": 2,
-     "why": "the boulder comes away in his hands"
+     "why": "the boulder comes away in his hands — and he is AT the door for it now: the grope leaves under the neighbours' departure, not after it, so the walk has time to arrive"
     },
     {
      "unit": "ody-iv-11-stone",
@@ -1688,8 +1702,8 @@
      "cls": "ACTION",
      "transition": "cut",
      "take": 1,
-     "size": 0.817,
-     "angle": 153.7,
+     "size": 0.835,
+     "angle": 26.1,
      "sub": 2,
      "at": 3.8,
      "why": "and the night opens a slit exactly the width of a man"
@@ -1702,8 +1716,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 1,
-     "size": 9,
-     "angle": 44.4
+     "size": 0.559,
+     "angle": 19.2
     },
     {
      "unit": "ody-iv-12-doorway",
@@ -1712,12 +1726,12 @@
      "role": "reaction",
      "cls": "ACTION",
      "transition": "cut",
-     "take": 3,
-     "size": 0.394,
-     "angle": 53.2,
+     "take": 2,
+     "size": 0.886,
+     "angle": 14,
      "sub": 1,
      "at": 2.4,
-     "why": "the captives doing the arithmetic of a doorway with a giant in it"
+     "why": "the captives doing the arithmetic of a doorway with a giant in it — read off their faces, lit by the very opening that is no use to them"
     },
     {
      "unit": "ody-iv-12-doorway",
@@ -1727,8 +1741,8 @@
      "cls": "GIANT",
      "transition": "cut",
      "take": 2,
-     "size": 9,
-     "angle": 0.3,
+     "size": 0.591,
+     "angle": 1.3,
      "sub": 2,
      "at": 4,
      "why": "and back to the geometry: the beat ends on the shape of the problem, wider than it began"
@@ -2584,6 +2598,7 @@
  "axis": {
   "law": "IN THE CAVE THE GIANT IS FRAME RIGHT AND THE MEN ARE FRAME LEFT; at sea the island is frame RIGHT and the ship frame LEFT — the direction she is leaving in.",
   "sides": {
+   "ody-ii-01-beg": -1,
    "ody-ii-02-present": -1,
    "ody-ii-05-strangers": 1,
    "ody-ii-06-plea": -1,
@@ -2606,8 +2621,6 @@
    "ody-iv-02-glowing": -1,
    "ody-iv-03-auger": -1,
    "ody-iv-04-bore": -1,
-   "ody-iv-05-hiss": 1,
-   "ody-iv-06-fright": -1,
    "ody-iv-08-nomankilling": 1,
    "ody-iv-12-doorway": 1,
    "ody-v-01-puzzling": -1,
@@ -4907,7 +4920,7 @@
    "unit": "ody-ii-01-beg",
    "beat": 2,
    "set": "cave",
-   "class": "NARRATION",
+   "class": "ACTION",
    "setup": "CV-RACKS",
    "setupName": "THE CHEESE RACKS",
    "setupRole": "geography",
@@ -4916,24 +4929,19 @@
    "reprise": null,
    "speaker": null,
    "subject": {
-    "m": [
-     640,
-     405
-    ],
-    "h": 2.7,
-    "y": 1.35
+    "a": "crew-0"
    },
    "over": null,
    "fg": null,
    "pos": [
-    -10.388,
-    1.7,
-    -0.432
+    2.233,
+    1.62,
+    0.44
    ],
    "lookAt": [
-    -1.349,
-    1.275,
-    -2.538
+    -0.03,
+    0.84,
+    -3.26
    ],
    "fov": 30,
    "move": {
@@ -4948,29 +4956,29 @@
     "near": 0.85
    },
    "read": {
-    "fill": 0.8,
-    "rim": 0.85,
-    "side": 1
+    "fill": 0.95,
+    "rim": 1.05,
+    "side": -1
    },
    "frame": {
-    "h": 2.7,
-    "point": true,
+    "h": 1.75,
+    "point": false,
     "fill": false,
-    "side": 0,
+    "side": -1,
     "sideLanded": -1,
-    "stationLegal": null,
-    "stationSees": null,
+    "stationLegal": true,
+    "stationSees": false,
     "liveAnchor": false,
-    "frac": 0.689,
-    "fracDesign": 0.543,
+    "frac": 0.903,
+    "fracDesign": 0.742,
     "inFrame": 1,
-    "cx": -0.173,
-    "cy": 0.005,
-    "floor": 0.2,
-    "crownPitch": 6.2,
+    "cx": -0.144,
+    "cy": -0.02,
+    "floor": 0.17,
+    "crownPitch": 1.7,
     "crownPitchMin": null,
-    "dist": 9.28,
-    "bearing": -73.7,
+    "dist": 4.4,
+    "bearing": 34.6,
     "comp": [
      -0.12,
      0.03
@@ -4978,11 +4986,11 @@
     "camY": 1.7,
     "follow": false,
     "anchor": [
-     -1.488,
-     1.35,
-     -3.027
+     -0.232,
+     0.875,
+     -3.128
     ],
-    "solved": "swung -76deg x0.92"
+    "solved": "AUTHORED (sight line blocked)"
    },
    "flags": {
     "intro": false,
@@ -4996,82 +5004,77 @@
      "unit": "ody-ii-01-beg",
      "beat": 2,
      "set": "cave",
-     "class": "NARRATION",
-     "setup": "CV-FIRE",
-     "setupName": "THE FIRE — THE SEIZE IN SHADOW",
-     "setupRole": "action",
+     "class": "ACTION",
+     "setup": "CV-GRIP",
+     "setupName": "THE HAND THAT TAKES THEM",
+     "setupRole": "insert",
      "transition": "cut",
      "hold": null,
      "reprise": null,
      "speaker": null,
      "subject": {
-      "m": [
-       640,
-       458
-      ],
-      "h": 2.4,
-      "y": 1.2
+      "a": "crew-0"
      },
      "over": null,
      "fg": null,
      "pos": [
-      3.074,
-      1.45,
-      4.865
+      1.163,
+      1.06,
+      -0.991
      ],
      "lookAt": [
-      -1.078,
-      1.2,
-      -0.487
+      -0.086,
+      0.859,
+      -3.222
      ],
-     "fov": 44,
+     "fov": 34,
      "move": {
       "k": "push",
-      "cms": 3.4,
+      "cms": 5,
       "dur": 10,
-      "m": 0.34
+      "m": 0.5
      },
      "dof": {
-      "fstop": 2.8,
+      "fstop": 2.2,
       "focus": "subject",
       "near": 0.85
      },
      "read": {
-      "fill": 0.8,
-      "rim": 0.85,
-      "side": 1
+      "fill": 2.2,
+      "rim": 4.4,
+      "side": -1
      },
      "frame": {
-      "h": 2.4,
-      "point": true,
-      "fill": false,
-      "side": 0,
+      "h": 1.75,
+      "point": false,
+      "fill": true,
+      "side": -1,
       "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.63,
-      "fracDesign": 0.44,
-      "inFrame": 1,
-      "cx": -0.14,
-      "cy": -0.028,
-      "floor": 0.2,
-      "crownPitch": 8,
+      "frac": 1.837,
+      "fracDesign": 1.119,
+      "inFrame": 0.544,
+      "cx": -0.203,
+      "cy": 0.03,
+      "floor": 0.17,
+      "crownPitch": 15.1,
       "crownPitchMin": null,
-      "dist": 6.75,
-      "bearing": 42.5,
+      "dist": 2.56,
+      "bearing": 33.1,
       "comp": [
-       -0.12,
-       0
+       -0.13,
+       0.02
       ],
-      "camY": 1.45,
+      "camY": 1.1,
       "follow": false,
       "anchor": [
-       -1.488,
-       1.2,
-       -0.11
+       -0.232,
+       0.875,
+       -3.128
       ],
-      "solved": "swung 4deg x1"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -5082,19 +5085,19 @@
      },
      "t": 3.8,
      "sub": 1,
-     "why": "the hearth the wealth is stacked around, planted on the angle all three meals will use",
-     "cutAngle": 134.6,
-     "cutMove": 14.47
+     "why": "the theft itself — a wheel of the giant's cheese in a man's arms, on the same insert angle his hand will take the men on",
+     "cutAngle": 1.5,
+     "cutMove": 1.87
     }
    ],
-   "cutAngle": 120,
-   "cutMove": 17.08
+   "cutAngle": 6,
+   "cutMove": 5.36
   },
   "ody-ii-02-present": {
    "unit": "ody-ii-02-present",
    "beat": 2,
    "set": "cave",
-   "class": "NARRATION",
+   "class": "DIALOGUE",
    "setup": "CV-ULY",
    "setupName": "ULYSSES, A MAN'S EYE",
    "setupRole": "single",
@@ -5108,16 +5111,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    -1.172,
+    0.6,
     1.58,
-    4.385
+    -2.9
    ],
    "lookAt": [
-    -1.637,
-    0.78,
-    -2.711
+    -2.748,
+    0.807,
+    -3.151
    ],
-   "fov": 30,
+   "fov": 44,
    "move": {
     "k": "push",
     "cms": 3,
@@ -5130,8 +5133,8 @@
     "near": 0.85
    },
    "read": {
-    "fill": 0.8,
-    "rim": 0.85,
+    "fill": 1,
+    "rim": 1,
     "side": -1
    },
    "frame": {
@@ -5140,19 +5143,19 @@
     "fill": false,
     "side": -1,
     "sideLanded": -1,
-    "stationLegal": null,
-    "stationSees": null,
+    "stationLegal": true,
+    "stationSees": true,
     "liveAnchor": false,
-    "frac": 0.506,
-    "fracDesign": 0.458,
+    "frac": 0.78,
+    "fracDesign": 0.633,
     "inFrame": 1,
-    "cx": -0.187,
-    "cy": 0.035,
-    "floor": 0.2,
-    "crownPitch": 1.4,
+    "cx": -0.214,
+    "cy": 0.029,
+    "floor": 0.3,
+    "crownPitch": 2.9,
     "crownPitchMin": null,
-    "dist": 7.13,
-    "bearing": 8.2,
+    "dist": 3.42,
+    "bearing": 92.6,
     "comp": [
      -0.17,
      0.05
@@ -5160,11 +5163,11 @@
     "camY": 1.58,
     "follow": false,
     "anchor": [
-     -2.186,
+     -2.744,
      0.875,
-     -2.641
+     -2.751
     ],
-    "solved": "swung 8deg x1"
+    "solved": "AUTHORED"
    },
    "flags": {
     "intro": false,
@@ -5178,7 +5181,7 @@
      "unit": "ody-ii-02-present",
      "beat": 2,
      "set": "cave",
-     "class": "NARRATION",
+     "class": "ACTION",
      "setup": "CV-MEN",
      "setupName": "THE MEN WATCHING",
      "setupRole": "reaction",
@@ -5192,14 +5195,14 @@
      "over": null,
      "fg": null,
      "pos": [
-      -5.512,
+      1.45,
       1.56,
-      3.181
+      1.1
      ],
      "lookAt": [
-      -1.899,
-      0.815,
-      -3.313
+      -1.029,
+      0.835,
+      -3.255
      ],
      "fov": 30,
      "move": {
@@ -5214,8 +5217,8 @@
       "near": 0.85
      },
      "read": {
-      "fill": 0.8,
-      "rim": 0.85,
+      "fill": 0.95,
+      "rim": 1.05,
       "side": -1
      },
      "frame": {
@@ -5224,19 +5227,19 @@
       "fill": false,
       "side": -1,
       "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.489,
-      "fracDesign": 0.438,
+      "frac": 0.761,
+      "fracDesign": 0.646,
       "inFrame": 1,
-      "cx": -0.145,
-      "cy": 0.01,
-      "floor": 0.2,
-      "crownPitch": 1.5,
+      "cx": -0.16,
+      "cy": -0.008,
+      "floor": 0.17,
+      "crownPitch": 2.2,
       "crownPitchMin": null,
-      "dist": 7.45,
-      "bearing": -25.4,
+      "dist": 5.05,
+      "bearing": 33.3,
       "comp": [
        -0.14,
        0.03
@@ -5244,11 +5247,11 @@
       "camY": 1.56,
       "follow": false,
       "anchor": [
-       -2.326,
+       -1.302,
        0.875,
-       -3.522
+       -3.082
       ],
-      "solved": "swung -28deg x1"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -5259,13 +5262,13 @@
      },
      "t": 4.2,
      "sub": 1,
-     "why": "the men who told him to take the cheeses and go — \"I would not listen to them\" needs a them",
-     "cutAngle": 33.7,
-     "cutMove": 4.5
+     "why": "the men he would not listen to, stopped a stride short of the daylight with the cheeses still in their arms",
+     "cutAngle": 51.2,
+     "cutMove": 4.09
     }
    ],
    "cutAngle": 26.8,
-   "cutMove": 4.28
+   "cutMove": 2.06
   },
   "ody-ii-03-return": {
    "unit": "ody-ii-03-return",
@@ -5290,14 +5293,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -0.873,
+    -1.188,
     1.66,
-    3.203
+    -2.939
    ],
    "lookAt": [
-    -7.939,
-    1.248,
-    -2.019
+    -8.249,
+    1.258,
+    -2.004
    ],
    "fov": 33,
    "move": {
@@ -5325,16 +5328,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.684,
-    "fracDesign": 0.5,
+    "frac": 0.858,
+    "fracDesign": 0.734,
     "inFrame": 1,
-    "cx": -0.093,
-    "cy": -0.011,
+    "cx": -0.186,
+    "cy": -0.015,
     "floor": 0.17,
-    "crownPitch": 6.1,
+    "crownPitch": 7.5,
     "crownPitchMin": null,
-    "dist": 8.78,
-    "bearing": 56.4,
+    "dist": 7.12,
+    "bearing": 100.4,
     "comp": [
      -0.1,
      0.02
@@ -5346,7 +5349,7 @@
      1.3,
      -1.651
     ],
-    "solved": "swung 28deg x1"
+    "solved": "swung 0deg x0.68 + backed off"
    },
    "flags": {
     "intro": false,
@@ -5355,8 +5358,8 @@
     "gateTarget": null,
     "sepLost": false
    },
-   "cutAngle": 27.5,
-   "cutMove": 4.64
+   "cutAngle": 26.4,
+   "cutMove": 4.83
   },
   "ody-ii-04-boulder": {
    "unit": "ody-ii-04-boulder",
@@ -5381,14 +5384,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -0.873,
+    -1.188,
     1.66,
-    3.203
+    -2.939
    ],
    "lookAt": [
-    -7.939,
-    1.248,
-    -2.019
+    -8.249,
+    1.258,
+    -2.004
    ],
    "fov": 33,
    "move": {
@@ -5416,16 +5419,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.684,
-    "fracDesign": 0.5,
+    "frac": 0.858,
+    "fracDesign": 0.734,
     "inFrame": 1,
-    "cx": -0.093,
-    "cy": -0.011,
+    "cx": -0.186,
+    "cy": -0.015,
     "floor": 0.17,
-    "crownPitch": 6.1,
+    "crownPitch": 7.5,
     "crownPitchMin": null,
-    "dist": 8.78,
-    "bearing": 56.4,
+    "dist": 7.12,
+    "bearing": 100.4,
     "comp": [
      -0.1,
      0.02
@@ -5437,7 +5440,7 @@
      1.3,
      -1.651
     ],
-    "solved": "swung 28deg x1"
+    "solved": "swung 0deg x0.68 + backed off"
    },
    "flags": {
     "intro": false,
@@ -5530,8 +5533,8 @@
     "gateTarget": null,
     "sepLost": false
    },
-   "cutAngle": 78.3,
-   "cutMove": 7.43
+   "cutAngle": 177.4,
+   "cutMove": 10.53
   },
   "ody-ii-06-plea": {
    "unit": "ody-ii-06-plea",
@@ -5551,14 +5554,14 @@
    "over": "poly-seat",
    "fg": null,
    "pos": [
-    -0.461,
+    0.031,
     3.4,
-    -2.677
+    -3.742
    ],
    "lookAt": [
-    3.182,
-    1.039,
-    5.608
+    -1.931,
+    1.029,
+    4.506
    ],
    "fov": 34,
    "move": {
@@ -5583,19 +5586,19 @@
     "fill": false,
     "side": -1,
     "sideLanded": -1,
-    "stationLegal": null,
-    "stationSees": null,
+    "stationLegal": true,
+    "stationSees": false,
     "liveAnchor": false,
-    "frac": 0.355,
-    "fracDesign": 0.308,
+    "frac": 0.375,
+    "fracDesign": 0.327,
     "inFrame": 1,
-    "cx": -0.2,
-    "cy": -0.081,
+    "cx": -0.195,
+    "cy": -0.08,
     "floor": 0.3,
-    "crownPitch": -10.4,
+    "crownPitch": -11.1,
     "crownPitchMin": null,
-    "dist": 9.31,
-    "bearing": -150.4,
+    "dist": 8.76,
+    "bearing": 172.5,
     "comp": [
      -0.19,
      -0.06
@@ -5603,11 +5606,11 @@
     "camY": 3.4,
     "follow": false,
     "anchor": [
-     3.959,
+     -1.066,
      0.875,
-     5.114
+     4.573
     ],
-    "solved": "UPSTAGE swung -32deg x1"
+    "solved": "AUTHORED (sight line blocked)"
    },
    "flags": {
     "intro": false,
@@ -5635,16 +5638,16 @@
      "over": null,
      "fg": null,
      "pos": [
-      -1.603,
+      1.8,
       1.58,
-      4.018
+      4
      ],
      "lookAt": [
-      3.871,
-      0.804,
-      5.517
+      -1.124,
+      0.813,
+      4.208
      ],
-     "fov": 28,
+     "fov": 46,
      "move": {
       "k": "push",
       "cms": 2.6,
@@ -5667,19 +5670,19 @@
       "fill": false,
       "side": -1,
       "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": true,
       "liveAnchor": false,
-      "frac": 0.697,
-      "fracDesign": 0.614,
+      "frac": 0.854,
+      "fracDesign": 0.686,
       "inFrame": 1,
-      "cx": -0.173,
-      "cy": 0.021,
+      "cx": -0.236,
+      "cy": 0.033,
       "floor": 0.3,
-      "crownPitch": 1.7,
+      "crownPitch": 3.3,
       "crownPitchMin": null,
-      "dist": 5.71,
-      "bearing": -101.1,
+      "dist": 3.01,
+      "bearing": 101.3,
       "comp": [
        -0.17,
        0.05
@@ -5687,11 +5690,11 @@
       "camY": 1.58,
       "follow": true,
       "anchor": [
-       3.959,
+       -1.066,
        0.875,
-       5.114
+       4.573
       ],
-      "solved": "UPSTAGE swung -48deg x0.84"
+      "solved": "AUTHORED"
      },
      "flags": {
       "intro": false,
@@ -5702,13 +5705,13 @@
      },
      "t": 4,
      "sub": 1,
-     "why": "the clean reverse the over-shoulder is asking for: his own face, at his own height. IT FOLLOWS: the suppliant is still walking to his knees when this cuts, and a locked station four metres from a surveyed mark measured him at 2.9x the frame",
-     "cutAngle": 49.3,
-     "cutMove": 7.03
+     "why": "the clean reverse the over-shoulder is asking for: his own face, at his own height. AUTHORED: at 1.25 m behind a seated giant the \"over-shoulder\" was 99 % blurred flesh, and the swing that fixed it in round 2 put the reverse where the suppliant was not",
+     "cutAngle": 71.2,
+     "cutMove": 8.15
     }
    ],
-   "cutAngle": 101.1,
-   "cutMove": 10.09
+   "cutAngle": 80.3,
+   "cutMove": 10.54
   },
   "ody-ii-07-pitiless": {
    "unit": "ody-ii-07-pitiless",
@@ -5812,16 +5815,16 @@
      "over": null,
      "fg": null,
      "pos": [
-      1.395,
-      1.56,
-      0.615
+      1.85,
+      1.4,
+      4.2
      ],
      "lookAt": [
-      5.087,
-      0.83,
-      4.886
+      5.304,
+      0.834,
+      4.959
      ],
-     "fov": 30,
+     "fov": 42,
      "move": {
       "k": "push",
       "cms": 3,
@@ -5844,19 +5847,19 @@
       "fill": false,
       "side": -1,
       "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.667,
-      "fracDesign": 0.575,
+      "frac": 0.799,
+      "fracDesign": 0.639,
       "inFrame": 1,
-      "cx": -0.153,
-      "cy": -0.003,
+      "cx": -0.143,
+      "cy": 0.009,
       "floor": 0.17,
-      "crownPitch": 1.9,
+      "crownPitch": 5.7,
       "crownPitchMin": null,
-      "dist": 5.68,
-      "bearing": -135.5,
+      "dist": 3.57,
+      "bearing": -97.1,
       "comp": [
        -0.14,
        0.03
@@ -5868,24 +5871,24 @@
        0.875,
        4.636
       ],
-      "solved": "UPSTAGE swung -92deg x0.76"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
       "blinding": false,
       "offstage": false,
       "gateTarget": null,
-      "sepLost": false
+      "sepLost": true
      },
      "t": 4.2,
      "sub": 1,
-     "why": "the men hearing that no god of theirs is coming",
-     "cutAngle": 38,
-     "cutMove": 7.33
+     "why": "the men hearing that no god of theirs is coming — AUTHORED, because the solver answered this reaction from 0.5 m inside the giant and photographed his hip",
+     "cutAngle": 0.4,
+     "cutMove": 7.37
     }
    ],
-   "cutAngle": 28.5,
-   "cutMove": 3.95
+   "cutAngle": 68,
+   "cutMove": 7.3
   },
   "ody-ii-08-shipfast": {
    "unit": "ody-ii-08-shipfast",
@@ -5905,21 +5908,21 @@
    "over": null,
    "fg": null,
    "pos": [
-    -5.315,
+    -5.237,
     1.05,
-    3.302
+    3.258
    ],
    "lookAt": [
-    1.001,
-    1.938,
-    -0.996
+    1.005,
+    1.939,
+    -0.99
    ],
    "fov": 44,
    "move": {
     "k": "push",
-    "cms": 3,
+    "cms": 4.2,
     "dur": 10,
-    "m": 0.3
+    "m": 0.42
    },
    "dof": {
     "fstop": 2.8,
@@ -5940,15 +5943,15 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.865,
-    "fracDesign": 0.694,
+    "frac": 0.895,
+    "fracDesign": 0.772,
     "inFrame": 1,
-    "cx": 0.121,
-    "cy": 0.064,
+    "cx": 0.123,
+    "cy": 0.065,
     "floor": 0.42,
-    "crownPitch": 22.4,
+    "crownPitch": 22.6,
     "crownPitchMin": 21,
-    "dist": 7.66,
+    "dist": 7.58,
     "bearing": -60.5,
     "comp": [
      0.12,
@@ -5961,7 +5964,7 @@
      2.03,
      -0.44
     ],
-    "solved": "swung -92deg x1"
+    "solved": "swung 16deg x1 + backed off"
    },
    "flags": {
     "intro": false,
@@ -5970,8 +5973,8 @@
     "gateTarget": null,
     "sepLost": false
    },
-   "cutAngle": 65.5,
-   "cutMove": 7.25
+   "cutAngle": 67.2,
+   "cutMove": 7.16
   },
   "ody-ii-09-shiplie": {
    "unit": "ody-ii-09-shiplie",
@@ -5988,19 +5991,19 @@
    "subject": {
     "a": "ulysses"
    },
-   "over": "poly-seat",
+   "over": null,
    "fg": null,
    "pos": [
-    0.34,
+    2.93,
     1.58,
-    -3.216
+    0.11
    ],
    "lookAt": [
-    -0.734,
-    0.804,
-    2.808
+    0.47,
+    0.816,
+    1.937
    ],
-   "fov": 26,
+   "fov": 42,
    "move": {
     "k": "push",
     "cms": 2.6,
@@ -6023,19 +6026,19 @@
     "fill": false,
     "side": -1,
     "sideLanded": -1,
-    "stationLegal": null,
-    "stationSees": null,
+    "stationLegal": true,
+    "stationSees": true,
     "liveAnchor": false,
-    "frac": 0.69,
-    "fracDesign": 0.616,
+    "frac": 0.937,
+    "fracDesign": 0.726,
     "inFrame": 1,
-    "cx": -0.172,
-    "cy": 0.025,
+    "cx": -0.21,
+    "cy": 0.003,
     "floor": 0.3,
-    "crownPitch": 1.6,
+    "crownPitch": 3.2,
     "crownPitchMin": null,
-    "dist": 6.15,
-    "bearing": 173.7,
+    "dist": 3.14,
+    "bearing": 133.1,
     "comp": [
      -0.17,
      0.05
@@ -6043,11 +6046,11 @@
     "camY": 1.58,
     "follow": false,
     "anchor": [
-     -0.326,
+     0.698,
      0.875,
-     2.861
+     2.201
     ],
-    "solved": "UPSTAGE swung 0deg x1"
+    "solved": "AUTHORED"
    },
    "flags": {
     "intro": false,
@@ -6070,21 +6073,21 @@
      "reprise": null,
      "speaker": "ULYSSES",
      "subject": {
-      "a": "ulysses"
+      "a": "poly-seat"
      },
      "over": "poly-seat",
      "fg": null,
      "pos": [
-      -2.727,
-      3.4,
-      -3.158
+      1.515,
+      1.85,
+      4.026
      ],
      "lookAt": [
-      -0.948,
-      0.994,
-      3.159
+      0.597,
+      2.161,
+      -0.401
      ],
-     "fov": 34,
+     "fov": 52,
      "move": {
       "k": "push",
       "cms": 2.6,
@@ -6099,39 +6102,39 @@
      "read": {
       "fill": 1,
       "rim": 0.95,
-      "side": -1
+      "side": 1
      },
      "frame": {
-      "h": 1.75,
+      "h": 4.3,
       "point": false,
-      "fill": false,
-      "side": -1,
-      "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "fill": true,
+      "side": 1,
+      "sideLanded": 1,
+      "stationLegal": true,
+      "stationSees": true,
       "liveAnchor": false,
-      "frac": 0.482,
-      "fracDesign": 0.411,
-      "inFrame": 1,
-      "cx": -0.208,
-      "cy": -0.084,
+      "frac": 1.427,
+      "fracDesign": 0.985,
+      "inFrame": 0.701,
+      "cx": 0.219,
+      "cy": -0.101,
       "floor": 0.3,
-      "crownPitch": -14.3,
+      "crownPitch": 27.5,
       "crownPitchMin": null,
-      "dist": 6.96,
-      "bearing": 201.7,
+      "dist": 4.47,
+      "bearing": 2.7,
       "comp": [
-       -0.19,
+       0.19,
        -0.06
       ],
       "camY": 3.4,
       "follow": false,
       "anchor": [
-       -0.326,
-       0.875,
-       2.861
+       1.302,
+       2.03,
+       -0.44
       ],
-      "solved": "UPSTAGE swung 12deg x1"
+      "solved": "AUTHORED"
      },
      "flags": {
       "intro": false,
@@ -6142,13 +6145,13 @@
      },
      "t": 3.8,
      "sub": 1,
-     "why": "from over his shoulder: the size of the man who is lying to him",
-     "cutAngle": 28,
-     "cutMove": 3.57
+     "why": "phase two closes: from just behind the man who has walked in, the size of the thing he is lying to",
+     "cutAngle": 68.6,
+     "cutMove": 4.17
     }
    ],
-   "cutAngle": 101.3,
-   "cutMove": 8.65
+   "cutAngle": 147,
+   "cutMove": 8.77
   },
   "ody-ii-10-firstmeal": {
    "unit": "ody-ii-10-firstmeal",
@@ -6168,16 +6171,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    -5.365,
+    6.708,
     1.45,
-    3.724
+    4.029
    ],
    "lookAt": [
-    5.268,
-    4.808,
-    2.984
+    1.892,
+    4.28,
+    4.487
    ],
-   "fov": 44,
+   "fov": 54,
    "move": {
     "k": "handheld",
     "amp": 0.01,
@@ -6202,16 +6205,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.857,
-    "fracDesign": 0.778,
-    "inFrame": 1,
-    "cx": 0.14,
-    "cy": 0.034,
+    "frac": 1.532,
+    "fracDesign": 1.966,
+    "inFrame": 0.653,
+    "cx": 0.233,
+    "cy": -0.253,
     "floor": 0.17,
-    "crownPitch": 32.9,
+    "crownPitch": 52.8,
     "crownPitchMin": null,
-    "dist": 11.14,
-    "bearing": -91,
+    "dist": 5.57,
+    "bearing": 88.5,
     "comp": [
      0.12,
      0
@@ -6219,18 +6222,18 @@
     "camY": 1.45,
     "follow": false,
     "anchor": [
-     5.252,
-     4.808,
-     3.903
+     1.907,
+     4.28,
+     3.907
     ],
-    "solved": "swung -80deg x0.76"
+    "solved": "CLAMPED to volume + at the wall"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
     "gateTarget": null,
-    "sepLost": false
+    "sepLost": true
    },
    "cuts": [
     {
@@ -6251,16 +6254,16 @@
      "over": null,
      "fg": null,
      "pos": [
-      0.755,
-      1.1,
-      4.995
+      2.6,
+      1.15,
+      2.1
      ],
      "lookAt": [
-      5.373,
-      0.847,
-      4.947
+      5.219,
+      0.858,
+      4.776
      ],
-     "fov": 34,
+     "fov": 26,
      "move": {
       "k": "push",
       "cms": 8,
@@ -6283,19 +6286,19 @@
       "fill": false,
       "side": -1,
       "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.833,
-      "fracDesign": 0.739,
-      "inFrame": 1,
-      "cx": -0.179,
-      "cy": 0.018,
+      "frac": 1.556,
+      "fracDesign": 1.01,
+      "inFrame": 0.643,
+      "cx": -0.17,
+      "cy": 0.001,
       "floor": 0.17,
-      "crownPitch": 8,
+      "crownPitch": 9.1,
       "crownPitchMin": null,
-      "dist": 4.61,
-      "bearing": -85.5,
+      "dist": 3.75,
+      "bearing": -132.7,
       "comp": [
        -0.13,
        0.02
@@ -6307,7 +6310,7 @@
        0.875,
        4.636
       ],
-      "solved": "swung -68deg x1 + backed off"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -6318,9 +6321,9 @@
      },
      "t": 2.2,
      "sub": 1,
-     "why": "the reach itself — the hand insert",
-     "cutAngle": 9.3,
-     "cutMove": 6.26
+     "why": "phase three — the reach itself, taken at the men's own end of it",
+     "cutAngle": 113.2,
+     "cutMove": 4.55
     },
     {
      "unit": "ody-ii-10-firstmeal",
@@ -6335,21 +6338,21 @@
      "reprise": null,
      "speaker": null,
      "subject": {
-      "a": "ulysses"
+      "a": "crew-0"
      },
      "over": null,
      "fg": null,
      "pos": [
-      6.663,
-      1.56,
-      4.107
+      1.85,
+      1.4,
+      4.2
      ],
      "lookAt": [
-      -0.241,
-      0.818,
-      2.414
+      5.304,
+      0.834,
+      4.959
      ],
-     "fov": 30,
+     "fov": 42,
      "move": {
       "k": "handheld",
       "amp": 0.012,
@@ -6371,19 +6374,19 @@
       "fill": false,
       "side": -1,
       "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.487,
-      "fracDesign": 0.458,
+      "frac": 0.722,
+      "fracDesign": 0.639,
       "inFrame": 1,
-      "cx": -0.137,
-      "cy": 0.011,
+      "cx": -0.131,
+      "cy": 0.005,
       "floor": 0.17,
-      "crownPitch": 1.5,
+      "crownPitch": 5.7,
       "crownPitchMin": null,
-      "dist": 7.13,
-      "bearing": 79.9,
+      "dist": 3.57,
+      "bearing": -97.1,
       "comp": [
        -0.14,
        0.03
@@ -6391,11 +6394,11 @@
       "camY": 1.56,
       "follow": false,
       "anchor": [
-       -0.326,
+       5.35,
        0.875,
-       2.861
+       4.636
       ],
-      "solved": "swung 88deg x1"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -6406,13 +6409,13 @@
      },
      "t": 3.8,
      "sub": 2,
-     "why": "and immediately the faces, which is where the horror actually lives",
-     "cutAngle": 53,
-     "cutMove": 5.99
+     "why": "and immediately the faces, which is where the horror actually lives — the FACES, not a distant Ulysses at a seventh of the frame with the giant's back across him",
+     "cutAngle": 35.6,
+     "cutMove": 2.24
     }
    ],
-   "cutAngle": 40.5,
-   "cutMove": 7.62
+   "cutAngle": 161.7,
+   "cutMove": 5.21
   },
   "ody-ii-11-sword": {
    "unit": "ody-ii-11-sword",
@@ -6433,14 +6436,14 @@
    "over": "ulysses",
    "fg": null,
    "pos": [
-    -5.94,
+    1.081,
     1.15,
-    2.055
+    -1.031
    ],
    "lookAt": [
-    -0.773,
-    0.817,
-    5.54
+    -0.811,
+    0.926,
+    4.909
    ],
    "fov": 30,
    "move": {
@@ -6468,16 +6471,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.371,
+    "frac": 0.367,
     "fracDesign": 0.3,
     "inFrame": 1,
-    "cx": -0.158,
-    "cy": -0.002,
+    "cx": -0.15,
+    "cy": 0.008,
     "floor": 0.22,
-    "crownPitch": 1.8,
+    "crownPitch": 2.8,
     "crownPitchMin": null,
-    "dist": 6.23,
-    "bearing": -120.1,
+    "dist": 6.22,
+    "bearing": 166.2,
     "comp": [
      -0.15,
      0.02
@@ -6485,11 +6488,11 @@
     "camY": 1.15,
     "follow": false,
     "anchor": [
-     -0.558,
-     0.85,
-     5.173
+     -0.398,
+     0.959,
+     5.011
     ],
-    "solved": "UPSTAGE swung 0deg x1"
+    "solved": "UPSTAGE swung -24deg x1"
    },
    "flags": {
     "intro": false,
@@ -6518,14 +6521,14 @@
      "over": null,
      "fg": null,
      "pos": [
-      -1.557,
+      1.831,
       0.9,
-      3.291
+      5.111
      ],
      "lookAt": [
-      -0.238,
-      0.877,
-      5.389
+      -0.391,
+      0.939,
+      4.849
      ],
      "fov": 34,
      "move": {
@@ -6553,16 +6556,16 @@
       "stationLegal": null,
       "stationSees": null,
       "liveAnchor": false,
-      "frac": 0.828,
-      "fracDesign": 0.654,
+      "frac": 0.925,
+      "fracDesign": 1.028,
       "inFrame": 1,
-      "cx": -0.216,
-      "cy": 0.045,
+      "cx": -0.2,
+      "cy": 0.068,
       "floor": 0.22,
-      "crownPitch": 8.1,
+      "crownPitch": 10.4,
       "crownPitchMin": null,
-      "dist": 2.47,
-      "bearing": -143.7,
+      "dist": 2.23,
+      "bearing": 87.4,
       "comp": [
        -0.14,
        0.03
@@ -6570,28 +6573,28 @@
       "camY": 0.9,
       "follow": false,
       "anchor": [
-       -0.093,
-       0.9,
-       5.283
+       -0.398,
+       0.959,
+       5.011
       ],
-      "solved": "UPSTAGE swung -96deg x0.52 + backed off"
+      "solved": "CLAMPED to volume + backed off"
      },
      "flags": {
       "intro": false,
       "blinding": false,
       "offstage": false,
       "gateTarget": null,
-      "sepLost": false
+      "sepLost": true
      },
      "t": 2.4,
      "sub": 1,
      "why": "the decision becomes a grip — knuckles, guard, the blaze behind them",
-     "cutAngle": 24.8,
-     "cutMove": 4.56
+     "cutAngle": 78.8,
+     "cutMove": 6.19
     }
    ],
-   "cutAngle": 141.5,
-   "cutMove": 12.78
+   "cutAngle": 56.4,
+   "cutMove": 5.29
   },
   "ody-ii-12-shiftstone": {
    "unit": "ody-ii-12-shiftstone",
@@ -6611,14 +6614,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -4.573,
+    -9.43,
     0.85,
-    -2.452
+    0.989
    ],
    "lookAt": [
-    5.743,
-    5.045,
-    3.007
+    2.091,
+    4.516,
+    2.915
    ],
    "fov": 44,
    "move": {
@@ -6646,16 +6649,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.828,
-    "fracDesign": 0.701,
+    "frac": 0.821,
+    "fracDesign": 0.71,
     "inFrame": 1,
-    "cx": 0.154,
-    "cy": 0.002,
+    "cx": 0.165,
+    "cy": -0.015,
     "floor": 0.42,
-    "crownPitch": 32.5,
+    "crownPitch": 30.6,
     "crownPitchMin": 21,
-    "dist": 12.36,
-    "bearing": -122.9,
+    "dist": 12.2,
+    "bearing": -104.4,
     "comp": [
      0.12,
      -0.05
@@ -6663,8 +6666,8 @@
     "camY": 0.85,
     "follow": false,
     "anchor": [
-     5.256,
-     4.809,
+     1.907,
+     4.28,
      3.907
     ],
     "solved": "UPSTAGE swung -92deg x1"
@@ -6695,16 +6698,16 @@
      "over": null,
      "fg": null,
      "pos": [
-      -6.588,
+      1.85,
       1.58,
-      3.293
+      4.15
      ],
      "lookAt": [
-      -0.692,
-      0.802,
-      5.576
+      -0.669,
+      0.822,
+      4.876
      ],
-     "fov": 26,
+     "fov": 44,
      "move": {
       "k": "push",
       "cms": 2.4,
@@ -6717,8 +6720,8 @@
       "near": 0.85
      },
      "read": {
-      "fill": 1,
-      "rim": 1,
+      "fill": 2.4,
+      "rim": 3.2,
       "side": -1
      },
      "frame": {
@@ -6727,19 +6730,19 @@
       "fill": false,
       "side": -1,
       "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": true,
       "liveAnchor": false,
-      "frac": 0.669,
-      "fracDesign": 0.596,
-      "inFrame": 1,
-      "cx": -0.173,
-      "cy": 0.022,
+      "frac": 1.036,
+      "fracDesign": 0.799,
+      "inFrame": 0.965,
+      "cx": -0.244,
+      "cy": 0.024,
       "floor": 0.3,
-      "crownPitch": 1.5,
+      "crownPitch": 3.7,
       "crownPitchMin": null,
-      "dist": 6.36,
-      "bearing": -107.3,
+      "dist": 2.71,
+      "bearing": 113,
       "comp": [
        -0.17,
        0.05
@@ -6751,7 +6754,7 @@
        0.875,
        5.173
       ],
-      "solved": "UPSTAGE swung -88deg x1"
+      "solved": "AUTHORED"
      },
      "flags": {
       "intro": false,
@@ -6762,9 +6765,9 @@
      },
      "t": 2.2,
      "sub": 1,
-     "why": "his eyes, doing the arithmetic that saves them",
-     "cutAngle": 44.9,
-     "cutMove": 6.13
+     "why": "his eyes, doing the arithmetic that saves them — AUTHORED, because the sprawl is nine metres of body across the whole south-west and the solved reverse looked straight through it",
+     "cutAngle": 131.7,
+     "cutMove": 11.74
     },
     {
      "unit": "ody-ii-12-shiftstone",
@@ -6789,14 +6792,14 @@
      "over": null,
      "fg": null,
      "pos": [
-      4.832,
+      2.803,
       1.3,
-      4.66
+      -1.293
      ],
      "lookAt": [
-      -8.619,
-      2.112,
-      -0.771
+      -8.216,
+      2.133,
+      -0.905
      ],
      "fov": 34,
      "move": {
@@ -6824,16 +6827,16 @@
       "stationLegal": null,
       "stationSees": null,
       "liveAnchor": false,
-      "frac": 0.671,
-      "fracDesign": 0.519,
+      "frac": 0.898,
+      "fracDesign": 0.682,
       "inFrame": 1,
-      "cx": 0.172,
-      "cy": 0.068,
+      "cx": 0.16,
+      "cy": 0.08,
       "floor": 0.2,
-      "crownPitch": 12.5,
+      "crownPitch": 16.2,
       "crownPitchMin": null,
-      "dist": 14.5,
-      "bearing": 64.1,
+      "dist": 11.03,
+      "bearing": 88.1,
       "comp": [
        0.13,
        0.02
@@ -6845,7 +6848,7 @@
        2.2,
        -1.651
       ],
-      "solved": "swung 44deg x1"
+      "solved": "swung 68deg x0.76"
      },
      "flags": {
       "intro": false,
@@ -6857,12 +6860,12 @@
      "t": 4,
      "sub": 2,
      "why": "and the mass that answers it: we should never be able to shift the stone",
-     "cutAngle": 46.2,
-     "cutMove": 11.5
+     "cutAngle": 28.2,
+     "cutMove": 5.53
     }
    ],
-   "cutAngle": 27.7,
-   "cutMove": 6.49
+   "cutAngle": 100.8,
+   "cutMove": 11.99
   },
   "ody-ii-13-tillmorning": {
    "unit": "ody-ii-13-tillmorning",
@@ -6943,17 +6946,17 @@
      1.3,
      0.55
     ],
-    "solved": "swung -8deg x0.45 + NO SEPARATION LEFT + backed off"
+    "solved": "swung -8deg x0.45 + backed off"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
     "gateTarget": null,
-    "sepLost": true
+    "sepLost": false
    },
-   "cutAngle": 11.8,
-   "cutMove": 1.84
+   "cutAngle": 60.5,
+   "cutMove": 6.48
   },
   "ody-iii-00-head": {
    "unit": "ody-iii-00-head",
@@ -9786,16 +9789,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    5.155,
-    0.95,
-    4.453
+    1.9,
+    2.45,
+    2.35
    ],
    "lookAt": [
-    0.068,
-    2.307,
-    4.682
+    -1.718,
+    1.274,
+    4.091
    ],
-   "fov": 40,
+   "fov": 50,
    "move": {
     "k": "handheld",
     "amp": 0.02,
@@ -9810,14 +9813,14 @@
     "near": 0.85,
     "rack": {
      "from": [
-      0.168,
-      2.417,
-      5.16
+      -1.475,
+      1.386,
+      4.523
      ],
      "to": [
-      2.656,
-      1.909,
-      3.907
+      -3.048,
+      1.14,
+      6.165
      ],
      "at": 0.12,
      "dur": 0.3
@@ -9831,22 +9834,22 @@
    "frame": {
     "h": 1.1,
     "point": true,
-    "fill": false,
+    "fill": true,
     "side": -1,
     "sideLanded": -1,
-    "stationLegal": null,
-    "stationSees": null,
+    "stationLegal": true,
+    "stationSees": true,
     "liveAnchor": false,
-    "frac": 0.365,
-    "fracDesign": 0.288,
+    "frac": 0.382,
+    "fracDesign": 0.284,
     "inFrame": 1,
-    "cx": -0.173,
-    "cy": 0.095,
+    "cx": -0.172,
+    "cy": 0.001,
     "floor": 0.18,
-    "crownPitch": 21.8,
+    "crownPitch": -7.3,
     "crownPitchMin": null,
-    "dist": 5.25,
-    "bearing": 98.1,
+    "dist": 4.15,
+    "bearing": 122.8,
     "comp": [
      -0.15,
      0.06
@@ -9854,18 +9857,18 @@
     "camY": 0.95,
     "follow": false,
     "anchor": [
-     0.168,
-     2.417,
-     5.16
+     -1.475,
+     1.386,
+     4.523
     ],
-    "solved": "UPSTAGE swung 84deg x1 + NO SEPARATION LEFT"
+    "solved": "AUTHORED"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
     "gateTarget": null,
-    "sepLost": true
+    "sepLost": false
    },
    "cuts": [
     {
@@ -9881,21 +9884,22 @@
      "reprise": null,
      "speaker": null,
      "subject": {
-      "a": "poly-idle"
+      "hd": "POLYPHEMUS",
+      "h": 1.3
      },
      "over": null,
      "fg": null,
      "pos": [
-      -5.943,
-      1.5,
-      3.603
+      0.55,
+      1.85,
+      3.55
      ],
      "lookAt": [
-      5.251,
-      4.9,
-      3.103
+      -2.914,
+      1.167,
+      6.357
      ],
-     "fov": 44,
+     "fov": 34,
      "move": {
       "k": "handheld",
       "amp": 0.022,
@@ -9915,24 +9919,24 @@
       "side": 1
      },
      "frame": {
-      "h": 7,
-      "point": false,
+      "h": 1.3,
+      "point": true,
       "fill": false,
-      "side": 1,
+      "side": 0,
       "sideLanded": 1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.813,
-      "fracDesign": 1.139,
+      "frac": 0.591,
+      "fracDesign": 0.472,
       "inFrame": 1,
-      "cx": 0.118,
-      "cy": 0.008,
+      "cx": 0.094,
+      "cy": -0.127,
       "floor": 0.18,
-      "crownPitch": 31.3,
+      "crownPitch": -0.8,
       "crownPitchMin": null,
-      "dist": 11.68,
-      "bearing": -91.6,
+      "dist": 4.5,
+      "bearing": 126,
       "comp": [
        0.1,
        -0.02
@@ -9940,11 +9944,11 @@
       "camY": 1.5,
       "follow": false,
       "anchor": [
-       5.256,
-       4.809,
-       3.907
+       -3.048,
+       1.14,
+       6.165
       ],
-      "solved": "swung -24deg x0.68 + backed off"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -9956,12 +9960,12 @@
      "t": 1.5,
      "sub": 1,
      "why": "the eye it is going into — one travel direction, kept across every cut",
-     "cutAngle": 81.1,
-     "cutMove": 11.14
+     "cutAngle": 1.6,
+     "cutMove": 1.9
     }
    ],
-   "cutAngle": 0.8,
-   "cutMove": 1.54
+   "cutAngle": 33.7,
+   "cutMove": 3.05
   },
   "ody-iv-04-bore": {
    "unit": "ody-iv-04-bore",
@@ -9982,16 +9986,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.707,
-    1,
-    4.653
+    1.15,
+    2.2,
+    2.8
    ],
    "lookAt": [
-    0.124,
-    2.391,
-    4.836
+    -1.761,
+    1.468,
+    4.927
    ],
-   "fov": 32,
+   "fov": 46,
    "move": {
     "k": "handheld",
     "amp": 0.02,
@@ -10010,22 +10014,22 @@
    "frame": {
     "h": 1.1,
     "point": true,
-    "fill": false,
+    "fill": true,
     "side": -1,
     "sideLanded": -1,
-    "stationLegal": null,
-    "stationSees": null,
+    "stationLegal": true,
+    "stationSees": true,
     "liveAnchor": false,
-    "frac": 0.511,
-    "fracDesign": 0.401,
+    "frac": 0.459,
+    "fracDesign": 0.354,
     "inFrame": 1,
-    "cx": -0.173,
-    "cy": 0.066,
+    "cx": -0.155,
+    "cy": -0.066,
     "floor": 0.18,
-    "crownPitch": 23.3,
+    "crownPitch": -2.4,
     "crownPitchMin": null,
-    "dist": 4.78,
-    "bearing": 96.4,
+    "dist": 3.66,
+    "bearing": 132.1,
     "comp": [
      -0.14,
      0.02
@@ -10033,11 +10037,11 @@
     "camY": 1,
     "follow": false,
     "anchor": [
-     0.168,
-     2.417,
-     5.16
+     -1.517,
+     1.498,
+     5.206
     ],
-    "solved": "UPSTAGE swung 80deg x1"
+    "solved": "AUTHORED"
    },
    "flags": {
     "intro": false,
@@ -10060,21 +10064,22 @@
      "reprise": null,
      "speaker": null,
      "subject": {
-      "a": "poly-seat"
+      "hd": "POLYPHEMUS",
+      "h": 1.3
      },
      "over": null,
      "fg": null,
      "pos": [
-      -5.391,
-      1.5,
-      3.618
+      1.45,
+      1.95,
+      2.55
      ],
      "lookAt": [
-      5.249,
-      5.011,
-      3.059
+      -2.913,
+      1.162,
+      6.29
      ],
-     "fov": 48,
+     "fov": 30,
      "move": {
       "k": "handheld",
       "amp": 0.022,
@@ -10091,24 +10096,24 @@
       "side": 1
      },
      "frame": {
-      "h": 7,
-      "point": false,
+      "h": 1.3,
+      "point": true,
       "fill": false,
-      "side": 1,
+      "side": 0,
       "sideLanded": 1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.77,
-      "fracDesign": 0.703,
+      "frac": 0.509,
+      "fracDesign": 0.419,
       "inFrame": 1,
-      "cx": 0.119,
-      "cy": 0.007,
+      "cx": 0.097,
+      "cy": -0.093,
       "floor": 0.18,
-      "crownPitch": 33,
+      "crownPitch": -1.7,
       "crownPitchMin": null,
-      "dist": 11.18,
-      "bearing": -91.6,
+      "dist": 5.79,
+      "bearing": 128,
       "comp": [
        0.1,
        -0.02
@@ -10116,11 +10121,11 @@
       "camY": 1.5,
       "follow": false,
       "anchor": [
-       5.256,
-       4.916,
-       3.907
+       -3.072,
+       1.131,
+       6.079
       ],
-      "solved": "swung -32deg x0.84"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -10132,12 +10137,12 @@
      "t": 1.6,
      "sub": 1,
      "why": "the twisting hands, then what the twisting is doing to him",
-     "cutAngle": 55.2,
-     "cutMove": 10.16
+     "cutAngle": 0.1,
+     "cutMove": 0.46
     }
    ],
-   "cutAngle": 159.3,
-   "cutMove": 10.71
+   "cutAngle": 3.4,
+   "cutMove": 1.02
   },
   "ody-iv-05-hiss": {
    "unit": "ody-iv-05-hiss",
@@ -10152,27 +10157,28 @@
    "reprise": null,
    "speaker": null,
    "subject": {
-    "a": "poly-seat"
+    "hd": "POLYPHEMUS",
+    "h": 1.3
    },
    "over": null,
    "fg": null,
    "pos": [
-    1.356,
-    1.45,
-    0.767
+    1.05,
+    3.1,
+    2.55
    ],
    "lookAt": [
-    5.729,
-    4.565,
-    3.581
+    -2.521,
+    1.602,
+    6.952
    ],
-   "fov": 52,
+   "fov": 20,
    "move": {
     "k": "handheld",
-    "amp": 0.04,
+    "amp": 0.045,
     "dur": 11,
-    "at": 1.15,
-    "pre": 0.14,
+    "at": 0.4,
+    "pre": 0.1,
     "decay": 3
    },
    "dof": {
@@ -10186,36 +10192,36 @@
     "side": 1
    },
    "frame": {
-    "h": 7,
-    "point": false,
+    "h": 1.3,
+    "point": true,
     "fill": true,
-    "side": 1,
+    "side": 0,
     "sideLanded": 1,
-    "stationLegal": null,
-    "stationSees": null,
+    "stationLegal": true,
+    "stationSees": true,
     "liveAnchor": false,
-    "frac": 1.423,
-    "fracDesign": 1.19,
-    "inFrame": 0.703,
-    "cx": 0.206,
-    "cy": 0.057,
+    "frac": 0.84,
+    "fracDesign": 0.629,
+    "inFrame": 1,
+    "cx": 0.122,
+    "cy": -0.045,
     "floor": 0.18,
-    "crownPitch": 53.9,
+    "crownPitch": -7.9,
     "crownPitchMin": null,
-    "dist": 6.03,
-    "bearing": -128.8,
+    "dist": 5.86,
+    "bearing": 139,
     "comp": [
      0.11,
-     0.1
+     0.06
     ],
     "camY": 1.45,
     "follow": false,
     "anchor": [
-     5.256,
-     4.809,
-     3.907
+     -2.677,
+     1.662,
+     6.837
     ],
-    "solved": "UPSTAGE swung -96deg x0.6"
+    "solved": "AUTHORED"
    },
    "flags": {
     "intro": false,
@@ -10224,83 +10230,186 @@
     "gateTarget": null,
     "sepLost": false
    },
-   "cutAngle": 37.3,
-   "cutMove": 7.32
+   "cuts": [
+    {
+     "unit": "ody-iv-05-hiss",
+     "beat": 4,
+     "set": "cave",
+     "class": "CLOCK",
+     "setup": "CV-GIANT-W",
+     "setupName": "THE GIANT, FROM THE WEST",
+     "setupRole": "giant",
+     "transition": "cut",
+     "hold": null,
+     "reprise": null,
+     "speaker": null,
+     "subject": {
+      "m": [
+       786,
+       531
+      ],
+      "h": 2.6,
+      "y": 1.1
+     },
+     "over": null,
+     "fg": null,
+     "pos": [
+      2.9,
+      2.6,
+      0.2
+     ],
+     "lookAt": [
+      2.507,
+      1.028,
+      4.039
+     ],
+     "fov": 64,
+     "move": {
+      "k": "handheld",
+      "amp": 0.03,
+      "dur": 6,
+      "at": 0.1,
+      "pre": 0.1,
+      "decay": 1.4
+     },
+     "dof": {
+      "fstop": 2.8,
+      "focus": "subject",
+      "near": 0.85
+     },
+     "read": {
+      "fill": 1,
+      "rim": 1.15,
+      "side": 1
+     },
+     "frame": {
+      "h": 2.6,
+      "point": true,
+      "fill": true,
+      "side": 0,
+      "sideLanded": 1,
+      "stationLegal": true,
+      "stationSees": false,
+      "liveAnchor": false,
+      "frac": 0.71,
+      "fracDesign": 0.505,
+      "inFrame": 1,
+      "cx": 0.267,
+      "cy": -0.129,
+      "floor": 0.18,
+      "crownPitch": -3,
+      "crownPitchMin": null,
+      "dist": 4.12,
+      "bearing": 165,
+      "comp": [
+       0.14,
+       0.03
+      ],
+      "camY": 1.5,
+      "follow": false,
+      "anchor": [
+       1.907,
+       1.1,
+       3.907
+      ],
+      "solved": "AUTHORED (sight line blocked)"
+     },
+     "flags": {
+      "intro": false,
+      "blinding": false,
+      "offstage": false,
+      "gateTarget": null,
+      "sepLost": false
+     },
+     "t": 1.5,
+     "sub": 1,
+     "why": "the consequence, whole: seven metres of him off the floor, from a lens on the floor",
+     "cutAngle": 47.3,
+     "cutMove": 3.03
+    }
+   ],
+   "cutAngle": 2.9,
+   "cutMove": 1.22
   },
   "ody-iv-06-fright": {
    "unit": "ody-iv-06-fright",
    "beat": 4,
    "set": "cave",
    "class": "ACTION",
-   "setup": "CV-FIVEFACES",
-   "setupName": "FIVE FACES, LIT FROM BELOW",
-   "setupRole": "reaction",
+   "setup": "CV-GIANT-E",
+   "setupName": "THE GIANT, FROM HIS FEET (east)",
+   "setupRole": "giant",
    "transition": "cut",
    "hold": null,
    "reprise": null,
    "speaker": null,
    "subject": {
-    "a": "ulysses"
+    "m": [
+     786,
+     531
+    ],
+    "h": 2.6,
+    "y": 1.1
    },
    "over": null,
    "fg": null,
    "pos": [
-    -0.442,
-    1.05,
-    5.066
+    1.55,
+    1.9,
+    1.9
    ],
    "lookAt": [
-    4.93,
-    0.848,
-    5.234
+    2.081,
+    1.138,
+    3.891
    ],
-   "fov": 28,
+   "fov": 50,
    "move": {
     "k": "handheld",
-    "amp": 0.012,
-    "dur": 7
+    "amp": 0.02,
+    "dur": 6
    },
    "dof": {
-    "fstop": 2,
+    "fstop": 2.8,
     "focus": "subject",
     "near": 0.85
    },
    "read": {
-    "fill": 0.95,
-    "rim": 1.05,
-    "side": -1
+    "fill": 2.6,
+    "rim": 3.4,
+    "side": 1
    },
    "frame": {
-    "h": 1.75,
-    "point": false,
-    "fill": false,
-    "side": -1,
-    "sideLanded": -1,
-    "stationLegal": null,
-    "stationSees": null,
+    "h": 2.6,
+    "point": true,
+    "fill": true,
+    "side": 0,
+    "sideLanded": 1,
+    "stationLegal": true,
+    "stationSees": true,
     "liveAnchor": false,
-    "frac": 0.704,
-    "fracDesign": 0.653,
-    "inFrame": 1,
-    "cx": -0.135,
-    "cy": 0.014,
+    "frac": 4.49,
+    "fracDesign": 1.273,
+    "inFrame": 0.057,
+    "cx": 1.845,
+    "cy": 1.076,
     "floor": 0.17,
-    "crownPitch": 7.4,
+    "crownPitch": 13.8,
     "crownPitchMin": null,
-    "dist": 5.37,
-    "bearing": -88.6,
+    "dist": 2.19,
+    "bearing": -169.9,
     "comp": [
-     -0.13,
-     0.02
+     0.1,
+     -0.04
     ],
     "camY": 1.05,
     "follow": false,
     "anchor": [
-     4.924,
-     0.875,
-     4.938
+     1.907,
+     1.1,
+     3.907
     ],
-    "solved": "swung -36deg x0.52"
+    "solved": "AUTHORED"
    },
    "flags": {
     "intro": false,
@@ -10333,16 +10442,16 @@
      "over": null,
      "fg": null,
      "pos": [
-      2.611,
+      1.139,
       1.3,
-      1.014
+      -4.705
      ],
      "lookAt": [
-      -8.372,
-      2.132,
-      -0.919
+      -7.935,
+      2.126,
+      -0.864
      ],
-     "fov": 34,
+     "fov": 41.5,
      "move": {
       "k": "handheld",
       "amp": 0.014,
@@ -10354,8 +10463,8 @@
       "near": 0.85
      },
      "read": {
-      "fill": 0.95,
-      "rim": 1.05,
+      "fill": 2.8,
+      "rim": 3.4,
       "side": 1
      },
      "frame": {
@@ -10367,16 +10476,16 @@
       "stationLegal": null,
       "stationSees": null,
       "liveAnchor": false,
-      "frac": 0.883,
-      "fracDesign": 0.674,
+      "frac": 0.885,
+      "fracDesign": 0.763,
       "inFrame": 1,
-      "cx": 0.218,
-      "cy": 0.086,
+      "cx": 0.072,
+      "cy": 0.104,
       "floor": 0.17,
-      "crownPitch": 16.1,
+      "crownPitch": 18.1,
       "crownPitchMin": null,
-      "dist": 11.16,
-      "bearing": 76.1,
+      "dist": 9.85,
+      "bearing": 108.1,
       "comp": [
        0.13,
        0.02
@@ -10388,7 +10497,7 @@
        2.2,
        -1.651
       ],
-      "solved": "swung 56deg x0.68"
+      "solved": "UPSTAGE swung 88deg x0.6 + widened"
      },
      "flags": {
       "intro": false,
@@ -10397,15 +10506,15 @@
       "gateTarget": null,
       "sepLost": false
      },
-     "t": 1.4,
+     "t": 1.3,
      "sub": 1,
-     "why": "and where running away actually gets them: a shut stone",
-     "cutAngle": 27.1,
-     "cutMove": 5.08
+     "why": "the shouting that fetches them, and then where running away actually gets the men: a shut stone — which by this second has the neighbours' first lamps in its cracks",
+     "cutAngle": 38.2,
+     "cutMove": 6.64
     }
    ],
-   "cutAngle": 50.8,
-   "cutMove": 4.68
+   "cutAngle": 25.1,
+   "cutMove": 2.28
   },
   "ody-iv-07-whatails": {
    "unit": "ody-iv-07-whatails",
@@ -10430,14 +10539,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    -0.543,
+    4.314,
     1.66,
-    4.988
+    4.213
    ],
    "lookAt": [
-    -7.714,
-    1.848,
-    -2.501
+    -7.766,
+    1.83,
+    -2.83
    ],
    "fov": 28,
    "move": {
@@ -10465,16 +10574,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.822,
-    "fracDesign": 0.676,
+    "frac": 0.559,
+    "fracDesign": 0.46,
     "inFrame": 1,
-    "cx": -0.167,
-    "cy": 0.045,
+    "cx": -0.148,
+    "cy": 0.033,
     "floor": 0.3,
-    "crownPitch": 10.1,
+    "crownPitch": 7.5,
     "crownPitchMin": null,
-    "dist": 10.35,
-    "bearing": 47.6,
+    "dist": 13.95,
+    "bearing": 63.6,
     "comp": [
      -0.16,
      0.02
@@ -10486,7 +10595,7 @@
      1.9,
      -1.981
     ],
-    "solved": "swung 20deg x0.68 + backed off"
+    "solved": "swung 36deg x1"
    },
    "flags": {
     "intro": false,
@@ -10519,16 +10628,16 @@
      "over": null,
      "fg": null,
      "pos": [
-      3.135,
+      1.45,
       1.85,
-      1.28
+      1.4
      ],
      "lookAt": [
-      -8.032,
-      2.009,
-      -2.515
+      -8.051,
+      1.979,
+      -2.363
      ],
-     "fov": 26,
+     "fov": 22,
      "move": {
       "k": "push",
       "cms": 2.4,
@@ -10551,19 +10660,19 @@
       "fill": false,
       "side": 0,
       "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.73,
-      "fracDesign": 0.588,
-      "inFrame": 1,
-      "cx": -0.084,
-      "cy": -0.039,
+      "frac": 1.044,
+      "fracDesign": 0.806,
+      "inFrame": 0.958,
+      "cx": -0.067,
+      "cy": -0.037,
       "floor": 0.3,
-      "crownPitch": 8,
+      "crownPitch": 9.2,
       "crownPitchMin": null,
-      "dist": 11.78,
-      "bearing": 73.9,
+      "dist": 10.21,
+      "bearing": 70.7,
       "comp": [
        -0.12,
        -0.04
@@ -10575,7 +10684,7 @@
        1.9,
        -1.981
       ],
-      "solved": "swung 56deg x0.68"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -10586,13 +10695,13 @@
      },
      "t": 3.8,
      "sub": 1,
-     "why": "the only way the neighbours exist on screen: lamps crossing the cracks",
-     "cutAngle": 26.3,
-     "cutMove": 5.23
+     "why": "the only way the neighbours exist on screen: lamps crossing the cracks — and in round 3 there ARE lamps (the director's seam rig), which is why five shots of a shut rock were inert",
+     "cutAngle": 7,
+     "cutMove": 4.02
     }
    ],
-   "cutAngle": 26.9,
-   "cutMove": 5.09
+   "cutAngle": 42.6,
+   "cutMove": 9.47
   },
   "ody-iv-08-nomankilling": {
    "unit": "ody-iv-08-nomankilling",
@@ -10607,21 +10716,21 @@
    "reprise": null,
    "speaker": "POLYPHEMUS",
    "subject": {
-    "a": "poly-seat"
+    "a": "poly-idle"
    },
    "over": null,
    "fg": null,
    "pos": [
-    -1.148,
+    0.771,
     1.05,
-    5.051
+    -5.014
    ],
    "lookAt": [
-    5.015,
-    4.959,
-    3.05
+    2.802,
+    4.448,
+    3.732
    ],
-   "fov": 60,
+   "fov": 50,
    "move": {
     "k": "push",
     "cms": 4,
@@ -10634,9 +10743,9 @@
     "near": 0.85
    },
    "read": {
-    "fill": 1.05,
-    "rim": 1.15,
-    "side": 1
+    "fill": 2.4,
+    "rim": 6.8,
+    "side": -1
    },
    "frame": {
     "h": 7,
@@ -10647,16 +10756,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.972,
-    "fracDesign": 0.999,
-    "inFrame": 0.985,
-    "cx": 0.144,
-    "cy": -0.058,
+    "frac": 0.944,
+    "fracDesign": 1.326,
+    "inFrame": 1,
+    "cx": 0.125,
+    "cy": -0.019,
     "floor": 0.42,
-    "crownPitch": 48.1,
+    "crownPitch": 36.8,
     "crownPitchMin": 21,
-    "dist": 7.51,
-    "bearing": -79.9,
+    "dist": 9.56,
+    "bearing": 187.3,
     "comp": [
      0.12,
      -0.04
@@ -10664,18 +10773,18 @@
     "camY": 1.05,
     "follow": false,
     "anchor": [
-     5.256,
-     4.809,
+     1.907,
+     4.28,
      3.907
     ],
-    "solved": "swung -92deg x0.52 + at the wall"
+    "solved": "CLAMPED to volume + backed off"
    },
    "flags": {
     "intro": false,
     "blinding": false,
     "offstage": false,
     "gateTarget": null,
-    "sepLost": false
+    "sepLost": true
    },
    "cuts": [
     {
@@ -10691,21 +10800,21 @@
      "reprise": null,
      "speaker": "POLYPHEMUS",
      "subject": {
-      "a": "ulysses"
+      "a": "crew-0"
      },
      "over": null,
      "fg": null,
      "pos": [
-      -1.889,
-      1.05,
-      -2.814
+      1.6,
+      1.45,
+      3.2
      ],
      "lookAt": [
-      4.964,
-      0.826,
-      4.14
+      4.548,
+      0.852,
+      4.374
      ],
-     "fov": 28,
+     "fov": 40,
      "move": {
       "k": "push",
       "cms": 3,
@@ -10718,8 +10827,8 @@
       "near": 0.85
      },
      "read": {
-      "fill": 0.95,
-      "rim": 1.05,
+      "fill": 2.8,
+      "rim": 3.8,
       "side": -1
      },
      "frame": {
@@ -10728,19 +10837,19 @@
       "fill": false,
       "side": -1,
       "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.394,
-      "fracDesign": 0.36,
+      "frac": 0.968,
+      "fracDesign": 0.747,
       "inFrame": 1,
-      "cx": -0.134,
-      "cy": 0.017,
+      "cx": -0.132,
+      "cy": -0.013,
       "floor": 0.17,
-      "crownPitch": 4.1,
+      "crownPitch": 5.4,
       "crownPitchMin": null,
-      "dist": 9.75,
-      "bearing": -132.3,
+      "dist": 3.22,
+      "bearing": -107,
       "comp": [
        -0.13,
        0.02
@@ -10748,11 +10857,11 @@
       "camY": 1.05,
       "follow": false,
       "anchor": [
-       5.326,
+       4.628,
        0.875,
-       3.742
+       4.127
       ],
-      "solved": "UPSTAGE swung -84deg x1"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -10764,12 +10873,12 @@
      "t": 1.8,
      "sub": 1,
      "why": "the silent reaction of the men who hear the joke land",
-     "cutAngle": 53.7,
-     "cutMove": 7.9
+     "cutAngle": 50.1,
+     "cutMove": 8.27
     }
    ],
-   "cutAngle": 61.2,
-   "cutMove": 5.76
+   "cutAngle": 3.1,
+   "cutMove": 6.5
   },
   "ody-iv-09-mustbeill": {
    "unit": "ody-iv-09-mustbeill",
@@ -10794,14 +10903,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.314,
+    1.296,
     1.66,
-    4.213
+    -2.253
    ],
    "lookAt": [
-    -7.766,
-    1.83,
-    -2.83
+    -8.206,
+    1.853,
+    -2.625
    ],
    "fov": 28,
    "move": {
@@ -10829,16 +10938,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.559,
-    "fracDesign": 0.46,
+    "frac": 0.85,
+    "fracDesign": 0.676,
     "inFrame": 1,
-    "cx": -0.148,
-    "cy": 0.033,
+    "cx": -0.185,
+    "cy": 0.04,
     "floor": 0.3,
-    "crownPitch": 7.5,
+    "crownPitch": 11,
     "crownPitchMin": null,
-    "dist": 13.95,
-    "bearing": 63.6,
+    "dist": 9.49,
+    "bearing": 91.6,
     "comp": [
      -0.16,
      0.02
@@ -10850,7 +10959,7 @@
      1.9,
      -1.981
     ],
-    "solved": "swung 36deg x1"
+    "solved": "swung 64deg x0.68"
    },
    "flags": {
     "intro": false,
@@ -10859,8 +10968,8 @@
     "gateTarget": null,
     "sepLost": false
    },
-   "cutAngle": 33.9,
-   "cutMove": 9.39
+   "cutAngle": 29.5,
+   "cutMove": 5.47
   },
   "ody-iv-10-wentaway": {
    "unit": "ody-iv-10-wentaway",
@@ -10885,14 +10994,14 @@
    "over": null,
    "fg": null,
    "pos": [
-    4.314,
+    1.296,
     1.66,
-    4.213
+    -2.253
    ],
    "lookAt": [
-    -7.766,
-    1.83,
-    -2.83
+    -8.206,
+    1.853,
+    -2.625
    ],
    "fov": 28,
    "move": {
@@ -10920,16 +11029,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.559,
-    "fracDesign": 0.46,
+    "frac": 0.85,
+    "fracDesign": 0.676,
     "inFrame": 1,
-    "cx": -0.148,
-    "cy": 0.033,
+    "cx": -0.185,
+    "cy": 0.04,
     "floor": 0.3,
-    "crownPitch": 7.5,
+    "crownPitch": 11,
     "crownPitchMin": null,
-    "dist": 13.95,
-    "bearing": 63.6,
+    "dist": 9.49,
+    "bearing": 91.6,
     "comp": [
      -0.16,
      0.02
@@ -10941,7 +11050,7 @@
      1.9,
      -1.981
     ],
-    "solved": "swung 36deg x1"
+    "solved": "swung 64deg x0.68"
    },
    "flags": {
     "intro": false,
@@ -10974,16 +11083,16 @@
    "over": null,
    "fg": null,
    "pos": [
-    1.163,
+    4.832,
     1.3,
-    -4.713
+    4.66
    ],
    "lookAt": [
-    -7.918,
-    2.121,
-    -0.809
+    -8.619,
+    2.112,
+    -0.771
    ],
-   "fov": 44,
+   "fov": 34,
    "move": {
     "k": "push",
     "cms": 8,
@@ -11009,16 +11118,16 @@
     "stationLegal": null,
     "stationSees": null,
     "liveAnchor": false,
-    "frac": 0.938,
-    "fracDesign": 0.762,
-    "inFrame": 0.975,
-    "cx": 0.079,
-    "cy": 0.108,
+    "frac": 0.703,
+    "fracDesign": 0.519,
+    "inFrame": 1,
+    "cx": 0.18,
+    "cy": 0.071,
     "floor": 0.17,
-    "crownPitch": 18,
+    "crownPitch": 12.5,
     "crownPitchMin": null,
-    "dist": 9.88,
-    "bearing": 108.1,
+    "dist": 14.5,
+    "bearing": 64.1,
     "comp": [
      0.13,
      0.02
@@ -11030,7 +11139,7 @@
      2.2,
      -1.651
     ],
-    "solved": "UPSTAGE swung 88deg x0.68 + at the wall"
+    "solved": "swung 44deg x1"
    },
    "flags": {
     "intro": false,
@@ -11053,21 +11162,21 @@
      "reprise": null,
      "speaker": null,
      "subject": {
-      "a": "poly-seat"
+      "a": "poly-idle"
      },
      "over": null,
      "fg": null,
      "pos": [
-      -10.521,
-      1.5,
-      -1.772
+      -1.6,
+      1.3,
+      3
      ],
      "lookAt": [
-      2.987,
-      3.402,
-      4.668
+      1.516,
+      3.47,
+      5.03
      ],
-     "fov": 36.5,
+     "fov": 44,
      "move": {
       "k": "push",
       "cms": 10,
@@ -11087,22 +11196,22 @@
      "frame": {
       "h": 7,
       "point": false,
-      "fill": false,
+      "fill": true,
       "side": 1,
-      "sideLanded": 1,
-      "stationLegal": null,
-      "stationSees": null,
+      "sideLanded": 0,
+      "stationLegal": true,
+      "stationSees": true,
       "liveAnchor": true,
-      "frac": 0.868,
-      "fracDesign": 0.76,
-      "inFrame": 1,
-      "cx": 0.113,
-      "cy": 0.056,
+      "frac": 9,
+      "fracDesign": 2.016,
+      "inFrame": 0,
+      "cx": 0,
+      "cy": 0,
       "floor": 0.17,
-      "crownPitch": 20.2,
+      "crownPitch": 57.1,
       "crownPitchMin": null,
-      "dist": 15.07,
-      "bearing": -118.4,
+      "dist": 4.3,
+      "bearing": -127.2,
       "comp": [
        0.09,
        0.02
@@ -11110,11 +11219,11 @@
       "camY": 1.5,
       "follow": false,
       "anchor": [
-       2.613,
+       1.341,
        3.5,
-       5.331
+       5.231
       ],
-      "solved": "UPSTAGE swung -60deg x0.6 + widened"
+      "solved": "AUTHORED"
      },
      "flags": {
       "intro": false,
@@ -11125,9 +11234,9 @@
      },
      "t": 2,
      "sub": 1,
-     "why": "the boulder comes away in his hands",
-     "cutAngle": 53.4,
-     "cutMove": 12.05
+     "why": "the boulder comes away in his hands — and he is AT the door for it now: the grope leaves under the neighbours' departure, not after it, so the walk has time to arrive",
+     "cutAngle": 133.5,
+     "cutMove": 6.64
     },
     {
      "unit": "ody-iv-11-stone",
@@ -11152,14 +11261,14 @@
      "over": null,
      "fg": null,
      "pos": [
-      2.531,
+      2.401,
       2.4,
-      1.124
+      1.077
      ],
      "lookAt": [
-      -6.457,
-      2.035,
-      -2.596
+      -6.459,
+      2.037,
+      -2.59
      ],
      "fov": 46,
      "move": {
@@ -11187,15 +11296,15 @@
       "stationLegal": null,
       "stationSees": null,
       "liveAnchor": false,
-      "frac": 0.817,
-      "fracDesign": 0.691,
+      "frac": 0.835,
+      "fracDesign": 0.909,
       "inFrame": 1,
-      "cx": -0.007,
-      "cy": 0.032,
+      "cx": -0.005,
+      "cy": 0.031,
       "floor": 0.17,
-      "crownPitch": 11.6,
+      "crownPitch": 11.8,
       "crownPitchMin": null,
-      "dist": 9.72,
+      "dist": 9.59,
       "bearing": 70,
       "comp": [
        -0.06,
@@ -11208,7 +11317,7 @@
        2.2,
        -2.201
       ],
-      "solved": "swung -20deg x1 + backed off"
+      "solved": "swung -56deg x0.76 + backed off"
      },
      "flags": {
       "intro": false,
@@ -11220,12 +11329,12 @@
      "t": 3.8,
      "sub": 2,
      "why": "and the night opens a slit exactly the width of a man",
-     "cutAngle": 153.7,
-     "cutMove": 13.4
+     "cutAngle": 26.1,
+     "cutMove": 4.57
     }
    ],
-   "cutAngle": 43.3,
-   "cutMove": 9.47
+   "cutAngle": 29.5,
+   "cutMove": 7.77
   },
   "ody-iv-12-doorway": {
    "unit": "ody-iv-12-doorway",
@@ -11240,19 +11349,19 @@
    "reprise": null,
    "speaker": null,
    "subject": {
-    "a": "poly-idle"
+    "a": "poly-seat"
    },
    "over": null,
    "fg": null,
    "pos": [
-    0.26,
+    0.3,
     1.45,
-    4.72
+    4.05
    ],
    "lookAt": [
-    0.568,
-    3.508,
-    5.033
+    -8.688,
+    2.212,
+    1.418
    ],
    "fov": 52,
    "move": {
@@ -11272,24 +11381,24 @@
     "side": 1
    },
    "frame": {
-    "h": 7,
+    "h": 4.3,
     "point": false,
     "fill": false,
     "side": 1,
-    "sideLanded": 0,
+    "sideLanded": 1,
     "stationLegal": true,
-    "stationSees": true,
+    "stationSees": false,
     "liveAnchor": true,
-    "frac": 9,
-    "fracDesign": 3.427,
-    "inFrame": 0,
-    "cx": 0,
-    "cy": 0,
+    "frac": 0.559,
+    "fracDesign": 0.472,
+    "inFrame": 1,
+    "cx": 0.138,
+    "cy": -0.034,
     "floor": 0.42,
-    "crownPitch": 85.6,
+    "crownPitch": 16.3,
     "crownPitchMin": 21,
-    "dist": 2.09,
-    "bearing": -163.8,
+    "dist": 9.35,
+    "bearing": 68,
     "comp": [
      0.12,
      -0.04
@@ -11297,11 +11406,11 @@
     "camY": 1.45,
     "follow": false,
     "anchor": [
-     0.379,
-     3.5,
-     5.13
+     -8.349,
+     2.03,
+     0.55
     ],
-    "solved": "AUTHORED"
+    "solved": "AUTHORED (sight line blocked)"
    },
    "flags": {
     "intro": false,
@@ -11329,16 +11438,16 @@
      "over": null,
      "fg": null,
      "pos": [
-      -1.889,
-      1.05,
-      -2.814
+      1.6,
+      1.45,
+      3.2
      ],
      "lookAt": [
-      4.964,
-      0.826,
-      4.14
+      5.237,
+      0.851,
+      4.711
      ],
-     "fov": 28,
+     "fov": 34,
      "move": {
       "k": "push",
       "cms": 3,
@@ -11361,19 +11470,19 @@
       "fill": false,
       "side": -1,
       "sideLanded": -1,
-      "stationLegal": null,
-      "stationSees": null,
+      "stationLegal": true,
+      "stationSees": false,
       "liveAnchor": false,
-      "frac": 0.394,
-      "fracDesign": 0.36,
+      "frac": 0.886,
+      "fracDesign": 0.72,
       "inFrame": 1,
-      "cx": -0.134,
-      "cy": 0.017,
+      "cx": -0.132,
+      "cy": -0.015,
       "floor": 0.17,
-      "crownPitch": 4.1,
+      "crownPitch": 4.4,
       "crownPitchMin": null,
-      "dist": 9.75,
-      "bearing": -132.3,
+      "dist": 3.97,
+      "bearing": -108.6,
       "comp": [
        -0.13,
        0.02
@@ -11383,9 +11492,9 @@
       "anchor": [
        5.326,
        0.875,
-       3.742
+       4.457
       ],
-      "solved": "UPSTAGE swung -84deg x1"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -11396,9 +11505,9 @@
      },
      "t": 2.4,
      "sub": 1,
-     "why": "the captives doing the arithmetic of a doorway with a giant in it",
-     "cutAngle": 53.2,
-     "cutMove": 7.84
+     "why": "the captives doing the arithmetic of a doorway with a giant in it — read off their faces, lit by the very opening that is no use to them",
+     "cutAngle": 14,
+     "cutMove": 1.55
     },
     {
      "unit": "ody-iv-12-doorway",
@@ -11413,19 +11522,19 @@
      "reprise": null,
      "speaker": null,
      "subject": {
-      "a": "poly-idle"
+      "a": "poly-seat"
      },
      "over": null,
      "fg": null,
      "pos": [
-      0.26,
-      1.45,
-      4.72
+      1.1,
+      1.55,
+      3.3
      ],
      "lookAt": [
-      0.519,
-      3.504,
-      5.071
+      -8.544,
+      2.114,
+      1.235
      ],
      "fov": 46,
      "move": {
@@ -11445,36 +11554,36 @@
       "side": 1
      },
      "frame": {
-      "h": 7,
+      "h": 4.3,
       "point": false,
       "fill": false,
       "side": 1,
-      "sideLanded": 0,
+      "sideLanded": 1,
       "stationLegal": true,
-      "stationSees": true,
+      "stationSees": false,
       "liveAnchor": true,
-      "frac": 9,
-      "fracDesign": 3.938,
-      "inFrame": 0,
-      "cx": 0,
-      "cy": 0,
+      "frac": 0.591,
+      "fracDesign": 0.514,
+      "inFrame": 1,
+      "cx": 0.115,
+      "cy": -0.014,
       "floor": 0.42,
-      "crownPitch": 85.6,
+      "crownPitch": 15,
       "crownPitchMin": 21,
-      "dist": 2.09,
-      "bearing": -163.8,
+      "dist": 9.85,
+      "bearing": 73.8,
       "comp": [
        0.1,
        -0.02
       ],
-      "camY": 1.45,
+      "camY": 1.55,
       "follow": false,
       "anchor": [
-       0.379,
-       3.5,
-       5.13
+       -8.349,
+       2.03,
+       0.55
       ],
-      "solved": "AUTHORED"
+      "solved": "AUTHORED (sight line blocked)"
      },
      "flags": {
       "intro": false,
@@ -11486,12 +11595,12 @@
      "t": 4,
      "sub": 2,
      "why": "and back to the geometry: the beat ends on the shape of the problem, wider than it began",
-     "cutAngle": 0.3,
-     "cutMove": 7.84
+     "cutAngle": 1.3,
+     "cutMove": 0.52
     }
    ],
-   "cutAngle": 44.4,
-   "cutMove": 4.36
+   "cutAngle": 19.2,
+   "cutMove": 3.76
   },
   "ody-v-00-head": {
    "unit": "ody-v-00-head",
@@ -15925,7 +16034,23 @@
  },
  "warnings": [
   "ody-i-08-cave: camera CLAMPED to the shore volume",
-  "ody-ii-11-sword: gate target sword not live at bake time",
-  "ody-ii-11-sword: gate target sword not live at bake time"
+  "ody-ii-01-beg: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-ii-01-beg: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-ii-02-present: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-ii-06-plea: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-ii-07-pitiless: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-ii-10-firstmeal: EDGE-CUT — only 65% of the subject is in frame (size 1.53)",
+  "ody-ii-10-firstmeal: EDGE-CUT — only 64% of the subject is in frame (size 1.56)",
+  "ody-ii-10-firstmeal: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-ii-10-firstmeal: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-iv-03-auger: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-iv-04-bore: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-iv-05-hiss: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-iv-07-whatails: EDGE-CUT — only 96% of the subject is in frame (size 1.04)",
+  "ody-iv-07-whatails: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-iv-08-nomankilling: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-iv-12-doorway: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-iv-12-doorway: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture",
+  "ody-iv-12-doorway: SIGHT LINE BLOCKED — the authored station looks at its subject through the cave's own furniture"
  ]
 }

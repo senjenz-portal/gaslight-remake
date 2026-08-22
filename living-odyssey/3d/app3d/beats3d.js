@@ -514,7 +514,15 @@ export class Director {
     if (!b.userData.home) b.userData.home = { p: b.position.clone(), rz: b.rotation.z };
     const h = b.userData.home;
     const e = 1 - clamp01(k);                    /* 0 shut … 1 rolled aside */
-    b.position.set(h.p.x + 4.9 * e, h.p.y - 0.55 * e, h.p.z + 2.1 * e);
+    /* WHERE AN OPEN DOOR PARKS (round 3). The old aside offset put the stone
+       down at world (-2.6, -3.0) — the middle of the floor, one metre from the
+       cheese-rack mark, and it stood in front of the men for the whole of Beat
+       II's opening: Sol saw "near-identical empty cave compositions" because
+       the bodies were behind a boulder. A door leans against the wall BESIDE
+       its doorway. This offset rolls it north-west to (-5.6, -5.4), between
+       the mouth and the first rack, where it belongs and where it blocks no
+       sight line into the room. */
+    b.position.set(h.p.x + 3.40 * e, h.p.y - 0.55 * e, h.p.z - 1.49 * e);
     b.rotation.z = h.rz - 1.25 * e;
     this.boulderK = k;
   }
@@ -615,6 +623,128 @@ export class Director {
   /** the pantomime rail's own hook — pours 2 and 3 ride the autos */
   fx(name, delay = 0) {
     if (name === 'pour') this._pour(false, delay);
+  }
+
+  /* ================= ROUND 3 · THE TWO THINGS THAT WERE NEVER STAGED =======
+   * Sol's Beat II note is not about the camera: "0:00–0:16 cycles through
+   * near-identical empty cave, fire and boulder compositions. NOTHING ACTS,
+   * DISCOVERS OR REACTS." He is right, and the ledger was honest — the leaf
+   * said `cheese-rack` and all that act did was PARK four bodies at a mark.
+   * The text says the men stole the cheeses and were stopped; nothing in the
+   * scene graph ever picked a cheese up. Same at Beat IV 23–41 s: the leaf
+   * says the neighbours gather at the stone and go away again, and the set
+   * had no light for them to carry, so five shots photographed a shut rock.
+   * Behaviour has to EXIST before a lens can find it.
+   * ====================================================================== */
+
+  /** THE STOLEN CHEESE — a wheel off the rack, carried in a man's arms, and
+   *  dropped where he drops it. Parented into the body, so it walks with him;
+   *  the spill group is the director's, so a re-seek cannot leave two. */
+  _cheese(a, on, { silent = false } = {}) {
+    if (!a) return;
+    if (on && !a.__cheese) {
+      const m = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.185, 0.20, 0.135, 16),
+        new THREE.MeshStandardMaterial({ color: 0xf6e6bc, roughness: 0.88, metalness: 0 }));
+      m.rotation.set(Math.PI / 2, 0, 0);   /* the flat face out, to the lens */
+      m.position.set(0.05, 1.14, 0.30);    /* held against the chest, arms round it */
+      m.castShadow = true;
+      m.name = 'stolen-cheese';
+      a.group.add(m);
+      a.__cheese = m;
+    }
+    if (a.__cheese) a.__cheese.visible = !!on;
+    void silent;
+  }
+  /** the wheels hit the floor when the men bolt — the visible consequence of
+   *  a man dropping what he was stealing */
+  _dropCheeses(silent = false) {
+    if (!this._spill) {
+      this._spill = new THREE.Group();
+      this._spill.name = 'dropped-cheeses';
+    }
+    if (this._spill.parent !== this.stage.scene) this.stage.scene.add(this._spill);
+    for (const a of this._crew(CREW_POOL)) {
+      const c = a && a.__cheese;
+      if (!c || !c.visible) continue;
+      const w = c.getWorldPosition(new THREE.Vector3());
+      a.group.remove(c);
+      a.__cheese = null;
+      this._spill.add(c);
+      c.rotation.set(Math.PI / 2, 0, 0.5 + this._spill.children.length * 0.4);
+      c.position.copy(w);
+      const y0 = w.y;
+      this._mover('cheese-drop-' + a.id, 0.5, (k) => {
+        c.position.y = y0 + (0.085 - y0) * easeInOut(k);
+      }, { silent });
+    }
+  }
+  _clearSpill() {
+    if (!this._spill) return;
+    for (const c of this._spill.children.slice()) this._spill.remove(c);
+  }
+
+  /** THE NEIGHBOURS' LAMPS. They are never seen — the reader is inside — so
+   *  they exist as light in the cracks of the shut stone: a vertical arc of
+   *  slivers round the boulder's rim that gathers, holds, and then RECEDES
+   *  westward and dies, which is the only way "then they went away" can be a
+   *  picture instead of a caption. */
+  _seamRig() {
+    if (!this._seams) {
+      const g = new THREE.Group();
+      g.name = 'neighbour-lamps';
+      const geo = new THREE.PlaneGeometry(1, 1);
+      /* the arc is measured off the shut stone: x just inside the rim, the
+         slivers climbing its west shoulder from floor to crown */
+      /* MEASURED OFF THE STONE, NOT GUESSED. The shut boulder's own mass runs
+         x -10.9..-4.9: bars authored at x -8.5 were buried INSIDE it and the
+         first render of this rig photographed a rock with nothing on it. They
+         belong a hand's breadth proud of its EAST face, where a crack would
+         actually show, in a line up its downstage shoulder. */
+      const arc = [[-4.78, 0.45, -4.30, 0.17, 0.80], [-4.80, 1.35, -4.62, 0.14, 1.35],
+        [-4.82, 2.35, -4.40, 0.19, 1.70], [-4.80, 3.35, -3.75, 0.15, 1.35],
+        [-4.78, 4.05, -2.80, 0.13, 1.05], [-4.76, 3.40, -1.60, 0.15, 1.45],
+        [-4.74, 2.20, -0.95, 0.14, 1.25], [-4.72, 1.05, -1.10, 0.17, 0.85]];
+      for (const [x, y, z, w, h] of arc) {
+        const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+          color: 0xffe0a8, transparent: true, opacity: 0, depthWrite: false,
+          toneMapped: false, side: THREE.DoubleSide }));
+        m.position.set(x, y, z);
+        m.scale.set(w, h, 1);
+        m.rotation.y = Math.PI / 2 + 0.18;    /* facing into the room */
+        g.add(m);
+      }
+      const L = new THREE.PointLight(0xffc477, 0, 9, 2);
+      L.position.set(-5.6, 2.3, -2.8);
+      g.add(L);
+      this._seams = g;
+      this._seamLight = L;
+    }
+    if (this._seams.parent !== this.stage.scene) this.stage.scene.add(this._seams);
+    return this._seams;
+  }
+  /** k 0..1 how bright the crowd outside is · slide −1..1 where it stands */
+  _seamsAt(k, slide = 0) {
+    const g = this._seamRig();
+    const bars = g.children.filter((c) => c.isMesh);
+    bars.forEach((m, i) => {
+      /* the crowd is a MOVING pool of lamps: each sliver answers the slide, so
+         the light travels along the rim instead of just fading in place */
+      const at = (i / (bars.length - 1)) * 2 - 1;
+      const w = Math.max(0, 1 - Math.abs(at - slide) * 1.15);
+      m.material.opacity = clamp01(k) * (0.30 + 0.70 * w);
+      m.visible = m.material.opacity > 0.004;
+    });
+    if (this._seamLight) this._seamLight.intensity = clamp01(k) * 14;
+    this.seamK = clamp01(k);
+  }
+  _seamsTo(k, slide, dur, { silent = false, delay = 0 } = {}) {
+    const k0 = this.seamK || 0, s0 = this.seamSlide || 0;
+    this._mover('seams', dur, (x) => {
+      const e = easeInOut(x);
+      this._seamsAt(k0 + (k - k0) * e, s0 + (slide - s0) * e);
+    }, { silent, delay });
+    this.seamK = k; this.seamSlide = slide;
   }
 
   /** arm ONE of the sea set's ballistic rocks. The scheduler stays pure
@@ -734,7 +864,9 @@ export class Director {
       },
 
       /* ---------- BEATS II–V · THE CAVE ---------- */
-      'cave-dawn': (silent) => S._grade('cave-dawn', silent),
+      /* the leaf's own park puts the party in the mouth for the heading wide;
+         this act owns the HOUR and clears what the last read left lying about */
+      'cave-dawn': (silent) => { S._grade('cave-dawn', silent); S._clearSpill(); S._seamsAt(0); },
       'cave-shut': (silent) => S._grade('cave-shut', silent),
       'cave-embers': (silent) => { S._grade('cave-embers', silent); S._giantSprawl(silent); },
       'cave-predawn': (silent) => {
@@ -765,14 +897,32 @@ export class Director {
         S._crew(CREW_POOL).slice(left.length).forEach((c) => S._off(c));
         S._stand(A('ulysses'), caveAt(933, 528), -1.2);
       },
-      'cheese-rack': (silent) => {
+      /* THE THEFT (Sol II #1: "men stealing cheese"). They stand at the racks
+         with a wheel each already in their arms, on the audited corridor, and
+         Ulysses is planted between them and the daylight — the whole tragedy
+         of the chapter is that tableau, and it was never staged. */
+      'cheese-steal': (silent) => {
+        S._clearSpill();
         const crew = S._aliveCrew();
-        const spots = S._cluster(caveAt(640, 398), crew.length, 71041, 1.0);
-        crew.forEach((c, i) => S._stand(c, spots[i], -2.2));
-        S._crew(CREW_POOL).slice(crew.length).forEach((c) => S._off(c));
-        S._stand(A('ulysses'), caveAt(610, 412), -2.0);
+        const spots = S._cluster(caveAt(716, 402), crew.length, 71041, 1.05);
+        crew.forEach((c, i) => {
+          S._stand(c, spots[i], i === 0 ? -3.0 : 0.12 + 0.10 * i);
+          S._cheese(c, true, { silent });
+        });
+        S._crew(CREW_POOL).slice(crew.length).forEach((c) => { S._cheese(c, false); S._off(c); });
+        S._stand(A('ulysses'), caveAt(586, 410), 1.62);   /* barring the way out */
+      },
+      /* THE STOP AT THE ENTRANCE (Sol II #1: "stopping at the entrance"). They
+         start for the door with the cheeses and are halted a stride short of
+         the man who will not listen to them. The walk is the corridor's own. */
+      'cheese-halt': (silent) => {
+        const crew = S._aliveCrew();
+        crew.forEach((c, i) => S._walkRoute(c, [716 + (i - 1) * 16, 402],
+          [648 + i * 15, 404], { silent, delay: 0.18 * i, label: 'cave:for-the-door' }));
+        S._stand(A('ulysses'), caveAt(586, 410), 1.62);
       },
       'huddle-far': (silent) => {                  /* the scatter to the far dark */
+        S._dropCheeses(silent);                    /* the wheels hit the floor */
         const rnd = mulberry32(71051);
         S._aliveCrew().forEach((c, i) => {
           const tx = CAVE_MARKS.huddle[0] + (rnd() - 0.5) * 56;
@@ -785,12 +935,25 @@ export class Director {
       },
       'giant-seat': () => { S._seatGiant(); },
       suppliant: (silent) => {
+        /* HE HAS TO ARRIVE INSIDE HIS OWN LINE. At walking pace the kneel took
+           longer than the plea, so the reverse angle was cut on a man still
+           four metres upstage of the mark it was framed for, and the giant ate
+           the frame. A suppliant crosses a floor faster than that. */
         S._walkRoute(A('ulysses'), CAVE_MARKS.huddle, CAVE_MARKS.suppliant,
-          { silent, label: 'cave:huddle->suppliant' });
+          { speed: 1.75, silent, label: 'cave:huddle->suppliant' });
+      },
+      /* PHASE 2 OF THE STANDOFF (Sol II #2). A shot/reverse that never changes
+         the distance between two bodies is coverage; the relation has to move.
+         He kneels at four metres to beg, and then — to sell the wrecked-ship
+         lie — he WALKS IN to under three, which is what makes the giant's own
+         reach, one unit later, land on a man who came to him. */
+      'advance-lie': (silent) => {
+        S._walkRoute(A('ulysses'), CAVE_MARKS.suppliant, [734, 500],
+          { silent, label: 'cave:suppliant->lie' });
       },
       'sword-ulysses': (silent) => {
-        S._walkRoute(A('ulysses'), CAVE_MARKS.suppliant, CAVE_MARKS.sword,
-          { silent, label: 'cave:suppliant->sword' });
+        S._walkRoute(A('ulysses'), [734, 500], CAVE_MARKS.sword,
+          { silent, label: 'cave:lie->sword' });
         const sw = S._prop('sword');
         if (sw) sw.visible = true;
         S.swordLive = true;
@@ -883,19 +1046,28 @@ export class Director {
           1.3, { silent });
       },
       'stake-drive': (silent) => {
-        /* THE LINE: the beam runs from the men's hands at the lower left up
-           into the eye at the upper right — one clean diagonal, with the two
-           who lean on it DOWNSTAGE of the sprawl so the frame reads back to
-           front. Nine hundred millimetres of honest air between beam and face. */
-        const butt = caveAt(612, 596, 1.15);
-        const eye = caveAt(706, 556, 2.35);
+        /* THE LINE, RE-SURVEYED (round 3). The beam ran from (612,596) to an
+           "eye" at (706,556) — and the eye is not there. The sprawl's HEAD
+           BONE measures at world (-3.30, 1.00, 5.19), which is plate (562,554):
+           the old drive point was three and a half metres EAST of the face it
+           was supposed to be going into, so the whole blinding was a beam being
+           pushed into open air with the giant's shoulder in the way of every
+           lens. It also parked the two men at z ≈ 6.8-7.2 m — two metres
+           outside the cave's own camera volume — so no legal station could see
+           their hands and his eye in one frame.
+             The beam now runs WEST from the men's hands into the measured eye,
+           along z ≈ 5.2, and both ends sit inside the pocket a camera can
+           stand in. This is the geometry the three authored stations in
+           shots3d_bake.mjs (STAKE / EYE / CONTACT) are cut against. */
+        const butt = caveAt(710, 552, 1.55);
+        const eye = caveAt(573, 557, 1.45);
         S._moveProp('stake', butt.clone().lerp(eye, 0.52),
           new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0),
             eye.clone().sub(butt).normalize()), 2.4, { silent });
         if (!silent) S.driveSpin = { t0: S.t + 1.2 };
-        S._walkRoute(A('ulysses'), [648, 517], [604, 583], { silent, label: 'cave:drive-u' });
+        S._walkRoute(A('ulysses'), [648, 517], [700, 548], { silent, label: 'cave:drive-u' });
         S._crew(1).forEach((c) => {
-          S._walkRoute(c, [668, 521], [650, 590], { silent, label: 'cave:drive-crew' });
+          S._walkRoute(c, [668, 521], [726, 556], { silent, label: 'cave:drive-crew' });
         });
         /* a pile of four at one mark is what makes this frame unreadable */
         S._crew(CREW_POOL).slice(1).forEach((c) => S._fade(c, 0, 0.8, silent));
@@ -937,13 +1109,52 @@ export class Director {
             { speed: SCURRY_MPS, silent, delay: 0.12 * i, label: 'cave:fright-crew' });
         });
       },
+      /* THE NEIGHBOURS, MADE VISIBLE (Sol IV #2). They cannot be photographed —
+         the reader is inside the shut cave — so they are LIGHT: lamps that
+         gather in the cracks of the stone, shift when a second voice speaks,
+         and travel away west when the text says they went away. */
+      'seams-gather': (silent) => S._seamsTo(0.42, -0.62, 1.3, { silent }),
+      'seams-close': (silent) => S._seamsTo(1.0, 0.12, 1.4, { silent }),
+      'seams-shift': (silent) => S._seamsTo(0.92, -0.30, 1.1, { silent }),
+      /* the departure, and the grope UNDER it: the lamps slide off west and
+         die while the blind giant is already feeling his way to the door, so
+         the held door shot has two things changing inside it */
+      'seams-go': (silent) => {
+        S._seamsTo(0, 1.15, 3.4, { silent });
+        const g = S._giant('idle');
+        if (!g) return;
+        /* a silent replay must leave him where a read lap would have left him:
+           the grope is the whole point of this leaf, so it lands either way */
+        if (silent) { S._seatGiant(CAVE_MARKS.doorwaySeat, 2.1); return; }
+        if (g.mode === 'walk') return;
+        const gp = g.group.position.clone(), gq = g.group.quaternion.clone();
+        const up = caveAt(806, 545);
+        const uq = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -1.4, 0));
+        g.mode = 'pose'; g.group.visible = true; g.walk = null;
+        S._mover('giant-rise', 1.5, (k) => {
+          const e = easeInOut(k);
+          g.group.position.lerpVectors(gp, up, e);
+          g.group.quaternion.slerpQuaternions(gq, uq, e);
+        }, { owner: g.id, onDone: () => {
+          if (g.mode === 'off') return;
+          S._walkRoute(g, [806, 545], CAVE_MARKS.doorwaySeat,
+            { speed: GIANT_MPS * 1.35, label: 'cave:grope' });
+        } });
+      },
       boulderOpen: (silent) => {
         S._boulderTo(0, { silent });
+        S._seamsAt(0);
         /* the blind grope: he rolls to his feet among the sheep and feels his
            way down the audited lane to the door he can no longer see */
         if (silent) { S._seatGiant(CAVE_MARKS.doorwaySeat, 2.1); return; }
         const g = S._giant('idle');
         if (!g) return;
+        /* he left for the door while the neighbours were still talking — the
+           stone comes away at the END of that walk, not at the start of one */
+        if (g.mode === 'walk') return;
+        if (g.group.position.distanceTo(caveAt(...CAVE_MARKS.doorwaySeat)) < 1.4) {
+          S._seatGiant(CAVE_MARKS.doorwaySeat, 2.1); return;   /* already arrived */
+        }
         const gp = g.group.position.clone(), gq = g.group.quaternion.clone();
         const up = caveAt(806, 545);
         const uq = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -1.4, 0));
@@ -960,7 +1171,20 @@ export class Director {
       },
       'doorway-seat': (silent) => {
         const groping = A('poly-idle');
-        if (!silent && groping && groping.mode === 'walk') return; /* already going */
+        /* THE LAST GEOMETRY OF THE BEAT IS THE GIANT IN THE DOORWAY, and it is
+           only a picture if he is THERE. He may still be walking his last two
+           metres — that is drama — but if the grope has gone quiet anywhere
+           short of the seat, the tableau is taken by hand. */
+        /* THE MEN UNDERSTAND, AND THEY ARE FACING THE THING THEY UNDERSTAND.
+           They ended the fright scatter running east, so the closing reaction
+           photographed three backs. Escape is west; they are looking at it. */
+        S._aliveCrew().forEach((c, i) => S._stand(c, c.group.position.clone(), -1.62 + 0.12 * i));
+        const u = A('ulysses');
+        if (u) S._stand(u, u.group.position.clone(), -1.55);
+        if (!silent && groping && groping.mode === 'walk') {
+          const seat = caveAt(...CAVE_MARKS.doorwaySeat);
+          if (groping.group.position.distanceTo(seat) > 1.4) return;  /* still going */
+        }
         S._seatGiant(CAVE_MARKS.doorwaySeat, 2.1);
       },
 

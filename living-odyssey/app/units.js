@@ -187,14 +187,14 @@ export const UNITS = [
   { id: 'ody-ii-01-beg', key: 'beg',
     text: 'His cheese-racks were loaded with cheeses, and he had more lambs and kids than his pens could hold… When they saw all this, my men begged me to let them first steal some cheeses, and make off with them to the ship…',
     speaker: '', verb: 'click', focus: 'racks-sweep', page: 2, beat: 2,
-    set: 'cave', clear: true, sfx: 'bleats', act: 'cheese-rack', fact: 'O.3a' },
+    set: 'cave', clear: true, sfx: 'bleats', act: 'cheese-steal', fact: 'O.3a' },
 
   /* 2.2 — the chapter's tragic hinge — the waiting segment plays on advance (K4).
    */
   { id: 'ody-ii-02-present', key: 'present',
     text: 'It would have been indeed better if we had done so but I would not listen to them, for I wanted to see the owner himself, in the hope that he might give me a present. When, however, we saw him my poor men found him ill to deal with.',
     speaker: '', verb: 'click', focus: 'doorlight-hinge', page: 2, beat: 2,
-    set: 'cave', fact: 'O.3b' },
+    set: 'cave', act: 'cheese-halt', fact: 'O.3b' },
 
   /* 2.3 — POLYPHEMUS enters under the firewood load; single-eye cameo art carries O.1's
      visual half; the men scatter to the far dark (K5).
@@ -251,7 +251,7 @@ export const UNITS = [
   { id: 'ody-ii-09-shiplie', key: 'shiplie',
     text: 'Neptune… sent my ship on to the rocks at the far end of your country, and wrecked it. We were driven on to them from the open sea, but I and those who are with me escaped the jaws of death.',
     speaker: 'ULYSSES', verb: 'click', focus: 'twoshot', page: 2, beat: 2,
-    set: 'cave', clear: true },
+    set: 'cave', clear: true, act: 'advance-lie' },
 
   /* 2.10 — the two-at-a-clutch seize IN SHADOW (K13) — seg seize restages IDENTICALLY at
      Beat III's two meals (O.6's carrier); then the sprawl among the sheep,
@@ -474,14 +474,14 @@ export const UNITS = [
   { id: 'ody-iv-06-fright', key: 'fright',
     text: '"We ran away in a fright… shouting as he did so to the other Cyclopes who lived on the bleak headlands near him; so they gathered from all quarters round his cave when they heard him crying, and asked what was the matter with him."',
     speaker: '', verb: 'clock', at: 14.7, focus: 'mouth', page: 3, beat: 4,
-    set: 'cave', clear: true, sfx: 'clatter' },
+    set: 'cave', clear: true, sfx: 'clatter', act: 'seams-gather' },
 
   /* 4.7 — voices from BEYOND the stone — voice-only card, first appearance; O.10 opens.
    */
   { id: 'ody-iv-07-whatails', key: 'whatails',
     text: '"What ails you, Polyphemus… that you make such a noise, breaking the stillness of the night, and preventing us from being able to sleep? Surely no man is carrying off your sheep? Surely no man is trying to kill you either by fraud or by force?"',
     speaker: 'A CYCLOPS', verb: 'click', focus: 'mouth', page: 3, beat: 4,
-    set: 'cave', clear: true, cameo: 'a-cyclops',
+    set: 'cave', clear: true, cameo: 'a-cyclops', act: 'seams-close',
     cap: 'A Cyclops · the Neighbours' },
 
   /* 4.8 — the pun lands — the shout is HIS, so the lens leaves the seams for the
@@ -498,14 +498,14 @@ export const UNITS = [
   { id: 'ody-iv-09-mustbeill', key: 'mustbeill',
     text: '"Then… if no man is attacking you, you must be ill; when Jove makes people ill, there is no help for it, and you had better pray to your father Neptune."',
     speaker: 'A CYCLOPS', verb: 'click', focus: 'mouth', page: 3, beat: 4,
-    set: 'cave', fact: 'O.13a' },
+    set: 'cave', act: 'seams-shift', fact: 'O.13a' },
 
   /* 4.10 — the lamps RECEDE — the seams dim one by one; O.10 completes: they GO.
    */
   { id: 'ody-iv-10-wentaway', key: 'wentaway',
     text: '"Then they went away, and I laughed inwardly at the success of my clever stratagem…"',
     speaker: '', verb: 'click', focus: 'mouth', page: 3, beat: 4, set: 'cave',
-    clear: true, sfx: 'footfalls', cameo: null, fact: 'O.10b' },
+    clear: true, sfx: 'footfalls', cameo: null, act: 'seams-go', fact: 'O.10b' },
 
   /* 4.11 — the blind grope along the wall; the stone drawn aside — night air spills in
      (the Beat II shut-sfx reversed).
