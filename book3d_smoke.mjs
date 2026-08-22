@@ -30,7 +30,7 @@ import http from 'node:http';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 
 const ARGS = process.argv.slice(2);
@@ -72,7 +72,10 @@ const BEAT_FRAMES = [
   { file: 'beat1-council.png', unit: 'ody-i-07-council', hold: 8.0, why: 'I · the council on the sand, the ship behind' },
   { file: 'beat2-plea.png', unit: 'ody-ii-06-plea', hold: 9.0, why: 'II · the suppliant at the seated giant' },
   { file: 'beat3-bowl.png', unit: 'ody-iii-08-lookhere', hold: 6.0, why: 'III · the bowl offered at the knee' },
-  { file: 'beat4-auger.png', unit: 'ody-iv-03-auger', hold: 3.0, why: 'IV · the beam driven into the eye' },
+  /* the auger's own shot, not the eye it cuts to at 1.5 s — the sheet names a
+     shot and must photograph THAT shot, which is a thing a cut list makes
+     newly possible to get wrong */
+  { file: 'beat4-auger.png', unit: 'ody-iv-03-auger', hold: 1.2, why: 'IV · the beam driven into the eye' },
   { file: 'beat5-ram.png', unit: 'ody-v-07-lastofall', hold: 7.0, why: 'V · the great ram at the mouth' },
   { file: 'beat6-curse.png', unit: 'ody-vi-11-curse', hold: 3.2, why: 'VI · the curse from the water' },
 ];
@@ -100,7 +103,18 @@ await page.waitForFunction('window.__sceneReady === true', null, { timeout: 1200
 report.scale = await page.evaluate(() => window.__scale);
 report.mounted = await page.evaluate(() => window.__book.describe().set);
 
-report.walk = await page.evaluate(async () => {
+/* THE LAP READS AT THE READER'S OWN PACE. Round 1's walk gave every click leaf
+   a flat 3 s, which was already a shortcut — and round 2 made it a defect: a
+   unit's cut list is scheduled in the unit's own seconds, so a lap that turns
+   the page at three seconds never sees two thirds of the film. The dwell is the
+   same model the bake and the recorder use: the words on the leaf. */
+const WALK_DWELL = Object.fromEntries(
+  (await import(pathToFileURL(path.join(ROOT, 'living-odyssey', 'app', 'units.js')).href))
+    .UNITS.map((u) => {
+      const words = String(u.text || '').trim().split(/\s+/).filter(Boolean).length;
+      return [u.id, Math.max(2.2, Math.min(7.0, 0.9 + words / 7.0))];
+    }));
+report.walk = await page.evaluate(async (DWELL) => {
   const B = window.__book;
   const UNITS = B.stage ? null : null;
   const log = [], stuck = [];
@@ -136,7 +150,7 @@ report.walk = await page.evaluate(async () => {
          lens still on a man in the middle of the sand and the ship behind
          the camera. The gate then reads as dead — which is exactly what it
          did. The lap now reads at the pace the book declares. */
-      step(3.0);
+      step(DWELL[id] === undefined ? 5.0 : DWELL[id]);
       await B.advance();
     } else if (verb === 'auto') {
       how = 'auto';
@@ -199,9 +213,11 @@ report.walk = await page.evaluate(async () => {
   void UNITS;
   return { log, stuck, gates: gatesSeen, ended: B.ended, simT: +B.simT.toFixed(2),
            visited: log.length, guard };
-});
+}, WALK_DWELL);
 
 report.gates = await page.evaluate(() => window.__book.gates);
+/* THE CUT LEDGER — the camera's own record of the lap just walked */
+report.cuts = await page.evaluate(() => (window.__cuts ? window.__cuts() : null));
 report.routes = await page.evaluate(() => window.__book.routes());
 report.voice = await page.evaluate(() => window.__book.voice());
 report.pitch = await page.evaluate(() => window.__book.actorPitch());
@@ -388,21 +404,33 @@ const HIT_GATES = [
   report.escalation = TABLE.escalation || null;
   const rows = [];
   for (const id of ids) {
-    const r = await pv.evaluate(async (unit) => {
-      const B = window.__book;
-      await B.seek(unit);
-      /* THE SHUTTER WAITS FOR THE SHOT. A cut crossfades and a body may still
-         be walking to its mark: read the frame the reader would be looking at
-         a beat later, not the one mid-dissolve. */
-      B.run(1.6);
-      const c = window.__cine(), rd = window.__read();
-      return { unit, set: document.body.dataset.set, cls: c && c.cls,
-               cine: c && { size: c.size, inFrame: c.inFrame, cx: c.cx, cy: c.cy,
-                            side: c.side, wantSide: c.wantSide, sideOk: c.sideOk,
-                            rig: c.rig, rack: c.rack },
-               read: rd };
-    }, id);
-    rows.push(r);
+    /* EVERY SHOT OF EVERY UNIT, not every unit. A unit's cut list puts real
+       stations on screen that the reader will look at for two seconds each;
+       a viewing law that only ever measured the opening shot would be blind
+       to two thirds of round 2's picture. The pass seeks the unit, reads its
+       opening shot, then advances the sim clock past each declared sub-cut
+       and reads THAT frame too. */
+    const marks = [1.6, ...(TABLE.units[id].cuts || []).map((c) => c.t + 0.6)];
+    let spent = 0;
+    for (let k = 0; k < marks.length; k++) {
+      const r = await pv.evaluate(async (a) => {
+        const B = window.__book;
+        if (a.first) await B.seek(a.unit);
+        /* THE SHUTTER WAITS FOR THE SHOT. A cut crossfades and a body may
+           still be walking to its mark: read the frame the reader would be
+           looking at a beat later, not the one mid-dissolve. */
+        B.run(a.dt);
+        const c = window.__cine(), rd = window.__read();
+        return { unit: a.unit, sub: c ? c.sub : 0, setup: c && c.setup,
+                 set: document.body.dataset.set, cls: c && c.cls,
+                 cine: c && { size: c.size, inFrame: c.inFrame, cx: c.cx, cy: c.cy,
+                              side: c.side, wantSide: c.wantSide, sideOk: c.sideOk,
+                              rig: c.rig, rack: c.rack },
+                 read: rd };
+      }, { unit: id, first: k === 0, dt: +(marks[k] - spent).toFixed(3) });
+      spent = marks[k];
+      rows.push(r);
+    }
   }
   report.viewing = { rows };
   errors.push(...verr);
@@ -467,6 +495,144 @@ const GATE_KEYS = ['council', 'sword', 'lookhere', 'embers', 'greatram', 'jeer',
 const gateOk = GATE_KEYS.filter((k) => report.gates && report.gates[k] && report.gates[k].ok);
 push('every gate resolved by its own verb', gateOk.length === GATE_KEYS.length,
      `${gateOk.length}/${GATE_KEYS.length} — ${GATE_KEYS.filter((k) => !gateOk.includes(k)).join(', ') || 'all'}`);
+
+/* ---------------- THE COVERAGE LAW (the director's cut) ----------------
+ * Proved on the LAP, not on the table: the ledger the camera wrote as the
+ * reader walked it. Three questions, the three an editor asks on the bench.
+ *   1. did the angle change on every unit advance that was not a declared hold
+ *   2. was the establishing setup of each scene used once
+ *   3. does the scene RETURN to angles the reader already knows, or is every
+ *      setup a one-off (thirteen postcards, which is the defect)
+ */
+{
+  const C = report.cuts || {};
+  const TBL = JSON.parse(await readFile(
+    path.join(ROOT, 'living-odyssey', '3d', 'shots3d.json'), 'utf8'));
+  const seqs = TBL.sequences || [];
+  const rowOf = (u) => TBL.units[u];
+  /* THE LEDGER IS A LIST OF SHOTS, NOT A LIST OF UNITS — which is round 2's
+     whole architectural point. A unit may play several shots off its own cut
+     list, so the law is asked of every consecutive pair of SHOTS the camera
+     actually took. The only thing deduped is the harness entering the opening
+     unit twice at boot: the SAME unit at the SAME index of its cut list. */
+  const ledger = [];
+  for (const e of (C.log || [])) {
+    if (!e.setup) continue;
+    const last = ledger[ledger.length - 1];
+    if (last && last.unit === e.unit && (last.sub || 0) === (e.sub || 0)) continue;
+    ledger.push(e);
+  }
+  const shotOf = (e) => {
+    const r = rowOf(e.unit);
+    if (!r) return null;
+    return e.sub ? (r.cuts || [])[e.sub - 1] || null : r;
+  };
+  /* every consecutive pair of shots the camera actually played */
+  const bad = [];
+  for (let i = 1; i < ledger.length; i++) {
+    const a = ledger[i - 1], b = ledger[i];
+    const ra = rowOf(a.unit), rb = rowOf(b.unit);
+    if (!ra || !rb || ra.beat !== rb.beat) continue;
+    if (a.setup === b.setup && !(rb.hold && !b.sub))
+      bad.push(`${b.unit}${b.sub ? '#' + b.sub : ''} repeats ${a.setup}`);
+    if (a.setup !== b.setup && rb.hold && !b.sub)
+      bad.push(`${b.unit} declares a hold across a setup change`);
+  }
+  const subsPlayed = ledger.filter((e) => e.sub).length;
+  push('[coverage] the angle changes between consecutive SHOTS (holds declared)',
+       bad.length === 0 && ledger.length >= 81,
+       `${ledger.length} shots played · ${C.cuts} cuts · ${C.holds} holds · ` +
+       `${subsPlayed} of them taken inside a unit · ` +
+       (bad.length ? bad.join(' · ') : 'no undeclared repeat'));
+
+  /* ---- THE PACING LAW (round 2). The defect Sol named in all six scenes was
+     not a bad angle: it was that the cut was welded to the page turn, so every
+     shot was the same length and no passage could tighten. The fix is a CUT
+     LIST per unit, and this is the assertion that it is real: the table
+     declares sub-cuts, the lap PLAYS them, and the resulting average shot
+     length is a fraction of the reading dwell rather than equal to it. ---- */
+  {
+    const declared = Object.values(TBL.units).reduce((n, r) => n + ((r.cuts || []).length), 0);
+    const bySeq = (TBL.sequences || []).map((q) =>
+      `${q.beat}: ${q.stats.shots} shots / ${q.stats.subCuts} inside units / ASL ${q.stats.asl}s`);
+    const worstAsl = Math.max(...(TBL.sequences || []).map((q) => q.stats.asl || 99));
+    push('[pacing] the cut is not the reading clock — units carry cut lists and the lap plays them',
+         declared >= 55 && subsPlayed >= Math.round(declared * 0.75) && worstAsl <= 4.2,
+         `${declared} sub-cuts declared · ${subsPlayed} played on the lap · ` +
+         `worst scene ASL ${worstAsl}s (r1 was a flat 6.96) · ` + bySeq.join(' · '));
+  }
+
+  const holdRows = Object.values(TBL.units).filter((r) => r.hold);
+  const heldOnLap = ledger.filter((e) => !e.sub && rowOf(e.unit) && rowOf(e.unit).hold);
+  /* a hold must be the same STATION and the same LENS as the shot it holds —
+     otherwise it is a jump cut wearing an excuse */
+  const jump = [];
+  for (const r of holdRows) {
+    const i = ledger.findIndex((e) => e.unit === r.unit && !e.sub);
+    const prev = i > 0 ? shotOf(ledger[i - 1]) : null;
+    if (!prev) { jump.push(`${r.unit} never played`); continue; }
+    const dp = Math.hypot(r.pos[0] - prev.pos[0], r.pos[1] - prev.pos[1], r.pos[2] - prev.pos[2]);
+    if (dp > 0.35 || Math.abs(r.fov - prev.fov) > 2)
+      jump.push(`${r.unit} moves ${dp.toFixed(2)}m/${Math.abs(r.fov - prev.fov).toFixed(1)}deg`);
+    if (!(r.hold && r.hold.length > 24)) jump.push(`${r.unit} has no real reason`);
+    if (ledger[i] && ledger[i].kind !== 'hold') jump.push(`${r.unit} played as a ${ledger[i].kind}`);
+  }
+  push('[coverage] every declared hold is the same shot still running',
+       jump.length === 0 && heldOnLap.length === holdRows.length && holdRows.length === 2,
+       holdRows.map((r) => `${r.unit} (${r.setup})`).join(' · ') +
+       (jump.length ? ' — ' + jump.join(', ') : ' — same station, same lens, clock not restarted'));
+
+  const estBad = [];
+  for (const q of seqs) {
+    const est = q.setups.filter((x) => x.role === 'establishing');
+    for (const e of est) {
+      const excused = q.cut.filter((c) => c.setup === e.id && c.reprise).length;
+      if (e.takes - excused !== 1) estBad.push(`beat ${q.beat} ${e.id} x${e.takes}`);
+    }
+  }
+  push('[coverage] one establishing setup per scene, used once (a reprise says why)',
+       estBad.length === 0,
+       seqs.map((q) => `${q.beat}:${q.setups.filter((x) => x.role === 'establishing').map((x) => x.id).join('/')}`).join(' · ') +
+       (estBad.length ? ' — ' + estBad.join(', ') : ''));
+
+  /* THE ANGLE IS MEASURED, NOT DECLARED. Two stations 23 cm apart on the same
+     lens are one shot played twice however the table labels them. */
+  const same = [];
+  for (const q of seqs) {
+    for (let i = 1; i < q.cut.length; i++) {
+      const c = q.cut[i], pr = q.cut[i - 1];
+      if (c.transition === 'hold') continue;
+      const pick = (x) => (x.sub ? (TBL.units[x.unit].cuts || [])[x.sub - 1] : TBL.units[x.unit]);
+      const ra = pick(pr), rb = pick(c);
+      if (!ra || !rb) continue;
+      const dp = Math.hypot(rb.pos[0] - ra.pos[0], rb.pos[1] - ra.pos[1], rb.pos[2] - ra.pos[2]);
+      const near = rb.set === 'cave' ? 1.6 : 4.8;
+      if (dp < near && Math.abs(rb.fov - ra.fov) < 8 && (c.angle === null || c.angle < 22))
+        same.push(`${c.unit} ~ ${pr.unit} (${c.angle}deg, ${dp.toFixed(2)}m)`);
+    }
+  }
+  const angles = seqs.flatMap((q) => q.cut.map((c) => c.angle).filter((a) => a !== null && a !== undefined));
+  push('[coverage] the angle change is MEASURED, not just declared (30-deg rule)',
+       same.length === 0 && angles.length >= 70,
+       `${angles.length} cuts measured · median ${angles.slice().sort((a, b) => a - b)[angles.length >> 1]} deg · ` +
+       `min ${Math.min(...angles)} deg · ` + (same.length ? same.join(' · ') : 'no two consecutive shots share a camera'));
+
+  const thin = seqs.filter((q) => q.stats.returns / Math.max(1, q.stats.cuts) < 0.25);
+  push('[coverage] every scene RETURNS to angles the reader already knows',
+       thin.length === 0,
+       seqs.map((q) => `${q.beat}: ${q.stats.setups} setups / ${q.stats.cuts} cuts / ` +
+         `${q.stats.returns} returns / ${q.stats.holds} holds`).join(' · '));
+
+  const diss = Object.values(TBL.units).filter((r) => r.transition === 'dissolve');
+  const dissPlayed = ledger.filter((e) => e.kind === 'dissolve');
+  push('[coverage] straight cuts throughout; the declared dissolves are time ellipses only',
+       diss.length === 5 && dissPlayed.length === diss.length,
+       `${dissPlayed.length}/${diss.length} played — ${diss.map((r) => r.unit).join(', ')}`);
+
+  push('[coverage] the lens is declared and one lens only',
+       (TBL.lens || {}).id === 'spielberg' && !!(TBL.lens || {}).why,
+       `${(TBL.lens || {}).id} · ${(TBL.coverage || {}).totals ? JSON.stringify(TBL.coverage.totals) : 'no totals'}`);
+}
 
 /* ---------------- THE [hit] GATE ---------------- */
 const H = report.hit || { gates: [] };

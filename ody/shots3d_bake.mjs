@@ -202,400 +202,823 @@ function readOf(spec) {
 }
 
 /* ====================================================================== *
- * THE AUTHORED SPEC — one row per unit, off the contract's staging column
- * and the ledger's own marks. Shorthand:
- *   sub  {a:'<actor>'} live actor · {m:[px,py],h,y} a ledger mark ·
- *        {t:'<gate target>',h} the reader's target · {p:'<prop>',h} a hand prop
- *   from [px,py] where the camera stands (direction hint; the framing law
- *        sets the distance) — or bear: degrees off downstage (+Z), +east
- *   comp [x,y] where the subject sits in the frame, NDC — the look-room
- *   move  push | track | crane | tilt | whip | handheld | orbit | hold
+ * THE SETUP REGISTRY — THE DIRECTOR'S CUT (round 3, lens: SPIELBERG).
+ *
+ * THE DEFECT THIS ANSWERS (owner, 2026-08-21): "the full-3D book must PRESENT
+ * like a film — consecutive units must cut like an edited scene from different,
+ * story-motivated angles." Round 2 gave every unit a good shot; it did not give
+ * any scene a CUT PATTERN. Thirteen units meant thirteen unrelated stations —
+ * which is exactly Sol's round-1 note ("the sequence reads as set coverage, not
+ * escalating cinema") restated one level up.
+ *
+ * A film scene is not a list of shots. It is a small vocabulary of CAMERA
+ * SETUPS, established once and then ALTERNATED: master, single, reverse,
+ * insert, reaction. A setup that returns is the same angle on the action, so
+ * the reader re-enters a place they already know and the cut carries meaning
+ * instead of novelty. That is what this registry is.
+ *
+ * A SETUP is a stable ANGLE ON THE ACTION — the direction the lens looks from,
+ * the height it looks from, and the glass it looks through. Between takes of
+ * one setup the lens may punch in (fov / frac) and the subject may be a
+ * different body in the same relationship: that is coverage, not a new setup.
+ *
+ * THE COVERAGE LAW, gated below: NO TWO CONSECUTIVE UNITS MAY SHARE A SETUP
+ * unless the row declares `hold: '<reason>'`, and a held row is the SAME shot
+ * still running (same station, same lens, same move — the clock does not
+ * restart), because that is what a hold is.
+ *
+ * THE CAVE HAS ONE VOCABULARY (`CV-*`) across Beats II-V: it is one room and a
+ * reader who learns the door angle in Beat II must recognise it in Beat IV. The
+ * four cave ESTABLISHING setups stay four, one per beat, because they are the
+ * escalation ladder (each lower and tighter than the last, then the turn to the
+ * mouth in Beat V) and each is used exactly ONCE.
+ * ====================================================================== */
+const SETUPS = {
+  /* ---------------- BEAT I · the shore ---------------- */
+  'SH-EST': { name: 'THE BLACK STRAIT', role: 'establishing',
+    note: 'the night master, craning down out of the weather onto the fleet',
+    from: [470, 740], camY: 15, fov: 36, comp: [0, 0.06], dof: { f: 8, near: 0.55 } },
+  'SH-FLEET': { name: 'THE FLEET IN MIST', role: 'wide',
+    note: 'ships ghosting in at four metres — the tale\'s voice has a place to come from',
+    from: [455, 700], camY: 4.6, fov: 33, comp: [-0.08, 0.05], dof: { f: 5.6 } },
+  'SH-TELLER': { name: 'THE TELLER', role: 'single',
+    note: 'Ulysses at a man\'s eye from the west of the camp, look-room to the strait',
+    from: [332, 588], camY: 1.62, fov: 28, comp: [-0.15, 0.05], dof: { f: 2.8 } },
+  'SH-CAMP': { name: 'THE CAMP FIRE', role: 'reaction',
+    note: 'the men at the embers from the seaward side — the faces that will turn',
+    from: [575, 610], camY: 1.66, fov: 32, comp: [-0.13, 0.04], dof: { f: 3.5 } },
+  'SH-STRAIT': { name: 'ACROSS THE STRAIT', role: 'reveal',
+    note: 'the long lens on the far mainland: the smoke, then the mouth, then the climb',
+    from: [600, 548], camY: 2.4, fov: 20, comp: [0.08, -0.05], dof: { f: 9, near: 0.45 } },
+  'SH-ISLAND': { name: 'THE GOAT ISLAND', role: 'reestablish',
+    note: 'the day state — a time cut, not a repeat of the night master',
+    from: [372, 640], camY: 4.4, fov: 40, comp: [-0.10, 0.10], dof: { f: 8 } },
+  'SH-COUNCIL': { name: 'THE COUNCIL, OVER THE SHOULDER', role: 'ots',
+    note: 'a stride behind the listener; the speaker on the third, the ship in his look-room',
+    over: 'crew-0', from: [455, 596], behind: 1.35, overSide: 2.5,
+    camY: 1.62, fov: 32, comp: [0.20, -0.02], dof: { f: 2.5 } },
+  'SH-CRAG': { name: 'THE CRAG', role: 'reveal',
+    note: 'the empty mouth held, then the lens tilts the cliff up into the sky',
+    from: [690, 520], camY: 2.2, fov: 27, comp: [0.05, -0.14], dof: { f: 11 } },
+  'SH-SKIN': { name: 'THE WINESKIN', role: 'insert',
+    note: 'the gift read as an object, close on a 35 mm and above the gunwale between',
+    from: [1010, 600], camY: 1.68, fov: 40, comp: [0.16, 0.05], dof: { f: 2.2 } },
+
+  /* ---------------- BEATS II-V · the cave, one vocabulary ---------------- */
+  /* the four establishing rungs — each used ONCE, each lower and tighter */
+  'CV-EST2': { name: 'THE ROOM, LOW AND EXPLORATORY', role: 'establishing',
+    note: 'rung 1: the height of a man who has just walked in, drifting to find the room',
+    bear: 58, camY: 1.55, fov: 56, dist: 7.6, comp: [0, 0.04], dof: { f: 8, near: 0.5 } },
+  'CV-EST3': { name: 'THE FIRE, TIGHTER', role: 'establishing',
+    note: 'rung 2: the conspiracy is hatched at the blaze, printed down so flame keeps detail',
+    bear: -64, camY: 1.25, fov: 50, dist: 6.6, comp: [0.04, 0.03],
+    dof: { f: 8, near: 0.5, expo: 0.88 } },
+  'CV-EST4': { name: 'THE FLOOR', role: 'establishing',
+    note: 'rung 3: the room has stopped being a room and become ground to work on',
+    bear: -80, camY: 0.95, fov: 46, dist: 5.4, comp: [0.05, 0.05],
+    dof: { f: 8, near: 0.5, expo: 0.9 } },
+  'CV-EST5': { name: 'THE TURN — FACING THE MOUTH', role: 'establishing',
+    note: 'rung 4: the ladder breaks and the camera turns round; the way out is the subject',
+    station: [1.60, 1.80, 3.40], fov: 38, comp: [0.06, 0.02], seesOver: true,
+    dof: { f: 8, near: 0.5 }, read: { fill: 0.35, rim: 0.75 } },
+  /* the working angles */
+  'CV-DOOR': { name: 'THE DOOR, FROM THE DARK', role: 'geography',
+    note: 'the mouth seen from the men\'s hiding place — the shot the stone shuts',
+    from: [580, 608], camY: 1.66, fov: 33, comp: [-0.10, 0.02], dof: { f: 4 } },
+  'CV-RACKS': { name: 'THE CHEESE RACKS', role: 'geography',
+    note: 'the wealth that walks them in, swept from the men\'s side',
+    from: [660, 620], camY: 1.70, fov: 30, comp: [-0.12, 0.03], dof: { f: 3.5 } },
+  'CV-GIANT-E': { name: 'THE GIANT, FROM HIS FEET (east)', role: 'giant',
+    note: 'the scale angle: a waist-high lens east of the fire with a man at his feet',
+    from: [960, 590], camY: 1.05, fov: 50, comp: [0.10, -0.04], dof: { f: 2.8 } },
+  'CV-GIANT-W': { name: 'THE GIANT, FROM THE WEST', role: 'giant',
+    note: 'the answering low angle from the mouth side — the eye unblinking',
+    from: [612, 610], camY: 1.50, fov: 46, comp: [0.14, 0.03], dof: { f: 2.8 } },
+  /* THE STANDOFF IS MEASURED AGAINST HIS MASS, NOT AGAINST HIS ORIGIN. At
+     1.25 m behind a SEATED GIANT's placement the lens is inside his torso: the
+     recorded scene showed five of the plea's six seconds as a wall of blurred
+     flesh with the suppliant nowhere in it. A shoulder frames the near edge of
+     an OTS; it does not BE the OTS. Standoff is now most of his seated radius
+     and the swing is far enough round his side to see past the upper arm. */
+  'CV-OVER': { name: 'OVER HIS SHOULDER, LOOKING DOWN', role: 'ots',
+    note: 'the reverse the giant owns: his bulk on the near edge, the petitioner small below',
+    over: 'poly-seat', from: [640, 640], behind: 2.8, overSide: 36,
+    camY: 3.40, fov: 34, comp: [-0.19, -0.06], dof: { f: 2.5 } },
+  'CV-ULY': { name: 'ULYSSES, A MAN\'S EYE', role: 'single',
+    note: 'the clean reverse onto the man; from the lie on it carries the giant\'s shoulder',
+    from: [612, 636], camY: 1.58, fov: 26, comp: [-0.17, 0.05], dof: { f: 2.2 } },
+  'CV-FIRE': { name: 'THE FIRE — THE SEIZE IN SHADOW', role: 'action',
+    note: 'the horror staged against the blaze and never printed; the same angle all three meals',
+    from: [900, 596], camY: 1.45, fov: 44, comp: [-0.12, 0.00], dof: { f: 2.8 } },
+  /* MOVED, round 2. Sol: "the intended reaction angle becomes a wall of the
+     giant's torso." At 700 px the station was east of the men and the seated
+     giant sat between the lens and the faces it exists to photograph. It now
+     stands downstage and west of them, so the horror plays BEHIND the faces
+     instead of in front of them, which is the whole point of the setup. */
+  'CV-MEN': { name: 'THE MEN WATCHING', role: 'reaction',
+    from: [634, 678], camY: 1.56, fov: 30, comp: [-0.14, 0.03], dof: { f: 2.5 },
+    note: 'the faces that see it — by the second meal the reader knows what they are looking at' },
+  'CV-OBJ': { name: 'THE HAND BENCH', role: 'insert',
+    note: 'hand height, downstage centre: the sword at the hip, the beam in the coals',
+    from: [640, 652], camY: 1.15, fov: 30, comp: [-0.15, 0.02], dof: { f: 2.2 } },
+  'CV-BOWL': { name: 'THE BOWL, LOWER FOREGROUND', role: 'insert',
+    note: 'the ivy-wood bowl held into the bottom of the frame, the rack doing the reveal',
+    station: [0.80, 1.05, 5.00], fov: 46, comp: [-0.20, -0.30],
+    dof: { f: 2.0, expo: 0.86 } },
+  /* MOVED, round 2. Sol: "essentially the entire shot is occluded — the stake,
+     the plot's critical object, is never established." The old station looked
+     across the pens; it now stands downstage of them. */
+  'CV-CLUB': { name: 'THE CLUB', role: 'reveal',
+    note: 'the searching pan finds it; the mast-scale is delivered by figures beside it',
+    from: [886, 692], camY: 1.64, fov: 34, comp: [0.10, -0.04], dof: { f: 4 } },
+  'CV-LOTS': { name: 'THE CIRCLE, FROM ABOVE', role: 'action',
+    note: 'the one overhead in the book — a lot is drawn in a ring and read from over it',
+    from: [880, 668], camY: 2.35, fov: 36, comp: [0, 0.06], dof: { f: 3.5 } },
+  /* MOVED, round 2. Sol: "the fall is visible briefly, but shelving covers
+     half the frame." Downstage and west of the racks, and lower. */
+  'CV-COLLAPSE': { name: 'THE COLLAPSE', role: 'aftermath',
+    note: 'low, craning as the body settles; the shot the next beat is standing in',
+    from: [688, 702], camY: 1.05, fov: 46, comp: [0.06, -0.06], dof: { f: 2.8 } },
+  'CV-AFTER': { name: 'THE AFTERMATH', role: 'aftermath',
+    note: 'not the establishing shot: a night station, small shapes against the stone',
+    bear: 62, camY: 1.9, fov: 40, comp: [0, 0.04], dof: { f: 5.6 } },
+  'CV-FIVEFACES': { name: 'FIVE FACES, LIT FROM BELOW', role: 'reaction',
+    note: 'the drawn point is the lamp; the faces arrive before the weapon does',
+    from: [636, 640], camY: 1.05, fov: 28, comp: [-0.13, 0.02], dof: { f: 2.0 } },
+  'CV-AUGER': { name: 'ALONG THE BEAM, FROM THE FLOOR', role: 'action',
+    note: 'the shaft enters the lower corner on the men\'s hands, the eye sits opposite',
+    from: [760, 636], camY: 0.95, fov: 40, comp: [-0.15, 0.06], dof: { f: 2.2 } },
+  'CV-BLIND': { name: 'AT ATTACKER HEIGHT — THE BLINDING', role: 'action',
+    note: 'he fills the vertical frame; the operator is locked off until contact',
+    from: [788, 624], camY: 1.45, fov: 52, comp: [0.11, -0.02], fill: true,
+    dof: { f: 2.2 } },
+  'CV-SEATED': { name: 'SEATED IN THE MOUTH', role: 'tableau',
+    note: 'the door is open and utterly barred; a slow push out of the cave\'s dark',
+    station: [0.26, 1.45, 4.72], fov: 52, comp: [0.12, -0.04], dof: { f: 2.8 } },
+  'CV-WITHIES': { name: 'HANDS AND FLEECE', role: 'insert',
+    note: 'the lashing, noiseless, kept under his breathing',
+    from: [880, 630], camY: 1.20, fov: 32, comp: [0.12, 0.02], dof: { f: 2.5 } },
+  'CV-DAWNMOUTH': { name: 'THE LIGHT PAST HIM', role: 'reestablish',
+    note: 'dawn breaks through the mouth past the seated giant; the light is the goal',
+    bear: 70, camY: 2.4, fov: 46, dist: 7.5, comp: [-0.06, 0.04], dof: { f: 5.6 } },
+  'CV-HANDPASS': { name: 'THE HAND OVER THE WOOL', role: 'action',
+    note: 'low and close on the flock\'s side: the palm strokes the fleece that hides a man',
+    from: [600, 650], camY: 0.95, fov: 44, comp: [0.11, 0.02], dof: { f: 2.6 } },
+  'CV-BELLY': { name: 'UNDER THE BELLY', role: 'pov',
+    note: 'the belly line roofs the frame; the rack finds the man, not the obstruction',
+    from: [430, 604], camY: 0.58, fov: 40, comp: [-0.14, -0.06], follow: true,
+    dof: { f: 2.5 } },
+  'CV-RAMSPEECH': { name: 'THE BLIND MAN SPEAKING DOWN', role: 'giant',
+    note: 'gentle for the first time in the chapter, and talking to the wrong animal',
+    from: [500, 592], camY: 1.28, fov: 47, comp: [0.12, 0.02], dof: { f: 2.8 } },
+  'CV-TWOSHOT': { name: 'THE RUINED FACE AND THE WOOL', role: 'two-shot',
+    note: 'profile: his face above, the fists in the fleece below, one arm\'s length apart',
+    from: [420, 600], camY: 1.24, fov: 46, comp: [-0.11, 0.02], dof: { f: 2.8 } },
+  /* MOVED, round 2: with the ram-speech two-shot re-lensed the solver put this
+     station 1.16 m and 0.4 deg off the speech single — a punch-in wearing a
+     new name, which is the exact defect Sol names at Beat VI 00:39.5. */
+  'CV-OUT': { name: 'BACK AT THE MOUTH', role: 'aftermath',
+    note: 'over the shoulder into open dawn, the giant still seated and small now',
+    from: [404, 672], camY: 1.55, fov: 32, comp: [-0.14, 0.04], follow: true,
+    dof: { f: 3.2 } },
+  'SEA-EST': { name: 'THE TWO PLANES', role: 'establishing',
+    note: 'ship frame left, island and its blinded figure frame right — the axis, declared once',
+    over: 'ulysses', from: [470, 560], camY: 3.4, fov: 22, comp: [0.16, -0.08],
+    dof: { f: 5.6 } },
+  'SEA-STERN': { name: 'AT THE STERN', role: 'single',
+    note: 'off the seaward quarter, so the island sits in the look-room he shouts into',
+    from: [450, 483], camY: 2.60, fov: 30, comp: [0.30, 0.04], dof: { f: 2.5 } },
+  'SEA-ROCK': { name: 'THE THROW', role: 'action',
+    note: 'the eye rides the arc and the splash takes it; the settle is the operator\'s',
+    from: [430, 600], camY: 3.0, fov: 34, dist: 22, comp: [-0.10, -0.06],
+    dof: { f: 8 } },
+  'SEA-DECK': { name: 'THE DECK', role: 'geography',
+    note: 'the ship\'s three-quarter interior; oars trailing, the hush before the plea',
+    from: [470, 590], camY: 2.6, fov: 32, comp: [-0.10, 0.02], dof: { f: 4 } },
+  'SEA-MEN': { name: 'THE ROWERS', role: 'reaction',
+    note: 'faces up at him, one hand on his arm — the plea the reader will click over',
+    from: [520, 560], camY: 2.7, fov: 26, comp: [-0.16, 0.05], dof: { f: 2.2 } },
+  'SEA-CLIFF': { name: 'THE CLIFF CLOSE', role: 'giant',
+    note: 'the long lens past the ship: the prophecy, and the arms lifted to the firmament',
+    from: [500, 520], camY: 3.2, fov: 17, comp: [0.14, -0.06], dof: { f: 4 } },
+  'SEA-HAND': { name: 'THE BECKONING HAND', role: 'giant',
+    note: 'a step round and a step lower as the tone turns wheedling: come here, then',
+    from: [560, 540], camY: 3.0, fov: 16, comp: [-0.13, -0.06], dof: { f: 4 } },
+  'SEA-ALTAR': { name: 'THE DRIFTWOOD ALTAR', role: 'aftermath',
+    note: 'the thigh-fire smoke rising straight into a sky that gives no sign',
+    from: [560, 620], camY: 2.4, fov: 36, comp: [-0.10, 0.03], dof: { f: 4 } },
+  'SEA-OFF': { name: 'THE SAIL-OFF', role: 'aftermath',
+    note: 'the ship frame left with open water ahead and the island shrinking behind',
+    station: [-49.0, 9.0, 20.0], fov: 54, comp: [0.34, -0.30], side: -1,
+    dof: { f: 11, near: 0.4 } },
+
+  /* ================================================================== *
+   * ROUND 2 · THE INSERT AND REACTION VOCABULARY.
+   *
+   * Sol's round-1 verdict names the same absence in all six scenes: "the
+   * essential reaction and action inserts DO NOT EXIST ... this cannot be
+   * solved by trimming alone." Round 1 had a setup for every ANGLE ON A
+   * PERSON and almost none for a HAND, an OBJECT, or a FACE THAT IS ONLY
+   * WATCHING — which is exactly the half of the vocabulary a cut list needs,
+   * because those are the shots that fit inside a line of text.
+   *
+   * Every one of these is a real station solved by the same solver against
+   * the same furniture; none is a crop of the shot beside it.
+   * ================================================================== */
+
+  /* ---- shore: the council triangle and the crossing ---- */
+  /* STANDOFF 2.6 m AND 44 deg ROUND HIS SIDE — the CV-OVER lesson applied
+     before it could cost another round: at 1.5 m behind a man the lens is
+     inside his back and the frame reads 99 % dark. */
+  'SH-CREW': { name: 'THE CREW, THE MATCHED REVERSE', role: 'reaction',
+    note: 'over Ulysses onto the faces that answer him — the other half of the council',
+    over: 'ulysses', from: [300, 636], behind: 2.6, overSide: 44,
+    camY: 1.60, fov: 34, comp: [-0.18, 0.02], dof: { f: 2.5 } },
+  'SH-SHIP': { name: 'THE SHIP ON THE SAND', role: 'insert',
+    note: 'the thing he is pointing at and the thing the reader clicks, photographed once',
+    from: [700, 668], camY: 1.35, fov: 30, comp: [0.14, 0.02], dof: { f: 4 } },
+  'SH-KEEL': { name: 'AT THE WATERLINE', role: 'action',
+    note: 'the crossing as travel: a low lens off the keel, the mainland coming up',
+    from: [742, 558], camY: 0.92, fov: 34, comp: [-0.13, -0.02], follow: true,
+    dof: { f: 4 } },
+
+  /* ---- cave: the hands, the objects, the stone ---- */
+  'CV-GRIP': { name: 'THE HAND THAT TAKES THEM', role: 'insert',
+    note: 'the reach itself, low and close east of the blaze — the shot the seize never had',
+    from: [858, 646], camY: 1.10, fov: 34, comp: [-0.13, 0.02], dof: { f: 2.2 } },
+  'CV-HILT': { name: 'THE HAND ON THE HILT', role: 'insert',
+    note: 'the decision as a grip: knuckles, guard, the fire behind them',
+    from: [556, 672], camY: 0.90, fov: 34, comp: [0.14, 0.03], dof: { f: 2.0 } },
+  'CV-VITALS': { name: 'PAST THE BLADE, UP AT HIM', role: 'giant',
+    note: 'the place the blow would land, seen over the drawn sword — and how far up it is',
+    from: [702, 692], camY: 0.85, fov: 44, comp: [0.12, -0.05], dof: { f: 2.5 } },
+  'CV-STONE': { name: 'THE STONE AT CLOSE QUARTERS', role: 'insert',
+    note: 'the door as a mass, not a doorway: the lid clapping to, the hand finding it',
+    from: [470, 566], camY: 1.30, fov: 34, comp: [0.13, 0.02], dof: { f: 3.2 } },
+  'CV-HANDS': { name: 'THE HANDS ON THE BEAM', role: 'insert',
+    note: 'work: the cutting, and later the twisting — the same hands, the same angle',
+    from: [792, 670], camY: 1.00, fov: 32, comp: [-0.14, 0.02], dof: { f: 2.2 } },
+  'CV-POINT': { name: 'THE POINT', role: 'insert',
+    note: 'the sharpened end — charred in Beat III, white-hot in Beat IV',
+    from: [598, 692], camY: 0.95, fov: 30, comp: [0.13, 0.03], dof: { f: 2.0 } },
+  'CV-POUR': { name: 'THE POUR', role: 'insert',
+    note: 'the wine going in and the level going down; three takes, three different states',
+    from: [762, 692], camY: 1.05, fov: 34, comp: [0.12, -0.02], dof: { f: 2.0 } },
+  'CV-SEAM': { name: 'THE SEAMS', role: 'insert',
+    note: 'the neighbours are never seen: they are lamplight moving in the cracks of a shut stone',
+    from: [522, 646], camY: 1.85, fov: 26, comp: [-0.12, -0.04], dof: { f: 4 } },
+  'CV-WOOL': { name: 'THE FISTS IN THE FLEECE', role: 'insert',
+    note: 'from under the flank: the grip that is the only thing between a man and the floor',
+    from: [706, 614], camY: 0.72, fov: 36, comp: [-0.12, 0.04], dof: { f: 2.4 } },
+  'CV-GATEWAY': { name: 'THE WAY OUT, WITH HIM IN IT', role: 'geography',
+    note: 'the one frame that holds the blind giant, the gate, and the direction the flock goes',
+    from: [566, 694], camY: 1.70, fov: 44, comp: [0.12, 0.03], dof: { f: 5.6 } },
+
+  /* ---- sea: the missing reverse and the throw ---- */
+  'SEA-DOWN': { name: 'FROM THE HEADLAND, LOOKING DOWN', role: 'reverse',
+    note: 'the answering half of the axis: the ship as he would see it, small and below',
+    from: [640, 430], camY: 12.0, fov: 28, comp: [-0.16, -0.10], dof: { f: 8 } },
+  'SEA-GRIP': { name: 'THE ROCK IN HIS HANDS', role: 'action',
+    note: 'the wind-up: the mass leaves the clifftop before it crosses the water',
+    from: [608, 474], camY: 14.0, fov: 30, comp: [0.13, -0.06], dof: { f: 5.6 } },
+  'SEA-OAR': { name: 'THE OAR BITES', role: 'insert',
+    note: 'consequence at the waterline — twenty men rowing because of one man\'s mouth',
+    from: [524, 646], camY: 1.60, fov: 38, comp: [-0.14, 0.06], dof: { f: 3.5 } },
+};
+
+/* ====================================================================== *
+ * THE SEQUENCES — one row per unit, in reading order, each naming the SETUP
+ * it is shot on. A row carries only what makes it a TAKE of that setup: the
+ * subject, the size (`frac` / `dist`), the lens if the take punches in, the
+ * move, the focus. Everything else is the setup's.
+ *
+ *   hold:'<reason>'  the shot does not change — the row inherits the held
+ *                    row's geometry, subject and move outright and the move
+ *                    clock keeps running. Two in the book, both because the
+ *                    reader must not be taken off the thing they are watching.
+ *   into:'dissolve'  the ONE transition the lens allows besides the straight
+ *                    cut, and only for a TIME ELLIPSIS (five in the book, all
+ *                    of them a night that has become a morning).
  * ====================================================================== */
 const SPEC = {
-  /* ---------------- BEAT I · THE TALE BEGUN — shore ---------------- */
-  'ody-i-00-head': { cls: 'WIDE', sub: { m: [520, 470], h: 11, y: 2.5 }, from: [470, 740],
-    camY: 15, fov: 36, dist: 44, comp: [0, 0.06],
-    move: { k: 'crane', dy: 9, dz: 5, dur: 7 }, dof: { f: 8, near: 0.55 } },
-  'ody-i-01-bard': { cls: 'NARRATION', sub: { m: [500, 474], h: 6.2, y: 1.6 }, from: [455, 700],
-    camY: 4.6, fov: 33, comp: [-0.08, 0.05], move: { k: 'push', cms: 4.0 }, dof: { f: 5.6 } },
-  'ody-i-02-iamulysses': { cls: 'ACTION', sub: { a: 'ulysses' }, from: [300, 596],
-    camY: 1.72, fov: 34, frac: 0.36, comp: [-0.15, 0.04],
-    move: { k: 'track', m: 1.1, dur: 9 }, follow: true, dof: { f: 4 } },
-  'ody-i-03-troy': { cls: 'NARRATION', sub: { a: 'ulysses' }, from: [332, 588],
-    camY: 1.62, fov: 27, frac: 0.55, comp: [-0.16, 0.06],
-    move: { k: 'push', cms: 3.0 }, dof: { f: 2.8 } },
-  'ody-i-04-lawless': { cls: 'ACTION', sub: { m: [980, 205], h: 13, y: 6.5 }, from: [520, 560],
-    camY: 2.4, fov: 15, dist: 64, comp: [0.10, -0.05],
-    move: { k: 'push', cms: 22 }, dof: { f: 11, near: 0.4 } },
-  'ody-i-05-dawn': { cls: 'ACTION', sub: { a: 'ulysses' }, from: [372, 640],
-    camY: 4.4, fov: 40, frac: 0.21, comp: [-0.10, 0.10],
-    move: { k: 'crane', dy: 3.6, dz: 2.4, dur: 8 }, dof: { f: 8 } },
-  'ody-i-06-smoke': { cls: 'NARRATION', sub: { m: [479, 507], h: 1.7, y: 0.85 }, from: [575, 610],
-    camY: 1.66, fov: 32, frac: 0.31, comp: [-0.13, 0.04],
-    move: { k: 'push', cms: 3.5 }, dof: { f: 3.5 } },
-  /* SOL #5 — THE COUNCIL IS A COUNCIL, NOT A CENTRED SINGLE. Round 1 read as
-     "excessive headroom, no council geometry, no eyeline, a rock dominating
-     the right". The operator now stands A STRIDE BEHIND THE LISTENER'S
-     SHOULDER (`behind`, so the distance is the geometry's, not a wish), two
-     crew shoulders soft in the near foreground (`over` + `fg`), the speaker on
-     the left third with the look-room he is speaking INTO carrying the ship —
-     the axis every reaction in Beat I then obeys. */
-  'ody-i-07-council': { cls: 'OTS', sub: { a: 'ulysses' }, over: 'crew-0',
-    from: [455, 596], behind: 1.35, overSide: 2.5,
-    camY: 1.62, fov: 32, comp: [0.20, -0.02],
-    move: { k: 'push', cms: 2.6 }, dof: { f: 2.5 }, gateTarget: 'ship' },
-  'ody-i-08-cave': { cls: 'ACTION', sub: { m: [1008, 290], h: 9, y: 3.6 }, from: [700, 530],
-    camY: 3.0, fov: 22, dist: 38, comp: [0.06, -0.04],
-    move: { k: 'push', cms: 28 }, dof: { f: 8 } },
-  'ody-i-09-monster': { cls: 'NARRATION', sub: { m: [1050, 200], h: 22, y: 10 }, from: [690, 520],
-    camY: 2.2, fov: 27, dist: 56, comp: [0.05, -0.14],
-    move: { k: 'tilt', dy: 7.0, dur: 9 }, dof: { f: 11 } },
-  'ody-i-10-wineskin': { cls: 'NARRATION', sub: { m: [560, 503], h: 1.7, y: 0.85 }, from: [470, 606],
-    camY: 1.66, fov: 30, frac: 0.34, comp: [-0.13, 0.05],
-    move: { k: 'push', cms: 3.2 }, dof: { f: 3.2 } },
-  'ody-i-11-twentyone': { cls: 'DIALOGUE', sub: { a: 'ulysses' }, from: [498, 588],
-    camY: 1.56, fov: 24, frac: 0.66, comp: [0.16, 0.05],
-    move: { k: 'push', cms: 2.4 }, dof: { f: 2.2 } },
-  'ody-i-12-misgave': { cls: 'NARRATION', sub: { m: [1008, 290], h: 9, y: 3.6 }, from: [780, 540],
-    camY: 2.4, fov: 24, dist: 24, comp: [0.04, -0.06],
-    move: { k: 'push', cms: 5.0 }, dof: { f: 5.6 } },
+  /* ---------------- BEAT I · THE TALE BEGUN — shore ----------------
+     COVERAGE: EST · FLEET · TELLER · CAMP · STRAIT · ISLAND · CAMP · COUNCIL ·
+     STRAIT · CRAG · TELLER · SKIN · STRAIT — nine setups, twelve cuts. The
+     strait is the recurring threat angle and it tightens every time it returns
+     (64 m of telephoto, then 38, then 24); the camp fire is the recurring
+     reaction angle. */
+  'ody-i-00-head': { setup: 'SH-EST', cls: 'WIDE', sub: { m: [520, 470], h: 11, y: 2.5 },
+    dist: 44, move: { k: 'crane', dy: 9, dz: 5, dur: 7 } },
+  'ody-i-01-bard': { setup: 'SH-FLEET', cls: 'NARRATION', sub: { m: [500, 474], h: 6.2, y: 1.6 },
+    move: { k: 'push', cms: 4.0 },
+    cuts: [{ t: 4.2, setup: 'SH-CAMP', sub: { m: [479, 507], h: 1.7, y: 0.85 }, frac: 0.32,
+      move: { k: 'push', cms: 3.0 },
+      why: 'the tale has listeners: the faces it is being told to arrive before it is half a minute old' }] },
+  'ody-i-02-iamulysses': { setup: 'SH-TELLER', cls: 'ACTION', sub: { a: 'ulysses' },
+    frac: 0.40, move: { k: 'track', m: 1.1, dur: 9 }, follow: true },
+  'ody-i-03-troy': { setup: 'SH-CAMP', cls: 'NARRATION', sub: { m: [479, 507], h: 1.7, y: 0.85 },
+    frac: 0.30, move: { k: 'push', cms: 3.0 } },
+  'ody-i-04-lawless': { setup: 'SH-STRAIT', cls: 'ACTION', sub: { m: [980, 205], h: 13, y: 6.5 },
+    fov: 15, dist: 64, comp: [0.10, -0.05], move: { k: 'push', cms: 22 },
+    dof: { f: 11, near: 0.4 },
+    cuts: [{ t: 4.4, setup: 'SH-CRAG', sub: { m: [1050, 200], h: 22, y: 10 }, dist: 72, fov: 24,
+      comp: [0.05, -0.12], move: { k: 'push', cms: 20 },
+      why: 'the land the smoke belongs to, planted here so the crag pays off later' }] },
+  'ody-i-05-dawn': { setup: 'SH-ISLAND', cls: 'ACTION', sub: { a: 'ulysses' }, frac: 0.21,
+    into: 'dissolve', move: { k: 'crane', dy: 3.6, dz: 2.4, dur: 8 } },
+  /* THE COUNCIL TRIANGLE, first corner. Sol: "Ulysses' introduction has no
+     teller/listener relationship, reaction, or meaningful point of view." The
+     lens's own rule orders it — the face that sees, then the thing seen. */
+  'ody-i-06-smoke': { setup: 'SH-CAMP', cls: 'NARRATION', sub: { m: [479, 507], h: 1.7, y: 0.85 },
+    fov: 30, frac: 0.38, move: { k: 'push', cms: 3.5 },
+    cuts: [
+      { t: 3.0, setup: 'SH-CREW', sub: { a: 'crew-0' }, frac: 0.46, move: { k: 'push', cms: 2.8 },
+        why: 'the eyes turning — the crew reverse the council never had' },
+      { t: 5.2, setup: 'SH-STRAIT', cls: 'ACTION', sub: { m: [980, 205], h: 13, y: 6.5 },
+        fov: 16, dist: 58, comp: [0.09, -0.05], move: { k: 'push', cms: 20 },
+        dof: { f: 11, near: 0.4 },
+        why: 'and only then the smoke they are looking at' }] },
+  /* A GATE UNIT KEEPS ONE FRAME. The ship insert was first written INSIDE this
+     unit and the [hit] probe killed it: the reader's ring and the click both
+     ride an aim measured against the live shot, and a cut mid-gate leaves a
+     finger reaching for a camera that has moved. (The aim cache is dropped on
+     a sub-cut now — that part was a real bug — but the deeper point stands: a
+     unit whose whole job is to be pressed does not get to change its mind.)
+     The insert moved one unit down the reel, to the line that is ABOUT the
+     ship, which is where it always belonged. */
+  /* sepDeg 0: THE SEPARATION CONSTRAINT MAY NOT SWING A GATE OFF ITS TARGET.
+     Adding one insert three units upstream re-solved the whole chain and put
+     this station 20 deg round from the authored bearing — far enough that the
+     ship left the look-room and the reader's own gate went DEAD on the lap.
+     A row whose framing carries an affordance is authored, and says so. */
+  'ody-i-07-council': { setup: 'SH-COUNCIL', cls: 'OTS', sub: { a: 'ulysses' },
+    move: { k: 'push', cms: 2.6 }, gateTarget: 'ship', sepDeg: 0 },
+  /* THE CROSSING IS AN ACTION CHAIN (Sol #2): "Ulysses is cut away mid-stride
+     to a static cave ... no exit, oar, keel, water or directional movement
+     carries us across the strait." The unit now travels before it arrives. */
+  'ody-i-08-cave': { setup: 'SH-KEEL', cls: 'ACTION', sub: { a: 'ulysses' }, frac: 0.48,
+    move: { k: 'track', m: 1.4, dur: 7 }, follow: true, read: { fill: 3.0, rim: 3.6 },
+    cuts: [{ t: 2.6, setup: 'SH-STRAIT', sub: { m: [1008, 290], h: 9, y: 3.6 },
+      fov: 22, dist: 38, comp: [0.06, -0.04], move: { k: 'push', cms: 28 }, dof: { f: 8 },
+      why: 'cut on the movement: the mainland arrives because the boat did' }] },
+  'ody-i-09-monster': { setup: 'SH-CRAG', cls: 'NARRATION', sub: { m: [1050, 200], h: 22, y: 10 },
+    dist: 56, move: { k: 'tilt', dy: 7.0, dur: 9 },
+    cuts: [{ t: 4.2, setup: 'SH-STRAIT', cls: 'ACTION', sub: { m: [1008, 290], h: 9, y: 3.6 },
+      fov: 20, dist: 30, comp: [0.05, -0.05], move: { k: 'push', cms: 22 }, dof: { f: 8 },
+      why: 'the threat angle returns nearer every time it returns — third take, thirty metres' }] },
+  'ody-i-10-wineskin': { setup: 'SH-TELLER', cls: 'NARRATION', sub: { m: [560, 503], h: 1.7, y: 0.85 },
+    fov: 30, frac: 0.34, comp: [-0.13, 0.05], move: { k: 'push', cms: 3.2 }, dof: { f: 3.2 },
+    cuts: [
+      { t: 2.4, setup: 'SH-SHIP', cls: 'ACTION', sub: { t: 'ship', h: 6.0 }, frac: 0.44,
+        move: { k: 'push', cms: 6 }, read: { fill: 2.4, rim: 2.8 },
+        why: 'draw the ship ashore — the ship photographed once, as an object' },
+      { t: 4.2, setup: 'SH-CAMP', sub: { m: [479, 507], h: 1.7, y: 0.85 }, fov: 30, frac: 0.44,
+        move: { k: 'push', cms: 2.8 }, read: { fill: 2.4, rim: 2.8 },
+        why: 'the twelve best men, chosen — the faces that are going in with him' }] },
+  'ody-i-11-twentyone': { setup: 'SH-SKIN', cls: 'DIALOGUE', sub: { a: 'ulysses' }, frac: 0.62,
+    move: { k: 'push', cms: 2.4 }, read: { fill: 1.8, rim: 1.7 } },
+  /* END ON DREAD, NOT ON GEOGRAPHY (Sol #4). The beat's last unit is now
+     three shots: the mouth, the thing he packs BECAUSE of it, and the face
+     that has already decided. The scene ends on a man, not on a coastline. */
+  'ody-i-12-misgave': { setup: 'SH-STRAIT', cls: 'NARRATION', sub: { m: [1008, 290], h: 9, y: 3.6 },
+    fov: 24, dist: 24, comp: [0.04, -0.06], move: { k: 'push', cms: 5.0 }, dof: { f: 5.6 },
+    cuts: [
+      { t: 2.8, setup: 'SH-SKIN', cls: 'DIALOGUE', sub: { a: 'ulysses' }, fov: 36, frac: 0.46,
+        move: { k: 'push', cms: 2.4 }, read: { fill: 1.8, rim: 1.7 },
+        why: 'the wine goes in on purpose — the insert is the decision' },
+      { t: 5.2, setup: 'SH-COUNCIL', cls: 'OTS', sub: { a: 'ulysses' }, frac: 0.54,
+        move: { k: 'push', cms: 2.2 }, dof: { f: 2.2 },
+        read: { fill: 2.6, rim: 3.0 }, sepDeg: 0,
+        why: 'and the face, over the shoulder of a man he has just talked into it: my mind misgave me' }] },
 
-  /* ---------------- BEAT II · THE CAVE — cave ---------------- */
-  /* SOL #7 — THE CAVE ESCALATION LADDER (see ESCALATION below). Beat II is the
-     one true master and it is the LOW, EXPLORATORY one: the height of a man
-     who has just walked in, a lateral drift that finds the room rather than
-     presenting it. */
-  'ody-ii-00-head': { cls: 'WIDE', sub: { m: [700, 455], h: 4.8, y: 2.7 }, bear: 58,
-    camY: 1.55, fov: 56, dist: 7.6, comp: [0, 0.04],
-    move: { k: 'track', m: 1.9, dur: 8 }, dof: { f: 8, near: 0.5 } },
-  'ody-ii-01-beg': { cls: 'NARRATION', sub: { m: [640, 405], h: 2.7, y: 1.35 }, from: [660, 620],
-    camY: 1.70, fov: 30, frac: 0.50, comp: [-0.12, 0.03],
-    move: { k: 'push', cms: 3.4 }, dof: { f: 3.5 } },
-  'ody-ii-02-present': { cls: 'NARRATION', sub: { m: [430, 432], h: 3.0, y: 1.5 }, from: [560, 600],
-    camY: 1.66, fov: 32, frac: 0.44, comp: [-0.14, 0.02],
-    move: { k: 'push', cms: 3.0 }, dof: { f: 4 } },
-  'ody-ii-03-return': { cls: 'ACTION', sub: { m: [933, 541], h: 1.8, y: 0.9 }, from: [860, 640],
-    camY: 1.35, fov: 34, frac: 0.30, comp: [0.12, 0.04],
-    move: { k: 'push', cms: 5.5 }, dof: { f: 2.8 } },
-  'ody-ii-04-boulder': { cls: 'ACTION', sub: { m: [352, 430], h: 4.6, y: 2.2 }, from: [560, 600],
-    camY: 1.70, fov: 34, frac: 0.55, comp: [-0.08, 0.02],
-    move: { k: 'push', cms: 12 }, dof: { f: 4 } },
-  /* SOL #4a — THE REVEAL NEEDS A MAN IN IT. An isolated upright shape is not
-     a giant; a giant is a thing with a person at its feet. The hero himself
-     (not a spare crewman) is the foreground scale reference, the lens is a
-     25 mm-equivalent (fov 50 on a 24 mm sensor height) and the camera is at a
-     man's WAIST, so the crown climbs the frame instead of sitting in it. */
-  'ody-ii-05-strangers': { cls: 'GIANT', sub: { a: 'poly-seat' }, from: [960, 590],
-    camY: 1.05, fov: 50, frac: 0.66, comp: [0.10, -0.04],
-    move: { k: 'push', cms: 5.0 }, dof: { f: 2.8 }, fg: 'ulysses', intro: true },
-  /* SOL #4b — THE PLEA IS SHOT OVER THE GIANT, NOT BESIDE HIM. Round 1 put two
-     similarly sized figures in a flat lineup and destroyed the scale the
-     reveal had just built. The camera now rides the seated giant's shoulder
-     (camY 3.4 — where that shoulder actually is) and looks sharply DOWN at the
-     suppliant, so his smallness is the composition, not a caption. */
-  'ody-ii-06-plea': { cls: 'DIALOGUE', sub: { a: 'ulysses' }, over: 'poly-seat', from: [640, 640],
-    behind: 1.25, overSide: 24,
-    camY: 3.40, fov: 34, frac: 0.42, comp: [-0.19, -0.06],
-    move: { k: 'push', cms: 2.8 }, dof: { f: 2.5 } },
-  'ody-ii-07-pitiless': { cls: 'GIANT', sub: { a: 'poly-seat' }, from: [612, 610],
-    camY: 1.52, fov: 46, frac: 0.66, comp: [0.14, 0.03],
-    move: { k: 'push', cms: 3.4 }, dof: { f: 2.8 } },
-  'ody-ii-08-shipfast': { cls: 'GIANT', sub: { a: 'poly-seat' }, from: [880, 600],
-    camY: 1.50, fov: 44, frac: 0.70, comp: [-0.13, 0.03],
-    move: { k: 'push', cms: 3.0 }, dof: { f: 2.8 } },
-  'ody-ii-09-shiplie': { cls: 'DIALOGUE', sub: { a: 'ulysses' }, over: 'poly-seat', from: [612, 636],
-    camY: 1.58, fov: 26, frac: 0.62, comp: [-0.17, 0.05],
-    move: { k: 'push', cms: 2.6 }, dof: { f: 2.2 } },
-  'ody-ii-10-firstmeal': { cls: 'ACTION', sub: { a: 'poly-seat' }, from: [900, 596],
-    camY: 1.45, fov: 44, frac: 0.62, comp: [-0.12, 0.00],
-    move: { k: 'handheld', amp: 0.010, dur: 6 }, dof: { f: 2.8 } },
-  'ody-ii-11-sword': { cls: 'GATE', sub: { t: 'sword', h: 1.0 }, at: [680, 554], atY: 0.85,
-    over: 'ulysses', from: [640, 660],
-    camY: 1.35, fov: 30, frac: 0.30, comp: [-0.16, 0.03],
-    move: { k: 'push', cms: 5.0 }, dof: { f: 2.2 } },
-  'ody-ii-12-shiftstone': { cls: 'NARRATION', sub: { m: [352, 430], h: 4.6, y: 2.2 }, from: [600, 620],
-    camY: 1.62, fov: 32, frac: 0.42, comp: [-0.10, 0.02],
-    move: { k: 'push', cms: 3.0 }, dof: { f: 4 } },
-  'ody-ii-13-tillmorning': { cls: 'NARRATION', sub: { m: [700, 470], h: 3.0, y: 1.3 }, bear: 62,
-    camY: 1.9, fov: 40, frac: 0.30, comp: [0, 0.04],
-    move: { k: 'push', cms: 4.0 }, dof: { f: 5.6 } },
+  /* ---------------- BEAT II · THE CAVE — cave ----------------
+     COVERAGE: EST2 · RACKS · ULY · DOOR · DOOR(hold) · GIANT-E · OVER ·
+     GIANT-W · GIANT-E · ULY · FIRE · OBJ · DOOR · AFTER. The dialogue runs as
+     true shot-reverse-shot on two answering angles (GIANT-E/GIANT-W up at him,
+     OVER/ULY down and across at the men), and the door is the geography angle
+     that returns three times — the last time to stop a sword. */
+  'ody-ii-00-head': { setup: 'CV-EST2', cls: 'WIDE', sub: { m: [700, 455], h: 4.8, y: 2.7 },
+    move: { k: 'track', m: 1.9, dur: 8 } },
+  'ody-ii-01-beg': { setup: 'CV-RACKS', cls: 'NARRATION', sub: { m: [640, 405], h: 2.7, y: 1.35 },
+    frac: 0.50, move: { k: 'push', cms: 3.4 },
+    cuts: [{ t: 3.8, setup: 'CV-FIRE', sub: { m: [640, 458], h: 2.4, y: 1.2 }, frac: 0.44,
+      move: { k: 'push', cms: 3.4 },
+      why: 'the hearth the wealth is stacked around, planted on the angle all three meals will use' }] },
+  'ody-ii-02-present': { setup: 'CV-ULY', cls: 'NARRATION', sub: { a: 'ulysses' },
+    fov: 30, frac: 0.46, move: { k: 'push', cms: 3.0 }, dof: { f: 2.8 },
+    cuts: [{ t: 4.2, setup: 'CV-MEN', sub: { a: 'crew-0' }, frac: 0.44, move: { k: 'push', cms: 3.0 },
+      why: 'the men who told him to take the cheeses and go — "I would not listen to them" needs a them' }] },
+  'ody-ii-03-return': { setup: 'CV-DOOR', cls: 'ACTION', sub: { m: [352, 430], h: 2.6, y: 1.3 },
+    frac: 0.50, into: 'dissolve', move: { k: 'push', cms: 5.5 },
+    read: { fill: 1.9, rim: 1.9 } },
+  'ody-ii-04-boulder': { setup: 'CV-DOOR', holdOf: 'ody-ii-03-return',
+    hold: 'the men never look away from the door: the frame that watched him come in is the frame the stone shuts' },
+  'ody-ii-05-strangers': { setup: 'CV-GIANT-E', cls: 'GIANT', sub: { a: 'poly-seat' },
+    frac: 0.66, move: { k: 'push', cms: 5.0 }, fg: 'ulysses', intro: true },
+  'ody-ii-06-plea': { setup: 'CV-OVER', cls: 'DIALOGUE', sub: { a: 'ulysses' }, frac: 0.42,
+    move: { k: 'push', cms: 2.8 },
+    cuts: [{ t: 4.0, setup: 'CV-ULY', sub: { a: 'ulysses' }, fov: 28, frac: 0.52,
+      move: { k: 'push', cms: 2.6 }, dof: { f: 2.5 }, follow: true,
+      why: 'the clean reverse the over-shoulder is asking for: his own face, at his own height. ' +
+           'IT FOLLOWS: the suppliant is still walking to his knees when this cuts, and a locked ' +
+           'station four metres from a surveyed mark measured him at 2.9x the frame' }] },
+  'ody-ii-07-pitiless': { setup: 'CV-GIANT-W', cls: 'GIANT', sub: { a: 'poly-seat' },
+    frac: 0.66, move: { k: 'push', cms: 3.4 },
+    cuts: [{ t: 4.2, setup: 'CV-MEN', cls: 'ACTION', sub: { a: 'crew-0' }, frac: 0.44,
+      move: { k: 'push', cms: 3.0 },
+      why: 'the men hearing that no god of theirs is coming' }] },
+  'ody-ii-08-shipfast': { setup: 'CV-GIANT-E', cls: 'GIANT', sub: { a: 'poly-seat' },
+    fov: 44, frac: 0.70, comp: [0.12, 0.03], move: { k: 'push', cms: 3.0 } },
+  'ody-ii-09-shiplie': { setup: 'CV-ULY', cls: 'DIALOGUE', sub: { a: 'ulysses' },
+    over: 'poly-seat', frac: 0.62, move: { k: 'push', cms: 2.6 },
+    cuts: [{ t: 3.8, setup: 'CV-OVER', cls: 'OTS', sub: { a: 'ulysses' }, frac: 0.38,
+      move: { k: 'push', cms: 2.6 },
+      why: 'from over his shoulder: the size of the man who is lying to him' }] },
+  /* THE SEIZE IS AN ESCALATION, NOT A TABLEAU (Sol II #2): "the strongest
+     action — the giant reaching toward the man — gets neither a hand insert
+     nor an immediate facial reaction." Three shots, each shorter. */
+  'ody-ii-10-firstmeal': { setup: 'CV-FIRE', cls: 'ACTION', sub: { a: 'poly-seat' },
+    frac: 0.62, move: { k: 'handheld', amp: 0.010, dur: 6 },
+    cuts: [
+      { t: 2.2, setup: 'CV-GRIP', sub: { a: 'crew-0' }, frac: 0.74, move: { k: 'push', cms: 8 },
+        read: { fill: 2.2, rim: 5.4 }, sepDeg: 0,
+        why: 'the reach itself — the hand insert' },
+      { t: 3.8, setup: 'CV-MEN', sub: { a: 'ulysses' }, frac: 0.46,
+        move: { k: 'handheld', amp: 0.012, dur: 5 },
+        why: 'and immediately the faces, which is where the horror actually lives' }] },
+  /* THE SWORD BEAT AS A CINEMATIC SENTENCE (Sol II #3). It runs across two
+     units: decision (the hilt at the hip) / grip / the place the blow would
+     land / his eyes / the mass that answers them. Both shots of the GATE unit
+     keep the sword in frame, because the reader has to be able to press it. */
+  'ody-ii-11-sword': { setup: 'CV-OBJ', cls: 'GATE', sub: { t: 'sword', h: 1.0 },
+    at: [680, 554], atY: 0.85, over: 'ulysses', frac: 0.30, move: { k: 'push', cms: 5.0 },
+    cuts: [{ t: 2.4, setup: 'CV-HILT', sub: { t: 'sword', h: 0.7 }, at: [700, 556], atY: 0.90,
+      frac: 0.34, move: { k: 'push', cms: 6 }, read: { fill: 1.8, rim: 5.6 }, sepDeg: 0,
+      why: 'the decision becomes a grip — knuckles, guard, the blaze behind them' }] },
+  'ody-ii-12-shiftstone': { setup: 'CV-VITALS', cls: 'GIANT', sub: { a: 'poly-idle' },
+    frac: 0.74, move: { k: 'push', cms: 4.5 },
+    cuts: [
+      { t: 2.2, setup: 'CV-ULY', cls: 'DIALOGUE', sub: { a: 'ulysses' }, fov: 26, frac: 0.60,
+        move: { k: 'push', cms: 2.4 }, dof: { f: 2.2 },
+        why: 'his eyes, doing the arithmetic that saves them' },
+      { t: 4.0, setup: 'CV-STONE', cls: 'NARRATION', sub: { m: [352, 430], h: 4.6, y: 2.2 },
+        frac: 0.52, move: { k: 'push', cms: 3.0 },
+        why: 'and the mass that answers it: we should never be able to shift the stone' }] },
+  'ody-ii-13-tillmorning': { setup: 'CV-AFTER', cls: 'NARRATION', sub: { m: [700, 470], h: 3.0, y: 1.3 },
+    frac: 0.30, move: { k: 'push', cms: 4.0 } },
 
-  /* ---------------- BEAT III · NOBODY — cave ---------------- */
-  /* SOL #7 — rung 2: TIGHTER AND FIRE-DOMINATED. The conspiracy is hatched at
-     the blaze, so the heading is anchored on the fire, a step closer and a
-     step lower than Beat II's master, and printed down so the flame keeps its
-     detail instead of clipping to white. */
-  'ody-iii-00-head': { cls: 'WIDE', sub: { m: [640, 468], h: 3.9, y: 2.2 }, bear: -64,
-    camY: 1.25, fov: 50, dist: 6.6, comp: [0.04, 0.03],
-    move: { k: 'push', cms: 9 }, dof: { f: 8, near: 0.5, expo: 0.88 } },
-  'ody-iii-01-morningmeal': { cls: 'ACTION', sub: { m: [852, 470], h: 2.0, y: 1.0 }, from: [800, 640],
-    camY: 1.40, fov: 34, frac: 0.40, comp: [0.12, 0.02],
-    move: { k: 'push', cms: 4.5 }, dof: { f: 2.8 } },
-  'ody-iii-02-quiverlid': { cls: 'ACTION', sub: { m: [352, 430], h: 4.6, y: 2.2 }, from: [620, 610],
-    camY: 1.62, fov: 33, frac: 0.48, comp: [-0.10, 0.02],
-    move: { k: 'push', cms: 9 }, dof: { f: 4 } },
-  'ody-iii-03-scheme': { cls: 'DIALOGUE', sub: { a: 'ulysses' }, from: [880, 618],
-    camY: 1.56, fov: 26, frac: 0.64, comp: [0.16, 0.05],
-    move: { k: 'push', cms: 2.4 }, dof: { f: 2.2 } },
-  'ody-iii-04-club': { cls: 'NARRATION', sub: { m: [880, 380], h: 5.6, y: 2.6 }, from: [820, 620],
-    camY: 1.70, fov: 36, frac: 0.44, comp: [0.10, -0.04],
-    move: { k: 'push', cms: 3.6 }, dof: { f: 4 } },
-  'ody-iii-05-lots': { cls: 'ACTION', sub: { m: [713, 527], h: 1.8, y: 0.9 }, from: [700, 660],
-    camY: 2.35, fov: 36, frac: 0.34, comp: [0, 0.06],
-    move: { k: 'orbit', deg: 9, dur: 9 }, dof: { f: 3.5 } },
-  'ody-iii-06-return': { cls: 'NARRATION', sub: { m: [420, 434], h: 4.4, y: 2.1 }, from: [660, 606],
-    camY: 1.64, fov: 33, frac: 0.40, comp: [-0.12, 0.02],
-    move: { k: 'push', cms: 4.0 }, dof: { f: 4.5 } },
-  'ody-iii-07-suppertwo': { cls: 'ACTION', sub: { a: 'poly-seat' }, from: [905, 600],
-    camY: 1.45, fov: 44, frac: 0.62, comp: [-0.12, 0.00],
-    move: { k: 'handheld', amp: 0.010, dur: 6 }, dof: { f: 2.8 } },
-  /* SOL #6 — THE BOWL BEAT MUST FEATURE THE BOWL. Round 1 crushed the man to
-     silhouette, clipped the fire to white and let the logs cut the frame. The
-     bowl now sits in the LOWER FOREGROUND (comp y well under the centre) with
-     the hand that offers it, the frame is printed down for the blaze (expo)
-     so the flame keeps detail instead of blooming, and the focus RACKS from
-     the bowl to the giant — the reveal is the rack, not a blur. */
-  'ody-iii-08-lookhere': { cls: 'GATE', sub: { p: 'bowl', h: 0.75 }, over: 'ulysses',
-    station: [0.80, 1.05, 5.00], fov: 46, comp: [-0.20, -0.30],
-    rack: { from: 'p:bowl', to: 'h:POLYPHEMUS', at: 2.6, dur: 1.0 },
-    move: { k: 'push', cms: 4.0 }, dof: { f: 2.0, expo: 0.86 } },
-  'ody-iii-09-besokind': { cls: 'GIANT', sub: { a: 'poly-seat' }, from: [700, 620],
-    camY: 1.48, fov: 48, frac: 0.72, comp: [0.10, 0.02],
-    move: { k: 'push', cms: 3.4 }, dof: { f: 2.5 } },
-  'ody-iii-10-thrice': { cls: 'ACTION', sub: { a: 'poly-seat' }, from: [860, 606],
-    camY: 1.44, fov: 46, frac: 0.68, comp: [-0.11, 0.01],
-    move: { k: 'handheld', amp: 0.012, dur: 8 }, dof: { f: 2.8 } },
-  'ody-iii-11-noman': { cls: 'DIALOGUE', sub: { a: 'ulysses' }, over: 'poly-seat', from: [636, 646],
-    camY: 1.58, fov: 25, frac: 0.66, comp: [-0.17, 0.05],
-    move: { k: 'push', cms: 2.2 }, dof: { f: 2.0 } },
-  'ody-iii-12-nomanlast': { cls: 'GIANT', sub: { a: 'poly-seat' }, from: [790, 616],
-    camY: 1.48, fov: 46, frac: 0.72, comp: [0.12, 0.02],
-    move: { k: 'push', cms: 3.0 }, dof: { f: 2.5 } },
-  'ody-iii-13-neck': { cls: 'ACTION', sub: { a: 'poly-seat' }, from: [700, 650],
-    camY: 1.15, fov: 48, frac: 0.60, comp: [0.06, -0.06],
-    move: { k: 'crane', dy: 1.5, dz: 0.5, dur: 5 }, dof: { f: 2.8 } },
+  /* ---------------- BEAT III · NOBODY — cave ----------------
+     COVERAGE: EST3 · MEN · DOOR · SCHEME · CLUB · LOTS · FLOCK · FIRE · BOWL ·
+     GIANT-W · BOWL · ULY · GIANT-W · COLLAPSE. The second meal is covered on
+     the FACES (the reader already knows what they are looking at), the bowl is
+     an A-B-A: offered, his face, offered again with the rack reversed. */
+  'ody-iii-00-head': { setup: 'CV-EST3', cls: 'WIDE', sub: { m: [640, 468], h: 3.9, y: 2.2 },
+    move: { k: 'push', cms: 9 } },
+  'ody-iii-01-morningmeal': { setup: 'CV-MEN', cls: 'ACTION', sub: { a: 'crew-0' }, frac: 0.44,
+    into: 'dissolve', move: { k: 'push', cms: 4.5 },
+    cuts: [{ t: 2.8, setup: 'CV-GRIP', sub: { a: 'crew-0' }, frac: 0.62, move: { k: 'push', cms: 8 },
+      why: 'the clutch — the second meal is the same hand, and now the reader knows the hand' }] },
+  'ody-iii-02-quiverlid': { setup: 'CV-DOOR', cls: 'ACTION', sub: { m: [352, 430], h: 4.6, y: 2.2 },
+    frac: 0.40, move: { k: 'push', cms: 9 },
+    cuts: [{ t: 2.4, setup: 'CV-STONE', sub: { m: [352, 430], h: 2.6, y: 1.3 }, frac: 0.50,
+      move: { k: 'push', cms: 8 },
+      why: 'the lid claps to — the stone as a mass, at the distance a man would flinch from' }] },
+  'ody-iii-03-scheme': { setup: 'CV-ULY', cls: 'DIALOGUE', sub: { a: 'ulysses' }, frac: 0.64,
+    move: { k: 'push', cms: 2.4 } },
+  /* THE STAKE IS MADE ON SCREEN (Sol III #2): club wide, cutting hand, charred
+     point. Round 1 named the object and never photographed it. */
+  'ody-iii-04-club': { setup: 'CV-CLUB', cls: 'NARRATION', sub: { m: [880, 380], h: 5.6, y: 2.6 },
+    frac: 0.44, move: { k: 'push', cms: 3.6 },
+    cuts: [
+      { t: 3.0, setup: 'CV-HANDS', cls: 'ACTION', sub: { p: 'stake', h: 1.1 }, frac: 0.40,
+        move: { k: 'push', cms: 5 }, why: 'a fathom of it cut off' },
+      { t: 5.0, setup: 'CV-POINT', cls: 'ACTION', sub: { p: 'stake', h: 1.1 }, frac: 0.34,
+        move: { k: 'push', cms: 4 }, why: 'and sharpened to a point, and charred' }] },
+  'ody-iii-05-lots': { setup: 'CV-LOTS', cls: 'ACTION', sub: { m: [713, 527], h: 1.8, y: 0.9 },
+    frac: 0.34, move: { k: 'orbit', deg: 9, dur: 9 },
+    cuts: [{ t: 3.4, setup: 'CV-OBJ', sub: { m: [713, 527], h: 0.9, y: 0.95 }, frac: 0.34,
+      move: { k: 'push', cms: 5 },
+      why: 'the lots themselves, in the hands — the insert the passage names and never showed' }] },
+  /* THE SUBJECT IS THE GAP THE FLOCK COMES THROUGH, NOT THE WHOLE ARCH. Asked
+     for a 4.4 m subject at a third of frame height the framing law wanted the
+     lens twenty-one metres back — outside the cave — so the solver shrank to
+     the one arc the volume allows and landed on top of the shot before it. */
+  'ody-iii-06-return': { setup: 'CV-DOOR', cls: 'NARRATION', sub: { m: [420, 434], h: 2.6, y: 1.3 },
+    fov: 30, frac: 0.60, move: { k: 'push', cms: 4.0 }, read: { fill: 1.8, rim: 1.8 },
+    cuts: [{ t: 3.4, setup: 'CV-STONE', cls: 'ACTION', sub: { m: [352, 430], h: 4.6, y: 2.2 },
+      frac: 0.55, move: { k: 'push', cms: 6 },
+      why: 'and the stone comes back across it — the ominous sealing the scene was missing' }] },
+  'ody-iii-07-suppertwo': { setup: 'CV-FIRE', cls: 'ACTION', sub: { a: 'poly-seat' },
+    frac: 0.62, move: { k: 'handheld', amp: 0.010, dur: 6 },
+    cuts: [{ t: 2.6, setup: 'CV-MEN', sub: { a: 'ulysses' }, frac: 0.46,
+      move: { k: 'handheld', amp: 0.012, dur: 5 },
+      why: 'the terrified men — third meal, and the reader is watching them, not it' }] },
+  'ody-iii-08-lookhere': { setup: 'CV-BOWL', cls: 'GATE', sub: { p: 'bowl', h: 0.75 },
+    over: 'ulysses', rack: { from: 'p:bowl', to: 'h:POLYPHEMUS', at: 2.6, dur: 1.0 },
+    move: { k: 'push', cms: 4.0 },
+    cuts: [{ t: 3.6, setup: 'CV-POUR', cls: 'ACTION', sub: { p: 'bowl', h: 0.75 }, frac: 0.42,
+      move: { k: 'push', cms: 5 }, why: 'the first pour' }] },
+  'ody-iii-09-besokind': { setup: 'CV-GIANT-W', cls: 'GIANT', sub: { a: 'poly-seat' },
+    fov: 48, frac: 0.72, comp: [0.10, 0.02], move: { k: 'push', cms: 3.4 }, dof: { f: 2.5 },
+    cuts: [{ t: 2.8, setup: 'CV-OBJ', cls: 'ACTION', sub: { p: 'bowl', h: 0.75 }, frac: 0.34,
+      move: { k: 'push', cms: 5 }, why: 'the bowl he has already drained — the second state' }] },
+  /* THREE POURS, THREE DRAINS (Sol III #4). The A-B-A is kept and the third
+     fill is played inside the unit that says "three times did I fill it". */
+  'ody-iii-10-thrice': { setup: 'CV-BOWL', cls: 'ACTION', sub: { p: 'bowl', h: 0.75 },
+    over: 'ulysses', rack: { from: 'h:POLYPHEMUS', to: 'p:bowl', at: 1.6, dur: 0.9 },
+    move: { k: 'push', cms: 3.0 },
+    cuts: [
+      { t: 2.0, setup: 'CV-POUR', sub: { p: 'bowl', h: 0.75 }, frac: 0.46,
+        move: { k: 'push', cms: 5 }, why: 'the third pour' },
+      { t: 3.8, setup: 'CV-OBJ', sub: { p: 'bowl', h: 0.75 }, frac: 0.36,
+        move: { k: 'push', cms: 4 }, why: 'and the third empty bowl' }] },
+  /* THE EXCHANGE ON ONE AXIS (Sol III #3): the man closer and screen-left,
+     the giant's answer closer and lower and screen-right, and one two-shot in
+     between as geographic insurance. */
+  'ody-iii-11-noman': { setup: 'CV-ULY', cls: 'DIALOGUE', sub: { a: 'ulysses' },
+    over: 'poly-seat', fov: 22, frac: 0.74, move: { k: 'push', cms: 2.2 }, dof: { f: 2.0 },
+    cuts: [{ t: 3.8, setup: 'CV-GIANT-E', cls: 'GIANT', sub: { a: 'poly-seat' }, frac: 0.60,
+      fg: 'ulysses', move: { k: 'push', cms: 3.0 },
+      why: 'both of them in one frame, on the axis, so the reverses cannot drift' }] },
+  'ody-iii-12-nomanlast': { setup: 'CV-GIANT-W', cls: 'GIANT', sub: { a: 'poly-seat' },
+    camY: 1.22, fov: 42, frac: 0.80, comp: [0.12, 0.02], move: { k: 'push', cms: 3.0 },
+    dof: { f: 2.5 } },
+  'ody-iii-13-neck': { setup: 'CV-COLLAPSE', cls: 'ACTION', sub: { a: 'poly-seat' }, frac: 0.38,
+    move: { k: 'crane', dy: 1.5, dz: 0.5, dur: 5 }, read: { fill: 4.6, rim: 3.6 },
+    cuts: [{ t: 1.8, setup: 'CV-ULY', cls: 'DIALOGUE', sub: { a: 'ulysses' }, fov: 28, frac: 0.62,
+      move: { k: 'push', cms: 2.4 }, read: { fill: 4.2, rim: 3.4 },
+      why: 'and the face that has been waiting all night for exactly this' }] },
 
-  /* ---------------- BEAT IV · THE STAKE — cave ---------------- */
-  /* SOL #7 — rung 3: THE FLOOR. The blinding's heading is the lowest and
-     tightest of the ladder — the room has stopped being a room and become the
-     ground the men are about to work on. */
-  'ody-iv-00-head': { cls: 'WIDE', sub: { m: [676, 474], h: 3.0, y: 1.65 }, bear: -80,
-    camY: 0.95, fov: 46, dist: 5.4, comp: [0.05, 0.05],
-    move: { k: 'push', cms: 7 }, dof: { f: 8, near: 0.5, expo: 0.9 } },
-  'ody-iv-01-embers': { cls: 'GATE', sub: { p: 'fire', h: 1.5 }, from: [640, 646],
-    camY: 1.10, fov: 32, frac: 0.34, comp: [-0.10, 0.00],
-    move: { k: 'push', cms: 5.0 }, dof: { f: 2.5 } },
-  'ody-iv-02-glowing': { cls: 'GATE', sub: { p: 'stake', h: 1.1 }, from: [636, 640],
-    camY: 1.05, fov: 28, frac: 0.30, comp: [-0.13, 0.02],
-    move: { k: 'push', cms: 4.0 }, dof: { f: 2.0 } },
-  /* SOL #1 — THE AUGER SHOT, FROM THE FLOOR, ALONG THE BEAM. Round 1's worst
-     frame: "most of the frame is an unreadable black occlusion; the auger, its
-     target and the attackers' effort are invisible." The camera is now on the
-     cave floor (y 0.60, the lowest the volume allows) out on the men's side of
-     the shaft, so the beam ENTERS THE LOWER-LEFT CORNER on the four men's
-     hands, runs up across the frame, and POLYPHEMUS's eye sits on the opposite
-     third. Depth carries tip AND eye at f/2.2, then RACKS decisively between
-     them. The screen-direction system does the rest: the beam is the men's, so
-     it is frame left; the giant is frame right, as he is in every cave cut. */
-  /* THE STATION IS THE SOLVER'S, THE HEIGHT AND THE DEPTH ARE THE DP'S. Three
-     authored stations were tried and photographed through tools/ody/
-     _stationsheet.mjs; every one of them was legal, and every one of them shot
-     into the woodpile, into the cave's own bowl floor, or into the fallen
-     giant's hand at arm's length. Beat IV's floor is a four-metre box with a
-     seven-metre body in the middle of it — there is no clear downstage station
-     to author. So the proscenium solver, which searches bearings and proves
-     what it finds, keeps the placement; what Sol asked for and what this row
-     now carries is the HEIGHT (the cave floor, not a diorama hover), the DEPTH
-     (a rack that travels from the beam to the eye instead of blurring an
-     obstruction) and the TIME (an operator who is locked off until contact). */
-  'ody-iv-03-auger': { cls: 'CLOCK', sub: { p: 'stake', h: 1.1 }, from: [760, 636],
-    camY: 0.95, fov: 40, frac: 0.30, comp: [-0.15, 0.06],
-    /* MEASURED AGAINST THE BEAT CLOCK, NOT AGAINST TASTE: the clock holds this
-       leaf for 0.6 s (tools/ody/work/logs/beat4vid.log — the cut ledger of the
-       recorded thirty seconds), so a rack at 2.4 s and a break at 4.2 s never
-       fired at all. Both now land inside the shot the reader is given. */
+  /* ---------------- BEAT IV · THE STAKE — cave ----------------
+     COVERAGE: EST4 · OBJ · FIVEFACES · AUGER · GIANT-W · BLIND · DARK · DOOR ·
+     GIANT-E · DOOR · DOOR(hold) · GROPE · SEATED. The blinding is cut on the
+     lens's own law — the faces that see it arrive before the weapon does — and
+     the neighbours' scene is a three-cornered exchange across a shut stone. */
+  'ody-iv-00-head': { setup: 'CV-EST4', cls: 'WIDE', sub: { m: [676, 474], h: 3.0, y: 1.65 },
+    move: { k: 'push', cms: 7 } },
+  'ody-iv-01-embers': { setup: 'CV-OBJ', cls: 'GATE', sub: { p: 'fire', h: 1.5 },
+    fov: 32, frac: 0.34, comp: [-0.10, 0.00], move: { k: 'push', cms: 5.0 }, dof: { f: 2.5 },
+    cuts: [{ t: 1.8, setup: 'CV-POINT', sub: { p: 'fire', h: 1.3 }, frac: 0.40,
+      move: { k: 'push', cms: 6 }, read: { fill: 2.2, rim: 2.8 },
+      why: 'the beam\'s end in the coals, changing state under the reader\'s own hold' }] },
+  /* PHOTOGRAPHED, NOT ASSUMED. CV-FIVEFACES was written for this line and the
+     frame it actually delivers here is two dark legs across the foreground —
+     the staging at `glowing` puts bodies between the low lamp angle and the
+     faces it is named after. The men's own reaction angle holds them, and the
+     insert goes on the one station in the room that can see into the coals. */
+  'ody-iv-02-glowing': { setup: 'CV-MEN', cls: 'ACTION', sub: { a: 'crew-0' },
+    frac: 0.84, move: { k: 'push', cms: 4.0 }, read: { fill: 2.6, rim: 2.8 }, sepDeg: 0 },
+  /* NO CUT LIST. The glowing point is shown at `embers`, on the one station in
+     the room that can see into the coals; a second take of it a unit later
+     photographs a black box, and a shot the reader cannot see is not a shot.
+     The cut list is a tool, not a quota. */
+  /* THE BLINDING IS FIVE SHOTS OF ACCELERATING PHYSICAL FACT, and round 1
+     gave the decisive one 0.58 seconds because the beat clock had already run
+     on without it. The clock offsets in emit_units_ody.py are amended so each
+     leaf owns real screen time, and each leaf now carries its own cut. */
+  'ody-iv-03-auger': { setup: 'CV-AUGER', cls: 'CLOCK', sub: { p: 'stake', h: 1.1 }, frac: 0.30,
     rack: { from: 'p:stake', to: 'h:POLYPHEMUS', at: 0.12, dur: 0.30 },
     move: { k: 'handheld', amp: 0.020, dur: 9, at: 0.30, pre: 0.16, decay: 1.1 },
-    dof: { f: 2.2 }, read: { fill: 1.15, rim: 1.25 } },
-  'ody-iv-04-bore': { cls: 'CLOCK', sub: { a: 'poly-seat' }, from: [640, 630],
-    camY: 1.38, fov: 48, frac: 0.62, comp: [0.10, -0.02],
-    move: { k: 'handheld', amp: 0.020, dur: 10 }, dof: { f: 2.5 } },
-  /* SOL #2 — THE BLINDING IS AN EVENT, NOT A PORTRAIT. Round 1: "a static
-     portrait of the giant; the weapon and the point of contact are absent;
-     handheld has no motivated event." The camera stands where the attackers
-     stand (y 1.45 — a braced man's eye, on the men's side of the beam so the
-     auger crosses the frame on the SAME diagonal it had in the shot before),
-     the giant FILLS the vertical frame, and the operator is CONTROLLED right
-     up to contact and breaks loose exactly at it (`at`, in seconds from the
-     cut) before settling. */
-  'ody-iv-05-hiss': { cls: 'CLOCK', sub: { a: 'poly-seat' }, from: [788, 624],
-    camY: 1.45, fov: 52, frac: 0.86, comp: [0.11, -0.02], fill: true,
+    read: { fill: 1.15, rim: 1.25 },
+    cuts: [{ t: 1.5, setup: 'CV-GIANT-W', sub: { a: 'poly-idle' }, fov: 44, frac: 0.86,
+      comp: [0.10, -0.02], dof: { f: 2.5 }, read: { fill: 4.4, rim: 3.4 }, sepDeg: 0,
+      move: { k: 'handheld', amp: 0.022, dur: 6, at: 0.2, pre: 0.2, decay: 1.0 },
+      why: 'the eye it is going into — one travel direction, kept across every cut' }] },
+  'ody-iv-04-bore': { setup: 'CV-HANDS', cls: 'CLOCK', sub: { p: 'stake', h: 1.1 }, frac: 0.42,
+    move: { k: 'handheld', amp: 0.020, dur: 6 }, read: { fill: 1.15, rim: 1.25 },
+    cuts: [{ t: 1.6, setup: 'CV-GIANT-W', sub: { a: 'poly-seat' }, fov: 48, frac: 0.62,
+      comp: [0.10, -0.02], move: { k: 'handheld', amp: 0.022, dur: 6 }, dof: { f: 2.5 },
+      why: 'the twisting hands, then what the twisting is doing to him' }] },
+  'ody-iv-05-hiss': { setup: 'CV-BLIND', cls: 'CLOCK', sub: { a: 'poly-seat' }, frac: 0.86,
+    comp: [0.11, 0.10],
     move: { k: 'handheld', amp: 0.040, dur: 11, at: 1.15, pre: 0.14, decay: 3.0 },
-    dof: { f: 2.2 }, blinding: true, read: { fill: 1.2, rim: 1.3 } },
-  'ody-iv-06-fright': { cls: 'ACTION', sub: { m: [352, 430], h: 4.6, y: 2.2 }, from: [640, 610],
-    camY: 1.60, fov: 34, frac: 0.46, comp: [-0.10, 0.02],
-    move: { k: 'handheld', amp: 0.012, dur: 7 }, dof: { f: 4 } },
-  'ody-iv-07-whatails': { cls: 'DIALOGUE', sub: { m: [352, 424], h: 3.2, y: 1.9 }, from: [560, 590],
-    camY: 1.62, fov: 28, frac: 0.44, comp: [-0.16, 0.02],
-    move: { k: 'push', cms: 2.6 }, dof: { f: 2.8 }, offstage: true },
-  'ody-iv-08-nomankilling': { cls: 'GIANT', sub: { a: 'poly-seat' }, from: [560, 626],
-    camY: 1.20, fov: 50, frac: 0.60, comp: [0.12, -0.04],
-    move: { k: 'push', cms: 4.0 }, dof: { f: 2.5 } },
-  'ody-iv-09-mustbeill': { cls: 'DIALOGUE', sub: { m: [352, 424], h: 3.2, y: 1.9 }, from: [520, 584],
-    camY: 1.62, fov: 28, frac: 0.46, comp: [-0.16, 0.02],
-    move: { k: 'push', cms: 2.4 }, dof: { f: 2.8 }, offstage: true },
-  'ody-iv-10-wentaway': { cls: 'NARRATION', sub: { m: [352, 430], h: 4.6, y: 2.2 }, from: [640, 604],
-    camY: 1.60, fov: 32, frac: 0.40, comp: [-0.12, 0.02],
-    move: { k: 'push', cms: 3.0 }, dof: { f: 4 } },
-  /* THE READABILITY LAW, applied where it caught something. The blinded giant
-     groping the doorway stone read at mean 0.086 with 89% of the subject box
-     near-black — Fable's "unreadable silhouette", exactly, and the one shot in
-     Beat IV where the room's own light story leaves nothing on the subject.
-     The motivated rig is doubled here: the fill is the hearth behind us, the
-     rim is the cold of the doorway itself. */
-  /* THE SUBJECT IS THE BODY DOING THE THING, NOT THE FURNITURE IT DOES IT TO.
-     Aimed at the doorway MARK this shot read at mean 0.086 with 89% of the box
-     near-black — a hole, because the mark is bare rock in an unlit mouth and a
-     motivated rig has nothing there to land on. The blinded giant is the one
-     hauling the stone; frame HIM, and the doorway is in shot behind him. */
-  'ody-iv-11-stone': { cls: 'ACTION', sub: { a: 'poly-seat' }, from: [620, 600],
-    camY: 1.58, fov: 34, frac: 0.46, comp: [-0.09, 0.02],
-    move: { k: 'push', cms: 10 }, dof: { f: 4 },
-    read: { fill: 1.8, rim: 1.8 }, liveAnchor: true },
-  /* THE STATION IS CHOSEN AGAINST THE LIVE BODY, NOT THE MARKS FILE. By this
-     unit the blinded giant has left the seat mark the survey recorded and is
-     groping the doorway eight metres upstage-left of it, so the surveyed anchor
-     put the lens INSIDE his 7 m envelope: the gate read him at 51x frame height
-     with 0.1% of him in shot. Measured live with tools/ody/_liveprobe.mjs and
-     stood off at ten metres, downstage of the mouth, still below him.
-     (tools/ody/shots3d_marks.mjs cannot re-survey this: it is written against
-     the 2D book's harness — window.__ready / __refs / __state — and the 3D page
-     exposes window.__sceneReady / __book. Re-surveying is its own lane.) */
-  'ody-iv-12-doorway': { cls: 'GIANT', sub: { a: 'poly-idle' },
-    station: [0.26, 1.45, 4.72], fov: 52, comp: [0.12, -0.04],
-    move: { k: 'push', cms: 3.2 }, dof: { f: 2.8 }, liveAnchor: true },
+    blinding: true, read: { fill: 1.2, rim: 1.3 } },
+  'ody-iv-06-fright': { setup: 'CV-FIVEFACES', cls: 'ACTION', sub: { a: 'ulysses' }, frac: 0.34,
+    move: { k: 'handheld', amp: 0.012, dur: 7 },
+    cuts: [{ t: 1.4, setup: 'CV-STONE', sub: { m: [352, 430], h: 4.6, y: 2.2 }, frac: 0.46,
+      move: { k: 'handheld', amp: 0.014, dur: 5 },
+      why: 'and where running away actually gets them: a shut stone' }] },
+  /* THE NEIGHBOURS ARE A TRIANGLE WITH ONE CORNER OFF-STAGE (Sol IV #2). The
+     exterior cannot be shot — the reader is inside — so the third corner is
+     the SEAM: lamplight moving in the cracks of the stone they are behind. */
+  'ody-iv-07-whatails': { setup: 'CV-DOOR', cls: 'DIALOGUE', sub: { m: [352, 424], h: 3.2, y: 1.9 },
+    fov: 28, frac: 0.46, comp: [-0.16, 0.02], move: { k: 'push', cms: 2.6 },
+    dof: { f: 2.8 }, offstage: true,
+    cuts: [{ t: 3.8, setup: 'CV-SEAM', sub: { m: [352, 424], h: 3.2, y: 1.9 }, frac: 0.40,
+      move: { k: 'push', cms: 2.4 }, offstage: true,
+      why: 'the only way the neighbours exist on screen: lamps crossing the cracks' }] },
+  'ody-iv-08-nomankilling': { setup: 'CV-GIANT-E', cls: 'GIANT', sub: { a: 'poly-seat' },
+    frac: 0.60, comp: [0.12, -0.04], move: { k: 'push', cms: 4.0 }, dof: { f: 2.5 },
+    cuts: [{ t: 1.8, setup: 'CV-FIVEFACES', cls: 'ACTION', sub: { a: 'ulysses' }, frac: 0.36,
+      move: { k: 'push', cms: 3.0 },
+      why: 'the silent reaction of the men who hear the joke land' }] },
+  'ody-iv-09-mustbeill': { setup: 'CV-DOOR', cls: 'DIALOGUE', sub: { m: [352, 424], h: 3.2, y: 1.9 },
+    fov: 28, frac: 0.46, comp: [-0.16, 0.02], move: { k: 'push', cms: 2.6 },
+    dof: { f: 2.8 }, offstage: true },
+  'ody-iv-10-wentaway': { setup: 'CV-DOOR', holdOf: 'ody-iv-09-mustbeill',
+    hold: 'the lamps recede past the very seams the men have not stopped staring at — a cut here would take away the thing that is going away' },
+  /* THE DOORWAY ACTION, COVERED (Sol IV #4): hand finds stone, boulder shifts,
+     night slit widens. */
+  'ody-iv-11-stone': { setup: 'CV-STONE', cls: 'ACTION', sub: { m: [352, 430], h: 4.6, y: 2.2 },
+    frac: 0.52, move: { k: 'push', cms: 8 }, read: { fill: 1.8, rim: 1.8 },
+    cuts: [
+      { t: 2.0, setup: 'CV-GIANT-W', sub: { a: 'poly-seat' }, fov: 34, frac: 0.46,
+        comp: [0.09, 0.02], move: { k: 'push', cms: 10 }, dof: { f: 4 },
+        read: { fill: 1.8, rim: 1.8 }, liveAnchor: true,
+        why: 'the boulder comes away in his hands' },
+      { t: 3.8, setup: 'CV-DAWNMOUTH', sub: { m: [420, 420], h: 4.4, y: 2.2 }, frac: 0.44,
+        move: { k: 'push', cms: 5 },
+        why: 'and the night opens a slit exactly the width of a man' }] },
+  'ody-iv-12-doorway': { setup: 'CV-SEATED', cls: 'GIANT', sub: { a: 'poly-idle' },
+    move: { k: 'push', cms: 3.2 }, liveAnchor: true,
+    cuts: [
+      { t: 2.4, setup: 'CV-FIVEFACES', cls: 'ACTION', sub: { a: 'ulysses' }, frac: 0.36,
+        move: { k: 'push', cms: 3.0 },
+        why: 'the captives doing the arithmetic of a doorway with a giant in it' },
+      { t: 4.0, setup: 'CV-SEATED', cls: 'GIANT', sub: { a: 'poly-idle' }, fov: 46,
+        comp: [0.10, -0.02], move: { k: 'push', cms: 2.0 }, liveAnchor: true,
+        why: 'and back to the geometry: the beat ends on the shape of the problem, wider than it began' }] },
 
-  /* ---------------- BEAT V · UNDER THE RAMS — cave ---------------- */
-  /* SOL #7 — rung 4: THE LADDER BREAKS AND TURNS AROUND. Beat V's heading is
-     the only cave wide that faces the MOUTH: the camera stands inside and
-     looks out at the shut doorway with the cold way out behind it, escape
-     space open on the frame's far side. Three neutral repeats become one
-     master and three answers to it. */
-  'ody-v-00-head': { cls: 'WIDE', sub: { m: [348, 332], h: 9.0, y: 2.6 },
-    station: [1.60, 1.80, 3.40], fov: 38, comp: [0.06, 0.02], seesOver: true,
-    move: { k: 'crane', dy: 1.1, dz: 0.8, dur: 8 }, dof: { f: 8, near: 0.5 },
-    read: { fill: 0.35, rim: 0.75 } },
-  'ody-v-01-puzzling': { cls: 'DIALOGUE', sub: { a: 'ulysses' }, from: [560, 616],
-    camY: 1.58, fov: 27, frac: 0.58, comp: [-0.16, 0.05],
-    move: { k: 'push', cms: 2.8 }, dof: { f: 2.5 } },
-  'ody-v-02-withies': { cls: 'ACTION', sub: { m: [900, 466], h: 1.6, y: 0.8 }, from: [880, 630],
-    camY: 1.20, fov: 32, frac: 0.42, comp: [0.12, 0.02],
-    move: { k: 'push', cms: 5.0 }, dof: { f: 2.5 } },
-  'ody-v-03-threetoaman': { cls: 'ACTION', sub: { m: [900, 466], h: 1.6, y: 0.8 }, from: [820, 636],
-    camY: 1.15, fov: 30, frac: 0.46, comp: [-0.12, 0.02],
-    move: { k: 'track', m: 0.8, dur: 8 }, dof: { f: 2.5 } },
-  'ody-v-04-greatram': { cls: 'GATE', sub: { t: 'ram-great', h: 1.15 }, from: [860, 620],
-    camY: 1.05, fov: 30, frac: 0.34, comp: [-0.15, 0.03],
-    move: { k: 'push', cms: 5.0 }, dof: { f: 2.5 } },
-  'ody-v-05-dawn': { cls: 'ACTION', sub: { m: [520, 440], h: 4.4, y: 1.5 }, bear: 70,
-    camY: 2.4, fov: 46, dist: 7.5, comp: [-0.06, 0.04],
-    move: { k: 'crane', dy: 1.0, dz: 0.4, dur: 9 }, dof: { f: 5.6 } },
-  'ody-v-06-feltbacks': { cls: 'GIANT', sub: { a: 'poly-idle' }, from: [520, 596],
-    camY: 1.30, fov: 48, frac: 0.50, comp: [0.11, 0.02],
-    move: { k: 'push', cms: 3.6 }, dof: { f: 2.8 } },
-  /* SOL #3 — THROUGH THE FLEECE, NOT BEHIND IT. Round 1: "foreground rams
-     obscure virtually all story information; the shallow focus creates
-     blockage rather than suspense." The camera is now UNDER the flock at the
-     lowest station the volume allows (y 0.58), close, on a 40 mm-equivalent,
-     so the belly line of the great ram roofs the frame and the man strapped
-     beneath it is the thing in focus with the giant's groping hand crossing
-     above. The focus RACKS from the fleece to his face. The station also puts
-     the competing bowl behind the camera, which is where Sol wanted it. */
-  /* SOL #3 — THROUGH THE FLEECE, NOT BEHIND IT. Round 1: "foreground rams
-     obscure virtually all story information; the shallow focus creates
-     blockage rather than suspense." Round 2 first aimed this at the mouth MARK
-     and measured a hole (mean 0.096, p90 0.126): at the moment the reader
-     enters the unit the great ram is still three quarters of the way back
-     across the floor, so the frame held bare rock while the action was
-     elsewhere. THE SUBJECT IS THE RAM, live, and the camera FOLLOWS him out —
-     the belly line roofs the frame, the man strapped under it is what is in
-     focus, and the focus racks off the giant's groping hand onto him. */
-  'ody-v-07-lastofall': { cls: 'ACTION', sub: { a: 'ram-great' }, from: [430, 604],
-    camY: 0.58, fov: 40, frac: 0.60, comp: [-0.14, -0.06], follow: true,
-    rack: { from: 'a:poly-seat', to: 'a:ram-great', at: 2.2, dur: 0.9 },
-    move: { k: 'push', cms: 5.0 }, dof: { f: 2.5 }, read: { fill: 2.4, rim: 2.2 } },
-  'ody-v-08-ramspeech1': { cls: 'GIANT', sub: { a: 'poly-idle' }, from: [500, 592],
-    camY: 1.28, fov: 47, frac: 0.50, comp: [0.12, 0.02],
-    move: { k: 'push', cms: 3.0 }, dof: { f: 2.8 } },
-  'ody-v-09-ramspeech2': { cls: 'GIANT', sub: { a: 'poly-idle' }, from: [420, 600],
-    camY: 1.24, fov: 46, frac: 0.50, comp: [-0.11, 0.02],
-    move: { k: 'push', cms: 2.8 }, dof: { f: 2.8 } },
-  'ody-v-10-ramspeech3': { cls: 'GIANT', sub: { a: 'poly-idle' }, from: [540, 588],
-    camY: 1.20, fov: 48, frac: 0.52, comp: [0.10, 0.01],
-    move: { k: 'push', cms: 2.6 }, dof: { f: 2.5 } },
-  'ody-v-11-freed': { cls: 'ACTION', sub: { a: 'ulysses' }, from: [470, 630],
-    camY: 1.55, fov: 32, frac: 0.44, comp: [-0.14, 0.04],
-    move: { k: 'track', m: 0.9, dur: 8 }, follow: true, dof: { f: 3.2 } },
-  'ody-v-12-aboard': { cls: 'NARRATION', sub: { m: [370, 452], h: 3.4, y: 1.6 }, from: [560, 604],
-    camY: 1.62, fov: 34, frac: 0.36, comp: [-0.12, 0.03],
-    move: { k: 'push', cms: 4.0 }, dof: { f: 4 } },
+  /* ---------------- BEAT V · UNDER THE RAMS — cave ----------------
+     COVERAGE: EST5 · ULY · WITHIES · UNDER · RAM · DAWNMOUTH · HANDPASS ·
+     BELLY · RAMSPEECH · TWOSHOT · RAMSPEECH · OUT · RUN. Round 2 played all
+     three ram-speech units from one station; the speech is now a real
+     two-hander — his blind face, the wool with a man in it, his blind face. */
+  'ody-v-00-head': { setup: 'CV-EST5', cls: 'WIDE', sub: { m: [348, 332], h: 9.0, y: 2.6 },
+    move: { k: 'crane', dy: 1.1, dz: 0.8, dur: 8 } },
+  'ody-v-01-puzzling': { setup: 'CV-ULY', cls: 'DIALOGUE', sub: { a: 'ulysses' },
+    fov: 27, frac: 0.58, move: { k: 'push', cms: 2.8 }, dof: { f: 2.5 },
+    cuts: [{ t: 3.8, setup: 'CV-HANDPASS', cls: 'ACTION', sub: { m: [900, 466], h: 1.6, y: 0.8 },
+      fov: 38, frac: 0.40, comp: [-0.12, 0.02], move: { k: 'push', cms: 4 }, dof: { f: 2.5 },
+      why: 'what a man planning an escape is actually looking at' }] },
+  'ody-v-02-withies': { setup: 'CV-WITHIES', cls: 'ACTION', sub: { m: [900, 466], h: 1.6, y: 0.8 },
+    frac: 0.42, move: { k: 'push', cms: 5.0 },
+    cuts: [{ t: 3.8, setup: 'CV-WOOL', sub: { m: [900, 466], h: 1.2, y: 0.6 }, frac: 0.44,
+      move: { k: 'push', cms: 5 },
+      why: 'the lashing from under the flank — the suspense insert the scene never had' }] },
+  'ody-v-03-threetoaman': { setup: 'CV-HANDPASS', cls: 'ACTION', sub: { m: [900, 466], h: 1.6, y: 0.8 },
+    fov: 34, frac: 0.46, comp: [-0.12, 0.02], move: { k: 'track', m: 0.8, dur: 8 },
+    dof: { f: 2.5 },
+    cuts: [{ t: 2.8, setup: 'CV-BELLY', sub: { a: 'ewe-1' }, fov: 44, frac: 0.34,
+      move: { k: 'push', cms: 5 }, read: { fill: 2.4, rim: 2.2 },
+      why: 'and the geometry from underneath: exactly where the man will be' }] },
+  'ody-v-04-greatram': { setup: 'CV-WITHIES', cls: 'GATE', sub: { t: 'ram-great', h: 1.15 },
+    fov: 30, frac: 0.34, comp: [-0.15, 0.03], move: { k: 'push', cms: 5.0 } },
+  'ody-v-05-dawn': { setup: 'CV-DAWNMOUTH', cls: 'ACTION', sub: { m: [520, 440], h: 4.4, y: 1.5 },
+    into: 'dissolve', move: { k: 'crane', dy: 1.0, dz: 0.4, dur: 9 },
+    cuts: [{ t: 4.0, setup: 'CV-GATEWAY', sub: { a: 'poly-seat' }, frac: 0.44,
+      move: { k: 'push', cms: 4 },
+      why: 'the geographic master this scene never had: him, the gate, and the way the flock will go' }] },
+  /* THE NEAR-CAPTURE (Sol V #2). Hand on the wool, the eye under it tracking
+     that hand, and the blind face that very nearly notices. */
+  'ody-v-06-feltbacks': { setup: 'CV-HANDPASS', cls: 'GIANT', sub: { a: 'poly-idle' },
+    frac: 0.82, move: { k: 'push', cms: 3.6 }, read: { fill: 1.8, rim: 5.4 },
+    cuts: [
+      { t: 2.6, setup: 'CV-BELLY', cls: 'ACTION', sub: { a: 'ram-great' }, frac: 0.55,
+        move: { k: 'push', cms: 5 }, read: { fill: 2.4, rim: 2.2 },
+        why: 'the hidden eye, tracking the palm crossing above it' },
+      { t: 4.4, setup: 'CV-RAMSPEECH', sub: { a: 'poly-idle' }, frac: 0.46,
+        move: { k: 'push', cms: 3.0 },
+        why: 'and the blind face that very nearly notices' }] },
+  /* ORDERED FOR THE PREFIX LAW: `feltbacks` may still be sitting on CV-BELLY
+     when the reader turns the page, so this unit cannot OPEN on it. The fists
+     come first and the POV under the belly is the payoff — which is the better
+     order anyway: the grip, then what the grip is holding up. */
+  'ody-v-07-lastofall': { setup: 'CV-WOOL', cls: 'ACTION', sub: { a: 'ram-great' }, frac: 0.68,
+    move: { k: 'push', cms: 4.0 },
+    cuts: [{ t: 2.6, setup: 'CV-BELLY', sub: { a: 'ram-great' }, frac: 0.60,
+      rack: { from: 'a:poly-seat', to: 'a:ram-great', at: 0.9, dur: 0.9 },
+      move: { k: 'push', cms: 5.0 }, read: { fill: 2.4, rim: 2.2 },
+      why: 'and under the belly with him: the ram going out heavy with a man' }] },
+  'ody-v-08-ramspeech1': { setup: 'CV-RAMSPEECH', cls: 'GIANT', sub: { a: 'poly-idle' },
+    frac: 0.50, move: { k: 'push', cms: 3.0 } },
+  /* THE TWO-SHOT IS A DIFFERENT LENS AS WELL AS A DIFFERENT PLACE. Round 1's
+     lesson repeated itself here the moment the chain changed: at 46 deg the
+     solver put this station within a degree of the ram-speech single, and a
+     gate that reads the label would have passed it. A profile two-shot wants
+     wide glass anyway — it has to hold a face and a fist a metre apart. */
+  'ody-v-09-ramspeech2': { setup: 'CV-TWOSHOT', cls: 'GIANT', sub: { a: 'poly-idle' },
+    camY: 1.10, fov: 56, frac: 0.74, move: { k: 'push', cms: 2.8 },
+    cuts: [{ t: 2.6, setup: 'CV-BELLY', cls: 'ACTION', sub: { a: 'ram-great' }, frac: 0.90,
+      move: { k: 'push', cms: 4 }, read: { fill: 3.0, rim: 5.4 },
+      why: 'an arm\'s length under the hand that is stroking him, while he is asked where he is' }] },
+  'ody-v-10-ramspeech3': { setup: 'CV-RAMSPEECH', cls: 'GIANT', sub: { a: 'poly-idle' },
+    fov: 48, frac: 0.52, comp: [0.10, 0.01], move: { k: 'push', cms: 2.6 }, dof: { f: 2.5 } },
+  'ody-v-11-freed': { setup: 'CV-OUT', cls: 'ACTION', sub: { a: 'ulysses' }, frac: 0.44,
+    move: { k: 'track', m: 0.9, dur: 8 },
+    cuts: [{ t: 3.0, setup: 'CV-GATEWAY', sub: { a: 'poly-seat' }, frac: 0.42,
+      move: { k: 'push', cms: 4 },
+      why: 'the men clear the danger line and he does not know — consequence, not stopping' }] },
+  'ody-v-12-aboard': { setup: 'CV-DAWNMOUTH', cls: 'NARRATION', sub: { m: [370, 452], h: 3.4, y: 1.6 },
+    fov: 40, dist: 9.5, comp: [-0.12, 0.03], move: { k: 'push', cms: 4.0 }, dof: { f: 4 },
+    cuts: [{ t: 3.4, setup: 'CV-AFTER', sub: { m: [700, 470], h: 3.0, y: 1.3 }, frac: 0.30,
+      move: { k: 'push', cms: 4 },
+      why: 'and one breath on the emptied room they got out of' }] },
 
-  /* ---------------- BEAT VI · THE SEA — sea ---------------- */
-  'ody-vi-01-jeer': { cls: 'GATE', sub: { t: 'cyclops', h: 6.4 }, over: 'ulysses', from: [470, 560],
-    camY: 3.4, fov: 22, frac: 0.30, comp: [0.16, -0.08],
-    move: { k: 'push', cms: 16 }, dof: { f: 5.6 } },
-  /* SOL #8a — A TAUNT NEEDS ITS TARGET IN THE FRAME. Round 1 made the speaker
-     look like he was addressing his own shipmates, because the Cyclops was
-     absent. The camera now stands OFF THE SHIP'S SEAWARD QUARTER, west of
-     Ulysses looking east, so the island and its giant sit in the very
-     look-room he is shouting into — the sea axis (ship frame LEFT, island
-     frame RIGHT) declared once and held through the sail-off. */
-  'ody-vi-02-taunt': { cls: 'DIALOGUE', sub: { a: 'ulysses' }, from: [450, 483],
-    camY: 2.60, fov: 30, frac: 0.50, comp: [0.30, 0.04],
-    move: { k: 'push', cms: 2.8 }, dof: { f: 2.5 } },
-  'ody-vi-03-rock1': { cls: 'CLOCK', sub: { m: [520, 470], h: 6.0, y: 1.4 }, from: [430, 600],
-    camY: 3.0, fov: 34, dist: 22, comp: [-0.10, -0.06],
-    move: { k: 'whip', toPx: [468, 505], toY: 1.2, at: 0.62, dur: 11, rise: 2.2 }, dof: { f: 8 } },
-  'ody-vi-04-twiceasfar': { cls: 'ACTION', sub: { m: [575, 450], h: 4.2, y: 1.6 }, from: [470, 590],
-    camY: 2.6, fov: 32, frac: 0.42, comp: [-0.10, 0.02],
-    move: { k: 'push', cms: 8 }, dof: { f: 4 } },
-  'ody-vi-05-menbeg': { cls: 'DIALOGUE', sub: { a: 'crew-0' }, from: [520, 560],
-    camY: 2.7, fov: 26, frac: 0.58, comp: [-0.16, 0.05],
-    move: { k: 'push', cms: 2.6 }, dof: { f: 2.2 } },
-  'ody-vi-06-defy': { cls: 'GATE', sub: { t: 'cyclops', h: 6.4 }, over: 'ulysses', from: [455, 545],
-    camY: 3.2, fov: 20, frac: 0.32, comp: [0.15, -0.08],
-    move: { k: 'push', cms: 14 }, dof: { f: 5.6 } },
-  'ody-vi-07-myname': { cls: 'DIALOGUE', sub: { a: 'ulysses' }, from: [418, 512],
-    camY: 2.9, fov: 24, frac: 0.66, comp: [0.17, 0.05],
-    move: { k: 'push', cms: 2.4 }, dof: { f: 2.0 } },
-  'ody-vi-08-prophecy': { cls: 'GIANT', sub: { a: 'poly-idle' }, from: [500, 520],
-    camY: 3.2, fov: 17, frac: 0.52, comp: [0.14, -0.06],
-    move: { k: 'push', cms: 5.5 }, dof: { f: 4 } },
-  'ody-vi-09-fatherson': { cls: 'GIANT', sub: { a: 'poly-idle' }, from: [560, 540],
-    camY: 3.0, fov: 16, frac: 0.58, comp: [-0.13, -0.06],
-    move: { k: 'push', cms: 5.0 }, dof: { f: 4 } },
-  'ody-vi-10-hades': { cls: 'DIALOGUE', sub: { a: 'ulysses' }, from: [440, 530],
-    camY: 2.9, fov: 25, frac: 0.62, comp: [0.17, 0.05],
-    move: { k: 'push', cms: 2.6 }, dof: { f: 2.2 } },
-  'ody-vi-11-curse': { cls: 'GIANT', sub: { a: 'poly-idle' }, from: [520, 500],
-    camY: 3.4, fov: 15, frac: 0.62, comp: [0.12, -0.05],
-    move: { k: 'push', cms: 4.5 }, dof: { f: 4 } },
-  'ody-vi-12-heard': { cls: 'CLOCK', sub: { m: [540, 468], h: 6.0, y: 1.4 }, from: [420, 606],
-    camY: 3.2, fov: 34, dist: 24, comp: [-0.10, -0.06],
-    move: { k: 'whip', toPx: [455, 540], toY: 1.2, at: 0.55, dur: 6, rise: 1.8 }, dof: { f: 8 } },
-  'ody-vi-13-ram': { cls: 'ACTION', sub: { m: [575, 450], h: 4.2, y: 1.6 }, from: [455, 596],
-    camY: 2.8, fov: 32, frac: 0.40, comp: [-0.10, 0.03],
-    move: { k: 'push', cms: 9 }, follow: true, dof: { f: 4 } },
-  /* SOL #8b — THE SAIL-OFF MUST SAY DEPARTURE. Round 1 showed the ship
-     apparently parked beside the cave. The subject is now the SHIP HERSELF, at
-     the mark she has actually reached by this unit, pinned by an authored
-     `side` to frame LEFT with open water ahead of her, while the island she is
-     leaving rises on the right — the same screen direction as the taunt, so
-     the cut answers it. The crane rises off her as she goes. */
-  'ody-vi-14-sailedon': { cls: 'WIDE', sub: { m: [205, 489], h: 8.0, y: 2.6 },
-    station: [-49.0, 9.0, 20.0], fov: 54, comp: [0.34, -0.30], side: -1,
-    move: { k: 'crane', dy: 1.8, dz: 1.5, dur: 10 }, follow: true, dof: { f: 11, near: 0.4 } },
+  /* ---------------- BEAT VI · THE TAUNT — sea ----------------
+     COVERAGE: EST · STERN · ROCK · DECK · MEN · EST · STERN · CLIFF · HAND ·
+     STERN · CLIFF · ROCK · ALTAR · OFF. The two-plane master returns for the
+     second gate, so the reader's defiance is committed in the same frame that
+     holds the men who are begging him not to. */
+  'ody-vi-01-jeer': { setup: 'SEA-EST', cls: 'GATE', sub: { t: 'cyclops', h: 6.4 }, frac: 0.30,
+    move: { k: 'push', cms: 16 } },
+  /* THE AXIS GETS ITS OTHER HALF (Sol VI #1): "there is no shared giant/boat
+     composition or matched high/low POV defining the conversation axis." The
+     master declares it; SEA-DOWN answers it from the headland, every time the
+     scene needs to remember how small the mouth doing the shouting is. */
+  'ody-vi-02-taunt': { setup: 'SEA-STERN', cls: 'DIALOGUE', sub: { a: 'ulysses' }, frac: 0.50,
+    move: { k: 'push', cms: 2.8 },
+    cuts: [{ t: 3.0, setup: 'SEA-DOWN', cls: 'ACTION', sub: { a: 'ulysses' }, frac: 0.24,
+      move: { k: 'push', cms: 8 },
+      why: 'the matched reverse: the boat as the thing on the cliff sees it' }] },
+  /* THE THROW, RECONSTRUCTED (Sol VI #2): hand grips rock, crew notices,
+     release and trajectory, boat reaction — and the cut lands ON the throw
+     rather than after it has disappeared. Four shots in one clock leaf, which
+     is only possible because the cut no longer waits for a page turn. */
+  'ody-vi-03-rock1': { setup: 'SEA-GRIP', cls: 'CLOCK', sub: { a: 'poly-idle' }, frac: 0.70,
+    move: { k: 'push', cms: 12 },
+    cuts: [
+      { t: 1.4, setup: 'SEA-MEN', cls: 'ACTION', sub: { a: 'crew-0' }, frac: 0.52,
+        move: { k: 'push', cms: 4 }, why: 'the crew see it leave his hands' },
+      { t: 2.8, setup: 'SEA-ROCK', sub: { m: [520, 470], h: 6.0, y: 1.4 },
+        move: { k: 'whip', toPx: [468, 505], toY: 1.2, at: 0.5, dur: 4.4, rise: 2.0 },
+        why: 'the eye rides the arc and the splash takes it' },
+      { t: 5.0, setup: 'SEA-DECK', cls: 'ACTION', sub: { m: [575, 450], h: 4.2, y: 1.6 },
+        frac: 0.46, move: { k: 'push', cms: 10 },
+        why: 'and the boat is thrown — the physical consequence, on the same breath' }] },
+  'ody-vi-04-twiceasfar': { setup: 'SEA-OAR', cls: 'ACTION', sub: { a: 'crew-1' }, frac: 0.42,
+    move: { k: 'push', cms: 6 },
+    cuts: [{ t: 3.0, setup: 'SEA-DECK', sub: { m: [575, 450], h: 4.2, y: 1.6 }, frac: 0.42,
+      move: { k: 'push', cms: 8 },
+      why: 'the oar bites, then the deck it is pulling — twice as far, and rowing for it' }] },
+  'ody-vi-05-menbeg': { setup: 'SEA-MEN', cls: 'DIALOGUE', sub: { a: 'crew-0' }, frac: 0.58,
+    move: { k: 'push', cms: 2.6 },
+    cuts: [{ t: 4.0, setup: 'SEA-STERN', sub: { a: 'ulysses' }, fov: 28, frac: 0.54,
+      comp: [0.28, 0.04], move: { k: 'push', cms: 2.4 },
+      why: 'and the face they are begging, with the confidence starting to crack' }] },
+  'ody-vi-06-defy': { setup: 'SEA-EST', cls: 'GATE', sub: { t: 'cyclops', h: 6.4 }, fov: 20,
+    frac: 0.32, comp: [0.15, -0.08], move: { k: 'push', cms: 14 },
+    reprise: 'the second gate is the master returning on purpose: the reader must commit the hubris inside the very frame that still holds the men begging him not to' },
+  'ody-vi-07-myname': { setup: 'SEA-STERN', cls: 'DIALOGUE', sub: { a: 'ulysses' }, fov: 24,
+    frac: 0.66, comp: [0.17, 0.05], move: { k: 'push', cms: 2.4 }, dof: { f: 2.0 },
+    cuts: [{ t: 3.2, setup: 'SEA-DOWN', cls: 'ACTION', sub: { a: 'ulysses' }, frac: 0.22,
+      move: { k: 'push', cms: 9 },
+      why: 'a name shouted at a mountain, seen from the mountain' }] },
+  'ody-vi-08-prophecy': { setup: 'SEA-CLIFF', cls: 'GIANT', sub: { a: 'poly-idle' }, frac: 0.52,
+    move: { k: 'push', cms: 5.5 },
+    cuts: [{ t: 4.0, setup: 'SEA-MEN', cls: 'ACTION', sub: { a: 'crew-0' }, frac: 0.50,
+      move: { k: 'push', cms: 3.0 },
+      why: 'the men doing the arithmetic of a prophecy — and it breaks the two giant shots apart' }] },
+  'ody-vi-09-fatherson': { setup: 'SEA-HAND', cls: 'GIANT', sub: { a: 'poly-idle' }, frac: 0.58,
+    move: { k: 'push', cms: 5.0 },
+    cuts: [{ t: 4.2, setup: 'SEA-DECK', cls: 'ACTION', sub: { m: [575, 450], h: 4.2, y: 1.6 },
+      frac: 0.44, move: { k: 'push', cms: 6 },
+      why: 'the deck, while he wheedles — nobody on it is moving toward him' }] },
+  'ody-vi-10-hades': { setup: 'SEA-STERN', cls: 'DIALOGUE', sub: { a: 'ulysses' }, fov: 25,
+    frac: 0.62, comp: [0.17, 0.05], move: { k: 'push', cms: 2.6 }, dof: { f: 2.2 } },
+  'ody-vi-11-curse': { setup: 'SEA-CLIFF', cls: 'GIANT', sub: { a: 'poly-idle' }, fov: 15,
+    frac: 0.62, comp: [0.12, -0.05], move: { k: 'push', cms: 4.5 },
+    cuts: [{ t: 4.0, setup: 'SEA-DOWN', cls: 'ACTION', sub: { a: 'ulysses' }, frac: 0.20,
+      move: { k: 'push', cms: 7 },
+      why: 'the curse lands on a boat too far off to hear it — which is the whole tragedy' }] },
+  'ody-vi-12-heard': { setup: 'SEA-ROCK', cls: 'CLOCK', sub: { m: [540, 468], h: 6.0, y: 1.4 },
+    dist: 24, camY: 3.2, move: { k: 'whip', toPx: [455, 540], toY: 1.2, at: 0.45, dur: 4, rise: 1.8 },
+    cuts: [{ t: 1.2, setup: 'SEA-DECK', cls: 'ACTION', sub: { m: [575, 450], h: 4.2, y: 1.6 },
+      frac: 0.44, move: { k: 'push', cms: 12 },
+      why: 'the wave takes them on — cut on the throw, not after it has vanished' }] },
+  'ody-vi-13-ram': { setup: 'SEA-ALTAR', cls: 'ACTION', sub: { m: [575, 450], h: 4.2, y: 1.6 },
+    frac: 0.40, move: { k: 'push', cms: 9 }, follow: true,
+    cuts: [{ t: 4.0, setup: 'SEA-MEN', sub: { a: 'crew-0' }, frac: 0.48,
+      move: { k: 'push', cms: 3.0 },
+      why: 'the men at the sacrifice, and the sky that gives them no sign' }] },
+  'ody-vi-14-sailedon': { setup: 'SEA-OFF', cls: 'WIDE', sub: { m: [205, 489], h: 8.0, y: 2.6 },
+    into: 'dissolve', move: { k: 'crane', dy: 1.8, dz: 1.5, dur: 10 }, follow: true },
 };
+
+/* THE MERGE. A row is a TAKE of its setup: the setup's geometry first, the
+   row's own decisions over it. A `holdOf` row is not a take at all — it is the
+   held row still running, so it inherits that row outright and may differ only
+   in the class it is read under. */
+function resolveSpec(id, spec, resolved) {
+  if (!spec) return null;
+  const base = SETUPS[spec.setup];
+  if (!base) throw new Error(`${id}: unknown setup ${spec.setup}`);
+  if (spec.holdOf) {
+    const held = resolved[spec.holdOf];
+    if (!held) throw new Error(`${id}: holdOf ${spec.holdOf} is not resolved yet`);
+    const { setup, holdOf, hold, cls, ...rest } = spec;
+    return { ...held, setup, holdOf, hold, ...(cls ? { cls } : {}), ...rest,
+             __held: true };
+  }
+  const { setup, ...row } = spec;
+  const out = { ...base, ...row, setup };
+  /* the dof block merges rather than replaces: a take may change the stop
+     without re-declaring the near-field softening the setup signed off */
+  if (base.dof || row.dof) out.dof = { ...(base.dof || {}), ...(row.dof || {}) };
+  /* a setup's own `name`/`role`/`note` are documentation, never geometry */
+  delete out.name; delete out.role; delete out.note;
+  return out;
+}
 
 /* ====================================================================== *
  * the solver
@@ -746,8 +1169,30 @@ function solve(spec, set, w, boxes, anch, over) {
      down out of solid rock because only the end was ever checked. */
   const mv0 = spec.move || {};
   const legal = (p) => inVol(S.vol, p) && !Object.values(boxes).some((b) => inBox(b, p));
+  /* ================= THE 30-DEGREE RULE, SOLVED ================= *
+   * A declared setup is a promise about an ANGLE, and a search wide enough to
+   * get round the furniture is wide enough to break that promise: Beat II's
+   * two answering giant angles both swung west and landed 23 cm apart, and the
+   * three ram-speech units came back within one degree of each other — the
+   * very defect the round was called to fix, hiding behind a correct label.
+   * So the separation is a CONSTRAINT the solver has to satisfy, not a number
+   * the table reports afterwards. A candidate station is rejected when it sits
+   * inside `sepDeg` of the previous shot's bearing on the same subject; if the
+   * room genuinely has nowhere else to stand, the search runs again without it
+   * and the row says so out loud. */
+  const AV = spec.__prevPos;
+  const sepDeg = spec.__sepDeg === undefined ? 26 : spec.__sepDeg;
+  const sepOk = (p) => {
+    if (!AV || spec.__sepOff) return true;
+    const a1 = Math.atan2(AV[0] - A.x, AV[2] - A.z) / D2R;
+    const a2 = Math.atan2(p.x - A.x, p.z - A.z) / D2R;
+    let dd = Math.abs(a1 - a2) % 360;
+    if (dd > 180) dd = 360 - dd;
+    return dd >= sepDeg;
+  };
   const ok = (p) => {
     if (!legal(p)) return false;
+    if (!sepOk(p)) return false;
     if (mv0.k !== 'crane') return true;
     const d = { x: p.x - A.x, z: p.z - A.z };
     const l = Math.hypot(d.x, d.z) || 1;
@@ -775,17 +1220,25 @@ function solve(spec, set, w, boxes, anch, over) {
     return null;
   };
   let best = null, why = 'hint';
-  outer:
-  for (const phase of phases) {
-    for (const shrink of [1, 0.92, 0.84, 0.76, 0.68, 0.6, 0.52, 0.45]) {
-      const got = placeAt(want * shrink, phase);
-      if (!got) continue;
-      best = got;
-      why = (got.da === 0 && shrink === 1 && phase === 1) ? 'hint'
-        : `${phase === 2 ? 'UPSTAGE ' : ''}swung ${got.da.toFixed(0)}deg x${shrink}`;
-      break outer;
+  const search = () => {
+    for (const phase of phases) {
+      for (const shrink of [1, 0.92, 0.84, 0.76, 0.68, 0.6, 0.52, 0.45]) {
+        const got = placeAt(want * shrink, phase);
+        if (!got) continue;
+        return { got, why: (got.da === 0 && shrink === 1 && phase === 1) ? 'hint'
+          : `${phase === 2 ? 'UPSTAGE ' : ''}swung ${got.da.toFixed(0)}deg x${shrink}` };
+      }
     }
+    return null;
+  };
+  let found = search();
+  if (!found && AV && !spec.__sepOff) {
+    /* the room has nowhere else to stand — take the near angle and declare it */
+    spec.__sepOff = true;
+    spec.__sepLost = true;
+    found = search();
   }
+  if (found) { best = found.got; why = found.why + (spec.__sepLost ? ' + NO SEPARATION LEFT' : ''); }
   /* ================= THE SIGHT LINE =================
    * A station is legal when the LENS is out of the furniture; a station is
    * SHOOTABLE when the lens's view of its subject is too. The cave's woodpile
@@ -1016,7 +1469,41 @@ const UNITS_MOD = await import(pathToFileURL(UNITS_JS).href);
 const units = UNITS_MOD.UNITS.map((u) => ({
   id: u.id, set: u.set, speaker: u.speaker || '', verb: u.verb || '',
   focus: u.focus || '', head: !!u.head, beat: u.beat || 1,
+  words: String(u.text || '').trim().split(/\s+/).filter(Boolean).length,
 }));
+
+/* ====================================================================== *
+ * THE READING CLOCK, MODELLED — and the reason it is in the BAKE.
+ *
+ * The cut list has to be designed against something. A shot scheduled five
+ * seconds into a unit a reader leaves after three is not a shot: it is a line
+ * of JSON nobody will ever see. So the bake carries the same model of a
+ * reader the judgment recorder plays at — a line takes the time its WORDS
+ * take, not a fixed six-nine seconds — and warns when a cut list overruns it.
+ *
+ * This is a DESIGN CONSTRAINT, not a coupling: nothing at runtime reads these
+ * numbers, and a reader who lingers or races still gets whatever of the list
+ * their own dwell reaches. It is the difference between an editor who knows
+ * how long the reel is and one who does not.
+ * ====================================================================== */
+export const READ_RATE = 7.0;          /* words a second — a carried skim-read */
+export const READ_BASE = 0.9;
+export const READ_MIN = 2.2, READ_MAX = 7.0, READ_GATE_MIN = 5.4;
+/* the four leaves the BEAT CLOCK owns are not read at all — their length is
+   the clock's, measured off the amended offsets in emit_units_ody.py */
+const CLOCK_DWELL = {
+  'ody-iv-03-auger': 3.0, 'ody-iv-04-bore': 3.1, 'ody-iv-05-hiss': 2.8,
+  'ody-iv-06-fright': 2.2, 'ody-vi-03-rock1': 6.0, 'ody-vi-12-heard': 2.2,
+};
+const READ_DWELL = {};
+for (const u of units) {
+  const d = READ_BASE + u.words / READ_RATE;
+  const gate = u.verb === 'target' || u.verb === 'hold' || u.verb === 'release';
+  const auto = UNITS_MOD.UNITS.find((x) => x.id === u.id);
+  READ_DWELL[u.id] = CLOCK_DWELL[u.id] !== undefined ? CLOCK_DWELL[u.id]
+    : u.verb === 'auto' ? (auto && auto.dwell) || 3.4
+    : Math.max(gate ? READ_GATE_MIN : READ_MIN, Math.min(READ_MAX, d));
+}
 /* a unit inherits its leaf's set when it does not name one */
 {
   let last = 'shore';
@@ -1031,9 +1518,22 @@ const MARKS = JSON.parse(await readFile(MARKS_FILE, 'utf8'));
 const rows = {};
 const warn = [];
 const wideByBeat = {};
-for (const u of units) {
-  const spec = SPEC[u.id];
-  if (!spec) { warn.push(`${u.id}: NO SPEC`); continue; }
+const resolvedSpecs = {};
+
+/* ====================================================================== *
+ * THE SHOT BAKE, as a function — because a UNIT IS NO LONGER ONE SHOT.
+ *
+ * Round 1's table had exactly one station per unit, so the bake could be a
+ * loop over units. Sol's round-1 verdict killed that shape: "fourteen scene
+ * shots ... almost exactly 6.96 seconds each — that is reading cadence
+ * imposed on picture." A unit is a slot of the READER's time; the film's cut
+ * has to be free of it. So a SPEC row may carry `cuts: [{t, ...}]` and every
+ * entry is baked through this same function, against the same marks, the
+ * same proscenium law and the same 26-degree separation constraint as any
+ * other shot. The only thing a sub-shot has that a unit's opening shot does
+ * not is a `t` — the offset, in the unit's own seconds, at which it cuts.
+ * ====================================================================== */
+function bakeShot(id, spec, u, prevShot) {
   const w = FRAME[u.set];
   const boxes = Object.fromEntries(Object.entries(OBSTACLES[u.set])
     .map(([k, b]) => [k, boxWorld(w, b)]));
@@ -1041,6 +1541,15 @@ for (const u of units) {
   if (!bodies) warn.push(`${u.id}: no measured staging — re-run shots3d_marks.mjs`);
 
   spec.__set = u.set;
+  /* the shot this one cuts FROM, so the solver can be made to stand somewhere
+     else; a hold is the same shot still running and is exempt by definition.
+     THE CHAIN RUNS THROUGH THE CUT LIST: a unit's opening shot answers the
+     LAST shot of the unit before it, not that unit's opening shot. */
+  if (!spec.hold && prevShot) {
+    spec.__prevPos = prevShot.pos;
+    spec.__prevFrac = prevShot.frame.frac;
+    if (spec.sepDeg !== undefined) spec.__sepDeg = spec.sepDeg;
+  }
   const anch = anchorOf(spec, w, bodies, warn, u.id);
   let over = null;
   if (spec.over && bodies) {
@@ -1131,8 +1640,19 @@ for (const u of units) {
     }
   }
 
-  rows[u.id] = {
+  return {
     unit: u.id, beat: u.beat, set: u.set, class: spec.cls,
+    /* THE CUT PATTERN, carried by the row the runtime reads. `setup` is the
+       angle on the action; a unit advance that changes it is a CUT, one that
+       does not is a HOLD and must say why. `transition` is how the cut is
+       played — a straight cut everywhere except the five time ellipses the
+       lens allows a dissolve for. */
+    setup: spec.setup,
+    setupName: (SETUPS[spec.setup] || {}).name || null,
+    setupRole: (SETUPS[spec.setup] || {}).role || null,
+    transition: spec.hold ? 'hold' : (spec.into === 'dissolve' ? 'dissolve' : 'cut'),
+    hold: spec.hold || null,
+    reprise: spec.reprise || null,
     speaker: u.speaker || null,
     subject: spec.sub, over: spec.over || null, fg: spec.fg || null,
     pos: [+r.pos.x.toFixed(3), +r.pos.y.toFixed(3), +r.pos.z.toFixed(3)],
@@ -1172,8 +1692,59 @@ for (const u of units) {
     flags: {
       intro: !!spec.intro, blinding: !!spec.blinding, offstage: !!spec.offstage,
       gateTarget: spec.gateTarget || null,
+      sepLost: !!spec.__sepLost,
     },
   };
+}
+
+/* ---- the walk over the contract: one opening shot per unit, then its list ---- */
+let prevInBeat = null;
+for (const u of units) {
+  const spec = resolveSpec(u.id, SPEC[u.id], resolvedSpecs);
+  if (!spec) { warn.push(`${u.id}: NO SPEC`); continue; }
+  resolvedSpecs[u.id] = spec;
+  const chainFrom = (!spec.hold && prevInBeat && prevInBeat.beat === u.beat) ? prevInBeat : null;
+  const row = bakeShot(u.id, spec, u, chainFrom);
+  rows[u.id] = row;
+  if (!spec.hold) prevInBeat = row;
+
+  /* THE CUT LIST. Every entry is a whole shot; `t` is when it cuts, measured
+     in the unit's own seconds from the unit's cut. A held row may not carry
+     one — a hold is the same shot still running, and a shot that cuts away
+     inside it was never a hold. */
+  const list = (SPEC[u.id] || {}).cuts;
+  if (list && list.length) {
+    if (spec.hold) warn.push(`${u.id}: a HELD row may not carry a cut list`);
+    const baked = [];
+    let prev = row, tPrev = 0;
+    for (let i = 0; i < list.length; i++) {
+      const c = list[i];
+      const sid = `${u.id}#${i + 1}`;
+      if (!(c.t > 0.3)) warn.push(`${sid}: a sub-cut must land after the unit's own first frame (t ${c.t})`);
+      if (!(c.t > tPrev + 0.6)) warn.push(`${sid}: sub-cut at ${c.t}s crowds the shot before it (${tPrev}s)`);
+      tPrev = c.t;
+      const { t, why, ...rest } = c;
+      const ss = resolveSpec(sid, { cls: spec.cls, sub: spec.sub, ...rest }, resolvedSpecs);
+      const srow = bakeShot(sid, ss, u, prev);
+      srow.t = t;
+      srow.sub = i + 1;
+      srow.why = why || null;
+      srow.transition = 'cut';           /* only a page turn may dissolve */
+      if (srow.class === 'WIDE') warn.push(`${sid}: a sub-cut may not be the beat's WIDE`);
+      if (prev.setup === srow.setup)
+        warn.push(`COVERAGE: ${sid} repeats ${prev.setup} — the angle must change on every cut`);
+      baked.push(srow);
+      prev = srow;
+    }
+    row.cuts = baked;
+    prevInBeat = prev;
+    /* THE CUT LIST IS DESIGNED AGAINST THE READING CLOCK, not welded to it: a
+       shot the reader will never reach is a shot that does not exist. */
+    const dwell = READ_DWELL[u.id];
+    if (dwell !== undefined && tPrev > dwell - 0.5)
+      warn.push(`${u.id}: the last sub-cut at ${tPrev}s falls outside a reader's ` +
+        `${dwell.toFixed(1)}s on this unit — it would never play`);
+  }
 }
 
 /* the wide budget: ONE per beat, and it is the heading's */
@@ -1224,6 +1795,152 @@ for (let i = 1; i < escalation.rungs.length; i++) {
   }
 }
 
+/* ====================================================================== *
+ * THE COVERAGE LAW (the director's cut).
+ *
+ * A scene is an EDITED SEQUENCE, not a list of shots. The gate is the one an
+ * editor would apply on the bench:
+ *
+ *   1. ANGLES CHANGE. No two consecutive units may sit on the same setup
+ *      unless the row declares a hold reason — and a declared hold must be
+ *      the SAME SHOT STILL RUNNING (same station, same lens), or it is not a
+ *      hold, it is a jump cut wearing an excuse.
+ *   2. ESTABLISH ONCE. A setup whose role is `establishing` is used exactly
+ *      once in its scene. Re-establishing a changed world (a night that has
+ *      become a morning) is a different setup with the role `reestablish`.
+ *   3. THE VOCABULARY IS SMALL AND IT RECURS. A scene whose setups are all
+ *      used once has no coverage — it has thirteen postcards. At least a
+ *      third of the cuts in a scene must be a RETURN to a setup the reader
+ *      has already been given.
+ * ====================================================================== */
+const BEATS = [1, 2, 3, 4, 5, 6];
+/* which take of its setup this row is — the number an editor writes on a slate */
+const takeOf = (list, i) =>
+  list.slice(0, i + 1).filter((r) => r.setup === list[i].setup).length;
+const sequences = [];
+for (const b of BEATS) {
+  /* THE SCENE IS A LIST OF SHOTS, NOT A LIST OF UNITS. Every unit contributes
+     its opening shot and then whatever its cut list owes, in order — which is
+     the sequence an editor would actually splice, and the sequence every
+     coverage law below is measured on. */
+  const list = [];
+  for (const u of units) {
+    if (u.beat !== b) continue;
+    const r = rows[u.id];
+    if (!r) continue;
+    list.push(r);
+    for (const c of r.cuts || []) list.push(c);
+  }
+  if (!list.length) continue;
+  const seen = new Set();
+  const cut = [];
+  let cuts = 0, holds = 0, returns = 0, dissolves = 0;
+  for (let i = 0; i < list.length; i++) {
+    const r = list[i], p = i ? list[i - 1] : null;
+    const isReturn = seen.has(r.setup);
+    if (p && r.setup === p.setup) {
+      if (!r.hold) warn.push(`COVERAGE: ${r.unit} repeats ${p.unit}'s setup ${r.setup} ` +
+        'with no declared hold — the angle must change between consecutive units');
+      else {
+        const dp = Math.hypot(r.pos[0] - p.pos[0], r.pos[1] - p.pos[1], r.pos[2] - p.pos[2]);
+        if (dp > 0.35 || Math.abs(r.fov - p.fov) > 2)
+          warn.push(`COVERAGE: ${r.unit} declares a HOLD but the camera moves ` +
+            `${dp.toFixed(2)} m / ${Math.abs(r.fov - p.fov).toFixed(1)} deg — a hold is the same shot still running`);
+        holds++;
+      }
+    } else if (p) { cuts++; if (isReturn) returns++; }
+    if (r.transition === 'dissolve') dissolves++;
+    /* THE ANGLE IS MEASURED, NOT DECLARED. A label that says the angle changed
+       is worth nothing if the solver put both stations in the same place. */
+    if (p && !r.hold) {
+      const s0 = r.frame.anchor;
+      const v1 = [p.pos[0] - s0[0], p.pos[2] - s0[2]];
+      const v2 = [r.pos[0] - s0[0], r.pos[2] - s0[2]];
+      const n1 = Math.hypot(v1[0], v1[1]) || 1, n2 = Math.hypot(v2[0], v2[1]) || 1;
+      const deg = Math.acos(Math.max(-1, Math.min(1,
+        (v1[0] * v2[0] + v1[1] * v2[1]) / (n1 * n2)))) / D2R;
+      const dp = Math.hypot(r.pos[0] - p.pos[0], r.pos[1] - p.pos[1], r.pos[2] - p.pos[2]);
+      const near = r.set === 'cave' ? 1.6 : 4.8;
+      r.cutAngle = +deg.toFixed(1);
+      r.cutMove = +dp.toFixed(2);
+      if (dp < near && Math.abs(r.fov - p.fov) < 8 && deg < 22)
+        warn.push(`COVERAGE: ${r.unit} is the SAME CAMERA as ${p.unit} — ` +
+          `${deg.toFixed(0)} deg apart, ${dp.toFixed(2)} m, same lens`);
+    }
+    seen.add(r.setup);
+    cut.push({ unit: r.unit, setup: r.setup, name: r.setupName, role: r.setupRole,
+               cls: r.class, transition: r.transition, take: takeOf(list, i),
+               size: r.frame.frac, angle: r.cutAngle === undefined ? null : r.cutAngle,
+               ...(r.sub ? { sub: r.sub, at: r.t, why: r.why } : {}),
+               ...(r.hold ? { hold: r.hold } : {}),
+               ...(r.reprise ? { reprise: r.reprise } : {}) });
+  }
+    /* ================================================================== *
+   * THE PREFIX LAW — round 2's own new failure mode, found on the lap.
+   *
+   * A cut list is spent in the READER's time, and a reader may turn the page
+   * at any moment. So the shot the next unit OPENS on has to be legal against
+   * every shot the unit before it could still be sitting on: its base and each
+   * of its sub-cuts. Round 2's first green bake shipped `feltbacks` cutting
+   * BELLY -> RAMSPEECH and `lastofall` opening on BELLY, and the lap — which
+   * turned the page before the second sub-cut — played BELLY straight into
+   * BELLY. The bake could not see it because the table's own order was legal.
+   * ================================================================== */
+  for (let i = 1; i < list.length; i++) {
+    const r = list[i];
+    if (r.sub || r.hold) continue;              /* a unit's OPENING shot only */
+    let j = i - 1;
+    while (j >= 0 && list[j].sub) j--;          /* back to that unit's base */
+    for (let k = j; k < i; k++)
+      if (list[k] && list[k].setup === r.setup)
+        warn.push(`COVERAGE: ${r.unit} opens on ${r.setup}, which ${list[k].unit}` +
+          `${list[k].sub ? '#' + list[k].sub : ''} may still be on when the reader ` +
+          'turns the page — a cut list must leave EVERY prefix legal');
+  }
+  const est = [...seen].filter((s) => (SETUPS[s] || {}).role === 'establishing');
+  for (const s of est) {
+    const takes = list.filter((r) => r.setup === s);
+    /* a master may come back exactly once, and only when the row says why:
+       a reprise is a dramatic decision, not a tired operator */
+    const excused = takes.filter((r) => r.reprise).length;
+    if (takes.length - excused !== 1)
+      warn.push(`COVERAGE: beat ${b} uses the establishing setup ${s} ${takes.length} times ` +
+        `(${excused} declared reprise) — the budget is one`);
+  }
+  if (cuts && returns / cuts < 0.25)
+    warn.push(`COVERAGE: beat ${b} returns to a known angle on only ${returns}/${cuts} cuts — ` +
+      'a scene whose setups are all used once is a slideshow, not coverage');
+  sequences.push({ beat: b, set: list[0].set, units: list.length,
+    setups: [...seen].map((s) => ({ id: s, ...SETUPS[s] && { name: SETUPS[s].name,
+      role: SETUPS[s].role, note: SETUPS[s].note, takes: list.filter((r) => r.setup === s).length } })),
+    stats: { setups: seen.size, cuts, holds, returns, dissolves,
+             shots: list.length, subCuts: list.filter((r) => r.sub).length,
+             /* THE AVERAGE SHOT LENGTH the scene will actually play at: the
+                modelled reader's seconds for the beat, divided by the number
+                of SHOTS rather than the number of page turns. This is the one
+                number Sol's whole verdict was about. */
+             secs: +[...new Set(list.map((r) => r.unit))]
+                    .reduce((n, id) => n + (READ_DWELL[id] || 0), 0).toFixed(1),
+             asl: +([...new Set(list.map((r) => r.unit))]
+                    .reduce((n, id) => n + (READ_DWELL[id] || 0), 0) / list.length).toFixed(2),
+             cutsPerSetup: +(cuts / seen.size).toFixed(2) },
+    cut });
+}
+const coverage = {
+  law: 'a scene is an edited sequence: establish once, then alternate; the angle changes between consecutive units unless a hold is declared, and a hold is the same shot still running.',
+  lens: 'spielberg',
+  ok: !warn.some((x) => x.startsWith('COVERAGE:')),
+  totals: {
+    shots: sequences.reduce((n, s) => n + s.stats.shots, 0),
+    subCuts: sequences.reduce((n, s) => n + s.stats.subCuts, 0),
+    setups: sequences.reduce((n, s) => n + s.stats.setups, 0),
+    cuts: sequences.reduce((n, s) => n + s.stats.cuts, 0),
+    holds: sequences.reduce((n, s) => n + s.stats.holds, 0),
+    returns: sequences.reduce((n, s) => n + s.stats.returns, 0),
+    dissolves: sequences.reduce((n, s) => n + s.stats.dissolves, 0),
+  },
+};
+
 /* THE SCREEN-DIRECTION LEDGER — every pinned row, and the side it is pinned
    to, so the walk's own [side] gate has something to check the live frame
    against instead of re-deriving the axis from scratch. */
@@ -1231,7 +1948,17 @@ const sides = {};
 for (const [id, r] of Object.entries(rows)) if (r.frame.side) sides[id] = r.frame.side;
 
 const out = {
-  lane: 'cine-r2',
+  lane: 'cine-r3-directors-cut',
+  lens: {
+    id: 'spielberg',
+    why: 'the only lens in the reference set whose editing default IS classical coverage — master + reverse + reaction + insert, cut on the reaction rather than the reveal — which is the thing this book was missing; and its scale grammar (the threat shot from a child\'s eye height with a human in the near ground) and its firelit palette (amber key, grey-blue-green shadow, one visible hard shaft through haze) are already the cave\'s own light story.',
+    defaults: { lensKitMm: [21, 35, 50, 135], keyRatio: '3:1 warm / 8:1 threat',
+      aslSeconds: '3-7 action / 5-9 emotional',
+      transitions: ['hard cut', 'match cut', 'dissolve'],
+      avoid: ['dutch angle', 'unmotivated handheld', 'orbit around subject', 'snap zoom'] },
+  },
+  coverage,
+  sequences,
   escalation,
   axis: { law: 'IN THE CAVE THE GIANT IS FRAME RIGHT AND THE MEN ARE FRAME LEFT; at sea the island is frame RIGHT and the ship frame LEFT — the direction she is leaving in.', sides },
   created: new Date().toISOString().slice(0, 10),
