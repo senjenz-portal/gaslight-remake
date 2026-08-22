@@ -80,6 +80,19 @@ export const CINE_VERSION = 'cine-r4-live-book';
  * ====================================================================== */
 export const COC_REF_H = 538;
 export const DESIGN_ASPECT = 1408 / 768;
+/* THE GATE SHOT MUST SEE THE GATE. How far into the frame the reader's target
+   has to be before the picture counts as showing it, how much of the target
+   that has to cover, and how far the lens may open to get there. */
+export const SEE_SAFE = 0.90;        /* NDC — inside the action-safe rim */
+export const SEE_SHARE = 0.34;       /* of the target's own screen box */
+export const SEE_FOV_MAX = 58;       /* deg — past this the cave stops being a cave */
+export const SEE_TAU = 0.42;         /* s — the operator's own hand on the correction */
+/* THE COMPOSITION HOLD. How far a body may drift from the size the bake
+   composed him at before the lens holds him, how far the lens may go to do it,
+   and how fast the operator's hand moves. */
+export const HOLD_BAND = [0.86, 1.22];
+export const HOLD_ZOOM = [0.70, 1.45];
+export const HOLD_TAU = 0.55;        /* s */
 /* the stage may narrow this far before it letterboxes again */
 export const ASPECT_MIN = 1.30;
 
@@ -94,9 +107,10 @@ export const DWELL = Object.freeze({
                           class's pushMax, and it only ever GROWS the subject */
   PUSH_TAU: 9.0,       /* s — the creep's time constant */
   SWAY_M: 0.014,       /* m — the operator's weight on his feet */
-  HOLD_S: 10.5,        /* s — how long the hold frame is kept before coverage
-                          is re-cycled (clear of the 10 s live-dwell gate) */
-  CYCLE_S: 7.0,        /* s — one re-cycled angle's own dwell */
+  HOLD_S: 10.5,        /* s — the longest a station is held before the unit
+                          re-cycles its coverage, and the whole cadence when
+                          there is no line to spread it over */
+  CYCLE_MIN: 4.5,      /* s — the shortest: a reader is not cut on top of */
 });
 
 /* THE TRANSITION. A unit advance is a straight CUT — that is the grammar and
@@ -352,6 +366,11 @@ export class CineCam {
     this.noRecycle = false;           /* the page's word: this unit is the reader's */
     this.dwellLog = [];               /* re-cycles, kept off the assembly's ledger */
     this.fitYaw = 0; this.fitFov = 0; /* what the aspect solve had to do */
+    this.fitSee = 0;                  /* ...and what the reader's gate had to */
+    this.fitHold = 0; this.holdFovD = 0;  /* ...and what the drifting world did */
+    this.seeFovD = 0; this.seeSnap = true;
+    this.seeLookD = new THREE.Vector3();
+    this._seeBox = null; this._see = null;
     this.log = [];                    /* [{unit, setup, kind, t}] — the cut ledger */
     this.anchor = new THREE.Vector3();/* the live subject, this frame */
     this.subjBox = new THREE.Box3();
@@ -388,7 +407,16 @@ export class CineCam {
    * The table is gated at bake time so a hold can only happen where a row
    * declared a reason; this reads the declaration rather than re-deciding it.
    */
-  cutTo(unitId, t, resolve) {
+  /**
+   * @param {string} unitId
+   * @param {number} t
+   * @param {Function} [resolve]
+   * @param {number} [lineS] the MASTERED length of this unit's spoken line, in
+   *   seconds. The one fact the shot table does not contain and the page does:
+   *   the bake wrote every cut list against a 7 s-capped reading model and the
+   *   sentences run 7.2-21.2 s. See `_spendDwell`.
+   */
+  cutTo(unitId, t, resolve, lineS) {
     const row = this.rowFor(unitId);
     if (!row) return false;
     const prev = this.shot;
@@ -412,6 +440,17 @@ export class CineCam {
     this.holdRow = this.coverage[this.coverage.length - 1];
     this.lastCutT = t;
     this.cycleI = 0;
+    /* THE COVERAGE IS RE-SPACED AGAINST THE LINE THE READER ACTUALLY HEARS.
+       See `_spendDwell`: the declared cut times are left exactly where the
+       bake put them (they are the sentence's opening rhythm and the recorder
+       played them), and everything AFTER the list is spread over what is left
+       of the spoken line instead of over a constant. */
+    /* a cut is a cut: the new station owes the reader its gate on its FIRST
+       frame, and it carries none of the last station's correction */
+    this.seeSnap = true; this.seeFovD = 0; this.holdFovD = 0;
+    if (this.seeLookD) this.seeLookD.set(0, 0, 0);
+    this.lineS = (lineS > 0) ? lineS : 0;
+    this.cycleDue = this._cycleDue();
     if (held) {
       this.holds++;
       this.log.push({ unit: unitId, t: +t.toFixed(3), setup: row.setup, kind: 'hold', sub: 0 });
@@ -486,9 +525,40 @@ export class CineCam {
    * target (the ring is drawn where the shot puts it), and a CLOCK unit's move
    * belongs to the beat clock. Those hold and breathe; they do not re-cut.
    *
+   * THE SPACING IS THE LINE'S, NOT A CONSTANT'S. The other half of this class
+   * was "re-bake the cut lists against each unit's ACTUAL line duration so the
+   * coverage spans the spoken sentence", and the honest place to do that is
+   * here rather than in shots3d.json — because the table is a FILM and the film
+   * was cut at the recorder's pace, which is the pace the assembly gates still
+   * measure it at. Pushing the declared cuts later in the table would drain
+   * two thirds of the sub-cuts out of the recorder's own lap and out of every
+   * frame the viewing law reads. So the DECLARED times stay declared, and the
+   * page hands the camera the one fact the table does not carry — the mastered
+   * length of the line — and the coverage that is left is spread over the rest
+   * of the SENTENCE. ody-i-01-bard: one declared cut at 4.2 s against a 21.2 s
+   * line becomes FLEET 0-4.2 · CAMP 4.2-12.7 · FLEET 12.7-21.2, three live
+   * pictures across the sentence instead of a frozen one from 14 s.
+   *
+   * With no line (an unvoiced head, a silent replay) the constant is the
+   * fallback, and at the recorder's own pace nothing re-cycles at all: every
+   * unit is gone before its first cycle is due, which is why the assembly's
+   * numbers cannot move.
+   *
    * DETERMINISM is unharmed: the trigger is a fixed offset from a fixed-step
    * sim clock and the rotation is an index, never a random.
    */
+  /** how long this station is held before the next declared angle is due */
+  _cycleDue() {
+    const n = Math.max(1, (this.coverage ? this.coverage.length : 1) - 1);
+    /* the line, from the end of the declared cut list to the last word */
+    const left = this.lineS ? this.lineS - (this.lastCutT - this.unitT0) : 0;
+    if (!(left > 0)) return DWELL.HOLD_S;
+    /* one slot per remaining angle plus the hold frame it comes home to; never
+       so brisk that the reader is cut on top of, never so slow that a long line
+       dies on one frame */
+    return clamp(left / (n + 1), DWELL.CYCLE_MIN, DWELL.HOLD_S);
+  }
+
   _spendDwell(t) {
     const list = this.coverage;
     if (!list || list.length < 2) return 0;
@@ -503,8 +573,7 @@ export class CineCam {
     if (this.noRecycle) return 0;
     if (u.class === 'GATE' || u.class === 'CLOCK') return 0;
     if (u.flags && u.flags.gateTarget) return 0;
-    const due = this.cycleI === 0 ? DWELL.HOLD_S : DWELL.CYCLE_S;
-    if (t - this.lastCutT < due) return 0;
+    if (t - this.lastCutT < (this.cycleDue || DWELL.HOLD_S)) return 0;
     const others = list.filter((s) => s !== this.holdRow);
     if (!others.length) return 0;
     this.cycleI++;
@@ -516,6 +585,10 @@ export class CineCam {
     this.t0 = t;                       /* the station starts at its own first frame */
     this.recycles++;
     this.lastCutT = t;
+    /* past the line's own end the cadence settles to the long hold: the reader
+       who stops to look at a picture is not cut on every seven seconds forever */
+    this.cycleDue = this.lineS && (t - this.unitT0) < this.lineS
+      ? this._cycleDue() : DWELL.HOLD_S;
     /* THE CUT LEDGER IS THE ASSEMBLY'S, NOT THE READER'S. `log` is what the
        coverage law reads — the shots the film is made of. A dwell re-cycle is
        a projection-time event on a unit whose picture has already been played,
@@ -527,6 +600,10 @@ export class CineCam {
   }
 
   _install(row) {
+    /* a sub-cut is a cut: the incoming station owes the reader its gate on its
+       first frame, and inherits none of the outgoing one's correction */
+    this.seeSnap = true; this.seeFovD = 0; this.holdFovD = 0;
+    if (this.seeLookD) this.seeLookD.set(0, 0, 0);
     this._basePos.fromArray(row.pos);
     this._baseLook.fromArray(row.lookAt);
     this._bakedAnchor.fromArray(row.frame.anchor);
@@ -716,9 +793,15 @@ export class CineCam {
     this.cam.up.set(0, 1, 0);
     this.cam.lookAt(this._look);
     this.cam.updateMatrixWorld(true);
-    /* ...and only now, on the aim the move actually landed, is the frame the
-       reader is being shown solved for */
+    /* the composition the bake signed off, held against a world that has moved
+       on — then the frame the reader is actually being shown, solved for */
+    this._holdComposition(row, dt);
     this._fitAspect(row);
+    /* ...and last of all, the frame is asked whether the reader can still find
+       the thing it is telling him to click */
+    this._keepMustSee(row, dt);
+    /* a cut lands whole: the frame after it is eased, not snapped */
+    this.seeSnap = false;
 
     /* the focus rides the subject, not the frame centre */
     this.focusDist = Math.max(0.25, this.cam.position.distanceTo(this.anchor));
@@ -735,6 +818,68 @@ export class CineCam {
       this.rackK = +e.toFixed(3);
     }
     void dt; void snap;
+  }
+
+  /**
+   * THE COMPOSITION IS HELD (live-book cut, CLASS 2).
+   *
+   * THE DEFECT, measured at reader pace: the staging runs on sim time and the
+   * shot table was baked against a 7 s reading model, so by the time a frame
+   * ACTUALLY arrives the bodies it was composed around have walked on. The
+   * station has a partial answer already — `_look` rides the subject's drift,
+   * so he stays on his NDC — but nothing rides his DISTANCE, and distance is
+   * what size is. Measured on the live page at reader pace:
+   *
+   *     ody-i-12-misgave / SH-COUNCIL   subject 0.235 of frame height,
+   *                                     against an OTS floor of 0.300
+   *     ody-ii-06-plea   / CV-OVER      0.298, against the same floor
+   *
+   * — men who had walked six metres further off than the bake left them, in a
+   * frame the reader was looking at for thirteen seconds.
+   *
+   * So the operator holds his composition. The lens keeps the subject at the
+   * SIZE THE BAKE COMPOSED HIM AT, and every part of that sentence is a bound:
+   *
+   *   · it only engages on REAL drift (outside a dead band), so a shot whose
+   *     world is where the bake left it is untouched, and the recorder's own
+   *     pace — where the drift is small — never sees it;
+   *   · it never takes the subject below his CLASS FLOOR and never past a
+   *     legal lens, so it cannot rescue one law by breaking another;
+   *   · it is a first-order lag, not a snap, so it reads as a hand on the zoom
+   *     and not as a pop; and it is pure f(dt), so two laps hold identically;
+   *   · a shot that DECLARED a fill is left to fill.
+   */
+  _holdComposition(row, dt = 1 / 60) {
+    if (!row || !row.frame || row.frame.fill) { this.fitHold = 0; return; }
+    const want = row.frame.frac;                  /* what the bake composed */
+    if (!(want > 0.02)) { this.fitHold = 0; return; }
+    const m = measureShot(this.cam, this.subjBox, {});
+    if (!m.ok || !(m.h > 1e-4)) { this.fitHold = 0; return; }
+    const drift = m.h / want;
+    /* THE DEAD BAND. Inside it the world is where the bake left it and the
+       lens is the table's. Outside it a body has walked out of its own shot. */
+    let f = 1;
+    if (drift < HOLD_BAND[0]) f = drift / HOLD_BAND[0];        /* he is far: tighten */
+    else if (drift > HOLD_BAND[1]) f = drift / HOLD_BAND[1];   /* he is near: widen */
+    else f = 1;
+    /* the lens the correction asks for — bounded by the shot's own lens, by a
+       legal field of view, and by the floor the subject's class demands */
+    let fov = clamp(row.fov * f, row.fov * HOLD_ZOOM[0], row.fov * HOLD_ZOOM[1]);
+    fov = clamp(fov, 8, SEE_FOV_MAX);
+    const floor = this.classOf(row.class).floor || 0;
+    if (floor > 0 && fov > this.cam.fov) {
+      /* opening shrinks him: never past his own floor */
+      const most = this.cam.fov * (m.h / (floor * 1.03));
+      fov = Math.min(fov, Math.max(this.cam.fov, most));
+    }
+    const d = fov - row.fov;
+    const lag = this.seeSnap ? 1 : 1 - Math.exp(-Math.max(0, dt) / HOLD_TAU);
+    this.holdFovD = (this.holdFovD || 0) + (d - (this.holdFovD || 0)) * lag;
+    if (Math.abs(this.holdFovD) < 1e-3) this.holdFovD = 0;
+    if (!this.holdFovD) { this.fitHold = 0; return; }
+    this.cam.fov = clamp(row.fov + this.holdFovD, 8, SEE_FOV_MAX);
+    this.cam.updateProjectionMatrix();
+    this.fitHold = +this.cam.fov.toFixed(2);
   }
 
   /**
@@ -795,25 +940,25 @@ export class CineCam {
     /* how far the lens may open before the subject stops obeying its class */
     const floor = (this.classOf(row.class).floor || 0) * 1.02;
     const room = floor > 0 ? m.h / floor : 99;
+    /* A DECLARED FILL IS ONLY A FILL WHEN IT FILLS. `frame.fill` says the shot
+       MEANS to run past the frame edge, and for those the crop is the picture.
+       But the bake set the flag on shots that do not actually fill at every
+       aspect, and the composition gate asks the strict question of anything
+       measuring under 1.0 — so a "fill" that came in at 0.84 was left to crop
+       by this solve and then failed inFrame on the gate. Measured on
+       ody-i-09-monster: the crag came in at inFrame 0.86 at 1.30 and the lens
+       never opened, because the flag said the crop was intended. The two now
+       ask the same question of the same number. */
     let need = 1;
-    if (!row.frame.fill)
-      need = Math.max(need, Math.max(Math.abs(m.box[0]), Math.abs(m.box[2])) / 0.97);
-    /* THE READER'S TARGET IS PART OF THE COMPOSITION. A gate unit's picture has
-       a job the shot table does not describe: the thing the reader has to find
-       must be ON THE PICTURE. The council's ship already sat at the frame's
-       left edge in the design frame, so a narrower one cropped it off and the
-       ring fell back to a bounding box — measured, on the [hit] gate, the day
-       the stage stopped letterboxing. The lens opens for it too. */
-    if (this._see) {
-      const cs = (this.__cs2 || (this.__cs2 = new THREE.Vector3()))
-        .copy(this._see).applyMatrix4(this.cam.matrixWorldInverse);
-      if (cs.z < -this.cam.near) {
-        const q = (this.__ndc2 || (this.__ndc2 = new THREE.Vector3()))
-          .copy(this._see).project(this.cam);
-        if (isFinite(q.x)) need = Math.max(need, Math.abs(q.x) / 0.88,
-                                                 Math.abs(q.y) / 0.90);
-      }
-    }
+    if (!(row.frame.fill && m.h >= 1))
+      need = Math.max(need, Math.max(Math.abs(m.box[0]), Math.abs(m.box[2])) / 0.97,
+                            Math.max(Math.abs(m.box[1]), Math.abs(m.box[3])) / 0.97);
+    /* THE READER'S TARGET is no longer this solve's business: `_keepMustSee`
+       owns it, at every aspect, as a REGION, bounded by the shot's own class
+       and eased like an operator's hand. It used to be a point handled here,
+       and being handled here it fired only on narrow windows and fired hard —
+       measured on the live page, it opened ody-i-07-council from 32 deg to 44
+       and took the subject from 0.76 of frame height to 0.41 in one step. */
     /* THE SIZE IS NOT THE FORMAT'S TO SPEND.
      *
      * The first cut of this solve split the format change — half the lost width
@@ -864,10 +1009,210 @@ export class CineCam {
     }
   }
 
-  /** the page's word on what the reader has to be able to see and click */
-  setMustSee(p) {
-    if (!p) { this._see = null; return; }
-    this._see = (this._seeV || (this._seeV = new THREE.Vector3())).copy(p);
+  /**
+   * THE READER'S TARGET IS A REGION, NOT A POINT.
+   *
+   * The first cut of this handed the camera the target's group ORIGIN, and the
+   * council's ship is a fifteen-metre twenty-oarer whose origin is the hull
+   * midpoint: the point can be comfortably on frame while the vessel is half
+   * off it, and the reader's ring is aimed at PIXELS, not at origins. The page
+   * now hands over the target's world BOX and the frame is asked to keep the
+   * whole of it findable.
+   * @param {THREE.Box3|null} box
+   */
+  setMustSee(box) {
+    if (!box || box.isEmpty || box.isEmpty()) { this._see = null; this._seeBox = null; return; }
+    this._seeBox = (this._seeBoxV || (this._seeBoxV = new THREE.Box3())).copy(box);
+    this._see = box.getCenter(this._seeV || (this._seeV = new THREE.Vector3()));
+  }
+
+  /**
+   * THE GATE SHOT MUST SEE THE GATE (live-book cut, CLASS 5).
+   *
+   * THE DEFECT, measured on the live page: on ody-i-07-council the reader's
+   * ring was DARK FOR 23 SECONDS while the margin said "click the ship · cross
+   * to the mainland". The shot is an OTS composed on Ulysses with the fleet in
+   * his look-room, and the aim solve is honest — it will not put a ring on a
+   * pixel that does not show the ship — so when the shot stopped showing the
+   * ship the ring went out and the book asked the reader for a click he had no
+   * way to make. Three things conspire: the station's push, the hold breath,
+   * and the fact that `_look` is dragged by the SPEAKER's own drift while
+   * Ulysses walks the audited corridor to his council mark.
+   *
+   * The composition laws protect the SPEAKER as a region and never knew about
+   * the reader's target at all. So: a frame that is asking for input owes the
+   * reader the thing he is being asked to press. The lens OPENS first (it costs
+   * subject size, which is bounded by the shot's own class floor and is the
+   * cheapest correction a DP has), and only if that is not enough does the aim
+   * PAN — and every correction is measured against the subject and UNDONE if it
+   * would put the shot's own composition through a gate. A picture is never
+   * broken to save a ring; it is opened, or it is left as it was and the
+   * failure is reported honestly by the ring staying dark.
+   */
+  _keepMustSee(row, dt = 1 / 60) {
+    const b = this._seeBox;
+    /* THE CORRECTION IS EASED, NOT SNAPPED. The solve below runs from the
+       station's own aim every frame, so the ANSWER it gives moves as the world
+       does; applying it raw would make the lens twitch at the threshold. The
+       correction the reader actually gets is a first-order lag on that answer
+       — an operator finding the ship in his frame — except on the first frame
+       after a cut, where a cut is a cut and the gate shot owes the reader the
+       gate immediately. */
+    if (!b || !row) {
+      if (this.seeFovD || (this.seeLookD && this.seeLookD.lengthSq() > 1e-12)) {
+        this.seeFovD = 0; if (this.seeLookD) this.seeLookD.set(0, 0, 0);
+      }
+      this.fitSee = 0;
+      return;
+    }
+    if (!this.seeLookD) this.seeLookD = new THREE.Vector3();
+    const fovBase = this.cam.fov;
+    const lookBase = (this.__lkB || (this.__lkB = new THREE.Vector3())).copy(this._look);
+    /* last frame's correction, carried in first so the solve starts from the
+       picture the reader is actually looking at and converges instead of
+       re-deriving the whole swing every frame */
+    if (this.seeFovD) {
+      this.cam.fov = clamp(fovBase + this.seeFovD, 1, SEE_FOV_MAX);
+      this.cam.updateProjectionMatrix();
+    }
+    if (this.seeLookD.lengthSq() > 1e-12) {
+      this._look.add(this.seeLookD);
+      this.cam.lookAt(this._look); this.cam.updateMatrixWorld(true);
+    }
+    this.fitSee = 0;
+    const bad = () => {
+      /* the worst NDC excursion of the target's box past the safe frame, and
+         whether any of it is in front of the lens at all */
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, front = 0;
+      const v = (this.__sv || (this.__sv = new THREE.Vector3()));
+      for (let i = 0; i < 8; i++) {
+        v.set(i & 1 ? b.max.x : b.min.x, i & 2 ? b.max.y : b.min.y, i & 4 ? b.max.z : b.min.z);
+        v.applyMatrix4(this.cam.matrixWorldInverse);
+        if (v.z >= -this.cam.near) continue;
+        front++;
+        v.applyMatrix4(this.cam.projectionMatrix);
+        x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x);
+        y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y);
+      }
+      if (!front) return null;                        /* behind the lens: unreachable */
+      /* SEEN means a usable share of the box is inside the safe frame — the
+         ring needs pixels, not a corner clipping the rim */
+      const w = x1 - x0, h = y1 - y0;
+      const ix = Math.max(0, Math.min(x1, SEE_SAFE) - Math.max(x0, -SEE_SAFE));
+      const iy = Math.max(0, Math.min(y1, SEE_SAFE) - Math.max(y0, -SEE_SAFE));
+      const share = (w > 1e-4 && h > 1e-4) ? (ix / w) * (iy / h) : (ix > 0 && iy > 0 ? 1 : 0);
+      return { x0, y0, x1, y1, share, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2 };
+    };
+    /* how much of the correction the reader has caught up to, this frame */
+    const lag = this.seeSnap ? 1 : 1 - Math.exp(-Math.max(0, dt) / SEE_TAU);
+    const settle = () => {
+      /* the correction that is actually in the picture, relaxed toward what
+         the solve just asked for — and toward zero when it asked for nothing */
+      const wantFov = this.cam.fov - fovBase;
+      const wantLook = (this.__wl || (this.__wl = new THREE.Vector3()))
+        .copy(this._look).sub(lookBase);
+      this.seeFovD += (wantFov - this.seeFovD) * lag;
+      this.seeLookD.addScaledVector(
+        (this.__wd || (this.__wd = new THREE.Vector3())).copy(wantLook).sub(this.seeLookD), lag);
+      if (Math.abs(this.seeFovD) < 1e-3) this.seeFovD = 0;
+      if (this.seeLookD.lengthSq() < 1e-10) this.seeLookD.set(0, 0, 0);
+      this.cam.fov = clamp(fovBase + this.seeFovD, 1, SEE_FOV_MAX);
+      this.cam.updateProjectionMatrix();
+      this._look.copy(lookBase).add(this.seeLookD);
+      this.cam.lookAt(this._look); this.cam.updateMatrixWorld(true);
+      this.fitSee = this.seeFovD ? +this.cam.fov.toFixed(2) : 0;
+    };
+    let m = bad();
+    if (!m || m.share >= SEE_SHARE) {
+      /* nothing is owed: the lens relaxes back to the station's own frame */
+      this._look.copy(lookBase); this.cam.fov = fovBase;
+      this.cam.updateProjectionMatrix();
+      this.cam.lookAt(this._look); this.cam.updateMatrixWorld(true);
+      settle();
+      return;
+    }
+
+    /* the state a failed correction is put back to */
+    const fov0 = this.cam.fov;
+    const look0 = (this.__lk0 || (this.__lk0 = new THREE.Vector3())).copy(this._look);
+    const ok = () => {
+      const s = measureShot(this.cam, this.subjBox, {});
+      if (!s.ok) return false;
+      const floor = (this.classOf(row.class).floor || 0);
+      if (floor > 0 && !(s.h >= floor)) return false;
+      return s.inFrame === undefined || s.inFrame >= 0.92;
+    };
+    const half = () => Math.tan(this.cam.fov * D2R / 2);
+
+    /* ---- 1. OPEN. The cheapest correction: the frame grows around what it
+       already has, nothing moves, and the cost is subject size, which the
+       class floor bounds exactly. ---- */
+    for (let i = 0; i < 3 && m && m.share < SEE_SHARE; i++) {
+      const reach = Math.max(Math.abs(m.x0), Math.abs(m.x1),
+                             Math.abs(m.y0), Math.abs(m.y1));
+      const f = clamp(reach / SEE_SAFE, 1.02, 1.6);
+      const fovWas = this.cam.fov;
+      this.cam.fov = Math.min(SEE_FOV_MAX, 2 * Math.atan(half() * f) / D2R);
+      if (this.cam.fov <= fovWas + 1e-4) break;
+      this.cam.updateProjectionMatrix();
+      if (!ok()) { this.cam.fov = fovWas; this.cam.updateProjectionMatrix(); break; }
+      m = bad();
+    }
+    if (!m || m.share >= SEE_SHARE) { settle(); return; }
+
+    /* ---- 2. PAN. The operator turns his head. The aim moves toward the
+       target only as far as the shot's own composition survives; the swing
+       never changes the sign of the subject's cx, so the screen-direction
+       axis cannot flip. ---- */
+    const fwd = (this.__sf || (this.__sf = new THREE.Vector3()));
+    this.cam.getWorldDirection(fwd);
+    const right = (this.__sr || (this.__sr = new THREE.Vector3())).set(-fwd.z, 0, fwd.x);
+    if (right.lengthSq() > 1e-8) {
+      right.normalize();
+      const up = (this.__su || (this.__su = new THREE.Vector3()))
+        .crossVectors(right, fwd).normalize();
+      const L = this._pos.distanceTo(this._look) || 1;
+      const sign0 = Math.sign(this._ndcxOf(this.anchor));
+      for (let i = 0; i < 4 && m && m.share < SEE_SHARE; i++) {
+        const dx = m.cx > SEE_SAFE ? m.cx - SEE_SAFE * 0.8
+                 : m.cx < -SEE_SAFE ? m.cx + SEE_SAFE * 0.8 : 0;
+        const dy = m.cy > SEE_SAFE ? m.cy - SEE_SAFE * 0.8
+                 : m.cy < -SEE_SAFE ? m.cy + SEE_SAFE * 0.8 : 0;
+        if (!dx && !dy) break;
+        const swing = (this.__sw || (this.__sw = new THREE.Vector3()))
+          .copy(this._look)
+          .addScaledVector(right, L * Math.tan(Math.atan(dx * this.cam.aspect * half())))
+          .addScaledVector(up, L * Math.tan(Math.atan(dy * half())));
+        const keep = (this.__sk || (this.__sk = new THREE.Vector3())).copy(this._look);
+        this._look.copy(swing);
+        this.cam.lookAt(this._look);
+        this.cam.updateMatrixWorld(true);
+        if (!ok() || Math.sign(this._ndcxOf(this.anchor)) !== sign0) {
+          this._look.copy(keep); this.cam.lookAt(this._look);
+          this.cam.updateMatrixWorld(true);
+          break;
+        }
+        m = bad();
+      }
+    }
+    /* THE PICTURE IS NEVER BROKEN TO SAVE A RING. If no legal correction got
+       there, the frame keeps whatever legal ground it did gain (an opened lens
+       and a swing that both passed the subject's own gates), and if it gained
+       none the station is left exactly as the table composed it. The ring then
+       stays dark and the gate reports it, which is the truth. */
+    if (m && m.share < SEE_SHARE && this.cam.fov === fov0 &&
+        this._look.distanceToSquared(look0) < 1e-10) {
+      this._look.copy(lookBase); this.cam.fov = fovBase;
+      this.cam.updateProjectionMatrix();
+      this.cam.lookAt(this._look); this.cam.updateMatrixWorld(true);
+    }
+    settle();
+  }
+
+  /** the subject's NDC x under the live lens — the screen-direction axis */
+  _ndcxOf(p) {
+    const v = (this.__nx || (this.__nx = new THREE.Vector3())).copy(p).project(this.cam);
+    return isFinite(v.x) ? v.x : 0;
   }
 
   _v(a) { return this.__v ? this.__v.fromArray(a) : (this.__v = new THREE.Vector3().fromArray(a)); }
@@ -915,6 +1260,8 @@ export class CineCam {
       aspect: +this.cam.aspect.toFixed(4),
       fitYaw: this.fitYaw || 0,
       fitFov: this.fitFov || 0,
+      fitSee: this.fitSee || 0,
+      fitHold: this.fitHold || 0,
     };
   }
 }

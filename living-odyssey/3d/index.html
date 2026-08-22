@@ -117,19 +117,33 @@
   html.debug #leader{display:block;}
   html.noverlay #leader,html.noverlay #hold,html.noverlay #target{display:none !important;}
 
+  /* THE CONTROL IS TUNED TO THE THEATRE (live-book cut). The reader's ring is
+     drawn ON the judged picture — the masters were shot with `noverlay` and the
+     reader never gets that frame — so at full strength it was a teal lamp with
+     a 7 px bloom sitting on the sword, on a face, on the giant's head, and the
+     glow spilled across the composition it was supposed to point INTO. The line
+     is what does the pointing, so the LINE is kept and the LAMP is turned down:
+     the bloom loses two thirds of its radius and half its alpha, the outer ring
+     drops to a whisper, and the whole control rides at 0.8. The one moment it
+     is allowed to be loud is the ARRIVAL — one 1.1 s swell as it comes up, so a
+     reader's eye still catches it — and the MISS, which is an answer and has to
+     be seen. `prefers-reduced-motion` and the harness both kill the swell. */
   #hold,#target{position:fixed;left:0;top:0;width:78px;height:78px;margin:-39px 0 0 -39px;
     z-index:6;pointer-events:none;opacity:0;transition:opacity .35s ease;}
-  #hold.on,#target.on{opacity:1;}
+  #hold.on,#target.on{opacity:.8;}
   #hold svg,#target svg{width:100%;height:100%;}
   #hold svg{transform:rotate(-90deg);}
-  #hold .trk,#target .trk{fill:none;stroke:rgba(214,196,158,.20);stroke-width:2;}
-  #hold .arc{fill:none;stroke:#f0d79a;stroke-width:2.6;stroke-linecap:round;
-    filter:drop-shadow(0 0 6px rgba(240,215,154,.55));}
-  #hold .dot,#target .dot{fill:rgba(240,215,154,.9);}
-  #target .ring{fill:none;stroke:#7fe3d8;stroke-width:2.2;
-    filter:drop-shadow(0 0 7px rgba(127,227,216,.65));}
-  #target .ring2{fill:none;stroke:rgba(127,227,216,.5);stroke-width:1.2;}
-  #target.miss .ring{stroke:#f0b07a;}
+  #hold .trk,#target .trk{fill:none;stroke:rgba(214,196,158,.13);stroke-width:1.6;}
+  #hold .arc{fill:none;stroke:#f0d79a;stroke-width:2.2;stroke-linecap:round;
+    filter:drop-shadow(0 0 2.5px rgba(240,215,154,.30));}
+  #hold .dot,#target .dot{fill:rgba(240,215,154,.62);}
+  #target .ring{fill:none;stroke:#7fe3d8;stroke-width:1.9;
+    filter:drop-shadow(0 0 2.5px rgba(127,227,216,.32));}
+  #target .ring2{fill:none;stroke:rgba(127,227,216,.24);stroke-width:1;}
+  #target.miss .ring{stroke:#f0b07a;filter:drop-shadow(0 0 4px rgba(240,176,122,.6));}
+  #target.miss{opacity:1;}
+  @keyframes arrive{0%{opacity:0;}22%{opacity:1;}100%{opacity:.8;}}
+  #hold.on,#target.on{animation:arrive 1.1s ease-out 1;}
 
   #leader{position:fixed;inset:0;width:100%;height:100%;z-index:4;
     pointer-events:none;opacity:0;transition:opacity .35s ease;}

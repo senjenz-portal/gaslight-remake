@@ -206,7 +206,8 @@ async function enterUnit(i, { silent = false } = {}) {
          finger on this unit? A click/auto unit may re-cycle its coverage while
          the reader listens; a unit whose verb puts a ring or an arc on a
          particular station may not, or the target moves under the finger. */
-      cine.enter(u.id, { own: u.verb !== 'click' && u.verb !== 'auto' });
+      cine.enter(u.id, { own: u.verb !== 'click' && u.verb !== 'auto',
+                         lineS: (VOICE[u.key] && VOICE[u.key].dur) || 0 });
       cine.mustSee(u.verb === 'target' && u.target
         ? director.targetObject(u.target) : null);
       cine.step(stage.simT, 0);
@@ -379,6 +380,9 @@ const boxTmp = new THREE.Box3();
 const vTmp = new THREE.Vector3();
 let aimCache = { name: '', t: -1e9, hit: null };
 let targetRing = false;
+/* the last aim solve's own account of itself — the ring going dark has five
+   distinct causes and a report that only says "dark" cannot be acted on */
+let aimWhy = null;
 
 const rectOf = () => stageEl.getBoundingClientRect();
 const toNdc = (clientX, clientY, r) => ({
@@ -446,15 +450,45 @@ function screenBox(obj, cam) {
   return { x0, y0, x1, y1 };
 }
 
+/** THE SHOT'S PROTECTED REGION, in NDC: the top of the subject the composition
+ *  was built on — a head, a crown, a jaw. The reader's ring stays out of it
+ *  where it can. Null when there is no live subject to protect. */
+const _gb = new THREE.Box3(), _gv = new THREE.Vector3();
+function crownBand() {
+  const cam = stage.camera;
+  if (!cine || !cine.cam || !cam) return null;
+  const box = cine.cam.subjBox;
+  if (!box || box.isEmpty() || !isFinite(box.min.x)) return null;
+  _gb.copy(box);
+  /* the crown: the top third of the body, which is the face on every rig in
+     this book, plus the halo a 78 px ring occupies around its own centre */
+  _gb.min.y = _gb.max.y - (_gb.max.y - _gb.min.y) * 0.34;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (let i = 0; i < 8; i++) {
+    _gv.set(i & 1 ? _gb.max.x : _gb.min.x, i & 2 ? _gb.max.y : _gb.min.y,
+            i & 4 ? _gb.max.z : _gb.min.z);
+    if (_gv.clone().applyMatrix4(cam.matrixWorldInverse).z >= -cam.near) return null;
+    _gv.project(cam);
+    x0 = Math.min(x0, _gv.x); x1 = Math.max(x1, _gv.x);
+    y0 = Math.min(y0, _gv.y); y1 = Math.max(y1, _gv.y);
+  }
+  if (!isFinite(x0)) return null;
+  return { x0: x0 - 0.03, y0: y0 - 0.03, x1: x1 + 0.03, y1: y1 + 0.03 };
+}
+
 /** WHERE THE TARGET RENDERS: {x,y} client px on the pixels it actually covers,
  *  or null when the live shot does not show it at all. */
 function computeAim(name) {
   const cam = stage.camera;
   const obj = director.targetObject(name);
-  if (!cam || !obj || !obj.visible) return null;
+  aimWhy = { name, obj: !!obj, vis: !!(obj && obj.visible), box: null,
+             cands: 0, onGeom: false, inRect: null, why: '' };
+  if (!cam || !obj || !obj.visible) { aimWhy.why = 'no object'; return null; }
   cam.updateMatrixWorld();
   const b = screenBox(obj, cam);
-  if (!b) return null;
+  aimWhy.box = b && { x0: +b.x0.toFixed(3), y0: +b.y0.toFixed(3),
+                      x1: +b.x1.toFixed(3), y1: +b.y1.toFixed(3) };
+  if (!b) { aimWhy.why = 'off frame or behind the lens'; return null; }
   /* STAGE ONE — free: which samples fall on the thing's silhouette.
      A RIGGED BODY IS ASKED ITS SKELETON. A giant's bind-pose box stands
      taller than he does and holds the air between his arm and his side, so
@@ -495,11 +529,24 @@ function computeAim(name) {
      the frame, which the projected world centre is not required to be. */
   const mid = cands.length ? [sx / cands.length, sy / cands.length]
                            : [(b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2];
-  /* STAGE TWO — bounded: put the middle, then its nearest neighbours, to the
-     GEOMETRY, and take the first pixel the geometry answers for */
-  const order = cands.slice().sort((p, q) =>
-    ((p[0] - mid[0]) ** 2 + (p[1] - mid[1]) ** 2) - ((q[0] - mid[0]) ** 2 + (q[1] - mid[1]) ** 2));
-  order.unshift(mid);
+  /* THE RING KEEPS OFF THE FACE (live-book cut).
+   *
+   * The control is drawn ON the judged picture, and a 78 px teal ring landing
+   * on the speaker's head is the loudest thing in the composition — the giant's
+   * jaw at ii-11, Ulysses' face wherever the target overlaps him. So a
+   * candidate inside the SHOT SUBJECT'S CROWN BAND carries a penalty in the
+   * ordering, and the ring moves to another pixel OF THE SAME TARGET.
+   *
+   * It penalises; it never forbids, and it never invents. If every pixel of the
+   * target is on the face — the target IS the face, or the sword is crossing it
+   * — every candidate carries the same penalty, the ordering is unchanged, and
+   * the ring lands exactly where it would have. No fiction, no dark ring. */
+  const guard = crownBand();
+  const pen = (p) => (guard && p[0] > guard.x0 && p[0] < guard.x1 &&
+                      p[1] > guard.y0 && p[1] < guard.y1) ? 4 : 0;
+  const d2 = (p) => (p[0] - mid[0]) ** 2 + (p[1] - mid[1]) ** 2;
+  const order = cands.slice().sort((p, q) => (pen(p) + d2(p)) - (pen(q) + d2(q)));
+  if (pen(mid)) order.push(mid); else order.unshift(mid);
   const budget = skinned ? AIM_RAYS_SKINNED : AIM_RAYS_STATIC;
   /* a bone-picked middle is inside the body already — one ray confirms it */
   let pick = mid, onGeometry = false;
@@ -510,10 +557,12 @@ function computeAim(name) {
   /* NO FICTION. If nothing proposed the target and the geometry did not
      answer either, the live shot does not show it — and a gate must not be
      resolvable at a pixel that shows sky. */
-  if (!cands.length && !onGeometry) return null;
+  aimWhy.cands = cands.length; aimWhy.onGeom = onGeometry;
+  if (!cands.length && !onGeometry) { aimWhy.why = 'nothing on the pixels'; return null; }
   const r = rectOf();
   const c = toClient(pick[0], pick[1], r);
-  if (!inRect(c.x, c.y, r)) return null;
+  aimWhy.inRect = inRect(c.x, c.y, r);
+  if (!aimWhy.inRect) { aimWhy.why = 'the pick is off the stage rectangle'; return null; }
   return { x: c.x, y: c.y, nx: +pick[0].toFixed(4), ny: +pick[1].toFixed(4),
            covered: cands.length, swept: cands.length > 0, onGeometry };
 }
@@ -894,6 +943,8 @@ window.__book = {
   stage, director,
 };
 window.__cine = () => (cine ? cine.metrics() : null);
+/** the aim solve's own account of the last repaint — why the ring is or is not up */
+window.__aimdbg = () => aimWhy;
 /* THE RETINA LAW's own readout: the depth of field expressed as a share of the
    FRAME, which must be the same number at every device pixel ratio. */
 window.__dof = () => (cine && cine.dof && cine.dof.law ? cine.dof.law() : null);

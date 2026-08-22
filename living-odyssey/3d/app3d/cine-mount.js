@@ -24,8 +24,12 @@ import { CineCam, CineDof, measureShot, ReadRig, readSubjectPixels, READ_LAW, DI
 /** the void a cutaway set shows when the lens can see past its shell */
 export const VOID_COLOUR = { cave: '#0a0806', shore: '#060910', sea: '#070b16' };
 
-/* scratch for the must-see point handed to the aspect solve */
-const _see = new THREE.Vector3();
+/* scratch for the must-see REGION handed to the frame, and its own cadence:
+   the reader's ring is repainted eight times a second and the box is what the
+   ring is aimed inside, so the frame reads it no faster than that */
+const _seeBox = new THREE.Box3();
+const SEE_PERIOD = 1 / 8;
+let _seeFor = null, _seeAt = -1e9;
 
 export async function mountCine(stage, url = './shots3d.json') {
   const table = await (await fetch(url, { cache: 'force-cache' })).json();
@@ -103,13 +107,16 @@ export async function mountCine(stage, url = './shots3d.json') {
     cam, dof, table, rig,
     /**
      * @param {string} unitId
-     * @param {{own?:boolean}} [opt] `own: true` — the reader's finger is on
+     * @param {{own?:boolean, lineS?:number}} [opt] `lineS` — the mastered
+     *   length of this unit's spoken line, the one pacing fact the shot table
+     *   does not carry; the dwell grammar spreads the unit's remaining
+     *   coverage over it. `own: true` — the reader's finger is on
      *   this unit (a target/hold/release/clock verb), so the dwell grammar may
      *   breathe but may NOT re-cycle coverage: the ring is drawn where THIS
      *   station puts it and cutting away would move the reader's target.
      */
     enter(unitId, opt) {
-      const c = cam.cutTo(unitId, stage.simT, resolve);
+      const c = cam.cutTo(unitId, stage.simT, resolve, opt && opt.lineS);
       cam.noRecycle = !!(opt && opt.own);
       light();
       return c;
@@ -121,11 +128,23 @@ export async function mountCine(stage, url = './shots3d.json') {
     /** the page turned: dissolve the new shot out of the frame that was held */
     turn(sec = DISSOLVE_S) { turnFade = sec; },
     setAspect(a) { cam.setAspect(a); },
-    /** the reader's target, so a narrower frame may not crop away his gate */
-    mustSee(obj) {
-      if (!obj || !obj.visible) { cam.setMustSee(null); return; }
-      obj.updateWorldMatrix(true, false);
-      cam.setMustSee(obj.getWorldPosition(_see));
+    /**
+     * THE READER'S TARGET, handed to the frame as the REGION it is.
+     *
+     * A target's world box is a traversal of every mesh under it and this is
+     * called on every frame of the walk, so the box is cached against the
+     * object and re-read on the aim's own cadence — the ring is repainted
+     * eight times a second and the frame cannot need it fresher than the
+     * control it exists to serve.
+     */
+    mustSee(obj, t = stage.simT) {
+      if (!obj || !obj.visible) { cam.setMustSee(null); _seeFor = null; return; }
+      if (_seeFor !== obj.uuid || Math.abs(t - _seeAt) >= SEE_PERIOD) {
+        obj.updateWorldMatrix(true, true);
+        _seeBox.setFromObject(obj);
+        _seeFor = obj.uuid; _seeAt = t;
+      }
+      cam.setMustSee(_seeBox.isEmpty() ? null : _seeBox);
     },
     snapshot() { return { ...cam.snapshot(), read: rig.report }; },
     /**
@@ -177,7 +196,9 @@ export async function mountCine(stage, url = './shots3d.json') {
            `recycles` how many times the unit has re-cut its own coverage
            because the reader stayed. A live-dwell gate reads these. */
         aspect: +cam.cam.aspect.toFixed(4), fitYaw: cam.fitYaw || 0,
-        fitFov: cam.fitFov || 0, dwell: +(cam.dwellS || 0).toFixed(2),
+        fitFov: cam.fitFov || 0, fitSee: cam.fitSee || 0,
+        fitHold: cam.fitHold || 0,
+        dwell: +(cam.dwellS || 0).toFixed(2),
         breath: cam.breath || 0, recycles: cam.recycles || 0,
       };
       /* THE SCREEN-DIRECTION SYSTEM. In the cave the giant is ALWAYS frame
