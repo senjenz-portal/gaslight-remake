@@ -448,7 +448,7 @@ export const UNITS = [
    */
   { id: 'ody-iv-03-auger', key: 'auger',
     text: '"…I kept turning it round and round as though I were boring a hole in a ship’s plank with an auger, which two men with a wheel and strap can keep on turning as long as they choose."',
-    speaker: '', verb: 'clock', at: 4.2, focus: 'drive-tight',
+    speaker: '', verb: 'clock', at: 6.6, focus: 'drive-tight',
     shot: 'shot-drive', shotAt: 1.2, page: 3, beat: 4, set: 'cave',
     clear: true, sfx: 'grind', fact: 'O.9' },
 
@@ -456,7 +456,7 @@ export const UNITS = [
    */
   { id: 'ody-iv-04-bore', key: 'bore',
     text: '"Even thus did we bore the red hot beam into his eye, till the boiling blood bubbled all over it as we worked it round and round, so that the steam from the burning eyeball scalded his eyelids and eyebrows, and the roots of the eye sputtered in the fire."',
-    speaker: '', verb: 'clock', at: 7.4, focus: 'drive-tight',
+    speaker: '', verb: 'clock', at: 9.7, focus: 'drive-tight',
     shot: 'shot-drive', page: 3, beat: 4, set: 'cave', sfx: 'sputter' },
 
   /* 4.5 — the HISS then the YELL — camera shake, roof-dust, the flocks surging in the
@@ -464,7 +464,7 @@ export const UNITS = [
    */
   { id: 'ody-iv-05-hiss', key: 'hiss',
     text: '"As a blacksmith plunges an axe or hatchet into cold water to temper it—for it is this that gives strength to the iron—and it makes a great hiss as he does so, even thus did the Cyclops’ eye hiss round the beam of olive wood, and his hideous yells made the cave ring again."',
-    speaker: '', verb: 'clock', at: 10.4, focus: 'drive-tight',
+    speaker: '', verb: 'clock', at: 12.5, focus: 'drive-tight',
     shot: 'shot-drive', page: 3, beat: 4, set: 'cave', sfx: 'hiss',
     bed: 'cave' },
 
@@ -473,7 +473,7 @@ export const UNITS = [
    */
   { id: 'ody-iv-06-fright', key: 'fright',
     text: '"We ran away in a fright… shouting as he did so to the other Cyclopes who lived on the bleak headlands near him; so they gathered from all quarters round his cave when they heard him crying, and asked what was the matter with him."',
-    speaker: '', verb: 'clock', at: 12.6, focus: 'mouth', page: 3, beat: 4,
+    speaker: '', verb: 'clock', at: 14.7, focus: 'mouth', page: 3, beat: 4,
     set: 'cave', clear: true, sfx: 'clatter' },
 
   /* 4.7 — voices from BEYOND the stone — voice-only card, first appearance; O.10 opens.
@@ -660,7 +660,7 @@ export const UNITS = [
    */
   { id: 'ody-vi-03-rock1', key: 'rock1',
     text: 'He got more and more furious as he heard me, so he tore the top from off a high mountain…',
-    speaker: '', verb: 'clock', at: 7.0, wait: 'rock1', focus: 'gate-wide',
+    speaker: '', verb: 'clock', at: 12.0, wait: 'rock1', focus: 'gate-wide',
     page: 5, beat: 6, set: 'sea', clear: true, sfx: 'rock-tear' },
 
   /* 6.4 — double distance — headland layer scaled back; THE MEN turn from their oars.

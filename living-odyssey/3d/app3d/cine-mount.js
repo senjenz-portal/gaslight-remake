@@ -88,7 +88,7 @@ export async function mountCine(stage, url = './shots3d.json') {
   const api = {
     cam, dof, table, rig,
     enter(unitId) { const c = cam.cutTo(unitId, stage.simT, resolve); light(); return c; },
-    step(t, dt = 1 / 60) { cam.step(t, dt, resolve); light(); },
+    step(t, dt = 1 / 60) { cam.step(t, dt, resolve); light(); return cam.tookCut || 0; },
     setAspect(a) { cam.setAspect(a); },
     snapshot() { return { ...cam.snapshot(), read: rig.report }; },
     /**
@@ -108,7 +108,8 @@ export async function mountCine(stage, url = './shots3d.json') {
       dof.forceNoFade = true;
       stage.render();
       dof.forceNoFade = false;
-      const r = readSubjectPixels(stage.canvas, m.box, 160, cam.shot && cam.shot.class);
+      const r = readSubjectPixels(stage.canvas, m.box, 160, cam.shot && cam.shot.class,
+                                  cam.shot && cam.shot.setupRole);
       if (!r) return { ok: false, why: 'no canvas' };
       return { unit: cam.unitId, cls: cam.shot && cam.shot.class, box: m.box,
                law: READ_LAW, rig: rig.report, ...r };
@@ -126,6 +127,11 @@ export async function mountCine(stage, url = './shots3d.json') {
         cx: m.cx, cy: m.cy, live: cam.subjOk, cuts: cam.cuts, holds: cam.holds,
         setup: row.setup || null, transition: row.transition || 'cut',
         hold: row.hold || null,
+        /* the cut list: which shot of the unit is on screen, and how many the
+           unit still owes — the pacing law's own readout */
+        sub: cam.subI, subCuts: cam.subCuts,
+        subsOwed: Math.max(0, cam.subs.length - cam.subI),
+        subAt: row.t === undefined ? null : row.t,
         fov: cam.cam.fov, camY: cam.cam.position.y, focus: cam.focusDist,
         fstop: cam.fstop, move: row.move.k, shake: cam.shakeAmp,
         rack: cam.rackK || 0, rig: rig.report,

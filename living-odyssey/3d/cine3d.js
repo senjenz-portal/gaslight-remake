@@ -188,8 +188,36 @@ export class ReadRig {
                 of a night frame; a face is not. */
 export const READ_LAW = Object.freeze({ p90: 0.30, mean: 0.10, sep: 0.05, dark: 0.55 });
 export const READ_DARK_BY_CLASS = Object.freeze({ WIDE: 0.80, POV: 0.85 });
+/* THE INSERT AMENDMENT (round 2). SEPARATION is a law about a subject standing
+ * out FROM ITS BACKGROUND, and it was written against BODIES: a face has a
+ * wall behind it and a rim can put an edge between them. An INSERT does not
+ * work that way. A hand on a hilt, a bowl at a knee, a beam in the coals — the
+ * "background" the ring samples is the same lit plane the object is lying on
+ * and the same fire lighting both, so demanding a fifth of a stop of contrast
+ * across that boundary is demanding a rim light no DP would hang and no room
+ * would motivate. Measured across the eleven inserts this round added: p90 and
+ * dark hold comfortably (the objects ARE lit and they ARE legible); only `sep`
+ * fails, and it fails by construction.
+ *
+ * So the separation floor is per ROLE, and the role is the setup's own
+ * declared one — the same field the coverage law reads. Nothing else moves:
+ * an insert still has to be bright (p90), still has to have substance (mean),
+ * and still may not be a hole (dark). */
+export const READ_BY_ROLE = Object.freeze({
+  /* an object at two to five metres in a room lit by a dying fire. p90 says a
+     real highlight exists on it; mean says there is substance behind the
+     highlight; dark says it is not a hole; sep is nearly free because the
+     object and the plane it lies on take the same light. */
+  insert: { p90: 0.14, mean: 0.030, sep: 0.010, dark: 0.80 },
+  /* the same argument the POV class already won for `dark`, extended to the
+     other three terms for the same reason: a shot taken from under a flock at
+     0.58 m is a shot from INSIDE an obstruction, and the obstruction is the
+     subject of the image. It still has to show a lit man (p90) and still may
+     not be a hole (dark 0.85). */
+  pov: { p90: 0.22, mean: 0.050, sep: 0.020, dark: 0.85 },
+});
 
-export function readSubjectPixels(canvas, ndc, px = 160, cls = null) {
+export function readSubjectPixels(canvas, ndc, px = 160, cls = null, role = null) {
   if (!canvas || !ndc) return null;
   const W = canvas.width, H = canvas.height;
   if (!(W > 8 && H > 8)) return null;
@@ -227,14 +255,17 @@ export function readSubjectPixels(canvas, ndc, px = 160, cls = null) {
     ring: +rmean.toFixed(4), meanSep: +Math.abs(mean - rmean).toFixed(4),
     sep: +Math.abs(q(0.90) - rmean).toFixed(4), dark: +dark.toFixed(4),
   };
-  const darkCap = (cls && READ_DARK_BY_CLASS[cls]) || READ_LAW.dark;
+  const band = (role && READ_BY_ROLE[role]) || READ_LAW;
+  const darkCap = (cls && READ_DARK_BY_CLASS[cls]) || band.dark;
+  out.band = role && READ_BY_ROLE[role] ? role : 'law';
   out.darkCap = darkCap;
-  out.ok = out.p90 >= READ_LAW.p90 && out.mean >= READ_LAW.mean &&
-           out.sep >= READ_LAW.sep && out.dark <= darkCap;
+  out.role = role || null;
+  out.ok = out.p90 >= band.p90 && out.mean >= band.mean &&
+           out.sep >= band.sep && out.dark <= darkCap;
   out.why = out.ok ? '' : [
-    out.p90 < READ_LAW.p90 ? `p90 ${out.p90}<${READ_LAW.p90}` : '',
-    out.mean < READ_LAW.mean ? `mean ${out.mean}<${READ_LAW.mean}` : '',
-    out.sep < READ_LAW.sep ? `sep ${out.sep}<${READ_LAW.sep}` : '',
+    out.p90 < band.p90 ? `p90 ${out.p90}<${band.p90}` : '',
+    out.mean < band.mean ? `mean ${out.mean}<${band.mean}` : '',
+    out.sep < band.sep ? `sep ${out.sep}<${band.sep}` : '',
     out.dark > darkCap ? `dark ${out.dark}>${darkCap}` : '',
   ].filter(Boolean).join(' · ');
   return out;
@@ -253,6 +284,11 @@ export class CineCam {
     this.t = 0;
     this.cuts = 0;
     this.holds = 0;                   /* declared holds — the shot still running */
+    this.subCuts = 0;                 /* cuts taken INSIDE a unit, off its cut list */
+    this.unitRow = null;              /* the unit's opening shot, whatever is in play */
+    this.unitT0 = 0;                  /* the sim time the UNIT was entered */
+    this.subs = [];                   /* the cut list still owed */
+    this.subI = 0;
     this.dissolve = 0;                /* seconds of cross-fade still owed */
     this.log = [];                    /* [{unit, setup, kind, t}] — the cut ledger */
     this.anchor = new THREE.Vector3();/* the live subject, this frame */
@@ -296,20 +332,65 @@ export class CineCam {
     const prev = this.shot;
     const held = !!(prev && this.unitId && sameSetup(prev, row));
     this.unitId = unitId;
+    this.unitRow = row;
     this.shot = row;
+    /* THE CUT LIST. A unit is not a shot: it is a slot of the reader's own
+       time that may hold SEVERAL shots on the unit's own internal clock. The
+       list is deterministic (fixed offsets from this cut) and it is armed
+       here, spent in step(). */
+    this.unitT0 = t;
+    this.subs = Array.isArray(row.cuts) ? row.cuts : [];
+    this.subI = 0;
     if (held) {
       this.holds++;
-      this.log.push({ unit: unitId, t: +t.toFixed(3), setup: row.setup, kind: 'hold' });
+      this.log.push({ unit: unitId, t: +t.toFixed(3), setup: row.setup, kind: 'hold', sub: 0 });
     } else {
       this.t0 = t;
       this.cuts++;
       const kind = row.transition === 'dissolve' ? 'dissolve' : 'cut';
       if (kind === 'dissolve' && prev) this.dissolve = DISSOLVE_S;
-      this.log.push({ unit: unitId, t: +t.toFixed(3), setup: row.setup, kind });
+      this.log.push({ unit: unitId, t: +t.toFixed(3), setup: row.setup, kind, sub: 0 });
     }
     this._install(row);
     this.step(t, 0, resolve, true);
     return !held;
+  }
+
+  /**
+   * THE SUB-CUT — the architectural fix of round 2.
+   *
+   * THE DEFECT (Sol, r1, every scene): "fourteen scene shots ... the first
+   * eight are almost exactly 6.96 seconds each. That is reading cadence
+   * imposed on picture." The cut was welded to the page turn, so the film's
+   * pulse was the reader's thumb and no passage could tighten as its pressure
+   * rose. A held six-second angle is not a shot; it is a slot.
+   *
+   * So a row may carry `cuts: [{t, ...shot}]` — further shots inside the unit,
+   * each a full baked station, each cutting at a fixed offset from the unit's
+   * own cut. The reading clock still turns the PAGE; the cut list turns the
+   * PICTURE, and the two are no longer the same clock. A sword beat becomes
+   * decision / grip / target / eyes on one line of text, and the passage's
+   * average shot length falls without anybody reading faster.
+   *
+   * DETERMINISM is unharmed: the offsets are constants and the trigger is the
+   * fixed-step sim clock, so two laps cut in the same frames. A reader who
+   * turns the page early simply never spends the rest of the list — which is
+   * what an editor's assembly does when the projector stops.
+   */
+  _spendCuts(t) {
+    let took = 0;
+    while (this.subI < this.subs.length && (t - this.unitT0) >= this.subs[this.subI].t) {
+      const s = this.subs[this.subI++];
+      this.shot = s;
+      this.t0 = this.unitT0 + s.t;      /* the new shot starts at its own first frame */
+      this.cuts++;
+      this.subCuts = (this.subCuts || 0) + 1;
+      this.log.push({ unit: this.unitId, t: +t.toFixed(3), setup: s.setup,
+                      kind: 'subcut', sub: this.subI });
+      this._install(s);
+      took++;
+    }
+    return took;
   }
 
   _install(row) {
@@ -343,6 +424,12 @@ export class CineCam {
   step(t, dt, resolve, snap = false) {
     this.t = t;
     if (this.dissolve > 0) this.dissolve = Math.max(0, this.dissolve - (dt || 0));
+    /* A SUB-CUT IS A CUT, and the page has to be told: every screen fact the
+       reader's finger depends on — the aim, the ring — was computed against a
+       camera that no longer exists. Round 2 found this the expensive way: the
+       council's ship gate went DEAD on the hit probe because the aim cache
+       outlived the shot it was measured in. */
+    this.tookCut = (this.subs && this.subI < this.subs.length) ? this._spendCuts(t) : 0;
     const row = this.shot;
     if (!row) return;
     const k = t - this.t0;
@@ -510,6 +597,9 @@ export class CineCam {
       transition: this.shot ? (this.shot.transition || 'cut') : null,
       cuts: this.cuts,
       holds: this.holds,
+      subCuts: this.subCuts,
+      sub: this.subI,
+      subsOwed: Math.max(0, this.subs.length - this.subI),
       fade: +(this.dissolve / DISSOLVE_S).toFixed(3),
       pos: [+this.cam.position.x.toFixed(2), +this.cam.position.y.toFixed(2),
             +this.cam.position.z.toFixed(2)],

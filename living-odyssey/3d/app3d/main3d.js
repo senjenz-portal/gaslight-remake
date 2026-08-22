@@ -638,7 +638,11 @@ function step(dt) {
   stage.step(dt);
   try { audio.setTime(stage.simT); } catch (_) { /* the bed is optional */ }
   if (cine) {
-    try { cine.step(stage.simT, dt); } catch (e) { fail('cine.step', e); }
+    try {
+      /* a sub-cut off the unit's own cut list is a CUT: every screen fact
+         measured against the old camera dies with it */
+      if (cine.step(stage.simT, dt)) dropAim();
+    } catch (e) { fail('cine.step', e); }
     /* the two moments the DIRECTOR takes the frame back: the blinding shake
        and the under-fleece eye. Everything else is the shot table's. */
     director.driveCamera(stage.camera, stage.simT, cine.cam.anchor, !!cine.cam.shot);
@@ -843,7 +847,8 @@ window.__read = () => (cine ? cine.readback() : null);
 /* THE CUT LEDGER — what the camera ACTUALLY did on this lap, so the coverage
    law is proved against a reading and not against the table that asked for it */
 window.__cuts = () => (cine ? {
-  cuts: cine.cam.cuts, holds: cine.cam.holds, log: cine.cam.log.slice(),
+  cuts: cine.cam.cuts, holds: cine.cam.holds, subCuts: cine.cam.subCuts,
+  log: cine.cam.log.slice(),
   coverage: cine.table.coverage || null, lens: (cine.table.lens || {}).id || null,
 } : null);
 window.__errors = () => errors.slice();
