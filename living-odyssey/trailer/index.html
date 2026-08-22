@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Cyclops — trailer · a book you play</title>
+<meta name="description" content="A 62-second trailer for The Cyclops: Homer's Book IX rebuilt as an interactive painted book, narrated by Ulysses himself.">
+<meta property="og:title" content="The Cyclops — a book you play">
+<meta property="og:description" content="Homer's Book IX, rebuilt as an interactive painted book. 81 units, three painted worlds, one eye.">
+<meta property="og:type" content="video.other">
+<meta property="og:url" content="https://senjenz-portal.github.io/gaslight-remake/living-odyssey/trailer/">
+<meta property="og:image" content="https://senjenz-portal.github.io/gaslight-remake/living-odyssey/trailer/poster.jpg">
+<meta property="og:video" content="https://senjenz-portal.github.io/gaslight-remake/living-odyssey/trailer/odyssey-trailer.mp4">
+<meta property="og:video:type" content="video/mp4">
+<meta property="og:video:width" content="1920">
+<meta property="og:video:height" content="1080">
+<meta name="twitter:card" content="player">
+<meta name="twitter:title" content="The Cyclops — a book you play">
+<meta name="twitter:description" content="Homer's Book IX, rebuilt as an interactive painted book. 81 units, three painted worlds, one eye.">
+<meta name="twitter:image" content="https://senjenz-portal.github.io/gaslight-remake/living-odyssey/trailer/poster.jpg">
+<style>
+  /* House style: site-deploy/index.html's own tokens and grammar —
+     dark ground, cream serif, gold small-caps labels, hairline rules. */
+  :root{
+    --ground:#0a0e1c;
+    --cream:#eee4cc;
+    --cream-bright:#f6edd6;
+    --gold:#d6c49e;
+    --gold-dim:rgba(205,171,99,.55);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  }
+  html,body{margin:0;padding:0;background:var(--ground);
+    -webkit-font-smoothing:antialiased;}
+  body{font-family:var(--serif);color:var(--cream);line-height:1.55;}
+  main{max-width:980px;margin:0 auto;padding:8vh 24px 7vh;}
+
+  .kicker{
+    font-size:13px;letter-spacing:.28em;color:var(--gold);
+    font-variant-caps:small-caps;text-transform:lowercase;margin:0 0 18px;
+  }
+  h1{
+    font-size:clamp(28px,4.4vw,44px);font-weight:500;line-height:1.2;
+    color:var(--cream-bright);margin:0 0 6px;
+  }
+  h1 .beat{display:block;font-size:.58em;color:var(--cream);
+    font-style:italic;margin-top:8px;}
+  .desc{font-style:italic;font-size:18px;margin:18px 0 0;max-width:60ch;}
+  .desc em{font-style:normal;font-variant-caps:small-caps;
+    text-transform:lowercase;letter-spacing:.08em;color:var(--cream-bright);}
+
+  hr{border:0;height:1px;background:var(--gold-dim);margin:36px 0;}
+
+  .frame{
+    position:relative;margin:0 0 10px;border:1px solid var(--gold-dim);
+    background:#05070f;line-height:0;
+    box-shadow:0 26px 70px rgba(0,0,0,.72),0 0 92px rgba(96,132,210,.05);
+  }
+  video{width:100%;height:auto;display:block;background:#05070f;}
+  .meta{
+    font-size:12.5px;letter-spacing:.22em;color:var(--gold);
+    font-variant-caps:small-caps;text-transform:lowercase;margin:0 0 34px;
+  }
+  .meta .sep{color:var(--gold-dim);padding:0 .5em;}
+
+  .cta{
+    display:inline-block;padding:16px 34px;
+    border:1px solid var(--gold);color:var(--cream-bright);
+    text-decoration:none;font-size:20px;letter-spacing:.06em;
+    background:rgba(214,196,158,.06);
+  }
+  .cta:hover{background:rgba(214,196,158,.14);color:#fff;}
+  .cta .arrow{color:var(--gold);margin-right:10px;}
+
+  .label{
+    font-size:12px;letter-spacing:.3em;color:var(--gold);
+    font-variant-caps:small-caps;text-transform:lowercase;margin:0 0 12px;
+  }
+  .shots{
+    border-top:1px solid var(--gold-dim);border-bottom:1px solid var(--gold-dim);
+    padding:22px 0;margin:38px 0;
+  }
+  .shots ol{margin:0;padding:0 0 0 1.3em;font-size:16.5px;}
+  .shots li{margin:0 0 7px;}
+  .shots .who{color:var(--gold);font-variant-caps:small-caps;
+    text-transform:lowercase;letter-spacing:.1em;}
+  .shots .sep{color:var(--gold-dim);padding:0 .4em;}
+
+  .alt{font-size:15px;color:rgba(238,228,204,.78);margin:0 0 30px;}
+  .alt a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-dim);}
+  .alt a:hover{color:var(--cream-bright);}
+
+  footer{
+    border-top:1px solid var(--gold-dim);padding-top:20px;margin-top:40px;
+    font-size:13.5px;color:rgba(238,228,204,.72);
+  }
+  footer a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-dim);}
+  footer a:hover{color:var(--cream-bright);}
+  @media (max-width:640px){
+    main{padding:6vh 18px 6vh;}
+    .shots ol{font-size:15.5px;}
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">The Odyssey of Homer · Book IX</p>
+  <h1>The Cyclops — the trailer
+    <span class="beat">a book you play</span></h1>
+  <p class="desc">Sixty-two seconds cut from the book itself: its painted plates, its
+    live pages, its own mastered ambience and foley, and <em>Ulysses' own narration</em>
+    as the voice-over. Nothing here was generated for the trailer.</p>
+
+  <hr>
+
+  <div class="frame">
+    <video controls playsinline preload="metadata" poster="./poster.jpg">
+      <source src="./odyssey-trailer.mp4" type="video/mp4">
+      Your browser cannot play this video.
+      <a href="./odyssey-trailer.mp4">Download the trailer (MP4)</a>.
+    </video>
+  </div>
+  <p class="meta">1920×1080 · H.264 · 62 s<span class="sep">·</span>sound on
+    <span class="sep">·</span>voice: Ulysses, from the book's own narration</p>
+
+  <p><a class="cta" href="../"><span class="arrow">▶</span>Read the book</a></p>
+
+  <div class="shots">
+    <p class="label">The cut</p>
+    <ol>
+      <li>The leaf opens<span class="sep">·</span>the lit plate is found and lifted<span class="sep">·</span><span class="who">spotlight-hero-card</span></li>
+      <li>The title<span class="sep">·</span><span class="who">tracking-expand</span></li>
+      <li>The shore by moonlight, in three planes<span class="sep">·</span><span class="who">multiplane</span></li>
+      <li>Ink spreads and the cave is printed over it<span class="sep">·</span><span class="who">ink-bleed-reveal</span></li>
+      <li>The bowl — hold it until it fills<span class="sep">·</span><span class="who">slow-push-in</span></li>
+      <li>“my name is Noman”<span class="sep">·</span><span class="who">card-footage-cadence</span></li>
+      <li>The stake, and the world pressing in<span class="sep">·</span><span class="who">dolly-zoom</span></li>
+      <li>The blinding, then dead silence<span class="sep">·</span><span class="who">smash-cut</span></li>
+      <li>Under the great ram<span class="sep">·</span><span class="who">the breathing beat</span></li>
+      <li>The round of daylight becomes the moon<span class="sep">·</span><span class="who">circle-match-iris</span></li>
+      <li>The name, twelve black frames, and the mountain<span class="sep">·</span><span class="who">drop-blackout-slam</span></li>
+      <li>The closing card, alone<span class="sep">·</span><span class="who">pull-back-isolation</span></li>
+      <li>The lockup<span class="sep">·</span><span class="who">grain-dissolve</span></li>
+    </ol>
+  </div>
+
+  <p class="alt">Prefer to bring your own music?
+    <a href="./odyssey-trailer-nobgm.mp4">The same cut without the ambience beds</a>
+    — foley and narration retained.</p>
+
+  <footer>
+    <p>Built from the book's own material: painted plates and live page captures from
+       <a href="../">The Cyclops</a>, its mastered ambience and foley
+       (<code>assets/audio/</code>), its four hero inset clips, and its ElevenLabs
+       narration (<code>assets/voice/</code>). Butler's translation is public domain —
+       Project Gutenberg #1727. Additional cinematic stings are free-for-commercial-use
+       Mixkit samples; attribution ships with the source.</p>
+    <p><a href="../">The Cyclops</a> · <a href="../../">Gaslight Streets — remade</a></p>
+  </footer>
+</main>
+</body>
+</html>
