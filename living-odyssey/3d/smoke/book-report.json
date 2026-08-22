@@ -1,7 +1,7 @@
 {
  "lane": "viewing-r2",
- "when": "2026-08-22T02:35:51.118Z",
- "base": "http://127.0.0.1:65278",
+ "when": "2026-08-22T02:43:31.843Z",
+ "base": "https://senjenz-portal.github.io/gaslight-remake",
  "scale": {
   "rows": [
    {
@@ -8139,5 +8139,5 @@
   }
  ],
  "green": true,
- "framesDir": "/Users/samz/Documents/gaslight-remake/shots/book3d-r2"
+ "framesDir": "/Users/samz/Documents/gaslight-remake/shots/book3d-r2-live"
 }
